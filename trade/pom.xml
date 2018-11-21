@@ -1,26 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<groupId>org.trade</groupId>
-		<artifactId>trade-manager</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
-	</parent>
+    <parent>
+        <groupId>org.trade</groupId>
+        <artifactId>trade-manager</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
 
-	<artifactId>trade-manager-trade</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+    <artifactId>trade-manager-trade</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
 
-	<name>Trade Manager - Trade</name>
-	<description>Trade Manager core components</description>
+    <name>Trade Manager - Trade</name>
+    <description>Trade Manager components</description>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<java.version>1.8</java.version>
-	</properties>
-
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.version>1.8</java.version>
+    </properties>
+    <repositories>
+        <repository>
+            <id>com.ib</id>
+            <name>your custom repo</name>
+            <url>http://repo.spring.io/plugins-release/</url>
+        </repository>
+    </repositories>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -60,15 +66,24 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
-    </dependencies>
+        <dependency>
+            <groupId>org.jfree</groupId>
+            <artifactId>jfreechart</artifactId>
+            <version>1.0.19</version>
+        </dependency>
+        <dependency>
+            <groupId>org.trade</groupId>
+            <artifactId>trade-manager-core</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.ib/interactive-brokers-api -->
+        <dependency>
+            <groupId>com.ib</groupId>
+            <artifactId>interactive-brokers-api</artifactId>
+            <version>9.73-1</version>
+        </dependency>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
+    </dependencies>
 
 </project>
