@@ -1,0 +1,15 @@
+---
+tags: [trade]
+projects: [spring-data-rest,spring-data-jpa,spring-hateoas,spring-security,spring-boot,]
+---
+:toc: left
+:icons: font
+:source-highlighter: prettify
+:image-width: 500
+
+= Trade Manager
+
+include::core/README.adoc[leveloffset=+1]
+include::trade/README.adoc[leveloffset=+1]
+include::strategies/README.adoc[leveloffset=+1]
+include::web/README.adoc[leveloffset=+1]

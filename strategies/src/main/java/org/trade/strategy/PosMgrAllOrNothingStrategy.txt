@@ -1,0 +1,7 @@
+1/ If the open position is filled create a STP (transmit=false see 2/ )
+at the 5min low +/- 1c. The STP order take an initial risk of 1R.
+
+2/ Stop prices should be round over/under whole/half numbers when
+ever they are calculated..
+
+3/ Close any open positions at 15:58.

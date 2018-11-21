@@ -1,0 +1,15 @@
+#!/bin/bash
+
+asciidoctor -a linkcss -s README.adoc
+
+cd core
+asciidoctor -a linkcss -s README.adoc
+
+cd ../trade
+asciidoctor -a linkcss -s README.adoc
+
+cd ../strategies
+asciidoctor -a linkcss -s README.adoc
+
+cd ../web
+asciidoctor -a linkcss -s README.adoc

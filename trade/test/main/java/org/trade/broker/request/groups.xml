@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListOfGroups>
+        <Group>
+                <name>group_cci_daily</name>
+                <ListOfAccts varName="list">
+                        <String>U1000609</String>
+                        <String>U1000594</String>
+                        <String>U1000582</String>
+                        <String>U100809</String>
+                </ListOfAccts>
+                <defaultMethod>PctChange</defaultMethod>
+        </Group>
+        <Group>
+                <name>group_cci_weekly</name>
+                <ListOfAccts varName="list">
+                        <String>U1062562</String>
+                        <String>U1000620</String>
+                        <String>U1000603</String>
+                        <String>U1000615</String>
+                        <String>U1000616</String>
+                        <String>U1000617</String>
+                        <String>U103985</String>
+                        <String>U1000621</String>
+                        <String>U1000691</String>
+                        <String>U1000614</String>
+                        <String>U1000633</String>
+                </ListOfAccts>
+                <defaultMethod>NetLiq</defaultMethod>
+        </Group>
+        <Group>
+                <name>group_options_margin</name>
+                <ListOfAccts varName="list">
+                        <String>U1000609</String>
+                        <String>U1000594</String>
+                        <String>U103985</String>
+                </ListOfAccts>
+                <defaultMethod>NetLiq</defaultMethod>
+        </Group>
+</ListOfGroups>
+
