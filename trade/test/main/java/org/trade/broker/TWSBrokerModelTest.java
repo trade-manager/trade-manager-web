@@ -204,7 +204,7 @@ public class TWSBrokerModelTest implements BrokerChangeListener {
 		try {
 			if (tWSBrokerModel.isConnected()) {
 
-				String fileName = "trade/test/org/trade/broker/OneSymbolToday.csv";
+				String fileName = "org/trade/test/org/trade/broker/OneSymbolToday.csv";
 				ZonedDateTime tradingDay = TradingCalendar.getDateTimeNowMarketTimeZone();
 				tradingDay = TradingCalendar.getPrevTradingDay(tradingDay);
 
@@ -257,7 +257,7 @@ public class TWSBrokerModelTest implements BrokerChangeListener {
 		try {
 			if (tWSBrokerModel.isConnected()) {
 
-				String fileName = "trade/test/org/trade/broker/OneMonthContracts.csv";
+				String fileName = "org/trade/test/org/trade/broker/OneMonthContracts.csv";
 				ZonedDateTime tradingDay = TradingCalendar.getDateTimeNowMarketTimeZone();
 				tradingDay = TradingCalendar.getPrevTradingDay(tradingDay);
 
@@ -310,7 +310,7 @@ public class TWSBrokerModelTest implements BrokerChangeListener {
 		try {
 			if (tWSBrokerModel.isConnected()) {
 
-				String fileName = "trade/test/org/trade/broker/OneSymbolTwoMths.csv";
+				String fileName = "org/trade/test/org/trade/broker/OneSymbolTwoMths.csv";
 				ZonedDateTime tradingDay = TradingCalendar.getDateTimeNowMarketTimeZone();
 				tradingDay = TradingCalendar.getPrevTradingDay(tradingDay);
 
@@ -372,7 +372,7 @@ public class TWSBrokerModelTest implements BrokerChangeListener {
 		try {
 			if (tWSBrokerModel.isConnected()) {
 
-				String fileName = "trade/test/org/trade/broker/MultiContractsMultiDays.csv";
+				String fileName = "org/trade/test/org/trade/broker/MultiContractsMultiDays.csv";
 				ZonedDateTime tradingDay = TradingCalendar.getDateTimeNowMarketTimeZone();
 				tradingDay = TradingCalendar.getPrevTradingDay(tradingDay);
 

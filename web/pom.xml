@@ -65,6 +65,24 @@
             <artifactId>jaxb-api</artifactId>
             <version>2.3.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.interactivebrokers</groupId>
+            <artifactId>tws-api</artifactId>
+            <version>9.72.18-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.trade</groupId>
+            <artifactId>trade-manager-trade</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.trade</groupId>
+            <artifactId>trade-manager-core</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
    </dependencies>
 
    <build>
