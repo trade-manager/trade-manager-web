@@ -38,7 +38,7 @@ package org.trade.persistent.dao;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 
-import javax.ejb.Stateless;
+
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
@@ -47,7 +47,7 @@ import org.trade.core.util.TradingCalendar;
 
 /**
  */
-@Stateless
+
 public class TradelogHome {
 	private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 

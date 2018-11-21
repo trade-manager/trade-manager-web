@@ -20,13 +20,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
     </properties>
-    <repositories>
-        <repository>
-            <id>com.ib</id>
-            <name>your custom repo</name>
-            <url>http://repo.spring.io/plugins-release/</url>
-        </repository>
-    </repositories>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -72,18 +65,22 @@
             <version>1.0.19</version>
         </dependency>
         <dependency>
+            <groupId>de.sciss</groupId>
+            <artifactId>jsyntaxpane</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.interactivebrokers</groupId>
+            <artifactId>tws-api</artifactId>
+            <version>9.72.18-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>org.trade</groupId>
             <artifactId>trade-manager-core</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/com.ib/interactive-brokers-api -->
-        <dependency>
-            <groupId>com.ib</groupId>
-            <artifactId>interactive-brokers-api</artifactId>
-            <version>9.73-1</version>
-        </dependency>
-
     </dependencies>
 
 </project>

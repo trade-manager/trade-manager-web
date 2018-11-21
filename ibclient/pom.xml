@@ -1,0 +1,16 @@
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.trade</groupId>
+        <artifactId>trade-manager</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+    <name>Trade Manager - IBClient</name>
+    <description>Trade Manager IBClient</description>
+
+    <groupId>com.interactivebrokers</groupId>
+    <artifactId>tws-api</artifactId>
+    <version>9.72.18-SNAPSHOT</version>
+
+</project>
