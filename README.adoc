@@ -8,22 +8,23 @@ projects: [spring-data-rest,spring-data-jpa,spring-hateoas,spring-security,sprin
 :image-width: 500
 
 = Trade Manager
-Environment<br/>
+
+Environment
 1/ Maven 3.2 or higher  
-2/ Git
-3/ MySQL 5.6.24
-4/ Java 1.8.191
-5/ IntelliJ open source version
-6/ Install the DB from the script
-7/ To clone from command line
-$git clone <URL> i.e. https://github.com/trade-manager/trade-manager-web.git
-8/ Build the project from command line
-$mvn clean install (make sure $JAVA_HOME is version 1.8)
-9/ Open IntelliJ and import the parent pom.xml
-10/ From root cd web and run from the command line
-$mvn -N io.takari:maven:wrapper
-10/ To run the old Swing UI from the command line
-$mvnw -Duser.timezone=America/New_York -Dlog4j.configuration=file:config.properties exec:java
+2/ Git  
+3/ MySQL 5.6.24  
+4/ Java 1.8.191  
+5/ IntelliJ open source version  
+6/ Install the DB from the script  
+7/ To clone from command line  
+$git clone <URL> i.e. https://github.com/trade-manager/trade-manager-web.git  
+8/ Build the project from command line  
+$mvn clean install (make sure $JAVA_HOME is version 1.8)  
+9/ Open IntelliJ and import the parent pom.xml  
+10/ From root cd web and run from the command line  
+$mvn -N io.takari:maven:wrapper  
+10/ To run the old Swing UI from the command line  
+$mvnw -Duser.timezone=America/New_York -Dlog4j.configuration=file:config.properties exec:java  
 
 
 include::core/README.adoc[leveloffset=+1]
