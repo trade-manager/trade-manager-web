@@ -9,7 +9,7 @@ projects: [spring-data-rest,spring-data-jpa,spring-hateoas,spring-security,sprin
 
 = Trade Manager
 
-Environment
+Environment</br>
 1/ Maven 3.2 or higher  
 2/ Git  
 3/ MySQL 5.6.24  
