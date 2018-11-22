@@ -56,7 +56,7 @@ import org.slf4j.LoggerFactory;
  * This static class is designed so that it can be used with any JPA
  * application.
  * </p>
- * 
+ *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
@@ -72,12 +72,12 @@ public class EntityManagerHelper {
 	 * application.
 	 * </p>
 	 */
-	static final String PERSISTENCE_UNIT = "dbresource";
+    private static final String PERSISTENCE_UNIT = "dbresource";
 
 	private static final EntityManagerFactory factory;
 	private static ValidatorFactory validatorFactory;
 	private static final ThreadLocal<EntityManager> threadLocal;
-	private final static Logger _log = LoggerFactory.getLogger(EntityManagerHelper.class);
+	private static final Logger _log = LoggerFactory.getLogger(EntityManagerHelper.class);
 
 	static {
 		factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT);
@@ -93,11 +93,12 @@ public class EntityManagerHelper {
 	 * This method can be called as many times as needed per thread, and it will
 	 * return the same EntityManager instance, until the manager is closed.
 	 * </p>
-	 * 
-	 * 
+	 *
+	 *
 	 * @return EntityManager singleton for this thread
 	 */
 	public static EntityManager getEntityManager() {
+
 		EntityManager manager = threadLocal.get();
 		if ((manager == null) || !manager.isOpen()) {
 			manager = factory.createEntityManager();
@@ -114,8 +115,8 @@ public class EntityManagerHelper {
 	 * This method can be called as many times as needed per thread, and it will
 	 * return the same EntityManager instance, until the manager is closed.
 	 * </p>
-	 * 
-	 * 
+	 *
+	 *
 	 * @return EntityManager local entity manager instance. This instance should
 	 *         be method managed. i.e. begin, commit, close transaction.
 	 */
@@ -166,7 +167,7 @@ public class EntityManagerHelper {
 	 * <p>
 	 * Create a query for the EntityManager on this thread.
 	 * </p>
-	 * 
+	 *
 	 * @param query
 	 *            String
 	 * @return Query
@@ -199,7 +200,7 @@ public class EntityManagerHelper {
 	 * <p>
 	 * Write an error message to the logging system.
 	 * </p>
-	 * 
+	 *
 	 * @param info
 	 *            String
 	 * @param ex
@@ -223,7 +224,7 @@ public class EntityManagerHelper {
 
 	/**
 	 * Method getValidator
-	 * 
+	 *
 	 * @return Validator
 	 */
 	public static Validator getValidator() {

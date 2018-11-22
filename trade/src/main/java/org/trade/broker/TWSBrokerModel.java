@@ -1098,7 +1098,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
 								OrderType.MKT, quantity, null, null, OverrideConstraints.YES, TimeInForce.DAY,
 								TriggerMethod.DEFAULT);
 						tradeOrder.setClientId(execution.clientId());
-						tradeOrder.setPermId((long) execution.permId());
+						tradeOrder.setPermId(execution.permId());
 						tradeOrder.setOrderKey(execution.orderId());
 						for (String key1 : executionDetails.keySet()) {
 							Execution execution1 = executionDetails.get(key1);
@@ -2815,8 +2815,8 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
 				order.setFAProfile(ibOrder.faProfile());
 				changed = true;
 			}
-			if (CoreUtils.nullSafeComparator(order.getPermId(), ibOrder.permId()) != 0) {
-				order.setPermId(ibOrder.permId());
+			if (CoreUtils.nullSafeComparator(order.getPermId(), (int)ibOrder.permId()) != 0) {
+				order.setPermId((int)ibOrder.permId());
 				changed = true;
 			}
 			if (CoreUtils.nullSafeComparator(order.getParentId(), ibOrder.parentId()) != 0) {
