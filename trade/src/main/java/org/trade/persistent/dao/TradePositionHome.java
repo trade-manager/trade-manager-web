@@ -35,13 +35,14 @@
  */
 package org.trade.persistent.dao;
 
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 
 import org.trade.core.dao.EntityManagerHelper;
 
 /**
  */
-
+@Stateless
 public class TradePositionHome {
 
 	public TradePositionHome() {

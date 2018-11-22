@@ -117,7 +117,7 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
 	@NotNull
 	private String orderType;
 	private Integer overrideConstraints;
-	private Long permId;
+	private Integer permId;
 	private Integer parentId;
 	@Min(0)
 	private Integer quantity;
@@ -354,7 +354,7 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
 			Integer displayQuantity, ZonedDateTime filledDate, Integer filledQuantity, ZonedDateTime goodAfterTime,
 			ZonedDateTime goodTillTime, Boolean hidden, Boolean isOpenPosition, Boolean isFilled, BigDecimal limitPrice,
 			String ocaGroupName, Integer ocaType, Integer orderKey, String orderReference, String orderType,
-			Integer overrideConstraints, Integer parentId, Long permId, Integer quantity, String timeInForce,
+			Integer overrideConstraints, Integer parentId, Integer permId, Integer quantity, String timeInForce,
 			String status, BigDecimal stopPrice, Boolean transmit, BigDecimal trailStopPrice,
 			BigDecimal trailingPercent, Integer triggerMethod, String warningMessage, String whyHeld,
 			ZonedDateTime lastUpdateDate, List<TradeOrderfill> tradeOrderfills) {
@@ -1057,10 +1057,10 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
 	/**
 	 * Method getPermId.
 	 * 
-	 * @return Long
+	 * @return Integer
 	 */
 	@Column(name = "permId")
-	public Long getPermId() {
+	public Integer getPermId() {
 		return this.permId;
 	}
 
@@ -1068,9 +1068,9 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
 	 * Method setPermId.
 	 * 
 	 * @param permId
-	 *            Long
+	 *            Integer
 	 */
-	public void setPermId(Long permId) {
+	public void setPermId(Integer permId) {
 		this.permId = permId;
 	}
 

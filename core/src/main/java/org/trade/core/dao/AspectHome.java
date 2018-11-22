@@ -38,6 +38,7 @@ package org.trade.core.dao;
 import java.util.List;
 import java.util.Set;
 
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -49,6 +50,7 @@ import javax.validation.Path.Node;
 
 /**
  */
+@Stateless
 public class AspectHome {
 
 	public AspectHome() {

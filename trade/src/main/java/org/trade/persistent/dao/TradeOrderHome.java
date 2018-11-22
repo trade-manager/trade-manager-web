@@ -37,6 +37,7 @@ package org.trade.persistent.dao;
 
 import java.util.List;
 
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -49,7 +50,7 @@ import org.trade.core.util.TradingCalendar;
 
 /**
  */
-
+@Stateless
 public class TradeOrderHome {
 
 	public TradeOrderHome() {
