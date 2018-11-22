@@ -9,10 +9,12 @@
         <version>2.0.5.RELEASE</version>
         <relativePath/>
     </parent>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
     </properties>
+
     <groupId>org.trade</groupId>
     <artifactId>trade-manager</artifactId>
     <version>0.0.1-SNAPSHOT</version>
