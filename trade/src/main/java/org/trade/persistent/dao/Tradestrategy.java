@@ -419,7 +419,7 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
 	 * 
 	 * @return Boolean
 	 */
-	@Column(name = "org/trade", length = 1)
+	@Column(name = "trade", length = 1)
 	public Boolean getTrade() {
 
 		return this.trade;

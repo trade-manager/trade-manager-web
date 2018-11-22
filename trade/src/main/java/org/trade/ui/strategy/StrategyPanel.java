@@ -74,7 +74,7 @@ import javax.swing.text.StyleConstants;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
-import jsyntaxpane.DefaultSyntaxKit;
+import de.sciss.syntaxpane.DefaultSyntaxKit;
 
 import org.trade.broker.BrokerModel;
 import org.trade.core.factory.ClassFactory;
@@ -392,9 +392,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
 
 	/**
 	 * Method doSave.
-	 * 
-	 * @param rule
-	 *            Rule
+	 *
 	 */
 	public void doSave() {
 		try {
@@ -486,9 +484,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
 
 	/**
 	 * Method doDelete.
-	 * 
-	 * @param rule
-	 *            Rule
+	 *
 	 */
 	public void doDelete() {
 		try {
