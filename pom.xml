@@ -27,7 +27,6 @@
        <module>ibclient</module>
         <module>core</module>
         <module>trade</module>
-        <module>strategies</module>
         <module>web</module>
     </modules>
 </project>
