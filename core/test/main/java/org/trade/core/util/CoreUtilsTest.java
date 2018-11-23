@@ -236,10 +236,10 @@ public class CoreUtilsTest {
 	@Test
 	public void testBigDecimalRounding() {
 
-		BigDecimal avgFillPrice = new BigDecimal("35.34567897").setScale(SCALE, BigDecimal.ROUND_HALF_EVEN);
+		BigDecimal avgFillPrice = new BigDecimal("35.34567897").setScale(SCALE, RoundingMode.HALF_EVEN);
 		assertEquals("1", new BigDecimal("35.34568"), avgFillPrice);
 
-		avgFillPrice = new BigDecimal("35.34567344").setScale(SCALE, BigDecimal.ROUND_HALF_EVEN);
+		avgFillPrice = new BigDecimal("35.34567344").setScale(SCALE, RoundingMode.HALF_EVEN);
 		assertEquals("2", new BigDecimal("35.34567"), avgFillPrice);
 
 		assertEquals("3", 0, BigDecimal.ZERO.compareTo(new BigDecimal(0.00)));

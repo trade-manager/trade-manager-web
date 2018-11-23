@@ -37,6 +37,7 @@ package org.trade.core.valuetype;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.Comparator;
 
 import org.trade.core.conversion.JavaTypeTranslator;
@@ -613,7 +614,7 @@ public class Money extends ValueType implements Comparator<Money>, Comparable<Mo
 			m_value = new BigDecimal(0.0);
 		} else {
 			// m_value = value;
-			m_value = value.setScale(SCALE, BigDecimal.ROUND_HALF_EVEN);
+			m_value = value.setScale(SCALE, RoundingMode.HALF_EVEN);
 		}
 
 		// Clear any invalid values

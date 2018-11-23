@@ -37,6 +37,7 @@ package org.trade.broker;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.ParseException;
 import java.time.ZonedDateTime;
 import java.util.Date;
@@ -1153,7 +1154,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements ClientWr
 								&& !TradingCalendar.isMarketHours(tradestrategy.getTradingday().getOpen(),
 										tradestrategy.getTradingday().getClose(), date))
 							return;
-						BigDecimal price = (new BigDecimal(close)).setScale(SCALE, BigDecimal.ROUND_HALF_EVEN);
+						BigDecimal price = (new BigDecimal(close)).setScale(SCALE, RoundingMode.HALF_EVEN);
 						tradestrategy.getStrategyData().getBaseCandleSeries().getContract().setLastAskPrice(price);
 						tradestrategy.getStrategyData().getBaseCandleSeries().getContract().setLastBidPrice(price);
 						tradestrategy.getStrategyData().getBaseCandleSeries().getContract().setLastPrice(price);
