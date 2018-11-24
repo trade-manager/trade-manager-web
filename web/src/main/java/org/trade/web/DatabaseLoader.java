@@ -1,18 +1,3 @@
-/*
- * Copyright 2015 the original author or authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.trade.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,50 +7,54 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
-/**
- * @author Greg Turnquist
- */
-// tag::code[]
 @Component
 public class DatabaseLoader implements CommandLineRunner {
 
-	private final EmployeeRepository employees;
-	private final ManagerRepository managers;
+    private final EmployeeRepository employees;
+    private final UserRepository users;
 
-	@Autowired
-	public DatabaseLoader(EmployeeRepository employeeRepository,
-						  ManagerRepository managerRepository) {
+    private final static String ROLE_MANAGER = "ROLE_MANAGER";
 
-		this.employees = employeeRepository;
-		this.managers = managerRepository;
-	}
+    @Autowired
+    public DatabaseLoader(EmployeeRepository employeeRepository,
+                          UserRepository userRepository) {
 
-	@Override
-	public void run(String... strings) throws Exception {
+        this.employees = employeeRepository;
+        this.users = userRepository;
+    }
 
-		Manager greg = this.managers.save(new Manager("admin", "admin",
-							"ROLE_MANAGER"));
-		Manager oliver = this.managers.save(new Manager("oliver", "gierke",
-							"ROLE_MANAGER"));
 
-		SecurityContextHolder.getContext().setAuthentication(
-			new UsernamePasswordAuthenticationToken("admin", "doesn't matter",
-				AuthorityUtils.createAuthorityList("ROLE_MANAGER")));
+    public void run(String... strings) throws Exception {
 
-		this.employees.save(new Employee("Frodo", "Baggins", "ring bearer", greg));
-		this.employees.save(new Employee("Bilbo", "Baggins", "burglar", greg));
-		this.employees.save(new Employee("Gandalf", "the Grey", "wizard", greg));
+        User admin = this.users.findByName("admin");
+        if (null == admin) {
+            admin = this.users.save(new User("admin", "admin",
+                    ROLE_MANAGER));
+        }
+        User oliver = this.users.findByName("oliver");
+        if (null == oliver) {
+            oliver = this.users.save(new User("oliver", "admin",
+                    ROLE_MANAGER));
+        }
 
-		SecurityContextHolder.getContext().setAuthentication(
-			new UsernamePasswordAuthenticationToken("oliver", "doesn't matter",
-				AuthorityUtils.createAuthorityList("ROLE_MANAGER")));
 
-		this.employees.save(new Employee("Samwise", "Gamgee", "gardener", oliver));
-		this.employees.save(new Employee("Merry", "Brandybuck", "pony rider", oliver));
-		this.employees.save(new Employee("Peregrin", "Took", "pipe smoker", oliver));
+        SecurityContextHolder.getContext().setAuthentication(
+                new UsernamePasswordAuthenticationToken("admin", "doesn't matter",
+                        AuthorityUtils.createAuthorityList(ROLE_MANAGER)));
 
-		SecurityContextHolder.clearContext();
+        this.employees.save(new Employee("Frodo", "Baggins", "ring bearer", admin));
+        this.employees.save(new Employee("Bilbo", "Baggins", "burglar", admin));
+        this.employees.save(new Employee("Gandalf", "the Grey", "wizard", admin));
 
-	}
+        SecurityContextHolder.getContext().setAuthentication(
+                new UsernamePasswordAuthenticationToken("oliver", "doesn't matter",
+                        AuthorityUtils.createAuthorityList(ROLE_MANAGER)));
+
+        this.employees.save(new Employee("Samwise", "Gamgee", "gardener", oliver));
+        this.employees.save(new Employee("Merry", "Brandybuck", "pony rider", oliver));
+        this.employees.save(new Employee("Peregrin", "Took", "pipe smoker", oliver));
+
+        SecurityContextHolder.clearContext();
+
+    }
 }
-// end::code[]

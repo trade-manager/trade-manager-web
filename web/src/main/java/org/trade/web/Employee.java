@@ -1,18 +1,3 @@
-/*
- * Copyright 2015 the original author or authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.trade.web;
 
 import javax.persistence.Entity;
@@ -25,10 +10,7 @@ import lombok.Data;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-/**
- * @author Greg Turnquist
- */
-// tag::code[]
+
 @Data
 @Entity
 public class Employee {
@@ -40,15 +22,15 @@ public class Employee {
 
 	private @Version @JsonIgnore Long version;
 
-	private @ManyToOne Manager manager;
+	private @ManyToOne
+    User user;
 
 	private Employee() {}
 
-	public Employee(String firstName, String lastName, String description, Manager manager) {
+	public Employee(String firstName, String lastName, String description, User user) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.description = description;
-		this.manager = manager;
+		this.user = user;
 	}
 }
-// end::code[]

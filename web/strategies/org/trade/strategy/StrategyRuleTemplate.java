@@ -118,7 +118,7 @@ public class StrategyRuleTemplate extends AbstractStrategyRule {
 
 			/*
 			 * Position is open kill this Strategy as its job is done. In this
-			 * example we would manage the position with a strategy manager.
+			 * example we would manage the position with a strategy user.
 			 * This strategy is just used to create the order that would open
 			 * the position.
 			 */
