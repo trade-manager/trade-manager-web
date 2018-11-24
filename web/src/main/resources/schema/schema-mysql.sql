@@ -1,19 +1,21 @@
-SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
-SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
-SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
+-- DELIMITER //
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0//
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0//
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL'//
 
 
--- DROP SCHEMA IF EXISTS tradeprod;
-CREATE SCHEMA IF NOT EXISTS tradeprod;
-SHOW WARNINGS;
-USE tradeprod;
+DROP SCHEMA IF EXISTS tradeprod//
+CREATE SCHEMA IF NOT EXISTS tradeprod//
+SHOW WARNINGS//
+USE tradeprod//
 
 -- -----------------------------------------------------
 -- Table EntryLimits
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS entrylimit ;
+DROP TABLE IF EXISTS entrylimit //
 
-SHOW WARNINGS;
+SHOW WARNINGS//
 CREATE  TABLE IF NOT EXISTS entrylimit (
   idEntryLimit INT NOT NULL AUTO_INCREMENT ,
   startPrice DECIMAL(10,2) NOT NULL ,
@@ -26,16 +28,16 @@ CREATE  TABLE IF NOT EXISTS entrylimit (
   shareRound INT NULL ,
   version INT NULL,
   PRIMARY KEY (idEntryLimit) )
-ENGINE = InnoDB;
+ENGINE = InnoDB//
 
-SHOW WARNINGS;
+SHOW WARNINGS//
 
 -- -----------------------------------------------------
 -- Table Contract
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS contract ;
+DROP TABLE IF EXISTS contract //
 
-SHOW WARNINGS;
+SHOW WARNINGS//
 CREATE  TABLE IF NOT EXISTS contract (
   idContract INT NOT NULL AUTO_INCREMENT ,
   category VARCHAR(80) NULL ,
@@ -80,16 +82,16 @@ CREATE  TABLE IF NOT EXISTS contract (
     REFERENCES tradeposition (idTradePosition )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+ENGINE = InnoDB//
 
-SHOW WARNINGS;
+SHOW WARNINGS//
 
 -- -----------------------------------------------------
 -- Table Portfolio
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS portfolio ;
+DROP TABLE IF EXISTS portfolio //
 
-SHOW WARNINGS;
+SHOW WARNINGS//
 CREATE  TABLE IF NOT EXISTS portfolio (
   idPortfolio INT NOT NULL AUTO_INCREMENT ,
   name VARCHAR(45) NOT NULL ,
@@ -101,16 +103,16 @@ CREATE  TABLE IF NOT EXISTS portfolio (
   version INT NULL,
   PRIMARY KEY (idPortfolio) ,
   UNIQUE INDEX portfolio_name_uq (name ASC))
-ENGINE = InnoDB;
+ENGINE = InnoDB//
 
-SHOW WARNINGS;
+SHOW WARNINGS//
 
 -- -----------------------------------------------------
 -- Table Account
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS account ;
+DROP TABLE IF EXISTS account //
 
-SHOW WARNINGS;
+SHOW WARNINGS//
 CREATE  TABLE IF NOT EXISTS account (
   idAccount INT NOT NULL AUTO_INCREMENT ,
   accountNumber VARCHAR(20) NOT NULL ,
@@ -129,16 +131,16 @@ CREATE  TABLE IF NOT EXISTS account (
   PRIMARY KEY (idAccount) ,
   UNIQUE INDEX account_name_uq (name ASC),
   UNIQUE INDEX accountNumber_uq (accountNumber ASC) )
-ENGINE = InnoDB;
+ENGINE = InnoDB//
 
-SHOW WARNINGS;
+SHOW WARNINGS//
 
 -- -----------------------------------------------------
 -- Table PortfolioAccount
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS portfolioaccount ;
+DROP TABLE IF EXISTS portfolioaccount //
 
-SHOW WARNINGS;
+SHOW WARNINGS//
 CREATE  TABLE IF NOT EXISTS portfolioaccount (
   idPortfolioAccount INT NOT NULL AUTO_INCREMENT ,
   version INT NULL,
@@ -158,16 +160,16 @@ CREATE  TABLE IF NOT EXISTS portfolioaccount (
     REFERENCES account (idAccount)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION )
-ENGINE = InnoDB;
+ENGINE = InnoDB//
 
-SHOW WARNINGS;
+SHOW WARNINGS//
 
 -- -----------------------------------------------------
 -- Table TradingDay
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS tradingday ;
+DROP TABLE IF EXISTS tradingday //
 
-SHOW WARNINGS;
+SHOW WARNINGS//
 CREATE  TABLE IF NOT EXISTS tradingday (
   idTradingDay INT NOT NULL AUTO_INCREMENT ,
   open DATETIME NOT NULL ,
@@ -178,16 +180,16 @@ CREATE  TABLE IF NOT EXISTS tradingday (
   version INT NULL,
   PRIMARY KEY (idTradingDay) ,
   UNIQUE INDEX open_close_uq (open ASC, close ASC))
-ENGINE = InnoDB;
+ENGINE = InnoDB//
 
-SHOW WARNINGS;
+SHOW WARNINGS//
 
 -- -----------------------------------------------------
 -- Table Strategy
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS strategy ;
+DROP TABLE IF EXISTS strategy //
 
-SHOW WARNINGS;
+SHOW WARNINGS//
 CREATE  TABLE IF NOT EXISTS strategy (
   idStrategy INT NOT NULL AUTO_INCREMENT ,
   name VARCHAR(45) NOT NULL ,
@@ -204,16 +206,16 @@ CREATE  TABLE IF NOT EXISTS strategy (
     REFERENCES strategy (idStrategy )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION) 
-ENGINE = InnoDB;
+ENGINE = InnoDB//
 
-SHOW WARNINGS;
+SHOW WARNINGS//
 
 -- -----------------------------------------------------
 -- Table TradeStrategy
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS tradestrategy ;
+DROP TABLE IF EXISTS tradestrategy //
 
-SHOW WARNINGS;
+SHOW WARNINGS//
 CREATE  TABLE IF NOT EXISTS tradestrategy (
   idTradeStrategy INT NOT NULL AUTO_INCREMENT ,
   barSize  INT NULL ,
@@ -255,16 +257,16 @@ CREATE  TABLE IF NOT EXISTS tradestrategy (
     REFERENCES portfolio (idPortfolio)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+ENGINE = InnoDB//
 
-SHOW WARNINGS;
+SHOW WARNINGS//
 
 -- -----------------------------------------------------
 -- Table TradePosition
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS tradeposition ;
+DROP TABLE IF EXISTS tradeposition //
 
-SHOW WARNINGS;
+SHOW WARNINGS//
 CREATE  TABLE IF NOT EXISTS tradeposition (
   idTradePosition INT NOT NULL AUTO_INCREMENT ,
   openQuantity INT NULL ,
@@ -287,16 +289,16 @@ CREATE  TABLE IF NOT EXISTS tradeposition (
     REFERENCES contract (idContract )
     ON DELETE CASCADE
     ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+ENGINE = InnoDB//
 
-SHOW WARNINGS;
+SHOW WARNINGS//
 
 -- -----------------------------------------------------
 -- Table TradeOrder
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS tradeorder ; 
+DROP TABLE IF EXISTS tradeorder // 
 
-SHOW WARNINGS; 
+SHOW WARNINGS// 
 
 CREATE  TABLE IF NOT EXISTS tradeorder (
   idTradeOrder INT NOT NULL AUTO_INCREMENT ,
@@ -357,16 +359,16 @@ CREATE  TABLE IF NOT EXISTS tradeorder (
     REFERENCES tradeposition (idTradePosition )
     ON DELETE CASCADE
     ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+ENGINE = InnoDB//
 
-SHOW WARNINGS; 
+SHOW WARNINGS// 
 
 -- -----------------------------------------------------
 -- Table TradeOrderFill
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS tradeorderfill ;
+DROP TABLE IF EXISTS tradeorderfill //
 
-SHOW WARNINGS; 
+SHOW WARNINGS// 
 
 CREATE  TABLE IF NOT EXISTS tradeorderfill (
   idTradeOrderFill INT NOT NULL AUTO_INCREMENT ,
@@ -392,16 +394,16 @@ CREATE  TABLE IF NOT EXISTS tradeorderfill (
     REFERENCES tradeorder (idTradeOrder )
     ON DELETE CASCADE
     ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+ENGINE = InnoDB//
  
-SHOW WARNINGS;
+SHOW WARNINGS//
 
 -- -----------------------------------------------------
 -- Table Candle
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS candle ;
+DROP TABLE IF EXISTS candle //
 
-SHOW WARNINGS;
+SHOW WARNINGS//
 
 CREATE  TABLE IF NOT EXISTS candle (
   idCandle INT NOT NULL AUTO_INCREMENT ,
@@ -435,16 +437,16 @@ CREATE  TABLE IF NOT EXISTS candle (
     REFERENCES tradingday (idTradingDay )
     ON DELETE CASCADE
     ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+ENGINE = InnoDB//
 
-SHOW WARNINGS;
+SHOW WARNINGS//
 
 -- -----------------------------------------------------
 -- Table Rule
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS rule ;
+DROP TABLE IF EXISTS rule //
 
-SHOW WARNINGS;
+SHOW WARNINGS//
 CREATE  TABLE IF NOT EXISTS rule (
   idRule INT NOT NULL AUTO_INCREMENT,
   comment TEXT NULL,
@@ -461,16 +463,16 @@ CREATE  TABLE IF NOT EXISTS rule (
     REFERENCES strategy (idStrategy )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+ENGINE = InnoDB//
 
-SHOW WARNINGS;
+SHOW WARNINGS//
 
 -- -----------------------------------------------------
 -- Table IndicatorSeries
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS indicatorseries ;
+DROP TABLE IF EXISTS indicatorseries //
 
-SHOW WARNINGS;
+SHOW WARNINGS//
 CREATE  TABLE IF NOT EXISTS indicatorseries (
   idIndicatorSeries INT NOT NULL AUTO_INCREMENT,
   name VARCHAR(45) NOT NULL ,
@@ -489,16 +491,16 @@ CREATE  TABLE IF NOT EXISTS indicatorseries (
     REFERENCES strategy (idStrategy )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+ENGINE = InnoDB//
 
-SHOW WARNINGS;
+SHOW WARNINGS//
 
 -- -----------------------------------------------------
 -- Table CodeType
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS codetype ;
+DROP TABLE IF EXISTS codetype //
 
-SHOW WARNINGS;
+SHOW WARNINGS//
 
 CREATE  TABLE IF NOT EXISTS codetype (
   idCodeType INT NOT NULL AUTO_INCREMENT ,
@@ -508,16 +510,16 @@ CREATE  TABLE IF NOT EXISTS codetype (
   version INT NULL,
   PRIMARY KEY (idCodeType) ,
   UNIQUE INDEX codetype_name_type_uq (name ASC, type ASC) )
-ENGINE = InnoDB;
+ENGINE = InnoDB//
 
-SHOW WARNINGS;
+SHOW WARNINGS//
 
 -- -----------------------------------------------------
 -- Table CodeAttribute
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS codeattribute ;
+DROP TABLE IF EXISTS codeattribute //
 
-SHOW WARNINGS;
+SHOW WARNINGS//
 CREATE  TABLE IF NOT EXISTS codeattribute (
   idCodeAttribute INT NOT NULL AUTO_INCREMENT ,
   name VARCHAR(45) NOT NULL ,
@@ -534,16 +536,16 @@ CREATE  TABLE IF NOT EXISTS codeattribute (
     REFERENCES codetype (idCodeType )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+ENGINE = InnoDB//
 
-SHOW WARNINGS;
+SHOW WARNINGS//
 
 -- -----------------------------------------------------
 -- Table CodeValue
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS codevalue ;
+DROP TABLE IF EXISTS codevalue //
 
-SHOW WARNINGS;
+SHOW WARNINGS//
 CREATE  TABLE IF NOT EXISTS codevalue (
   idCodeValue INT NOT NULL AUTO_INCREMENT ,
   codeValue VARCHAR(45) NOT NULL ,
@@ -572,10 +574,10 @@ CREATE  TABLE IF NOT EXISTS codevalue (
     REFERENCES tradestrategy (idTradeStrategy )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+ENGINE = InnoDB//
 
-SHOW WARNINGS;
+SHOW WARNINGS//
 
-SET SQL_MODE=@OLD_SQL_MODE;
-SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
-SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+SET SQL_MODE=@OLD_SQL_MODE//
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS//
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS//
