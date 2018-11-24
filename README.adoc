@@ -22,25 +22,25 @@ IntelliJ open source version
 
 $git clone <URL> i.e. https://github.com/trade-manager/trade-manager-web.git 
 
-2/ Install the DB from the script i.e run the scripts in web/src/main/resources/schema as root. 
+2/ Add the tools-1.8.0.jar to the .m2 repo. From the project dir 
+
+$mvn install:install-file -Dfile=web/lib/tools-1.8.0.jar -DgroupId=com.sun -DartifactId=tools -Dversion=1.8.0 -Dpackaging=jar
+
+3/ Build the project from the project dir 
+
+$mvn clean install (make sure $JAVA_HOME is version 1.8)
+
+4/ Open IntelliJ and import the parent pom.xml from the project dir. 
+
+5/ Add the Maven Wrapper. From project dir run  
+
+$mvn -N io.takari:maven:wrapper  
+
+6/ Install the DB from the script i.e run the scripts in web/src/main/resources/schema as root. Note uncomment the DELIMITER statement. The scripts can also be run by following the instructions in the /web application.properties
 
 schema-mysql.sql create schema tradeprod.
 drop-create-user-mysql.sql creates the DB user trader fpr tradeprod.
 data-mysql.sql adds defaults data.
-
-3/ Add the tools-1.8.0.jar to the .m2 repo. From the project dir 
-
-$mvn install:install-file -Dfile=web/lib/tools-1.8.0.jar -DgroupId=com.sun -DartifactId=tools -Dversion=1.8.0 -Dpackaging=jar
-
-4/ Build the project from the project dir 
-
-$mvn clean install (make sure $JAVA_HOME is version 1.8)
-
-5/ Open IntelliJ and import the parent pom.xml from the project dir. 
-
-6/ Add the Maven Wrapper. From project dir run  
-
-$mvn -N io.takari:maven:wrapper  
 
 7/ To run the old Swing UI. From project dir, cd web, then run
 
