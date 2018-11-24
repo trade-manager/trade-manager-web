@@ -133,7 +133,7 @@ public class PosMgrHeikinAshiTrailStrategy extends AbstractStrategyRule {
 			}
 
 			/*
-			 * If all trades are closed shut down the position manager
+			 * If all trades are closed shut down the position user
 			 * 
 			 * Note this strategy is run as soon as we enter a position.
 			 * 
@@ -261,8 +261,8 @@ public class PosMgrHeikinAshiTrailStrategy extends AbstractStrategyRule {
 				this.cancel();
 			}
 		} catch (StrategyRuleException ex) {
-			_log.error("Error Position Manager exception: " + ex.getMessage(), ex);
-			error(1, 40, "Error Position Manager exception: " + ex.getLocalizedMessage());
+			_log.error("Error Position User exception: " + ex.getMessage(), ex);
+			error(1, 40, "Error Position User exception: " + ex.getLocalizedMessage());
 		}
 	}
 

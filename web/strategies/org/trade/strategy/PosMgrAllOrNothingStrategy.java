@@ -118,7 +118,7 @@ public class PosMgrAllOrNothingStrategy extends AbstractStrategyRule {
 				return;
 			}
 			/*
-			 * If all trades are closed shut down the position manager
+			 * If all trades are closed shut down the position user
 			 * 
 			 * Note this strategy is run as soon as we enter a position.
 			 * 
@@ -178,8 +178,8 @@ public class PosMgrAllOrNothingStrategy extends AbstractStrategyRule {
 				this.cancel();
 			}
 		} catch (StrategyRuleException ex) {
-			_log.error("Error Position Manager exception: " + ex.getMessage(), ex);
-			error(1, 30, "Error  Position Manager exception: " + ex.getMessage());
+			_log.error("Error Position User exception: " + ex.getMessage(), ex);
+			error(1, 30, "Error  Position User exception: " + ex.getMessage());
 		}
 	}
 }
