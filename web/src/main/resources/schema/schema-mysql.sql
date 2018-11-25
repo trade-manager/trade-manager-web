@@ -1,4 +1,4 @@
--- DELIMITER //
+DELIMITER //
 
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0//
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0//
@@ -23,7 +23,7 @@ CREATE  TABLE IF NOT EXISTS entrylimit (
   limitAmount DECIMAL(10,2) NULL ,
   percentOfPrice DECIMAL(10,6) NULL ,
   percentOfMargin DECIMAL(10,6) NULL ,
-  pivotRange DECIMAL(5,2) NULL ,  
+  pivotRange DECIMAL(5,2) NULL ,
   priceRound DECIMAL(10,2) NULL ,
   shareRound INT NULL ,
   version INT NULL,
@@ -64,14 +64,14 @@ CREATE  TABLE IF NOT EXISTS contract (
   symbol VARCHAR(20) NOT NULL ,
   secId VARCHAR(10) NULL ,
   secIdType VARCHAR(5) NULL ,
-  secType VARCHAR(4) NOT NULL ,  
+  secType VARCHAR(4) NOT NULL ,
   strike DECIMAL(10,2) NULL ,
   subCategory VARCHAR(80) NULL ,
   timeZoneId VARCHAR(7) NULL ,
   tradingClass VARCHAR(80) NULL ,
   tradingHours VARCHAR(100) NULL ,
   underConId INT NULL ,
-  validExchanges VARCHAR(200) NULL ,  
+  validExchanges VARCHAR(200) NULL ,
   version INT NULL,
   idTradePosition INT NULL,
   PRIMARY KEY (idContract) ,
@@ -95,9 +95,9 @@ SHOW WARNINGS//
 CREATE  TABLE IF NOT EXISTS portfolio (
   idPortfolio INT NOT NULL AUTO_INCREMENT ,
   name VARCHAR(45) NOT NULL ,
-  alias VARCHAR(45) NULL ,  
+  alias VARCHAR(45) NULL ,
   allocationMethod  VARCHAR(20) NULL ,
-  description VARCHAR(240) NULL ,  
+  description VARCHAR(240) NULL ,
   isDefault SMALLINT(1)  NOT NULL ,
   lastUpdateDate DATETIME(3) NOT NULL ,
   version INT NULL,
@@ -205,7 +205,7 @@ CREATE  TABLE IF NOT EXISTS strategy (
     FOREIGN KEY (idStrategyManager )
     REFERENCES strategy (idStrategy )
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION) 
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB//
 
 SHOW WARNINGS//
@@ -236,7 +236,7 @@ CREATE  TABLE IF NOT EXISTS tradestrategy (
   INDEX tradeStrategy_Contract_idx  (idContract ASC) ,
   INDEX tradeStrategy_Stategy_idx  (idStrategy ASC) ,
   INDEX tradeStrategy_Portfolio_idx  (idPortfolio ASC) ,
-  UNIQUE INDEX tradeStrategy_uq (idTradingDay ASC, idContract ASC, idStrategy ASC, idPortfolio ASC, barSize ASC), 
+  UNIQUE INDEX tradeStrategy_uq (idTradingDay ASC, idContract ASC, idStrategy ASC, idPortfolio ASC, barSize ASC),
   CONSTRAINT tradeStrategy_TradingDay_fk
     FOREIGN KEY (idTradingDay )
     REFERENCES tradingday (idTradingDay )
@@ -271,10 +271,10 @@ CREATE  TABLE IF NOT EXISTS tradeposition (
   idTradePosition INT NOT NULL AUTO_INCREMENT ,
   openQuantity INT NULL ,
   positionOpenDate DATETIME(3) NOT NULL ,
-  positionCloseDate DATETIME(3) NULL ,  
+  positionCloseDate DATETIME(3) NULL ,
   side VARCHAR(3) NOT NULL ,
   totalCommission DECIMAL(10,2) NULL ,
-  totalBuyQuantity INT NULL ,  
+  totalBuyQuantity INT NULL ,
   totalBuyValue DECIMAL(10,2) NULL ,
   totalSellQuantity INT NULL ,
   totalSellValue DECIMAL(10,2) NULL ,
@@ -296,9 +296,9 @@ SHOW WARNINGS//
 -- -----------------------------------------------------
 -- Table TradeOrder
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS tradeorder // 
+DROP TABLE IF EXISTS tradeorder //
 
-SHOW WARNINGS// 
+SHOW WARNINGS//
 
 CREATE  TABLE IF NOT EXISTS tradeorder (
   idTradeOrder INT NOT NULL AUTO_INCREMENT ,
@@ -338,7 +338,7 @@ CREATE  TABLE IF NOT EXISTS tradeorder (
   transmit SMALLINT(1)  NULL ,
   trailStopPrice DECIMAL(10,2) NULL ,
   trailingPercent DECIMAL(10,2) NULL ,
-  triggerMethod INT NOT NULL ,  
+  triggerMethod INT NOT NULL ,
   warningMessage VARCHAR(200) NULL ,
   whyHeld VARCHAR(45) NULL ,
   lastUpdateDate DATETIME(3) NOT NULL ,
@@ -361,14 +361,14 @@ CREATE  TABLE IF NOT EXISTS tradeorder (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB//
 
-SHOW WARNINGS// 
+SHOW WARNINGS//
 
 -- -----------------------------------------------------
 -- Table TradeOrderFill
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS tradeorderfill //
 
-SHOW WARNINGS// 
+SHOW WARNINGS//
 
 CREATE  TABLE IF NOT EXISTS tradeorderfill (
   idTradeOrderFill INT NOT NULL AUTO_INCREMENT ,
@@ -395,7 +395,7 @@ CREATE  TABLE IF NOT EXISTS tradeorderfill (
     ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB//
- 
+
 SHOW WARNINGS//
 
 -- -----------------------------------------------------
@@ -407,13 +407,13 @@ SHOW WARNINGS//
 
 CREATE  TABLE IF NOT EXISTS candle (
   idCandle INT NOT NULL AUTO_INCREMENT ,
-  open DECIMAL(10,2) NULL ,  
+  open DECIMAL(10,2) NULL ,
   high DECIMAL(10,2) NULL ,
   low DECIMAL(10,2) NULL ,
   close DECIMAL(10,2) NULL ,
   period VARCHAR(45) NULL ,
   startPeriod DATETIME(3) NULL ,
-  endPeriod DATETIME(3) NULL ,  
+  endPeriod DATETIME(3) NULL ,
   barSize INT  NULL ,
   tradeCount INT NULL ,
   volume INT NULL ,
@@ -574,6 +574,128 @@ CREATE  TABLE IF NOT EXISTS codevalue (
     REFERENCES tradestrategy (idTradeStrategy )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
+ENGINE = InnoDB//
+
+SHOW WARNINGS//
+
+-- -----------------------------------------------------
+-- Table Domain
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS domain //
+
+CREATE  TABLE IF NOT EXISTS domain (
+  sys_id BIGINT NOT NULL AUTO_INCREMENT ,
+  name VARCHAR(255) NOT NULL ,
+  description VARCHAR(100) NULL ,
+  version BIGINT NULL,
+  PRIMARY KEY (sys_id) ,
+  UNIQUE INDEX domain_name_uq (name ASC) )
+ENGINE = InnoDB//
+
+SHOW WARNINGS//
+
+-- -----------------------------------------------------
+-- Table User
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS user //
+
+CREATE  TABLE IF NOT EXISTS user (
+  sys_id BIGINT NOT NULL AUTO_INCREMENT ,
+  name VARCHAR(100) NOT NULL ,
+  first_name VARCHAR(100)  NULL ,
+  last_name VARCHAR(100)  NULL ,
+  password VARCHAR(255) NOT NULL ,
+  roles TINYBLOB NULL ,
+  domain_sys_id BIGINT NOT NULL ,
+  version BIGINT NULL,
+  PRIMARY KEY (sys_id) ,
+  UNIQUE INDEX user_name_uq (name ASC) ,
+  INDEX user_Domain_idx (domain_sys_id ASC) ,
+  CONSTRAINT user_Domain_fk
+    FOREIGN KEY (domain_sys_id)
+    REFERENCES domain (sys_id )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB//
+
+SHOW WARNINGS//
+
+-- -----------------------------------------------------
+-- Table Role
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS role //
+
+CREATE  TABLE IF NOT EXISTS role (
+  sys_id BIGINT NOT NULL AUTO_INCREMENT ,
+  name VARCHAR(100) NOT NULL ,
+  description VARCHAR(100) NULL ,
+  version BIGINT NULL,
+  PRIMARY KEY (sys_id) ,
+  UNIQUE INDEX user_name_uq (name ASC) )
+ENGINE = InnoDB//
+
+SHOW WARNINGS//
+
+-- -----------------------------------------------------
+-- Table UserRole
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS userrole //
+
+CREATE  TABLE IF NOT EXISTS userrole (
+  sys_id BIGINT NOT NULL AUTO_INCREMENT ,
+  user_sys_id BIGINT NOT NULL ,
+  role_sys_id BIGINT NOT NULL ,
+  version BIGINT NULL,
+  PRIMARY KEY (sys_id) ,
+  INDEX userrole_Role_idx (role_sys_id ASC) ,
+  CONSTRAINT userrole_Role_fk
+    FOREIGN KEY (role_sys_id )
+    REFERENCES role (sys_id )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  INDEX userrole_User_idx (user_sys_id ASC) ,
+  CONSTRAINT userrole_User_fk
+    FOREIGN KEY (user_sys_id )
+    REFERENCES user (sys_id )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+
+ENGINE = InnoDB//
+
+SHOW WARNINGS//
+
+-- -----------------------------------------------------
+-- Table employee dummy table
+-- -----------------------------------------------------
+
+DROP TABLE IF EXISTS employee//
+
+CREATE  TABLE IF NOT EXISTS employee (
+  sys_id BIGINT NOT NULL AUTO_INCREMENT ,
+  first_name VARCHAR(100)  NULL ,
+  last_name VARCHAR(100)  NULL ,
+  description VARCHAR(100)  NULL ,
+  user_sys_id BIGINT NOT NULL ,
+  version BIGINT NULL,
+  PRIMARY KEY (sys_id) ,
+  INDEX employee_name_uq (first_name ASC, last_name ASC) ,
+  INDEX user_Domain_idx (user_sys_id ASC) ,
+  CONSTRAINT employee_User_fk
+    FOREIGN KEY (user_sys_id )
+    REFERENCES user (sys_id )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB//
+
+SHOW WARNINGS//
+
+-- -----------------------------------------------------
+-- Table hibernate_sequence
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS hibernate_sequence //
+
+CREATE  TABLE IF NOT EXISTS hibernate_sequence (
+  next_val BIGINT  NULL)
 ENGINE = InnoDB//
 
 SHOW WARNINGS//
