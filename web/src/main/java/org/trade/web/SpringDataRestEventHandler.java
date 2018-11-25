@@ -7,6 +7,8 @@ import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+import static org.trade.web.DatabaseLoader.ROLE_MANAGER;
+
 
 @Component
 @RepositoryEventHandler(Employee.class)

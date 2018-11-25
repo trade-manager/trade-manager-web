@@ -12,29 +12,36 @@ public class DatabaseLoader implements CommandLineRunner {
 
     private final EmployeeRepository employees;
     private final UserRepository users;
+    private final DomainRepository domains;
 
-    private final static String ROLE_MANAGER = "ROLE_MANAGER";
+    public final static String ROLE_MANAGER = "ROLE_MANAGER";
 
     @Autowired
     public DatabaseLoader(EmployeeRepository employeeRepository,
-                          UserRepository userRepository) {
+                          UserRepository userRepository, DomainRepository domainRepository) {
 
+        this.domains = domainRepository;
         this.employees = employeeRepository;
         this.users = userRepository;
     }
 
 
-    public void run(String... strings) throws Exception {
+    public void run(String... strings)  {
+
+        Domain global = this.domains.findByName("global");
+        if (null == global) {
+            global = this.domains.save(new Domain("global", "global"));
+        }
 
         User admin = this.users.findByName("admin");
         if (null == admin) {
             admin = this.users.save(new User("admin", "admin",
-                    ROLE_MANAGER));
+                    global, ROLE_MANAGER));
         }
         User oliver = this.users.findByName("oliver");
         if (null == oliver) {
             oliver = this.users.save(new User("oliver", "admin",
-                    ROLE_MANAGER));
+                    global, ROLE_MANAGER));
         }
 
 

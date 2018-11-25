@@ -4,6 +4,9 @@
 
 USE tradeprod//
 
+INSERT INTO hibernate_sequence (next_val) VALUES (100)//
+COMMIT//
+
 DELETE FROM tradeorderfill WHERE idTradeOrderFill >='0'//
 COMMIT//
 DELETE FROM tradeorder WHERE idTradeOrder>='0'//

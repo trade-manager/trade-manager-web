@@ -3,6 +3,7 @@ package org.trade.web;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 import lombok.Data;
 import lombok.ToString;
@@ -20,7 +21,7 @@ public class User {
 
 	public static final PasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
 
-	private @Id @GeneratedValue Long id;
+	private @Id @GeneratedValue Long sysId;
 
 	private String name;
 
@@ -28,17 +29,21 @@ public class User {
 
 	private String[] roles;
 
+	private @ManyToOne
+	Domain domain;
+
 	public void setPassword(String password) {
 		this.password = PASSWORD_ENCODER.encode(password);
 	}
 
 	protected User() {}
 
-	public User(String name, String password, String... roles) {
+	public User(String name, String password, Domain domain, String... roles) {
 
 		this.name = name;
 		this.setPassword(password);
 		this.roles = roles;
+		this.domain = domain;
 	}
 
 }
