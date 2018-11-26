@@ -1,143 +1,143 @@
 select
-cast(rand()*1000000000 as unsigned integer) as id,
+cast(rand()*1000000000 as unsigned integer) as id_tradelog_detail,
 data.sort_col,
-if(data.sortCol = 'Total' , 'Total', data.open) as open,
-if(data.sortCol = 'Total' , data.symbol, if(data.isOpenPosition is null,data.symbol ,if(data.isOpenPosition = 1, data.symbol,  if(data.idTradePosition is null,data.symbol, null))))   as symbol,
-data.idTradeStrategy as id_trade_strategy,
-if(data.sortCol = 'Total' , null, if(data.isOpenPosition is null,data.longShort ,if(data.isOpenPosition = 1, data.longShort,  if(data.idTradePosition is null,data.longShort, null))))  as longShort,
-if(data.sortCol = 'Total' , null, if(data.isOpenPosition is null,data.tier ,if(data.isOpenPosition = 1, data.tier, if(data.idTradePosition is null, data.tier, null))))  as tier,
-if(data.sortCol = 'Total' , null, if(data.isOpenPosition is null,data.marketBias ,if(data.isOpenPosition = 1, data.marketBias, if(data.idTradePosition is null, data.marketBias, null)))) as marketBias,
-if(data.sortCol = 'Total' , null, if(data.isOpenPosition is null,data.marketBar ,if(data.isOpenPosition = 1, data.marketBar, if(data.idTradePosition is null, data.marketBar, null)))) as marketBar,
-if(data.sortCol = 'Total' , null, if(data.isOpenPosition is null,data.name ,if(data.isOpenPosition = 1, data.name, if(data.idTradePosition is null, data.name, null))))  as name,
-if(data.sortCol = 'Total' , null, if(data.isOpenPosition is null,data.status ,if(data.isOpenPosition = 1, data.status, if(data.idTradePosition is null, data.status, null))))  as status,
-if(data.sortCol = 'Total' , null, if(data.isOpenPosition is null,data.idTradePosition ,if(data.isOpenPosition = 1, data.idTradePosition, null)))  as idTradePosition,
-if(data.sortCol = 'Total' , null, if(data.isOpenPosition is null,data.side ,if(data.isOpenPosition = 1, data.side, if(data.idTradePosition is null, data.side, null))))  as side,
-if(data.sortCol = 'Total' , null, data.action) as action,
-if(data.sortCol = 'Total' , null, data.stopPrice) as stopPrice,
-if(data.sortCol = 'Total' , null, data.orderStatus) as orderStatus,
-if(data.sortCol = 'Total' , null, data.filledDate) as filledDate,
+if(data.sort_col = 'Total' , 'Total', data.open) as open,
+if(data.sort_col = 'Total' , data.symbol, if(data.is_open_position is null,data.symbol ,if(data.is_open_position = 1, data.symbol,  if(data.id_trade_position is null,data.symbol, null))))   as symbol,
+data.id_trade_strategy as id_trade_strategy,
+if(data.sort_col = 'Total' , null, if(data.is_open_position is null,data.long_sort ,if(data.is_open_position = 1, data.long_sort,  if(data.id_trade_position is null,data.long_sort, null))))  as long_short,
+if(data.sort_col = 'Total' , null, if(data.is_open_position is null,data.tier ,if(data.is_open_position = 1, data.tier, if(data.id_trade_position is null, data.tier, null))))  as tier,
+if(data.sort_col = 'Total' , null, if(data.is_open_position is null,data.market_bias ,if(data.is_open_position = 1, data.market_bias, if(data.id_trade_position is null, data.market_bias, null)))) as market_bias,
+if(data.sort_col = 'Total' , null, if(data.is_open_position is null,data.market_bar ,if(data.is_open_position = 1, data.market_bar, if(data.id_trade_position is null, data.market_bar, null)))) as market_bar,
+if(data.sort_col = 'Total' , null, if(data.is_open_position is null,data.name ,if(data.is_open_position = 1, data.name, if(data.id_trade_position is null, data.name, null))))  as name,
+if(data.sort_col = 'Total' , null, if(data.is_open_position is null,data.status ,if(data.is_open_position = 1, data.status, if(data.id_trade_position is null, data.status, null))))  as status,
+if(data.sort_col = 'Total' , null, if(data.is_open_position is null,data.id_trade_position ,if(data.is_open_position = 1, data.id_trade_position, null)))  as id_trade_position,
+if(data.sort_col = 'Total' , null, if(data.is_open_position is null,data.side ,if(data.is_open_position = 1, data.side, if(data.id_trade_position is null, data.side, null))))  as side,
+if(data.sort_col = 'Total' , null, data.action) as action,
+if(data.sort_col = 'Total' , null, data.stop_price) as stop_price,
+if(data.sort_col = 'Total' , null, data.order_status) as order_status,
+if(data.sort_col = 'Total' , null, data.filled_date) as filled_date,
 cast(data.quantity as signed integer) as quantity,
-data.averageFilledPrice,
+data.average_filled_price,
 data.commission,
-if(data.quantity = 0,data.profitLoss,0) as profitLoss
+if(data.quantity = 0,data.profit_loss,0) as profit_loss
 from (select
-'A' as sortCol,
+'A' as sort_col,
 date_format(tradingday.open, '%Y/%m/%d') as open,
 contract.symbol as symbol,
-tradestrategy.idTradeStrategy as idTradeStrategy,
-tradestrategy.side as longShort,
+tradestrategy.id_trade_strategy as id_trade_strategy,
+tradestrategy.side as long_sort,
 tradestrategy.tier as tier,
-tradingday.marketBias as marketBias,
-tradingday.marketBar as marketBar,
+tradingday.market_bias as market_bias,
+tradingday.market_bar as market_bar,
 strategy.name as name,
 tradestrategy.status as status,
-tradeposition.idTradePosition as idTradePosition,
+tradeposition.id_trade_position as id_trade_position,
 tradeposition.side as side,
-tradeorder.isOpenPosition  as isOpenPosition,
+tradeorder.is_open_position  as is_open_position,
 tradeorder.action as action,
-tradeorder.stopPrice as stopPrice,
-tradeorder.status as orderStatus,
-tradeorder.filledDate as filledDate,
+tradeorder.stop_price as stop_price,
+tradeorder.status as order_status,
+tradeorder.filled_date as filled_date,
 ((if(tradeorder.action = 'BUY',  1 , -1)) * tradeorder.quantity) as quantity,
-tradeorder.averageFilledPrice as averageFilledPrice,
+tradeorder.average_filled_price as average_filled_price,
 ifnull(tradeorder.commission,0)  as commission,
-tradeposition.totalNetValue as profitLoss
+tradeposition.total_net_value as profit_loss
 from 
 contract
-left outer join tradeposition  on contract.idContract = tradeposition.idContract
-left outer join tradeorder  on tradeposition.idTradePosition = tradeorder.idTradePosition
-inner join tradestrategy on tradestrategy.idTradestrategy = tradeorder.idTradestrategy
-inner join tradingday on tradestrategy.idTradingday = tradingday.idTradingday
-inner join strategy on tradestrategy.idStrategy = strategy.idStrategy
-inner join portfolio on tradestrategy.idPortfolio = portfolio.idPortfolio
+left outer join tradeposition  on contract.id = tradeposition.id_contract
+left outer join tradeorder  on tradeposition.id = tradeorder.id_trade_position
+inner join tradestrategy on tradestrategy.id = tradeorder.id_tradestrategy
+inner join tradingday on tradestrategy.id_tradingday = tradingday.id
+inner join strategy on tradestrategy.id_strategy = strategy.id
+inner join portfolio on tradestrategy.id_portfolio = portfolio.id
 where tradestrategy.trade = 1
-and tradeposition.openQuantity = 0
-and (0 = :filter and  tradeorder.isFilled = 1)
+and tradeposition.open_quantity = 0
+and (0 = :filter and  tradeorder.is_filled = 1)
 and (isnull(:symbol) or contract.symbol = :symbol)
-and tradeposition.positionCloseDate between :start and :end
-and portfolio.idPortfolio = :idPortfolio
+and tradeposition.position_close_date between :start and :end
+and portfolio.id = :id_portfolio
 union all
 select
-'Total' as sortCol,
+'Total' as sort_col,
 date_format(tradingday.open, '%Y/%m/%d') as open,
 contract.symbol as symbol,
-tradestrategy.idTradeStrategy as idTradeStrategy,
-tradestrategy.side as longShort,
+tradestrategy.id as id_trade_strategy,
+tradestrategy.side as long_sort,
 tradestrategy.tier as tier,
-tradingday.marketBias as marketBias,
-tradingday.marketBar as marketBar,
+tradingday.market_bias as market_bias,
+tradingday.market_bar as market_bar,
 strategy.name as name,
 tradestrategy.status as status,
-tradeposition.idTradePosition as idTradePosition,
+tradeposition.id as id_trade_position,
 "" as side,
-"" as isOpenPosition,
+"" as is_open_position,
 "" as action,
-"" as stopPrice,
-"" as orderStatus,
-null as filledDate,
-sum((if( tradeorder.action = 'BUY',  1 , -1)) * (if(tradeorder.isFilled =1, 1, 0))* tradeorder.quantity) as quantity,
-(sum((if( tradeorder.action = 'BUY',  -1 , 1))* (if(tradeorder.isFilled =1, 1, 0)) * tradeorder.averageFilledPrice  * tradeorder.quantity)/sum(((tradeorder.quantity/2)* (if(tradeorder.isFilled =1, 1, 0))))) as averageFilledPrice,
+"" as stop_price,
+"" as order_status,
+null as filled_date,
+sum((if( tradeorder.action = 'BUY',  1 , -1)) * (if(tradeorder.is_filled =1, 1, 0))* tradeorder.quantity) as quantity,
+(sum((if( tradeorder.action = 'BUY',  -1 , 1))* (if(tradeorder.is_filled =1, 1, 0)) * tradeorder.average_filled_price  * tradeorder.quantity)/sum(((tradeorder.quantity/2)* (if(tradeorder.is_filled =1, 1, 0))))) as average_filled_price,
 sum(ifnull(tradeorder.commission,0)) as commission,
-(sum((if( tradeorder.action = 'BUY',  -1 , 1))* (if(tradeorder.isFilled =1, 1, 0)) * tradeorder.averageFilledPrice * tradeorder.quantity) - sum(ifnull(tradeorder.commission,0)))as profitLoss
+(sum((if( tradeorder.action = 'BUY',  -1 , 1))* (if(tradeorder.is_filled =1, 1, 0)) * tradeorder.average_filled_price * tradeorder.quantity) - sum(ifnull(tradeorder.commission,0)))as profit_loss
 from
 contract
-left outer join tradeposition  on contract.idContract = tradeposition.idContract
-left outer join tradeorder  on tradeposition.idTradePosition = tradeorder.idTradePosition
-inner join tradestrategy on tradestrategy.idTradestrategy = tradeorder.idTradestrategy
-inner join tradingday on tradestrategy.idTradingday = tradingday.idTradingday
-inner join strategy on tradestrategy.idStrategy = strategy.idStrategy
-inner join portfolio on tradestrategy.idPortfolio = portfolio.idPortfolio
+left outer join tradeposition  on contract.id = tradeposition.id_contract
+left outer join tradeorder  on tradeposition.id = tradeorder.id_trade_position
+inner join tradestrategy on tradestrategy.id = tradeorder.id_tradestrategy
+inner join tradingday on tradestrategy.id_tradingday = tradingday.id
+inner join strategy on tradestrategy.id_strategy = strategy.id
+inner join portfolio on tradestrategy.id_portfolio = portfolio.id
 where tradestrategy.trade = 1
-and tradeposition.openQuantity = 0
-and (0 = :filter and tradeorder.isFilled = 1)
+and tradeposition.open_quantity = 0
+and (0 = :filter and tradeorder.is_filled = 1)
 and (isnull(:symbol) or contract.symbol = :symbol)
-and tradeposition.positionCloseDate between :start and :end
-and portfolio.idPortfolio = :idPortfolio
+and tradeposition.position_close_date between :start and :end
+and portfolio.id = :id_portfolio
 group by
 contract.symbol,
-tradeposition.idTradePosition
+tradeposition.id
 union all
 select
-'A' as sortCol,
+'A' as sort_col,
 date_format(tradingday.open, '%Y/%m/%d') as open,
 contract.symbol as symbol,
-tradestrategy.idTradeStrategy as idTradeStrategy,
-tradestrategy.side as longShort,
+tradestrategy.id as id_trade_strategy,
+tradestrategy.side as long_sort,
 tradestrategy.tier as tier,
-tradingday.marketBias as marketBias,
-tradingday.marketBar as marketBar,
+tradingday.market_bias as market_bias,
+tradingday.market_bar as market_bar,
 strategy.name as name,
 tradestrategy.status as status,
-tradestrategy.idTradestrategy as idTradePosition,
+tradestrategy.id as id_trade_position,
 "" as side,
-1 as isOpenPosition,
+1 as is_open_position,
 "" as action,
-"" as stopPrice,
-"" as orderStatus,
-null as filledDate,
+"" as stop_price,
+"" as order_status,
+null as filled_date,
 "" as quantity,
-"" as averageFilledPrice,
+"" as average_filled_price,
 "" as commission,
-"" as profitLoss
+"" as profit_loss
 from
 tradestrategy
-inner join contract on contract.idContract = tradestrategy.idContract
-inner join tradingday on tradestrategy.idTradingday = tradingday.idTradingday
-inner join strategy on tradestrategy.idStrategy = strategy.idStrategy
-inner join portfolio on tradestrategy.idPortfolio = portfolio.idPortfolio
+inner join contract on contract.id = tradestrategy.id_contract
+inner join tradingday on tradestrategy.id_tradingday = tradingday.id
+inner join strategy on tradestrategy.id_strategy = strategy.id
+inner join portfolio on tradestrategy.id_portfolio = portfolio.id
 where tradestrategy.trade = 1
-and tradestrategy.idTradestrategy not in (select tradeorder.idTradestrategy
-from tradeorder where tradeorder.idTradestrategy = tradestrategy.idTradestrategy
-and tradeorder.isFilled = true)
+and tradestrategy.id not in (select tradeorder.id_tradestrategy
+from tradeorder where tradeorder.id_tradestrategy = tradestrategy.id
+and tradeorder.is_filled = true)
 and (1 = :filter )
 and (isnull(:symbol) or contract.symbol = :symbol)
 and tradingday.open between :start and :end
-and portfolio.idPortfolio = :idPortfolio
+and portfolio.id = :id_portfolio
 ) as data
 order by
-data.idTradePosition desc,
+data.id_trade_position desc,
 data.symbol asc,
-data.sortCol asc,
+data.sort_col asc,
 data.open asc,
-data.isOpenPosition desc,
-data.filledDate asc
+data.is_open_position desc,
+data.filled_date asc
