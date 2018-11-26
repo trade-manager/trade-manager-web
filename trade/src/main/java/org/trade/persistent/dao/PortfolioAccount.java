@@ -76,7 +76,7 @@ public class PortfolioAccount extends Aspect implements java.io.Serializable {
 	 */
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "idPortfolioAccount", unique = true, nullable = false)
+	@Column(name = "id", unique = true, nullable = false)
 	public Integer getIdPortfolioAccount() {
 		return this.id;
 	}
@@ -97,7 +97,7 @@ public class PortfolioAccount extends Aspect implements java.io.Serializable {
 	 * @return Portfolio
 	 */
 	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH })
-	@JoinColumn(name = "idPortfolio", nullable = false)
+	@JoinColumn(name = "id_portfolio", nullable = false)
 	public Portfolio getPortfolio() {
 		return this.portfolio;
 	}
@@ -118,7 +118,7 @@ public class PortfolioAccount extends Aspect implements java.io.Serializable {
 	 * @return Account
 	 */
 	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH })
-	@JoinColumn(name = "idAccount", nullable = false)
+	@JoinColumn(name = "id_account", nullable = false)
 	public Account getAccount() {
 		return this.account;
 	}

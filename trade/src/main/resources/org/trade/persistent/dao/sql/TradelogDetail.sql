@@ -1,9 +1,9 @@
 select
-cast(rand()*1000000000 as unsigned integer) as idTradelogDetail,
-data.sortCol,
+cast(rand()*1000000000 as unsigned integer) as id,
+data.sort_col,
 if(data.sortCol = 'Total' , 'Total', data.open) as open,
 if(data.sortCol = 'Total' , data.symbol, if(data.isOpenPosition is null,data.symbol ,if(data.isOpenPosition = 1, data.symbol,  if(data.idTradePosition is null,data.symbol, null))))   as symbol,
-data.idTradeStrategy as idTradeStrategy,
+data.idTradeStrategy as id_trade_strategy,
 if(data.sortCol = 'Total' , null, if(data.isOpenPosition is null,data.longShort ,if(data.isOpenPosition = 1, data.longShort,  if(data.idTradePosition is null,data.longShort, null))))  as longShort,
 if(data.sortCol = 'Total' , null, if(data.isOpenPosition is null,data.tier ,if(data.isOpenPosition = 1, data.tier, if(data.idTradePosition is null, data.tier, null))))  as tier,
 if(data.sortCol = 'Total' , null, if(data.isOpenPosition is null,data.marketBias ,if(data.isOpenPosition = 1, data.marketBias, if(data.idTradePosition is null, data.marketBias, null)))) as marketBias,

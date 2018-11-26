@@ -140,7 +140,7 @@ public class Tradingday extends Aspect implements Serializable, Cloneable {
 	 */
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "idTradingDay", unique = true, nullable = false)
+	@Column(name = "id", unique = true, nullable = false)
 	public Integer getIdTradingDay() {
 		return this.id;
 	}
@@ -200,7 +200,7 @@ public class Tradingday extends Aspect implements Serializable, Cloneable {
 	 * 
 	 * @return String
 	 */
-	@Column(name = "marketBias", length = 10)
+	@Column(name = "market_bias", length = 10)
 	public String getMarketBias() {
 		return this.marketBias;
 	}
@@ -220,7 +220,7 @@ public class Tradingday extends Aspect implements Serializable, Cloneable {
 	 * 
 	 * @return String
 	 */
-	@Column(name = "marketGap", length = 10)
+	@Column(name = "market_gap", length = 10)
 	public String getMarketGap() {
 		return this.marketGap;
 	}
@@ -240,7 +240,7 @@ public class Tradingday extends Aspect implements Serializable, Cloneable {
 	 * 
 	 * @return String
 	 */
-	@Column(name = "marketBar", length = 10)
+	@Column(name = "market_bar", length = 10)
 	public String getMarketBar() {
 		return this.marketBar;
 	}

@@ -100,7 +100,7 @@ public class Portfolio extends Aspect implements Serializable, Cloneable {
 	 */
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "idPortfolio", unique = true, nullable = false)
+	@Column(name = "id", unique = true, nullable = false)
 	public Integer getIdPortfolio() {
 		return this.id;
 	}
@@ -160,7 +160,7 @@ public class Portfolio extends Aspect implements Serializable, Cloneable {
 	 * 
 	 * @return String
 	 */
-	@Column(name = "allocationMethod", nullable = false, length = 20)
+	@Column(name = "allocation_method", nullable = false, length = 20)
 	public String getAllocationMethod() {
 		return this.allocationMethod;
 	}
@@ -200,7 +200,7 @@ public class Portfolio extends Aspect implements Serializable, Cloneable {
 	 * 
 	 * @return Boolean
 	 */
-	@Column(name = "isDefault", nullable = false)
+	@Column(name = "is_default", nullable = false)
 	public Boolean getIsDefault() {
 		return this.isDefault;
 	}
@@ -220,7 +220,7 @@ public class Portfolio extends Aspect implements Serializable, Cloneable {
 	 * 
 	 * @return ZonedDateTime
 	 */
-	@Column(name = "lastUpdateDate", nullable = false)
+	@Column(name = "last_update_date", nullable = false)
 	public ZonedDateTime getLastUpdateDate() {
 		return this.lastUpdateDate;
 	}

@@ -155,7 +155,7 @@ public class TradelogDetail extends Aspect implements java.io.Serializable {
 	 * @return Integer
 	 */
 	@Id
-	@Column(name = "idTradelogDetail")
+	@Column(name = "id")
 	public Integer getIdTradelogDetail() {
 		return this.id;
 	}
@@ -175,7 +175,7 @@ public class TradelogDetail extends Aspect implements java.io.Serializable {
 	 * 
 	 * @return Integer
 	 */
-	@Column(name = "idTradestrategy")
+	@Column(name = "id_tradestrategy")
 	public Integer getIdTradestrategy() {
 		return this.idTradestrategy;
 	}
@@ -215,7 +215,7 @@ public class TradelogDetail extends Aspect implements java.io.Serializable {
 	 * 
 	 * @return String
 	 */
-	@Column(name = "marketBias", length = 10)
+	@Column(name = "market_bias", length = 10)
 	public String getMarketBias() {
 		return this.marketBias;
 	}
@@ -235,7 +235,7 @@ public class TradelogDetail extends Aspect implements java.io.Serializable {
 	 * 
 	 * @return String
 	 */
-	@Column(name = "marketBar", length = 10)
+	@Column(name = "market_bar", length = 10)
 	public String getMarketBar() {
 		return this.marketBar;
 	}
@@ -295,7 +295,7 @@ public class TradelogDetail extends Aspect implements java.io.Serializable {
 	 * 
 	 * @return String
 	 */
-	@Column(name = "longShort", length = 6)
+	@Column(name = "long_short", length = 6)
 	public String getLongShort() {
 		return this.longShort;
 	}
@@ -395,7 +395,7 @@ public class TradelogDetail extends Aspect implements java.io.Serializable {
 	 * 
 	 * @return BigDecimal
 	 */
-	@Column(name = "stopPrice", precision = 10)
+	@Column(name = "stop_price", precision = 10)
 	public BigDecimal getStopPrice() {
 		return this.stopPrice;
 	}
@@ -415,7 +415,7 @@ public class TradelogDetail extends Aspect implements java.io.Serializable {
 	 * 
 	 * @return String
 	 */
-	@Column(name = "orderStatus", length = 45)
+	@Column(name = "order_status", length = 45)
 	public String getOrderStatus() {
 		return this.orderStatus;
 	}
@@ -435,7 +435,7 @@ public class TradelogDetail extends Aspect implements java.io.Serializable {
 	 * 
 	 * @return ZonedDateTime
 	 */
-	@Column(name = "filledDate")
+	@Column(name = "filled_date")
 	public ZonedDateTime getFilledDate() {
 		return this.filledDate;
 	}
@@ -475,7 +475,7 @@ public class TradelogDetail extends Aspect implements java.io.Serializable {
 	 * 
 	 * @return BigDecimal
 	 */
-	@Column(name = "averageFilledPrice", precision = 10)
+	@Column(name = "average_filled_price", precision = 10)
 	public BigDecimal getAverageFilledPrice() {
 		return this.averageFilledPrice;
 	}
@@ -515,7 +515,7 @@ public class TradelogDetail extends Aspect implements java.io.Serializable {
 	 * 
 	 * @return BigDecimal
 	 */
-	@Column(name = "profitLoss", precision = 10)
+	@Column(name = "profit_loss", precision = 10)
 	public BigDecimal getProfitLoss() {
 		return this.profitLoss;
 	}

@@ -177,7 +177,7 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
 	 */
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "idTradeStrategy", unique = true, nullable = false)
+	@Column(name = "id", unique = true, nullable = false)
 	public Integer getIdTradeStrategy() {
 		return this.id;
 	}
@@ -197,7 +197,7 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
 	 * 
 	 * @return Integer
 	 */
-	@Column(name = "barSize")
+	@Column(name = "bar_size")
 	public Integer getBarSize() {
 		return this.barSize;
 	}
@@ -222,7 +222,7 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
 	 * 
 	 * @return Integer
 	 */
-	@Column(name = "chartDays")
+	@Column(name = "chart_days")
 	public Integer getChartDays() {
 		return this.chartDays;
 	}
@@ -275,7 +275,7 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
 	 * 
 	 * @return BigDecimal
 	 */
-	@Column(name = "riskAmount", nullable = false, precision = 10)
+	@Column(name = "risk_amount", nullable = false, precision = 10)
 	public BigDecimal getRiskAmount() {
 		return this.riskAmount;
 	}
@@ -336,7 +336,7 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
 	 * @return Contract
 	 */
 	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH })
-	@JoinColumn(name = "idContract", insertable = true, updatable = true, nullable = false)
+	@JoinColumn(name = "id_contract", insertable = true, updatable = true, nullable = false)
 	public Contract getContract() {
 		return this.contract;
 	}
@@ -357,7 +357,7 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
 	 * @return Tradingday
 	 */
 	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH })
-	@JoinColumn(name = "idTradingDay", insertable = true, updatable = true, nullable = false)
+	@JoinColumn(name = "id_trading_day", insertable = true, updatable = true, nullable = false)
 	public Tradingday getTradingday() {
 		return this.tradingday;
 	}
@@ -378,7 +378,7 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
 	 * @return Strategy
 	 */
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "idStrategy", insertable = true, updatable = true, nullable = false)
+	@JoinColumn(name = "id_strategy", insertable = true, updatable = true, nullable = false)
 	public Strategy getStrategy() {
 		return this.strategy;
 	}
@@ -399,7 +399,7 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
 	 * @return Portfolio
 	 */
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "idPortfolio", insertable = true, updatable = true, nullable = false)
+	@JoinColumn(name = "id_portfolio", insertable = true, updatable = true, nullable = false)
 	public Portfolio getPortfolio() {
 		return this.portfolio;
 	}
@@ -440,7 +440,7 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
 	 * 
 	 * @return ZonedDateTime
 	 */
-	@Column(name = "lastUpdateDate", nullable = false)
+	@Column(name = "last_update_date", nullable = false)
 	public ZonedDateTime getLastUpdateDate() {
 		return this.lastUpdateDate;
 	}

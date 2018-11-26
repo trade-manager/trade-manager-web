@@ -134,7 +134,7 @@ public class TradeOrderfill extends Aspect implements java.io.Serializable, Clon
 	 */
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "idTradeOrderFill", unique = true, nullable = false)
+	@Column(name = "id", unique = true, nullable = false)
 	public Integer getIdTradeOrderFill() {
 		return this.id;
 	}
@@ -155,7 +155,7 @@ public class TradeOrderfill extends Aspect implements java.io.Serializable, Clon
 	 * @return TradeOrder
 	 */
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "idTradeOrder", insertable = true, updatable = true, nullable = false)
+	@JoinColumn(name = "id_trade_order", insertable = true, updatable = true, nullable = false)
 	public TradeOrder getTradeOrder() {
 		return this.tradeOrder;
 	}
@@ -175,7 +175,7 @@ public class TradeOrderfill extends Aspect implements java.io.Serializable, Clon
 	 * 
 	 * @return String
 	 */
-	@Column(name = "accountNumber", length = 20)
+	@Column(name = "account_number", length = 20)
 	public String getAccountNumber() {
 		return this.accountNumber;
 	}
@@ -195,7 +195,7 @@ public class TradeOrderfill extends Aspect implements java.io.Serializable, Clon
 	 * 
 	 * @return BigDecimal
 	 */
-	@Column(name = "averagePrice", nullable = false, precision = 11)
+	@Column(name = "average_price", nullable = false, precision = 11)
 	public BigDecimal getAveragePrice() {
 		return this.averagePrice;
 	}
@@ -235,7 +235,7 @@ public class TradeOrderfill extends Aspect implements java.io.Serializable, Clon
 	 * 
 	 * @return Integer
 	 */
-	@Column(name = "cumulativeQuantity", nullable = false)
+	@Column(name = "cumulative_quantity", nullable = false)
 	public Integer getCumulativeQuantity() {
 		return this.cumulativeQuantity;
 	}
@@ -255,7 +255,7 @@ public class TradeOrderfill extends Aspect implements java.io.Serializable, Clon
 	 * 
 	 * @return String
 	 */
-	@Column(name = "execId", nullable = false, length = 45)
+	@Column(name = "exec_id", nullable = false, length = 45)
 	public String getExecId() {
 		return this.execId;
 	}
@@ -275,7 +275,7 @@ public class TradeOrderfill extends Aspect implements java.io.Serializable, Clon
 	 * 
 	 * @return String
 	 */
-	@Column(name = "orderReference", nullable = true, length = 45)
+	@Column(name = "order_reference", nullable = true, length = 45)
 	public String getOrderReference() {
 		return this.orderReference;
 	}
@@ -315,7 +315,7 @@ public class TradeOrderfill extends Aspect implements java.io.Serializable, Clon
 	 * 
 	 * @return Integer
 	 */
-	@Column(name = "permId")
+	@Column(name = "perm_id")
 	public Integer getPermId() {
 		return this.permId;
 	}
