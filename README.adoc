@@ -51,8 +51,3 @@ OR the new Spring boot Web app
 $mvnw spring-boot:run   Note WIP so not much to see yet
 
 In IntelliJ, Edit Configuration add a Maven set working dir to /web then set command line to above without mvnw.
-
-include::core/README.adoc[leveloffset=+1]
-include::trade/README.adoc[leveloffset=+1]
-include::strategies/README.adoc[leveloffset=+1]
-include::web/README.adoc[leveloffset=+1]
