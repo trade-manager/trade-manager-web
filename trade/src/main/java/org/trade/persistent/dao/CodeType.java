@@ -119,7 +119,7 @@ public class CodeType extends Aspect implements java.io.Serializable {
 	 */
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "idCodeType", unique = true, nullable = false)
+	@Column(name = "id", unique = true, nullable = false)
 	public Integer getIdCodeType() {
 		return this.id;
 	}
@@ -220,7 +220,7 @@ public class CodeType extends Aspect implements java.io.Serializable {
 	 * 
 	 * @return List<CodeAttribute>
 	 */
-	@OneToMany(mappedBy = "codeType", fetch = FetchType.EAGER, orphanRemoval = true, cascade = { CascadeType.ALL })
+	@OneToMany(mappedBy = "codetype", fetch = FetchType.EAGER, orphanRemoval = true, cascade = { CascadeType.ALL })
 	public List<CodeAttribute> getCodeAttribute() {
 		return this.codeAttributes;
 	}

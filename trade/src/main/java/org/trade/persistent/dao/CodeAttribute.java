@@ -108,7 +108,7 @@ public class CodeAttribute extends Aspect implements java.io.Serializable {
 	 */
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "idCodeAttribute", unique = true, nullable = false)
+	@Column(name = "id", unique = true, nullable = false)
 	public Integer getIdCodeAttribute() {
 		return this.id;
 	}
@@ -168,7 +168,7 @@ public class CodeAttribute extends Aspect implements java.io.Serializable {
 	 * 
 	 * @return String
 	 */
-	@Column(name = "defaultValue", nullable = true, length = 45)
+	@Column(name = "default_value", nullable = true, length = 45)
 	public String getDefaultValue() {
 		return this.defaultValue;
 	}
@@ -188,7 +188,7 @@ public class CodeAttribute extends Aspect implements java.io.Serializable {
 	 * 
 	 * @return String
 	 */
-	@Column(name = "className", nullable = false, length = 100)
+	@Column(name = "class_name", nullable = false, length = 100)
 	public String getClassName() {
 		return this.className;
 	}
@@ -208,7 +208,7 @@ public class CodeAttribute extends Aspect implements java.io.Serializable {
 	 * 
 	 * @return String
 	 */
-	@Column(name = "classEditorName", nullable = true, length = 100)
+	@Column(name = "class_editor_name", nullable = true, length = 100)
 	public String getEditorClassName() {
 		return this.classEditorName;
 	}
@@ -229,7 +229,7 @@ public class CodeAttribute extends Aspect implements java.io.Serializable {
 	 * @return CodeType
 	 */
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "idCodeType", nullable = false)
+	@JoinColumn(name = "id_code_type", nullable = false)
 	public CodeType getCodeType() {
 		return this.codeType;
 	}
@@ -249,7 +249,7 @@ public class CodeAttribute extends Aspect implements java.io.Serializable {
 	 * 
 	 * @return List<CodeValue>
 	 */
-	@OneToMany(mappedBy = "codeAttribute", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "codeattribute", fetch = FetchType.LAZY)
 	public List<CodeValue> getCodeValue() {
 		return this.codeValues;
 	}

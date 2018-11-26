@@ -173,7 +173,7 @@ public class Account extends Aspect implements Serializable, Cloneable {
 	 */
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "idAccount", unique = true, nullable = false)
+	@Column(name = "id", unique = true, nullable = false)
 	public Integer getIdAccount() {
 		return this.id;
 	}
@@ -213,7 +213,7 @@ public class Account extends Aspect implements Serializable, Cloneable {
 	 * 
 	 * @return String
 	 */
-	@Column(name = "accountNumber", unique = true, nullable = false, length = 20)
+	@Column(name = "account_number", unique = true, nullable = false, length = 20)
 	public String getAccountNumber() {
 		return this.accountNumber;
 	}
@@ -233,7 +233,7 @@ public class Account extends Aspect implements Serializable, Cloneable {
 	 * 
 	 * @return String
 	 */
-	@Column(name = "accountType", length = 20)
+	@Column(name = "account_type", length = 20)
 	public String getAccountType() {
 		return this.accountType;
 	}
@@ -293,7 +293,7 @@ public class Account extends Aspect implements Serializable, Cloneable {
 	 * 
 	 * @return BigDecimal
 	 */
-	@Column(name = "availableFunds", precision = 10)
+	@Column(name = "available_funds", precision = 10)
 	public BigDecimal getAvailableFunds() {
 		return this.availableFunds;
 	}
@@ -313,7 +313,7 @@ public class Account extends Aspect implements Serializable, Cloneable {
 	 * 
 	 * @return BigDecimal
 	 */
-	@Column(name = "buyingPower", precision = 10)
+	@Column(name = "buying_power", precision = 10)
 	public BigDecimal getBuyingPower() {
 		return this.buyingPower;
 	}
@@ -333,7 +333,7 @@ public class Account extends Aspect implements Serializable, Cloneable {
 	 * 
 	 * @return BigDecimal
 	 */
-	@Column(name = "cashBalance", precision = 10)
+	@Column(name = "cash_balance", precision = 10)
 	public BigDecimal getCashBalance() {
 		return this.cashBalance;
 	}
@@ -353,7 +353,7 @@ public class Account extends Aspect implements Serializable, Cloneable {
 	 * 
 	 * @return BigDecimal
 	 */
-	@Column(name = "grossPositionValue", precision = 10)
+	@Column(name = "gross_position_value", precision = 10)
 	public BigDecimal getGrossPositionValue() {
 		return this.grossPositionValue;
 	}
@@ -373,7 +373,7 @@ public class Account extends Aspect implements Serializable, Cloneable {
 	 * 
 	 * @return BigDecimal
 	 */
-	@Column(name = "realizedPnL", precision = 10)
+	@Column(name = "realized_pn_l", precision = 10)
 	public BigDecimal getRealizedPnL() {
 		return this.realizedPnL;
 	}
@@ -393,7 +393,7 @@ public class Account extends Aspect implements Serializable, Cloneable {
 	 * 
 	 * @return BigDecimal
 	 */
-	@Column(name = "unrealizedPnL", precision = 10)
+	@Column(name = "unrealized_pn_l", precision = 10)
 	public BigDecimal getUnrealizedPnL() {
 		return this.unrealizedPnL;
 	}
@@ -428,7 +428,7 @@ public class Account extends Aspect implements Serializable, Cloneable {
 	 * 
 	 * @return ZonedDateTime
 	 */
-	@Column(name = "lastUpdateDate", nullable = false)
+	@Column(name = "last_update_date", nullable = false)
 	public ZonedDateTime getLastUpdateDate() {
 		return this.lastUpdateDate;
 	}

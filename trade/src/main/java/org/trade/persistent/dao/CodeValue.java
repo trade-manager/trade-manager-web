@@ -126,7 +126,7 @@ public class CodeValue extends Aspect implements java.io.Serializable {
 	 */
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "idCodeValue", unique = true, nullable = false)
+	@Column(name = "id", unique = true, nullable = false)
 	public Integer getIdCodeValue() {
 		return this.id;
 	}
@@ -146,7 +146,7 @@ public class CodeValue extends Aspect implements java.io.Serializable {
 	 * 
 	 * @return String
 	 */
-	@Column(name = "codeValue", nullable = false, length = 45)
+	@Column(name = "code_value", nullable = false, length = 45)
 	public String getCodeValue() {
 		return this.codeValue;
 	}
@@ -167,7 +167,7 @@ public class CodeValue extends Aspect implements java.io.Serializable {
 	 * @return CodeAttribute
 	 */
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "idCodeAttribute", nullable = false)
+	@JoinColumn(name = "id_code_attribute", nullable = false)
 	public CodeAttribute getCodeAttribute() {
 		return this.codeAttribute;
 	}
@@ -188,7 +188,7 @@ public class CodeValue extends Aspect implements java.io.Serializable {
 	 * @return IndicatorSeries
 	 */
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "idIndicatorSeries", nullable = true)
+	@JoinColumn(name = "id_indicator_series", nullable = true)
 	public IndicatorSeries getIndicatorSeries() {
 		return this.indicatorSeries;
 	}
@@ -209,7 +209,7 @@ public class CodeValue extends Aspect implements java.io.Serializable {
 	 * @return Tradestrategy
 	 */
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "idTradeStrategy", nullable = true)
+	@JoinColumn(name = "id_trade_strategy", nullable = true)
 	public Tradestrategy getTradestrategy() {
 		return this.tradestrategy;
 	}

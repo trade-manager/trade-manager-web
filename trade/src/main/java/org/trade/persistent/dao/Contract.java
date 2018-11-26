@@ -168,7 +168,7 @@ public class Contract extends Aspect implements Serializable, Cloneable {
 	 */
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "idContract", unique = true, nullable = false)
+	@Column(name = "id", unique = true, nullable = false)
 	public Integer getIdContract() {
 		return this.id;
 	}
@@ -228,7 +228,7 @@ public class Contract extends Aspect implements Serializable, Cloneable {
 	 * 
 	 * @return String
 	 */
-	@Column(name = "comboLegDescription", nullable = false, length = 30)
+	@Column(name = "combo_leg_description", nullable = false, length = 30)
 	public String getComboLegDescription() {
 		return this.comboLegDescription;
 	}
@@ -248,7 +248,7 @@ public class Contract extends Aspect implements Serializable, Cloneable {
 	 * 
 	 * @return String
 	 */
-	@Column(name = "contractMonth", length = 6)
+	@Column(name = "contract_month", length = 6)
 	public String getContractMonth() {
 		return this.contractMonth;
 	}
@@ -268,7 +268,7 @@ public class Contract extends Aspect implements Serializable, Cloneable {
 	 * 
 	 * @return String
 	 */
-	@Column(name = "longName", length = 80)
+	@Column(name = "long_name", length = 80)
 	public String getLongName() {
 		return this.longName;
 	}
@@ -288,7 +288,7 @@ public class Contract extends Aspect implements Serializable, Cloneable {
 	 * 
 	 * @return BigDecimal
 	 */
-	@Column(name = "evMultiplier", precision = 10)
+	@Column(name = "ev_multiplier", precision = 10)
 	public BigDecimal getEvMultiplier() {
 		return this.evMultiplier;
 	}
@@ -308,7 +308,7 @@ public class Contract extends Aspect implements Serializable, Cloneable {
 	 * 
 	 * @return String
 	 */
-	@Column(name = "evRule", length = 80)
+	@Column(name = "ev_rule", length = 80)
 	public String getEvRule() {
 		return this.evRule;
 	}
@@ -368,7 +368,7 @@ public class Contract extends Aspect implements Serializable, Cloneable {
 	 * 
 	 * @return Integer
 	 */
-	@Column(name = "idContractIB")
+	@Column(name = "id_contract_IB")
 	public Integer getIdContractIB() {
 		return this.idContractIB;
 	}
@@ -388,7 +388,7 @@ public class Contract extends Aspect implements Serializable, Cloneable {
 	 * 
 	 * @return Boolean
 	 */
-	@Column(name = "includeExpired")
+	@Column(name = "include_expired")
 	public Boolean getIncludeExpired() {
 		return this.includeExpired;
 	}
@@ -428,7 +428,7 @@ public class Contract extends Aspect implements Serializable, Cloneable {
 	 * 
 	 * @return String
 	 */
-	@Column(name = "liquidHours", length = 50)
+	@Column(name = "liquid_hours", length = 50)
 	public String getLiquidHours() {
 		return this.liquidHours;
 	}
@@ -508,7 +508,7 @@ public class Contract extends Aspect implements Serializable, Cloneable {
 	 * 
 	 * @return String
 	 */
-	@Column(name = "localSymbol", length = 20)
+	@Column(name = "local_symbol", length = 20)
 	public String getLocalSymbol() {
 		return this.localSymbol;
 	}
@@ -528,7 +528,7 @@ public class Contract extends Aspect implements Serializable, Cloneable {
 	 * 
 	 * @return String
 	 */
-	@Column(name = "marketName", length = 80)
+	@Column(name = "market_name", length = 80)
 	public String getMarketName() {
 		return this.marketName;
 	}
@@ -548,7 +548,7 @@ public class Contract extends Aspect implements Serializable, Cloneable {
 	 * 
 	 * @return BigDecimal
 	 */
-	@Column(name = "minTick", precision = 10)
+	@Column(name = "min_tick", precision = 10)
 	public BigDecimal getMinTick() {
 		return this.minTick;
 	}
@@ -568,7 +568,7 @@ public class Contract extends Aspect implements Serializable, Cloneable {
 	 * 
 	 * @return String
 	 */
-	@Column(name = "orderTypes", length = 50)
+	@Column(name = "order_types", length = 50)
 	public String getOrderTypes() {
 		return this.orderTypes;
 	}
@@ -588,7 +588,7 @@ public class Contract extends Aspect implements Serializable, Cloneable {
 	 * 
 	 * @return BigDecimal
 	 */
-	@Column(name = "priceMagnifier", precision = 10)
+	@Column(name = "price_magnifier", precision = 10)
 	public BigDecimal getPriceMagnifier() {
 		return this.priceMagnifier;
 	}
@@ -608,7 +608,7 @@ public class Contract extends Aspect implements Serializable, Cloneable {
 	 * 
 	 * @return BigDecimal
 	 */
-	@Column(name = "priceMultiplier", precision = 10)
+	@Column(name = "price_multiplier", precision = 10)
 	public BigDecimal getPriceMultiplier() {
 		return this.priceMultiplier;
 	}
@@ -628,7 +628,7 @@ public class Contract extends Aspect implements Serializable, Cloneable {
 	 * 
 	 * @return String
 	 */
-	@Column(name = "primaryExchange", length = 10)
+	@Column(name = "primary_exchange", length = 10)
 	public String getPrimaryExchange() {
 		return this.primaryExchange;
 	}
@@ -648,7 +648,7 @@ public class Contract extends Aspect implements Serializable, Cloneable {
 	 * 
 	 * @return optionType
 	 */
-	@Column(name = "optionType ", length = 1)
+	@Column(name = "option_type ", length = 1)
 	public String getOptionType() {
 		return this.optionType;
 	}
@@ -688,7 +688,7 @@ public class Contract extends Aspect implements Serializable, Cloneable {
 	 * 
 	 * @return String
 	 */
-	@Column(name = "secId", length = 10)
+	@Column(name = "sec_id", length = 10)
 	public String getSecId() {
 		return this.secId;
 	}
@@ -708,7 +708,7 @@ public class Contract extends Aspect implements Serializable, Cloneable {
 	 * 
 	 * @return String
 	 */
-	@Column(name = "secIdType", length = 5)
+	@Column(name = "sec_id_type", length = 5)
 	public String getSecIdType() {
 		return this.secIdType;
 	}
@@ -728,7 +728,7 @@ public class Contract extends Aspect implements Serializable, Cloneable {
 	 * 
 	 * @return String
 	 */
-	@Column(name = "secType", nullable = false, length = 4)
+	@Column(name = "sec_type", nullable = false, length = 4)
 	public String getSecType() {
 		return this.secType;
 	}
@@ -768,7 +768,7 @@ public class Contract extends Aspect implements Serializable, Cloneable {
 	 * 
 	 * @return String
 	 */
-	@Column(name = "subCategory", length = 80)
+	@Column(name = "sub_category", length = 80)
 	public String getSubCategory() {
 		return this.subCategory;
 	}
@@ -788,7 +788,7 @@ public class Contract extends Aspect implements Serializable, Cloneable {
 	 * 
 	 * @return String
 	 */
-	@Column(name = "tradingClass", length = 80)
+	@Column(name = "trading_class", length = 80)
 	public String getTradingClass() {
 		return this.tradingClass;
 	}
@@ -808,7 +808,7 @@ public class Contract extends Aspect implements Serializable, Cloneable {
 	 * 
 	 * @return String
 	 */
-	@Column(name = "tradingHours", length = 100)
+	@Column(name = "trading_hours", length = 100)
 	public String getTradingHours() {
 		return this.tradingHours;
 	}
@@ -838,7 +838,7 @@ public class Contract extends Aspect implements Serializable, Cloneable {
 	 * 
 	 * @return String
 	 */
-	@Column(name = "timeZoneId", length = 7)
+	@Column(name = "time_zone_id", length = 7)
 	public String getTimeZoneId() {
 		return this.timeZoneId;
 	}
@@ -858,7 +858,7 @@ public class Contract extends Aspect implements Serializable, Cloneable {
 	 * 
 	 * @return Integer
 	 */
-	@Column(name = "underConId", length = 3)
+	@Column(name = "under_con_id", length = 3)
 	public Integer getUnderConId() {
 		return this.underConId;
 	}
@@ -878,7 +878,7 @@ public class Contract extends Aspect implements Serializable, Cloneable {
 	 * 
 	 * @return String
 	 */
-	@Column(name = "validExchanges", length = 200)
+	@Column(name = "valid_exchanges", length = 200)
 	public String getValidExchanges() {
 		return this.validExchanges;
 	}
@@ -962,7 +962,7 @@ public class Contract extends Aspect implements Serializable, Cloneable {
 	 * @return TradePosition
 	 */
 	@OneToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "idTradePosition", insertable = false, updatable = true, nullable = true)
+	@JoinColumn(name = "id_trade_position", insertable = false, updatable = true, nullable = true)
 	public TradePosition getTradePosition() {
 		return this.tradePosition;
 	}

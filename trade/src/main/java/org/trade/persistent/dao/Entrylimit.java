@@ -126,7 +126,7 @@ public class Entrylimit extends Aspect implements java.io.Serializable {
 	 */
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "idEntryLimit", unique = true, nullable = false)
+	@Column(name = "id", unique = true, nullable = false)
 	public Integer getIdEntryLimit() {
 		return this.id;
 	}
@@ -146,7 +146,7 @@ public class Entrylimit extends Aspect implements java.io.Serializable {
 	 * 
 	 * @return BigDecimal
 	 */
-	@Column(name = "startPrice", nullable = false, precision = 10)
+	@Column(name = "start_price", nullable = false, precision = 10)
 	public BigDecimal getStartPrice() {
 		return this.startPrice;
 	}
@@ -166,7 +166,7 @@ public class Entrylimit extends Aspect implements java.io.Serializable {
 	 * 
 	 * @return BigDecimal
 	 */
-	@Column(name = "endPrice", nullable = false, precision = 10)
+	@Column(name = "end_price", nullable = false, precision = 10)
 	public BigDecimal getEndPrice() {
 		return this.endPrice;
 	}
@@ -186,7 +186,7 @@ public class Entrylimit extends Aspect implements java.io.Serializable {
 	 * 
 	 * @return BigDecimal
 	 */
-	@Column(name = "limitAmount", nullable = false, precision = 10)
+	@Column(name = "limit_amount", nullable = false, precision = 10)
 	public BigDecimal getLimitAmount() {
 		return this.limitAmount;
 	}
@@ -206,7 +206,7 @@ public class Entrylimit extends Aspect implements java.io.Serializable {
 	 * 
 	 * @return BigDecimal
 	 */
-	@Column(name = "percentOfPrice", precision = 10)
+	@Column(name = "percent_of_price", precision = 10)
 	public BigDecimal getPercentOfPrice() {
 		return this.percentOfPrice;
 	}
@@ -226,7 +226,7 @@ public class Entrylimit extends Aspect implements java.io.Serializable {
 	 * 
 	 * @return BigDecimal
 	 */
-	@Column(name = "pivotRange", precision = 10)
+	@Column(name = "pivot_range", precision = 10)
 	public BigDecimal getPivotRange() {
 		return this.pivotRange;
 	}
@@ -246,7 +246,7 @@ public class Entrylimit extends Aspect implements java.io.Serializable {
 	 * 
 	 * @return BigDecimal
 	 */
-	@Column(name = "percentOfMargin", precision = 10)
+	@Column(name = "percent_of_margin", precision = 10)
 	public BigDecimal getPercentOfMargin() {
 		return this.percentOfMargin;
 	}
@@ -266,7 +266,7 @@ public class Entrylimit extends Aspect implements java.io.Serializable {
 	 * 
 	 * @return BigDecimal
 	 */
-	@Column(name = "priceRound", precision = 10)
+	@Column(name = "price_round", precision = 10)
 	public BigDecimal getPriceRound() {
 		return this.priceRound;
 	}
@@ -286,7 +286,7 @@ public class Entrylimit extends Aspect implements java.io.Serializable {
 	 * 
 	 * @return Integer
 	 */
-	@Column(name = "shareRound")
+	@Column(name = "share_round")
 	public Integer getShareRound() {
 		return this.shareRound;
 	}
