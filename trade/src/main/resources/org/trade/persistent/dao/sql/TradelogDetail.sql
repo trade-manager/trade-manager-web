@@ -24,14 +24,14 @@ from (select
 'A' as sort_col,
 date_format(tradingday.open, '%Y/%m/%d') as open,
 contract.symbol as symbol,
-tradestrategy.id_trade_strategy as id_trade_strategy,
+tradestrategy.id as id_trade_strategy,
 tradestrategy.side as long_sort,
 tradestrategy.tier as tier,
 tradingday.market_bias as market_bias,
 tradingday.market_bar as market_bar,
 strategy.name as name,
 tradestrategy.status as status,
-tradeposition.id_trade_position as id_trade_position,
+tradeposition.id as id_trade_position,
 tradeposition.side as side,
 tradeorder.is_open_position  as is_open_position,
 tradeorder.action as action,
@@ -47,7 +47,7 @@ contract
 left outer join tradeposition  on contract.id = tradeposition.id_contract
 left outer join tradeorder  on tradeposition.id = tradeorder.id_trade_position
 inner join tradestrategy on tradestrategy.id = tradeorder.id_tradestrategy
-inner join tradingday on tradestrategy.id_tradingday = tradingday.id
+inner join tradingday on tradestrategy.id_trading_day = tradingday.id
 inner join strategy on tradestrategy.id_strategy = strategy.id
 inner join portfolio on tradestrategy.id_portfolio = portfolio.id
 where tradestrategy.trade = 1
@@ -84,7 +84,7 @@ contract
 left outer join tradeposition  on contract.id = tradeposition.id_contract
 left outer join tradeorder  on tradeposition.id = tradeorder.id_trade_position
 inner join tradestrategy on tradestrategy.id = tradeorder.id_tradestrategy
-inner join tradingday on tradestrategy.id_tradingday = tradingday.id
+inner join tradingday on tradestrategy.id_trading_day = tradingday.id
 inner join strategy on tradestrategy.id_strategy = strategy.id
 inner join portfolio on tradestrategy.id_portfolio = portfolio.id
 where tradestrategy.trade = 1
@@ -122,7 +122,7 @@ null as filled_date,
 from
 tradestrategy
 inner join contract on contract.id = tradestrategy.id_contract
-inner join tradingday on tradestrategy.id_tradingday = tradingday.id
+inner join tradingday on tradestrategy.id_trading_day = tradingday.id
 inner join strategy on tradestrategy.id_strategy = strategy.id
 inner join portfolio on tradestrategy.id_portfolio = portfolio.id
 where tradestrategy.trade = 1
