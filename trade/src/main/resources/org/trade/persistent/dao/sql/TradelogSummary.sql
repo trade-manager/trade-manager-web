@@ -1,101 +1,102 @@
 select
-cast(rand()*1000000000 as unsigned integer) as idTradelogSummary,
+cast(rand()*1000000000 as unsigned integer) as id_tradelog_summary,
 dataAll.period as period,
-(dataAll.winCount/ (dataAll.winCount  + dataAll.lossCount)) as battingAverage,
-((dataAll.profitAmount/ dataAll.winCount)/((dataAll.lossAmount*-1)/dataAll.lossCount))  as simpleSharpeRatio,
+(dataAll.win_count/ (dataAll.win_count  + dataAll.loss_count)) as batting_average,
+((dataAll.profit_amount/ dataAll.win_count)/((dataAll.loss_amount*-1)/dataAll.loss_count))  as simple_sharpe_ratio,
 cast(dataAll.quantity as signed integer) as quantity,
 dataAll.commission as commission,
-(dataAll.profitAmount + dataAll.lossAmount) as grossProfitLoss,
-(dataAll.profitAmount + dataAll.lossAmount - dataAll.commission) as netProfitLoss,
-dataAll.profitAmount as profitAmount,
-dataAll.lossAmount as lossAmount,
-cast(dataAll.winCount as signed integer)  as winCount,
-cast(dataAll.lossCount as signed integer)  as lossCount,
-cast(dataAll.positionCount as signed integer)  as positionCount,
-cast(dataAll.tradestrategyCount as signed integer)  as tradestrategyCount
+(dataAll.profit_amount + dataAll.loss_amount) as gross_profit_loss,
+(dataAll.profit_amount + dataAll.loss_amount - dataAll.commission) as net_profit_loss,
+dataAll.profit_amount as profit_amount,
+dataAll.loss_amount as loss_amount,
+cast(dataAll.win_count as signed integer)  as win_count,
+cast(dataAll.loss_count as signed integer)  as loss_count,
+cast(dataAll.position_count as signed integer)  as position_count,
+cast(dataAll.tradestrategy_count as signed integer)  as tradestrategy_count
 from (select
 dataC.period as period,
 sum(dataC.quantity) as quantity,
 sum(dataC.commission) as commission,
-sum(dataC.profitAmount) as profitAmount,
-sum(dataC.lossAmount) as lossAmount,
-sum(dataC.winCount) as winCount,
-sum(dataC.lossCount) as lossCount,
-sum(dataC.positionCount) as positionCount,
-sum(dataC.tradestrategyCount) as tradestrategyCount
+sum(dataC.profit_amount) as profit_amount,
+sum(dataC.loss_amount) as loss_amount,
+sum(dataC.win_count) as win_count,
+sum(dataC.loss_count) as loss_count,
+sum(dataC.position_count) as position_count,
+sum(dataC.tradestrategy_count) as tradestrategy_count
 from(select
 'Total' as period,
 sum(dataA.quantity) as quantity,
 sum(dataA.commission) as commission,
-sum(dataA.profitAmount) as profitAmount,
-sum(dataA.lossAmount) as lossAmount,
-sum(dataA.winCount) as winCount,
-sum(dataA.lossCount) as lossCount,
-sum(dataA.positionCount) as positionCount,
-sum(dataA.tradestrategyCount) as tradestrategyCount
+sum(dataA.profit_amount) as profit_amount,
+sum(dataA.loss_amount) as loss_amount,
+sum(dataA.win_count) as win_count,
+sum(dataA.loss_count) as loss_count,
+sum(dataA.position_count) as position_count,
+sum(dataA.tradestrategy_count) as tradestrategy_count
 from (select
 dataD.period as period,
-dataD.quantityTotal as quantity,
+dataD.quantity_total as quantity,
 dataD.commission as commission,
-if(dataD.quantity = 0 , dataD.profitAmount, 0) as profitAmount,
-if(dataD.quantity = 0 , dataD.lossAmount, 0) as lossAmount,
-if(dataD.quantity = 0 , dataD.winCount, 0) as winCount,
-if(dataD.quantity = 0 , dataD.lossCount, 0) as lossCount,
-dataD.positionCount as positionCount,
-dataD.tradestrategyCount as tradestrategyCount
+if(dataD.quantity = 0 , dataD.profit_amount, 0) as profit_amount,
+if(dataD.quantity = 0 , dataD.loss_amount, 0) as loss_amount,
+if(dataD.quantity = 0 , dataD.win_count, 0) as win_count,
+if(dataD.quantity = 0 , dataD.loss_count, 0) as loss_count,
+dataD.position_count as position_count,
+dataD.tradestrategy_count as tradestrategy_count
 from(select
-date_format(tradeposition.positionCloseDate , '%Y/%m') as period,
+date_format(tradeposition.position_close_date , '%Y/%m') as period,
 contract.symbol,
-tradeposition.idTradeposition,
-sum(ifnull(tradeorder.quantity,0))  as quantityTotal,
+tradeposition.id,
+sum(ifnull(tradeorder.quantity,0))  as quantity_total,
 sum((if(tradeorder.action = 'BUY',  1 , -1)) * ifnull(tradeorder.quantity,0))  as quantity,
 sum(ifnull(tradeorder.commission,0)) as commission,
-if(sum(((if(tradeorder.action = 'BUY',  -1 , 1))  * tradeorder.quantity * tradeorder.averageFilledPrice)) > 0, sum(((if( tradeorder.action = 'BUY',  -1 , 1))  * tradeorder.quantity * tradeorder.averageFilledPrice)), 0)	as profitAmount,
-if(sum(((if(tradeorder.action = 'BUY',  -1 , 1))  * tradeorder.quantity * tradeorder.averageFilledPrice)) < 0, sum(((if( tradeorder.action = 'BUY',  -1 , 1))  * tradeorder.quantity * tradeorder.averageFilledPrice)), 0)	as lossAmount,
-(if((:winLossAmount) < (sum(((if( tradeorder.action = 'BUY',  -1 , 1))  * tradeorder.quantity * tradeorder.averageFilledPrice))), 1 ,0 )) as winCount,
-(if((-1*:winLossAmount) >= (sum(((if( tradeorder.action = 'BUY',  -1 , 1))  * tradeorder.quantity * tradeorder.averageFilledPrice))), 1 ,0 )) as lossCount,
-if(ifnull(tradeposition.idTradePosition,0),1, 0) as positionCount,
-0 as tradestrategyCount
+if(sum(((if(tradeorder.action = 'BUY',  -1 , 1))  * tradeorder.quantity * tradeorder.average_filled_price)) > 0, sum(((if( tradeorder.action = 'BUY',  -1 , 1))  * tradeorder.quantity * tradeorder.average_filled_price)), 0)	as profit_amount,
+if(sum(((if(tradeorder.action = 'BUY',  -1 , 1))  * tradeorder.quantity * tradeorder.average_filled_price)) < 0, sum(((if( tradeorder.action = 'BUY',  -1 , 1))  * tradeorder.quantity * tradeorder.average_filled_price)), 0)	as loss_amount,
+(if((:win_loss_amount) < (sum(((if( tradeorder.action = 'BUY',  -1 , 1))  * tradeorder.quantity * tradeorder.average_filled_price))), 1 ,0 )) as win_count,
+(if((-1*:win_loss_amount) >= (sum(((if( tradeorder.action = 'BUY',  -1 , 1))  * tradeorder.quantity * tradeorder.average_filled_price))), 1 ,0 )) as loss_count,
+if(ifnull(tradeposition.id,0),1, 0) as position_count,
+0 as tradestrategy_count
 from contract
-left outer join tradeposition  on contract.idContract = tradeposition.idContract
-left outer join tradeorder  on tradeposition.idTradePosition = tradeorder.idTradePosition
-inner join tradestrategy on tradestrategy.idTradestrategy = tradeorder.idTradestrategy
-inner join portfolio on tradestrategy.idPortfolio = portfolio.idPortfolio
-where tradeorder.isFilled =1
-and tradeposition.openQuantity = 0
+left outer join tradeposition  on contract.id = tradeposition.id_contract
+left outer join tradeorder  on tradeposition.id = tradeorder.id_trade_position
+inner join tradestrategy on tradestrategy.id = tradeorder.id_tradestrategy
+inner join portfolio on tradestrategy.id_portfolio = portfolio.id
+where tradeorder.is_filled =1
+and tradeposition.open_quantity = 0
 and tradestrategy.trade = 1
 and (isnull(:symbol) or contract.symbol = :symbol)
-and tradeposition.positionCloseDate between :start and :end
-and portfolio.idPortfolio = :idPortfolio
+and tradeposition.position_close_date between :start and :end
+and portfolio.id = :id_portfolio
 group by
 period,
 contract.symbol,
-tradeposition.idTradeposition
+tradeposition.id
 union all
 select
 date_format(tradingday.open , '%Y/%m') as period,
 contract.symbol,
-0 as idTradePosition,
-0 as quantityTotal,
+0 as id_trade_position,
+0 as quantity_total,
 0 as quantity,
 0 as commission,
-0 as profitAmount,
-0 as lossAmount,
-0 as winCount,
-0 as lossCount,
-0 as positionCount,
-if(ifnull(tradestrategy.idTradestrategy,0),1, 0)  as tradestrategyCount
+0 as profit_amount,
+0 as loss_amount,
+0 as win_count,
+0 as loss_count,
+0 as position_count,
+if(ifnull(tradestrategy.id,0),1, 0)  as tradestrategy_count
 from tradestrategy
-inner join contract  on contract.idContract = tradestrategy.idContract
-inner join tradingday  on tradingday.idTradingday = tradestrategy.idTradingday
-inner join portfolio on tradestrategy.idPortfolio = portfolio.idPortfolio
-where tradingday.open between :start and :end
+inner join contract  on contract.id = tradestrategy.id_contract
+inner join tradingday  on tradingday.id = tradestrategy.id_trading_day
+inner join portfolio on tradestrategy.id_portfolio = portfolio.id
+where 
+tradingday.open between :start and :end
 and (isnull(:symbol) or contract.symbol = :symbol)
-and (portfolio.idPortfolio = :idPortfolio or portfolio.idPortfolio is null)
+and (portfolio.id = :id_portfolio or portfolio.id is null)
 group by
 period,
 contract.symbol,
-tradestrategy.idTradestrategy) dataD) dataA
+tradestrategy.id) dataD) dataA
 group by dataA.period) dataC
 group by
 dataC.period
@@ -104,73 +105,74 @@ select
 dataM.period as period,
 sum(dataM.quantity) as quantity,
 sum(dataM.commission) as commission,
-sum(dataM.profitAmount) as profitAmount,
-sum(dataM.lossAmount) as lossAmount,
-sum(dataM.winCount) as winCount,
-sum(dataM.lossCount) as lossCount,
-sum(dataM.positionCount) as positionCount,
-sum(dataM.tradestrategyCount) as tradestrategyCount
+sum(dataM.profit_amount) as profit_amount,
+sum(dataM.loss_amount) as loss_amount,
+sum(dataM.win_count) as win_count,
+sum(dataM.loss_count) as loss_count,
+sum(dataM.position_count) as position_count,
+sum(dataM.tradestrategy_count) as tradestrategy_count
 from (select
 dataD.period as period,
-dataD.quantityTotal as quantity,
+dataD.quantity_total as quantity,
 dataD.commission as commission,
-if(dataD.quantity = 0 , dataD.profitAmount, 0) as profitAmount,
-if(dataD.quantity = 0 , dataD.lossAmount, 0) as lossAmount,
-if(dataD.quantity = 0 , dataD.winCount, 0) as winCount,
-if(dataD.quantity = 0 , dataD.lossCount, 0) as lossCount,
-dataD.positionCount as positionCount,
-dataD.tradestrategyCount as tradestrategyCount
+if(dataD.quantity = 0 , dataD.profit_amount, 0) as profit_amount,
+if(dataD.quantity = 0 , dataD.loss_amount, 0) as loss_amount,
+if(dataD.quantity = 0 , dataD.win_count, 0) as win_count,
+if(dataD.quantity = 0 , dataD.loss_count, 0) as loss_count,
+dataD.position_count as position_count,
+dataD.tradestrategy_count as tradestrategy_count
 from(select
-date_format(tradeposition.positionCloseDate , '%Y/%m') as period,
+date_format(tradeposition.position_close_date , '%Y/%m') as period,
 contract.symbol,
-tradeposition.idTradePosition,
-sum(ifnull(tradeorder.quantity,0))  as quantityTotal,
+tradeposition.id,
+sum(ifnull(tradeorder.quantity,0))  as quantity_total,
 sum((if( tradeorder.action = 'BUY',  1 , -1)) * ifnull(tradeorder.quantity,0))  as quantity,
 sum(ifnull(tradeorder.commission,0)) as commission,
-if(sum(((if(tradeorder.action = 'BUY',  -1 , 1))  * tradeorder.quantity * tradeorder.averageFilledPrice)) > 0, sum(((if( tradeorder.action = 'BUY',  -1 , 1))  * tradeorder.quantity * tradeorder.averageFilledPrice)), 0)	as profitAmount,
-if(sum(((if(tradeorder.action = 'BUY',  -1 , 1))  * tradeorder.quantity * tradeorder.averageFilledPrice)) < 0, sum(((if( tradeorder.action = 'BUY',  -1 , 1))  * tradeorder.quantity * tradeorder.averageFilledPrice)), 0)	as lossAmount,
-(if((:winLossAmount) < (sum(((if( tradeorder.action = 'BUY',  -1 , 1))  * tradeorder.quantity * tradeorder.averageFilledPrice))), 1 ,0 )) as winCount,
-(if((-1*:winLossAmount) >= (sum(((if(tradeorder.action = 'BUY',  -1 , 1))  * tradeorder.quantity * tradeorder.averageFilledPrice))), 1 ,0 )) as lossCount,
-if(ifnull(tradeposition.idTradePosition,0),1, 0) as positionCount,
-0 as tradestrategyCount
+if(sum(((if(tradeorder.action = 'BUY',  -1 , 1))  * tradeorder.quantity * tradeorder.average_filled_price)) > 0, sum(((if( tradeorder.action = 'BUY',  -1 , 1))  * tradeorder.quantity * tradeorder.average_filled_price)), 0)	as profit_amount,
+if(sum(((if(tradeorder.action = 'BUY',  -1 , 1))  * tradeorder.quantity * tradeorder.average_filled_price)) < 0, sum(((if( tradeorder.action = 'BUY',  -1 , 1))  * tradeorder.quantity * tradeorder.average_filled_price)), 0)	as loss_amount,
+(if((:win_loss_amount) < (sum(((if( tradeorder.action = 'BUY',  -1 , 1))  * tradeorder.quantity * tradeorder.average_filled_price))), 1 ,0 )) as win_count,
+(if((-1*:win_loss_amount) >= (sum(((if(tradeorder.action = 'BUY',  -1 , 1))  * tradeorder.quantity * tradeorder.average_filled_price))), 1 ,0 )) as loss_count,
+if(ifnull(tradeposition.id,0),1, 0) as position_count,
+0 as tradestrategy_count
 from contract
-left outer join tradeposition  on contract.idContract = tradeposition.idContract
-left outer join tradeorder  on tradeposition.idTradePosition = tradeorder.idTradePosition
-inner join tradestrategy on tradestrategy.idTradestrategy = tradeorder.idTradestrategy
-inner join portfolio on tradestrategy.idPortfolio = portfolio.idPortfolio
-where tradeorder.isFilled =1
-and tradeposition.openQuantity = 0
+left outer join tradeposition  on contract.id = tradeposition.id_contract
+left outer join tradeorder  on tradeposition.id = tradeorder.id_trade_position
+inner join tradestrategy on tradestrategy.id = tradeorder.id_tradestrategy
+inner join portfolio on tradestrategy.id_portfolio = portfolio.id
+where tradeorder.is_filled =1
+and tradeposition.open_quantity = 0
 and tradestrategy.trade = 1
 and (isnull(:symbol) or contract.symbol = :symbol)
-and tradeposition.positionCloseDate between :start and :end
-and portfolio.idPortfolio = :idPortfolio
+and tradeposition.position_close_date between :start and :end
+and portfolio.id = :id_portfolio
 group by
 period,
 contract.symbol,
-tradeposition.idTradePosition
+tradeposition.id
 union all
 select date_format(tradingday.open , '%Y/%m') as period,
 contract.symbol,
-0 as idTradePosition,
-0 as quantityTotal,
+0 as id_trade_position,
+0 as quantity_total,
 0 as quantity,
 0 as commission,
-0 as profitAmount,
-0 as lossAmount,
-0 as winCount,
-0 as lossCount,
-0 as positionCount,
-if(ifnull(tradestrategy.idTradestrategy,0),1, 0)  as tradestrategyCount
+0 as profit_amount,
+0 as loss_amount,
+0 as win_count,
+0 as loss_count,
+0 as position_count,
+if(ifnull(tradestrategy.id,0),1, 0)  as tradestrategy_count
 from tradestrategy
-inner join contract  on contract.idContract = tradestrategy.idContract
-inner join tradingday  on tradingday.idTradingday = tradestrategy.idTradingday
-inner join portfolio on tradestrategy.idPortfolio = portfolio.idPortfolio
-where tradingday.open between :start and :end
+inner join contract  on contract.id = tradestrategy.id_contract
+inner join tradingday  on tradingday.id = tradestrategy.id_trading_day
+inner join portfolio on tradestrategy.id_portfolio = portfolio.id
+where 
+tradingday.open between :start and :end
 and (isnull(:symbol) or contract.symbol = :symbol)
-and (portfolio.idPortfolio = :idPortfolio or portfolio.idPortfolio is null)
+and (portfolio.id = :id_portfolio or portfolio.id is null)
 group by
 period,
 contract.symbol,
-tradestrategy.idTradestrategy) dataD) dataM
+tradestrategy.id) dataD) dataM
 group by dataM.period) dataAll
 order by dataAll.period desc
