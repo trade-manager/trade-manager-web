@@ -249,7 +249,7 @@ public class CodeAttribute extends Aspect implements java.io.Serializable {
 	 * 
 	 * @return List<CodeValue>
 	 */
-	@OneToMany(mappedBy = "codeattribute", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "codeAttribute", fetch = FetchType.LAZY)
 	public List<CodeValue> getCodeValue() {
 		return this.codeValues;
 	}
