@@ -66,7 +66,7 @@ and tradeposition.open_quantity = 0
 and tradestrategy.trade = 1
 and (isnull(:symbol) or contract.symbol = :symbol)
 and tradeposition.position_close_date between :start and :end
-and portfolio.id = :id_portfolio
+and portfolio.id = :idPortfolio
 group by
 period,
 contract.symbol,
@@ -92,7 +92,7 @@ inner join portfolio on tradestrategy.id_portfolio = portfolio.id
 where 
 tradingday.open between :start and :end
 and (isnull(:symbol) or contract.symbol = :symbol)
-and (portfolio.id = :id_portfolio or portfolio.id is null)
+and (portfolio.id = :idPortfolio or portfolio.id is null)
 group by
 period,
 contract.symbol,
@@ -144,7 +144,7 @@ and tradeposition.open_quantity = 0
 and tradestrategy.trade = 1
 and (isnull(:symbol) or contract.symbol = :symbol)
 and tradeposition.position_close_date between :start and :end
-and portfolio.id = :id_portfolio
+and portfolio.id = :idPortfolio
 group by
 period,
 contract.symbol,
@@ -169,7 +169,7 @@ inner join portfolio on tradestrategy.id_portfolio = portfolio.id
 where 
 tradingday.open between :start and :end
 and (isnull(:symbol) or contract.symbol = :symbol)
-and (portfolio.id = :id_portfolio or portfolio.id is null)
+and (portfolio.id = :idPortfolio or portfolio.id is null)
 group by
 period,
 contract.symbol,

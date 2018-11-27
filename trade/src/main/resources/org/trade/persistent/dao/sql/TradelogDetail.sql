@@ -55,7 +55,7 @@ and tradeposition.open_quantity = 0
 and (0 = :filter and  tradeorder.is_filled = 1)
 and (isnull(:symbol) or contract.symbol = :symbol)
 and tradeposition.position_close_date between :start and :end
-and portfolio.id = :id_portfolio
+and portfolio.id = :idPortfolio
 union all
 select
 'Total' as sort_col,
@@ -92,7 +92,7 @@ and tradeposition.open_quantity = 0
 and (0 = :filter and tradeorder.is_filled = 1)
 and (isnull(:symbol) or contract.symbol = :symbol)
 and tradeposition.position_close_date between :start and :end
-and portfolio.id = :id_portfolio
+and portfolio.id = :idPortfolio
 group by
 contract.symbol,
 tradeposition.id
@@ -132,7 +132,7 @@ and tradeorder.is_filled = true)
 and (1 = :filter )
 and (isnull(:symbol) or contract.symbol = :symbol)
 and tradingday.open between :start and :end
-and portfolio.id = :id_portfolio
+and portfolio.id = :idPortfolio
 ) as data
 order by
 data.id_trade_position desc,
