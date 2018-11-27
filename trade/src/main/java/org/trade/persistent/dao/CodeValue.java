@@ -209,7 +209,7 @@ public class CodeValue extends Aspect implements java.io.Serializable {
 	 * @return Tradestrategy
 	 */
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "id_trade_strategy", nullable = true)
+	@JoinColumn(name = "id_tradestrategy", nullable = true)
 	public Tradestrategy getTradestrategy() {
 		return this.tradestrategy;
 	}

@@ -242,7 +242,7 @@ public class Candle extends Aspect implements java.io.Serializable {
 	 * @return Tradingday
 	 */
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "id_tradingday", nullable = false)
+	@JoinColumn(name = "id_trading_day", nullable = false)
 	public Tradingday getTradingday() {
 		return this.tradingday;
 	}

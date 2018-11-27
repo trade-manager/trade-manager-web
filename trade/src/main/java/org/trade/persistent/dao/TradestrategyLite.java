@@ -102,8 +102,8 @@ public class TradestrategyLite extends Aspect implements Serializable {
 	 * @param idTradeStrategy
 	 *            Integer
 	 */
-	public void setIdTradeStrategy(Integer idTradeStrategy) {
-		this.id = idTradeStrategy;
+	public void setIdTradeStrategy(Integer id) {
+		this.id = id;
 	}
 
 	/**

@@ -552,12 +552,12 @@ CREATE  TABLE IF NOT EXISTS codevalue (
   version INT NULL,
   id_code_attribute INT NOT NULL ,
   id_indicator_series INT NULL ,
-  id_trade_strategy INT NULL ,
+  id_tradestrategy INT NULL ,
   PRIMARY KEY (id) ,
   INDEX codeValue_codeattribute_idx (id_code_attribute ASC) ,
   INDEX codeValue_indicatorseries_idx (id_indicator_series ASC) ,
-  INDEX codeValue_tradestrategy_idx (id_trade_strategy ASC) ,
-  UNIQUE INDEX codeValue_tradestrategy_codeattribute_uq (id_code_attribute ASC, id_trade_strategy ASC),
+  INDEX codeValue_tradestrategy_idx (id_tradestrategy ASC) ,
+  UNIQUE INDEX codeValue_tradestrategy_codeattribute_uq (id_code_attribute ASC, id_tradestrategy ASC),
   UNIQUE INDEX codeValue_indicatorseries_codeattribute_uq (id_indicator_series ASC, id_code_attribute ASC),
   CONSTRAINT codeValue_codeattribute_fk
     FOREIGN KEY (id_code_attribute )
@@ -570,7 +570,7 @@ CREATE  TABLE IF NOT EXISTS codevalue (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
    CONSTRAINT codevalue_tradestrategy_fk
-    FOREIGN KEY (id_trade_strategy )
+    FOREIGN KEY (id_tradestrategy )
     REFERENCES tradestrategy (id )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)

@@ -86,7 +86,7 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
 
 	private TradePosition tradePosition;
 	private Tradestrategy tradestrategy;
-	private TradestrategyLite tradestrategyId;
+	private TradestrategyLite tradestrategyLite;
 	@NotNull
 	private String action;
 	private String accountNumber;
@@ -382,7 +382,7 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
 	 * @return Tradestrategy
 	 */
 	@ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH})
-	@JoinColumn(name = "id_trade_strategy", insertable = true, updatable = true, nullable = false)
+	@JoinColumn(name = "id_tradestrategy", insertable = true, updatable = true, nullable = false)
 	public Tradestrategy getTradestrategy() {
 		return this.tradestrategy;
 	}
@@ -402,9 +402,9 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
 	 * @return tradestrategyId
 	 */
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "id_trade_strategy", insertable = false, updatable = false, nullable = false)
+	@JoinColumn(name = "id_tradestrategy", insertable = false, updatable = false, nullable = false)
 	public TradestrategyLite getTradestrategyId() {
-		return this.tradestrategyId;
+		return this.tradestrategyLite;
 	}
 
 	/**
@@ -413,7 +413,7 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
 	 * @param tradestrategyId TradestrategyId
 	 */
 	public void setTradestrategyId(TradestrategyLite tradestrategyId) {
-		this.tradestrategyId = tradestrategyId;
+		this.tradestrategyLite = tradestrategyId;
 	}
 
 	/**

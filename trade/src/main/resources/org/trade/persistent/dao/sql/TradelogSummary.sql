@@ -52,8 +52,8 @@ sum((if(tradeorder.action = 'BUY',  1 , -1)) * ifnull(tradeorder.quantity,0))  a
 sum(ifnull(tradeorder.commission,0)) as commission,
 if(sum(((if(tradeorder.action = 'BUY',  -1 , 1))  * tradeorder.quantity * tradeorder.average_filled_price)) > 0, sum(((if( tradeorder.action = 'BUY',  -1 , 1))  * tradeorder.quantity * tradeorder.average_filled_price)), 0)	as profit_amount,
 if(sum(((if(tradeorder.action = 'BUY',  -1 , 1))  * tradeorder.quantity * tradeorder.average_filled_price)) < 0, sum(((if( tradeorder.action = 'BUY',  -1 , 1))  * tradeorder.quantity * tradeorder.average_filled_price)), 0)	as loss_amount,
-(if((:win_loss_amount) < (sum(((if( tradeorder.action = 'BUY',  -1 , 1))  * tradeorder.quantity * tradeorder.average_filled_price))), 1 ,0 )) as win_count,
-(if((-1*:win_loss_amount) >= (sum(((if( tradeorder.action = 'BUY',  -1 , 1))  * tradeorder.quantity * tradeorder.average_filled_price))), 1 ,0 )) as loss_count,
+(if((:winLossAmount) < (sum(((if( tradeorder.action = 'BUY',  -1 , 1))  * tradeorder.quantity * tradeorder.average_filled_price))), 1 ,0 )) as win_count,
+(if((-1*:winLossAmount) >= (sum(((if( tradeorder.action = 'BUY',  -1 , 1))  * tradeorder.quantity * tradeorder.average_filled_price))), 1 ,0 )) as loss_count,
 if(ifnull(tradeposition.id,0),1, 0) as position_count,
 0 as tradestrategy_count
 from contract
@@ -130,8 +130,8 @@ sum((if( tradeorder.action = 'BUY',  1 , -1)) * ifnull(tradeorder.quantity,0))  
 sum(ifnull(tradeorder.commission,0)) as commission,
 if(sum(((if(tradeorder.action = 'BUY',  -1 , 1))  * tradeorder.quantity * tradeorder.average_filled_price)) > 0, sum(((if( tradeorder.action = 'BUY',  -1 , 1))  * tradeorder.quantity * tradeorder.average_filled_price)), 0)	as profit_amount,
 if(sum(((if(tradeorder.action = 'BUY',  -1 , 1))  * tradeorder.quantity * tradeorder.average_filled_price)) < 0, sum(((if( tradeorder.action = 'BUY',  -1 , 1))  * tradeorder.quantity * tradeorder.average_filled_price)), 0)	as loss_amount,
-(if((:win_loss_amount) < (sum(((if( tradeorder.action = 'BUY',  -1 , 1))  * tradeorder.quantity * tradeorder.average_filled_price))), 1 ,0 )) as win_count,
-(if((-1*:win_loss_amount) >= (sum(((if(tradeorder.action = 'BUY',  -1 , 1))  * tradeorder.quantity * tradeorder.average_filled_price))), 1 ,0 )) as loss_count,
+(if((:winLossAmount) < (sum(((if( tradeorder.action = 'BUY',  -1 , 1))  * tradeorder.quantity * tradeorder.average_filled_price))), 1 ,0 )) as win_count,
+(if((-1*:winLossAmount) >= (sum(((if(tradeorder.action = 'BUY',  -1 , 1))  * tradeorder.quantity * tradeorder.average_filled_price))), 1 ,0 )) as loss_count,
 if(ifnull(tradeposition.id,0),1, 0) as position_count,
 0 as tradestrategy_count
 from contract
