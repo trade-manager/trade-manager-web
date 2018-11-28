@@ -40,6 +40,7 @@ import static org.junit.Assert.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.swing.Timer;
