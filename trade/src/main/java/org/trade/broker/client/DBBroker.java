@@ -313,7 +313,7 @@ public class DBBroker extends Broker {
 		// Free some memory!!
 		this.tradestrategy.setStrategyData(null);
 		_log.debug("BackTestBroker done for: " + tradestrategy.getContract().getSymbol() + " idTradestrategy: "
-				+ this.tradestrategy.getIdTradeStrategy());
+				+ this.tradestrategy.getId());
 	}
 
 	/**
@@ -693,7 +693,7 @@ public class DBBroker extends Broker {
 				childTradestrategy.setDirty(false);
 
 				List<Candle> indicatorCandles = this.tradePersistentModel.findCandlesByContractDateRangeBarSize(
-						childTradestrategy.getContract().getIdContract(), startDate, endDate,
+						childTradestrategy.getContract().getId(), startDate, endDate,
 						childTradestrategy.getBarSize());
 				if (indicatorCandles.isEmpty()) {
 					_log.warn("No data available for " + childTradestrategy.getContract().getSymbol()
@@ -747,7 +747,7 @@ public class DBBroker extends Broker {
 				if ((Math.floor(
 						tradestrategy.getBarSize() / (double) size) == (tradestrategy.getBarSize() / (double) size))) {
 					candles = tradePersistentModel.findCandlesByContractDateRangeBarSize(
-							tradestrategy.getContract().getIdContract(), startDate, endDate, size);
+							tradestrategy.getContract().getId(), startDate, endDate, size);
 					if (!candles.isEmpty()) {
 						break;
 					}

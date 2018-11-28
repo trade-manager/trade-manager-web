@@ -134,25 +134,25 @@ public class Tradingday extends Aspect implements Serializable, Cloneable {
 	}
 
 	/**
-	 * Method getIdTradingDay.
+	 * Method getId.
 	 * 
 	 * @return Integer
 	 */
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "id", unique = true, nullable = false)
-	public Integer getIdTradingDay() {
+	public Integer getId() {
 		return this.id;
 	}
 
 	/**
-	 * Method setIdTradingDay.
+	 * Method setId.
 	 * 
-	 * @param idTradingDay
+	 * @param id
 	 *            Integer
 	 */
-	public void setIdTradingDay(Integer idTradingDay) {
-		this.id = idTradingDay;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	/**
@@ -282,7 +282,7 @@ public class Tradingday extends Aspect implements Serializable, Cloneable {
 	 * @return List<Tradestrategy>
 	 */
 	@OneToMany(mappedBy = "tradingday", fetch = FetchType.EAGER, cascade = { CascadeType.REFRESH })
-	@OrderBy("side ASC, idTradeStrategy ASC")
+	@OrderBy("side ASC, id ASC")
 	public List<Tradestrategy> getTradestrategies() {
 		return this.tradestrategies;
 	}

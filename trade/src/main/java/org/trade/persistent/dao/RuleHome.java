@@ -105,7 +105,7 @@ public class RuleHome {
 			List<Predicate> predicates = new ArrayList<Predicate>();
 			if (null != strategy) {
 				Join<Rule, Strategy> strategies = from.join("strategy");
-				Predicate predicate = builder.equal(strategies.get("idStrategy"), strategy.getIdStrategy());
+				Predicate predicate = builder.equal(strategies.get("id"), strategy.getId());
 				predicates.add(predicate);
 			}
 			query.where(predicates.toArray(new Predicate[] {}));

@@ -120,25 +120,25 @@ public class CodeValue extends Aspect implements java.io.Serializable {
 	}
 
 	/**
-	 * Method getIdCodeValue.
+	 * Method getId.
 	 * 
 	 * @return Integer
 	 */
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "id", unique = true, nullable = false)
-	public Integer getIdCodeValue() {
+	public Integer getId() {
 		return this.id;
 	}
 
 	/**
-	 * Method setIdCodeValue.
+	 * Method setId.
 	 * 
-	 * @param idCodeValue
+	 * @param id
 	 *            Integer
 	 */
-	public void setIdCodeValue(Integer idCodeValue) {
-		this.id = idCodeValue;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	/**

@@ -94,25 +94,25 @@ public class Portfolio extends Aspect implements Serializable, Cloneable {
 	}
 
 	/**
-	 * Method getIdPortfolio.
+	 * Method getId.
 	 * 
 	 * @return Integer
 	 */
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "id", unique = true, nullable = false)
-	public Integer getIdPortfolio() {
+	public Integer getId() {
 		return this.id;
 	}
 
 	/**
-	 * Method setIdPortfolio.
+	 * Method setId.
 	 * 
-	 * @param idPortfolio
+	 * @param id
 	 *            Integer
 	 */
-	public void setIdPortfolio(Integer idPortfolio) {
-		this.id = idPortfolio;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	/**

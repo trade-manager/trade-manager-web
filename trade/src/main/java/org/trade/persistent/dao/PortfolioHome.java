@@ -202,7 +202,7 @@ public class PortfolioHome {
 			query.select(from);
 			List<Portfolio> items = entityManager.createQuery(query).getResultList();
 			for (Portfolio item : items) {
-				if (item.getIdPortfolio().equals(defaultPortfolio.getIdPortfolio())) {
+				if (item.getId().equals(defaultPortfolio.getId())) {
 					item.setIsDefault(true);
 				} else {
 					item.setIsDefault(false);

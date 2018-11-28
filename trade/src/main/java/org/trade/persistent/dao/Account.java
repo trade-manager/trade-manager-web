@@ -167,25 +167,25 @@ public class Account extends Aspect implements Serializable, Cloneable {
 	}
 
 	/**
-	 * Method getIdAccount.
+	 * Method getId.
 	 * 
 	 * @return Integer
 	 */
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "id", unique = true, nullable = false)
-	public Integer getIdAccount() {
+	public Integer getId() {
 		return this.id;
 	}
 
 	/**
-	 * Method setIdAccount.
+	 * Method setId.
 	 * 
 	 * @param idAccount
 	 *            Integer
 	 */
-	public void setIdAccount(Integer idAccount) {
-		this.id = idAccount;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	/**

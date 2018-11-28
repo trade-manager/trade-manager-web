@@ -346,7 +346,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
             if (this.currentRule.getRule().length > 0) {
                 if ((new String(this.currentRule.getRule())).equals(getContent())) {
                     if (null != this.currentRule.getComment() && this.currentRule.getComment().equals(getComments())) {
-                        if (null != this.currentRule.getIdRule()) {
+                        if (null != this.currentRule.getId()) {
                             return;
                         }
                     }
@@ -426,7 +426,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
                     "Information", JOptionPane.YES_NO_OPTION);
             if (result == JOptionPane.YES_OPTION) {
                 for (Strategy strategy : this.strategies) {
-                    if (strategy.getIdStrategy().equals(this.currentRule.getStrategy().getIdStrategy())) {
+                    if (strategy.getId().equals(this.currentRule.getStrategy().getId())) {
                         strategy.getRules().remove(this.currentRule);
                         this.tradePersistentModel.removeAspect(this.currentRule);
                     }

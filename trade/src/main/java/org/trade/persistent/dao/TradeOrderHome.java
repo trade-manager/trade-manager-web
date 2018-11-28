@@ -70,11 +70,11 @@ public class TradeOrderHome {
 			EntityManager entityManager = EntityManagerHelper.getEntityManager();
 			entityManager.getTransaction().begin();
 			transientInstance.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
-			if (null == transientInstance.getIdTradeOrder()) {
+			if (null == transientInstance.getId()) {
 				if (null != transientInstance.getTradePosition()) {
-					if (null != transientInstance.getTradePosition().getIdTradePosition()) {
+					if (null != transientInstance.getTradePosition().getId()) {
 						entityManager.find(TradePosition.class,
-								transientInstance.getTradePosition().getIdTradePosition());
+								transientInstance.getTradePosition().getId());
 						TradePosition instance = entityManager.merge(transientInstance.getTradePosition());
 						transientInstance.setTradePosition(instance);
 					}

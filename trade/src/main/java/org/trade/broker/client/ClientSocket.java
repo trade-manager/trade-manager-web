@@ -86,7 +86,7 @@ public class ClientSocket {
 
 				if (tradestrategy.getTrade()) {
 					DBBroker backTestBroker = new DBBroker(tradestrategy.getStrategyData(),
-							tradestrategy.getIdTradeStrategy(), m_client);
+							tradestrategy.getId(), m_client);
 					m_backTestBroker.put(reqId, backTestBroker);
 					backTestBroker.execute();
 				}

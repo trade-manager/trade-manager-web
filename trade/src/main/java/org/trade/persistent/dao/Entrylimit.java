@@ -120,25 +120,25 @@ public class Entrylimit extends Aspect implements java.io.Serializable {
 	}
 
 	/**
-	 * Method getIdEntryLimit.
+	 * Method getId.
 	 * 
 	 * @return Integer
 	 */
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "id", unique = true, nullable = false)
-	public Integer getIdEntryLimit() {
+	public Integer getId() {
 		return this.id;
 	}
 
 	/**
-	 * Method setIdEntryLimit.
+	 * Method setId.
 	 * 
-	 * @param idEntryLimit
+	 * @param id
 	 *            Integer
 	 */
-	public void setIdEntryLimit(Integer idEntryLimit) {
-		this.id = idEntryLimit;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	/**

@@ -145,25 +145,25 @@ public class Strategy extends Aspect implements Serializable, Cloneable {
 	}
 
 	/**
-	 * Method getIdStrategy.
+	 * Method getId.
 	 * 
 	 * @return Integer
 	 */
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "id", unique = true, nullable = false)
-	public Integer getIdStrategy() {
+	public Integer getId() {
 		return this.id;
 	}
 
 	/**
-	 * Method setIdStrategy.
+	 * Method setId.
 	 * 
-	 * @param idStrategy
+	 * @param id
 	 *            Integer
 	 */
-	public void setIdStrategy(Integer idStrategy) {
-		this.id = idStrategy;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	/**

@@ -280,7 +280,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements BrokerCh
 
 	public void doFetch(final Tradestrategy tradestrategy) {
 		try {
-			if (null != tradestrategy.getIdTradeStrategy()) {
+			if (null != tradestrategy.getId()) {
 				int result = JOptionPane.showConfirmDialog(this.getFrame(),
 						"Do you want to save orders that did not orginate from this TM client?", "Information",
 						JOptionPane.YES_NO_OPTION);
@@ -329,7 +329,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements BrokerCh
 		} else {
 			Tradingdays tradingdays = new Tradingdays();
 			Tradingday tradingday = Tradingday.newInstance(tradestrategy.getTradingday().getOpen());
-			tradingday.setIdTradingDay(Integer.MAX_VALUE);
+			tradingday.setId(Integer.MAX_VALUE);
 			tradingday.addTradestrategy(tradestrategy);
 			tradingdays.add(tradingday);
 			runStrategy(tradingdays, true);
@@ -402,7 +402,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements BrokerCh
 			} else {
 				Tradingdays tradingdays = new Tradingdays();
 				Tradingday tradingday = Tradingday.newInstance(tradestrategy.getTradingday().getOpen());
-				tradingday.setIdTradingDay(Integer.MAX_VALUE);
+				tradingday.setId(Integer.MAX_VALUE);
 				tradingday.addTradestrategy(tradestrategy);
 				tradingdays.add(tradingday);
 				runStrategy(tradingdays, false);
@@ -514,7 +514,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements BrokerCh
 			contractPanel.doClose(tradestrategy);
 			Tradingdays tradingdays = new Tradingdays();
 			Tradingday tradingday = Tradingday.newInstance(tradestrategy.getTradingday().getOpen());
-			tradingday.setIdTradingDay(Integer.MAX_VALUE);
+			tradingday.setId(Integer.MAX_VALUE);
 			tradingday.addTradestrategy(tradestrategy);
 			tradingdays.add(tradingday);
 			runStrategy(tradingdays, false);
@@ -552,7 +552,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements BrokerCh
 					 * are still active in the broker.
 					 */
 					for (TradeOrder openOrder : openTradeOrders.values()) {
-						if (null == openOrder.getIdTradeOrder()) {
+						if (null == openOrder.getId()) {
 							// Note we use the orderReference to store the
 							// tradestrategyId.
 
@@ -637,7 +637,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements BrokerCh
 
 		try {
 			final Tradestrategy tradestrategy = m_tradingdays
-					.getTradestrategy(tradeOrder.getTradestrategyId().getIdTradeStrategy());
+					.getTradestrategy(tradeOrder.getTradestrategyId().getId());
 
 			if (null == tradestrategy) {
 				this.setStatusBarMessage("Warning position opened but Tradestrategy not found for Order Key: "
@@ -669,18 +669,18 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements BrokerCh
 				if (tradestrategy.getStrategy().hasStrategyManager()) {
 					if (!tradingdayPanel
 							.isStrategyWorkerRunning(tradestrategy.getStrategy().getStrategyManager().getClassName()
-									+ tradestrategy.getIdTradeStrategy())) {
+									+ tradestrategy.getId())) {
 						/*
 						 * Kill the worker that got us in if still running its
 						 * job is done.
 						 */
 
 						tradingdayPanel.killStrategyWorker(
-								tradestrategy.getStrategy().getClassName() + tradestrategy.getIdTradeStrategy());
+								tradestrategy.getStrategy().getClassName() + tradestrategy.getId());
 						createStrategy(tradestrategy.getStrategy().getStrategyManager().getClassName(), tradestrategy);
 					}
 				} else {
-					String key = tradestrategy.getStrategy().getClassName() + tradestrategy.getIdTradeStrategy();
+					String key = tradestrategy.getStrategy().getClassName() + tradestrategy.getId();
 					if (tradingdayPanel.isStrategyWorkerRunning(key)) {
 						StrategyRule strategy = tradingdayPanel.getStrategyWorker(key);
 						strategy.tradeOrderFilled(tradeOrder);
@@ -710,7 +710,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements BrokerCh
 				public void run() {
 					try {
 						Tradestrategy tradestrategy = m_tradingdays
-								.getTradestrategy(tradeOrder.getTradestrategyId().getIdTradeStrategy());
+								.getTradestrategy(tradeOrder.getTradestrategyId().getId());
 						if (null == tradestrategy) {
 							setStatusBarMessage(
 									"Warning position cancelled but Tradestrategy not found for Order Key: "
@@ -743,7 +743,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements BrokerCh
 				public void run() {
 					try {
 						Tradestrategy tradestrategy = m_tradingdays
-								.getTradestrategy(tradeOrder.getTradestrategyId().getIdTradeStrategy());
+								.getTradestrategy(tradeOrder.getTradestrategyId().getId());
 						if (null == tradestrategy) {
 							setStatusBarMessage(
 									"Warning position opened but Tradestrategy not found for Order Key: "
@@ -778,11 +778,11 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements BrokerCh
 					try {
 
 						TradePosition currTradePosition = m_tradePersistentModel
-								.findTradePositionById(tradePosition.getIdTradePosition());
+								.findTradePositionById(tradePosition.getId());
 						for (TradeOrder tradeOrder : currTradePosition.getTradeOrders()) {
 							Tradestrategy tradestrategy = m_tradePersistentModel
-									.findTradestrategyById(tradeOrder.getTradestrategyId().getIdTradeStrategy());
-							m_tradingdays.getTradestrategy(tradestrategy.getIdTradeStrategy())
+									.findTradestrategyById(tradeOrder.getTradestrategyId().getId());
+							m_tradingdays.getTradestrategy(tradestrategy.getId())
 									.setStatus(tradestrategy.getStatus());
 							contractPanel.doRefresh(tradestrategy);
 						}
@@ -806,11 +806,11 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements BrokerCh
 
 		try {
 			if (m_brokerModel.isConnected()) {
-				tradestrategy = m_tradePersistentModel.findTradestrategyById(tradestrategy.getIdTradeStrategy());
-				m_tradingdays.getTradestrategy(tradestrategy.getIdTradeStrategy()).setStatus(tradestrategy.getStatus());
+				tradestrategy = m_tradePersistentModel.findTradestrategyById(tradestrategy.getId());
+				m_tradingdays.getTradestrategy(tradestrategy.getId()).setStatus(tradestrategy.getStatus());
 				contractPanel.doRefresh(tradestrategy);
 			}
-			tradingdayPanel.removeStrategyWorker(strategyClassName + tradestrategy.getIdTradeStrategy());
+			tradingdayPanel.removeStrategyWorker(strategyClassName + tradestrategy.getId());
 
 		} catch (Exception ex) {
 			this.setErrorMessage("Error strategyComplete : ", ex.getMessage(), ex);
@@ -1446,12 +1446,12 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements BrokerCh
 	 */
 	public void doCloseAll(final Tradestrategy tradestrategy) {
 		try {
-			if (null == tradestrategy.getIdTradeStrategy()) {
+			if (null == tradestrategy.getId()) {
 				return;
 			}
 			TradestrategyOrders positionOrders = m_tradePersistentModel
-					.findPositionOrdersByTradestrategyId(tradestrategy.getIdTradeStrategy());
-			Tradestrategy instance = m_tradePersistentModel.findTradestrategyById(tradestrategy.getIdTradeStrategy());
+					.findPositionOrdersByTradestrategyId(tradestrategy.getId());
+			Tradestrategy instance = m_tradePersistentModel.findTradestrategyById(tradestrategy.getId());
 			for (TradeOrder order : positionOrders.getTradeOrders()) {
 				if (order.isActive()) {
 					m_brokerModel.onCancelOrder(order);
@@ -1563,7 +1563,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements BrokerCh
 			if (null == m_tradingdays.getTradingday(tradestrategy.getTradingday().getOpen(),
 					tradestrategy.getTradingday().getClose())) {
 				Tradingday tradingday = m_tradePersistentModel
-						.findTradingdayById(tradestrategy.getTradingday().getIdTradingDay());
+						.findTradingdayById(tradestrategy.getTradingday().getId());
 				m_tradingdays.add(tradingday);
 			}
 			if (tradestrategy.isDirty()) {
@@ -1688,7 +1688,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements BrokerCh
 							startDate = TradingCalendar.getPrevTradingDay(startDate);
 
 							List<Candle> candles = m_tradePersistentModel.findCandlesByContractDateRangeBarSize(
-									tradestrategy.getContract().getIdContract(), startDate, endDate,
+									tradestrategy.getContract().getId(), startDate, endDate,
 									tradestrategy.getBarSize());
 							if (!candles.isEmpty()) {
 								int result = JOptionPane.showConfirmDialog(this.getFrame(),
@@ -1775,7 +1775,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements BrokerCh
 	 */
 	private synchronized void createStrategy(String strategyClassName, Tradestrategy tradestrategy) throws Exception {
 
-		String key = strategyClassName + tradestrategy.getIdTradeStrategy();
+		String key = strategyClassName + tradestrategy.getId();
 
 		// Only allow one strategy worker per tradestrategy
 		if (tradingdayPanel.isStrategyWorkerRunning(key)) {
@@ -1788,7 +1788,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements BrokerCh
 		Vector<Object> parm = new Vector<Object>(0);
 		parm.add(m_brokerModel);
 		parm.add(tradestrategy.getStrategyData());
-		parm.add(tradestrategy.getIdTradeStrategy());
+		parm.add(tradestrategy.getId());
 
 		StrategyRule strategy = (StrategyRule) dynacode.newProxyInstance(StrategyRule.class,
 				StrategyRule.PACKAGE + strategyClassName, parm);

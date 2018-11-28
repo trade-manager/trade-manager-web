@@ -77,25 +77,25 @@ public class ContractLite extends Aspect implements Serializable, Cloneable {
 	}
 
 	/**
-	 * Method getIdContract.
+	 * Method getId.
 	 * 
 	 * @return Integer
 	 */
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "id", unique = true, nullable = false)
-	public Integer getIdContract() {
+	public Integer getId() {
 		return this.id;
 	}
 
 	/**
-	 * Method setIdContract.
+	 * Method setId.
 	 * 
-	 * @param idContract
+	 * @param id
 	 *            Integer
 	 */
-	public void setIdContract(Integer idContract) {
-		this.id = idContract;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	/**

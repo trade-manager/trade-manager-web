@@ -171,25 +171,25 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
 	}
 
 	/**
-	 * Method getIdTradeStrategy.
+	 * Method getId.
 	 * 
 	 * @return Integer
 	 */
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "id", unique = true, nullable = false)
-	public Integer getIdTradeStrategy() {
+	public Integer getId() {
 		return this.id;
 	}
 
 	/**
-	 * Method setIdTradeStrategy.
+	 * Method setId.
 	 * 
-	 * @param idTradeStrategy
+	 * @param id
 	 *            Integer
 	 */
-	public void setIdTradeStrategy(Integer idTradeStrategy) {
-		this.id = idTradeStrategy;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	/**
@@ -554,7 +554,7 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
 	public void addTradeOrder(TradeOrder tradeOrder) {
 		int index = 0;
 		for (TradeOrder currTradeOrder : this.tradeOrders) {
-			if (CoreUtils.nullSafeComparator(currTradeOrder.getIdTradeOrder(), tradeOrder.getIdTradeOrder()) == 0) {
+			if (CoreUtils.nullSafeComparator(currTradeOrder.getId(), tradeOrder.getId()) == 0) {
 				index = this.tradeOrders.indexOf(currTradeOrder);
 				break;
 			}

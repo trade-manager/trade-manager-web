@@ -215,25 +215,25 @@ public class Candle extends Aspect implements java.io.Serializable {
 	}
 
 	/**
-	 * Method getIdCandle.
+	 * Method getId.
 	 * 
 	 * @return Integer
 	 */
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "id", unique = true, nullable = false)
-	public Integer getIdCandle() {
+	public Integer getId() {
 		return this.id;
 	}
 
 	/**
-	 * Method setIdCandle.
+	 * Method setId.
 	 * 
-	 * @param idCandle
+	 * @param id
 	 *            Integer
 	 */
-	public void setIdCandle(Integer idCandle) {
-		this.id = idCandle;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	/**

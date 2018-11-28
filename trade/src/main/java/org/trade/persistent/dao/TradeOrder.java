@@ -181,7 +181,7 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
 		this.timeInForce = timeInForce;
 		this.triggerMethod = triggerMethod;
 		this.lastUpdateDate = createDate;
-		this.orderReference = this.tradestrategy.getIdTradeStrategy().toString();
+		this.orderReference = this.tradestrategy.getId().toString();
 	}
 
 	/**
@@ -325,24 +325,24 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
 	}
 
 	/**
-	 * Method getIdTradeOrder.
+	 * Method getId.
 	 *
 	 * @return Integer
 	 */
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "id", unique = true, nullable = false)
-	public Integer getIdTradeOrder() {
+	public Integer getId() {
 		return this.id;
 	}
 
 	/**
-	 * Method setIdTradeOrder.
+	 * Method setId.
 	 *
-	 * @param idTradeOrder Integer
+	 * @param id Integer
 	 */
-	public void setIdTradeOrder(Integer idTradeOrder) {
-		this.id = idTradeOrder;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	/**
@@ -1546,12 +1546,12 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
 	 * @return String
 	 */
 	public String toString() {
-		return "OrderKey: " + this.getOrderKey() + " Id: " + this.getIdTradeOrder() + " Version: " + this.getVersion()
+		return "OrderKey: " + this.getOrderKey() + " Id: " + this.getId() + " Version: " + this.getVersion()
 				+ " Action: " + this.getAction() + " Quantity: " + this.getQuantity() + " Status: " + this.getStatus()
 				+ " OrderType: " + this.getOrderType() + " AuxPrice: " + new Money(this.getAuxPrice()) + " LmtPrice: "
 				+ new Money(this.getLimitPrice()) + " Open Position: " + this.getIsOpenPosition() + " Filled: "
 				+ this.getIsFilled() + " Filled Qty: " + this.getFilledQuantity() + " Trade Id: "
-				+ this.getTradePosition().getIdTradePosition() + " Trade Version: "
+				+ this.getTradePosition().getId() + " Trade Version: "
 				+ this.getTradePosition().getVersion();
 	}
 }

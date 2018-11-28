@@ -139,7 +139,7 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
 								Tradestrategy tradestrategy = (Tradestrategy) itemTradestrategy.clone();
 								tradestrategy.setBarSize(getBarSize(tradingday));
 								tradestrategy.setChartDays(1);
-								tradestrategy.setIdTradeStrategy(this.brokerModel.getNextRequestId());
+								tradestrategy.setId(this.brokerModel.getNextRequestId());
 								tradestrategy.setStrategyData(null);
 								tradestrategy.setStrategyData(StrategyData.create(tradestrategy));
 
@@ -319,9 +319,9 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
 				CandleSeries series = candleDataset.getSeries(seriesIndex);
 				Tradestrategy indicatorTradestrategy = getIndicatorTradestrategy(tradestrategy, series);
 				candleDataset.setSeries(seriesIndex, indicatorTradestrategy.getStrategyData().getBaseCandleSeries());
-				if (!indicatorRequests.containsKey(indicatorTradestrategy.getIdTradeStrategy())) {
+				if (!indicatorRequests.containsKey(indicatorTradestrategy.getId())) {
 					if (this.brokerModel.isConnected() || this.brokerModel.isBrokerDataOnly()) {
-						indicatorRequests.put(indicatorTradestrategy.getIdTradeStrategy(), indicatorTradestrategy);
+						indicatorRequests.put(indicatorTradestrategy.getId(), indicatorTradestrategy);
 						tradingday.addTradestrategy(indicatorTradestrategy);
 						addedIndicator = true;
 					}
@@ -475,7 +475,7 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
 		}
 		if (null == indicatorTradestrategy) {
 			Contract contract = series.getContract();
-			if (null == series.getContract().getIdContract()) {
+			if (null == series.getContract().getId()) {
 				contract = this.tradePersistentModel.findContractByUniqueKey(series.getContract().getSecType(),
 						series.getContract().getSymbol(), series.getContract().getExchange(),
 						series.getContract().getCurrency(), series.getContract().getExpiry());
@@ -486,7 +486,7 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
 			indicatorTradestrategy = new Tradestrategy(contract, tradestrategy.getTradingday(),
 					new Strategy("Indicator"), tradestrategy.getPortfolio(), new BigDecimal(0), null, null, false,
 					tradestrategy.getChartDays(), tradestrategy.getBarSize());
-			indicatorTradestrategy.setIdTradeStrategy(this.brokerModel.getNextRequestId());
+			indicatorTradestrategy.setId(this.brokerModel.getNextRequestId());
 			indicatorTradestrategy.setDirty(false);
 		}
 		if (null == indicatorTradestrategy.getStrategyData()) {
@@ -589,8 +589,8 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
 
 		Collections.sort(tradingday.getTradestrategies(), Tradestrategy.TRADINGDAY_CONTRACT);
 		Tradingday reProcessTradingday = null;
-		if (runningContractRequests.containsKey(tradingday.getIdTradingDay())) {
-			reProcessTradingday = runningContractRequests.get(tradingday.getIdTradingDay());
+		if (runningContractRequests.containsKey(tradingday.getId())) {
+			reProcessTradingday = runningContractRequests.get(tradingday.getId());
 		} else {
 			reProcessTradingday = (Tradingday) tradingday.clone();
 		}
@@ -617,10 +617,10 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
 				reProcessTradingday.removeTradestrategy(tradestrategy);
 		}
 		if (reProcessTradingday.getTradestrategies().isEmpty()) {
-			runningContractRequests.remove(reProcessTradingday.getIdTradingDay());
+			runningContractRequests.remove(reProcessTradingday.getId());
 		}
 		if (!reProcessTradingday.getTradestrategies().isEmpty()) {
-			runningContractRequests.put(reProcessTradingday.getIdTradingDay(), reProcessTradingday);
+			runningContractRequests.put(reProcessTradingday.getId(), reProcessTradingday);
 		}
 		return toProcessTradingday;
 	}

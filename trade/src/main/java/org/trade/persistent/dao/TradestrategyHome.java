@@ -127,7 +127,7 @@ public class TradestrategyHome {
 			CriteriaQuery<TradestrategyLite> query = builder.createQuery(TradestrategyLite.class);
 			Root<TradestrategyLite> from = query.from(TradestrategyLite.class);
 
-			CriteriaQuery<TradestrategyLite> select = query.multiselect(from.get("idTradeStrategy"),
+			CriteriaQuery<TradestrategyLite> select = query.multiselect(from.get("id"),
 					from.get("version"));
 			Predicate predicate = builder.equal(from.get("idTradeStrategy"), id);
 			query.where(predicate);
@@ -283,7 +283,7 @@ public class TradestrategyHome {
 			}
 			if (null != idContract) {
 				Join<Tradestrategy, Contract> contract = from.join("contract");
-				Predicate predicate = builder.equal(contract.get("idContract"), idContract);
+				Predicate predicate = builder.equal(contract.get("id"), idContract);
 				predicates.add(predicate);
 			}
 			query.where(predicates.toArray(new Predicate[] {}));

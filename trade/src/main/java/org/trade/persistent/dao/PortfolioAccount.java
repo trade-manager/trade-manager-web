@@ -70,25 +70,25 @@ public class PortfolioAccount extends Aspect implements java.io.Serializable {
 	}
 
 	/**
-	 * Method getIdPortfolioAccount.
+	 * Method getId.
 	 * 
 	 * @return Integer
 	 */
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "id", unique = true, nullable = false)
-	public Integer getIdPortfolioAccount() {
+	public Integer getId() {
 		return this.id;
 	}
 
 	/**
-	 * Method setIdPortfolioAccount.
+	 * Method setId.
 	 * 
-	 * @param idPortfolioAccount
+	 * @param id
 	 *            Integer
 	 */
-	public void setIdPortfolioAccount(Integer idPortfolioAccount) {
-		this.id = idPortfolioAccount;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	/**

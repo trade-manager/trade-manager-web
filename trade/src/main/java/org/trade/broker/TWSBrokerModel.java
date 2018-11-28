@@ -29,7 +29,6 @@ import org.trade.strategy.data.candle.CandleItem;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.math.RoundingMode;
 import java.text.ParseException;
 import java.time.ZonedDateTime;
@@ -273,16 +272,16 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
                 if (addOrders)
                     clientId = 0;
 
-                Integer reqId = tradestrategy.getIdTradeStrategy();
+                Integer reqId = tradestrategy.getId();
                 m_client.reqExecutions(reqId,
                         TWSBrokerModel.getIBExecutionFilter(clientId, tradestrategy.getTradingday().getOpen(),
                                 tradestrategy.getContract().getSecType(), tradestrategy.getContract().getSymbol()));
             } else {
-                throw new BrokerModelException(tradestrategy.getIdTradeStrategy(), 3020,
+                throw new BrokerModelException(tradestrategy.getId(), 3020,
                         "Not conected to TWS historical data cannot be retrieved");
             }
         } catch (Exception ex) {
-            throw new BrokerModelException(tradestrategy.getIdTradeStrategy(), 3020,
+            throw new BrokerModelException(tradestrategy.getId(), 3020,
                     "Error request executions for symbol: " + tradestrategy.getContract().getSymbol() + " Msg: "
                             + ex.getMessage());
         }
@@ -379,7 +378,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
 
             if (m_client.isConnected()) {
                 if (this.isHistoricalDataRunning(tradestrategy)) {
-                    throw new BrokerModelException(tradestrategy.getIdTradeStrategy(), 3010,
+                    throw new BrokerModelException(tradestrategy.getId(), 3010,
                             "HistoricalData request is already in progress for: "
                                     + tradestrategy.getContract().getSymbol() + " Please wait or cancel.");
                 }

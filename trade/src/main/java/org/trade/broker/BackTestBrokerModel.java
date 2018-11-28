@@ -1577,7 +1577,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements ClientWr
 	 *            com.ib.client.Execution
 	 */
 	public static void logExecution(TradeOrderfill execution) {
-		_log.debug("execDetails OrderId: " + execution.getTradeOrder().getIdTradeOrder() + " Exchange: "
+		_log.debug("execDetails OrderId: " + execution.getTradeOrder().getId() + " Exchange: "
 				+ execution.getExchange() + " Side: " + execution.getSide() + " ExecId: " + execution.getExecId()
 				+ " Time: " + execution.getTime() + " Qty: " + execution.getQuantity() + " AveragePrice: "
 				+ execution.getAveragePrice() + " Price: " + execution.getPrice() + " CumulativeQuantity: "

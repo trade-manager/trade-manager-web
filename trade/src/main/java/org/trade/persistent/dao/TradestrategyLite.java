@@ -85,24 +85,24 @@ public class TradestrategyLite extends Aspect implements Serializable {
 	}
 
 	/**
-	 * Method getIdTradeStrategy.
+	 * Method getId.
 	 * 
 	 * @return Integer
 	 */
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "id", unique = true, nullable = false)
-	public Integer getIdTradeStrategy() {
+	public Integer getId() {
 		return this.id;
 	}
 
 	/**
-	 * Method setIdTradeStrategy.
+	 * Method setId.
 	 * 
-	 * @param idTradeStrategy
+	 * @param id
 	 *            Integer
 	 */
-	public void setIdTradeStrategy(Integer id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 

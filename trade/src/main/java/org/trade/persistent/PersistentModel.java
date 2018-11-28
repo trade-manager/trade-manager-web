@@ -504,12 +504,12 @@ public interface PersistentModel {
 	/**
 	 * Method findStrategyById.
 	 * 
-	 * @param idStrategy
+	 * @param id
 	 *            Integer
 	 * @return Strategy
 	 * @throws PersistentModelException
 	 */
-	Strategy findStrategyById(Integer idStrategy) throws PersistentModelException;
+	Strategy findStrategyById(Integer id) throws PersistentModelException;
 
 	/**
 	 * Method findStrategyByName.

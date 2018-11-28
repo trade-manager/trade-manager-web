@@ -128,25 +128,25 @@ public class TradeOrderfill extends Aspect implements java.io.Serializable, Clon
 	}
 
 	/**
-	 * Method getIdTradeOrderFill.
+	 * Method getId.
 	 * 
 	 * @return Integer
 	 */
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "id", unique = true, nullable = false)
-	public Integer getIdTradeOrderFill() {
+	public Integer getId() {
 		return this.id;
 	}
 
 	/**
-	 * Method setIdTradeOrderFill.
+	 * Method setId.
 	 * 
-	 * @param idTradeOrderFill
+	 * @param id
 	 *            Integer
 	 */
-	public void setIdTradeOrderFill(Integer idTradeOrderFill) {
-		this.id = idTradeOrderFill;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	/**
@@ -453,9 +453,9 @@ public class TradeOrderfill extends Aspect implements java.io.Serializable, Clon
 	 * @return String
 	 */
 	public String toString() {
-		return "Order Id: " + this.getTradeOrder().getIdTradeOrder() + " OrderKey: "
+		return "Order Id: " + this.getTradeOrder().getId() + " OrderKey: "
 				+ this.getTradeOrder().getOrderKey() + " Trade Order Version: " + this.getTradeOrder().getVersion()
-				+ " Order Fill Id: " + this.getIdTradeOrderFill() + " Order Fill Version: " + this.getVersion()
+				+ " Order Fill Id: " + this.getId() + " Order Fill Version: " + this.getVersion()
 				+ " Quantity: " + this.getQuantity() + " Avg Price: " + new Money(this.getAveragePrice()) + " Cum Qty: "
 				+ this.getCumulativeQuantity() + " Price: " + new Money(this.getPrice()) + " Exchange: "
 				+ this.getExchange() + " Side: " + this.getSide() + " Time: " + this.getTime();

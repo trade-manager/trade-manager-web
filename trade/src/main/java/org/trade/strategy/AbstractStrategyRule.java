@@ -454,7 +454,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
 		removeAllMessageListener();
 		this.strategyData.getBaseCandleSeries().removeChangeListener(this);
 		_log.info("Rule engine done: " + getSymbol() + " class: " + this.getClass().getSimpleName()
-				+ " idTradestrategy: " + this.tradestrategy.getIdTradeStrategy() + " Tradingday Date: "
+				+ " idTradestrategy: " + this.tradestrategy.getId() + " Tradingday Date: "
 				+ this.tradestrategy.getTradingday().getOpen());
 	}
 
@@ -754,7 +754,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
 
 		if (this.isThereOpenPosition())
 			throw new StrategyRuleException(1, 205, "Cannot create position for TradePosition Id: "
-					+ this.getOpenTradePosition().getIdTradePosition() + " as position is already open.");
+					+ this.getOpenTradePosition().getId() + " as position is already open.");
 
 		if (null == action)
 			throw new StrategyRuleException(1, 206, "Action cannot be null");

@@ -162,25 +162,25 @@ public class Contract extends Aspect implements Serializable, Cloneable {
 	}
 
 	/**
-	 * Method getIdContract.
+	 * Method getId.
 	 * 
 	 * @return Integer
 	 */
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "id", unique = true, nullable = false)
-	public Integer getIdContract() {
+	public Integer getId() {
 		return this.id;
 	}
 
 	/**
-	 * Method setIdContract.
+	 * Method setId.
 	 * 
-	 * @param idContract
+	 * @param id
 	 *            Integer
 	 */
-	public void setIdContract(Integer idContract) {
-		this.id = idContract;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	/**
@@ -1026,7 +1026,7 @@ public class Contract extends Aspect implements Serializable, Cloneable {
 	public void addTradePosition(TradePosition tradePosition) {
 		int index = 0;
 		for (TradePosition currTradePosition : this.tradePositions) {
-			if (currTradePosition.getIdTradePosition().equals(tradePosition.getIdTradePosition())) {
+			if (currTradePosition.getId().equals(tradePosition.getId())) {
 				index = this.tradePositions.indexOf(currTradePosition);
 				break;
 			}
