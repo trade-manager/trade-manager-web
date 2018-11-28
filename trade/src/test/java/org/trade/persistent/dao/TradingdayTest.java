@@ -122,8 +122,8 @@ public class TradingdayTest {
 				transientInstance = Tradingday.newInstance(open);
 			}
 			tradingdayHome.persist(transientInstance);
-			_log.info("Tradingday added Id = " + transientInstance.getIdTradingDay());
-			assertNotNull(transientInstance.getIdTradingDay());
+			_log.info("Tradingday added Id = " + transientInstance.getId());
+			assertNotNull(transientInstance.getId());
 			aspectHome.remove(transientInstance);
 		} catch (Exception | AssertionError ex) {
 			String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
@@ -152,8 +152,8 @@ public class TradingdayTest {
 			}
 			transientInstance.setMarketBar(MarketBar.newInstance("+WRB").getCode());
 			tradingdayHome.persist(transientInstance);
-			_log.info("Tradingday Update Id = " + transientInstance.getIdTradingDay());
-			assertNotNull(transientInstance.getIdTradingDay());
+			_log.info("Tradingday Update Id = " + transientInstance.getId());
+			assertNotNull(transientInstance.getId());
 			aspectHome.remove(transientInstance);
 		} catch (Exception | AssertionError ex) {
 			String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();

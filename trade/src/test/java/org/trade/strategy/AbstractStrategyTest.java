@@ -130,7 +130,7 @@ public class AbstractStrategyTest {
 			assertNotNull("1", this.tradestrategy);
 
 			this.strategyProxy = new StrategyRuleTest(m_brokerModel, this.tradestrategy.getStrategyData(),
-					this.tradestrategy.getIdTradeStrategy());
+					this.tradestrategy.getId());
 			assertNotNull("2", this.strategyProxy);
 			strategyProxy.execute();
 			try {
@@ -179,7 +179,7 @@ public class AbstractStrategyTest {
 			Vector<Object> parm = new Vector<Object>(0);
 			parm.add(m_brokerModel);
 			parm.add(this.tradestrategy.getStrategyData());
-			parm.add(this.tradestrategy.getIdTradeStrategy());
+			parm.add(this.tradestrategy.getId());
 			DynamicCode dynacode = new DynamicCode();
 			dynacode.addSourceDir(new File(m_strategyDir));
 			StrategyRule strategyProxy = (StrategyRule) dynacode.newProxyInstance(StrategyRule.class,

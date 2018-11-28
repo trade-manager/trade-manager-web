@@ -113,8 +113,8 @@ public class StrategyTest {
 				transientInstance = new Strategy(name);
 			}
 			transientInstance = aspectHome.persist(transientInstance);
-			_log.info("Strategy added Id = " + transientInstance.getIdStrategy());
-			assertNotNull("1", transientInstance.getIdStrategy());
+			_log.info("Strategy added Id = " + transientInstance.getId());
+			assertNotNull("1", transientInstance.getId());
 			aspectHome.remove(transientInstance);
 
 		} catch (Exception | AssertionError ex) {

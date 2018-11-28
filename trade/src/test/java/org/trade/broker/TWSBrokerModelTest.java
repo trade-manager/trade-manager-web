@@ -492,8 +492,8 @@ public class TWSBrokerModelTest implements BrokerChangeListener {
 
 		try {
 			_log.info("Symbol: " + tradestrategy.getContract().getSymbol() + " Candles  saved: "
-					+ tradePersistentModel.findCandleCount(tradestrategy.getTradingday().getIdTradingDay(),
-							tradestrategy.getContract().getIdContract()));
+					+ tradePersistentModel.findCandleCount(tradestrategy.getTradingday().getId(),
+							tradestrategy.getContract().getId()));
 		} catch (PersistentModelException ex) {
 			_log.error("Error historicalDataComplete Msg: " + ex.getMessage());
 		}

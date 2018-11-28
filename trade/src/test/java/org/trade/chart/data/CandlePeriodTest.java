@@ -130,7 +130,7 @@ public class CandlePeriodTest {
 					.minusDays((tradestrategy.getChartDays() - 1));
 			prevTradingday = TradingCalendar.getPrevTradingDay(prevTradingday);
 			List<Candle> candles = tradePersistentModel.findCandlesByContractDateRangeBarSize(
-					this.tradestrategy.getContract().getIdContract(), prevTradingday,
+					this.tradestrategy.getContract().getId(), prevTradingday,
 					this.tradestrategy.getTradingday().getOpen(), this.tradestrategy.getBarSize());
 			if (candles.isEmpty()) {
 				StrategyData.doDummyData(this.tradestrategy.getStrategyData().getBaseCandleSeries(),
@@ -165,7 +165,7 @@ public class CandlePeriodTest {
 					.minusDays((this.tradestrategy.getChartDays() - 1));
 			prevTradingday = TradingCalendar.getPrevTradingDay(prevTradingday);
 			List<Candle> candles = tradePersistentModel.findCandlesByContractDateRangeBarSize(
-					this.tradestrategy.getContract().getIdContract(), prevTradingday,
+					this.tradestrategy.getContract().getId(), prevTradingday,
 					this.tradestrategy.getTradingday().getOpen(), this.tradestrategy.getBarSize());
 			if (candles.isEmpty()) {
 				StrategyData.doDummyData(this.tradestrategy.getStrategyData().getBaseCandleSeries(),

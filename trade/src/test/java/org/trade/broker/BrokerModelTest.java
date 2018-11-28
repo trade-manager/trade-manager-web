@@ -210,7 +210,7 @@ public class BrokerModelTest implements BrokerChangeListener {
 
 			tradeOrder = backTestbrokerModel.onPlaceOrder(this.tradestrategy.getContract(), tradeOrder);
 
-			_log.info("IdTradeOrder: " + tradeOrder.getIdTradeOrder() + " OrderKey: " + tradeOrder.getOrderKey());
+			_log.info("IdTradeOrder: " + tradeOrder.getId() + " OrderKey: " + tradeOrder.getOrderKey());
 			assertNotNull("1", tradeOrder);
 
 		} catch (Exception | AssertionError ex) {
@@ -235,8 +235,8 @@ public class BrokerModelTest implements BrokerChangeListener {
 			tradeOrder.setStatus(OrderStatus.UNSUBMIT);
 			tradeOrder = backTestbrokerModel.onPlaceOrder(this.tradestrategy.getContract(), tradeOrder);
 
-			_log.info("IdTradeOrder: " + tradeOrder.getIdTradeOrder() + " OrderKey: " + tradeOrder.getOrderKey());
-			assertNotNull("1", tradeOrder.getIdTradeOrder());
+			_log.info("IdTradeOrder: " + tradeOrder.getId() + " OrderKey: " + tradeOrder.getOrderKey());
+			assertNotNull("1", tradeOrder.getId());
 
 		} catch (Exception | AssertionError ex) {
 			String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
@@ -260,7 +260,7 @@ public class BrokerModelTest implements BrokerChangeListener {
 			tradeOrder.setTransmit(true);
 			tradeOrder.setStatus(OrderStatus.UNSUBMIT);
 			tradeOrder = backTestbrokerModel.onPlaceOrder(this.tradestrategy.getContract(), tradeOrder);
-			assertNotNull("1", tradeOrder.getIdTradeOrder());
+			assertNotNull("1", tradeOrder.getId());
 
 			TradeOrder tradeOrder1 = new TradeOrder(this.tradestrategy, Action.SELL, OrderType.LMT, 50,
 					price.subtract(new BigDecimal(1.0)), price.add(new BigDecimal(2.0)),
@@ -273,7 +273,7 @@ public class BrokerModelTest implements BrokerChangeListener {
 			tradeOrder1.setStatus(OrderStatus.UNSUBMIT);
 
 			tradeOrder1 = backTestbrokerModel.onPlaceOrder(this.tradestrategy.getContract(), tradeOrder1);
-			assertNotNull("2", tradeOrder1.getIdTradeOrder());
+			assertNotNull("2", tradeOrder1.getId());
 
 			TradeOrder tradeOrder2 = new TradeOrder(this.tradestrategy, Action.SELL, OrderType.STP, 50,
 					price.subtract(new BigDecimal(1.0)), null, TradingCalendar.getDateTimeNowMarketTimeZone());
@@ -284,7 +284,7 @@ public class BrokerModelTest implements BrokerChangeListener {
 			tradeOrder2.setTransmit(true);
 			tradeOrder2.setStatus(OrderStatus.UNSUBMIT);
 			tradeOrder2 = backTestbrokerModel.onPlaceOrder(this.tradestrategy.getContract(), tradeOrder2);
-			assertNotNull("3", tradeOrder2.getIdTradeOrder());
+			assertNotNull("3", tradeOrder2.getId());
 
 			TradeOrder tradeOrder3 = new TradeOrder(this.tradestrategy, Action.SELL, OrderType.STP, 50,
 					price.subtract(new BigDecimal(2.0)), null, TradingCalendar.getDateTimeNowMarketTimeZone());
@@ -294,8 +294,8 @@ public class BrokerModelTest implements BrokerChangeListener {
 			tradeOrder3.setTransmit(false);
 			tradeOrder3.setStatus(OrderStatus.UNSUBMIT);
 			tradeOrder3 = backTestbrokerModel.onPlaceOrder(this.tradestrategy.getContract(), tradeOrder3);
-			assertNotNull("4", tradeOrder3.getIdTradeOrder());
-			_log.info("IdTradeOrder: " + tradeOrder3.getIdTradeOrder() + " OrderKey2: " + tradeOrder2.getOrderKey()
+			assertNotNull("4", tradeOrder3.getId());
+			_log.info("IdTradeOrder: " + tradeOrder3.getId() + " OrderKey2: " + tradeOrder2.getOrderKey()
 					+ " OrderKey2 Price: " + tradeOrder2.getLimitPrice() + " OrderKey3: " + tradeOrder3.getOrderKey()
 					+ " OrderKey3 Price: " + tradeOrder3.getAuxPrice());
 			// Update the Stop price
@@ -306,7 +306,7 @@ public class BrokerModelTest implements BrokerChangeListener {
 			tradeOrder3.setAuxPrice(price.subtract(new BigDecimal(0.9)));
 			tradeOrder3.setStatus(OrderStatus.UNSUBMIT);
 			tradeOrder3 = backTestbrokerModel.onPlaceOrder(this.tradestrategy.getContract(), tradeOrder3);
-			_log.info("IdTradeOrder: " + tradeOrder3.getIdTradeOrder() + " OrderKey2: " + tradeOrder2.getOrderKey()
+			_log.info("IdTradeOrder: " + tradeOrder3.getId() + " OrderKey2: " + tradeOrder2.getOrderKey()
 					+ " OrderKey2 Price: " + tradeOrder2.getLimitPrice() + " OrderKey3: " + tradeOrder3.getOrderKey()
 					+ " OrderKey3 Price: " + tradeOrder3.getAuxPrice());
 
@@ -314,7 +314,7 @@ public class BrokerModelTest implements BrokerChangeListener {
 			tradeOrder3.setStatus(OrderStatus.UNSUBMIT);
 			tradeOrder3 = backTestbrokerModel.onPlaceOrder(this.tradestrategy.getContract(), tradeOrder3);
 
-			_log.info("IdTradeOrder: " + tradeOrder2.getIdTradeOrder() + " OrderKey: " + tradeOrder3.getOrderKey());
+			_log.info("IdTradeOrder: " + tradeOrder2.getId() + " OrderKey: " + tradeOrder3.getOrderKey());
 			assertNotNull("5", tradeOrder3);
 
 		} catch (Exception | AssertionError ex) {

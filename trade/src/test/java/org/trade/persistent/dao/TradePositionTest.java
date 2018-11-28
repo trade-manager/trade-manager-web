@@ -115,13 +115,13 @@ public class TradePositionTest {
 
 			TradePosition tradePosition = aspectHome.persist(instance);
 
-			assertNotNull("1", tradePosition.getIdTradePosition());
-			_log.info("testAddTradePosition IdTradeStrategy: " + this.tradestrategy.getIdTradeStrategy()
-					+ "IdTradePosition: " + tradePosition.getIdTradePosition());
+			assertNotNull("1", tradePosition.getId());
+			_log.info("testAddTradePosition IdTradeStrategy: " + this.tradestrategy.getId()
+					+ "IdTradePosition: " + tradePosition.getId());
 
 			tradePositionHome.remove(tradePosition);
-			_log.info("testDeleteTradePosition IdTradeStrategy: " + tradestrategy.getIdTradeStrategy());
-			tradePosition = tradePositionHome.findById(tradePosition.getIdTradePosition());
+			_log.info("testDeleteTradePosition IdTradeStrategy: " + tradestrategy.getId());
+			tradePosition = tradePositionHome.findById(tradePosition.getId());
 			assertNull("2", tradePosition);
 		} catch (Exception | AssertionError ex) {
 			String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();

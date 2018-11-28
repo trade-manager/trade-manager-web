@@ -135,8 +135,8 @@ public class CandleTest {
 			transientInstance.setTradeCount(10);
 
 			transientInstance = aspectHome.persist(transientInstance);
-			assertNotNull("1", transientInstance.getIdCandle());
-			_log.info("testAddCandle IdCandle: " + transientInstance.getIdCandle());
+			assertNotNull("1", transientInstance.getId());
+			_log.info("testAddCandle IdCandle: " + transientInstance.getId());
 
 		} catch (Exception | AssertionError ex) {
 			String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
@@ -153,7 +153,7 @@ public class CandleTest {
 			TradestrategyHome tradestrategyHome = new TradestrategyHome();
 			CandleHome candleHome = new CandleHome();
 			for (Tradestrategy tradestrategy : tradestrategyHome.findAll()) {
-				tradestrategy = tradestrategyHome.findById(tradestrategy.getIdTradeStrategy());
+				tradestrategy = tradestrategyHome.findById(tradestrategy.getId());
 				tradestrategy.setStrategyData(StrategyData.create(tradestrategy));
 				ZonedDateTime prevTradingday = TradingCalendar.addTradingDays(tradestrategy.getTradingday().getOpen(),
 						(-1 * (tradestrategy.getChartDays() - 1)));
@@ -162,9 +162,9 @@ public class CandleTest {
 				assertFalse("1", tradestrategy.getStrategyData().getBaseCandleSeries().isEmpty());
 				candleHome.persistCandleSeries(tradestrategy.getStrategyData().getBaseCandleSeries());
 
-				_log.info("testAddCandle IdTradeStrategy: " + tradestrategy.getIdTradeStrategy());
+				_log.info("testAddCandle IdTradeStrategy: " + tradestrategy.getId());
 				assertNotNull("2", ((CandleItem) tradestrategy.getStrategyData().getBaseCandleSeries().getDataItem(0))
-						.getCandle().getIdCandle());
+						.getCandle().getId());
 
 			}
 

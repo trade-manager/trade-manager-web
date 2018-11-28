@@ -36,6 +36,8 @@
 package org.trade.persistent.dao;
 
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -63,7 +65,7 @@ public class AspectTest {
 	/**
 	 * Method setUpBeforeClass.
 	 * 
-	 * @throws java.lang.Exception
+	 * @throws Exception
 	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -71,8 +73,8 @@ public class AspectTest {
 
 	/**
 	 * Method setUp.
-	 * 
-	 * @throws java.lang.Exception
+	 *
+	 * @throws Exception
 	 */
 	@Before
 	public void setUp() throws Exception {
@@ -81,8 +83,8 @@ public class AspectTest {
 
 	/**
 	 * Method tearDown.
-	 * 
-	 * @throws java.lang.Exception
+	 *
+	 * @throws Exception
 	 */
 	@After
 	public void tearDown() throws Exception {
@@ -90,8 +92,8 @@ public class AspectTest {
 
 	/**
 	 * Method tearDownAfterClass.
-	 * 
-	 * @throws java.lang.Exception
+	 *
+	 * @throws Exception
 	 */
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {

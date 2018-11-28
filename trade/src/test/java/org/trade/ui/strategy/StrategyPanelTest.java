@@ -17,7 +17,7 @@ import java.util.Vector;
 import javax.swing.JEditorPane;
 import javax.swing.JScrollPane;
 
-import jsyntaxpane.DefaultSyntaxKit;
+import de.sciss.syntaxpane.DefaultSyntaxKit;
 import static org.junit.Assert.*;
 
 import org.junit.After;
@@ -218,7 +218,7 @@ public class StrategyPanelTest {
 			Vector<Object> parm = new Vector<Object>(0);
 			parm.add(m_brokerManagerModel);
 			parm.add(this.tradestrategy.getStrategyData());
-			parm.add(this.tradestrategy.getIdTradeStrategy());
+			parm.add(this.tradestrategy.getId());
 			_log.info("Ready to create Strategy");
 			DynamicCode dynacode = new DynamicCode();
 			dynacode.addSourceDir(new File(m_strategyDir));
@@ -255,9 +255,9 @@ public class StrategyPanelTest {
 			Vector<Object> parm = new Vector<Object>(0);
 			parm.add(m_brokerManagerModel);
 			parm.add(this.tradestrategy.getStrategyData());
-			parm.add(this.tradestrategy.getIdTradeStrategy());
+			parm.add(this.tradestrategy.getId());
 			Strategy strategy = this.tradePersistentModel
-					.findStrategyById(this.tradestrategy.getStrategy().getIdStrategy());
+					.findStrategyById(this.tradestrategy.getStrategy().getId());
 			Integer version = this.tradePersistentModel.findRuleByMaxVersion(strategy);
 			Rule myRule = null;
 			for (Rule rule : strategy.getRules()) {
@@ -316,7 +316,7 @@ public class StrategyPanelTest {
 
 			} else {
 				myrule.setVersion(myrule.getVersion() + 1);
-				myrule.setIdRule(null);
+				myrule.setId(null);
 			}
 			assertNotNull("testDoCompile: Rule should be not null", myrule);
 			strategyPanel.doCompile(myrule);
@@ -351,7 +351,7 @@ public class StrategyPanelTest {
 
 			} else {
 				myrule.setVersion(myrule.getVersion() + 1);
-				myrule.setIdRule(null);
+				myrule.setId(myrule.getId());
 			}
 			myrule.setComment("Test Ver: " + myrule.getVersion());
 			myrule.setCreateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
@@ -364,9 +364,9 @@ public class StrategyPanelTest {
 			textArea.setText(content);
 			myrule.setRule(textArea.getText().getBytes());
 			myrule = this.tradePersistentModel.persistAspect(myrule);
-			assertNotNull("testDoSave: Rule should be not null", myrule.getIdRule());
-			Rule ruleSaved = this.tradePersistentModel.findRuleById(myrule.getIdRule());
-			assertNotNull("testDoSave: Rule saved should be not null", ruleSaved.getIdRule());
+			assertNotNull("testDoSave: Rule should be not null", myrule.getId());
+			Rule ruleSaved = this.tradePersistentModel.findRuleById(myrule.getId());
+			assertNotNull("testDoSave: Rule saved should be not null", ruleSaved.getId());
 			String javaCode = new String(ruleSaved.getRule());
 			assertEquals("testDoSave: Java rule test should be equals", javaCode, textArea.getText());
 			_log.info("Java file to Saved: " + javaCode);
