@@ -79,13 +79,13 @@ public class TradingdayHome {
 			 * merge with the persisted one if not persist.
 			 */
 			Tradingday tradingday = null;
-			if (null == detachedInstance.getIdTradingDay()) {
+			if (null == detachedInstance.getId()) {
 				tradingday = this.findTradingdayByOpenCloseDate(detachedInstance.getOpen(),
 						detachedInstance.getClose());
 				if (null == tradingday) {
 					entityManager.persist(detachedInstance);
 				} else {
-					detachedInstance.setIdTradingDay(tradingday.getIdTradingDay());
+					detachedInstance.setId(tradingday.getId());
 					detachedInstance.setVersion(tradingday.getVersion());
 					tradingday = entityManager.merge(detachedInstance);
 				}
@@ -129,7 +129,7 @@ public class TradingdayHome {
 					/*
 					 * Persist or merge the tradestrategy.
 					 */
-					if (null == tradestrategy.getIdTradeStrategy()) {
+					if (null == tradestrategy.getId()) {
 						entityManager.persist(tradestrategy);
 						entityManager.getTransaction().commit();
 					} else {
@@ -141,7 +141,7 @@ public class TradingdayHome {
 				}
 			}
 			entityManager.getTransaction().begin();
-			List<Tradestrategy> tradestrategies = findTradestrategyByIdTradingday(detachedInstance.getIdTradingDay());
+			List<Tradestrategy> tradestrategies = findTradestrategyByIdTradingday(detachedInstance.getId());
 
 			for (Tradestrategy tradestrategy : tradestrategies) {
 				boolean exists = false;
@@ -382,7 +382,7 @@ public class TradingdayHome {
 
 			if (null != idTradingday) {
 				Join<Tradestrategy, Tradingday> tradingday = from.join("tradingday");
-				Predicate predicate = builder.equal(tradingday.get("idTradingDay"), idTradingday);
+				Predicate predicate = builder.equal(tradingday.get("id"), idTradingday);
 				predicates.add(predicate);
 			}
 			query.where(predicates.toArray(new Predicate[] {}));

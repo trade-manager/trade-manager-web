@@ -78,29 +78,29 @@ public class CandleHome {
 			EntityManager entityManager = EntityManagerHelper.getEntityManager();
 			entityManager.getTransaction().begin();
 			Tradingday tradingday = null;
-			Contract contract = findContractById(candleSeries.getContract().getIdContract());
+			Contract contract = findContractById(candleSeries.getContract().getId());
 			for (int i = 0; i < candleSeries.getItemCount(); i++) {
 
 				CandleItem candleItem = (CandleItem) candleSeries.getDataItem(i);
-				if (null != candleItem.getCandle().getIdCandle()) {
-					Candle instance = entityManager.find(Candle.class, candleItem.getCandle().getIdCandle());
+				if (null != candleItem.getCandle().getId()) {
+					Candle instance = entityManager.find(Candle.class, candleItem.getCandle().getId());
 					if (instance.equals(candleItem.getCandle())) {
 						continue;
 					} else {
 						// This should never happen.
 						throw new Exception("Count: " + i + " Symbol: " + candleSeries.getSymbol() + "candleid: "
-								+ candleItem.getCandle().getIdCandle() + " open: "
+								+ candleItem.getCandle().getId() + " open: "
 								+ candleItem.getCandle().getStartPeriod());
 					}
 				}
 
 				if (!candleItem.getCandle().getTradingday().equals(tradingday)) {
 
-					if (null == candleItem.getCandle().getTradingday().getIdTradingDay()) {
+					if (null == candleItem.getCandle().getTradingday().getId()) {
 						tradingday = findTradingdayByDate(candleItem.getCandle().getTradingday().getOpen(),
 								candleItem.getCandle().getTradingday().getClose());
 					} else {
-						tradingday = findTradingdayById(candleItem.getCandle().getTradingday().getIdTradingDay());
+						tradingday = findTradingdayById(candleItem.getCandle().getTradingday().getId());
 					}
 
 					if (null == tradingday) {
@@ -109,10 +109,10 @@ public class CandleHome {
 						entityManager.getTransaction().begin();
 						tradingday = candleItem.getCandle().getTradingday();
 					} else {
-						Integer idTradingday = tradingday.getIdTradingDay();
-						Integer idContract = contract.getIdContract();
+						Integer idTradingday = tradingday.getId();
+						Integer idContract = contract.getId();
 						Integer barSize = candleSeries.getBarSize();
-						String hqlDelete = "delete Candle where idContract = :idContract and idTradingday = :idTradingday and barSize = :barSize";
+						String hqlDelete = "delete Candle where id_contract = :idContract and id_trading_day = :idTradingday and bar_size = :barSize";
 						entityManager.createQuery(hqlDelete).setParameter("idContract", idContract)
 								.setParameter("idTradingday", idTradingday).setParameter("barSize", barSize)
 								.executeUpdate();
@@ -225,7 +225,7 @@ public class CandleHome {
 			List<Predicate> predicates = new ArrayList<Predicate>();
 			if (null != idContract) {
 				Join<Candle, Contract> contract = from.join("contract");
-				Predicate predicateContract = builder.equal(contract.get("idContract"), idContract);
+				Predicate predicateContract = builder.equal(contract.get("id"), idContract);
 				predicates.add(predicateContract);
 			}
 			if (null != startOpenDate) {
@@ -308,12 +308,12 @@ public class CandleHome {
 
 			if (null != idTradingday) {
 				Join<Candle, Tradingday> tradingday = from.join("tradingday");
-				Predicate predicate = builder.equal(tradingday.get("idTradingDay"), idTradingday);
+				Predicate predicate = builder.equal(tradingday.get("id"), idTradingday);
 				predicates.add(predicate);
 			}
 			if (null != idContract) {
 				Join<Candle, Contract> contract = from.join("contract");
-				Predicate predicate = builder.equal(contract.get("idContract"), idContract);
+				Predicate predicate = builder.equal(contract.get("id"), idContract);
 				predicates.add(predicate);
 			}
 			if (null != startPeriod) {
@@ -361,19 +361,19 @@ public class CandleHome {
 			CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 			CriteriaQuery<Object> query = builder.createQuery();
 			Root<Candle> from = query.from(Candle.class);
-			Expression<Long> id = from.get("idCandle");
+			Expression<Long> id = from.get("id");
 			Expression<Long> minExpression = builder.count(id);
 
 			List<Predicate> predicates = new ArrayList<Predicate>();
 
 			if (null != idTradingday) {
 				Join<Candle, Tradingday> tradingday = from.join("tradingday");
-				Predicate predicate = builder.equal(tradingday.get("idTradingDay"), idTradingday);
+				Predicate predicate = builder.equal(tradingday.get("id"), idTradingday);
 				predicates.add(predicate);
 			}
 			if (null != idContract) {
 				Join<Candle, Contract> contract = from.join("contract");
-				Predicate predicate = builder.equal(contract.get("idContract"), idContract);
+				Predicate predicate = builder.equal(contract.get("id"), idContract);
 				predicates.add(predicate);
 			}
 			query.where(predicates.toArray(new Predicate[] {}));

@@ -276,7 +276,7 @@ public class Tradingdays extends Aspect implements java.io.Serializable {
 		synchronized (this.tradingdays) {
 			for (Tradingday tradingday : this.tradingdays) {
 				for (Tradestrategy tradestrategy : tradingday.getTradestrategies()) {
-					if (tradestrategy.getIdTradeStrategy().equals(idTradestrategy)) {
+					if (tradestrategy.getId().equals(idTradestrategy)) {
 						return tradestrategy;
 					}
 				}

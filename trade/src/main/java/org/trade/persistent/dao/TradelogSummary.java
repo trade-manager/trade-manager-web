@@ -134,7 +134,7 @@ public class TradelogSummary extends Aspect implements java.io.Serializable {
 	 * @return Integer
 	 */
 	@Id
-	@Column(name = "idTradelogSummary")
+	@Column(name = "id_tradelog_summary")
 	public Integer getIdTradelogSummary() {
 		return this.id;
 	}
@@ -174,7 +174,7 @@ public class TradelogSummary extends Aspect implements java.io.Serializable {
 	 * 
 	 * @return BigDecimal
 	 */
-	@Column(name = "battingAverage", precision = 10)
+	@Column(name = "batting_average", precision = 10)
 	public BigDecimal getBattingAverage() {
 		return this.battingAverage;
 	}
@@ -194,7 +194,7 @@ public class TradelogSummary extends Aspect implements java.io.Serializable {
 	 * 
 	 * @return BigDecimal
 	 */
-	@Column(name = "simpleSharpeRatio", precision = 10)
+	@Column(name = "simple_sharpe_ratio", precision = 10)
 	public BigDecimal getSimpleSharpeRatio() {
 		return this.simpleSharpeRatio;
 	}
@@ -234,7 +234,7 @@ public class TradelogSummary extends Aspect implements java.io.Serializable {
 	 * 
 	 * @return BigDecimal
 	 */
-	@Column(name = "grossProfitLoss", precision = 10)
+	@Column(name = "gross_profit_loss", precision = 10)
 	public BigDecimal getGrossProfitLoss() {
 		return this.grossProfitLoss;
 	}
@@ -274,7 +274,7 @@ public class TradelogSummary extends Aspect implements java.io.Serializable {
 	 * 
 	 * @return BigDecimal
 	 */
-	@Column(name = "netProfitLoss", precision = 10)
+	@Column(name = "net_profit_loss", precision = 10)
 	public BigDecimal getNetProfitLoss() {
 		return this.netProfitLoss;
 	}
@@ -294,7 +294,7 @@ public class TradelogSummary extends Aspect implements java.io.Serializable {
 	 * 
 	 * @return BigDecimal
 	 */
-	@Column(name = "profitAmount", precision = 10)
+	@Column(name = "profit_amount", precision = 10)
 	public BigDecimal getProfitAmount() {
 		return this.profitAmount;
 	}
@@ -314,7 +314,7 @@ public class TradelogSummary extends Aspect implements java.io.Serializable {
 	 * 
 	 * @return BigDecimal
 	 */
-	@Column(name = "lossAmount", precision = 10)
+	@Column(name = "loss_amount", precision = 10)
 	public BigDecimal getLossAmount() {
 		return this.lossAmount;
 	}
@@ -334,7 +334,7 @@ public class TradelogSummary extends Aspect implements java.io.Serializable {
 	 * 
 	 * @return Integer
 	 */
-	@Column(name = "winCount")
+	@Column(name = "win_count")
 	public Integer getWinCount() {
 		return this.winCount;
 	}
@@ -354,7 +354,7 @@ public class TradelogSummary extends Aspect implements java.io.Serializable {
 	 * 
 	 * @return Integer
 	 */
-	@Column(name = "lossCount")
+	@Column(name = "loss_count")
 	public Integer getLossCount() {
 		return this.lossCount;
 	}
@@ -374,7 +374,7 @@ public class TradelogSummary extends Aspect implements java.io.Serializable {
 	 * 
 	 * @return Integer
 	 */
-	@Column(name = "positionCount")
+	@Column(name = "position_count")
 	public Integer getPositionCount() {
 		return this.positionCount;
 	}
@@ -394,7 +394,7 @@ public class TradelogSummary extends Aspect implements java.io.Serializable {
 	 * 
 	 * @return Integer
 	 */
-	@Column(name = "tradestrategyCount")
+	@Column(name = "tradestrategy_count")
 	public Integer getTradestrategyCount() {
 		return this.tradestrategyCount;
 	}

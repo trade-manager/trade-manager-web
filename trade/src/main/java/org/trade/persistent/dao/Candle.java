@@ -215,25 +215,25 @@ public class Candle extends Aspect implements java.io.Serializable {
 	}
 
 	/**
-	 * Method getIdCandle.
+	 * Method getId.
 	 * 
 	 * @return Integer
 	 */
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "idCandle", unique = true, nullable = false)
-	public Integer getIdCandle() {
+	@Column(name = "id", unique = true, nullable = false)
+	public Integer getId() {
 		return this.id;
 	}
 
 	/**
-	 * Method setIdCandle.
+	 * Method setId.
 	 * 
-	 * @param idCandle
+	 * @param id
 	 *            Integer
 	 */
-	public void setIdCandle(Integer idCandle) {
-		this.id = idCandle;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	/**
@@ -242,7 +242,7 @@ public class Candle extends Aspect implements java.io.Serializable {
 	 * @return Tradingday
 	 */
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "idTradingday", nullable = false)
+	@JoinColumn(name = "id_trading_day", nullable = false)
 	public Tradingday getTradingday() {
 		return this.tradingday;
 	}
@@ -263,7 +263,7 @@ public class Candle extends Aspect implements java.io.Serializable {
 	 * @return Contract
 	 */
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "idContract", nullable = false)
+	@JoinColumn(name = "id_contract", nullable = false)
 	public Contract getContract() {
 		return this.contract;
 	}
@@ -384,7 +384,7 @@ public class Candle extends Aspect implements java.io.Serializable {
 	 * @return Date
 	 */
 
-	@Column(name = "endPeriod")
+	@Column(name = "end_period")
 	public ZonedDateTime getEndPeriod() {
 		return this.endPeriod;
 	}
@@ -404,7 +404,7 @@ public class Candle extends Aspect implements java.io.Serializable {
 	 * 
 	 * @return Date
 	 */
-	@Column(name = "startPeriod")
+	@Column(name = "start_period")
 	public ZonedDateTime getStartPeriod() {
 		return this.startPeriod;
 	}
@@ -424,7 +424,7 @@ public class Candle extends Aspect implements java.io.Serializable {
 	 * 
 	 * @return Integer
 	 */
-	@Column(name = "tradeCount")
+	@Column(name = "trade_count")
 	public Integer getTradeCount() {
 		return this.tradeCount;
 	}
@@ -484,7 +484,7 @@ public class Candle extends Aspect implements java.io.Serializable {
 	 * 
 	 * @return Integer
 	 */
-	@Column(name = "barSize")
+	@Column(name = "bar_size")
 	public Integer getBarSize() {
 		if (null == this.barSize) {
 			Duration duration = Duration.between(getStartPeriod(), getEndPeriod());
@@ -509,7 +509,7 @@ public class Candle extends Aspect implements java.io.Serializable {
 	 * @return ZonedDateTime
 	 */
 
-	@Column(name = "lastUpdateDate", nullable = false)
+	@Column(name = "last_update_date", nullable = false)
 	public ZonedDateTime getLastUpdateDate() {
 		return this.lastUpdateDate;
 	}

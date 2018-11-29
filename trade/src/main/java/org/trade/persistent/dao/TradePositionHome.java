@@ -61,7 +61,7 @@ public class TradePositionHome {
 			EntityManager entityManager = EntityManagerHelper.getEntityManager();
 			entityManager.getTransaction().begin();
 			TradePosition tradePosition = entityManager.find(TradePosition.class,
-					transientInstance.getIdTradePosition());
+					transientInstance.getId());
 			if (null != tradePosition) {
 				entityManager.remove(tradePosition);
 			}

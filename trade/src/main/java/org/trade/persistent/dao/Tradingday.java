@@ -134,25 +134,25 @@ public class Tradingday extends Aspect implements Serializable, Cloneable {
 	}
 
 	/**
-	 * Method getIdTradingDay.
+	 * Method getId.
 	 * 
 	 * @return Integer
 	 */
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "idTradingDay", unique = true, nullable = false)
-	public Integer getIdTradingDay() {
+	@Column(name = "id", unique = true, nullable = false)
+	public Integer getId() {
 		return this.id;
 	}
 
 	/**
-	 * Method setIdTradingDay.
+	 * Method setId.
 	 * 
-	 * @param idTradingDay
+	 * @param id
 	 *            Integer
 	 */
-	public void setIdTradingDay(Integer idTradingDay) {
-		this.id = idTradingDay;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	/**
@@ -200,7 +200,7 @@ public class Tradingday extends Aspect implements Serializable, Cloneable {
 	 * 
 	 * @return String
 	 */
-	@Column(name = "marketBias", length = 10)
+	@Column(name = "market_bias", length = 10)
 	public String getMarketBias() {
 		return this.marketBias;
 	}
@@ -220,7 +220,7 @@ public class Tradingday extends Aspect implements Serializable, Cloneable {
 	 * 
 	 * @return String
 	 */
-	@Column(name = "marketGap", length = 10)
+	@Column(name = "market_gap", length = 10)
 	public String getMarketGap() {
 		return this.marketGap;
 	}
@@ -240,7 +240,7 @@ public class Tradingday extends Aspect implements Serializable, Cloneable {
 	 * 
 	 * @return String
 	 */
-	@Column(name = "marketBar", length = 10)
+	@Column(name = "market_bar", length = 10)
 	public String getMarketBar() {
 		return this.marketBar;
 	}
@@ -282,7 +282,7 @@ public class Tradingday extends Aspect implements Serializable, Cloneable {
 	 * @return List<Tradestrategy>
 	 */
 	@OneToMany(mappedBy = "tradingday", fetch = FetchType.EAGER, cascade = { CascadeType.REFRESH })
-	@OrderBy("side ASC, idTradeStrategy ASC")
+	@OrderBy("side ASC, id ASC")
 	public List<Tradestrategy> getTradestrategies() {
 		return this.tradestrategies;
 	}

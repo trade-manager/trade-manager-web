@@ -145,25 +145,25 @@ public class Strategy extends Aspect implements Serializable, Cloneable {
 	}
 
 	/**
-	 * Method getIdStrategy.
+	 * Method getId.
 	 * 
 	 * @return Integer
 	 */
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "idStrategy", unique = true, nullable = false)
-	public Integer getIdStrategy() {
+	@Column(name = "id", unique = true, nullable = false)
+	public Integer getId() {
 		return this.id;
 	}
 
 	/**
-	 * Method setIdStrategy.
+	 * Method setId.
 	 * 
-	 * @param idStrategy
+	 * @param id
 	 *            Integer
 	 */
-	public void setIdStrategy(Integer idStrategy) {
-		this.id = idStrategy;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	/**
@@ -191,7 +191,7 @@ public class Strategy extends Aspect implements Serializable, Cloneable {
 	 * 
 	 * @return String
 	 */
-	@Column(name = "className", unique = false, nullable = false, length = 100)
+	@Column(name = "class_name", unique = false, nullable = false, length = 100)
 	public String getClassName() {
 		return this.className;
 	}
@@ -231,7 +231,7 @@ public class Strategy extends Aspect implements Serializable, Cloneable {
 	 * 
 	 * @return Boolean
 	 */
-	@Column(name = "marketData", length = 1)
+	@Column(name = "market_data", length = 1)
 	public Boolean getMarketData() {
 		return this.marketData;
 	}
@@ -344,7 +344,7 @@ public class Strategy extends Aspect implements Serializable, Cloneable {
 	 * @return List<Strategy>
 	 */
 	@OneToMany(fetch = FetchType.LAZY)
-	@JoinColumn(name = "idStrategyManager")
+	@JoinColumn(name = "id_strategy_manager")
 	public List<Strategy> getStrategies() {
 		return this.strategies;
 	}
@@ -365,7 +365,7 @@ public class Strategy extends Aspect implements Serializable, Cloneable {
 	 * @return Strategy
 	 */
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "idStrategyManager", insertable = true, updatable = true, nullable = true)
+	@JoinColumn(name = "id_strategy_manager", insertable = true, updatable = true, nullable = true)
 	public Strategy getStrategyManager() {
 		return this.strategy;
 	}

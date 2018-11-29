@@ -102,25 +102,25 @@ public class CodeAttribute extends Aspect implements java.io.Serializable {
 	}
 
 	/**
-	 * Method getIdCodeAttribute.
+	 * Method getId.
 	 * 
 	 * @return Integer
 	 */
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "idCodeAttribute", unique = true, nullable = false)
-	public Integer getIdCodeAttribute() {
+	@Column(name = "id", unique = true, nullable = false)
+	public Integer getId() {
 		return this.id;
 	}
 
 	/**
-	 * Method setIdCodeAttribute.
+	 * Method setId.
 	 * 
-	 * @param idCodeAttribute
+	 * @param id
 	 *            Integer
 	 */
-	public void setIdCodeAttribute(Integer idCodeAttribute) {
-		this.id = idCodeAttribute;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	/**
@@ -168,7 +168,7 @@ public class CodeAttribute extends Aspect implements java.io.Serializable {
 	 * 
 	 * @return String
 	 */
-	@Column(name = "defaultValue", nullable = true, length = 45)
+	@Column(name = "default_value", nullable = true, length = 45)
 	public String getDefaultValue() {
 		return this.defaultValue;
 	}
@@ -188,7 +188,7 @@ public class CodeAttribute extends Aspect implements java.io.Serializable {
 	 * 
 	 * @return String
 	 */
-	@Column(name = "className", nullable = false, length = 100)
+	@Column(name = "class_name", nullable = false, length = 100)
 	public String getClassName() {
 		return this.className;
 	}
@@ -208,7 +208,7 @@ public class CodeAttribute extends Aspect implements java.io.Serializable {
 	 * 
 	 * @return String
 	 */
-	@Column(name = "classEditorName", nullable = true, length = 100)
+	@Column(name = "class_editor_name", nullable = true, length = 100)
 	public String getEditorClassName() {
 		return this.classEditorName;
 	}
@@ -229,7 +229,7 @@ public class CodeAttribute extends Aspect implements java.io.Serializable {
 	 * @return CodeType
 	 */
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "idCodeType", nullable = false)
+	@JoinColumn(name = "id_code_type", nullable = false)
 	public CodeType getCodeType() {
 		return this.codeType;
 	}

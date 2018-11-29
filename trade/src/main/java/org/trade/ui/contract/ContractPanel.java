@@ -385,7 +385,7 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
 		for (int index = 0; index < m_jTabbedPaneContract.getTabCount(); index++) {
 			ChartPanel chart = (ChartPanel) m_jTabbedPaneContract.getComponentAt(index);
 			if ((null != chart)
-					&& chart.getTradestrategy().getIdTradeStrategy().equals(tradestrategy.getIdTradeStrategy())) {
+					&& chart.getTradestrategy().getId().equals(tradestrategy.getId())) {
 				doClose(index);
 				break;
 			}
@@ -519,8 +519,8 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
 				int currentTabIndex = -1;
 				for (int index = 0; index < m_jTabbedPaneContract.getTabCount(); index++) {
 					ChartPanel chartPanel = (ChartPanel) m_jTabbedPaneContract.getComponentAt(index);
-					if ((null != chartPanel) && chartPanel.getTradestrategy().getIdTradeStrategy()
-							.equals(tradestrategy.getIdTradeStrategy())) {
+					if ((null != chartPanel) && chartPanel.getTradestrategy().getId()
+							.equals(tradestrategy.getId())) {
 						currentTabIndex = index;
 						break;
 					}
@@ -645,7 +645,7 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
 			startDate = TradingCalendar.getPrevTradingDay(startDate);
 			startDate = TradingCalendar.getDateAtTime(startDate, tradestrategy.getTradingday().getOpen());
 			List<Candle> candles = m_tradePersistentModel.findCandlesByContractDateRangeBarSize(
-					tradestrategy.getContract().getIdContract(), startDate, endDate, tradestrategy.getBarSize());
+					tradestrategy.getContract().getId(), startDate, endDate, tradestrategy.getBarSize());
 			if (candles.isEmpty()) {
 				this.setStatusBarMessage("No chart data available for " + tradestrategy.getContract().getSymbol(),
 						BasePanel.INFORMATION);
@@ -694,7 +694,7 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
 					childTradestrategy.setDirty(false);
 
 					List<Candle> indicatorCandles = m_tradePersistentModel.findCandlesByContractDateRangeBarSize(
-							childTradestrategy.getContract().getIdContract(), startDate, endDate,
+							childTradestrategy.getContract().getId(), startDate, endDate,
 							childTradestrategy.getBarSize());
 					if (indicatorCandles.isEmpty()) {
 						this.setStatusBarMessage(
@@ -815,7 +815,7 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
 				 */
 				tradestrategy = m_tradePersistentModel.findTradestrategyById(currentTab.getTradestrategy());
 				tradestrategyOrders = m_tradePersistentModel
-						.findPositionOrdersByTradestrategyId(currentTab.getTradestrategy().getIdTradeStrategy());
+						.findPositionOrdersByTradestrategyId(currentTab.getTradestrategy().getId());
 				currentTab.setTradestrategy(tradestrategy);
 				m_tradeOrderModel.setData(tradestrategy);
 				RowSorter<?> rsDetail = m_tradeOrderTable.getRowSorter();
@@ -868,8 +868,8 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
 					if (order.getIsFilled()) {
 						Integer quantity = order.getFilledQuantity();
 						if (null == prevIdTradePosition
-								|| prevIdTradePosition != order.getTradePosition().getIdTradePosition()) {
-							prevIdTradePosition = order.getTradePosition().getIdTradePosition();
+								|| prevIdTradePosition != order.getTradePosition().getId()) {
+							prevIdTradePosition = order.getTradePosition().getId();
 						}
 
 						if (null != prevTradeOrder) {

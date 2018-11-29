@@ -85,25 +85,25 @@ public class TradestrategyLite extends Aspect implements Serializable {
 	}
 
 	/**
-	 * Method getIdTradeStrategy.
+	 * Method getId.
 	 * 
 	 * @return Integer
 	 */
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "idTradeStrategy", unique = true, nullable = false)
-	public Integer getIdTradeStrategy() {
+	@Column(name = "id", unique = true, nullable = false)
+	public Integer getId() {
 		return this.id;
 	}
 
 	/**
-	 * Method setIdTradeStrategy.
+	 * Method setId.
 	 * 
-	 * @param idTradeStrategy
+	 * @param id
 	 *            Integer
 	 */
-	public void setIdTradeStrategy(Integer idTradeStrategy) {
-		this.id = idTradeStrategy;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	/**
@@ -131,7 +131,7 @@ public class TradestrategyLite extends Aspect implements Serializable {
 	 * 
 	 * @return ZonedDateTime
 	 */
-	@Column(name = "lastUpdateDate", nullable = false)
+	@Column(name = "last_update_date", nullable = false)
 	public ZonedDateTime getLastUpdateDate() {
 		return this.lastUpdateDate;
 	}

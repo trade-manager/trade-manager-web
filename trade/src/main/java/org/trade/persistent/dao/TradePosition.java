@@ -117,7 +117,7 @@ public class TradePosition extends Aspect implements java.io.Serializable {
 	 *            String
 	 */
 	public TradePosition(Contract contract, ZonedDateTime positionOpenDate, String side) {
-		this.contract = new ContractLite(contract.getIdContract());
+		this.contract = new ContractLite(contract.getId());
 		this.positionOpenDate = positionOpenDate;
 		this.side = side;
 		this.lastUpdateDate = positionOpenDate;
@@ -170,7 +170,7 @@ public class TradePosition extends Aspect implements java.io.Serializable {
 			Integer openQuantity, String side, BigDecimal totalCommission, Integer totalBuyQuantity,
 			BigDecimal totalBuyValue, Integer totalSellQuantity, BigDecimal totalSellValue, BigDecimal totalNetValue,
 			List<TradeOrder> tradeOrders) {
-		this.contract = new ContractLite(contract.getIdContract());
+		this.contract = new ContractLite(contract.getId());
 		this.positionOpenDate = positionOpenDate;
 		this.positionCloseDate = positionCloseDate;
 		this.openQuantity = openQuantity;
@@ -186,25 +186,25 @@ public class TradePosition extends Aspect implements java.io.Serializable {
 	}
 
 	/**
-	 * Method getIdTradePosition.
+	 * Method getId.
 	 * 
 	 * @return Integer
 	 */
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "idTradePosition", unique = true, nullable = false)
-	public Integer getIdTradePosition() {
+	@Column(name = "id", unique = true, nullable = false)
+	public Integer getId() {
 		return this.id;
 	}
 
 	/**
-	 * Method setIdTradePosition.
+	 * Method setId.
 	 * 
-	 * @param idTradePosition
+	 * @param id
 	 *            Integer
 	 */
-	public void setIdTradePosition(Integer idTradePosition) {
-		this.id = idTradePosition;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	/**
@@ -213,7 +213,7 @@ public class TradePosition extends Aspect implements java.io.Serializable {
 	 * @return ContractLite
 	 */
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "idContract", insertable = true, updatable = true, nullable = false)
+	@JoinColumn(name = "id_contract", insertable = true, updatable = true, nullable = false)
 	public ContractLite getContract() {
 		return this.contract;
 	}
@@ -234,7 +234,7 @@ public class TradePosition extends Aspect implements java.io.Serializable {
 	 * @return ZonedDateTime
 	 */
 
-	@Column(name = "positionOpenDate", nullable = false)
+	@Column(name = "position_open_date", nullable = false)
 	public ZonedDateTime getPositionOpenDate() {
 		return this.positionOpenDate;
 	}
@@ -254,7 +254,7 @@ public class TradePosition extends Aspect implements java.io.Serializable {
 	 * 
 	 * @return ZonedDateTime
 	 */
-	@Column(name = "positionCloseDate", nullable = true)
+	@Column(name = "position_close_date", nullable = true)
 	public ZonedDateTime getPositionCloseDate() {
 		return this.positionCloseDate;
 	}
@@ -274,7 +274,7 @@ public class TradePosition extends Aspect implements java.io.Serializable {
 	 * 
 	 * @return Integer
 	 */
-	@Column(name = "openQuantity")
+	@Column(name = "open_quantity")
 	public Integer getOpenQuantity() {
 		return this.openQuantity;
 	}
@@ -314,7 +314,7 @@ public class TradePosition extends Aspect implements java.io.Serializable {
 	 * 
 	 * @return BigDecimal
 	 */
-	@Column(name = "totalCommission", precision = 10)
+	@Column(name = "total_commission", precision = 10)
 	public BigDecimal getTotalCommission() {
 		return this.totalCommission;
 	}
@@ -334,7 +334,7 @@ public class TradePosition extends Aspect implements java.io.Serializable {
 	 * 
 	 * @return Integer
 	 */
-	@Column(name = "totalBuyQuantity")
+	@Column(name = "total_buy_quantity")
 	public Integer getTotalBuyQuantity() {
 		return this.totalBuyQuantity;
 	}
@@ -354,7 +354,7 @@ public class TradePosition extends Aspect implements java.io.Serializable {
 	 * 
 	 * @return Integer
 	 */
-	@Column(name = "totalSellQuantity")
+	@Column(name = "total_sell_quantity")
 	public Integer getTotalSellQuantity() {
 		return this.totalSellQuantity;
 	}
@@ -374,7 +374,7 @@ public class TradePosition extends Aspect implements java.io.Serializable {
 	 * 
 	 * @return BigDecimal
 	 */
-	@Column(name = "totalBuyValue", precision = 10)
+	@Column(name = "total_buy_value", precision = 10)
 	public BigDecimal getTotalBuyValue() {
 		return this.totalBuyValue;
 	}
@@ -394,7 +394,7 @@ public class TradePosition extends Aspect implements java.io.Serializable {
 	 * 
 	 * @return BigDecimal
 	 */
-	@Column(name = "totalSellValue", precision = 10)
+	@Column(name = "total_sell_value", precision = 10)
 	public BigDecimal getTotalSellValue() {
 		return this.totalSellValue;
 	}
@@ -414,7 +414,7 @@ public class TradePosition extends Aspect implements java.io.Serializable {
 	 * 
 	 * @return BigDecimal
 	 */
-	@Column(name = "totalNetValue", precision = 10)
+	@Column(name = "total_net_value", precision = 10)
 	public BigDecimal getTotalNetValue() {
 		return this.totalNetValue;
 	}
@@ -434,7 +434,7 @@ public class TradePosition extends Aspect implements java.io.Serializable {
 	 * 
 	 * @return ZonedDateTime
 	 */
-	@Column(name = "lastUpdateDate", nullable = false)
+	@Column(name = "last_update_date", nullable = false)
 	public ZonedDateTime getLastUpdateDate() {
 		return this.lastUpdateDate;
 	}
@@ -547,9 +547,9 @@ public class TradePosition extends Aspect implements java.io.Serializable {
 		for (TradeOrder order : getTradeOrders()) {
 			if (order.getIsFilled()) {
 				if (null == prevIdTradePosition
-						|| prevIdTradePosition != order.getTradePosition().getIdTradePosition()) {
+						|| prevIdTradePosition != order.getTradePosition().getId()) {
 
-					prevIdTradePosition = order.getTradePosition().getIdTradePosition();
+					prevIdTradePosition = order.getTradePosition().getId();
 					if (order.getTradePosition().equals(order.getTradePosition().getContract().getTradePosition())) {
 						unRealizedProfit = order.getTradePosition().getTotalNetValue().doubleValue()
 								+ (order.getTradePosition().getOpenQuantity() * lastPrice.doubleValue());
@@ -575,9 +575,9 @@ public class TradePosition extends Aspect implements java.io.Serializable {
 
 			if (order.getIsFilled()) {
 				if (null == prevIdTradePosition
-						|| prevIdTradePosition != order.getTradePosition().getIdTradePosition()) {
+						|| prevIdTradePosition != order.getTradePosition().getId()) {
 
-					prevIdTradePosition = order.getTradePosition().getIdTradePosition();
+					prevIdTradePosition = order.getTradePosition().getId();
 
 					if (order.getTradePosition().getTotalSellQuantity().doubleValue() > 0
 							&& order.getTradePosition().getTotalBuyQuantity().doubleValue() > 0) {
@@ -612,7 +612,7 @@ public class TradePosition extends Aspect implements java.io.Serializable {
 	 * @return String
 	 */
 	public String toString() {
-		return "TradePosition Id: " + this.getIdTradePosition() + " Version: " + this.getVersion()
+		return "TradePosition Id: " + this.getId() + " Version: " + this.getVersion()
 				+ " positionOpenDate: " + this.getPositionOpenDate() + " positionCloseDate: "
 				+ this.getPositionCloseDate() + " Side: " + this.getSide() + " Open Qty: " + this.getOpenQuantity()
 				+ " Total Buy qty: " + this.getTotalBuyQuantity() + " Total Buy Value: "

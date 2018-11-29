@@ -113,25 +113,25 @@ public class CodeType extends Aspect implements java.io.Serializable {
 	}
 
 	/**
-	 * Method getIdCodeType.
+	 * Method getId.
 	 * 
 	 * @return Integer
 	 */
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "idCodeType", unique = true, nullable = false)
-	public Integer getIdCodeType() {
+	@Column(name = "id", unique = true, nullable = false)
+	public Integer getId() {
 		return this.id;
 	}
 
 	/**
-	 * Method setIdCodeType.
+	 * Method setId.
 	 * 
-	 * @param idCodeType
+	 * @param id
 	 *            Integer
 	 */
-	public void setIdCodeType(Integer idCodeType) {
-		this.id = idCodeType;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	/**

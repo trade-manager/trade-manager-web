@@ -78,7 +78,7 @@ public class TradelogHome {
 			Query queryDetail = entityManagerLocal.createNativeQuery(TradelogDetail.getSQLString(),
 					TradelogDetail.class);
 
-			queryDetail.setParameter("idPortfolio", portfolio.getIdPortfolio());
+			queryDetail.setParameter("idPortfolio", portfolio.getId());
 			queryDetail.setParameter("start", TradingCalendar.getFormattedDate(start, DATE_FORMAT));
 			queryDetail.setParameter("end", TradingCalendar.getFormattedDate(end, DATE_FORMAT));
 			queryDetail.setParameter("filter", filter);
@@ -92,7 +92,7 @@ public class TradelogHome {
 			Query querySummary = entityManagerLocal.createNativeQuery(TradelogSummary.getSQLString(),
 					TradelogSummary.class);
 
-			querySummary.setParameter("idPortfolio", portfolio.getIdPortfolio());
+			querySummary.setParameter("idPortfolio", portfolio.getId());
 			querySummary.setParameter("start", TradingCalendar.getFormattedDate(start, DATE_FORMAT));
 			querySummary.setParameter("end", TradingCalendar.getFormattedDate(end, DATE_FORMAT));
 			querySummary.setParameter("symbol", symbol);
@@ -135,7 +135,7 @@ public class TradelogHome {
 			Query queryDetail = entityManagerLocal.createNativeQuery(TradelogDetail.getSQLString(),
 					"TradelogDetailMapping");
 
-			queryDetail.setParameter("idPortfolio", portfolio.getIdPortfolio());
+			queryDetail.setParameter("idPortfolio", portfolio.getId());
 			queryDetail.setParameter("start", TradingCalendar.getFormattedDate(start, DATE_FORMAT));
 			queryDetail.setParameter("end", TradingCalendar.getFormattedDate(end, DATE_FORMAT));
 			queryDetail.setParameter("filter", filter);
@@ -177,7 +177,7 @@ public class TradelogHome {
 			Query querySummary = entityManagerLocal.createNativeQuery(TradelogSummary.getSQLString(),
 					TradelogSummary.class);
 
-			querySummary.setParameter("idPortfolio", portfolio.getIdPortfolio());
+			querySummary.setParameter("idPortfolio", portfolio.getId());
 			querySummary.setParameter("start", TradingCalendar.getFormattedDate(start, DATE_FORMAT));
 			querySummary.setParameter("end", TradingCalendar.getFormattedDate(end, DATE_FORMAT));
 			querySummary.setParameter("symbol", symbol);

@@ -94,7 +94,7 @@ public class DAOStrategyRenderer extends DefaultTableCellRenderer {
 				Tradestrategy transferObject = ((TradestrategyTableModel) table.getModel()).getData()
 						.getTradestrategies().get(table.convertRowIndexToModel(row));
 				String key = ((Strategy) ((DAOStrategy) dAOStrategy).getObject()).getClassName()
-						+ transferObject.getIdTradeStrategy();
+						+ transferObject.getId();
 				if (this.strategyWorkers.containsKey(key) && !isSelected) {
 					if (this.strategyWorkers.get(key).isDone()) {
 						setBackground(Color.YELLOW);

@@ -135,25 +135,25 @@ public class Rule extends Aspect implements java.io.Serializable {
 	}
 
 	/**
-	 * Method getIdRule.
+	 * Method getId.
 	 * 
 	 * @return Integer
 	 */
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "idRule", unique = true, nullable = false)
-	public Integer getIdRule() {
+	@Column(name = "id", unique = true, nullable = false)
+	public Integer getId() {
 		return this.id;
 	}
 
 	/**
-	 * Method setIdRule.
+	 * Method setId.
 	 * 
-	 * @param idRule
+	 * @param id
 	 *            Integer
 	 */
-	public void setIdRule(Integer idRule) {
-		this.id = idRule;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	/**
@@ -162,7 +162,7 @@ public class Rule extends Aspect implements java.io.Serializable {
 	 * @return Strategy
 	 */
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "idStrategy", nullable = false)
+	@JoinColumn(name = "id_strategy", nullable = false)
 	public Strategy getStrategy() {
 		return this.strategy;
 	}
@@ -202,7 +202,7 @@ public class Rule extends Aspect implements java.io.Serializable {
 	 * 
 	 * @return ZonedDateTime
 	 */
-	@Column(name = "createDate", nullable = false)
+	@Column(name = "create_date", nullable = false)
 	public ZonedDateTime getCreateDate() {
 		return this.createDate;
 	}
@@ -223,7 +223,7 @@ public class Rule extends Aspect implements java.io.Serializable {
 	 * @return ZonedDateTime
 	 */
 
-	@Column(name = "lastUpdateDate", nullable = false)
+	@Column(name = "last_update_date", nullable = false)
 	public ZonedDateTime getLastUpdateDate() {
 		return this.lastUpdateDate;
 	}
@@ -327,11 +327,11 @@ public class Rule extends Aspect implements java.io.Serializable {
 			return true;
 
 		if (objectToCompare instanceof Rule) {
-			if (null == this.getIdRule() || null == this.getVersion()) {
+			if (null == this.getId() || null == this.getVersion()) {
 				return false;
 			}
 
-			if (this.getStrategy().getIdStrategy().equals(((Rule) objectToCompare).getStrategy().getIdStrategy())
+			if (this.getStrategy().getId().equals(((Rule) objectToCompare).getStrategy().getId())
 					&& this.getVersion().equals(((Rule) objectToCompare).getVersion())) {
 				return true;
 			}

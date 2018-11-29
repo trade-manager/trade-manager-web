@@ -98,7 +98,7 @@ public abstract class IndicatorSeries extends ComparableObjectSeries implements 
 	public static final String MACDSeries = "MACDSeries";
 	public static final String VostroSeries = "VostroSeries";
 
-	private Integer idIndicatorSeries;
+	private Integer id;
 	@NotNull
 	private String name;
 	@NotNull
@@ -209,19 +209,19 @@ public abstract class IndicatorSeries extends ComparableObjectSeries implements 
 	 */
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "idIndicatorSeries", unique = true, nullable = false)
+	@Column(name = "id", unique = true, nullable = false)
 	public Integer getIdIndicatorSeries() {
-		return this.idIndicatorSeries;
+		return this.id;
 	}
 
 	/**
 	 * Method setIdIndicatorSeries.
 	 * 
-	 * @param idIndicatorSeries
+	 * @param id
 	 *            Integer
 	 */
-	public void setIdIndicatorSeries(Integer idIndicatorSeries) {
-		this.idIndicatorSeries = idIndicatorSeries;
+	public void setIdIndicatorSeries(Integer id) {
+		this.id = id;
 	}
 
 	/**
@@ -289,7 +289,7 @@ public abstract class IndicatorSeries extends ComparableObjectSeries implements 
 	 * 
 	 * @return Integer
 	 */
-	@Column(name = "seriesRGBColor")
+	@Column(name = "series_RGB_color")
 	public Integer getSeriesRGBColor() {
 		return this.seriesRGBColor;
 	}
@@ -319,7 +319,7 @@ public abstract class IndicatorSeries extends ComparableObjectSeries implements 
 	 * 
 	 * @return Boolean
 	 */
-	@Column(name = "displaySeries", length = 1)
+	@Column(name = "display_series", length = 1)
 	public Boolean getDisplaySeries() {
 		return this.displaySeries;
 	}
@@ -339,7 +339,7 @@ public abstract class IndicatorSeries extends ComparableObjectSeries implements 
 	 * 
 	 * @return Boolean
 	 */
-	@Column(name = "subChart", length = 1)
+	@Column(name = "sub_chart", length = 1)
 	public Boolean getSubChart() {
 		return this.subChart;
 	}
@@ -405,7 +405,7 @@ public abstract class IndicatorSeries extends ComparableObjectSeries implements 
 	 * @return Strategy
 	 */
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "idStrategy", insertable = true, updatable = true, nullable = false)
+	@JoinColumn(name = "id_strategy", insertable = true, updatable = true, nullable = false)
 	public Strategy getStrategy() {
 		return this.strategy;
 	}

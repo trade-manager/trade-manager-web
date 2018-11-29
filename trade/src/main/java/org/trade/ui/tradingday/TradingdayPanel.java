@@ -605,8 +605,8 @@ public class TradingdayPanel extends BasePanel {
 		try {
 			this.clearStatusBarMessage();
 			Tradingday currentTradingday = m_tradingdays.getTradingday(tradingday.getOpen(), tradingday.getClose());
-			if (null != currentTradingday && null != currentTradingday.getIdTradingDay()) {
-				Tradingday instance = m_tradePersistentModel.findTradingdayById(currentTradingday.getIdTradingDay());
+			if (null != currentTradingday && null != currentTradingday.getId()) {
+				Tradingday instance = m_tradePersistentModel.findTradingdayById(currentTradingday.getId());
 				instance.populateStrategyData(currentTradingday);
 				m_tradingdays.replaceTradingday(instance);
 			}
@@ -872,12 +872,12 @@ public class TradingdayPanel extends BasePanel {
 	 */
 	public boolean isStrategyWorkerRunning(final Tradestrategy tradestrategy) {
 
-		String key = tradestrategy.getStrategy().getClassName() + tradestrategy.getIdTradeStrategy();
+		String key = tradestrategy.getStrategy().getClassName() + tradestrategy.getId();
 		if (isStrategyWorkerRunning(key)) {
 			return true;
 		}
 		if (tradestrategy.getStrategy().hasStrategyManager()) {
-			key = tradestrategy.getStrategy().getStrategyManager().getClassName() + tradestrategy.getIdTradeStrategy();
+			key = tradestrategy.getStrategy().getStrategyManager().getClassName() + tradestrategy.getId();
 			if (isStrategyWorkerRunning(key)) {
 				return true;
 			}
@@ -951,12 +951,12 @@ public class TradingdayPanel extends BasePanel {
 	 *            Tradestrategy
 	 */
 	public void killAllStrategyWorkersForTradestrategy(final Tradestrategy tradestrategy) {
-		String key = tradestrategy.getStrategy().getClassName() + tradestrategy.getIdTradeStrategy();
+		String key = tradestrategy.getStrategy().getClassName() + tradestrategy.getId();
 		if (isStrategyWorkerRunning(key)) {
 			killStrategyWorker(key);
 		}
 		if (tradestrategy.getStrategy().hasStrategyManager()) {
-			key = tradestrategy.getStrategy().getStrategyManager().getClassName() + tradestrategy.getIdTradeStrategy();
+			key = tradestrategy.getStrategy().getStrategyManager().getClassName() + tradestrategy.getId();
 			if (isStrategyWorkerRunning(key)) {
 				killStrategyWorker(key);
 			}
@@ -1081,7 +1081,7 @@ public class TradingdayPanel extends BasePanel {
 		boolean enable = false;
 		if (null != tradestrategy) {
 			enable = true;
-			transferButton.setTransferObject(tradestrategy.getIdTradeStrategy());
+			transferButton.setTransferObject(tradestrategy.getId());
 			try {
 				CodeType codeType = m_tradePersistentModel.findCodeTypeByNameType(tradestrategy.getStrategy().getName(),
 						CodeType.StrategyParameters);
@@ -1386,7 +1386,7 @@ public class TradingdayPanel extends BasePanel {
 				getProgressBar().setMaximum(100);
 				setProgress(0);
 				String message = null;
-				this.toStrategy = this.tradeManagerModel.findStrategyById(this.toStrategy.getIdStrategy());
+				this.toStrategy = this.tradeManagerModel.findStrategyById(this.toStrategy.getId());
 				Collections.sort(tradingdays.getTradingdays(), Tradingday.DATE_ORDER_ASC);
 				for (Tradingday tradingday : tradingdays.getTradingdays()) {
 					this.tradeManagerModel.reassignStrategy(this.fromStrategy, this.toStrategy, tradingday);

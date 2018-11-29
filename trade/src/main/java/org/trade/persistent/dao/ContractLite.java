@@ -77,25 +77,25 @@ public class ContractLite extends Aspect implements Serializable, Cloneable {
 	}
 
 	/**
-	 * Method getIdContract.
+	 * Method getId.
 	 * 
 	 * @return Integer
 	 */
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "idContract", unique = true, nullable = false)
-	public Integer getIdContract() {
+	@Column(name = "id", unique = true, nullable = false)
+	public Integer getId() {
 		return this.id;
 	}
 
 	/**
-	 * Method setIdContract.
+	 * Method setId.
 	 * 
-	 * @param idContract
+	 * @param id
 	 *            Integer
 	 */
-	public void setIdContract(Integer idContract) {
-		this.id = idContract;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	/**
@@ -104,7 +104,7 @@ public class ContractLite extends Aspect implements Serializable, Cloneable {
 	 * @return TradePosition
 	 */
 	@OneToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "idTradePosition", insertable = false, updatable = true, nullable = true)
+	@JoinColumn(name = "id_trade_position", insertable = false, updatable = true, nullable = true)
 	public TradePosition getTradePosition() {
 		return this.tradePosition;
 	}
