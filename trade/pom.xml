@@ -93,7 +93,7 @@
             <version>3.0.0-M1</version>
             <configuration>
                 <argLine>-Duser.timezone=America/New_York
-                    -Dlog4j.configuration=${basedir}/src/test/resources/config.properties
+                    -Dlog4j.configuration=${basedir}/../config.properties
                 </argLine>
             </configuration>
         </plugin>
