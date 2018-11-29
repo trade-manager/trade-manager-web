@@ -24,7 +24,7 @@ $git clone <URL> i.e. https://github.com/trade-manager/trade-manager-web.git
 
 2/ Add the tools-1.8.0.jar to the .m2 repo. From the project dir 
 
-$mvn install:install-file -Dfile=web/lib/tools-1.8.0.jar -DgroupId=com.sun -DartifactId=tools -Dversion=1.8.0 -Dpackaging=jar
+$mvn install:install-file -Dfile=lib/tools-1.8.0.jar -DgroupId=com.sun -DartifactId=tools -Dversion=1.8.0 -Dpackaging=jar
 
 3/ Build the project from the project dir 
 
