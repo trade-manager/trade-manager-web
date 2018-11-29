@@ -1,7 +1,11 @@
 package org.trade.ui.strategy;
 
-import java.awt.Color;
-import java.awt.Font;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
+
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -14,11 +18,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
 
-import javax.swing.JEditorPane;
-import javax.swing.JScrollPane;
-
-import de.sciss.syntaxpane.DefaultSyntaxKit;
-import static org.junit.Assert.*;
+import javax.swing.*;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -45,6 +45,8 @@ import org.trade.strategy.data.StrategyData;
 import org.trade.ui.TradeAppLoadConfig;
 import org.trade.ui.base.StreamEditorPane;
 
+import de.sciss.syntaxpane.DefaultSyntaxKit;
+
 /**
  */
 public class StrategyPanelTest {
@@ -62,7 +64,7 @@ public class StrategyPanelTest {
 
 	/**
 	 * Method setUpBeforeClass.
-	 * 
+	 *
 	 * @throws java.lang.Exception
 	 */
 	@BeforeClass
@@ -71,7 +73,7 @@ public class StrategyPanelTest {
 
 	/**
 	 * Method setUp.
-	 * 
+	 *
 	 * @throws java.lang.Exception
 	 */
 	@Before
@@ -109,7 +111,7 @@ public class StrategyPanelTest {
 
 	/**
 	 * Method tearDown.
-	 * 
+	 *
 	 * @throws java.lang.Exception
 	 */
 	@After
@@ -121,7 +123,7 @@ public class StrategyPanelTest {
 
 	/**
 	 * Method tearDownAfterClass.
-	 * 
+	 *
 	 * @throws java.lang.Exception
 	 */
 	@AfterClass
@@ -164,9 +166,8 @@ public class StrategyPanelTest {
 
 	/**
 	 * Method readFile.
-	 * 
-	 * @param fileName
-	 *            String
+	 *
+	 * @param fileName String
 	 * @return String
 	 * @throws IOException
 	 */
@@ -194,11 +195,9 @@ public class StrategyPanelTest {
 
 	/**
 	 * Method writeFile.
-	 * 
-	 * @param fileName
-	 *            String
-	 * @param content
-	 *            String
+	 *
+	 * @param fileName String
+	 * @param content  String
 	 * @throws IOException
 	 */
 	private void writeFile(String fileName, String content) throws IOException {

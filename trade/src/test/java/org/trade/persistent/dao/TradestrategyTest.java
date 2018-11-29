@@ -217,8 +217,8 @@ public class TradestrategyTest {
 					.newInstance(TradingCalendar.getPrevTradingDay(TradingCalendar.getDateTimeNowMarketTimeZone()));
 			tradingdays.add(instance);
 
-			String fileName = "db/LoadFile10Stocks.csv";
-			tradingdays.populateDataFromFile(fileName, instance);
+			String TEST_FILE  = "../db/LoadFile10Stocks.csv";
+			tradingdays.populateDataFromFile(TEST_FILE, instance);
 			assertFalse("1", tradingdays.getTradingdays().isEmpty());
 			for (Tradingday tradingday : tradingdays.getTradingdays()) {
 				tradingdayHome.persist(tradingday);
@@ -248,9 +248,8 @@ public class TradestrategyTest {
 					.newInstance(TradingCalendar.getPrevTradingDay(TradingCalendar.getDateTimeNowMarketTimeZone()));
 			tradingdays.add(instance);
 
-			String fileName = "db/LoadFile1Stock.csv";
-
-			tradingdays.populateDataFromFile(fileName, instance);
+			String TEST_FILE  = "../db/LoadFile1Stock.csv";
+			tradingdays.populateDataFromFile(TEST_FILE, instance);
 			assertFalse("1", tradingdays.getTradingdays().isEmpty());
 			for (Tradingday tradingday : tradingdays.getTradingdays()) {
 				tradingdayHome.persist(tradingday);
