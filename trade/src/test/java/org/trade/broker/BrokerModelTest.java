@@ -104,7 +104,7 @@ public class BrokerModelTest implements BrokerChangeListener {
 	/**
 	 * Method setUpBeforeClass.
 	 * 
-	 * @throws java.lang.Exception
+	 * @throws Exception
 	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -126,7 +126,7 @@ public class BrokerModelTest implements BrokerChangeListener {
 	/**
 	 * Method setUp.
 	 * 
-	 * @throws java.lang.Exception
+	 * @throws Exception
 	 */
 	@Before
 	public void setUp() throws Exception {
@@ -162,7 +162,7 @@ public class BrokerModelTest implements BrokerChangeListener {
 	/**
 	 * Method tearDown.
 	 * 
-	 * @throws java.lang.Exception
+	 * @throws Exception
 	 */
 	@After
 	public void tearDown() throws Exception {
@@ -191,7 +191,7 @@ public class BrokerModelTest implements BrokerChangeListener {
 	/**
 	 * Method tearDownAfterClass.
 	 * 
-	 * @throws java.lang.Exception
+	 * @throws Exception
 	 */
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {

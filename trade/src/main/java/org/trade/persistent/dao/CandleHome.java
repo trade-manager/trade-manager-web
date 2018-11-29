@@ -361,7 +361,7 @@ public class CandleHome {
 			CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 			CriteriaQuery<Object> query = builder.createQuery();
 			Root<Candle> from = query.from(Candle.class);
-			Expression<Long> id = from.get("idCandle");
+			Expression<Long> id = from.get("id");
 			Expression<Long> minExpression = builder.count(id);
 
 			List<Predicate> predicates = new ArrayList<Predicate>();

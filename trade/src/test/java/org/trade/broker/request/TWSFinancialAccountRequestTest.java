@@ -71,7 +71,7 @@ public class TWSFinancialAccountRequestTest {
 	/**
 	 * Method setUpBeforeClass.
 	 * 
-	 * @throws java.lang.Exception
+	 * @throws Exception
 	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -80,7 +80,7 @@ public class TWSFinancialAccountRequestTest {
 	/**
 	 * Method setUp.
 	 * 
-	 * @throws java.lang.Exception
+	 * @throws Exception
 	 */
 	@Before
 	public void setUp() throws Exception {
@@ -92,7 +92,7 @@ public class TWSFinancialAccountRequestTest {
 	/**
 	 * Method tearDown.
 	 * 
-	 * @throws java.lang.Exception
+	 * @throws Exception
 	 */
 	@After
 	public void tearDown() throws Exception {
@@ -110,7 +110,7 @@ public class TWSFinancialAccountRequestTest {
 	/**
 	 * Method tearDownAfterClass.
 	 * 
-	 * @throws java.lang.Exception
+	 * @throws Exception
 	 */
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {

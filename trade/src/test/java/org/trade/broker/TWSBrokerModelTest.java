@@ -102,7 +102,7 @@ public class TWSBrokerModelTest implements BrokerChangeListener {
 	/**
 	 * Method setUpBeforeClass.
 	 * 
-	 * @throws java.lang.Exception
+	 * @throws Exception
 	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -131,7 +131,7 @@ public class TWSBrokerModelTest implements BrokerChangeListener {
 	 * Method setUp. Try to connect to the Broker for these tests that but
 	 * candle data from the broker and test the throtle monitor.
 	 * 
-	 * @throws java.lang.Exception
+	 * @throws Exception
 	 */
 	@Before
 	public void setUp() throws Exception {
@@ -160,7 +160,7 @@ public class TWSBrokerModelTest implements BrokerChangeListener {
 	/**
 	 * Method tearDown.
 	 * 
-	 * @throws java.lang.Exception
+	 * @throws Exception
 	 */
 	@After
 	public void tearDown() throws Exception {
@@ -192,7 +192,7 @@ public class TWSBrokerModelTest implements BrokerChangeListener {
 	/**
 	 * Method tearDownAfterClass.
 	 * 
-	 * @throws java.lang.Exception
+	 * @throws Exception
 	 */
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
@@ -204,7 +204,7 @@ public class TWSBrokerModelTest implements BrokerChangeListener {
 		try {
 			if (tWSBrokerModel.isConnected()) {
 
-				String fileName = "org/trade/test/org/trade/broker/OneSymbolToday.csv";
+				String fileName = "trade/test/org/trade/broker/OneSymbolToday.csv";
 				ZonedDateTime tradingDay = TradingCalendar.getDateTimeNowMarketTimeZone();
 				tradingDay = TradingCalendar.getPrevTradingDay(tradingDay);
 
@@ -257,7 +257,7 @@ public class TWSBrokerModelTest implements BrokerChangeListener {
 		try {
 			if (tWSBrokerModel.isConnected()) {
 
-				String fileName = "org/trade/test/org/trade/broker/OneMonthContracts.csv";
+				String fileName = "trade/test/org/trade/broker/OneMonthContracts.csv";
 				ZonedDateTime tradingDay = TradingCalendar.getDateTimeNowMarketTimeZone();
 				tradingDay = TradingCalendar.getPrevTradingDay(tradingDay);
 
@@ -310,7 +310,7 @@ public class TWSBrokerModelTest implements BrokerChangeListener {
 		try {
 			if (tWSBrokerModel.isConnected()) {
 
-				String fileName = "org/trade/test/org/trade/broker/OneSymbolTwoMths.csv";
+				String fileName = "trade/test/org/trade/broker/OneSymbolTwoMths.csv";
 				ZonedDateTime tradingDay = TradingCalendar.getDateTimeNowMarketTimeZone();
 				tradingDay = TradingCalendar.getPrevTradingDay(tradingDay);
 
@@ -372,7 +372,7 @@ public class TWSBrokerModelTest implements BrokerChangeListener {
 		try {
 			if (tWSBrokerModel.isConnected()) {
 
-				String fileName = "org/trade/test/org/trade/broker/MultiContractsMultiDays.csv";
+				String fileName = "trade/test/org/trade/broker/MultiContractsMultiDays.csv";
 				ZonedDateTime tradingDay = TradingCalendar.getDateTimeNowMarketTimeZone();
 				tradingDay = TradingCalendar.getPrevTradingDay(tradingDay);
 

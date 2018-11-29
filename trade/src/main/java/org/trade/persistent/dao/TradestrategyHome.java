@@ -129,7 +129,7 @@ public class TradestrategyHome {
 
 			CriteriaQuery<TradestrategyLite> select = query.multiselect(from.get("id"),
 					from.get("version"));
-			Predicate predicate = builder.equal(from.get("idTradeStrategy"), id);
+			Predicate predicate = builder.equal(from.get("id"), id);
 			query.where(predicate);
 			TypedQuery<TradestrategyLite> typedQuery = entityManager.createQuery(select);
 			List<TradestrategyLite> items = typedQuery.getResultList();
