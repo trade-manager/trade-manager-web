@@ -46,7 +46,7 @@ import org.trade.persistent.dao.Tradestrategy;
 
 /**
  */
-public interface BrokerModel {
+public interface IBrokerModel {
 
 	public final static String _brokerTest = "BrokerTest";
 
@@ -56,17 +56,17 @@ public interface BrokerModel {
 	 * Method addMessageListener.
 	 * 
 	 * @param listener
-	 *            BrokerChangeListener
+	 *            IBrokerChangeListener
 	 */
-	void addMessageListener(BrokerChangeListener listener);
+	void addMessageListener(IBrokerChangeListener listener);
 
 	/**
 	 * Method removeMessageListener.
 	 * 
 	 * @param listener
-	 *            BrokerChangeListener
+	 *            IBrokerChangeListener
 	 */
-	void removeMessageListener(BrokerChangeListener listener);
+	void removeMessageListener(IBrokerChangeListener listener);
 
 	/**
 	 * Method hasListener.
@@ -246,7 +246,7 @@ public interface BrokerModel {
 	 * @param addOrders
 	 *            boolean
 	 * @throws BrokerModelException
-	 * @see org.trade.broker.BrokerModel#onReqExecutions(Tradestrategy)
+	 * @see IBrokerModel#onReqExecutions(Tradestrategy)
 	 */
 	void onReqExecutions(Tradestrategy tradestrategy, boolean addOrders) throws BrokerModelException;
 

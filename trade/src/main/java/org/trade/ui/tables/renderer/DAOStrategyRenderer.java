@@ -45,7 +45,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import org.trade.dictionary.valuetype.DAOStrategy;
 import org.trade.persistent.dao.Strategy;
 import org.trade.persistent.dao.Tradestrategy;
-import org.trade.strategy.StrategyRule;
+import org.trade.strategy.IStrategyRule;
 import org.trade.ui.models.TradestrategyTableModel;
 
 /**
@@ -53,15 +53,15 @@ import org.trade.ui.models.TradestrategyTableModel;
 public class DAOStrategyRenderer extends DefaultTableCellRenderer {
 
 	private static final long serialVersionUID = -6600633898553131547L;
-	private ConcurrentHashMap<String, StrategyRule> strategyWorkers = null;
+	private ConcurrentHashMap<String, IStrategyRule> strategyWorkers = null;
 
 	/**
 	 * Constructor for DAOStrategyRenderer.
 	 * 
 	 * @param strategyWorkers
-	 *            ConcurrentHashMap<String,StrategyRule>
+	 *            ConcurrentHashMap<String,IStrategyRule>
 	 */
-	public DAOStrategyRenderer(ConcurrentHashMap<String, StrategyRule> strategyWorkers) {
+	public DAOStrategyRenderer(ConcurrentHashMap<String, IStrategyRule> strategyWorkers) {
 		this.strategyWorkers = strategyWorkers;
 	}
 

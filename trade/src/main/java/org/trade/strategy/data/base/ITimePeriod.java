@@ -25,7 +25,7 @@
  * Other names may be trademarks of their respective owners.]
  *
  * ---------------
- * TimePeriod.java
+ * ITimePeriod.java
  * ---------------
  * (C) Copyright 2003-2008, by Object Refinery Limited and Contributors.
  *
@@ -47,7 +47,7 @@ import java.time.ZonedDateTime;
 /**
  * A period of time measured to millisecond precision using two instances of
  */
-public interface TimePeriod extends Comparable<TimePeriod> {
+public interface ITimePeriod extends Comparable<ITimePeriod> {
 
 	/**
 	 * Returns the start date/time. This will always be on or before the end

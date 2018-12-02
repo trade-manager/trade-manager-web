@@ -42,7 +42,7 @@ import org.trade.core.message.MessageFactory;
 
 /**
  */
-public class StringValidator implements Validator {
+public class StringValidator implements IValidator {
 	// Use these to indicate sets of valid characters
 	public final static int NONE = 0;
 
@@ -186,15 +186,15 @@ public class StringValidator implements Validator {
 	 * @param expectedFormat
 	 *            String
 	 * @param receiver
-	 *            ExceptionMessageListener
+	 *            IExceptionMessageListener
 	 * @return boolean
-	 * @see org.trade.core.validator.Validator#isValid(Object, String, String,
-	 *      ExceptionMessageListener)
+	 * @see IValidator#isValid(Object, String, String,
+	 *      IExceptionMessageListener)
 	 */
 	public boolean isValid(Object value, String invalidValue, String expectedFormat,
-			ExceptionMessageListener receiver) {
+			IExceptionMessageListener receiver) {
 		if (null == receiver) {
-			receiver = new ExceptionMessageListener() {
+			receiver = new IExceptionMessageListener() {
 				public void addExceptionMessage(ExceptionMessage e) {
 				}
 			};

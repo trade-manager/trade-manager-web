@@ -5,10 +5,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 import javax.swing.SwingWorker;
 
 import org.trade.persistent.dao.Tradestrategy;
-import org.trade.strategy.StrategyChangeListener;
+import org.trade.strategy.IStrategyChangeListener;
 import org.trade.strategy.StrategyRuleException;
 
-public abstract class Broker extends SwingWorker<Void, Void> implements StrategyChangeListener {
+public abstract class Broker extends SwingWorker<Void, Void> implements IStrategyChangeListener {
 
 	protected AtomicInteger ruleComplete = new AtomicInteger(0);
 	protected AtomicInteger strategiesRunning = new AtomicInteger(0);
@@ -25,7 +25,7 @@ public abstract class Broker extends SwingWorker<Void, Void> implements Strategy
 	 *            String
 	 * @param tradestrategy
 	 *            Tradestrategy
-	 * @see org.trade.strategy.StrategyChangeListener#strategyComplete(Tradestrategy)
+	 * @see IStrategyChangeListener#strategyComplete(Tradestrategy)
 	 */
 	public synchronized void strategyComplete(String strategyClassName, Tradestrategy tradestrategy) {
 		synchronized (lockBackTestWorker) {
@@ -41,7 +41,7 @@ public abstract class Broker extends SwingWorker<Void, Void> implements Strategy
 	 *            String
 	 * @param tradestrategy
 	 *            Tradestrategy
-	 * @see org.trade.strategy.StrategyChangeListener#strategyStarted(Tradestrategy)
+	 * @see IStrategyChangeListener#strategyStarted(Tradestrategy)
 	 */
 	public synchronized void strategyStarted(String strategyClassName, Tradestrategy tradestrategy) {
 		synchronized (lockBackTestWorker) {
@@ -55,7 +55,7 @@ public abstract class Broker extends SwingWorker<Void, Void> implements Strategy
 	 * 
 	 * @param tradestrategy
 	 *            Tradestrategy
-	 * @see org.trade.strategy.StrategyChangeListener#ruleComplete(Tradestrategy)
+	 * @see IStrategyChangeListener#ruleComplete(Tradestrategy)
 	 */
 	public synchronized void ruleComplete(Tradestrategy tradestrategy) {
 		synchronized (lockBackTestWorker) {
@@ -69,7 +69,7 @@ public abstract class Broker extends SwingWorker<Void, Void> implements Strategy
 	 * 
 	 * @param strategyError
 	 *            StrategyRuleException
-	 * @see org.trade.strategy.StrategyChangeListener#strategyError(StrategyRuleException)
+	 * @see IStrategyChangeListener#strategyError(StrategyRuleException)
 	 */
 	public void strategyError(StrategyRuleException strategyError) {
 		this.cancel(true);

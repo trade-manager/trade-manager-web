@@ -63,7 +63,7 @@ import org.trade.core.factory.ClassFactory;
 import org.trade.core.lookup.DBTableLookupServiceProvider;
 import org.trade.dictionary.valuetype.DAOEntryLimit;
 import org.trade.dictionary.valuetype.ReferenceTable;
-import org.trade.persistent.PersistentModel;
+import org.trade.persistent.IPersistentModel;
 import org.trade.persistent.dao.CodeType;
 import org.trade.persistent.dao.CodeValue;
 import org.trade.persistent.dao.Portfolio;
@@ -92,7 +92,7 @@ public class ConfigurationPanel extends BasePanel {
 
 	private JScrollPane m_jScrollPane = null;
 	private JScrollPane m_jScrollPane1 = new JScrollPane();
-	private PersistentModel m_tradePersistentModel = null;
+	private IPersistentModel m_tradePersistentModel = null;
 	private ConfigurationTable m_table = null;
 	private AspectTableModel m_tableModel = null;
 	private Aspects m_aspects = null;
@@ -106,10 +106,10 @@ public class ConfigurationPanel extends BasePanel {
 	 * Constructor
 	 * 
 	 * @param tradePersistentModel
-	 *            PersistentModel
+	 *            IPersistentModel
 	 */
 
-	public ConfigurationPanel(PersistentModel tradePersistentModel) {
+	public ConfigurationPanel(IPersistentModel tradePersistentModel) {
 		try {
 			if (null != getMenu())
 				getMenu().addMessageListener(this);

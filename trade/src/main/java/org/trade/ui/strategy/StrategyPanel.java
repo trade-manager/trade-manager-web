@@ -36,19 +36,19 @@
 package org.trade.ui.strategy;
 
 import de.sciss.syntaxpane.DefaultSyntaxKit;
-import org.trade.broker.BrokerModel;
+import org.trade.broker.IBrokerModel;
 import org.trade.core.factory.ClassFactory;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.DynamicCode;
 import org.trade.core.util.TradingCalendar;
 import org.trade.core.valuetype.ValueTypeException;
 import org.trade.dictionary.valuetype.*;
-import org.trade.persistent.PersistentModel;
+import org.trade.persistent.IPersistentModel;
 import org.trade.persistent.PersistentModelException;
 import org.trade.persistent.dao.Contract;
 import org.trade.persistent.dao.Rule;
 import org.trade.persistent.dao.Strategy;
-import org.trade.strategy.StrategyRule;
+import org.trade.strategy.IStrategyRule;
 import org.trade.strategy.data.CandleDataset;
 import org.trade.strategy.data.CandleSeries;
 import org.trade.strategy.data.StrategyData;
@@ -89,7 +89,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
     private BaseButton compileButton = null;
     private BaseButton newButton = null;
     private StrategyTreeModel strategyTreeModel = null;
-    private PersistentModel tradePersistentModel = null;
+    private IPersistentModel tradePersistentModel = null;
     private String m_strategyDir = null;
     private DynamicCode dynacode = null;
     private List<Strategy> strategies = null;
@@ -97,7 +97,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
     private SimpleAttributeSet colorRedAttr = null;
 
 
-    public StrategyPanel(PersistentModel tradePersistentModel) {
+    public StrategyPanel(IPersistentModel tradePersistentModel) {
         try {
             if (null != getMenu())
                 getMenu().addMessageListener(this);
@@ -106,7 +106,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
             colorRedAttr = new SimpleAttributeSet();
             StyleConstants.setForeground(colorRedAttr, Color.RED);
             m_strategyDir = ConfigProperties.getPropAsString("trade.strategy.default.dir");
-            String fileDir = TEMP_DIR + "/" + StrategyRule.PACKAGE.replace('.', '/');
+            String fileDir = TEMP_DIR + "/" + IStrategyRule.PACKAGE.replace('.', '/');
             File srcDirFile = new File(fileDir);
             srcDirFile.mkdirs();
             srcDirFile.deleteOnExit();
@@ -226,7 +226,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
 
                 try {
                     Class<?> thisClass = this.dynacode
-                            .loadClass(StrategyRule.PACKAGE + rule.getStrategy().getClassName());
+                            .loadClass(IStrategyRule.PACKAGE + rule.getStrategy().getClassName());
                     setMessageText(null, false, false, null);
                     addClassDefinition(thisClass, "Methods for class: " + thisClass.getName(),
                             messageText.getDocument());
@@ -268,12 +268,12 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
     public void doCompile(final Rule rule) {
         try {
             setMessageText(null, false, false, null);
-            String fileName = TEMP_DIR + "/" + StrategyRule.PACKAGE.replace('.', '/');
+            String fileName = TEMP_DIR + "/" + IStrategyRule.PACKAGE.replace('.', '/');
             fileName = fileName + rule.getStrategy().getClassName() + ".java";
             doSaveFile(fileName, this.getContent());
 
             Vector<Object> parm = new Vector<Object>(0);
-            BrokerModel brokerManagerModel = (BrokerModel) ClassFactory.getServiceForInterface(BrokerModel._brokerTest,
+            IBrokerModel brokerManagerModel = (IBrokerModel) ClassFactory.getServiceForInterface(IBrokerModel._brokerTest,
                     this);
             CandleDataset candleDataset = new CandleDataset();
             CandleSeries candleSeries = new CandleSeries("Test",
@@ -286,7 +286,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
             parm.add(0);
             DynamicCode dynacode = new DynamicCode();
             dynacode.addSourceDir(new File(TEMP_DIR));
-            dynacode.newProxyInstance(StrategyRule.class, StrategyRule.PACKAGE + rule.getStrategy().getClassName(),
+            dynacode.newProxyInstance(IStrategyRule.class, IStrategyRule.PACKAGE + rule.getStrategy().getClassName(),
                     parm);
 
             this.setStatusBarMessage("File compiled.", BasePanel.INFORMATION);
@@ -306,7 +306,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
             if (null == m_strategyDir) {
                 fileView.setCurrentDirectory(new File(System.getProperty("user.dir")));
             } else {
-                String dir = m_strategyDir + "/" + StrategyRule.PACKAGE.replace('.', '/');
+                String dir = m_strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/');
                 fileView.setCurrentDirectory(new File(dir));
             }
 
@@ -352,7 +352,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
                     }
                 }
             }
-            String fileName = m_strategyDir + "/" + StrategyRule.PACKAGE.replace('.', '/');
+            String fileName = m_strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/');
             String fileNameSource = fileName + this.currentRule.getStrategy().getClassName() + ".java";
             String fileNameComments = fileName + this.currentRule.getStrategy().getClassName() + ".txt";
             int result = JOptionPane.NO_OPTION;
@@ -403,7 +403,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
         try {
 
             String templateName = ConfigProperties.getPropAsString("trade.strategy.template");
-            String fileName = m_strategyDir + "/" + StrategyRule.PACKAGE.replace('.', '/') + templateName + ".java";
+            String fileName = m_strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/') + templateName + ".java";
 
             commentText.setText(null);
             setContent(readFile(fileName));
@@ -485,9 +485,9 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
         try {
             this.setMessageText(null, false, false, null);
             for (Strategy strategy : strategies) {
-                String fileNameCode = m_strategyDir + "/" + StrategyRule.PACKAGE.replace('.', '/')
+                String fileNameCode = m_strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/')
                         + strategy.getClassName() + ".java";
-                String fileNameComments = m_strategyDir + "/" + StrategyRule.PACKAGE.replace('.', '/')
+                String fileNameComments = m_strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/')
                         + strategy.getClassName() + ".txt";
 
                 try {

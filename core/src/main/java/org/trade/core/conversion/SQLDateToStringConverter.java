@@ -48,7 +48,7 @@ import java.sql.Date;
  * @see java.sql.Date
  * @author Simon Allen
  */
-public class SQLDateToStringConverter implements JavaTypeConverter {
+public class SQLDateToStringConverter implements IJavaTypeConverter {
 	/**
 	 * Default constructor.
 	 */
@@ -56,7 +56,7 @@ public class SQLDateToStringConverter implements JavaTypeConverter {
 	}
 
 	//
-	// JavaTypeConverter interface methods
+	// IJavaTypeConverter interface methods
 	//
 	/**
 	 * This method is used by the JavaTypeTranslator to convert a source object
@@ -72,7 +72,7 @@ public class SQLDateToStringConverter implements JavaTypeConverter {
 	 * @return Object the String representation of the valueToConvert
 	 *         * @exception IllegalArgumentException thrown if the
 	 *         valueToConvert is not of type java.sql.Date * @see
-	 *         org.trade.core.conversion.JavaTypeConverter#convert(Object)
+	 *         org.trade.core.conversion.IJavaTypeConverter#convert(Object)
 	 */
 	public Object convert(Object valueToConvert) throws IllegalArgumentException {
 		if (valueToConvert instanceof java.sql.Date) {
@@ -89,7 +89,7 @@ public class SQLDateToStringConverter implements JavaTypeConverter {
 	 * 
 	 * @return Class the class of the source value which will be converted
 	 *         * @see
-	 *         org.trade.core.conversion.JavaTypeConverter#getSourceType()
+	 *         org.trade.core.conversion.IJavaTypeConverter#getSourceType()
 	 */
 	public Class<?> getSourceType() {
 		return java.sql.Date.class;
@@ -101,7 +101,7 @@ public class SQLDateToStringConverter implements JavaTypeConverter {
 	 * 
 	 * 
 	 * @return Class the class the source value will be converted to * @see
-	 *         org.trade.core.conversion.JavaTypeConverter#getTargetType()
+	 *         org.trade.core.conversion.IJavaTypeConverter#getTargetType()
 	 */
 	public Class<?> getTargetType() {
 		return java.lang.String.class;

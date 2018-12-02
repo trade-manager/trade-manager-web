@@ -51,7 +51,7 @@ public class StrategyChangeEvent extends java.util.EventObject {
 	/**
 	 * The strategyRule that generated the change event.
 	 */
-	private StrategyRule strategyRule;
+	private IStrategyRule strategyRule;
 
 	/**
 	 * Constructs a new event. The source is either the strategyRule or the
@@ -62,9 +62,9 @@ public class StrategyChangeEvent extends java.util.EventObject {
 	 *            the source of the event.
 	 * 
 	 * @param strategyRule
-	 *            StrategyRule
+	 *            IStrategyRule
 	 */
-	public StrategyChangeEvent(Object source, StrategyRule strategyRule) {
+	public StrategyChangeEvent(Object source, IStrategyRule strategyRule) {
 		super(source);
 		this.strategyRule = strategyRule;
 	}
@@ -77,7 +77,7 @@ public class StrategyChangeEvent extends java.util.EventObject {
 	 * 
 	 * @return The strategyRule (possibly <code>null</code>).
 	 */
-	public StrategyRule getStrategyRule() {
+	public IStrategyRule getStrategyRule() {
 		return this.strategyRule;
 	}
 

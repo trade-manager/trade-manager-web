@@ -60,7 +60,7 @@ import org.trade.core.dao.Aspects;
 import org.trade.core.factory.ClassFactory;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.TradingCalendar;
-import org.trade.persistent.PersistentModel;
+import org.trade.persistent.IPersistentModel;
 import org.trade.persistent.PersistentModelException;
 import org.trade.persistent.dao.Candle;
 import org.trade.persistent.dao.Contract;
@@ -78,15 +78,15 @@ import org.trade.ui.base.BasePanel;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-public class TWSBrokerModelTest implements BrokerChangeListener {
+public class TWSBrokerModelTest implements IBrokerChangeListener {
 
 	private final static Logger _log = LoggerFactory.getLogger(TWSBrokerModelTest.class);
 	@Rule
 	public TestName name = new TestName();
 
 	private Tradingdays tradingdays = null;
-	private BrokerModel tWSBrokerModel;
-	private PersistentModel tradePersistentModel = null;
+	private IBrokerModel tWSBrokerModel;
+	private IPersistentModel tradePersistentModel = null;
 	private static Integer clientId;
 	private static Integer port = null;
 	private static String host = null;
@@ -95,7 +95,7 @@ public class TWSBrokerModelTest implements BrokerChangeListener {
 	private boolean connectionFailed = false;
 	private static AtomicInteger timerRunning = null;
 	private final static Object lockCoreUtilsTest = new Object();
-	private final static String _broker = BrokerModel._broker;
+	private final static String _broker = IBrokerModel._broker;
 
 	private BrokerDataRequestMonitor brokerDataRequestProgressMonitor = null;
 
@@ -136,9 +136,9 @@ public class TWSBrokerModelTest implements BrokerChangeListener {
 	@Before
 	public void setUp() throws Exception {
 		try {
-			tradePersistentModel = (PersistentModel) ClassFactory
-					.getServiceForInterface(PersistentModel._persistentModel, this);
-			tWSBrokerModel = (BrokerModel) ClassFactory.getServiceForInterface(_broker, this);
+			tradePersistentModel = (IPersistentModel) ClassFactory
+					.getServiceForInterface(IPersistentModel._persistentModel, this);
+			tWSBrokerModel = (IBrokerModel) ClassFactory.getServiceForInterface(_broker, this);
 			tWSBrokerModel.addMessageListener(this);
 			tWSBrokerModel.onConnect(host, port, clientId);
 			timerRunning = new AtomicInteger(0);

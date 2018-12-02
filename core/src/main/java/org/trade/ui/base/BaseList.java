@@ -132,11 +132,11 @@ public class BaseList extends JList<Object> {
 	 * 
 	 * 
 	 * @param listener
-	 *            MessageListener
+	 *            IMessageListener
 	 * @exception *
 	 * 				@see
 	 */
-	public void addMessageListener(MessageListener listener) {
+	public void addMessageListener(IMessageListener listener) {
 		m_notifier.add(listener);
 	}
 
@@ -149,11 +149,11 @@ public class BaseList extends JList<Object> {
 	 * 
 	 * 
 	 * @param listener
-	 *            MessageListener
+	 *            IMessageListener
 	 * @exception *
 	 * 				@see
 	 */
-	public void removeMessageListener(MessageListener listener) {
+	public void removeMessageListener(IMessageListener listener) {
 		m_notifier.remove(listener);
 	}
 

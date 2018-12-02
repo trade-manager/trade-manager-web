@@ -46,7 +46,7 @@ import org.trade.core.message.MessageFactory;
 
 /**
  */
-public class DateValidator implements Validator {
+public class DateValidator implements IValidator {
 	public final static String DATE_TIME_FORMAT = "yyyy-MM-dd'T'HHmmss'Z'";
 
 	private IMessageFactory m_messageFactory;
@@ -89,15 +89,15 @@ public class DateValidator implements Validator {
 	 * @param expectedFormat
 	 *            String
 	 * @param receiver
-	 *            ExceptionMessageListener
+	 *            IExceptionMessageListener
 	 * @return boolean
-	 * @see org.trade.core.validator.Validator#isValid(Object, String, String,
-	 *      ExceptionMessageListener)
+	 * @see IValidator#isValid(Object, String, String,
+	 *      IExceptionMessageListener)
 	 */
 	public boolean isValid(Object value, String invalidValue, String expectedFormat,
-			ExceptionMessageListener receiver) {
+			IExceptionMessageListener receiver) {
 		if (null == receiver) {
-			receiver = new ExceptionMessageListener() {
+			receiver = new IExceptionMessageListener() {
 				public void addExceptionMessage(ExceptionMessage e) {
 				}
 			};

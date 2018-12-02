@@ -344,7 +344,7 @@ public class BasePanelMenu extends JPanel {
 	}
 
 	/**
-	 * addMessageListener (MessageListener listener)
+	 * addMessageListener (IMessageListener listener)
 	 * 
 	 * 
 	 * 
@@ -352,16 +352,16 @@ public class BasePanelMenu extends JPanel {
 	 * 
 	 * 
 	 * @param listener
-	 *            MessageListener
+	 *            IMessageListener
 	 * @exception *
 	 * 				@see
 	 */
-	public void addMessageListener(MessageListener listener) {
+	public void addMessageListener(IMessageListener listener) {
 		m_notifier.add(listener);
 	}
 
 	/**
-	 * removeMessageListener (MessageListener listener)
+	 * removeMessageListener (IMessageListener listener)
 	 * 
 	 * 
 	 * 
@@ -369,16 +369,16 @@ public class BasePanelMenu extends JPanel {
 	 * 
 	 * 
 	 * @param listener
-	 *            MessageListener
+	 *            IMessageListener
 	 * @exception *
 	 * 				@see
 	 */
-	public void removeMessageListener(MessageListener listener) {
+	public void removeMessageListener(IMessageListener listener) {
 		m_notifier.remove(listener);
 	}
 
 	/**
-	 * getWindowsOpenMenu (MessageListener listener)
+	 * getWindowsOpenMenu (IMessageListener listener)
 	 * 
 	 * 
 	 * 

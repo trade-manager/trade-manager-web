@@ -46,7 +46,7 @@ package org.trade.core.conversion;
  * @see java.lang.Object
  * @author Simon Allen
  */
-public class ObjectToStringConverter implements JavaTypeConverter {
+public class ObjectToStringConverter implements IJavaTypeConverter {
 	/**
 	 * Default constructor.
 	 */
@@ -54,7 +54,7 @@ public class ObjectToStringConverter implements JavaTypeConverter {
 	}
 
 	//
-	// JavaTypeConverter interface methods
+	// IJavaTypeConverter interface methods
 	//
 	/**
 	 * This method is used by the JavaTypeTranslator to convert a source object
@@ -70,7 +70,7 @@ public class ObjectToStringConverter implements JavaTypeConverter {
 	 * @return Object the String representation of the valueToConvert
 	 *         * @exception IllegalArgumentException which should never be
 	 *         thrown * @see
-	 *         org.trade.core.conversion.JavaTypeConverter#convert(Object)
+	 *         org.trade.core.conversion.IJavaTypeConverter#convert(Object)
 	 */
 	public Object convert(Object valueToConvert) throws IllegalArgumentException {
 		if (null == valueToConvert) {
@@ -87,7 +87,7 @@ public class ObjectToStringConverter implements JavaTypeConverter {
 	 * 
 	 * @return Class the class of the source value which will be converted
 	 *         * @see
-	 *         org.trade.core.conversion.JavaTypeConverter#getSourceType()
+	 *         org.trade.core.conversion.IJavaTypeConverter#getSourceType()
 	 */
 	public Class<?> getSourceType() {
 		return java.lang.Object.class;
@@ -99,7 +99,7 @@ public class ObjectToStringConverter implements JavaTypeConverter {
 	 * 
 	 * 
 	 * @return Class the class the source value will be converted to * @see
-	 *         org.trade.core.conversion.JavaTypeConverter#getTargetType()
+	 *         org.trade.core.conversion.IJavaTypeConverter#getTargetType()
 	 */
 	public Class<?> getTargetType() {
 		return java.lang.String.class;

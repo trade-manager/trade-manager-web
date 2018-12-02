@@ -50,7 +50,7 @@ public class BrokerChangeEvent extends java.util.EventObject {
 	/**
 	 * The brokerManagerModel that generated the change event.
 	 */
-	private BrokerModel brokerManagerModel;
+	private IBrokerModel brokerManagerModel;
 
 	/**
 	 * Constructs a new event. The source is either the brokerManagerModel or
@@ -61,9 +61,9 @@ public class BrokerChangeEvent extends java.util.EventObject {
 	 *            the source of the event.
 	 * 
 	 * @param brokerManagerModel
-	 *            BrokerModel
+	 *            IBrokerModel
 	 */
-	public BrokerChangeEvent(Object source, BrokerModel brokerManagerModel) {
+	public BrokerChangeEvent(Object source, IBrokerModel brokerManagerModel) {
 		super(source);
 		this.brokerManagerModel = brokerManagerModel;
 	}
@@ -77,7 +77,7 @@ public class BrokerChangeEvent extends java.util.EventObject {
 	 * 
 	 * @return The brokerManagerModel (possibly <code>null</code>).
 	 */
-	public BrokerModel getBrokerManagerModel() {
+	public IBrokerModel getBrokerManagerModel() {
 		return this.brokerManagerModel;
 	}
 

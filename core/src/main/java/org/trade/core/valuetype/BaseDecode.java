@@ -43,7 +43,7 @@ import java.util.Vector;
  * 
  * Note : This object is not intended to be used directly.
  * 
- * This object will use a LookupService in order to obtain a Lookup containing
+ * This object will use a LookupService in order to obtain a ILookup containing
  * all of the Systems CODE_DECODE values for a specific Type.
  * 
  * @author Simon Allen

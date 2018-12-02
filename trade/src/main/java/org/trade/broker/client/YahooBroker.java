@@ -65,11 +65,11 @@ public class YahooBroker extends Broker {
     private String durationStr = null;
     private String barSizeSetting = null;
     private String endDateTime = null;
-    private ClientWrapper brokerModel = null;
+    private IClientWrapper brokerModel = null;
 
 
     public YahooBroker(Integer reqId, Contract contract, String endDateTime, String durationStr, String barSizeSetting,
-                       ClientWrapper brokerModel) {
+                       IClientWrapper brokerModel) {
         this.reqId = reqId;
         this.contract = contract;
         this.barSizeSetting = barSizeSetting;

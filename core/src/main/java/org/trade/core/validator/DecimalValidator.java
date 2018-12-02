@@ -44,7 +44,7 @@ import org.trade.core.message.MessageFactory;
 
 /**
  */
-public class DecimalValidator implements Validator {
+public class DecimalValidator implements IValidator {
 	private IMessageFactory m_messageFactory;
 
 	private boolean m_isMandatory;
@@ -107,15 +107,15 @@ public class DecimalValidator implements Validator {
 	 * @param expectedFormat
 	 *            String
 	 * @param receiver
-	 *            ExceptionMessageListener
+	 *            IExceptionMessageListener
 	 * @return boolean
-	 * @see org.trade.core.validator.Validator#isValid(Object, String, String,
-	 *      ExceptionMessageListener)
+	 * @see IValidator#isValid(Object, String, String,
+	 *      IExceptionMessageListener)
 	 */
 	public boolean isValid(Object value, String invalidValue, String expectedFormat,
-			ExceptionMessageListener receiver) {
+			IExceptionMessageListener receiver) {
 		if (null == receiver) {
-			receiver = new ExceptionMessageListener() {
+			receiver = new IExceptionMessageListener() {
 				public void addExceptionMessage(ExceptionMessage e) {
 				}
 			};
@@ -184,7 +184,7 @@ public class DecimalValidator implements Validator {
 		} else
 		// Money was not able to parse invalidValue into a BigDecimal
 		{
-			Validator validator;
+			IValidator validator;
 
 			if (m_allowNegative) {
 				validator = new StringValidator(getMessageFactory(), 1, m_maxNonDecimalLength + m_maxDecimalLength + 2,

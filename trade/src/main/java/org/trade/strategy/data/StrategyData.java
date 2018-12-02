@@ -60,7 +60,7 @@ public class StrategyData extends Worker {
 
 	private CandleDataset baseCandleDataset = null;
 	private CandleDataset candleDataset = null;
-	private final List<IndicatorDataset> indicators = new ArrayList<IndicatorDataset>();
+	private final List<IIndicatorDataset> indicators = new ArrayList<IIndicatorDataset>();
 
 	private boolean seriesChanged = true;
 	private final Object lockStrategyWorker = new Object();
@@ -92,7 +92,7 @@ public class StrategyData extends Worker {
 				IndicatorSeries series = (IndicatorSeries) indicator.clone();
 				series.setKey(series.getName());
 				series.createSeries(candleDataset, 0);
-				IndicatorDataset indicatorDataset = this.getIndicatorByType(indicator.getType());
+				IIndicatorDataset indicatorDataset = this.getIndicatorByType(indicator.getType());
 				if (null == indicatorDataset) {
 					/*
 					 * Data-set and Series names should have the same name with
@@ -103,8 +103,8 @@ public class StrategyData extends Worker {
 					 */
 					String datasetName = indicator.getType().replaceAll("Series", "Dataset");
 					Vector<Object> parm = new Vector<Object>();
-					indicatorDataset = (IndicatorDataset) ClassFactory
-							.getCreateClass(IndicatorDataset.PACKAGE + datasetName, parm, this);
+					indicatorDataset = (IIndicatorDataset) ClassFactory
+							.getCreateClass(IIndicatorDataset.PACKAGE + datasetName, parm, this);
 					this.indicators.add(indicatorDataset);
 				}
 				indicatorDataset.addSeries(series);
@@ -315,7 +315,7 @@ public class StrategyData extends Worker {
 	 */
 	private void updateIndicators(CandleDataset source, boolean newBar) {
 
-		for (IndicatorDataset indicator : indicators) {
+		for (IIndicatorDataset indicator : indicators) {
 			/*
 			 * CandleSeries are only updated via the API i.e. these are not true
 			 * indicators and are shared across Data-sets.
@@ -338,7 +338,7 @@ public class StrategyData extends Worker {
 	 */
 	public void createIndicators(CandleDataset source) {
 
-		for (IndicatorDataset indicator : indicators) {
+		for (IIndicatorDataset indicator : indicators) {
 			if (!IndicatorSeries.CandleSeries.equals(indicator.getType(0))) {
 				for (int x = 0; x < indicator.getSeriesCount(); x++) {
 					IndicatorSeries series = indicator.getSeries(x);
@@ -362,7 +362,7 @@ public class StrategyData extends Worker {
 	}
 
 	public void clearChartDatasets() {
-		for (IndicatorDataset indicator : indicators) {
+		for (IIndicatorDataset indicator : indicators) {
 			if (!IndicatorSeries.CandleSeries.equals(indicator.getType(0))) {
 				indicator.clear();
 			}
@@ -373,9 +373,9 @@ public class StrategyData extends Worker {
 	/**
 	 * Method getIndicators.
 	 * 
-	 * @return List<IndicatorDataset>
+	 * @return List<IIndicatorDataset>
 	 */
-	public List<IndicatorDataset> getIndicators() {
+	public List<IIndicatorDataset> getIndicators() {
 		return indicators;
 	}
 
@@ -384,11 +384,11 @@ public class StrategyData extends Worker {
 	 * 
 	 * @param type
 	 *            String
-	 * @return IndicatorDataset
+	 * @return IIndicatorDataset
 	 */
-	public IndicatorDataset getIndicatorByType(String type) {
+	public IIndicatorDataset getIndicatorByType(String type) {
 		for (int index = 0; index < indicators.size(); index++) {
-			IndicatorDataset series = indicators.get(index);
+			IIndicatorDataset series = indicators.get(index);
 			if (series.getType(0).equals(type)) {
 				return series;
 			}
@@ -515,7 +515,7 @@ public class StrategyData extends Worker {
 			series.printSeries();
 		}
 
-		for (IndicatorDataset indicatorDataset : this.getIndicators()) {
+		for (IIndicatorDataset indicatorDataset : this.getIndicators()) {
 			for (int i = 0; i < indicatorDataset.getSeriesCount(); i++) {
 				IndicatorSeries series = indicatorDataset.getSeries(i);
 				series.printSeries();

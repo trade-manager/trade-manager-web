@@ -40,7 +40,7 @@ import java.util.Vector;
 
 import org.trade.core.conversion.JavaTypeTranslator;
 import org.trade.core.dao.Aspect;
-import org.trade.core.lookup.Lookup;
+import org.trade.core.lookup.ILookup;
 import org.trade.core.lookup.LookupQualifier;
 import org.trade.core.lookup.LookupService;
 import org.trade.core.lookup.PropertiesLookup;
@@ -52,7 +52,7 @@ import org.trade.core.util.CoreUtils;
  * 
  * Note : This object is not intended to be used directly.
  * 
- * This object will use a LookupService in order to obtain a Lookup containing
+ * This object will use a LookupService in order to obtain a ILookup containing
  * all of the Systems CODE_DECODE values for a specific Type.
  * 
  * @version $Id: Decode.java,v 1.1 2001/11/06 16:51:54 simon Exp $
@@ -65,7 +65,7 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
 	private static final long serialVersionUID = -5356057478795774210L;
 
 	/**
-	 * The Lookup Identifier for CODE_DECODE values
+	 * The ILookup Identifier for CODE_DECODE values
 	 */
 	public static final String CODE_DECODE_IDENTIFIER = "CODE_DECODE";
 	public static final String NONE = " ";
@@ -77,7 +77,7 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
 	}
 
 	/**
-	 * The Column identifers that should be returned in the Lookup
+	 * The Column identifers that should be returned in the ILookup
 	 */
 	public static final String _TYPE = "_TYPE";
 	public static final String _CODE = "_CODE";
@@ -86,7 +86,7 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
 	private String m_codeDecodeType = "";
 	private String m_codeDecodeIdentifier = "";
 
-	private Lookup m_lookup = null;
+	private ILookup m_lookup = null;
 	private Object m_badValue = null;
 
 	protected static Boolean m_ascending = new Boolean(true);
@@ -307,9 +307,9 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
 	/**
 	 * Method getLookup.
 	 * 
-	 * @return Lookup
+	 * @return ILookup
 	 */
-	protected Lookup getLookup() {
+	protected ILookup getLookup() {
 		return m_lookup;
 	}
 
@@ -447,7 +447,7 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
 
 						// construct a new business object
 						newDecode = (Decode) c.newInstance();
-						newDecode.m_lookup = (Lookup) getLookup().clone();
+						newDecode.m_lookup = (ILookup) getLookup().clone();
 
 						newDecode.setValue(getLookup().getValueAt(y, i));
 						decodes.add(newDecode);

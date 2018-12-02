@@ -35,13 +35,13 @@
  */
 package org.trade.core.valuetype;
 
-import org.trade.core.conversion.JavaDynamicTypeConverter;
+import org.trade.core.conversion.IJavaDynamicTypeConverter;
 import org.trade.core.conversion.JavaTypeTranslator;
 import org.trade.core.conversion.JavaTypeTranslatorException;
 
 /**
  */
-public class MoneyToObject implements JavaDynamicTypeConverter {
+public class MoneyToObject implements IJavaDynamicTypeConverter {
 
 	public MoneyToObject() {
 	}
@@ -55,7 +55,7 @@ public class MoneyToObject implements JavaDynamicTypeConverter {
 	 *            Object
 	 * @return Object
 	 * @throws JavaTypeTranslatorException
-	 * @see org.trade.core.conversion.JavaDynamicTypeConverter#convert(Class<?>,
+	 * @see IJavaDynamicTypeConverter#convert(Class<?>,
 	 *      Object)
 	 */
 	public Object convert(Class<?> targetType, Object valueToConvert) throws JavaTypeTranslatorException {
@@ -78,7 +78,7 @@ public class MoneyToObject implements JavaDynamicTypeConverter {
 	 * @param valueToConvert
 	 *            Object
 	 * @return boolean
-	 * @see org.trade.core.conversion.JavaDynamicTypeConverter#
+	 * @see IJavaDynamicTypeConverter#
 	 *      supportsConversion (Class<?>, Object)
 	 */
 	public boolean supportsConversion(Class<?> targetType, Object valueToConvert) {

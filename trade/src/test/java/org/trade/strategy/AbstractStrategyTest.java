@@ -52,7 +52,7 @@ import org.junit.rules.TestName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trade.broker.BackTestBrokerModel;
-import org.trade.broker.BrokerModel;
+import org.trade.broker.IBrokerModel;
 import org.trade.core.factory.ClassFactory;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.DynamicCode;
@@ -68,7 +68,7 @@ import org.trade.dictionary.valuetype.Side;
 import org.trade.dictionary.valuetype.TimeInForce;
 import org.trade.dictionary.valuetype.TradestrategyStatus;
 import org.trade.dictionary.valuetype.TriggerMethod;
-import org.trade.persistent.PersistentModel;
+import org.trade.persistent.IPersistentModel;
 import org.trade.persistent.PersistentModelException;
 import org.trade.persistent.dao.Entrylimit;
 import org.trade.persistent.dao.TradeOrder;
@@ -89,8 +89,8 @@ public class AbstractStrategyTest {
 	public TestName name = new TestName();
 
 	private String symbol = "TEST";
-	private BrokerModel m_brokerModel = null;
-	private PersistentModel tradePersistentModel = null;
+	private IBrokerModel m_brokerModel = null;
+	private IPersistentModel tradePersistentModel = null;
 	private Tradestrategy tradestrategy = null;
 	private String m_templateName = null;
 	private String m_strategyDir = null;
@@ -114,12 +114,12 @@ public class AbstractStrategyTest {
 	public void setUp() throws Exception {
 		try {
 			TradeAppLoadConfig.loadAppProperties();
-			// m_brokerModel = (BrokerModel)
+			// m_brokerModel = (IBrokerModel)
 			// ClassFactory.getServiceForInterface(
-			// BrokerModel._brokerTest, this);
-			m_brokerModel = (BrokerModel) ClassFactory.getServiceForInterface(BrokerModel._brokerTest, this);
-			tradePersistentModel = (PersistentModel) ClassFactory
-					.getServiceForInterface(PersistentModel._persistentModel, this);
+			// IBrokerModel._brokerTest, this);
+			m_brokerModel = (IBrokerModel) ClassFactory.getServiceForInterface(IBrokerModel._brokerTest, this);
+			tradePersistentModel = (IPersistentModel) ClassFactory
+					.getServiceForInterface(IPersistentModel._persistentModel, this);
 			m_templateName = ConfigProperties.getPropAsString("trade.strategy.template");
 			m_strategyDir = ConfigProperties.getPropAsString("trade.strategy.default.dir");
 			Integer clientId = ConfigProperties.getPropAsInt("trade.tws.clientId");
@@ -182,8 +182,8 @@ public class AbstractStrategyTest {
 			parm.add(this.tradestrategy.getId());
 			DynamicCode dynacode = new DynamicCode();
 			dynacode.addSourceDir(new File(m_strategyDir));
-			StrategyRule strategyProxy = (StrategyRule) dynacode.newProxyInstance(StrategyRule.class,
-					StrategyRule.PACKAGE + m_templateName, parm);
+			IStrategyRule strategyProxy = (IStrategyRule) dynacode.newProxyInstance(IStrategyRule.class,
+					IStrategyRule.PACKAGE + m_templateName, parm);
 
 			strategyProxy.execute();
 			try {
@@ -831,8 +831,8 @@ public class AbstractStrategyTest {
 		try {
 			/*
 			 * Fire an event on the BaseCandleSeries this will trigger a refresh
-			 * of the Trade in the StrategyRule. We need to wait until the
-			 * StrategyRule is back in a wait state.
+			 * of the Trade in the IStrategyRule. We need to wait until the
+			 * IStrategyRule is back in a wait state.
 			 */
 			strategyProxy.reFreshPositionOrders();
 
@@ -858,14 +858,14 @@ public class AbstractStrategyTest {
 		 * 
 		 * 
 		 * @param brokerManagerModel
-		 *            BrokerModel
+		 *            IBrokerModel
 		 * @param strategyData
 		 *            StrategyData
 		 * @param idTradestrategy
 		 *            Integer
 		 */
 
-		public StrategyRuleTest(BrokerModel brokerManagerModel, StrategyData strategyData, Integer idTradestrategy) {
+		public StrategyRuleTest(IBrokerModel brokerManagerModel, StrategyData strategyData, Integer idTradestrategy) {
 			super(brokerManagerModel, strategyData, idTradestrategy);
 		}
 
@@ -884,7 +884,7 @@ public class AbstractStrategyTest {
 		 *            CandleSeries
 		 * @param newBar
 		 *            boolean
-		 * @see org.trade.strategy.StrategyRule#runStrategy(CandleSeries,
+		 * @see IStrategyRule#runStrategy(CandleSeries,
 		 *      boolean)
 		 */
 		public void runStrategy(CandleSeries candleSeries, boolean newBar) {

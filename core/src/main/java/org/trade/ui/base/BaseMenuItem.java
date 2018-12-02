@@ -172,11 +172,11 @@ public class BaseMenuItem extends JMenuItem {
 	 * 
 	 * 
 	 * @param listener
-	 *            MessageListener
+	 *            IMessageListener
 	 * @exception *
 	 * 				@see
 	 */
-	public void addMessageListener(MessageListener listener) {
+	public void addMessageListener(IMessageListener listener) {
 		m_notifier.add(listener);
 	}
 
@@ -189,11 +189,11 @@ public class BaseMenuItem extends JMenuItem {
 	 * 
 	 * 
 	 * @param listener
-	 *            MessageListener
+	 *            IMessageListener
 	 * @exception *
 	 * 				@see
 	 */
-	public void removeMessageListener(MessageListener listener) {
+	public void removeMessageListener(IMessageListener listener) {
 		m_notifier.remove(listener);
 	}
 

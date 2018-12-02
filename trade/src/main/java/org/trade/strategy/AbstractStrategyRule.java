@@ -45,7 +45,7 @@ import org.jfree.data.general.SeriesChangeEvent;
 import org.jfree.data.general.SeriesChangeListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.trade.broker.BrokerModel;
+import org.trade.broker.IBrokerModel;
 import org.trade.broker.BrokerModelException;
 import org.trade.core.factory.ClassFactory;
 import org.trade.core.util.CoreUtils;
@@ -60,7 +60,7 @@ import org.trade.dictionary.valuetype.OverrideConstraints;
 import org.trade.dictionary.valuetype.Side;
 import org.trade.dictionary.valuetype.TimeInForce;
 import org.trade.dictionary.valuetype.TriggerMethod;
-import org.trade.persistent.PersistentModel;
+import org.trade.persistent.IPersistentModel;
 import org.trade.persistent.dao.Account;
 import org.trade.persistent.dao.Candle;
 import org.trade.persistent.dao.Contract;
@@ -76,7 +76,7 @@ import org.trade.strategy.data.candle.CandlePeriod;
 
 /**
  */
-public abstract class AbstractStrategyRule extends Worker implements SeriesChangeListener, StrategyRule, Serializable {
+public abstract class AbstractStrategyRule extends Worker implements SeriesChangeListener, IStrategyRule, Serializable {
 
 	/**
 	 * 
@@ -91,8 +91,8 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
 	 */
 	private transient EventListenerList listenerList;
 
-	private BrokerModel brokerModel;
-	private PersistentModel tradePersistentModel;
+	private IBrokerModel brokerModel;
+	private IPersistentModel tradePersistentModel;
 	private DAOEntryLimit entryLimits = new DAOEntryLimit();
 	private StrategyData strategyData = null;
 	private Tradestrategy tradestrategy = null;
@@ -112,13 +112,13 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
 	 * will be one Strategy running per tradestrategy.
 	 * 
 	 * @param brokerManagerModel
-	 *            BrokerModel
+	 *            IBrokerModel
 	 * @param strategyData
 	 *            StrategyData
 	 * @param idTradestrategy
 	 *            Integer
 	 */
-	public AbstractStrategyRule(BrokerModel brokerManagerModel, StrategyData strategyData, Integer idTradestrategy) {
+	public AbstractStrategyRule(IBrokerModel brokerManagerModel, StrategyData strategyData, Integer idTradestrategy) {
 		this.listenerList = new EventListenerList();
 		this.brokerModel = brokerManagerModel;
 		this.strategyData = strategyData;
@@ -135,7 +135,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
 	 *            int
 	 * @param errorMsg
 	 *            String
-	 * @see org.trade.strategy.StrategyRule#error(int, int, String)
+	 * @see IStrategyRule#error(int, int, String)
 	 */
 	public void error(int id, int errorCode, String errorMsg) {
 
@@ -160,10 +160,10 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
 	 *            the object to register.
 	 * 
 	 * 
-	 * @see #removeChangeListener(StrategyChangeListener)
+	 * @see #removeChangeListener(IStrategyChangeListener)
 	 */
-	public void addMessageListener(StrategyChangeListener listener) {
-		this.listenerList.add(StrategyChangeListener.class, listener);
+	public void addMessageListener(IStrategyChangeListener listener) {
+		this.listenerList.add(IStrategyChangeListener.class, listener);
 	}
 
 	/**
@@ -174,14 +174,14 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
 	 *            the object to deregister.
 	 * 
 	 * 
-	 * @see #addChangeListener(StrategyChangeListener)
+	 * @see #addChangeListener(IStrategyChangeListener)
 	 */
-	public void removeMessageListener(StrategyChangeListener listener) {
-		this.listenerList.remove(StrategyChangeListener.class, listener);
+	public void removeMessageListener(IStrategyChangeListener listener) {
+		this.listenerList.remove(IStrategyChangeListener.class, listener);
 	}
 
 	public void removeAllMessageListener() {
-		StrategyChangeListener[] listeners = this.listenerList.getListeners(StrategyChangeListener.class);
+		IStrategyChangeListener[] listeners = this.listenerList.getListeners(IStrategyChangeListener.class);
 		for (int i = 0; i < listeners.length; i++) {
 			removeMessageListener(listeners[i]);
 		}
@@ -193,13 +193,13 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
 	 * 
 	 * @param strategyError
 	 *            StrategyRuleException
-	 * @see #addChangeListener(StrategyChangeListener)
+	 * @see #addChangeListener(IStrategyChangeListener)
 	 */
 	protected void fireStrategyError(StrategyRuleException strategyError) {
 		Object[] listeners = this.listenerList.getListenerList();
 		for (int i = listeners.length - 2; i >= 0; i -= 2) {
-			if (listeners[i] == StrategyChangeListener.class) {
-				((StrategyChangeListener) listeners[i + 1]).strategyError(strategyError);
+			if (listeners[i] == IStrategyChangeListener.class) {
+				((IStrategyChangeListener) listeners[i + 1]).strategyError(strategyError);
 			}
 		}
 	}
@@ -210,13 +210,13 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
 	 * 
 	 * @param tradestrategy
 	 *            Tradestrategy
-	 * @see #addChangeListener(StrategyChangeListener)
+	 * @see #addChangeListener(IStrategyChangeListener)
 	 */
 	protected void fireStrategyComplete(String strategyClassName, final Tradestrategy tradestrategy) {
 		Object[] listeners = this.listenerList.getListenerList();
 		for (int i = listeners.length - 2; i >= 0; i -= 2) {
-			if (listeners[i] == StrategyChangeListener.class) {
-				((StrategyChangeListener) listeners[i + 1]).strategyComplete(strategyClassName, tradestrategy);
+			if (listeners[i] == IStrategyChangeListener.class) {
+				((IStrategyChangeListener) listeners[i + 1]).strategyComplete(strategyClassName, tradestrategy);
 			}
 		}
 	}
@@ -227,13 +227,13 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
 	 * 
 	 * @param tradestrategy
 	 *            Tradestrategy
-	 * @see #addChangeListener(StrategyChangeListener)
+	 * @see #addChangeListener(IStrategyChangeListener)
 	 */
 	protected void fireStrategyStarted(String strategyClassName, final Tradestrategy tradestrategy) {
 		Object[] listeners = this.listenerList.getListenerList();
 		for (int i = listeners.length - 2; i >= 0; i -= 2) {
-			if (listeners[i] == StrategyChangeListener.class) {
-				((StrategyChangeListener) listeners[i + 1]).strategyStarted(strategyClassName, tradestrategy);
+			if (listeners[i] == IStrategyChangeListener.class) {
+				((IStrategyChangeListener) listeners[i + 1]).strategyStarted(strategyClassName, tradestrategy);
 			}
 		}
 	}
@@ -245,13 +245,13 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
 	 * 
 	 * @param tradestrategy
 	 *            Tradestrategy
-	 * @see #addChangeListener(StrategyChangeListener)
+	 * @see #addChangeListener(IStrategyChangeListener)
 	 */
 	protected void fireRuleComplete(final Tradestrategy tradestrategy) {
 		Object[] listeners = this.listenerList.getListenerList();
 		for (int i = listeners.length - 2; i >= 0; i -= 2) {
-			if (listeners[i] == StrategyChangeListener.class) {
-				((StrategyChangeListener) listeners[i + 1]).ruleComplete(tradestrategy);
+			if (listeners[i] == IStrategyChangeListener.class) {
+				((IStrategyChangeListener) listeners[i + 1]).ruleComplete(tradestrategy);
 			}
 		}
 	}
@@ -273,8 +273,8 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
 		 */
 		try {
 
-			this.tradePersistentModel = (PersistentModel) ClassFactory
-					.getServiceForInterface(PersistentModel._persistentModel, this);
+			this.tradePersistentModel = (IPersistentModel) ClassFactory
+					.getServiceForInterface(IPersistentModel._persistentModel, this);
 			// Get an instances for this thread.
 			this.tradestrategy = this.tradePersistentModel.findTradestrategyById(this.idTradestrategy);
 			this.tradestrategy.setStrategyData(this.strategyData);
@@ -412,7 +412,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
 	/**
 	 * Method cancel.
 	 * 
-	 * @see org.trade.strategy.StrategyRule#cancel()
+	 * @see IStrategyRule#cancel()
 	 */
 	public void cancel() {
 		this.setIsCancelled(true);
@@ -445,7 +445,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
 	 * @param newBar
 	 *            boolean when ever a new bar is added to the candleSeries.
 	 * 
-	 * @see org.trade.strategy.StrategyRule#runStrategy(CandleSeries, boolean)
+	 * @see IStrategyRule#runStrategy(CandleSeries, boolean)
 	 */
 	public abstract void runStrategy(CandleSeries candleSeries, boolean newBar);
 
@@ -1273,9 +1273,9 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
 	/**
 	 * Method getBrokerManager.
 	 * 
-	 * @return BrokerModel
+	 * @return IBrokerModel
 	 */
-	private BrokerModel getBrokerManager() {
+	private IBrokerModel getBrokerManager() {
 		return this.brokerModel;
 	}
 

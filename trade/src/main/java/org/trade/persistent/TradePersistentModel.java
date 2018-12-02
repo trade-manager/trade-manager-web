@@ -57,7 +57,7 @@ import java.util.List;
 
 /**
  */
-public class TradePersistentModel implements PersistentModel {
+public class TradePersistentModel implements IPersistentModel {
 
     private CodeTypeHome m_codeTypeHome = null;
     private ContractHome m_contractHome = null;

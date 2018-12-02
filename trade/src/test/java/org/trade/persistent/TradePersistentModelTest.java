@@ -89,7 +89,7 @@ import org.trade.persistent.dao.TradestrategyTest;
 import org.trade.persistent.dao.Tradingday;
 import org.trade.persistent.dao.Tradingdays;
 import org.trade.strategy.data.CandleSeries;
-import org.trade.strategy.data.IndicatorDataset;
+import org.trade.strategy.data.IIndicatorDataset;
 import org.trade.strategy.data.IndicatorSeries;
 import org.trade.strategy.data.StrategyData;
 import org.trade.strategy.data.candle.CandleItem;
@@ -113,7 +113,7 @@ public class TradePersistentModelTest {
 	public TestName name = new TestName();
 
 	private String symbol = "TEST";
-	private PersistentModel tradePersistentModel = null;
+	private IPersistentModel tradePersistentModel = null;
 	private Tradestrategy tradestrategy = null;
 	private Integer clientId = null;
 
@@ -126,8 +126,8 @@ public class TradePersistentModelTest {
 	public void setUp() throws Exception {
 		TradeAppLoadConfig.loadAppProperties();
 		clientId = ConfigProperties.getPropAsInt("trade.tws.clientId");
-		this.tradePersistentModel = (PersistentModel) ClassFactory
-				.getServiceForInterface(PersistentModel._persistentModel, this);
+		this.tradePersistentModel = (IPersistentModel) ClassFactory
+				.getServiceForInterface(IPersistentModel._persistentModel, this);
 		this.tradestrategy = TradestrategyTest.getTestTradestrategy(symbol);
 		assertNotNull("1", this.tradestrategy);
 	}
@@ -1245,7 +1245,7 @@ public class TradePersistentModelTest {
 	public void testFindAspectsByClassNameFieldName() {
 
 		try {
-			for (IndicatorDataset indicator : this.tradestrategy.getStrategyData().getIndicators()) {
+			for (IIndicatorDataset indicator : this.tradestrategy.getStrategyData().getIndicators()) {
 				IndicatorSeries series = indicator.getSeries(0);
 				String indicatorName = series.getType().substring(0, series.getType().indexOf("Series"));
 				Aspects result = this.tradePersistentModel.findAspectsByClassNameFieldName(CodeType.class.getName(),

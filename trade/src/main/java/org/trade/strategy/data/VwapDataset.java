@@ -53,7 +53,7 @@ import org.trade.strategy.data.vwap.VwapItem;
 
 /**
  */
-public class VwapDataset extends AbstractXYDataset implements IVwapDataset, IndicatorDataset, Serializable {
+public class VwapDataset extends AbstractXYDataset implements IVwapDataset, IIndicatorDataset, Serializable {
 
 	/**
 	 * 
@@ -109,7 +109,7 @@ public class VwapDataset extends AbstractXYDataset implements IVwapDataset, Indi
 	 * 
 	 * @param series
 	 *            the series (<code>null</code> not permitted).
-	 * @see org.trade.strategy.data.IndicatorDataset#addSeries(IndicatorSeries)
+	 * @see IIndicatorDataset#addSeries(IndicatorSeries)
 	 */
 	public void addSeries(IndicatorSeries series) {
 		if (series == null) {
@@ -126,7 +126,7 @@ public class VwapDataset extends AbstractXYDataset implements IVwapDataset, Indi
 	 * 
 	 * @param series
 	 *            the series (<code>null</code> not permitted).
-	 * @see org.trade.strategy.data.IndicatorDataset#removeSeries(IndicatorSeries)
+	 * @see IIndicatorDataset#removeSeries(IndicatorSeries)
 	 */
 	public void removeSeries(IndicatorSeries series) {
 		if (series == null) {
@@ -145,7 +145,7 @@ public class VwapDataset extends AbstractXYDataset implements IVwapDataset, Indi
 	 *            the series (<code>null</code> not permitted).
 	 * @param index
 	 *            int
-	 * @see org.trade.strategy.data.IndicatorDataset#setSeries(int,
+	 * @see IIndicatorDataset#setSeries(int,
 	 *      IndicatorSeries)
 	 */
 	public void setSeries(int index, IndicatorSeries series) {
@@ -190,7 +190,7 @@ public class VwapDataset extends AbstractXYDataset implements IVwapDataset, Indi
 	 * @return The series. * @throws IllegalArgumentException if
 	 *         <code>series</code> is not in the range <code>0</code> to
 	 *         <code>getSeriesCount() - 1</code>. * @see
-	 *         org.trade.strategy.data.IndicatorDataset#getSeries(int)
+	 *         org.trade.strategy.data.IIndicatorDataset#getSeries(int)
 	 */
 	public VwapSeries getSeries(int series) {
 		if ((series < 0) || (series >= getSeriesCount())) {
@@ -391,7 +391,7 @@ public class VwapDataset extends AbstractXYDataset implements IVwapDataset, Indi
 	 *            int
 	 * @param newBar
 	 *            boolean
-	 * @see org.trade.strategy.data.IndicatorDataset#updateDataset(CandleDataset,
+	 * @see IIndicatorDataset#updateDataset(CandleDataset,
 	 *      int)
 	 */
 	public void updateDataset(CandleDataset source, int seriesIndex, boolean newBar) {
@@ -411,7 +411,7 @@ public class VwapDataset extends AbstractXYDataset implements IVwapDataset, Indi
 	/**
 	 * Method clear.
 	 * 
-	 * @see org.trade.strategy.data.IndicatorDataset#clear()
+	 * @see IIndicatorDataset#clear()
 	 */
 	public void clear() {
 
@@ -424,7 +424,7 @@ public class VwapDataset extends AbstractXYDataset implements IVwapDataset, Indi
 	 * Method getRenderer.
 	 * 
 	 * @return XYItemRenderer
-	 * @see org.trade.strategy.data.IndicatorDataset#getRenderer()
+	 * @see IIndicatorDataset#getRenderer()
 	 */
 	public XYItemRenderer getRenderer() {
 		return new StandardXYItemRenderer();
@@ -436,7 +436,7 @@ public class VwapDataset extends AbstractXYDataset implements IVwapDataset, Indi
 	 * @param seriesIndex
 	 *            int
 	 * @return Color
-	 * @see org.trade.strategy.data.IndicatorDataset#getSeriesColor(int)
+	 * @see IIndicatorDataset#getSeriesColor(int)
 	 */
 	public Color getSeriesColor(int seriesIndex) {
 		return this.getSeries(seriesIndex).getSeriesColor();
@@ -448,7 +448,7 @@ public class VwapDataset extends AbstractXYDataset implements IVwapDataset, Indi
 	 * @param seriesIndex
 	 *            int
 	 * @return boolean
-	 * @see org.trade.strategy.data.IndicatorDataset#getDisplaySeries(int)
+	 * @see IIndicatorDataset#getDisplaySeries(int)
 	 */
 	public boolean getDisplaySeries(int seriesIndex) {
 		return this.getSeries(seriesIndex).getDisplaySeries();
@@ -460,7 +460,7 @@ public class VwapDataset extends AbstractXYDataset implements IVwapDataset, Indi
 	 * @param seriesIndex
 	 *            int
 	 * @return boolean
-	 * @see org.trade.strategy.data.IndicatorDataset#getSubChart(int)
+	 * @see IIndicatorDataset#getSubChart(int)
 	 */
 	public boolean getSubChart(int seriesIndex) {
 		return this.getSeries(seriesIndex).getSubChart();
@@ -472,7 +472,7 @@ public class VwapDataset extends AbstractXYDataset implements IVwapDataset, Indi
 	 * @param seriesIndex
 	 *            int
 	 * @return String
-	 * @see org.trade.strategy.data.IndicatorDataset#getType(int)
+	 * @see IIndicatorDataset#getType(int)
 	 */
 	public String getType(int seriesIndex) {
 		return this.data.get(seriesIndex).getType();

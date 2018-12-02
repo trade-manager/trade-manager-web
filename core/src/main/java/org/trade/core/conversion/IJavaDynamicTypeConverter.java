@@ -33,56 +33,40 @@
  * -------
  *
  */
-package org.trade.strategy;
-
-import java.util.EventListener;
-
-import org.trade.persistent.dao.Tradestrategy;
+package org.trade.core.conversion;
 
 /**
- * The interface that must be supported by classes that wish to receive
- * notification of changes to a dataset.
+ * This interface must be implemented by any converter class which is to be used
+ * with the JavaTypeTranslator.
  * 
  * @author Simon Allen
- * @version $Revision: 1.0 $
  */
-public interface StrategyChangeListener extends EventListener {
+public interface IJavaDynamicTypeConverter {
+	/**
+	 * This method is used by the JavaTypeTranslator to convert a source object
+	 * to a given target type or class.
+	 * 
+	 * @param targetType
+	 *            the target type or class to convert to
+	 * @param valueToConvert
+	 *            the object value to convert
+	 * 
+	 * 
+	 * @return Object the converted object * @exception
+	 *         JavaTypeTranslatorException
+	 */
+	Object convert(Class<?> targetType, Object valueToConvert) throws JavaTypeTranslatorException;
 
 	/**
-	 * Receives notification of an strategRule change event.
+	 * This method is used by the JavaTypeTranslator to determine wether or not
+	 * the dynamic converter supports the conversion.
 	 * 
-	 * @param strategyClassName
-	 *            String
-	 * @param tradestrategy
-	 *            Tradestrategy
-	 */
-
-	public void strategyComplete(String strategyClassName, Tradestrategy tradestrategy);
-
-	/**
-	 * Method strategyStarted.
+	 * @param targetType
+	 *            the target type or class to convert to
+	 * @param valueToConvert
+	 *            the object value to convert
 	 * 
-	 * @param strategyClassName
-	 *            String
-	 * @param tradestrategy
-	 *            Tradestrategy
+	 * @return boolean is the object supports the conversion.
 	 */
-	public void strategyStarted(String strategyClassName, Tradestrategy tradestrategy);
-
-	/**
-	 * Method ruleComplete.
-	 * 
-	 * @param tradestrategy
-	 *            Tradestrategy
-	 */
-	public void ruleComplete(Tradestrategy tradestrategy);
-
-	/**
-	 * Method strategyError.
-	 * 
-	 * @param strategyError
-	 *            StrategyRuleException
-	 */
-	public void strategyError(StrategyRuleException strategyError);
-
+	boolean supportsConversion(Class<?> targetType, Object valueToConvert);
 }

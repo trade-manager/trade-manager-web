@@ -41,7 +41,7 @@ package org.trade.core.conversion;
  * 
  * @author Simon Allen
  */
-public interface JavaTypeConverter {
+public interface IJavaTypeConverter {
 	/**
 	 * This method is used by the JavaTypeTranslator to convert a source object
 	 * to a given target type or class.

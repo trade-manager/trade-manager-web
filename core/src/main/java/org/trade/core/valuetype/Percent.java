@@ -43,9 +43,9 @@ import java.util.Comparator;
 import org.trade.core.conversion.JavaTypeTranslator;
 import org.trade.core.message.IMessageFactory;
 import org.trade.core.util.CoreUtils;
-import org.trade.core.validator.ExceptionMessageListener;
+import org.trade.core.validator.IExceptionMessageListener;
+import org.trade.core.validator.IValidator;
 import org.trade.core.validator.PercentValidator;
-import org.trade.core.validator.Validator;
 
 /**
  */
@@ -512,12 +512,12 @@ public class Percent extends ValueType implements Comparator<Percent>, Comparabl
 	 * Method isValid.
 	 * 
 	 * @param validator
-	 *            Validator
+	 *            IValidator
 	 * @param receiver
-	 *            ExceptionMessageListener
+	 *            IExceptionMessageListener
 	 * @return boolean
 	 */
-	public boolean isValid(Validator validator, ExceptionMessageListener receiver) {
+	public boolean isValid(IValidator validator, IExceptionMessageListener receiver) {
 		return validator.isValid(m_value, m_invalidValue, null, receiver);
 	}
 
@@ -528,9 +528,9 @@ public class Percent extends ValueType implements Comparator<Percent>, Comparabl
 	 *            IMessageFactory
 	 * @param isMandatory
 	 *            boolean
-	 * @return Validator
+	 * @return IValidator
 	 */
-	public Validator getDefaultValidator(IMessageFactory messageFactory, boolean isMandatory) {
+	public IValidator getDefaultValidator(IMessageFactory messageFactory, boolean isMandatory) {
 		// This allow non-negative 11.2
 		return new PercentValidator(messageFactory, false, true, 7, 5, isMandatory);
 	}

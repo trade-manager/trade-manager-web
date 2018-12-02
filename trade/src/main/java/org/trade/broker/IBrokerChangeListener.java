@@ -49,7 +49,7 @@ import org.trade.persistent.dao.Tradestrategy;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-public interface BrokerChangeListener extends EventListener {
+public interface IBrokerChangeListener extends EventListener {
 
 	/**
 	 * Receives notification of an brokerManagerModel change event.

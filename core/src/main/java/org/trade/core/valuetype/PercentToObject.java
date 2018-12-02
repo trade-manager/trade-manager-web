@@ -35,13 +35,13 @@
  */
 package org.trade.core.valuetype;
 
-import org.trade.core.conversion.JavaDynamicTypeConverter;
+import org.trade.core.conversion.IJavaDynamicTypeConverter;
 import org.trade.core.conversion.JavaTypeTranslator;
 import org.trade.core.conversion.JavaTypeTranslatorException;
 
 /**
  */
-public class PercentToObject implements JavaDynamicTypeConverter {
+public class PercentToObject implements IJavaDynamicTypeConverter {
 	/**
 	 * Default constructor.
 	 */

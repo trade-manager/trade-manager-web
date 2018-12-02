@@ -54,17 +54,17 @@ import org.trade.core.util.Reflector;
 import org.trade.core.valuetype.Decode;
 
 /**
- * Implementation of the LookupServiceProvider interface that uses the
- * devtool.properties.ConfigProperties object for obtaining Lookup information.
+ * Implementation of the ILookupServiceProvider interface that uses the
+ * devtool.properties.ConfigProperties object for obtaining ILookup information.
  * 
  * @author Simon Allen
  */
-public class DBTableLookupServiceProvider implements LookupServiceProvider {
+public class DBTableLookupServiceProvider implements ILookupServiceProvider {
 	/*
-	 * This will be a hashtable of hashtables of Lookup objects. The first key
+	 * This will be a hashtable of hashtables of ILookup objects. The first key
 	 * is the lookup name and the second key is the LookupQualifier.
 	 */
-	private static Hashtable<String, Hashtable<String, Lookup>> _lookups = new Hashtable<String, Hashtable<String, Lookup>>();
+	private static Hashtable<String, Hashtable<String, ILookup>> _lookups = new Hashtable<String, Hashtable<String, ILookup>>();
 
 	/**
 	 * Default Constructor
@@ -86,14 +86,14 @@ public class DBTableLookupServiceProvider implements LookupServiceProvider {
 	 * 
 	 * @param optional
 	 *            boolean
-	 * @return Lookup
+	 * @return ILookup
 	 * @throws LookupException
-	 * @see org.trade.core.lookup.LookupServiceProvider#getLookup(String,
+	 * @see ILookupServiceProvider#getLookup(String,
 	 *      LookupQualifier)
 	 */
-	public synchronized Lookup getLookup(String lookupName, LookupQualifier qualifier, boolean optional)
+	public synchronized ILookup getLookup(String lookupName, LookupQualifier qualifier, boolean optional)
 			throws LookupException {
-		Lookup lookup = getCachedLookup(lookupName, qualifier);
+		ILookup lookup = getCachedLookup(lookupName, qualifier);
 
 		if (null == lookup) {
 			try {
@@ -240,14 +240,14 @@ public class DBTableLookupServiceProvider implements LookupServiceProvider {
 	 *            String
 	 * @param qualifier
 	 *            LookupQualifier
-	 * @return Lookup
+	 * @return ILookup
 	 */
-	private Lookup getCachedLookup(String lookupName, LookupQualifier qualifier) {
-		Lookup lookup = null;
+	private ILookup getCachedLookup(String lookupName, LookupQualifier qualifier) {
+		ILookup lookup = null;
 		Hashtable<?, ?> lookupsByQualifier = _lookups.get(lookupName);
 
 		if (null != lookupsByQualifier) {
-			lookup = (Lookup) lookupsByQualifier.get(qualifier.toString());
+			lookup = (ILookup) lookupsByQualifier.get(qualifier.toString());
 		}
 
 		/*
@@ -255,7 +255,7 @@ public class DBTableLookupServiceProvider implements LookupServiceProvider {
 		 * returned would effect everyone using the object.
 		 */
 		if (null != lookup) {
-			lookup = (Lookup) lookup.clone();
+			lookup = (ILookup) lookup.clone();
 		}
 
 		return (lookup);
@@ -269,13 +269,13 @@ public class DBTableLookupServiceProvider implements LookupServiceProvider {
 	 * @param qualifier
 	 *            LookupQualifier
 	 * @param lookup
-	 *            Lookup
+	 *            ILookup
 	 */
-	private synchronized void addLookupToCache(String lookupName, LookupQualifier qualifier, Lookup lookup) {
-		Hashtable<String, Lookup> lookupsByQualifier = _lookups.get(lookupName);
+	private synchronized void addLookupToCache(String lookupName, LookupQualifier qualifier, ILookup lookup) {
+		Hashtable<String, ILookup> lookupsByQualifier = _lookups.get(lookupName);
 
 		if (null == lookupsByQualifier) {
-			lookupsByQualifier = new Hashtable<String, Lookup>();
+			lookupsByQualifier = new Hashtable<String, ILookup>();
 			_lookups.put(lookupName, lookupsByQualifier);
 		}
 

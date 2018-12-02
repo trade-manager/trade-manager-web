@@ -63,7 +63,7 @@ import org.trade.dictionary.valuetype.Side;
 import org.trade.dictionary.valuetype.Tier;
 import org.trade.dictionary.valuetype.TradestrategyStatus;
 import org.trade.persistent.dao.Contract;
-import org.trade.strategy.StrategyRule;
+import org.trade.strategy.IStrategyRule;
 import org.trade.ui.base.Table;
 import org.trade.ui.base.TableModel;
 import org.trade.ui.models.TradestrategyTableModel;
@@ -93,12 +93,12 @@ public class TradestrategyTable extends Table {
 	 * @param model
 	 *            TableModel
 	 * @param strategyWorkers
-	 *            ConcurrentHashMap<String,StrategyRule>
+	 *            ConcurrentHashMap<String,IStrategyRule>
 	 * @throws ValueTypeException
 	 * @throws ParseException
 	 */
 
-	public TradestrategyTable(TableModel model, ConcurrentHashMap<String, StrategyRule> strategyWorkers)
+	public TradestrategyTable(TableModel model, ConcurrentHashMap<String, IStrategyRule> strategyWorkers)
 			throws ValueTypeException, ParseException {
 		super(model);
 		DateRenderer rDate = new DateRenderer(DATETIMEFORMAT);

@@ -54,7 +54,7 @@ public class StringToLongConverter extends StringToObjectConverter {
 	}
 
 	//
-	// JavaTypeConverter interface methods
+	// IJavaTypeConverter interface methods
 	//
 	/**
 	 * This method returns the target type or class that the converter converts
@@ -62,7 +62,7 @@ public class StringToLongConverter extends StringToObjectConverter {
 	 * 
 	 * 
 	 * @return Class the class the source value will be converted to * @see
-	 *         org.trade.core.conversion.JavaTypeConverter#getTargetType()
+	 *         org.trade.core.conversion.IJavaTypeConverter#getTargetType()
 	 */
 	public Class<?> getTargetType() {
 		return java.lang.Long.class;

@@ -40,7 +40,7 @@
  * 29-May-2002 : Implemented MonthConstants interface, so that these constants
  *               are conveniently available (DG);
  * 10-Sep-2002 : Added getSerialIndex() method (DG);
- * 10-Jan-2003 : Renamed TimePeriod --> RegularTimePeriod (DG);
+ * 10-Jan-2003 : Renamed ITimePeriod --> RegularTimePeriod (DG);
  * 13-Mar-2003 : Moved to com.jrefinery.data.time package (DG);
  * 29-Apr-2004 : Changed getMiddleMillisecond() methods to fix bug 943985 (DG);
  * 25-Nov-2004 : Added utility methods (DG);
@@ -66,7 +66,7 @@ import org.trade.core.util.TradingCalendar;
  * <P>
  * This class is immutable, and all subclasses should be immutable also.
  */
-public abstract class RegularTimePeriod implements TimePeriod, Comparable<TimePeriod> {
+public abstract class RegularTimePeriod implements ITimePeriod, Comparable<ITimePeriod> {
 
 	private static final String DATETIMEFORMAT = "MM/dd/yyyy HH:mm:ss";
 
@@ -188,7 +188,7 @@ public abstract class RegularTimePeriod implements TimePeriod, Comparable<TimePe
 	 *
 	 * @return The string.
 	 */
-	public boolean equals(TimePeriod obj) {
+	public boolean equals(ITimePeriod obj) {
 		if (obj == this) {
 			return true;
 		}
@@ -209,7 +209,7 @@ public abstract class RegularTimePeriod implements TimePeriod, Comparable<TimePe
 	 * 
 	 * @return negative == before, zero == same, positive == after.
 	 */
-	public int compareTo(TimePeriod o1) {
+	public int compareTo(ITimePeriod o1) {
 
 		int result = this.getStart().compareTo(o1.getStart());
 		if (result == 0)

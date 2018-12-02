@@ -40,7 +40,7 @@ import org.trade.strategy.data.CandleSeries;
 
 /**
  */
-public interface StrategyRule {
+public interface IStrategyRule {
 
 	public final String PACKAGE = "org.trade.strategy.";
 
@@ -103,17 +103,17 @@ public interface StrategyRule {
 	 * Method addMessageListener.
 	 * 
 	 * @param listener
-	 *            StrategyChangeListener
+	 *            IStrategyChangeListener
 	 */
-	void addMessageListener(StrategyChangeListener listener);
+	void addMessageListener(IStrategyChangeListener listener);
 
 	/**
 	 * Method removeMessageListener.
 	 * 
 	 * @param listener
-	 *            StrategyChangeListener
+	 *            IStrategyChangeListener
 	 */
-	void removeMessageListener(StrategyChangeListener listener);
+	void removeMessageListener(IStrategyChangeListener listener);
 
 	/**
 	 * Method tradeOrderFilled.

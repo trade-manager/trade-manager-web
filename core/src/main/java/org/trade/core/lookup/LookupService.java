@@ -44,7 +44,7 @@ public class LookupService {
 	//
 	// Private Attributes
 	//
-	private static Vector<LookupServiceProvider> _providers = new Vector<LookupServiceProvider>();
+	private static Vector<ILookupServiceProvider> _providers = new Vector<ILookupServiceProvider>();
 
 	static {
 		addLookupServiceProvider(new PropertyFileLookupServiceProvider());
@@ -52,7 +52,7 @@ public class LookupService {
 	}
 
 	/**
-	 * Get the appropriate Lookup.
+	 * Get the appropriate ILookup.
 	 * 
 	 * @param lookupName
 	 *            String
@@ -60,12 +60,12 @@ public class LookupService {
 	 *            LookupQualifier
 	 * @param optional
 	 *            boolean
-	 * @return Lookup
+	 * @return ILookup
 	 * @exception LookupException
 	 */
-	public static Lookup getLookup(String lookupName, LookupQualifier qualifier, boolean optional)
+	public static ILookup getLookup(String lookupName, LookupQualifier qualifier, boolean optional)
 			throws LookupException {
-		Lookup lookup = null;
+		ILookup lookup = null;
 		// Loop through the registered providers and find and try to find one
 		// that can provide the lookup
 		int providersSize = _providers.size();
@@ -74,7 +74,7 @@ public class LookupService {
 			lookup = _providers.elementAt(i).getLookup(lookupName, qualifier, optional);
 
 			if (null != lookup) {
-				// Have found a Lookup - don't care if another provider can
+				// Have found a ILookup - don't care if another provider can
 				// provide it or not
 				break;
 			}
@@ -86,9 +86,9 @@ public class LookupService {
 	 * Method addLookupServiceProvider.
 	 * 
 	 * @param provider
-	 *            LookupServiceProvider
+	 *            ILookupServiceProvider
 	 */
-	public static void addLookupServiceProvider(LookupServiceProvider provider) {
+	public static void addLookupServiceProvider(ILookupServiceProvider provider) {
 		if (!_providers.contains(provider)) {
 			_providers.addElement(provider);
 		}
@@ -98,9 +98,9 @@ public class LookupService {
 	 * Method removeLookupServiceProvider.
 	 * 
 	 * @param provider
-	 *            LookupServiceProvider
+	 *            ILookupServiceProvider
 	 */
-	public static void removeLookupServiceProvider(LookupServiceProvider provider) {
+	public static void removeLookupServiceProvider(ILookupServiceProvider provider) {
 		_providers.removeElement(provider);
 	}
 }

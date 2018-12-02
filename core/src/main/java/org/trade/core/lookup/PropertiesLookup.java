@@ -38,12 +38,12 @@ package org.trade.core.lookup;
 import java.util.Vector;
 
 /**
- * Implementation of the Lookup interface that uses data from the
- * ConfigProperties object for providing its Lookup information.
+ * Implementation of the ILookup interface that uses data from the
+ * ConfigProperties object for providing its ILookup information.
  * 
  * @author Simon Allen
  */
-public class PropertiesLookup implements Lookup, Cloneable, java.io.Serializable {
+public class PropertiesLookup implements ILookup, Cloneable, java.io.Serializable {
 	/**
 	 * 
 	 */
@@ -88,7 +88,7 @@ public class PropertiesLookup implements Lookup, Cloneable, java.io.Serializable
 	 * 
 	 * @return int
 	 * @throws LookupException
-	 * @see org.trade.core.lookup.Lookup#getColumnCount()
+	 * @see ILookup#getColumnCount()
 	 */
 	public int getColumnCount() throws LookupException {
 		return (m_columnNames.size());
@@ -99,7 +99,7 @@ public class PropertiesLookup implements Lookup, Cloneable, java.io.Serializable
 	 * 
 	 * @return int
 	 * @throws LookupException
-	 * @see org.trade.core.lookup.Lookup#getRowCount()
+	 * @see ILookup#getRowCount()
 	 */
 	public int getRowCount() throws LookupException {
 		return (m_data.size());
@@ -112,7 +112,7 @@ public class PropertiesLookup implements Lookup, Cloneable, java.io.Serializable
 	 *            int
 	 * @return Object
 	 * @throws LookupException
-	 * @see org.trade.core.lookup.Lookup#getValueAt(int)
+	 * @see ILookup#getValueAt(int)
 	 */
 	public Object getValueAt(int col) throws LookupException {
 		return (doGetValue(m_currentRowPos, col));
@@ -125,7 +125,7 @@ public class PropertiesLookup implements Lookup, Cloneable, java.io.Serializable
 	 *            String
 	 * @return Object
 	 * @throws LookupException
-	 * @see org.trade.core.lookup.Lookup#getValueAt(String)
+	 * @see ILookup#getValueAt(String)
 	 */
 	public Object getValueAt(String colName) throws LookupException {
 		return (doGetValue(m_currentRowPos, doGetColPos(colName)));
@@ -140,7 +140,7 @@ public class PropertiesLookup implements Lookup, Cloneable, java.io.Serializable
 	 *            int
 	 * @return Object
 	 * @throws LookupException
-	 * @see org.trade.core.lookup.Lookup#getValueAt(int, int)
+	 * @see ILookup#getValueAt(int, int)
 	 */
 	public Object getValueAt(int row, int col) throws LookupException {
 		return (doGetValue(row, col));
@@ -153,7 +153,7 @@ public class PropertiesLookup implements Lookup, Cloneable, java.io.Serializable
 	 *            int
 	 * @return String
 	 * @throws LookupException
-	 * @see org.trade.core.lookup.Lookup#getColumnName(int)
+	 * @see ILookup#getColumnName(int)
 	 */
 	public String getColumnName(int colPos) throws LookupException {
 		String colName = null;
@@ -174,7 +174,7 @@ public class PropertiesLookup implements Lookup, Cloneable, java.io.Serializable
 	 *            String
 	 * @return boolean
 	 * @throws LookupException
-	 * @see org.trade.core.lookup.Lookup#setDefaultPos(String)
+	 * @see ILookup#setDefaultPos(String)
 	 */
 	public boolean setDefaultPos(String colName) throws LookupException {
 		return (doSetPos(doGetValue(0, doGetColPos(colName)), doGetColPos(colName)));
@@ -189,7 +189,7 @@ public class PropertiesLookup implements Lookup, Cloneable, java.io.Serializable
 	 *            String
 	 * @return boolean
 	 * @throws LookupException
-	 * @see org.trade.core.lookup.Lookup#setPos(Object, String)
+	 * @see ILookup#setPos(Object, String)
 	 */
 	public boolean setPos(Object colValue, String colName) throws LookupException {
 		return (doSetPos(colValue, doGetColPos(colName)));
@@ -204,7 +204,7 @@ public class PropertiesLookup implements Lookup, Cloneable, java.io.Serializable
 	 *            int
 	 * @return boolean
 	 * @throws LookupException
-	 * @see org.trade.core.lookup.Lookup#setPos(Object, int)
+	 * @see ILookup#setPos(Object, int)
 	 */
 	public boolean setPos(Object colValue, int col) throws LookupException {
 		return (doSetPos(colValue, col));
@@ -214,7 +214,7 @@ public class PropertiesLookup implements Lookup, Cloneable, java.io.Serializable
 	 * Method clone.
 	 * 
 	 * @return Object
-	 * @see org.trade.core.lookup.Lookup#clone()
+	 * @see ILookup#clone()
 	 */
 	public Object clone() {
 		return (new PropertiesLookup(m_columnNames, m_data));
