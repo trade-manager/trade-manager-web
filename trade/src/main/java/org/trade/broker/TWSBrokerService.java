@@ -2,13 +2,11 @@ package org.trade.broker;
 
 import com.ib.client.*;
 import com.ib.client.Types.NewsType;
+import com.ib.controller.*;
 import com.ib.controller.ApiConnection.ILogger;
-import com.ib.controller.ApiController;
 import com.ib.controller.ApiController.IBulletinHandler;
 import com.ib.controller.ApiController.IConnectionHandler;
 import com.ib.controller.ApiController.ITimeHandler;
-import com.ib.controller.Formats;
-import com.ib.controller.Position;
 import org.slf4j.LoggerFactory;
 import org.trade.broker.client.Broker;
 import org.trade.core.factory.ClassFactory;
@@ -259,7 +257,8 @@ public class TWSBrokerService extends AbstractBrokerModel {
         synchronized (m_accountRequests) {
             if (m_accountRequests.containsKey(accountNumber)) {
                 if (controller().client().isConnected()) {
-                    controller().client().reqAccountUpdates(false, accountNumber);
+                    controller().reqAccountUpdates(false, accountNumber, new AccountHandler(this, accountNumber));
+//                    controller().client().reqAccountUpdates(false, accountNumber);
                 }
                 m_accountRequests.remove(accountNumber);
             }
@@ -270,7 +269,8 @@ public class TWSBrokerService extends AbstractBrokerModel {
     public void onReqFinancialAccount() {
         try {
             if (controller().client().isConnected()) {
-                controller().client().requestFA(EClientSocket.ALIASES);
+                controller().reqAdvisorData(Types.FADataType.ALIASES, new AdvisorHandler(this));
+                //     controller().client().requestFA(EClientSocket.ALIASES);
             } else {
                 throw new BrokerModelException(0, 3010, "Not conected Financial Account data cannot be retrieved");
             }
@@ -281,25 +281,12 @@ public class TWSBrokerService extends AbstractBrokerModel {
 
     @Override
     public void onReqReplaceFinancialAccount(int faDataType, String xml) throws BrokerModelException {
-        try {
-            if (controller().client().isConnected()) {
-                controller().client().replaceFA(faDataType, xml);
-            } else {
-                throw new BrokerModelException(0, 3010, "Not conected Financial Account data cannot be replaced");
-            }
-        } catch (Exception ex) {
-            error(0, 3295, "Error replacing Financial Account Msg: " + ex.getMessage());
-        }
+
     }
 
     @Override
     public void onReqManagedAccount() throws BrokerModelException {
-        // request list of all open orders
-        if (controller().client().isConnected()) {
-            controller().client().reqManagedAccts();
-        } else {
-            throw new BrokerModelException(0, 3010, "Not conected to TWS historical data cannot be retrieved");
-        }
+
     }
 
     @Override
@@ -307,7 +294,8 @@ public class TWSBrokerService extends AbstractBrokerModel {
         // request list of all open orders
         if (controller().client().isConnected()) {
             openOrders.clear();
-            controller().client().reqAllOpenOrders();
+            controller().reqLiveOrders(new LiveOrderHandler(this));
+//            controller().client().reqAllOpenOrders();
         } else {
             throw new BrokerModelException(0, 3010, "Not conected to TWS historical data cannot be retrieved");
         }
@@ -858,6 +846,40 @@ public class TWSBrokerService extends AbstractBrokerModel {
         }
     }
 
+    public class AdvisorHandler implements ApiController.IAdvisorHandler {
+
+        private AbstractBrokerModel m_brokerModel;
+        private IPersistentModel m_tradePersistentModel;
+
+        AdvisorHandler(AbstractBrokerModel brokerModel) {
+            this.m_brokerModel = brokerModel;
+            try {
+                m_tradePersistentModel = (IPersistentModel) ClassFactory
+                        .getServiceForInterface(IPersistentModel._persistentModel, this);
+
+            } catch (Exception ex) {
+                throw new IllegalArgumentException("Error initializing IBrokerModel Msg: " + ex.getMessage());
+            }
+        }
+
+        private AbstractBrokerModel getBrokerModel() {
+            return this.m_brokerModel;
+        }
+
+        private IPersistentModel getPersistentModel() {
+            return this.m_tradePersistentModel;
+        }
+
+        public void groups(ArrayList<Group> groups) {
+        }
+
+        public void profiles(ArrayList<Profile> profiles) {
+        }
+
+        public void aliases(ArrayList<Alias> aliases) {
+        }
+    }
+
     public class AccountHandler implements ApiController.IAccountHandler {
 
         private AbstractBrokerModel m_brokerModel;
@@ -894,11 +916,50 @@ public class TWSBrokerService extends AbstractBrokerModel {
         public void accountTime(String timeStamp) {
         }
 
-        public void accountDownloadEnd(String account) {
+        public void accountDownloadEnd(String accountNumber) {
+            _log.debug("accountDownloadEnd: " + accountNumber);
         }
 
         public void updatePortfolio(Position position) {
         }
+    }
+
+    public class LiveOrderHandler implements ApiController.ILiveOrderHandler {
+
+        private AbstractBrokerModel m_brokerModel;
+        private IPersistentModel m_tradePersistentModel;
+
+        LiveOrderHandler(AbstractBrokerModel brokerModel) {
+            this.m_brokerModel = brokerModel;
+
+            try {
+                m_tradePersistentModel = (IPersistentModel) ClassFactory
+                        .getServiceForInterface(IPersistentModel._persistentModel, this);
+
+            } catch (Exception ex) {
+                throw new IllegalArgumentException("Error initializing IBrokerModel Msg: " + ex.getMessage());
+            }
+        }
+
+        private AbstractBrokerModel getBrokerModel() {
+            return this.m_brokerModel;
+        }
+
+        private IPersistentModel getPersistentModel() {
+            return this.m_tradePersistentModel;
+        }
+
+        public void openOrder(com.ib.client.Contract contract, Order order, OrderState orderState) {
+        }
+
+        public void openOrderEnd() {
+        }
+
+        public void orderStatus(int orderId, com.ib.client.OrderStatus status, double filled, double remaining, double avgFillPrice, long permId, int parentId, double lastFillPrice, int clientId, String whyHeld) {
+        }
+
+        public void handle(int orderId, int errorCode, String errorMsg) {
+        }  // add permId?
     }
 
     public class OrderHandler implements ApiController.IOrderHandler {
