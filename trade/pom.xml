@@ -92,7 +92,7 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>3.0.0-M1</version>
 				<configuration>
-					<skipTests>true</skipTests>
+					<skipTests>false</skipTests>
 					<argLine>-Duser.timezone=America/New_York -Dlog4j.configuration=${basedir}/../config.properties
 					</argLine>
 				</configuration>

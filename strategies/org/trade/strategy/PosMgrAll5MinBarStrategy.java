@@ -39,7 +39,7 @@ import java.time.ZonedDateTime;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.trade.broker.BrokerModel;
+import org.trade.broker.IBrokerModel;
 import org.trade.strategy.data.CandleSeries;
 import org.trade.strategy.data.StrategyData;
 import org.trade.strategy.data.candle.CandleItem;
@@ -73,7 +73,7 @@ public class PosMgrAll5MinBarStrategy extends AbstractStrategyRule {
 	 *            Integer
 	 */
 
-	public PosMgrAll5MinBarStrategy(BrokerModel brokerManagerModel, StrategyData strategyData,
+	public PosMgrAll5MinBarStrategy(IBrokerModel brokerManagerModel, StrategyData strategyData,
 			Integer idTradestrategy) {
 		super(brokerManagerModel, strategyData, idTradestrategy);
 	}

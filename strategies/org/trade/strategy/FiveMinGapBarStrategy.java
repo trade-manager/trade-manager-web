@@ -39,7 +39,7 @@ import java.time.ZonedDateTime;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.trade.broker.BrokerModel;
+import org.trade.broker.IBrokerModel;
 import org.trade.core.util.CoreUtils;
 import org.trade.core.util.TradingCalendar;
 import org.trade.core.valuetype.Money;
