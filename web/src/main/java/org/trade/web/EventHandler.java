@@ -51,7 +51,7 @@ public class EventHandler {
 	 */
 	private String getPath(Employee employee) {
 		return this.entityLinks.linkForSingleResource(employee.getClass(),
-				employee.getSysId()).toUri().getPath();
+				employee.getId()).toUri().getPath();
 	}
 
 }

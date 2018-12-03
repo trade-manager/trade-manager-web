@@ -44,7 +44,6 @@ public class DatabaseLoader implements CommandLineRunner {
                     global, ROLE_MANAGER));
         }
 
-
         SecurityContextHolder.getContext().setAuthentication(
                 new UsernamePasswordAuthenticationToken("admin", "doesn't matter",
                         AuthorityUtils.createAuthorityList(ROLE_MANAGER)));
