@@ -18,6 +18,7 @@ import org.trade.dictionary.valuetype.*;
 import org.trade.dictionary.valuetype.OrderStatus;
 import org.trade.dictionary.valuetype.OrderType;
 import org.trade.persistent.IPersistentModel;
+import org.trade.persistent.PersistentModelException;
 import org.trade.persistent.dao.*;
 import org.trade.persistent.dao.Contract;
 
@@ -89,7 +90,6 @@ public class TWSBrokerService extends AbstractBrokerModel {
     // APIController vars
     private final ILogger m_inLogger = new TWSLogger(Logger.getLogger(TWSBrokerService.class.getName()));
     private final ILogger m_outLogger = new TWSLogger(Logger.getLogger(TWSBrokerService.class.getName()));
-    private final ArrayList<String> m_acctList = new ArrayList<>();
     private Integer m_clientId = null;
     private AtomicInteger reqId = null;
     private AtomicInteger orderKey = null;
@@ -280,12 +280,12 @@ public class TWSBrokerService extends AbstractBrokerModel {
     }
 
     @Override
-    public void onReqReplaceFinancialAccount(int faDataType, String xml) throws BrokerModelException {
+    public void onReqReplaceFinancialAccount(int faDataType, String xml) {
 
     }
 
     @Override
-    public void onReqManagedAccount() throws BrokerModelException {
+    public void onReqManagedAccount() {
 
     }
 
@@ -306,7 +306,8 @@ public class TWSBrokerService extends AbstractBrokerModel {
         // request list of all open orders
         if (controller().client().isConnected()) {
             openOrders.clear();
-            controller().client().reqOpenOrders();
+            controller().reqLiveOrders(new LiveOrderHandler(this));
+//            controller().client().reqOpenOrders();
         } else {
             throw new BrokerModelException(0, 3010, "Not conected to TWS historical data cannot be retrieved");
         }
@@ -358,6 +359,9 @@ public class TWSBrokerService extends AbstractBrokerModel {
                         + backfillWhatToShow + " Regular Trading Hrs: " + backfillUseRTH + " Date format: "
                         + backfillDateFormat);
                 List<TagValue> chartOptions = new ArrayList<TagValue>();
+
+                controller().reqHistoricalData(TWSBrokerModel.getIBContract(tradestrategy.getContract()), endDateTime, 1, Types.DurationUnit.WEEK, Types.BarSize._1_day,
+                        Types.WhatToShow.TRADES, (backfillUseRTH == 1 ? true : false), new HistoricalDataHandler(this, tradestrategy.getId()));
 
                 controller().client().reqHistoricalData(tradestrategy.getId(),
                         TWSBrokerModel.getIBContract(tradestrategy.getContract()), endDateTime,
@@ -828,9 +832,25 @@ public class TWSBrokerService extends AbstractBrokerModel {
         }
 
         public void accountList(ArrayList<String> list) {
+            try {
+                String accountNumbers = null;
+                for (String accountNumber : list) {
+                    if (null == accountNumbers)
+                        accountNumbers = accountNumber;
+                    accountNumbers = "," + accountNumber;
+                }
+                _log.debug("Managed accounts: " + accountNumbers);
+                getBrokerModel().fireManagedAccountsUpdated(accountNumbers);
+
+            } catch (Exception ex) {
+                message(0, 3315, "Error updating Managed Accounts: " + ex.getMessage());
+            } finally {
+                /*
+                 * Call FA Accounts to see if we are Financial Advisor.
+                 */
+                onReqFinancialAccount();
+            }
             show("Received account list");
-            m_acctList.clear();
-            m_acctList.addAll(list);
         }
 
         public void show(final String msg) {
@@ -871,12 +891,48 @@ public class TWSBrokerService extends AbstractBrokerModel {
         }
 
         public void groups(ArrayList<Group> groups) {
+            try {
+
+                for (Group group : groups) {
+                    _log.debug("Group: " + group.name() + "/n");
+                    Portfolio portfolio = new Portfolio(group.name(), group.name());
+                    getPersistentModel().persistPortfolio(portfolio);
+                }
+            } catch (PersistentModelException ex) {
+                error(Types.FADataType.ALIASES.ordinal(), 3235, ex.getMessage());
+            }
         }
 
         public void profiles(ArrayList<Profile> profiles) {
+            try {
+                for (Profile profile : profiles) {
+                    _log.debug("Profiles: " + profile.name() + "/n");
+                    Portfolio portfolio = new Portfolio(profile.name(), profile.name());
+                    getPersistentModel().persistPortfolio(portfolio);
+                }
+                getBrokerModel().fireFAAccountsCompleted();
+            } catch (PersistentModelException ex) {
+                error(Types.FADataType.ALIASES.ordinal(), 3235, ex.getMessage());
+            }
         }
 
         public void aliases(ArrayList<Alias> aliases) {
+            try {
+                for (Alias alias : aliases) {
+                    _log.debug("Aliases: " + alias.alias() + "/n");
+
+                    Account account = getPersistentModel().findAccountByNumber(alias.account());
+                    if (null == account) {
+                        account = new Account(alias.account(), alias.account(), Currency.USD,
+                                AccountType.INDIVIDUAL);
+                    }
+                    account.setAlias(alias.alias());
+                    account.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
+                    getPersistentModel().persistAspect(account);
+                }
+            } catch (PersistentModelException ex) {
+                error(Types.FADataType.ALIASES.ordinal(), 3235, ex.getMessage());
+            }
         }
     }
 
@@ -1056,6 +1112,43 @@ public class TWSBrokerService extends AbstractBrokerModel {
 
         public void handle(int errorCode, String errorMsg) {
             error(getOrderKey(), errorCode, errorMsg);
+        }
+    }
+
+    public class HistoricalDataHandler implements ApiController.IHistoricalDataHandler {
+
+        private AbstractBrokerModel m_brokerModel;
+        private Integer m_reqId;
+        private IPersistentModel m_tradePersistentModel;
+
+        HistoricalDataHandler(AbstractBrokerModel brokerModel, Integer reqId) {
+            this.m_brokerModel = brokerModel;
+            this.m_reqId = reqId;
+            try {
+                m_tradePersistentModel = (IPersistentModel) ClassFactory
+                        .getServiceForInterface(IPersistentModel._persistentModel, this);
+
+            } catch (Exception ex) {
+                throw new IllegalArgumentException("Error initializing IBrokerModel Msg: " + ex.getMessage());
+            }
+        }
+
+        private AbstractBrokerModel getBrokerModel() {
+            return this.m_brokerModel;
+        }
+
+        private IPersistentModel getPersistentModel() {
+            return this.m_tradePersistentModel;
+        }
+
+        private Integer getReqId() {
+            return this.m_reqId;
+        }
+
+        public void historicalData(Bar bar, boolean hasGaps) {
+        }
+
+        public void historicalDataEnd() {
         }
     }
 
