@@ -360,14 +360,14 @@ public class TWSBrokerService extends AbstractBrokerModel {
                         + backfillDateFormat);
                 List<TagValue> chartOptions = new ArrayList<TagValue>();
 
-                controller().reqHistoricalData(TWSBrokerModel.getIBContract(tradestrategy.getContract()), endDateTime, 1, Types.DurationUnit.WEEK, Types.BarSize._1_day,
-                        Types.WhatToShow.TRADES, (backfillUseRTH == 1 ? true : false), new HistoricalDataHandler(this, tradestrategy.getId()));
+                controller().reqHistoricalData(TWSBrokerModel.getIBContract(tradestrategy.getContract()), endDateTime, chartDays, Types.DurationUnit.DAY, Types.BarSize.valueOf(BarSize.newInstance(tradestrategy.getBarSize()).getCode()),
+                        Types.WhatToShow.valueOf(backfillWhatToShow), (backfillUseRTH == 1 ? true : false), new HistoricalDataHandler(this, tradestrategy.getId()));
 
-                controller().client().reqHistoricalData(tradestrategy.getId(),
-                        TWSBrokerModel.getIBContract(tradestrategy.getContract()), endDateTime,
-                        ChartDays.newInstance(chartDays).getDisplayName(),
-                        BarSize.newInstance(tradestrategy.getBarSize()).getDisplayName(), backfillWhatToShow,
-                        backfillUseRTH, backfillDateFormat, chartOptions);
+//                controller().client().reqHistoricalData(tradestrategy.getId(),
+//                        TWSBrokerModel.getIBContract(tradestrategy.getContract()), endDateTime,
+//                        ChartDays.newInstance(chartDays).getDisplayName(),
+//                        BarSize.newInstance(tradestrategy.getBarSize()).getDisplayName(), backfillWhatToShow,
+//                        backfillUseRTH, backfillDateFormat, chartOptions);
 
             } else {
                 throw new BrokerModelException(tradestrategy.getId(), 3100,
@@ -396,8 +396,10 @@ public class TWSBrokerService extends AbstractBrokerModel {
                  * supported by TWS for live data.
                  */
                 ArrayList<TagValue> realTimeBarOptions = new ArrayList<>();
-                controller().client().reqRealTimeBars(contract.getId(), TWSBrokerModel.getIBContract(contract), 5,
-                        backfillWhatToShow, (backfillUseRTH > 0), realTimeBarOptions);
+                controller().reqRealTimeBars(TWSBrokerModel.getIBContract(contract), Types.WhatToShow.valueOf(backfillWhatToShow), (backfillUseRTH == 1 ? true : false), new RealTimeBarHandler(this, contract.getId()));
+
+//                controller().client().reqRealTimeBars(contract.getId(), TWSBrokerModel.getIBContract(contract), 5,
+//                        backfillWhatToShow, (backfillUseRTH > 0), realTimeBarOptions);
 
                 if (mktData) {
                     onReqMarketData(contract, genericTicklist, false);
@@ -424,8 +426,10 @@ public class TWSBrokerService extends AbstractBrokerModel {
                 }
                 List<TagValue> mktDataOptions = new ArrayList<TagValue>();
                 m_marketDataRequests.put(contract.getId(), contract);
-                controller().client().reqMktData(contract.getId(), TWSBrokerModel.getIBContract(contract), genericTicklist, snapshot,
-                        mktDataOptions);
+                controller().reqTopMktData(TWSBrokerModel.getIBContract(contract), genericTicklist, snapshot, new TopMktDataHandler(this, contract.getId()));
+
+//                controller().client().reqMktData(contract.getId(), TWSBrokerModel.getIBContract(contract), genericTicklist, snapshot,
+//                        mktDataOptions);
 
             } else {
                 throw new BrokerModelException(contract.getId(), 3040,
@@ -449,7 +453,10 @@ public class TWSBrokerService extends AbstractBrokerModel {
                 commissionDetails.clear();
                 executionDetails.clear();
                 Integer reqId = this.getNextRequestId();
-                controller().client().reqExecutions(reqId, getIBExecutionFilter(m_clientId, mktOpenDate, null, null));
+                controller().reqExecutions(getIBExecutionFilter(m_clientId, mktOpenDate,
+                        null, null)
+                        , new TradeReportHandler(this, reqId));
+//                controller().client().reqExecutions(reqId, getIBExecutionFilter(m_clientId, mktOpenDate, null, null));
             } else {
                 throw new BrokerModelException(0, 3020, "Not conected to TWS historical data cannot be retrieved");
             }
@@ -1149,6 +1156,88 @@ public class TWSBrokerService extends AbstractBrokerModel {
         }
 
         public void historicalDataEnd() {
+        }
+    }
+
+    public class RealTimeBarHandler implements ApiController.IRealTimeBarHandler {
+
+
+        private AbstractBrokerModel m_brokerModel;
+        private Integer m_reqId;
+        private IPersistentModel m_tradePersistentModel;
+
+        RealTimeBarHandler(AbstractBrokerModel brokerModel, Integer reqId) {
+            this.m_brokerModel = brokerModel;
+            this.m_reqId = reqId;
+            try {
+                m_tradePersistentModel = (IPersistentModel) ClassFactory
+                        .getServiceForInterface(IPersistentModel._persistentModel, this);
+
+            } catch (Exception ex) {
+                throw new IllegalArgumentException("Error initializing IBrokerModel Msg: " + ex.getMessage());
+            }
+        }
+
+        private AbstractBrokerModel getBrokerModel() {
+            return this.m_brokerModel;
+        }
+
+        private IPersistentModel getPersistentModel() {
+            return this.m_tradePersistentModel;
+        }
+
+        private Integer getReqId() {
+            return this.m_reqId;
+        }
+
+        public void realtimeBar(Bar bar) {
+        }
+
+    }
+
+    public class TopMktDataHandler implements ApiController.ITopMktDataHandler {
+
+        private AbstractBrokerModel m_brokerModel;
+        private Integer m_reqId;
+        private IPersistentModel m_tradePersistentModel;
+
+        TopMktDataHandler(AbstractBrokerModel brokerModel, Integer reqId) {
+            this.m_brokerModel = brokerModel;
+            this.m_reqId = reqId;
+            try {
+                m_tradePersistentModel = (IPersistentModel) ClassFactory
+                        .getServiceForInterface(IPersistentModel._persistentModel, this);
+
+            } catch (Exception ex) {
+                throw new IllegalArgumentException("Error initializing IBrokerModel Msg: " + ex.getMessage());
+            }
+        }
+
+        private AbstractBrokerModel getBrokerModel() {
+            return this.m_brokerModel;
+        }
+
+        private IPersistentModel getPersistentModel() {
+            return this.m_tradePersistentModel;
+        }
+
+        private Integer getReqId() {
+            return this.m_reqId;
+        }
+
+        public void tickPrice(TickType tickType, double price, int canAutoExecute) {
+        }
+
+        public void tickSize(TickType tickType, int size) {
+        }
+
+        public void tickString(TickType tickType, String value) {
+        }
+
+        public void tickSnapshotEnd() {
+        }
+
+        public void marketDataType(Types.MktDataType marketDataType) {
         }
     }
 
