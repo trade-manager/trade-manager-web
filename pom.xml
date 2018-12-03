@@ -24,6 +24,7 @@
 		<module>core</module>
 		<module>trade</module>
 		<module>web</module>
+		<module>security</module>
 	</modules>
 	<dependencies>
 		<dependency>
