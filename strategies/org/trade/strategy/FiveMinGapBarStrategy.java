@@ -102,7 +102,7 @@ public class FiveMinGapBarStrategy extends AbstractStrategyRule {
 	 *            Integer
 	 */
 
-	public FiveMinGapBarStrategy(BrokerModel brokerManagerModel, StrategyData strategyData, Integer idTradestrategy) {
+	public FiveMinGapBarStrategy(IBrokerModel brokerManagerModel, StrategyData strategyData, Integer idTradestrategy) {
 		super(brokerManagerModel, strategyData, idTradestrategy);
 	}
 
