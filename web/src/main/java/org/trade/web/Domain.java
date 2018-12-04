@@ -3,20 +3,19 @@ package org.trade.web;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import org.trade.core.dao.Aspect;
 
 import javax.persistence.*;
 
-@Data
+@EqualsAndHashCode
 @Entity
 @Table(name = "domain")
 public class Domain {
 
 
-	private  Integer id;
+	private Integer id;
 	private Integer version;
 	private String name;
 	private String description;

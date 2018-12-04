@@ -13,10 +13,9 @@ import javax.persistence.Table;
 import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-@Data
+@EqualsAndHashCode
 @Entity
 @Table(name = "employee")
 public class Employee {
