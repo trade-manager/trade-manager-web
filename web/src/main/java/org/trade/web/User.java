@@ -1,9 +1,5 @@
 package org.trade.web;
 
-import static javax.persistence.GenerationType.IDENTITY;
-
-import java.util.Arrays;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -19,22 +15,18 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import lombok.EqualsAndHashCode;
-
-@EqualsAndHashCode
 @Entity
 @Table(name = "user")
 public class User {
 
 	public static final PasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
 
-	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+	private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
 	private String name;
 	private String password;
 
 	private String[] roles;
-//	private Domain domain;
+	private Domain domain;
 
 	protected User() {
 	}
@@ -44,16 +36,15 @@ public class User {
 		this.name = name;
 		this.setPassword(password);
 		this.roles = roles;
-//		this.domain = domain;
+		this.domain = domain;
 	}
 
-
 	@Column(name = "id", unique = true, nullable = false)
-	public Integer getId() {
+	public Long getId() {
 		return this.id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -67,7 +58,9 @@ public class User {
 	}
 
 	@Column(name = "roles")
-	public String[] getRoles() { return this.roles; }
+	public String[] getRoles() {
+		return this.roles;
+	}
 
 	public void setRoles(String[] roles) {
 		this.roles = roles;
@@ -83,15 +76,15 @@ public class User {
 		this.password = PASSWORD_ENCODER.encode(password);
 	}
 
-//	@ManyToOne(fetch = FetchType.EAGER)
-//	@JoinColumn(name = "domain_id")
-//	public Domain getDomain() {
-//		return this.domain;
-//	}
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "domain_id", insertable = true, updatable = true, nullable = false)
+	public Domain getDomain() {
+		return this.domain;
+	}
 
-//	public void setDomain(Domain domain) {
-//		this.domain = domain;
-//	}
+	public void setDomain(Domain domain) {
+		this.domain = domain;
+	}
 
 }
 

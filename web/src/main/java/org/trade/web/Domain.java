@@ -2,38 +2,42 @@ package org.trade.web;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Version;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.EqualsAndHashCode;
 
-import org.trade.core.dao.Aspect;
 
-import javax.persistence.*;
-
-@EqualsAndHashCode
 @Entity
 @Table(name = "domain")
 public class Domain {
 
 
-	private Integer id;
-	private Integer version;
+	private Long id;
+	private Long version;
 	private String name;
 	private String description;
 
-	private Domain() {}
+	private Domain() {
+	}
 
-	public Domain(String name, String description){
+	public Domain(String name, String description) {
 		this.name = name;
 		this.description = description;
 	}
 
-	@Id @GeneratedValue(strategy = IDENTITY)
+	@Id
+	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "id", unique = true, nullable = false)
-	public Integer getId() {
+	public Long getId() {
 		return this.id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -59,11 +63,11 @@ public class Domain {
 	@Version
 	@JsonIgnore
 	@Column(name = "version")
-	public Integer getVersion() {
+	public Long getVersion() {
 		return this.version;
 	}
 
-	public void setVersion(Integer version) {
+	public void setVersion(Long version) {
 		this.version = version;
 	}
 }
