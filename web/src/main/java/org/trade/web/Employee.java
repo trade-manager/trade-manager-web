@@ -13,8 +13,10 @@ import javax.persistence.Table;
 import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-
+@Data
 @Entity
 @Table(name = "employee")
 public class Employee {
@@ -36,8 +38,7 @@ public class Employee {
 		this.user = user;
 	}
 
-	@Id
-	@GeneratedValue(strategy = IDENTITY)
+	@Id @GeneratedValue(strategy = IDENTITY)
 	@Column(name = "id", unique = true, nullable = false)
 	public Integer getId() {
 		return this.id;

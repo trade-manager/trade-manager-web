@@ -4,16 +4,19 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 import org.trade.core.dao.Aspect;
 
 import javax.persistence.*;
 
-
+@Data
 @Entity
 @Table(name = "domain")
 public class Domain {
 
-	private Integer id;
+
+	private  Integer id;
 	private Integer version;
 	private String name;
 	private String description;
@@ -25,8 +28,7 @@ public class Domain {
 		this.description = description;
 	}
 
-	@Id
-	@GeneratedValue(strategy = IDENTITY)
+	@Id @GeneratedValue(strategy = IDENTITY)
 	@Column(name = "id", unique = true, nullable = false)
 	public Integer getId() {
 		return this.id;
