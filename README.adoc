@@ -36,11 +36,9 @@ $mvn clean install (make sure $JAVA_HOME is version 1.8)
 
 $mvn -N io.takari:maven:wrapper  
 
-6/ Install the DB from the script i.e run the scripts in /db as root. Note uncomment the DELIMITER statement. The scripts can also be run by following the instructions in the project /web resources/application.properties
+6/ Install the DB. Change the following properties in the project dir pom.xml, db-dba.user/db-dba.password set these to a user who can create DB and DB users. From project dir, cd web, then run
 
-db/schema-mysql.sql - create schema tradeprod.
-db/drop-create-user-mysql.sql - creates the DB user trader fpr tradeprod.
-db/data-mysql.sql - adds defaults data.
+$ mvnw sql:execute
 
 7/ To run the old Swing UI. From project dir, cd web, then run
 
