@@ -12,6 +12,9 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
 		<junit.version>4.12</junit.version>
+		<db-dba.url>jdbc:mysql://localhost:3306</db-dba.url>
+		<db-dba.user>root</db-dba.user>
+		<db-dba.password></db-dba.password>
 	</properties>
 	<groupId>org.trade</groupId>
 	<artifactId>trade-manager</artifactId>
