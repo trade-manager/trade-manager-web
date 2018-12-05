@@ -16,10 +16,20 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Table(name = "domain")
 public class Domain {
 
-
+	@Id
+	@GeneratedValue(strategy = IDENTITY)
+	@Column(name = "id", unique = true, nullable = false)
 	private Long id;
+
+	@Version
+	@JsonIgnore
+	@Column(name = "version")
 	private Long version;
+
+	@Column(name = "name")
 	private String name;
+
+	@Column(name = "description")
 	private String description;
 
 	private Domain() {
@@ -30,9 +40,6 @@ public class Domain {
 		this.description = description;
 	}
 
-	@Id
-	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "id", unique = true, nullable = false)
 	public Long getId() {
 		return this.id;
 	}
@@ -41,17 +48,14 @@ public class Domain {
 		this.id = id;
 	}
 
-	@Column(name = "name")
 	public String getName() {
 		return this.name;
 	}
-
 
 	public void setName(String name) {
 		this.name = name;
 	}
 
-	@Column(name = "description")
 	public String getDescription() {
 		return this.description;
 	}
@@ -60,9 +64,6 @@ public class Domain {
 		this.description = description;
 	}
 
-	@Version
-	@JsonIgnore
-	@Column(name = "version")
 	public Long getVersion() {
 		return this.version;
 	}

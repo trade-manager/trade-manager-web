@@ -18,11 +18,27 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Table(name = "employee")
 public class Employee {
 
+
+	@Id @GeneratedValue(strategy = IDENTITY)
+	@Column(name = "id", unique = true, nullable = false)
 	private Long id;
+
+	@Column(name = "first_name")
 	private String firstName;
+
+	@Column(name = "last_name")
 	private String lastName;
+
+	@Column(name = "description")
 	private String description;
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "user_id", insertable = true, updatable = true, nullable = false)
 	private User user;
+
+	@Version
+	@JsonIgnore
+	@Column(name = "version")
 	private Long version;
 
 	private Employee() {
@@ -35,8 +51,7 @@ public class Employee {
 		this.user = user;
 	}
 
-	@Id @GeneratedValue(strategy = IDENTITY)
-	@Column(name = "id", unique = true, nullable = false)
+
 	public Long getId() {
 		return this.id;
 	}
@@ -45,17 +60,15 @@ public class Employee {
 		this.id = id;
 	}
 
-	@Column(name = "first_name")
+
 	public String getFirstName() {
 		return this.firstName;
 	}
-
 
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
 
-	@Column(name = "last_name")
 	public String getLastName() {
 		return this.lastName;
 	}
@@ -64,7 +77,6 @@ public class Employee {
 		this.lastName = lastName;
 	}
 
-	@Column(name = "description")
 	public String getDescription() {
 		return this.description;
 	}
@@ -73,9 +85,6 @@ public class Employee {
 		this.description = description;
 	}
 
-	@Version
-	@JsonIgnore
-	@Column(name = "version")
 	public Long getVersion() {
 		return this.version;
 	}
@@ -84,8 +93,6 @@ public class Employee {
 		this.version = version;
 	}
 
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "user_id", insertable = true, updatable = true, nullable = false)
 	public User getUser() {
 		return this.user;
 	}

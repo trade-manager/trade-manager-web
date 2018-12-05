@@ -21,11 +21,25 @@ public class User {
 
 	public static final PasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
 
-	private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
+	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id", unique = true, nullable = false)
+	private Long id;
+
+	@Column(name = "name")
 	private String name;
+
+	@Column(name = "first_name")
+	private String firstName;
+
+	@JsonIgnore
+	@Column(name = "password")
 	private String password;
 
+	@Column(name = "roles")
 	private String[] roles;
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "domain_id", insertable = true, updatable = true, nullable = false)
 	private Domain domain;
 
 	protected User() {
@@ -39,7 +53,7 @@ public class User {
 		this.domain = domain;
 	}
 
-	@Column(name = "id", unique = true, nullable = false)
+
 	public Long getId() {
 		return this.id;
 	}
@@ -48,7 +62,6 @@ public class User {
 		this.id = id;
 	}
 
-	@Column(name = "name")
 	public String getName() {
 		return this.name;
 	}
@@ -57,7 +70,14 @@ public class User {
 		this.name = name;
 	}
 
-	@Column(name = "roles")
+	public String getFirstName() {
+		return this.firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
 	public String[] getRoles() {
 		return this.roles;
 	}
@@ -66,8 +86,6 @@ public class User {
 		this.roles = roles;
 	}
 
-	@JsonIgnore
-	@Column(name = "password")
 	public String getPassword() {
 		return this.password;
 	}
@@ -76,8 +94,6 @@ public class User {
 		this.password = PASSWORD_ENCODER.encode(password);
 	}
 
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "domain_id", insertable = true, updatable = true, nullable = false)
 	public Domain getDomain() {
 		return this.domain;
 	}
