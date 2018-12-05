@@ -15,8 +15,7 @@ BEGIN
   IF userCount > 0 THEN
          DROP USER trader@'localhost';
   END IF;
-END
-//
+END//
 
 
 CALL tradeprod.drop_user_if_exists('trader')//
