@@ -7,12 +7,8 @@ package org.trade.security;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Arrays;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -22,19 +18,22 @@ public class Manager {
 
 	public static final PasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
 
-	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+
+	private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
 	private String name;
 	private String password;
 	private String[] roles;
+	private @ManyToOne
+	Domain domain;
 
 	protected Manager() {
 	}
 
-	public Manager(String name, String password, String... roles) {
+	public Manager(String name, String password, Domain domain, String... roles) {
 		this.name = name;
 		this.setPassword(password);
 		this.roles = roles;
+		this.domain = domain;
 	}
 //	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", unique = true, nullable = false)
@@ -74,72 +73,4 @@ public class Manager {
 		this.roles = roles;
 	}
 
-	public boolean equals(final Object o) {
-		if (o == this) {
-			return true;
-		} else if (!(o instanceof Manager)) {
-			return false;
-		} else {
-			Manager other = (Manager)o;
-			if (!other.canEqual(this)) {
-				return false;
-			} else {
-				Object this$id = this.getId();
-				Object other$id = other.getId();
-				if (this$id == null) {
-					if (other$id != null) {
-						return false;
-					}
-				} else if (!this$id.equals(other$id)) {
-					return false;
-				}
-
-				Object this$name = this.getName();
-				Object other$name = other.getName();
-				if (this$name == null) {
-					if (other$name != null) {
-						return false;
-					}
-				} else if (!this$name.equals(other$name)) {
-					return false;
-				}
-
-				Object this$password = this.getPassword();
-				Object other$password = other.getPassword();
-				if (this$password == null) {
-					if (other$password != null) {
-						return false;
-					}
-				} else if (!this$password.equals(other$password)) {
-					return false;
-				}
-
-				if (!Arrays.deepEquals(this.getRoles(), other.getRoles())) {
-					return false;
-				} else {
-					return true;
-				}
-			}
-		}
-	}
-
-	protected boolean canEqual(final Object other) {
-		return other instanceof Manager;
-	}
-
-	public int hashCode() {
-		int result = 1;
-		Object $id = this.getId();
-		result = result * 59 + ($id == null ? 43 : $id.hashCode());
-		Object $name = this.getName();
-		result = result * 59 + ($name == null ? 43 : $name.hashCode());
-		Object $password = this.getPassword();
-		result = result * 59 + ($password == null ? 43 : $password.hashCode());
-		result = result * 59 + Arrays.deepHashCode(this.getRoles());
-		return result;
-	}
-
-	public String toString() {
-		return "Manager(id=" + this.getId() + ", name=" + this.getName() + ", roles=" + Arrays.deepToString(this.getRoles()) + ")";
-	}
 }
