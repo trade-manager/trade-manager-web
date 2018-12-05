@@ -23,8 +23,9 @@ public class Manager {
 	private String name;
 	private String password;
 	private String[] roles;
-	private @ManyToOne
-	Domain domain;
+
+	@ManyToOne(fetch = FetchType.EAGER) @JoinColumn(name = "domain_id", insertable = true, updatable = true, nullable = false)
+	private Domain domain;
 
 	protected Manager() {
 	}
@@ -71,6 +72,14 @@ public class Manager {
 
 	public void setRoles(final String[] roles) {
 		this.roles = roles;
+	}
+
+	public Domain getDomain() {
+		return this.domain;
+	}
+
+	public void setDomain(Domain domain) {
+		this.domain = domain;
 	}
 
 }
