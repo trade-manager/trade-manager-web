@@ -36,7 +36,7 @@ $mvn clean install (make sure $JAVA_HOME is version 1.8)
 
 5/ Open IntelliJ and import the parent pom.xml from the project dir. 
 
-6/ Install the DB. Change the following properties in the db/db.properties file and main pom.xml db-dba.user/db-dba.password/db-user.user/db-user.password set these to a user who can create schemas and users (root will do). From project dir, cd web, then run
+6/ Install the DB. Change the following properties in the project dir db.properties file and main pom.xml db-dba.user/db-dba.password/db-user.user/db-user.password set these to a user who can create schemas and users (root will do). From project dir, cd web, then run
 
 $ mvnw sql:execute
 
