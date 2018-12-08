@@ -26,17 +26,17 @@ $git clone <URL> i.e. https://github.com/trade-manager/trade-manager-web.git
 
 $mvn install:install-file -Dfile=lib/tools-1.8.0.jar -DgroupId=com.sun -DartifactId=tools -Dversion=1.8.0 -Dpackaging=jar
 
-3/ Build the project from the project dir 
+3/ Add the Maven Wrapper. From project dir run  
+
+$mvn -N io.takari:maven:wrapper
+
+4/ Build the project from the project dir 
 
 $mvn clean install (make sure $JAVA_HOME is version 1.8)
 
-4/ Open IntelliJ and import the parent pom.xml from the project dir. 
+5/ Open IntelliJ and import the parent pom.xml from the project dir. 
 
-5/ Add the Maven Wrapper. From project dir run  
-
-$mvn -N io.takari:maven:wrapper  
-
-6/ Install the DB. Change the following properties in the project dir pom.xml, db-dba.user/db-dba.password set these to a user who can create schemas and users (root will do). From project dir, cd web, then run
+6/ Install the DB. Change the following properties in the db/db.properties file and main pom.xml db-dba.user/db-dba.password/db-user.user/db-user.password set these to a user who can create schemas and users (root will do). From project dir, cd web, then run
 
 $ mvnw sql:execute
 
