@@ -2,7 +2,7 @@
 
 -- DELIMITER //
 
-USE tradeprod//
+USE @db-dba.schema@//
 
 DELETE FROM tradeorderfill WHERE id >='0'//
 COMMIT//
