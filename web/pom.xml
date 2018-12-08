@@ -32,6 +32,24 @@
 		<plugins>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>properties-maven-plugin</artifactId>
+				<version>1.0.0</version>
+				<executions>
+					<execution>
+						<phase>initialize</phase>
+						<goals>
+							<goal>read-project-properties</goal>
+						</goals>
+						<configuration>
+							<files>
+								<file>${basedir}/../db.properties</file>
+							</files>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
 				<version>1.2.1</version>
 				<configuration>
@@ -88,14 +106,12 @@
 						<artifactId>sql-maven-plugin</artifactId>
 						<version>1.5</version>
 					</dependency>
-
-					<!-- specify the dependent jdbc driver here -->
 					<dependency>
 						<groupId>mysql</groupId>
 						<artifactId>mysql-connector-java</artifactId>
-					<version>8.0.13</version>
-				</dependency>
-			</dependencies>
+						<version>8.0.13</version>
+					</dependency>
+				</dependencies>
 
 				<configuration>
 					<driver>com.mysql.cj.jdbc.Driver</driver>

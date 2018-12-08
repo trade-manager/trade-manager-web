@@ -12,14 +12,6 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
 		<junit.version>4.12</junit.version>
-		<db-dba.url>jdbc:mysql://localhost:3306</db-dba.url>
-		<db-dba.username>root</db-dba.username>
-		<db-dba.password>ledzepplin</db-dba.password>
-		<!--
-		<db-dba.schema>tradeprod</db-dba.schema>
-		<db-user.username>root</db-user.username>
-        <db-user.password>ledzepplin</db-user.password>
-        -->
 	</properties>
 	<groupId>org.trade</groupId>
 	<artifactId>trade-manager</artifactId>
@@ -100,7 +92,13 @@
 				<filtering>true</filtering>
 			</resource>
 		</resources>
+		<pluginManagement>
 		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>properties-maven-plugin</artifactId>
+				<version>1.0.0</version>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
@@ -112,5 +110,6 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		</pluginManagement>
 	</build>
 </project>
