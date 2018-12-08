@@ -35,11 +35,12 @@
         <validation-mode>CALLBACK</validation-mode>
         <properties>
             <property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver"/>
-            <property name="hibernate.connection.password" value="ledzepplin"/>
-            <property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/tradeprod"/>
-            <property name="hibernate.connection.username" value="trader"/>
+
+            <property name="hibernate.connection.url" value="@db-dba.url@/@db-dba.schema@"/>
+            <property name="hibernate.default_schema" value="@db-dba.schema@"/>
+            <property name="hibernate.connection.username" value="@db-user.username@"/>
+            <property name="hibernate.connection.password" value="@db-user.password@"/>
             <property name="hibernate.connection.autocommit" value="false"/>
-            <property name="hibernate.default_schema" value="tradeprod"/>
             <property name="hibernate.show_sql" value="false"/>
             <property name="hibernate.use_sql_comments" value="false"/>
 

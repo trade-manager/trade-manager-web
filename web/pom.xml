@@ -97,11 +97,10 @@
 				</dependency>
 			</dependencies>
 
-			<!-- common configuration shared by all executions -->
 				<configuration>
 					<driver>com.mysql.cj.jdbc.Driver</driver>
 					<url>${db-dba.url}</url>
-					<username>${db-dba.user}</username>
+					<username>${db-dba.username}</username>
 					<password>${db-dba.password}</password>
 					<!-- You can comment out username/password configurations and
                          have maven to look them up in your settings.xml using ${settingsKey}
@@ -113,7 +112,6 @@
 				<executions>
 					<execution>
 						<id>default-cli</id>
-						<phase>compile</phase>
 						<goals>
 							<goal>execute</goal>
 						</goals>
