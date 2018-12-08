@@ -20,25 +20,27 @@ IntelliJ open source version
 
 1/ To clone from command line  
 
-$git clone <URL> i.e. https://github.com/trade-manager/trade-manager-web.git 
+$git clone <URL> i.e. https://github.com/trade-manager/trade-manager-web.git
 
-2/ Add the tools-1.8.0.jar to the .m2 repo. From the project dir 
+2/ Change the following properties in the project dir db.properties file db-dba.user/db-dba.password/db-user.user/db-user.password set these to a user who can create schemas and users (root will do).
+
+3/ Add the tools-1.8.0.jar to the .m2 repo. From the project dir 
 
 $mvn install:install-file -Dfile=lib/tools-1.8.0.jar -DgroupId=com.sun -DartifactId=tools -Dversion=1.8.0 -Dpackaging=jar
 
-3/ Add the Maven Wrapper. From project dir run  
+4/ Add the Maven Wrapper. From project dir run  
 
 $mvn -N io.takari:maven:wrapper
 
-4/ Build the project from the project dir 
+5/ Build the project from the project dir 
 
 $mvn clean install (make sure $JAVA_HOME is version 1.8)
 
-5/ Open IntelliJ and import the parent pom.xml from the project dir. 
+6/ Open IntelliJ and import the parent pom.xml from the project dir. 
 
-6/ Install the DB. Change the following properties in the project dir db.properties file and main pom.xml db-dba.user/db-dba.password/db-user.user/db-user.password set these to a user who can create schemas and users (root will do). From project dir, cd web, then run
+6/ Create the MySQL DB. From project dir, cd web, then run
 
-$ mvnw sql:execute
+$ mvnw initialize sql:execute
 
 7/ To run the old Swing UI. From project dir, cd web, then run
 
