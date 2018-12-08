@@ -119,9 +119,9 @@
 							<delimiter>//</delimiter>
 							<autocommit>true</autocommit>
 							<srcFiles>
-								<srcFile>../db/schema-mysql.sql</srcFile>
-								<srcFile>../db/drop-create-user-mysql.sql</srcFile>
-								<srcFile>../db/data-mysql.sql</srcFile>
+								<srcFile>target/classes/schema/schema-mysql.sql</srcFile>
+								<srcFile>target/classes/schema/drop-create-user-mysql.sql</srcFile>
+								<srcFile>target/classes/schema/data-mysql.sql</srcFile>
 							</srcFiles>
 						</configuration>
 					</execution>
