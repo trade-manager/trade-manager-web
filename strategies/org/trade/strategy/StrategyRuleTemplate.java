@@ -39,7 +39,7 @@ import java.time.ZonedDateTime;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.trade.broker.BrokerModel;
+import org.trade.broker.IBrokerModel;
 import org.trade.dictionary.valuetype.OrderStatus;
 import org.trade.strategy.data.CandleSeries;
 import org.trade.strategy.data.StrategyData;
@@ -74,7 +74,7 @@ public class StrategyRuleTemplate extends AbstractStrategyRule {
 	 *            Integer
 	 */
 
-	public StrategyRuleTemplate(BrokerModel brokerManagerModel, StrategyData strategyData, Integer idTradestrategy) {
+	public StrategyRuleTemplate(IBrokerModel brokerManagerModel, StrategyData strategyData, Integer idTradestrategy) {
 		super(brokerManagerModel, strategyData, idTradestrategy);
 	}
 

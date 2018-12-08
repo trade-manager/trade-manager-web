@@ -28,19 +28,19 @@ import org.junit.Test;
 import org.junit.rules.TestName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.trade.broker.BrokerModel;
+import org.trade.broker.IBrokerModel;
 import org.trade.core.factory.ClassFactory;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.DynamicCode;
 import org.trade.core.util.TradingCalendar;
 import org.trade.dictionary.valuetype.BarSize;
-import org.trade.persistent.PersistentModel;
+import org.trade.persistent.IPersistentModel;
 import org.trade.persistent.dao.Rule;
 import org.trade.persistent.dao.Strategy;
 import org.trade.persistent.dao.Tradestrategy;
 import org.trade.persistent.dao.TradestrategyTest;
 import org.trade.persistent.dao.Tradingday;
-import org.trade.strategy.StrategyRule;
+import org.trade.strategy.IStrategyRule;
 import org.trade.strategy.data.StrategyData;
 import org.trade.ui.TradeAppLoadConfig;
 import org.trade.ui.base.StreamEditorPane;
@@ -56,7 +56,7 @@ public class StrategyPanelTest {
 	public TestName name = new TestName();
 
 	private String symbol = "TEST";
-	private PersistentModel tradePersistentModel = null;
+	private IPersistentModel tradePersistentModel = null;
 	private Tradestrategy tradestrategy = null;
 	private String m_templateName = null;
 	private String m_strategyDir = null;
@@ -84,14 +84,14 @@ public class StrategyPanelTest {
 			assertNotNull("setUp: Strategy template should be not null", m_templateName);
 			m_strategyDir = ConfigProperties.getPropAsString("trade.strategy.default.dir");
 			assertNotNull("setUp: Strategy dir should be not null", m_strategyDir);
-			this.tradePersistentModel = (PersistentModel) ClassFactory
-					.getServiceForInterface(PersistentModel._persistentModel, this);
+			this.tradePersistentModel = (IPersistentModel) ClassFactory
+					.getServiceForInterface(IPersistentModel._persistentModel, this);
 			this.tradestrategy = TradestrategyTest.getTestTradestrategy(symbol);
 			assertNotNull("setUp: tradestrategy should be not null", this.tradestrategy);
 			List<Strategy> strategies = this.tradePersistentModel.findStrategies();
 			assertNotNull("setUp: Strategy should be not null", strategies);
 			for (Strategy strategy : strategies) {
-				String fileName = m_strategyDir + "/" + StrategyRule.PACKAGE.replace('.', '/') + strategy.getClassName()
+				String fileName = m_strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/') + strategy.getClassName()
 						+ ".java";
 				String content = readFile(fileName);
 				assertNotNull("setUp: Strategy java file should be not null", content);
@@ -146,7 +146,7 @@ public class StrategyPanelTest {
 			sourceText.setSelectionColor(Color.red);
 			sourceText.setEditable(true);
 
-			String fileName = m_strategyDir + "/" + StrategyRule.PACKAGE.replace('.', '/') + m_templateName + ".java";
+			String fileName = m_strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/') + m_templateName + ".java";
 			String content = readFile(fileName);
 			sourceText.setText(content);
 			assertEquals("testJEditorPaneTextEquals:  Strategy java file not equal to test source", content,
@@ -211,8 +211,8 @@ public class StrategyPanelTest {
 	@Test
 	public void testDoCompileAndRunStrategy() {
 		try {
-			BrokerModel m_brokerManagerModel = (BrokerModel) ClassFactory
-					.getServiceForInterface(BrokerModel._brokerTest, this);
+			IBrokerModel m_brokerManagerModel = (IBrokerModel) ClassFactory
+					.getServiceForInterface(IBrokerModel._brokerTest, this);
 
 			Vector<Object> parm = new Vector<Object>(0);
 			parm.add(m_brokerManagerModel);
@@ -221,8 +221,8 @@ public class StrategyPanelTest {
 			_log.info("Ready to create Strategy");
 			DynamicCode dynacode = new DynamicCode();
 			dynacode.addSourceDir(new File(m_strategyDir));
-			StrategyRule strategyProxy = (StrategyRule) dynacode.newProxyInstance(StrategyRule.class,
-					StrategyRule.PACKAGE + m_templateName, parm);
+			IStrategyRule strategyProxy = (IStrategyRule) dynacode.newProxyInstance(IStrategyRule.class,
+					IStrategyRule.PACKAGE + m_templateName, parm);
 			_log.info("Created Strategy" + strategyProxy);
 			strategyProxy.execute();
 
@@ -248,8 +248,8 @@ public class StrategyPanelTest {
 	public void testDoCompileRule() {
 		File srcDirFile = null;
 		try {
-			BrokerModel m_brokerManagerModel = (BrokerModel) ClassFactory
-					.getServiceForInterface(BrokerModel._brokerTest, this);
+			IBrokerModel m_brokerManagerModel = (IBrokerModel) ClassFactory
+					.getServiceForInterface(IBrokerModel._brokerTest, this);
 
 			Vector<Object> parm = new Vector<Object>(0);
 			parm.add(m_brokerManagerModel);
@@ -264,7 +264,7 @@ public class StrategyPanelTest {
 					myRule = rule;
 			}
 			assertNotNull("testDoCompileRule: Rule should be not null", myRule);
-			String fileDir = m_tmpDir + "/" + StrategyRule.PACKAGE.replace('.', '/');
+			String fileDir = m_tmpDir + "/" + IStrategyRule.PACKAGE.replace('.', '/');
 			String className = strategy.getClassName() + ".java";
 
 			srcDirFile = new File(fileDir);
@@ -280,9 +280,9 @@ public class StrategyPanelTest {
 			_log.info("Ready to create Strategy");
 			DynamicCode dynacode = new DynamicCode();
 			dynacode.addSourceDir(new File(m_tmpDir));
-			StrategyRule strategyRule = (StrategyRule) dynacode.newProxyInstance(StrategyRule.class,
-					StrategyRule.PACKAGE + strategy.getClassName(), parm);
-			assertNotNull("testDoCompileRule: StrategyRule should be not null", strategyRule);
+			IStrategyRule strategyRule = (IStrategyRule) dynacode.newProxyInstance(IStrategyRule.class,
+					IStrategyRule.PACKAGE + strategy.getClassName(), parm);
+			assertNotNull("testDoCompileRule: IStrategyRule should be not null", strategyRule);
 		} catch (Exception | AssertionError ex) {
 			String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
 			_log.error(msg);
@@ -356,7 +356,7 @@ public class StrategyPanelTest {
 			myrule.setCreateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
 			StreamEditorPane textArea = new StreamEditorPane("text/rtf");
 			new JScrollPane(textArea);
-			String fileDir = m_strategyDir + "/" + StrategyRule.PACKAGE.replace('.', '/');
+			String fileDir = m_strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/');
 			String className = strategy.getClassName() + ".java";
 			String fileName = fileDir + className;
 			String content = strategyPanel.readFile(fileName);

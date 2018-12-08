@@ -93,7 +93,7 @@ import org.trade.dictionary.valuetype.AllocationMethod;
 import org.trade.dictionary.valuetype.Side;
 import org.trade.dictionary.valuetype.Tier;
 import org.trade.dictionary.valuetype.TradestrategyStatus;
-import org.trade.persistent.PersistentModel;
+import org.trade.persistent.IPersistentModel;
 import org.trade.persistent.PersistentModelException;
 import org.trade.persistent.dao.Candle;
 import org.trade.persistent.dao.Contract;
@@ -135,7 +135,7 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
 	private static final long serialVersionUID = 4026209743607182423L;
 
 	private Tradingdays m_tradingdays = null;
-	private PersistentModel m_tradePersistentModel = null;
+	private IPersistentModel m_tradePersistentModel = null;
 	private final JTabbedPane m_jTabbedPaneContract = new JTabbedPane();
 	private TradingdayTreeModel m_treeModel = null;
 	private Tree m_tree = null;
@@ -173,10 +173,10 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
 	 * @param controller
 	 *            TabbedAppPanel
 	 * @param tradePersistentModel
-	 *            PersistentModel
+	 *            IPersistentModel
 	 */
 
-	public ContractPanel(Tradingdays tradingdays, TabbedAppPanel controller, PersistentModel tradePersistentModel) {
+	public ContractPanel(Tradingdays tradingdays, TabbedAppPanel controller, IPersistentModel tradePersistentModel) {
 
 		try {
 			if (null != getMenu())

@@ -74,7 +74,7 @@ import org.trade.core.valuetype.Decode;
 import org.trade.core.valuetype.Money;
 import org.trade.core.valuetype.ValueTypeException;
 import org.trade.dictionary.valuetype.DAOPortfolio;
-import org.trade.persistent.PersistentModel;
+import org.trade.persistent.IPersistentModel;
 import org.trade.persistent.dao.Portfolio;
 import org.trade.persistent.dao.TradelogDetail;
 import org.trade.persistent.dao.TradelogReport;
@@ -101,7 +101,7 @@ public class PortfolioPanel extends BasePanel implements ChangeListener, ItemLis
 
 	private static final long serialVersionUID = 98016024273398947L;
 
-	private PersistentModel m_tradePersistentModel = null;
+	private IPersistentModel m_tradePersistentModel = null;
 	private TradelogReport m_tradelogReport = new TradelogReport();
 	private String m_csvDefaultDir = null;
 	private Table m_tableTradelogSummary = null;
@@ -129,10 +129,10 @@ public class PortfolioPanel extends BasePanel implements ChangeListener, ItemLis
 	 * @param controller
 	 *            BasePanel
 	 * @param tradePersistentModel
-	 *            PersistentModel
+	 *            IPersistentModel
 	 */
 
-	public PortfolioPanel(BasePanel controller, PersistentModel tradePersistentModel) {
+	public PortfolioPanel(BasePanel controller, IPersistentModel tradePersistentModel) {
 		try {
 			if (null != getMenu())
 				getMenu().addMessageListener(this);

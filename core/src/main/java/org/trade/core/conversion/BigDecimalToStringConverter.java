@@ -47,7 +47,7 @@ import java.math.BigDecimal;
  * 
  * @author Simon Allen
  */
-public class BigDecimalToStringConverter implements JavaTypeConverter {
+public class BigDecimalToStringConverter implements IJavaTypeConverter {
 	/**
 	 * Default constructor.
 	 */
@@ -68,7 +68,7 @@ public class BigDecimalToStringConverter implements JavaTypeConverter {
 	 * @return Object the String representation of the valueToConvert
 	 *         * @exception IllegalArgumentException thrown if the
 	 *         valueToConvert is not of type java.math.BigDecimal * @see
-	 *         org.trade.core.conversion.JavaTypeConverter#convert(Object)
+	 *         org.trade.core.conversion.IJavaTypeConverter#convert(Object)
 	 */
 	public Object convert(Object valueToConvert) throws IllegalArgumentException {
 		if (valueToConvert instanceof BigDecimal) {
@@ -85,7 +85,7 @@ public class BigDecimalToStringConverter implements JavaTypeConverter {
 	 * 
 	 * @return Class the class of the source value which will be converted
 	 *         * @see
-	 *         org.trade.core.conversion.JavaTypeConverter#getSourceType()
+	 *         org.trade.core.conversion.IJavaTypeConverter#getSourceType()
 	 */
 	public Class<?> getSourceType() {
 		return BigDecimal.class;
@@ -97,7 +97,7 @@ public class BigDecimalToStringConverter implements JavaTypeConverter {
 	 * 
 	 * 
 	 * @return Class the class the source value will be converted to * @see
-	 *         org.trade.core.conversion.JavaTypeConverter#getTargetType()
+	 *         org.trade.core.conversion.IJavaTypeConverter#getTargetType()
 	 */
 	public Class<?> getTargetType() {
 		return String.class;

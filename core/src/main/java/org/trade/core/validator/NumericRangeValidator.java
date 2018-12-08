@@ -77,13 +77,13 @@ public class NumericRangeValidator extends StringValidator {
 	 * @param expectedFormat
 	 *            String
 	 * @param receiver
-	 *            ExceptionMessageListener
+	 *            IExceptionMessageListener
 	 * @return boolean
-	 * @see org.trade.core.validator.Validator#isValid(Object, String, String,
-	 *      ExceptionMessageListener)
+	 * @see IValidator#isValid(Object, String, String,
+	 *      IExceptionMessageListener)
 	 */
 	public boolean isValid(Object value, String invalidValue, String expectedFormat,
-			ExceptionMessageListener receiver) {
+			IExceptionMessageListener receiver) {
 		boolean valid = true;
 
 		if (null == value) {

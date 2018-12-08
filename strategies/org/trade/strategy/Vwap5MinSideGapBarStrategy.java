@@ -39,7 +39,7 @@ import java.time.ZonedDateTime;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.trade.broker.BrokerModel;
+import org.trade.broker.IBrokerModel;
 import org.trade.core.util.TradingCalendar;
 import org.trade.core.valuetype.Money;
 import org.trade.dictionary.valuetype.Action;
@@ -82,7 +82,7 @@ public class Vwap5MinSideGapBarStrategy extends AbstractStrategyRule {
 	 *            Integer
 	 */
 
-	public Vwap5MinSideGapBarStrategy(BrokerModel brokerManagerModel, StrategyData strategyData,
+	public Vwap5MinSideGapBarStrategy(IBrokerModel brokerManagerModel, StrategyData strategyData,
 			Integer idTradestrategy) {
 		super(brokerManagerModel, strategyData, idTradestrategy);
 	}

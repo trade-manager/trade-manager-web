@@ -33,23 +33,56 @@
  * -------
  *
  */
-package org.trade.core.validator;
+package org.trade.strategy;
+
+import java.util.EventListener;
+
+import org.trade.persistent.dao.Tradestrategy;
 
 /**
+ * The interface that must be supported by classes that wish to receive
+ * notification of changes to a dataset.
+ * 
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
-public interface Validator {
+public interface IStrategyChangeListener extends EventListener {
+
 	/**
-	 * Method isValid.
+	 * Receives notification of an strategRule change event.
 	 * 
-	 * @param value
-	 *            Object
-	 * @param invalidValue
+	 * @param strategyClassName
 	 *            String
-	 * @param expectedFormat
-	 *            String
-	 * @param receiver
-	 *            ExceptionMessageListener
-	 * @return boolean
+	 * @param tradestrategy
+	 *            Tradestrategy
 	 */
-	boolean isValid(Object value, String invalidValue, String expectedFormat, ExceptionMessageListener receiver);
+
+	public void strategyComplete(String strategyClassName, Tradestrategy tradestrategy);
+
+	/**
+	 * Method strategyStarted.
+	 * 
+	 * @param strategyClassName
+	 *            String
+	 * @param tradestrategy
+	 *            Tradestrategy
+	 */
+	public void strategyStarted(String strategyClassName, Tradestrategy tradestrategy);
+
+	/**
+	 * Method ruleComplete.
+	 * 
+	 * @param tradestrategy
+	 *            Tradestrategy
+	 */
+	public void ruleComplete(Tradestrategy tradestrategy);
+
+	/**
+	 * Method strategyError.
+	 * 
+	 * @param strategyError
+	 *            StrategyRuleException
+	 */
+	public void strategyError(StrategyRuleException strategyError);
+
 }

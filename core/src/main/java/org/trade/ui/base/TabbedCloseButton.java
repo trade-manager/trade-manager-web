@@ -245,9 +245,9 @@ public class TabbedCloseButton extends JPanel {
 	 * Method addMessageListener.
 	 * 
 	 * @param listener
-	 *            MessageListener
+	 *            IMessageListener
 	 */
-	public void addMessageListener(MessageListener listener) {
+	public void addMessageListener(IMessageListener listener) {
 		m_notifier.add(listener);
 	}
 
@@ -255,9 +255,9 @@ public class TabbedCloseButton extends JPanel {
 	 * Method removeMessageListener.
 	 * 
 	 * @param listener
-	 *            MessageListener
+	 *            IMessageListener
 	 */
-	public void removeMessageListener(MessageListener listener) {
+	public void removeMessageListener(IMessageListener listener) {
 		m_notifier.remove(listener);
 	}
 

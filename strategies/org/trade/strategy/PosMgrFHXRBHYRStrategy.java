@@ -40,7 +40,7 @@ import java.util.Collections;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.trade.broker.BrokerModel;
+import org.trade.broker.IBrokerModel;
 import org.trade.core.util.TradingCalendar;
 import org.trade.core.valuetype.Money;
 import org.trade.dictionary.valuetype.Action;
@@ -96,7 +96,7 @@ public class PosMgrFHXRBHYRStrategy extends AbstractStrategyRule {
 	 *            Integer
 	 */
 
-	public PosMgrFHXRBHYRStrategy(BrokerModel brokerManagerModel, StrategyData strategyData, Integer idTradestrategy) {
+	public PosMgrFHXRBHYRStrategy(IBrokerModel brokerManagerModel, StrategyData strategyData, Integer idTradestrategy) {
 		super(brokerManagerModel, strategyData, idTradestrategy);
 	}
 

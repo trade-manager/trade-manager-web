@@ -55,7 +55,7 @@ import org.slf4j.LoggerFactory;
 import org.trade.core.factory.ClassFactory;
 import org.trade.core.util.TradingCalendar;
 import org.trade.dictionary.valuetype.BarSize;
-import org.trade.persistent.PersistentModel;
+import org.trade.persistent.IPersistentModel;
 import org.trade.persistent.dao.Candle;
 import org.trade.persistent.dao.Tradestrategy;
 import org.trade.persistent.dao.TradestrategyTest;
@@ -75,7 +75,7 @@ public class CandlePeriodTest {
 	public TestName name = new TestName();
 
 	private String symbol = "TEST";
-	private PersistentModel tradePersistentModel = null;
+	private IPersistentModel tradePersistentModel = null;
 	private Tradestrategy tradestrategy = null;
 
 	/**
@@ -95,7 +95,7 @@ public class CandlePeriodTest {
 	@Before
 	public void setUp() throws Exception {
 		TradeAppLoadConfig.loadAppProperties();
-		tradePersistentModel = (PersistentModel) ClassFactory.getServiceForInterface(PersistentModel._persistentModel,
+		tradePersistentModel = (IPersistentModel) ClassFactory.getServiceForInterface(IPersistentModel._persistentModel,
 				this);
 		this.tradestrategy = TradestrategyTest.getTestTradestrategy(symbol);
 		assertNotNull("1", this.tradestrategy);

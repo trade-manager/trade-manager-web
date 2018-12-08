@@ -48,7 +48,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trade.broker.client.Broker;
 import org.trade.broker.client.ClientSocket;
-import org.trade.broker.client.ClientWrapper;
+import org.trade.broker.client.IClientWrapper;
 import org.trade.broker.client.OrderState;
 import org.trade.core.factory.ClassFactory;
 import org.trade.core.properties.ConfigProperties;
@@ -58,7 +58,7 @@ import org.trade.core.valuetype.Money;
 import org.trade.dictionary.valuetype.BarSize;
 import org.trade.dictionary.valuetype.ChartDays;
 import org.trade.dictionary.valuetype.OrderStatus;
-import org.trade.persistent.PersistentModel;
+import org.trade.persistent.IPersistentModel;
 import org.trade.persistent.dao.Contract;
 import org.trade.persistent.dao.TradeOrder;
 import org.trade.persistent.dao.TradeOrderfill;
@@ -69,7 +69,7 @@ import com.ib.client.ContractDetails;
 
 /**
  */
-public class BackTestBrokerModel extends AbstractBrokerModel implements ClientWrapper {
+public class BackTestBrokerModel extends AbstractBrokerModel implements IClientWrapper {
 
 	/**
 	 * 
@@ -82,7 +82,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements ClientWr
 	private static final ConcurrentHashMap<Integer, Tradestrategy> m_historyDataRequests = new ConcurrentHashMap<Integer, Tradestrategy>();
 	private static final ConcurrentHashMap<Integer, Contract> m_realTimeBarsRequests = new ConcurrentHashMap<Integer, Contract>();
 	private static final ConcurrentHashMap<Integer, Contract> m_contractRequests = new ConcurrentHashMap<Integer, Contract>();
-	private PersistentModel m_tradePersistentModel = null;
+	private IPersistentModel m_tradePersistentModel = null;
 
 	private ClientSocket m_client = null;
 
@@ -102,7 +102,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements ClientWr
 			backfillUseRTH = ConfigProperties.getPropAsInt("trade.backfill.useRTH");
 
 		} catch (Exception ex) {
-			throw new IllegalArgumentException("Error initializing BrokerModel Msg: " + ex.getMessage());
+			throw new IllegalArgumentException("Error initializing IBrokerModel Msg: " + ex.getMessage());
 		}
 	}
 
@@ -110,15 +110,15 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements ClientWr
 
 		try {
 			m_client = new ClientSocket(this);
-			m_tradePersistentModel = (PersistentModel) ClassFactory
-					.getServiceForInterface(PersistentModel._persistentModel, this);
+			m_tradePersistentModel = (IPersistentModel) ClassFactory
+					.getServiceForInterface(IPersistentModel._persistentModel, this);
 			int maxKey = m_tradePersistentModel.findTradeOrderByMaxKey();
 			if (maxKey < 100000) {
 				maxKey = 100000;
 			}
 			orderKey = new AtomicInteger(maxKey + 1);
 		} catch (Exception ex) {
-			throw new IllegalArgumentException("Error initializing BrokerModel Msg: " + ex.getMessage());
+			throw new IllegalArgumentException("Error initializing IBrokerModel Msg: " + ex.getMessage());
 		}
 	}
 
@@ -126,7 +126,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements ClientWr
 	 * Method getHistoricalData.
 	 * 
 	 * @return ConcurrentHashMap<Integer,Tradestrategy>
-	 * @see org.trade.broker.BrokerModel#getHistoricalData()
+	 * @see IBrokerModel#getHistoricalData()
 	 */
 	public ConcurrentHashMap<Integer, Tradestrategy> getHistoricalData() {
 		return m_historyDataRequests;
@@ -136,7 +136,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements ClientWr
 	 * Method isConnected.
 	 * 
 	 * @return boolean
-	 * @see org.trade.broker.BrokerModel#isConnected()
+	 * @see IBrokerModel#isConnected()
 	 */
 	public boolean isConnected() {
 		return false;
@@ -152,7 +152,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements ClientWr
 	 * @param clientId
 	 *            Integer
 	 * @throws BrokerModelException
-	 * @see org.trade.broker.BrokerModel#onConnect(String, Integer, Integer)
+	 * @see IBrokerModel#onConnect(String, Integer, Integer)
 	 */
 	public void onConnect(String host, Integer port, Integer clientId) {
 
@@ -174,7 +174,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements ClientWr
 	 * Method disconnect.
 	 * 
 	 * @throws BrokerModelException
-	 * @see org.trade.broker.BrokerModel#disconnect()
+	 * @see IBrokerModel#disconnect()
 	 */
 	public void onDisconnect() {
 		if (isConnected()) {
@@ -188,7 +188,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements ClientWr
 	 * 
 	 * @param idTradestrategy
 	 *            Integer
-	 * @see org.trade.broker.BrokerModel#getBackTestBroker(Integer)
+	 * @see IBrokerModel#getBackTestBroker(Integer)
 	 */
 	public Broker getBackTestBroker(Integer idTradestrategy) {
 		return m_client.getBackTestBroker(idTradestrategy);
@@ -198,7 +198,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements ClientWr
 	 * Method getNextRequestId.
 	 * 
 	 * @return Integer
-	 * @see org.trade.broker.BrokerModel#getNextRequestId()
+	 * @see IBrokerModel#getNextRequestId()
 	 */
 	public Integer getNextRequestId() {
 		return new Integer(orderKey.incrementAndGet());
@@ -237,7 +237,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements ClientWr
 	 * @param account
 	 *            Account
 	 * @throws BrokerModelException
-	 * @see org.trade.broker.BrokerModel#onSubscribeAccountUpdates(boolean,
+	 * @see IBrokerModel#onSubscribeAccountUpdates(boolean,
 	 *      account)
 	 */
 	public void onSubscribeAccountUpdates(boolean subscribe, String accountNumber) throws BrokerModelException {
@@ -248,7 +248,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements ClientWr
 	 * 
 	 * @param accountNumber
 	 *            String
-	 * @see org.trade.broker.BrokerModel#onCancelAccountUpdates(String)
+	 * @see IBrokerModel#onCancelAccountUpdates(String)
 	 */
 	public void onCancelAccountUpdates(String accountNumber) {
 	}
@@ -278,7 +278,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements ClientWr
 	 * Method onReqManagedAccount.
 	 * 
 	 * @throws BrokerModelException
-	 * @see org.trade.broker.BrokerModel#onReqManagedAccount()
+	 * @see IBrokerModel#onReqManagedAccount()
 	 */
 	public void onReqManagedAccount() throws BrokerModelException {
 	}
@@ -286,7 +286,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements ClientWr
 	/**
 	 * Method onReqAllOpenOrders.
 	 * 
-	 * @see org.trade.broker.BrokerModel#onReqAllOpenOrders()
+	 * @see IBrokerModel#onReqAllOpenOrders()
 	 */
 	public void onReqAllOpenOrders() {
 		// request list of all open orders
@@ -296,7 +296,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements ClientWr
 	/**
 	 * Method onReqOpenOrders.
 	 * 
-	 * @see org.trade.broker.BrokerModel#onReqOpenOrders()
+	 * @see IBrokerModel#onReqOpenOrders()
 	 */
 	public void onReqOpenOrders() {
 		// request list of all open orders
@@ -312,7 +312,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements ClientWr
 	 * @param addOrders
 	 *            boolean
 	 * @throws BrokerModelException
-	 * @see org.trade.broker.BrokerModel#onReqExecutions(Tradestrategy)
+	 * @see IBrokerModel#onReqExecutions(Tradestrategy)
 	 */
 	public void onReqExecutions(Tradestrategy tradestrategy, boolean addOrders) throws BrokerModelException {
 
@@ -324,7 +324,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements ClientWr
 	 * @param mktOpenDate
 	 *            ZonedDateTime
 	 * @throws BrokerModelException
-	 * @see org.trade.broker.BrokerModel#onReqAllExecutions(Date)
+	 * @see IBrokerModel#onReqAllExecutions(Date)
 	 */
 	public void onReqAllExecutions(ZonedDateTime mktOpenDate) throws BrokerModelException {
 	}
@@ -371,7 +371,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements ClientWr
 	 * @param Integer
 	 *            chartDays
 	 * @throws BrokerModelException
-	 * @see org.trade.broker.BrokerModel#onBrokerData(Contract , String , String
+	 * @see IBrokerModel#onBrokerData(Contract , String , String
 	 *      )
 	 */
 	public void onBrokerData(final Tradestrategy tradestrategy, final ZonedDateTime endDate)
@@ -422,7 +422,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements ClientWr
 	 * @param contract
 	 *            Contract
 	 * @return boolean
-	 * @see org.trade.broker.BrokerModel#isHistoricalDataRunning(Contract)
+	 * @see IBrokerModel#isHistoricalDataRunning(Contract)
 	 */
 	public boolean isHistoricalDataRunning(Contract contract) {
 		for (Tradestrategy item : m_historyDataRequests.values()) {
@@ -453,7 +453,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements ClientWr
 	 * @param contract
 	 *            Contract
 	 * @return boolean
-	 * @see org.trade.broker.BrokerModel#isRealtimeBarsRunning(Contract)
+	 * @see IBrokerModel#isRealtimeBarsRunning(Contract)
 	 */
 	public boolean isRealtimeBarsRunning(Contract contract) {
 		if (m_realTimeBarsRequests.containsKey(contract.getId())) {
@@ -487,7 +487,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements ClientWr
 	 * @param contract
 	 *            Contract
 	 * @return boolean
-	 * @see org.trade.broker.BrokerModel#isRealtimeBarsRunning(Contract)
+	 * @see IBrokerModel#isRealtimeBarsRunning(Contract)
 	 */
 	public boolean isMarketDataRunning(Contract contract) {
 		return false;
@@ -510,7 +510,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements ClientWr
 	 * @param accountNumber
 	 *            String
 	 * @return boolean
-	 * @see org.trade.broker.BrokerModel#isAccountUpdatesRunning(String)
+	 * @see IBrokerModel#isAccountUpdatesRunning(String)
 	 */
 	public boolean isAccountUpdatesRunning(String accountNumber) {
 		return false;
@@ -519,7 +519,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements ClientWr
 	/**
 	 * Method onCancelAllRealtimeData.
 	 * 
-	 * @see org.trade.broker.BrokerModel#onCancelAllRealtimeData()
+	 * @see IBrokerModel#onCancelAllRealtimeData()
 	 */
 	public void onCancelAllRealtimeData() {
 		m_historyDataRequests.clear();
@@ -532,7 +532,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements ClientWr
 	 * @param contract
 	 *            Contract
 	 * @throws BrokerModelException
-	 * @see org.trade.broker.BrokerModel#onContractDetails(Contract)
+	 * @see IBrokerModel#onContractDetails(Contract)
 	 */
 	public void onContractDetails(final Contract contract) throws BrokerModelException {
 		/*
@@ -546,7 +546,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements ClientWr
 	 * 
 	 * @param contract
 	 *            Contract
-	 * @see org.trade.broker.BrokerModel#onCancelContractDetails(Contract)
+	 * @see IBrokerModel#onCancelContractDetails(Contract)
 	 */
 	public void onCancelContractDetails(Contract contract) {
 	}
@@ -574,7 +574,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements ClientWr
 	 * 
 	 * @param contract
 	 *            Contract
-	 * @see org.trade.broker.BrokerModel#onCancelRealtimeBars(Contract)
+	 * @see IBrokerModel#onCancelRealtimeBars(Contract)
 	 */
 	public void onCancelBrokerData(Contract contract) {
 		for (Tradestrategy tradestrategy : m_historyDataRequests.values()) {
@@ -594,7 +594,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements ClientWr
 	 * 
 	 * @param contract
 	 *            Contract
-	 * @see org.trade.broker.BrokerModel#onCancelRealtimeBars(Contract)
+	 * @see IBrokerModel#onCancelRealtimeBars(Contract)
 	 */
 	public void onCancelRealtimeBars(Contract contract) {
 
@@ -630,7 +630,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements ClientWr
 	 * 
 	 * @param contract
 	 *            Contract
-	 * @see org.trade.broker.BrokerModel#onCancelRealtimeBars(Contract)
+	 * @see IBrokerModel#onCancelRealtimeBars(Contract)
 	 */
 	public void onCancelMarketData(Contract contract) {
 	}
@@ -653,7 +653,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements ClientWr
 	 *            TradeOrder
 	 * @return TradeOrder
 	 * @throws BrokerModelException
-	 * @see org.trade.broker.BrokerModel#onPlaceOrder(Contract, TradeOrder)
+	 * @see IBrokerModel#onPlaceOrder(Contract, TradeOrder)
 	 */
 	public TradeOrder onPlaceOrder(final Contract contract, final TradeOrder tradeOrder) throws BrokerModelException {
 
@@ -685,7 +685,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements ClientWr
 	 * @param tradeOrder
 	 *            TradeOrder
 	 * @throws BrokerModelException
-	 * @see org.trade.broker.BrokerModel#onCancelOrder(TradeOrder)
+	 * @see IBrokerModel#onCancelOrder(TradeOrder)
 	 */
 	public void onCancelOrder(TradeOrder tradeOrder) throws BrokerModelException {
 		try {
@@ -927,7 +927,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements ClientWr
 	 *            Exception
 	 */
 	public void error(Exception ex) {
-		_log.error("BrokerModel error msg: " + ex.getMessage());
+		_log.error("IBrokerModel error msg: " + ex.getMessage());
 		// this.fireBrokerError(new BrokerManagerModelException(e));
 	}
 
@@ -938,7 +938,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements ClientWr
 	 *            String
 	 */
 	public void error(String msg) {
-		_log.error("BrokerModel error str: " + msg);
+		_log.error("IBrokerModel error str: " + msg);
 		// this.fireBrokerError(new BrokerManagerModelException(msg));
 	}
 
@@ -955,7 +955,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements ClientWr
 	 *            int
 	 * @param msg
 	 *            String
-	 * @see org.trade.broker.BrokerModel#error(int, int, String)
+	 * @see IBrokerModel#error(int, int, String)
 	 */
 	public void error(int id, int code, String msg) {
 		String symbol = "N/A";

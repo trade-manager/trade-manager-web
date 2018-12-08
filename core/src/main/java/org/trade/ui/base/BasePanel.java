@@ -57,7 +57,7 @@ import org.trade.core.util.Reflector;
  * @version $Id: BasePanel.java,v 1.21 2002/01/22 21:59:35 simon Exp $
  * @author Simon Allen
  */
-public abstract class BasePanel extends JPanel implements MessageListener {
+public abstract class BasePanel extends JPanel implements IMessageListener {
 	/**
 	 * 
 	 */
@@ -207,7 +207,7 @@ public abstract class BasePanel extends JPanel implements MessageListener {
 	 *            MessageEvent
 	 * @param parm
 	 *            Vector<Object>
-	 * @see org.trade.ui.base.MessageListener#handleEvent(MessageEvent, Vector
+	 * @see IMessageListener#handleEvent(MessageEvent, Vector
 	 *      <Object>)
 	 */
 	public void handleEvent(MessageEvent e, Vector<Object> parm) {

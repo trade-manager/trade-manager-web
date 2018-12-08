@@ -41,7 +41,7 @@ package org.trade.core.conversion;
  * 
  * @author Simon Allen
  */
-public abstract class StringToObjectConverter implements JavaTypeConverter {
+public abstract class StringToObjectConverter implements IJavaTypeConverter {
 	/**
 	 * Default constructor.
 	 */
@@ -49,7 +49,7 @@ public abstract class StringToObjectConverter implements JavaTypeConverter {
 	}
 
 	//
-	// JavaTypeConverter interface methods
+	// IJavaTypeConverter interface methods
 	//
 	/**
 	 * This method is used by the JavaTypeTranslator to convert a source object
@@ -67,7 +67,7 @@ public abstract class StringToObjectConverter implements JavaTypeConverter {
 	 *         thrown if the valueToConvert is not of type java.lang.String or
 	 *         if the valueToConvert is not in the correct format to do the
 	 *         conversion * @see
-	 *         org.trade.core.conversion.JavaTypeConverter#convert(Object)
+	 *         org.trade.core.conversion.IJavaTypeConverter#convert(Object)
 	 */
 	public Object convert(Object valueToConvert) throws IllegalArgumentException {
 		if (valueToConvert instanceof java.lang.String) {
@@ -84,7 +84,7 @@ public abstract class StringToObjectConverter implements JavaTypeConverter {
 	 * 
 	 * @return Class the class of the source value which will be converted
 	 *         * @see
-	 *         org.trade.core.conversion.JavaTypeConverter#getSourceType()
+	 *         org.trade.core.conversion.IJavaTypeConverter#getSourceType()
 	 */
 	public Class<?> getSourceType() {
 		return java.lang.String.class;

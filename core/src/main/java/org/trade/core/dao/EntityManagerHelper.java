@@ -224,7 +224,7 @@ public class EntityManagerHelper {
 	/**
 	 * Method getValidator
 	 * 
-	 * @return Validator
+	 * @return IValidator
 	 */
 	public static Validator getValidator() {
 		return validatorFactory.getValidator();

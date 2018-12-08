@@ -52,7 +52,7 @@ import org.trade.core.factory.ClassFactory;
 import org.trade.core.util.TradingCalendar;
 import org.trade.dictionary.valuetype.AccountType;
 import org.trade.dictionary.valuetype.Currency;
-import org.trade.persistent.PersistentModel;
+import org.trade.persistent.IPersistentModel;
 import org.trade.persistent.dao.Account;
 import org.trade.persistent.dao.Portfolio;
 import org.trade.persistent.dao.PortfolioAccount;
@@ -66,7 +66,7 @@ public class TWSFinancialAccountRequestTest {
 	@Rule
 	public TestName name = new TestName();
 
-	private PersistentModel m_tradePersistentModel = null;
+	private IPersistentModel m_tradePersistentModel = null;
 
 	/**
 	 * Method setUpBeforeClass.
@@ -85,7 +85,7 @@ public class TWSFinancialAccountRequestTest {
 	@Before
 	public void setUp() throws Exception {
 		TradeAppLoadConfig.loadAppProperties();
-		m_tradePersistentModel = (PersistentModel) ClassFactory.getServiceForInterface(PersistentModel._persistentModel,
+		m_tradePersistentModel = (IPersistentModel) ClassFactory.getServiceForInterface(IPersistentModel._persistentModel,
 				this);
 	}
 

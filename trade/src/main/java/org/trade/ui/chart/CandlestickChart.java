@@ -83,7 +83,7 @@ import org.trade.core.valuetype.ValueTypeException;
 import org.trade.dictionary.valuetype.Action;
 import org.trade.persistent.dao.Tradingday;
 import org.trade.strategy.data.CandleSeries;
-import org.trade.strategy.data.IndicatorDataset;
+import org.trade.strategy.data.IIndicatorDataset;
 import org.trade.strategy.data.IndicatorSeries;
 import org.trade.strategy.data.StrategyData;
 import org.trade.strategy.data.candle.CandleItem;
@@ -324,19 +324,19 @@ public class CandlestickChart extends JPanel implements SeriesChangeListener {
 		 * Change the List of indicators so that the candle dataset is the first
 		 * one in the list. The main chart must be plotted first.
 		 */
-		List<IndicatorDataset> indicators = new ArrayList<IndicatorDataset>(0);
-		for (IndicatorDataset item : strategyData.getIndicators()) {
+		List<IIndicatorDataset> indicators = new ArrayList<IIndicatorDataset>(0);
+		for (IIndicatorDataset item : strategyData.getIndicators()) {
 			if (IndicatorSeries.CandleSeries.equals(item.getType(0))) {
 				indicators.add(item);
 			}
 		}
-		for (IndicatorDataset item : strategyData.getIndicators()) {
+		for (IIndicatorDataset item : strategyData.getIndicators()) {
 			if (!IndicatorSeries.CandleSeries.equals(item.getType(0))) {
 				indicators.add(item);
 			}
 		}
 		for (int i = 0; i < indicators.size(); i++) {
-			IndicatorDataset indicator = indicators.get(i);
+			IIndicatorDataset indicator = indicators.get(i);
 			if (indicator.getDisplaySeries(0)) {
 
 				if (indicator.getSubChart(0)) {

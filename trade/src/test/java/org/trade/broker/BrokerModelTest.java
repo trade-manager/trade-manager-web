@@ -81,7 +81,7 @@ import org.trade.ui.base.BasePanel;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-public class BrokerModelTest implements BrokerChangeListener {
+public class BrokerModelTest implements IBrokerChangeListener {
 
 	private final static Logger _log = LoggerFactory.getLogger(BrokerModelTest.class);
 
@@ -89,7 +89,7 @@ public class BrokerModelTest implements BrokerChangeListener {
 	public TestName name = new TestName();
 
 	private String symbol = "TEST";
-	private BrokerModel backTestbrokerModel;
+	private IBrokerModel backTestbrokerModel;
 	private BigDecimal price = new BigDecimal(108.85);
 	private Tradestrategy tradestrategy = null;
 	private static Integer port = null;
@@ -99,7 +99,7 @@ public class BrokerModelTest implements BrokerChangeListener {
 	private boolean connectionFailed = false;
 	private static AtomicInteger timerRunning = null;
 	private final static Object lockCoreUtilsTest = new Object();
-	private final static String _broker = BrokerModel._brokerTest;
+	private final static String _broker = IBrokerModel._brokerTest;
 
 	/**
 	 * Method setUpBeforeClass.
@@ -132,11 +132,11 @@ public class BrokerModelTest implements BrokerChangeListener {
 	public void setUp() throws Exception {
 		try {
 			this.tradestrategy = TradestrategyTest.getTestTradestrategy(symbol);
-			backTestbrokerModel = (BrokerModel) ClassFactory.getServiceForInterface(_broker, BrokerModelTest.class);
+			backTestbrokerModel = (IBrokerModel) ClassFactory.getServiceForInterface(_broker, BrokerModelTest.class);
 			backTestbrokerModel.onConnect(host, port, clientId);
 			assertNotNull("1", this.tradestrategy);
 
-			backTestbrokerModel = (BrokerModel) ClassFactory.getServiceForInterface(_broker, BrokerModelTest.class);
+			backTestbrokerModel = (IBrokerModel) ClassFactory.getServiceForInterface(_broker, BrokerModelTest.class);
 			backTestbrokerModel.onConnect(host, port, clientId);
 
 			timerRunning = new AtomicInteger(0);
@@ -407,7 +407,7 @@ public class BrokerModelTest implements BrokerChangeListener {
 	public void testOnConnect() {
 		try {
 			backTestbrokerModel.onConnect(host, port, clientId);
-			if (_broker.equals(BrokerModel._brokerTest)) {
+			if (_broker.equals(IBrokerModel._brokerTest)) {
 				assertFalse("1", backTestbrokerModel.isConnected());
 			} else {
 				assertTrue("2", backTestbrokerModel.isConnected());
@@ -424,7 +424,7 @@ public class BrokerModelTest implements BrokerChangeListener {
 
 		try {
 			backTestbrokerModel.onDisconnect();
-			if (_broker.equals(BrokerModel._brokerTest)) {
+			if (_broker.equals(IBrokerModel._brokerTest)) {
 				assertFalse("1", backTestbrokerModel.isConnected());
 			} else {
 				assertTrue("2", backTestbrokerModel.isConnected());

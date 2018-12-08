@@ -35,12 +35,12 @@
  */
 package org.trade.core.valuetype;
 
-import org.trade.core.conversion.JavaDynamicTypeConverter;
+import org.trade.core.conversion.IJavaDynamicTypeConverter;
 import org.trade.core.conversion.JavaTypeTranslatorException;
 
 /**
  */
-public class ObjectToQuantity implements JavaDynamicTypeConverter {
+public class ObjectToQuantity implements IJavaDynamicTypeConverter {
 	/**
 	 * Default constructor.
 	 */
@@ -56,7 +56,7 @@ public class ObjectToQuantity implements JavaDynamicTypeConverter {
 	 *            Object
 	 * @return Object
 	 * @throws JavaTypeTranslatorException
-	 * @see org.trade.core.conversion.JavaDynamicTypeConverter#convert(Class<?>,
+	 * @see IJavaDynamicTypeConverter#convert(Class<?>,
 	 *      Object)
 	 */
 	public Object convert(Class<?> targetType, Object valueToConvert) throws JavaTypeTranslatorException {
@@ -78,7 +78,7 @@ public class ObjectToQuantity implements JavaDynamicTypeConverter {
 		return (rVal);
 	}
 
-	// from com.cbsinc.esc.devtools.conversion.JavaDynamicTypeConverter
+	// from com.cbsinc.esc.devtools.conversion.IJavaDynamicTypeConverter
 	/**
 	 * Method supportsConversion.
 	 * 
@@ -87,7 +87,7 @@ public class ObjectToQuantity implements JavaDynamicTypeConverter {
 	 * @param valueToConvert
 	 *            Object
 	 * @return boolean
-	 * @see org.trade.core.conversion.JavaDynamicTypeConverter#
+	 * @see IJavaDynamicTypeConverter#
 	 *      supportsConversion (Class<?>, Object)
 	 */
 	public boolean supportsConversion(Class<?> targetType, Object valueToConvert) {

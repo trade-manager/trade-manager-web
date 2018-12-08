@@ -61,7 +61,7 @@ import org.trade.strategy.data.CandleSeries;
 
 /**
  */
-public interface PersistentModel {
+public interface IPersistentModel {
 
 	public final static String _persistentModel = "PersistentModel";
 
@@ -217,7 +217,7 @@ public interface PersistentModel {
 	 * @param id
 	 *            Integer
 	 * @return boolean
-	 * @see org.trade.persistent.PersistentModel#existTradestrategyById(Integer)
+	 * @see IPersistentModel#existTradestrategyById(Integer)
 	 */
 	boolean existTradestrategyById(Integer id);
 
@@ -249,7 +249,7 @@ public interface PersistentModel {
 	 * 
 	 * @return PositionOrders
 	 * @throws PersistentModelException
-	 * @see org.trade.persistent.PersistentModel#findPositionOrdersById(Integer)
+	 * @see IPersistentModel#findPositionOrdersById(Integer)
 	 */
 	TradestrategyOrders refreshPositionOrdersByTradestrategyId(TradestrategyOrders positionOrders)
 			throws PersistentModelException;

@@ -42,7 +42,7 @@ import org.trade.core.message.MessageContextFactory;
 
 /**
  */
-public class CodeValidator implements Validator {
+public class CodeValidator implements IValidator {
 	private IMessageFactory m_messageFactory;
 
 	private Collection<?> m_acceptableValues;
@@ -84,13 +84,13 @@ public class CodeValidator implements Validator {
 	 * @param expectedFormat
 	 *            String
 	 * @param receiver
-	 *            ExceptionMessageListener
+	 *            IExceptionMessageListener
 	 * @return boolean
-	 * @see org.trade.core.validator.Validator#isValid(Object, String, String,
-	 *      ExceptionMessageListener)
+	 * @see IValidator#isValid(Object, String, String,
+	 *      IExceptionMessageListener)
 	 */
 	public boolean isValid(Object value, String invalidValue, String expectedFormat,
-			ExceptionMessageListener receiver) {
+			IExceptionMessageListener receiver) {
 		boolean valid = true;
 
 		if (null == value) {

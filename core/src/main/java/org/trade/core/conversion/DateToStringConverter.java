@@ -49,7 +49,7 @@ import java.util.Date;
  * @see java.text.DateFormat
  * @author Simon Allen
  */
-public class DateToStringConverter implements JavaTypeConverter {
+public class DateToStringConverter implements IJavaTypeConverter {
 	/**
 	 * Default constructor.
 	 */
@@ -61,7 +61,7 @@ public class DateToStringConverter implements JavaTypeConverter {
 	}
 
 	//
-	// JavaTypeConverter interface methods
+	// IJavaTypeConverter interface methods
 	//
 	/**
 	 * This method is used by the JavaTypeTranslator to convert a source object
@@ -77,7 +77,7 @@ public class DateToStringConverter implements JavaTypeConverter {
 	 * @return Object the String representation of the valueToConvert
 	 *         * @exception IllegalArgumentException thrown if the
 	 *         valueToConvert is not of type java.util.Date * @see
-	 *         org.trade.core.conversion.JavaTypeConverter#convert(Object)
+	 *         org.trade.core.conversion.IJavaTypeConverter#convert(Object)
 	 */
 	public Object convert(Object valueToConvert) throws IllegalArgumentException {
 		if (valueToConvert instanceof Date) {
@@ -96,7 +96,7 @@ public class DateToStringConverter implements JavaTypeConverter {
 	 * 
 	 * @return Class the class of the source value which will be converted
 	 *         * @see
-	 *         org.trade.core.conversion.JavaTypeConverter#getSourceType()
+	 *         org.trade.core.conversion.IJavaTypeConverter#getSourceType()
 	 */
 	public Class<?> getSourceType() {
 		return Date.class;
@@ -108,7 +108,7 @@ public class DateToStringConverter implements JavaTypeConverter {
 	 * 
 	 * 
 	 * @return Class the class the source value will be converted to * @see
-	 *         org.trade.core.conversion.JavaTypeConverter#getTargetType()
+	 *         org.trade.core.conversion.IJavaTypeConverter#getTargetType()
 	 */
 	public Class<?> getTargetType() {
 		return String.class;

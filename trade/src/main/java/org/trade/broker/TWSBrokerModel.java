@@ -19,7 +19,7 @@ import org.trade.dictionary.valuetype.*;
 import org.trade.dictionary.valuetype.Currency;
 import org.trade.dictionary.valuetype.OrderStatus;
 import org.trade.dictionary.valuetype.OrderType;
-import org.trade.persistent.PersistentModel;
+import org.trade.persistent.IPersistentModel;
 import org.trade.persistent.dao.*;
 import org.trade.persistent.dao.Contract;
 import org.trade.strategy.data.CandleSeries;
@@ -64,7 +64,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
     private static final ConcurrentHashMap<String, CommissionReport> commissionDetails = new ConcurrentHashMap<String, CommissionReport>();
 
     private EClientSocket m_client = null;
-    private PersistentModel m_tradePersistentModel = null;
+    private IPersistentModel m_tradePersistentModel = null;
     private AtomicInteger reqId = null;
     private AtomicInteger orderKey = null;
     private Integer m_clientId = null;
@@ -111,19 +111,19 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
             marketUpdateOnClose = ConfigProperties.getPropAsBoolean("trade.marketdata.realtime.updateClose");
 
         } catch (Exception ex) {
-            throw new IllegalArgumentException("Error initializing BrokerModel Msg: " + ex.getMessage());
+            throw new IllegalArgumentException("Error initializing IBrokerModel Msg: " + ex.getMessage());
         }
     }
 
     public TWSBrokerModel() {
         try {
             m_client = new EClientSocket(this, this);
-            m_tradePersistentModel = (PersistentModel) ClassFactory
-                    .getServiceForInterface(PersistentModel._persistentModel, this);
+            m_tradePersistentModel = (IPersistentModel) ClassFactory
+                    .getServiceForInterface(IPersistentModel._persistentModel, this);
             reqId = new AtomicInteger((int) (System.currentTimeMillis() / 1000d));
 
         } catch (Exception ex) {
-            throw new IllegalArgumentException("Error initializing BrokerModel Msg: " + ex.getMessage());
+            throw new IllegalArgumentException("Error initializing IBrokerModel Msg: " + ex.getMessage());
         }
     }
 
@@ -982,12 +982,12 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
     }
 
     public void error(Exception ex) {
-        _log.error("BrokerModel error msg: " + ex.getMessage());
+        _log.error("IBrokerModel error msg: " + ex.getMessage());
         // this.fireBrokerError(new BrokerManagerModelException(ex));
     }
 
     public void error(String msg) {
-        _log.error("BrokerModel error str: " + msg);
+        _log.error("IBrokerModel error str: " + msg);
         // this.fireBrokerError(new BrokerManagerModelException(str));
     }
 
@@ -1908,7 +1908,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
         return ibOrder;
     }
 
-    public static boolean updateTradeOrder(com.ib.client.Order ibOrder, com.ib.client.OrderState ibOrderState,
+    private static boolean updateTradeOrder(com.ib.client.Order ibOrder, com.ib.client.OrderState ibOrderState,
                                            TradeOrder order) {
 
         boolean changed = false;
@@ -2065,7 +2065,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
         return changed;
     }
 
-    public static boolean populateContract(com.ib.client.ContractDetails contractDetails, Contract transientContract)
+    private static boolean populateContract(com.ib.client.ContractDetails contractDetails, Contract transientContract)
             throws ParseException {
 
         boolean changed = false;
@@ -2249,7 +2249,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
     }
 
     public static void populateTradeOrderfill(com.ib.client.Execution execution, TradeOrderfill tradeOrderfill)
-            throws ParseException, IOException {
+             {
 
         ZonedDateTime date = TradingCalendar.getZonedDateTimeFromDateTimeString(execution.time().replaceAll("\\s", ""),
                 "yyyyMMddHH:mm:ss", TradingCalendar.LOCAL_TIMEZONE);
@@ -2266,7 +2266,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
         tradeOrderfill.setPermId(execution.permId());
     }
 
-    public static com.ib.client.ExecutionFilter getIBExecutionFilter(Integer clientId, ZonedDateTime mktOpen,
+    private static com.ib.client.ExecutionFilter getIBExecutionFilter(Integer clientId, ZonedDateTime mktOpen,
                                                                      String secType, String symbol) throws IOException {
 
         com.ib.client.ExecutionFilter executionFilter = new com.ib.client.ExecutionFilter();
@@ -2284,8 +2284,10 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
         return executionFilter;
     }
 
+
+
     public static void logOrderStatus(int orderId, String status, double filled, double remaining, double avgFillPrice,
-                                      int permId, int parentId, double lastFillPrice, int clientId, String whyHeld) {
+                                         int permId, int parentId, double lastFillPrice, int clientId, String whyHeld) {
 
         _log.info("orderId: " + orderId + " status: " + status + " filled: " + filled + " remaining: " + remaining
                 + " avgFillPrice: " + avgFillPrice + " permId: " + permId + " parentId: " + parentId
@@ -2352,7 +2354,6 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
                 + commissionReport.m_yield);
 
     }
-
     public void softDollarTiers(int reqId, SoftDollarTier[] tiers) {
         _log.debug("softDollarTiers: ");
     }

@@ -59,9 +59,9 @@ import javax.swing.SwingWorker;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.trade.broker.BrokerChangeListener;
+import org.trade.broker.IBrokerChangeListener;
 import org.trade.broker.BrokerDataRequestMonitor;
-import org.trade.broker.BrokerModel;
+import org.trade.broker.IBrokerModel;
 import org.trade.broker.BrokerModelException;
 import org.trade.core.factory.ClassFactory;
 import org.trade.core.lookup.DBTableLookupServiceProvider;
@@ -77,7 +77,7 @@ import org.trade.dictionary.valuetype.OverrideConstraints;
 import org.trade.dictionary.valuetype.Side;
 import org.trade.dictionary.valuetype.TimeInForce;
 import org.trade.dictionary.valuetype.TriggerMethod;
-import org.trade.persistent.PersistentModel;
+import org.trade.persistent.IPersistentModel;
 import org.trade.persistent.PersistentModelException;
 import org.trade.persistent.dao.Account;
 import org.trade.persistent.dao.Candle;
@@ -92,8 +92,8 @@ import org.trade.persistent.dao.Tradestrategy;
 import org.trade.persistent.dao.TradestrategyOrders;
 import org.trade.persistent.dao.Tradingday;
 import org.trade.persistent.dao.Tradingdays;
-import org.trade.strategy.StrategyChangeListener;
-import org.trade.strategy.StrategyRule;
+import org.trade.strategy.IStrategyChangeListener;
+import org.trade.strategy.IStrategyRule;
 import org.trade.strategy.StrategyRuleException;
 import org.trade.ui.base.BasePanel;
 import org.trade.ui.base.ComponentPrintService;
@@ -140,15 +140,15 @@ import org.trade.ui.tradingday.TradingdayPanel;
  * the strategy.
  * 
  */
-public class TradeMainControllerPanel extends TabbedAppPanel implements BrokerChangeListener, StrategyChangeListener {
+public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerChangeListener, IStrategyChangeListener {
 
 	private static final long serialVersionUID = -7717664255656430982L;
 
 	private final static Logger _log = LoggerFactory.getLogger(TradeMainControllerPanel.class);
 
 	private static Tradingdays m_tradingdays = null;
-	private BrokerModel m_brokerModel = null;
-	private PersistentModel m_tradePersistentModel = null;
+	private IBrokerModel m_brokerModel = null;
+	private IPersistentModel m_tradePersistentModel = null;
 	private BrokerDataRequestMonitor brokerDataRequestProgressMonitor = null;
 
 	private TradingdayPanel tradingdayPanel = null;
@@ -182,8 +182,8 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements BrokerCh
 			 * allways considered selected.
 			 */
 			setSelected(true);
-			m_tradePersistentModel = (PersistentModel) ClassFactory
-					.getServiceForInterface(PersistentModel._persistentModel, this);
+			m_tradePersistentModel = (IPersistentModel) ClassFactory
+					.getServiceForInterface(IPersistentModel._persistentModel, this);
 			Tradingday tradingday = Tradingday.newInstance(TradingCalendar.getCurrentTradingDay());
 			Tradingday todayTradingday = m_tradePersistentModel.findTradingdayByOpenCloseDate(tradingday.getOpen(),
 					tradingday.getClose());
@@ -523,14 +523,14 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements BrokerCh
 
 	/**
 	 * This method is fired when the system connects to TWS, if there are open
-	 * orders. i.e from a BrokerModel event. If todays orders are not in the
+	 * orders. i.e from a IBrokerModel event. If todays orders are not in the
 	 * openTradeOrders then we cancel then order.
 	 * 
 	 * @param openTradeOrders
 	 *            Hashtable<Integer, TradeOrder> the open orders that are from
 	 *            IB TWS.
 	 * 
-	 * @see org.trade.broker.BrokerChangeListener#openOrderEnd(
+	 * @see IBrokerChangeListener#openOrderEnd(
 	 *      ConcurrentHashMap< Integer,TradeOrder>)
 	 */
 
@@ -594,7 +594,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements BrokerCh
 	/**
 	 * This method is fired when the Brokermodel has completed the request for
 	 * Execution Details see doFetchExecution or connectionOpened i.e from a
-	 * BrokerModel event all executions for the filter have now been received.
+	 * IBrokerModel event all executions for the filter have now been received.
 	 * Check to see if we need to close any trades for these order fills.
 	 * 
 	 * @param tradeOrders
@@ -602,7 +602,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements BrokerCh
 	 *            that are from IB TWS.
 	 * 
 	 * 
-	 * @see org.trade.broker.BrokerChangeListener#executionDetailsEnd(
+	 * @see IBrokerChangeListener#executionDetailsEnd(
 	 *      ConcurrentHashMap<Integer,TradeOrder>)
 	 */
 	public void executionDetailsEnd(final ConcurrentHashMap<Integer, TradeOrder> tradeOrders) {
@@ -631,7 +631,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements BrokerCh
 	 * 
 	 * @param tradeOrder
 	 *            TradeOrder
-	 * @see org.trade.broker.BrokerChangeListener#tradeOrderFilled(TradeOrder)
+	 * @see IBrokerChangeListener#tradeOrderFilled(TradeOrder)
 	 */
 	public void tradeOrderFilled(final TradeOrder tradeOrder) {
 
@@ -682,7 +682,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements BrokerCh
 				} else {
 					String key = tradestrategy.getStrategy().getClassName() + tradestrategy.getId();
 					if (tradingdayPanel.isStrategyWorkerRunning(key)) {
-						StrategyRule strategy = tradingdayPanel.getStrategyWorker(key);
+						IStrategyRule strategy = tradingdayPanel.getStrategyWorker(key);
 						strategy.tradeOrderFilled(tradeOrder);
 					}
 				}
@@ -701,7 +701,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements BrokerCh
 	 * 
 	 * @param tradeOrder
 	 *            TradeOrder
-	 * @see org.trade.broker.BrokerChangeListener#tradeOrderCancelled(TradeOrder)
+	 * @see IBrokerChangeListener#tradeOrderCancelled(TradeOrder)
 	 */
 	public void tradeOrderCancelled(final TradeOrder tradeOrder) {
 		if (m_brokerModel.isConnected() && contractPanel.isSelected()) {
@@ -733,7 +733,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements BrokerCh
 	 * 
 	 * @param tradeOrder
 	 *            TradeOrder
-	 * @see org.trade.broker.BrokerChangeListener#tradeOrderCancelled(TradeOrder)
+	 * @see IBrokerChangeListener#tradeOrderCancelled(TradeOrder)
 	 */
 	public void tradeOrderStatusChanged(final TradeOrder tradeOrder) {
 
@@ -769,7 +769,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements BrokerCh
 	 * 
 	 * @param tradePosition
 	 *            TradePosition
-	 * @see org.trade.broker.BrokerChangeListener#positionClosed(TradePosition)
+	 * @see IBrokerChangeListener#positionClosed(TradePosition)
 	 */
 	public void positionClosed(final TradePosition tradePosition) {
 		if (m_brokerModel.isConnected()) {
@@ -800,7 +800,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements BrokerCh
 	 * 
 	 * @param tradestrategy
 	 *            Tradestrategy
-	 * @see org.trade.strategy.StrategyChangeListener#strategyComplete(Tradestrategy)
+	 * @see IStrategyChangeListener#strategyComplete(Tradestrategy)
 	 */
 	public void strategyComplete(String strategyClassName, Tradestrategy tradestrategy) {
 
@@ -824,7 +824,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements BrokerCh
 	 *            String
 	 * @param tradestrategy
 	 *            Tradestrategy
-	 * @see org.trade.strategy.StrategyChangeListener#strategyStarted(Tradestrategy)
+	 * @see IStrategyChangeListener#strategyStarted(Tradestrategy)
 	 */
 	public void strategyStarted(String strategyClassName, final Tradestrategy tradestrategy) {
 
@@ -835,7 +835,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements BrokerCh
 	 * 
 	 * @param tradestrategy
 	 *            Tradestrategy
-	 * @see org.trade.strategy.StrategyChangeListener#ruleComplete(Tradestrategy)
+	 * @see IStrategyChangeListener#ruleComplete(Tradestrategy)
 	 */
 	public void ruleComplete(final Tradestrategy tradestrategy) {
 
@@ -846,7 +846,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements BrokerCh
 	 * 
 	 * @param ex
 	 *            StrategyRuleException
-	 * @see org.trade.strategy.StrategyChangeListener#strategyError(StrategyRuleException)
+	 * @see IStrategyChangeListener#strategyError(StrategyRuleException)
 	 */
 	public void strategyError(final StrategyRuleException ex) {
 
@@ -923,7 +923,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements BrokerCh
 	 *            data
 	 * 
 	 * 
-	 * @see org.trade.broker.BrokerChangeListener#historicalDataComplete(Tradestrategy)
+	 * @see IBrokerChangeListener#historicalDataComplete(Tradestrategy)
 	 */
 
 	public void historicalDataComplete(final Tradestrategy tradestrategy) {
@@ -990,7 +990,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements BrokerCh
 				}
 			} else {
 				this.setBrokerMenu(null);
-				this.setBrokerModel(BrokerModel._brokerTest);
+				this.setBrokerModel(IBrokerModel._brokerTest);
 			}
 
 			final ConnectionPane connectionPane = new ConnectionPane();
@@ -1005,7 +1005,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements BrokerCh
 			DBTableLookupServiceProvider.clearLookup();
 
 			if (!dialog.getCancel()) {
-				this.setBrokerModel(BrokerModel._broker);
+				this.setBrokerModel(IBrokerModel._broker);
 				this.getFrame().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 				this.setStatusBarMessage("Please wait while login proceeds", BasePanel.INFORMATION);
 				SwingUtilities.invokeLater(new Runnable() {
@@ -1020,7 +1020,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements BrokerCh
 				});
 
 			} else {
-				this.setBrokerMenu(BrokerModel._brokerTest);
+				this.setBrokerMenu(IBrokerModel._brokerTest);
 				this.setStatusBarMessage("Running in test.", BasePanel.INFORMATION);
 			}
 		} catch (Exception ex) {
@@ -1059,7 +1059,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements BrokerCh
 	 * 
 	 * @param ex
 	 *            BrokerManagerModelException the broker exception
-	 * @see org.trade.broker.BrokerChangeListener#brokerError(BrokerModelException)
+	 * @see IBrokerChangeListener#brokerError(BrokerModelException)
 	 */
 
 	public void brokerError(final BrokerModelException ex) {
@@ -1122,14 +1122,14 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements BrokerCh
 	 * This method is fired from an event in the Broker Model. A connection has
 	 * been opened.
 	 * 
-	 * @see org.trade.broker.BrokerChangeListener#connectionOpened()
+	 * @see IBrokerChangeListener#connectionOpened()
 	 */
 
 	public void connectionOpened() {
 
 		try {
 
-			this.setBrokerMenu(BrokerModel._broker);
+			this.setBrokerMenu(IBrokerModel._broker);
 			tradingdayPanel.setConnected(true);
 			contractPanel.setConnected(true);
 
@@ -1155,7 +1155,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements BrokerCh
 	 * This method is fired from an event in the Broker Model. A connection has
 	 * been closed.
 	 * 
-	 * @see org.trade.broker.BrokerChangeListener#connectionClosed()
+	 * @see IBrokerChangeListener#connectionClosed()
 	 */
 	public void connectionClosed(boolean forced) {
 
@@ -1173,8 +1173,8 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements BrokerCh
 					doConnect();
 				}
 			} else {
-				this.setBrokerModel(BrokerModel._brokerTest);
-				this.setBrokerMenu(BrokerModel._brokerTest);
+				this.setBrokerModel(IBrokerModel._brokerTest);
+				this.setBrokerMenu(IBrokerModel._brokerTest);
 				this.setStatusBarMessage("Connected to Broker was closed.", BasePanel.INFORMATION);
 			}
 
@@ -1191,7 +1191,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements BrokerCh
 	 * 
 	 * @param accountNumber
 	 *            String csv list of managed accounts.
-	 * @see org.trade.broker.BrokerChangeListener#managedAccountsUpdated(String)
+	 * @see IBrokerChangeListener#managedAccountsUpdated(String)
 	 */
 
 	public void managedAccountsUpdated(String accountNumbers) {
@@ -1265,7 +1265,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements BrokerCh
 	 * 
 	 * @param accountNumber
 	 *            String
-	 * @see org.trade.broker.BrokerChangeListener#updateAccountTime(String)
+	 * @see IBrokerChangeListener#updateAccountTime(String)
 	 */
 	public void updateAccountTime(final String accountNumber) {
 
@@ -1790,8 +1790,8 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements BrokerCh
 		parm.add(tradestrategy.getStrategyData());
 		parm.add(tradestrategy.getId());
 
-		StrategyRule strategy = (StrategyRule) dynacode.newProxyInstance(StrategyRule.class,
-				StrategyRule.PACKAGE + strategyClassName, parm);
+		IStrategyRule strategy = (IStrategyRule) dynacode.newProxyInstance(IStrategyRule.class,
+				IStrategyRule.PACKAGE + strategyClassName, parm);
 
 		strategy.addMessageListener(this);
 
@@ -1820,9 +1820,9 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements BrokerCh
 				m_brokerModel.removeMessageListener(this);
 				m_brokerModel = null;
 			}
-			if (BrokerModel._brokerTest.equals(model)) {
+			if (IBrokerModel._brokerTest.equals(model)) {
 
-				m_brokerModel = (BrokerModel) ClassFactory.getServiceForInterface(BrokerModel._brokerTest, this);
+				m_brokerModel = (IBrokerModel) ClassFactory.getServiceForInterface(IBrokerModel._brokerTest, this);
 				tradingdayPanel.setConnected(false);
 				contractPanel.setConnected(false);
 				/*
@@ -1831,8 +1831,8 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements BrokerCh
 				 */
 				m_brokerModel.addMessageListener(this);
 
-			} else if (BrokerModel._broker.equals(model)) {
-				m_brokerModel = (BrokerModel) ClassFactory.getServiceForInterface(BrokerModel._broker, this);
+			} else if (IBrokerModel._broker.equals(model)) {
+				m_brokerModel = (IBrokerModel) ClassFactory.getServiceForInterface(IBrokerModel._broker, this);
 				/*
 				 * Controller listens for problems from the TWS interface see
 				 * doError()
@@ -1855,14 +1855,14 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements BrokerCh
 
 		try {
 
-			if (BrokerModel._brokerTest.equals(model)) {
+			if (IBrokerModel._brokerTest.equals(model)) {
 
 				getMenu().setEnabledBrokerData(true);
 				getMenu().setEnabledRunStrategy(false);
 				getMenu().setEnabledTestStrategy(true);
 				getMenu().setEnabledConnect(true);
 				this.setStatusBarMessage("Running in simulated mode", BasePanel.INFORMATION);
-			} else if (BrokerModel._broker.equals(model)) {
+			} else if (IBrokerModel._broker.equals(model)) {
 
 				getMenu().setEnabledBrokerData(true);
 				getMenu().setEnabledRunStrategy(true);

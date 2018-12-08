@@ -37,9 +37,9 @@ package org.trade.core.valuetype;
 
 import org.trade.core.exception.ExceptionContext;
 import org.trade.core.message.IMessageFactory;
-import org.trade.core.validator.ExceptionMessageListener;
+import org.trade.core.validator.IExceptionMessageListener;
+import org.trade.core.validator.IValidator;
 import org.trade.core.validator.StringValidator;
-import org.trade.core.validator.Validator;
 
 /**
  */
@@ -130,7 +130,7 @@ public abstract class AbstractNumberValueType extends StringWrapper {
 	 *            IMessageFactory
 	 * @return validator * @see <code>IStringValidator</code>
 	 */
-	public Validator getDefaultMandatoryValidator(IMessageFactory messageFactory) {
+	public IValidator getDefaultMandatoryValidator(IMessageFactory messageFactory) {
 		return getDefaultValidator(messageFactory, true);
 	}
 
@@ -143,7 +143,7 @@ public abstract class AbstractNumberValueType extends StringWrapper {
 	 *            IMessageFactory
 	 * @return validator * @see <code>IStringValidator</code>
 	 */
-	public Validator getDefaultOptionalValidator(IMessageFactory messageFactory) {
+	public IValidator getDefaultOptionalValidator(IMessageFactory messageFactory) {
 		return getDefaultValidator(messageFactory, false);
 	}
 
@@ -179,12 +179,12 @@ public abstract class AbstractNumberValueType extends StringWrapper {
 	 *            IMessageFactory
 	 * @param isMandatory
 	 *            boolean
-	 * @return validator * @see <code>Validator</code>
+	 * @return validator * @see <code>IValidator</code>
 	 */
-	protected Validator getDefaultValidator(IMessageFactory messageFactory, boolean isMandatory) {
+	protected IValidator getDefaultValidator(IMessageFactory messageFactory, boolean isMandatory) {
 		return new StringValidator(messageFactory, getMaximumLength(), StringValidator.DIGITS, "", isMandatory) {
 			public boolean isValid(Object value, String invalidValue, String expectedFormat,
-					ExceptionMessageListener receiver) {
+					IExceptionMessageListener receiver) {
 				boolean valid = super.isValid(value, invalidValue, expectedFormat, receiver);
 
 				do {

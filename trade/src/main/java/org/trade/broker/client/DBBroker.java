@@ -51,7 +51,7 @@ import org.trade.dictionary.valuetype.Action;
 import org.trade.dictionary.valuetype.OrderStatus;
 import org.trade.dictionary.valuetype.OrderType;
 import org.trade.dictionary.valuetype.Side;
-import org.trade.persistent.PersistentModel;
+import org.trade.persistent.IPersistentModel;
 import org.trade.persistent.PersistentModelException;
 import org.trade.persistent.dao.Candle;
 import org.trade.persistent.dao.Contract;
@@ -72,11 +72,11 @@ public class DBBroker extends Broker {
 
 	private final static Logger _log = LoggerFactory.getLogger(DBBroker.class);
 
-	private PersistentModel tradePersistentModel = null;
+	private IPersistentModel tradePersistentModel = null;
 	private StrategyData strategyData = null;
 	private Tradestrategy tradestrategy = null;
 	private Integer idTradestrategy = null;
-	private ClientWrapper brokerModel = null;
+	private IClientWrapper brokerModel = null;
 	private BigDecimal trailAmount = null;
 	private BigDecimal trailLimitOffsetAmount = null;
 
@@ -100,9 +100,9 @@ public class DBBroker extends Broker {
 	 * @param idTradestrategy
 	 *            Integer
 	 * @param brokerModel
-	 *            BrokerModel
+	 *            IBrokerModel
 	 */
-	public DBBroker(StrategyData strategyData, Integer idTradestrategy, ClientWrapper brokerModel) {
+	public DBBroker(StrategyData strategyData, Integer idTradestrategy, IClientWrapper brokerModel) {
 		this.idTradestrategy = idTradestrategy;
 		this.brokerModel = brokerModel;
 		this.strategyData = strategyData;
@@ -117,8 +117,8 @@ public class DBBroker extends Broker {
 
 		try {
 
-			this.tradePersistentModel = (PersistentModel) ClassFactory
-					.getServiceForInterface(PersistentModel._persistentModel, this);
+			this.tradePersistentModel = (IPersistentModel) ClassFactory
+					.getServiceForInterface(IPersistentModel._persistentModel, this);
 			this.tradestrategy = this.tradePersistentModel.findTradestrategyById(this.idTradestrategy);
 			this.strategyData.clearBaseCandleDataset();
 			this.tradestrategy.setStrategyData(this.strategyData);
@@ -193,7 +193,7 @@ public class DBBroker extends Broker {
 			for (Candle candle : candles) {
 				/*
 				 * We use the direct add to BaseCandle data-set rather than
-				 * going via the BrokerModel because the BrokerModel is in
+				 * going via the IBrokerModel because the IBrokerModel is in
 				 * another thread and so this thread tends to be blocked by
 				 * other activities.
 				 */

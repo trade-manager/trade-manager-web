@@ -46,7 +46,7 @@ import org.jfree.chart.renderer.xy.XYItemRenderer;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-public interface IndicatorDataset {
+public interface IIndicatorDataset {
 
 	public static final String PACKAGE = "org.trade.strategy.data.";
 

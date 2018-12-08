@@ -42,8 +42,8 @@ import org.trade.core.conversion.JavaTypeTranslator;
 import org.trade.core.message.IMessageFactory;
 import org.trade.core.util.CoreUtils;
 import org.trade.core.validator.DecimalValidator;
-import org.trade.core.validator.ExceptionMessageListener;
-import org.trade.core.validator.Validator;
+import org.trade.core.validator.IExceptionMessageListener;
+import org.trade.core.validator.IValidator;
 
 /**
  */
@@ -443,12 +443,12 @@ public class Quantity extends ValueType implements Comparator<Quantity>, Compara
 	 * Method isValid.
 	 * 
 	 * @param validator
-	 *            Validator
+	 *            IValidator
 	 * @param receiver
-	 *            ExceptionMessageListener
+	 *            IExceptionMessageListener
 	 * @return boolean
 	 */
-	public boolean isValid(Validator validator, ExceptionMessageListener receiver) {
+	public boolean isValid(IValidator validator, IExceptionMessageListener receiver) {
 		return validator.isValid(m_value, m_invalidValue, null, receiver);
 	}
 
@@ -459,9 +459,9 @@ public class Quantity extends ValueType implements Comparator<Quantity>, Compara
 	 *            IMessageFactory
 	 * @param isMandatory
 	 *            boolean
-	 * @return Validator
+	 * @return IValidator
 	 */
-	public Validator getDefaultValidator(IMessageFactory messageFactory, boolean isMandatory) {
+	public IValidator getDefaultValidator(IMessageFactory messageFactory, boolean isMandatory) {
 		// This allow non-negative 11.2
 		return new DecimalValidator(messageFactory, false, true, 11, 2, isMandatory);
 	}

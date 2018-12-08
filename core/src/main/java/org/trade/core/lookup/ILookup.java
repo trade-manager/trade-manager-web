@@ -36,7 +36,7 @@
 package org.trade.core.lookup;
 
 /**
- * Interface describing a Lookup - essentially it represents a single/multi
+ * Interface describing a ILookup - essentially it represents a single/multi
  * comlumn table/matrix that can be accessed by column id/name and row.
  * 
  * Note : This API has borrowed heavily from the javax.swing.table.TableModel
@@ -44,24 +44,24 @@ package org.trade.core.lookup;
  * 
  * @author Simon Allen
  */
-public interface Lookup {
+public interface ILookup {
 	/**
-	 * The number of columns that exist in the Lookup.
+	 * The number of columns that exist in the ILookup.
 	 * 
 	 * 
 	 * 
 	 * 
-	 * @return Number of columns in this Lookup. * @exception LookupException
+	 * @return Number of columns in this ILookup. * @exception LookupException
 	 */
 	int getColumnCount() throws LookupException;
 
 	/**
-	 * The number of rows in the Lookup.
+	 * The number of rows in the ILookup.
 	 * 
 	 * 
 	 * 
 	 * 
-	 * @return Number of rows in the Lookup. * @exception LookupException
+	 * @return Number of rows in the ILookup. * @exception LookupException
 	 */
 	int getRowCount() throws LookupException;
 

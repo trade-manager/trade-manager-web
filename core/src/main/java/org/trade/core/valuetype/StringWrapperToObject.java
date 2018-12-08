@@ -35,13 +35,13 @@
  */
 package org.trade.core.valuetype;
 
-import org.trade.core.conversion.JavaDynamicTypeConverter;
+import org.trade.core.conversion.IJavaDynamicTypeConverter;
 import org.trade.core.conversion.JavaTypeTranslator;
 import org.trade.core.conversion.JavaTypeTranslatorException;
 
 /**
  */
-public class StringWrapperToObject implements JavaDynamicTypeConverter {
+public class StringWrapperToObject implements IJavaDynamicTypeConverter {
 	/**
 	 * Default constructor.
 	 */
@@ -49,7 +49,7 @@ public class StringWrapperToObject implements JavaDynamicTypeConverter {
 	}
 
 	//
-	// JavaDynamicTypeConverter interface methods
+	// IJavaDynamicTypeConverter interface methods
 	//
 
 	/**

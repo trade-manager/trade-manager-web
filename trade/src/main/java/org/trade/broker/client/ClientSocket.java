@@ -44,9 +44,9 @@ import org.trade.persistent.dao.Tradestrategy;
 public class ClientSocket {
 
 	private static final ConcurrentHashMap<Integer, Broker> m_backTestBroker = new ConcurrentHashMap<Integer, Broker>();
-	private ClientWrapper m_client = null;
+	private IClientWrapper m_client = null;
 
-	public ClientSocket(ClientWrapper client) {
+	public ClientSocket(IClientWrapper client) {
 		m_client = client;
 	}
 

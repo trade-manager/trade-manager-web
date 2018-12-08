@@ -48,8 +48,8 @@ import org.trade.core.message.MessageFactory;
 import org.trade.core.util.CoreUtils;
 import org.trade.core.util.TradingCalendar;
 import org.trade.core.validator.DateValidator;
-import org.trade.core.validator.ExceptionMessageListener;
-import org.trade.core.validator.Validator;
+import org.trade.core.validator.IExceptionMessageListener;
+import org.trade.core.validator.IValidator;
 
 /**
  */
@@ -343,12 +343,12 @@ public class Date extends ValueType implements Comparator<Date>, Comparable<Date
 	 * Method isValid.
 	 * 
 	 * @param validator
-	 *            Validator
+	 *            IValidator
 	 * @param receiver
-	 *            ExceptionMessageListener
+	 *            IExceptionMessageListener
 	 * @return boolean
 	 */
-	public boolean isValid(Validator validator, ExceptionMessageListener receiver) {
+	public boolean isValid(IValidator validator, IExceptionMessageListener receiver) {
 		return validator.isValid(m_date, m_invalidDate, m_format, receiver);
 	}
 
@@ -357,9 +357,9 @@ public class Date extends ValueType implements Comparator<Date>, Comparable<Date
 	 * 
 	 * @param messageFactory
 	 *            IMessageFactory
-	 * @return Validator
+	 * @return IValidator
 	 */
-	public Validator getDefaultOptionalValidator(IMessageFactory messageFactory) {
+	public IValidator getDefaultOptionalValidator(IMessageFactory messageFactory) {
 		return getDefaultValidator(messageFactory, true);
 	}
 
@@ -368,9 +368,9 @@ public class Date extends ValueType implements Comparator<Date>, Comparable<Date
 	 * 
 	 * @param messageFactory
 	 *            IMessageFactory
-	 * @return Validator
+	 * @return IValidator
 	 */
-	public Validator getDefaultMandatoryValidator(IMessageFactory messageFactory) {
+	public IValidator getDefaultMandatoryValidator(IMessageFactory messageFactory) {
 		return getDefaultValidator(messageFactory, true);
 	}
 
@@ -381,9 +381,9 @@ public class Date extends ValueType implements Comparator<Date>, Comparable<Date
 	 *            IMessageFactory
 	 * @param isMandatory
 	 *            boolean
-	 * @return Validator
+	 * @return IValidator
 	 */
-	public Validator getDefaultValidator(IMessageFactory messageFactory, boolean isMandatory) {
+	public IValidator getDefaultValidator(IMessageFactory messageFactory, boolean isMandatory) {
 		return new DateValidator(messageFactory, isMandatory);
 	}
 

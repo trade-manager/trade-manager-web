@@ -59,7 +59,7 @@ import org.trade.dictionary.valuetype.Action;
 import org.trade.dictionary.valuetype.OrderStatus;
 import org.trade.dictionary.valuetype.OrderType;
 import org.trade.dictionary.valuetype.Side;
-import org.trade.persistent.PersistentModel;
+import org.trade.persistent.IPersistentModel;
 import org.trade.ui.TradeAppLoadConfig;
 
 import com.ib.client.Execution;
@@ -77,7 +77,7 @@ public class TradeOrderTest {
 	public TestName name = new TestName();
 
 	private String symbol = "TEST";
-	private PersistentModel tradePersistentModel = null;
+	private IPersistentModel tradePersistentModel = null;
 	private TradeOrderHome tradeOrderHome = null;
 	private Tradestrategy tradestrategy = null;
 	private Integer clientId = null;
@@ -101,8 +101,8 @@ public class TradeOrderTest {
 		TradeAppLoadConfig.loadAppProperties();
 		clientId = ConfigProperties.getPropAsInt("trade.tws.clientId");
 		tradeOrderHome = new TradeOrderHome();
-		this.tradePersistentModel = (PersistentModel) ClassFactory
-				.getServiceForInterface(PersistentModel._persistentModel, this);
+		this.tradePersistentModel = (IPersistentModel) ClassFactory
+				.getServiceForInterface(IPersistentModel._persistentModel, this);
 		this.tradestrategy = TradestrategyTest.getTestTradestrategy(symbol);
 		assertNotNull(this.tradestrategy);
 	}

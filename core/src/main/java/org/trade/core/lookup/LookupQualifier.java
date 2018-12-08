@@ -40,7 +40,7 @@ import java.util.Hashtable;
 
 /**
  * Used to describe the access of dynamic key value pairs that can be used by a
- * LookupServiceProvider to constrain the lookup returned.
+ * ILookupServiceProvider to constrain the lookup returned.
  * 
  * @author Simon Allen
  */

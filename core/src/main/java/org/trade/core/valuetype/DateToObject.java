@@ -38,14 +38,14 @@ package org.trade.core.valuetype;
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
 
-import org.trade.core.conversion.JavaDynamicTypeConverter;
+import org.trade.core.conversion.IJavaDynamicTypeConverter;
 import org.trade.core.conversion.JavaFormatForObject;
 import org.trade.core.conversion.JavaTypeTranslator;
 import org.trade.core.conversion.JavaTypeTranslatorException;
 
 /**
  */
-public class DateToObject implements JavaDynamicTypeConverter {
+public class DateToObject implements IJavaDynamicTypeConverter {
 	public DateToObject() {
 	}
 
@@ -58,7 +58,7 @@ public class DateToObject implements JavaDynamicTypeConverter {
 	 *            Object
 	 * @return Object
 	 * @throws JavaTypeTranslatorException
-	 * @see org.trade.core.conversion.JavaDynamicTypeConverter#convert(Class<?>,
+	 * @see IJavaDynamicTypeConverter#convert(Class<?>,
 	 *      Object)
 	 */
 	public Object convert(Class<?> targetType, Object valueToConvert) throws JavaTypeTranslatorException {
@@ -108,7 +108,7 @@ public class DateToObject implements JavaDynamicTypeConverter {
 	 * @param valueToConvert
 	 *            Object
 	 * @return boolean
-	 * @see org.trade.core.conversion.JavaDynamicTypeConverter#
+	 * @see IJavaDynamicTypeConverter#
 	 *      supportsConversion (Class<?>, Object)
 	 */
 	public boolean supportsConversion(Class<?> targetType, Object valueToConvert) {

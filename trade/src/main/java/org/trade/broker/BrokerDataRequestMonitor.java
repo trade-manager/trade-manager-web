@@ -19,7 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.TradingCalendar;
-import org.trade.persistent.PersistentModel;
+import org.trade.persistent.IPersistentModel;
 import org.trade.persistent.PersistentModelException;
 import org.trade.persistent.dao.Contract;
 import org.trade.persistent.dao.Strategy;
@@ -35,8 +35,8 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
 
 	private final static Logger _log = LoggerFactory.getLogger(BrokerDataRequestMonitor.class);
 
-	private BrokerModel brokerModel;
-	private PersistentModel tradePersistentModel = null;
+	private IBrokerModel brokerModel;
+	private IPersistentModel tradePersistentModel = null;
 	private Tradingdays tradingdays = null;
 	private int grandTotal = 0;
 	private long startTime = 0;
@@ -53,13 +53,13 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
 	 * Constructor for BrokerDataRequestProgressMonitor.
 	 * 
 	 * @param brokerManagerModel
-	 *            BrokerModel
+	 *            IBrokerModel
 	 * @param tradingdays
 	 *            Tradingdays
 	 * @throws IOException
 	 */
-	public BrokerDataRequestMonitor(BrokerModel brokerModel, PersistentModel tradePersistentModel,
-			Tradingdays tradingdays) throws IOException {
+	public BrokerDataRequestMonitor(IBrokerModel brokerModel, IPersistentModel tradePersistentModel,
+                                    Tradingdays tradingdays) throws IOException {
 		this.brokerModel = brokerModel;
 		this.tradePersistentModel = tradePersistentModel;
 		this.tradingdays = tradingdays;

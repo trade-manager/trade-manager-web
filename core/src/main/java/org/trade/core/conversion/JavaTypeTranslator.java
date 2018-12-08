@@ -42,7 +42,7 @@ import java.util.Vector;
 /**
  * This class is used to convert values of one type to another type. It
  * delegates conversion to registered converter instances which implement a
- * common interface: JavaTypeConverter.
+ * common interface: IJavaTypeConverter.
  * 
  * To make a conversion, execute something along the lines of the following:
  * 
@@ -67,7 +67,7 @@ public class JavaTypeTranslator {
 	 * hashtables whose keys represent source types. The inner hashtables'
 	 * values are the actual converter instances used by the JavaTypeTranslator.
 	 */
-	private static Hashtable<Class<?>, Hashtable<Class<?>, JavaTypeConverter>> m_converters = new Hashtable<Class<?>, Hashtable<Class<?>, JavaTypeConverter>>();
+	private static Hashtable<Class<?>, Hashtable<Class<?>, IJavaTypeConverter>> m_converters = new Hashtable<Class<?>, Hashtable<Class<?>, IJavaTypeConverter>>();
 
 	private static Hashtable<?, ?> m_noBaseConverters = new Hashtable<Object, Object>();
 
@@ -169,7 +169,7 @@ public class JavaTypeTranslator {
 		Class<?> sourceType = sourceValue.getClass();
 
 		while (sourceType != null) {
-			JavaTypeConverter converter = (JavaTypeConverter) innerTable.get(sourceType);
+			IJavaTypeConverter converter = (IJavaTypeConverter) innerTable.get(sourceType);
 
 			if (converter != null) {
 				// there is a converter for the given targetType and sourceType,
@@ -189,7 +189,7 @@ public class JavaTypeTranslator {
 					// Check the Dynamic Converters
 					Enumeration<Object> en = m_dynConverters.elements();
 					while (en.hasMoreElements()) {
-						JavaDynamicTypeConverter dc = (JavaDynamicTypeConverter) en.nextElement();
+						IJavaDynamicTypeConverter dc = (IJavaDynamicTypeConverter) en.nextElement();
 
 						if (dc.supportsConversion(targetType, sourceValue)) {
 							// The first matching dynamic converter will be used
@@ -228,10 +228,10 @@ public class JavaTypeTranslator {
 	 * @param theConverter
 	 *            the converter instance to register
 	 */
-	public static void registerConverter(JavaTypeConverter theConverter) {
+	public static void registerConverter(IJavaTypeConverter theConverter) {
 		Class<?> targetType = theConverter.getTargetType();
 		Class<?> sourceType = theConverter.getSourceType();
-		Hashtable<Class<?>, JavaTypeConverter> innerTable = m_converters.get(targetType);
+		Hashtable<Class<?>, IJavaTypeConverter> innerTable = m_converters.get(targetType);
 
 		if (innerTable != null) {
 			// add the converter to the existing list of
@@ -243,7 +243,7 @@ public class JavaTypeTranslator {
 			// there is no list of existing converters for
 			// this converter's targetType, create one and
 			// add the converter to it
-			innerTable = new Hashtable<Class<?>, JavaTypeConverter>(10);
+			innerTable = new Hashtable<Class<?>, IJavaTypeConverter>(10);
 
 			innerTable.put(sourceType, theConverter);
 			m_converters.put(targetType, innerTable);
@@ -257,7 +257,7 @@ public class JavaTypeTranslator {
 	 * @param theConverter
 	 *            the converter instance to register
 	 */
-	public static void registerDynamicTypeConverter(JavaDynamicTypeConverter theConverter) {
+	public static void registerDynamicTypeConverter(IJavaDynamicTypeConverter theConverter) {
 		if (!m_dynConverters.contains(theConverter)) {
 			m_dynConverters.addElement(theConverter);
 		}

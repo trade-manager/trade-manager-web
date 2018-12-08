@@ -1,5 +1,5 @@
 /* ===========================================================
- * TradeManager : An application to trade strategies for the Java(tm) platform
+ * TradeManager : a application to trade strategies for the Java(tm) platform
  * ===========================================================
  *
  * (C) Copyright 2011-2011, by Simon Allen and Contributors.
@@ -33,25 +33,24 @@
  * -------
  *
  */
-package org.trade.core.lookup;
+package org.trade.ui.base;
+
+import java.util.EventListener;
+import java.util.Vector;
 
 /**
+ * 
+ * @version $Id: IMessageListener.java,v 1.1 2001/10/18 01:32:15 simon Exp $
  * @author Simon Allen
  */
-public interface LookupServiceProvider {
+public interface IMessageListener extends EventListener {
 	/**
-	 * Get the appropriate Lookup.
+	 * Method handleEvent.
 	 * 
-	 * @param lookupName
-	 *            String
-	 * @param qualifier
-	 *            LookupQualifier
-	 * 
-	 * @param optional
-	 *            boolean
-	 * @return Lookup
-	 * @exception LookupException
+	 * @param e
+	 *            MessageEvent
+	 * @param parm
+	 *            Vector<Object>
 	 */
-	Lookup getLookup(String lookupName, LookupQualifier qualifier, boolean optional) throws LookupException;
-
+	void handleEvent(MessageEvent e, Vector<Object> parm);
 }

@@ -168,9 +168,9 @@ public class BaseButton extends JButton {
 	 * Method addMessageListener.
 	 * 
 	 * @param listener
-	 *            MessageListener
+	 *            IMessageListener
 	 */
-	public void addMessageListener(MessageListener listener) {
+	public void addMessageListener(IMessageListener listener) {
 		m_notifier.add(listener);
 	}
 
@@ -178,9 +178,9 @@ public class BaseButton extends JButton {
 	 * Method remove.
 	 * 
 	 * @param listener
-	 *            MessageListener
+	 *            IMessageListener
 	 */
-	public void remove(MessageListener listener) {
+	public void remove(IMessageListener listener) {
 		m_notifier.remove(listener);
 	}
 

@@ -35,16 +35,21 @@
  */
 package org.trade.core.validator;
 
-import org.trade.core.exception.ExceptionMessage;
-
 /**
  */
-public interface ExceptionMessageListener {
+public interface IValidator {
 	/**
-	 * Method addExceptionMessage.
+	 * Method isValid.
 	 * 
-	 * @param message
-	 *            ExceptionMessage
+	 * @param value
+	 *            Object
+	 * @param invalidValue
+	 *            String
+	 * @param expectedFormat
+	 *            String
+	 * @param receiver
+	 *            IExceptionMessageListener
+	 * @return boolean
 	 */
-	void addExceptionMessage(ExceptionMessage message);
+	boolean isValid(Object value, String invalidValue, String expectedFormat, IExceptionMessageListener receiver);
 }

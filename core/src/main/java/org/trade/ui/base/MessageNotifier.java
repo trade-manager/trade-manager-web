@@ -71,12 +71,12 @@ public class MessageNotifier {
 	 * 
 	 * 
 	 * @param listener
-	 *            MessageListener
+	 *            IMessageListener
 	 * @exception *
 	 * 				@see
 	 */
-	public void add(MessageListener listener) {
-		this.listeners.add(MessageListener.class, listener);
+	public void add(IMessageListener listener) {
+		this.listeners.add(IMessageListener.class, listener);
 	}
 
 	/**
@@ -88,12 +88,12 @@ public class MessageNotifier {
 	 * 
 	 * 
 	 * @param listener
-	 *            MessageListener
+	 *            IMessageListener
 	 * @exception *
 	 * 				@see
 	 */
-	public void remove(MessageListener listener) {
-		this.listeners.remove(MessageListener.class, listener);
+	public void remove(IMessageListener listener) {
+		this.listeners.remove(IMessageListener.class, listener);
 
 	}
 
@@ -111,8 +111,8 @@ public class MessageNotifier {
 	public void removeAll() {
 		Object[] listenerList = this.listeners.getListenerList();
 		for (int i = listenerList.length - 2; i >= 0; i -= 2) {
-			if (listenerList[i] == MessageListener.class) {
-				remove(((MessageListener) listenerList[i + 1]));
+			if (listenerList[i] == IMessageListener.class) {
+				remove(((IMessageListener) listenerList[i + 1]));
 			}
 		}
 	}
@@ -135,8 +135,8 @@ public class MessageNotifier {
 	public void notifyEvent(MessageEvent e, Vector<Object> parm) {
 		Object[] listenerList = this.listeners.getListenerList();
 		for (int i = listenerList.length - 2; i >= 0; i -= 2) {
-			if (listenerList[i] == MessageListener.class) {
-				((MessageListener) listenerList[i + 1]).handleEvent(e, parm);
+			if (listenerList[i] == IMessageListener.class) {
+				((IMessageListener) listenerList[i + 1]).handleEvent(e, parm);
 			}
 		}
 	}

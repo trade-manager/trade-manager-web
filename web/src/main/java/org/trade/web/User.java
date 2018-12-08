@@ -1,42 +1,49 @@
 package org.trade.web;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-
-import lombok.Data;
-import lombok.ToString;
+import javax.persistence.Table;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-
-@Data
-@ToString(exclude = "password")
 @Entity
+@Table(name = "user")
 public class User {
 
 	public static final PasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
 
-	private @Id @GeneratedValue Long sysId;
+	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id", unique = true, nullable = false)
+	private Long id;
 
+	@Column(name = "name")
 	private String name;
 
-	private @JsonIgnore String password;
+	@Column(name = "first_name")
+	private String firstName;
 
+	@JsonIgnore
+	@Column(name = "password")
+	private String password;
+
+	@Column(name = "roles")
 	private String[] roles;
 
-	private @ManyToOne
-	Domain domain;
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "domain_id", insertable = true, updatable = true, nullable = false)
+	private Domain domain;
 
-	public void setPassword(String password) {
-		this.password = PASSWORD_ENCODER.encode(password);
+	protected User() {
 	}
-
-	protected User() {}
 
 	public User(String name, String password, Domain domain, String... roles) {
 
@@ -46,5 +53,55 @@ public class User {
 		this.domain = domain;
 	}
 
+
+	public Long getId() {
+		return this.id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return this.name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getFirstName() {
+		return this.firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String[] getRoles() {
+		return this.roles;
+	}
+
+	public void setRoles(String[] roles) {
+		this.roles = roles;
+	}
+
+	public String getPassword() {
+		return this.password;
+	}
+
+	public void setPassword(String password) {
+		this.password = PASSWORD_ENCODER.encode(password);
+	}
+
+	public Domain getDomain() {
+		return this.domain;
+	}
+
+	public void setDomain(Domain domain) {
+		this.domain = domain;
+	}
+
 }
+
 

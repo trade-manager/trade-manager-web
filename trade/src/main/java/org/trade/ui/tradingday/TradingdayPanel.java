@@ -87,7 +87,7 @@ import org.trade.dictionary.valuetype.DAOPortfolio;
 import org.trade.dictionary.valuetype.DAOStrategy;
 import org.trade.dictionary.valuetype.DAOStrategyManager;
 import org.trade.dictionary.valuetype.UIPropertyCodes;
-import org.trade.persistent.PersistentModel;
+import org.trade.persistent.IPersistentModel;
 import org.trade.persistent.PersistentModelException;
 import org.trade.persistent.dao.CodeType;
 import org.trade.persistent.dao.Portfolio;
@@ -96,7 +96,7 @@ import org.trade.persistent.dao.Strategy;
 import org.trade.persistent.dao.Tradestrategy;
 import org.trade.persistent.dao.Tradingday;
 import org.trade.persistent.dao.Tradingdays;
-import org.trade.strategy.StrategyRule;
+import org.trade.strategy.IStrategyRule;
 import org.trade.ui.base.BaseButton;
 import org.trade.ui.base.BasePanel;
 import org.trade.ui.base.BaseUIPropertyCodes;
@@ -115,13 +115,13 @@ public class TradingdayPanel extends BasePanel {
 
 	private static final long serialVersionUID = 8543984162821384818L;
 
-	private PersistentModel m_tradePersistentModel = null;
+	private IPersistentModel m_tradePersistentModel = null;
 	private TradingdayTableModel m_tradingdayModel = null;
 	private Table m_tradestrategyTable = null;
 	private TradestrategyTableModel m_tradestrategyModel = null;
 	private Table m_tradingdayTable = null;
 	private Tradingdays m_tradingdays = null;
-	private static final ConcurrentHashMap<String, StrategyRule> m_strategyWorkers = new ConcurrentHashMap<String, StrategyRule>();
+	private static final ConcurrentHashMap<String, IStrategyRule> m_strategyWorkers = new ConcurrentHashMap<String, IStrategyRule>();
 	private DeleteProgressMonitor deleteProgressMonitor = null;
 	private static String m_defaultDir = null;
 	private BaseButton ordersButton = null;
@@ -163,12 +163,12 @@ public class TradingdayPanel extends BasePanel {
 	 * @param controller
 	 *            BasePanel
 	 * @param tradePersistentModel
-	 *            PersistentModel
+	 *            IPersistentModel
 	 * @param strategyWorkers
-	 *            ConcurrentHashMap<String,StrategyRule>
+	 *            ConcurrentHashMap<String,IStrategyRule>
 	 */
 
-	public TradingdayPanel(Tradingdays tradingdays, BasePanel controller, PersistentModel tradePersistentModel) {
+	public TradingdayPanel(Tradingdays tradingdays, BasePanel controller, IPersistentModel tradePersistentModel) {
 		try {
 			if (null != getMenu())
 				getMenu().addMessageListener(this);
@@ -895,7 +895,7 @@ public class TradingdayPanel extends BasePanel {
 	 */
 	public boolean isStrategyWorkerRunning(String key) {
 		if (m_strategyWorkers.containsKey(key)) {
-			StrategyRule strategy = m_strategyWorkers.get(key);
+			IStrategyRule strategy = m_strategyWorkers.get(key);
 			if (!strategy.isDone()) {
 				return true;
 			}
@@ -909,9 +909,9 @@ public class TradingdayPanel extends BasePanel {
 	 * @param key
 	 *            String
 	 * @param strategy
-	 *            StrategyRule
+	 *            IStrategyRule
 	 */
-	public void addStrategyWorker(String key, final StrategyRule strategy) {
+	public void addStrategyWorker(String key, final IStrategyRule strategy) {
 		m_strategyWorkers.put(key, strategy);
 	}
 
@@ -921,7 +921,7 @@ public class TradingdayPanel extends BasePanel {
 	 * @param key
 	 *            String
 	 * @param strategy
-	 *            StrategyRule
+	 *            IStrategyRule
 	 */
 	public void removeStrategyWorker(String key) {
 		if (m_strategyWorkers.containsKey(key)) {
@@ -935,9 +935,9 @@ public class TradingdayPanel extends BasePanel {
 	 * @param key
 	 *            String
 	 * @param strategy
-	 *            StrategyRule
+	 *            IStrategyRule
 	 */
-	public StrategyRule getStrategyWorker(String key) {
+	public IStrategyRule getStrategyWorker(String key) {
 		if (m_strategyWorkers.containsKey(key)) {
 			return m_strategyWorkers.get(key);
 		}
@@ -971,7 +971,7 @@ public class TradingdayPanel extends BasePanel {
 	 */
 	public void killStrategyWorker(String key) {
 		if (m_strategyWorkers.containsKey(key)) {
-			StrategyRule strategy = m_strategyWorkers.get(key);
+			IStrategyRule strategy = m_strategyWorkers.get(key);
 			if (!strategy.isDone()) {
 				strategy.cancel();
 			}
@@ -1266,7 +1266,7 @@ public class TradingdayPanel extends BasePanel {
 	 */
 	private class DeleteProgressMonitor extends SwingWorker<Void, String> {
 
-		private PersistentModel tradeManagerModel = null;
+		private IPersistentModel tradeManagerModel = null;
 		private Tradingdays tradingdays = null;
 		private int grandtotal = 0;
 		private long startTime = 0;
@@ -1275,11 +1275,11 @@ public class TradingdayPanel extends BasePanel {
 		 * Constructor for DeleteProgressMonitor.
 		 * 
 		 * @param tradeManagerModel
-		 *            PersistentModel
+		 *            IPersistentModel
 		 * @param tradingdays
 		 *            Tradingdays
 		 */
-		public DeleteProgressMonitor(PersistentModel tradeManagerModel, Tradingdays tradingdays) {
+		public DeleteProgressMonitor(IPersistentModel tradeManagerModel, Tradingdays tradingdays) {
 			this.tradingdays = tradingdays;
 			this.tradeManagerModel = tradeManagerModel;
 		}
@@ -1344,7 +1344,7 @@ public class TradingdayPanel extends BasePanel {
 	 */
 	private class ReAssignProgressMonitor extends SwingWorker<Void, String> {
 
-		private PersistentModel tradeManagerModel = null;
+		private IPersistentModel tradeManagerModel = null;
 		private Tradingdays tradingdays = null;
 		private int grandtotal = 0;
 		private long startTime = 0;
@@ -1355,7 +1355,7 @@ public class TradingdayPanel extends BasePanel {
 		 * Constructor for ReAssignProgressMonitor.
 		 * 
 		 * @param tradeManagerModel
-		 *            PersistentModel
+		 *            IPersistentModel
 		 * @param tradingdays
 		 *            Tradingdays
 		 * @param fromStrategy
@@ -1363,8 +1363,8 @@ public class TradingdayPanel extends BasePanel {
 		 * @param toStrategy
 		 *            Strategy
 		 */
-		public ReAssignProgressMonitor(PersistentModel tradeManagerModel, Tradingdays tradingdays,
-				Strategy fromStrategy, Strategy toStrategy) {
+		public ReAssignProgressMonitor(IPersistentModel tradeManagerModel, Tradingdays tradingdays,
+                                       Strategy fromStrategy, Strategy toStrategy) {
 			this.tradingdays = tradingdays;
 			this.tradeManagerModel = tradeManagerModel;
 			this.fromStrategy = fromStrategy;
