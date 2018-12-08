@@ -22,7 +22,7 @@ IntelliJ open source version
 
 $git clone <URL> i.e. https://github.com/trade-manager/trade-manager-web.git
 
-2/ Change the following properties in the project dir db.properties file db-dba.user/db-dba.password/db-user.user/db-user.password set these to a user who can create schemas and users (root will do).
+2/ Change the following properties in the project dir db.properties file: db-dba.username(root is default)/db-dba.password. Note the db-dba.username must have schema create privaledges i.e. root.
 
 3/ Add the tools-1.8.0.jar to the .m2 repo. From the project dir 
 
@@ -34,9 +34,7 @@ $mvn -N io.takari:maven:wrapper
 
 5/ Build the project from the project dir 
 
-$mvn clean install (make sure $JAVA_HOME is version 1.8)
-
-6/ Open IntelliJ and import the parent pom.xml from the project dir. 
+$mvn clean install (make sure $JAVA_HOME is version 1.8, check with $>echo $JAVA_HOME)
 
 6/ Create the MySQL DB. From project dir, cd web, then run
 
@@ -49,5 +47,7 @@ $mvnw -Duser.timezone=America/New_York -Dlog4j.configuration=file:../config.prop
 OR the new Spring boot Web app
 
 $mvnw spring-boot:run   Note WIP so not much to see yet
+
+8/ Open IntelliJ and import the parent pom.xml from the project dir. You can now set run configurations for 6/ and 7/ 
 
 In IntelliJ, Edit Configuration add a Maven set working dir to /web then set command line to above without mvnw.
