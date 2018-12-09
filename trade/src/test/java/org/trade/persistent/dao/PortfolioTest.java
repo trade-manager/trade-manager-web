@@ -35,14 +35,8 @@
  */
 package org.trade.persistent.dao;
 
-import static org.junit.Assert.*;
-
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.TestName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,74 +48,78 @@ import org.trade.dictionary.valuetype.Currency;
 import org.trade.dictionary.valuetype.DAOPortfolio;
 import org.trade.ui.TradeAppLoadConfig;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
+
 /**
+ *
  */
 public class PortfolioTest {
 
-	private final static Logger _log = LoggerFactory.getLogger(PortfolioTest.class);
-	@Rule
-	public TestName name = new TestName();
+    private final static Logger _log = LoggerFactory.getLogger(PortfolioTest.class);
+    @Rule
+    public TestName name = new TestName();
 
-	private AspectHome aspectHome = new AspectHome();
+    private AspectHome aspectHome = new AspectHome();
 
-	/**
-	 * Method setUpBeforeClass.
-	 * 
-	 * @throws java.lang.Exception
-	 */
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-	}
+    /**
+     * Method setUpBeforeClass.
+     *
+     * @throws java.lang.Exception
+     */
+    @BeforeClass
+    public static void setUpBeforeClass() throws Exception {
+    }
 
-	/**
-	 * Method setUp.
-	 * 
-	 * @throws java.lang.Exception
-	 */
-	@Before
-	public void setUp() throws Exception {
-		TradeAppLoadConfig.loadAppProperties();
-	}
+    /**
+     * Method setUp.
+     *
+     * @throws java.lang.Exception
+     */
+    @Before
+    public void setUp() throws Exception {
+        TradeAppLoadConfig.loadAppProperties();
+    }
 
-	/**
-	 * Method tearDown.
-	 * 
-	 * @throws java.lang.Exception
-	 */
-	@After
-	public void tearDown() throws Exception {
-		Aspects accounts = aspectHome.findByClassName(Account.class.getName());
-		for (Aspect aspect : accounts.getAspect()) {
-			aspectHome.remove(aspect);
-		}
-	}
+    /**
+     * Method tearDown.
+     *
+     * @throws java.lang.Exception
+     */
+    @After
+    public void tearDown() throws Exception {
+        Aspects accounts = aspectHome.findByClassName(Account.class.getName());
+        for (Aspect aspect : accounts.getAspect()) {
+            aspectHome.remove(aspect);
+        }
+    }
 
-	/**
-	 * Method tearDownAfterClass.
-	 * 
-	 * @throws java.lang.Exception
-	 */
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-	}
+    /**
+     * Method tearDownAfterClass.
+     *
+     * @throws java.lang.Exception
+     */
+    @AfterClass
+    public static void tearDownAfterClass() throws Exception {
+    }
 
-	@Test
-	public void testCreateAccount() {
+    @Test
+    public void testCreateAccount() {
 
-		try {
-			PortfolioHome portfolioHome = new PortfolioHome();
-			Portfolio portfolio = (Portfolio) DAOPortfolio.newInstance().getObject();
-			portfolio = portfolioHome.findByName(portfolio.getName());
-			Account account = new Account("Test", "T123456", Currency.USD, AccountType.INDIVIDUAL);
-			PortfolioAccount portfolioAccount = new PortfolioAccount(portfolio, account);
-			portfolio.getPortfolioAccounts().add(portfolioAccount);
-			portfolio = aspectHome.persist(portfolio);
-			assertNotNull("1", portfolio.getIndividualAccount());
+        try {
+            PortfolioHome portfolioHome = new PortfolioHome();
+            Portfolio portfolio = (Portfolio) DAOPortfolio.newInstance().getObject();
+            portfolio = portfolioHome.findByName(portfolio.getName());
+            Account account = new Account("Test", "T123456", Currency.USD, AccountType.INDIVIDUAL);
+            PortfolioAccount portfolioAccount = new PortfolioAccount(portfolio, account);
+            portfolio.getPortfolioAccounts().add(portfolioAccount);
+            portfolio = aspectHome.persist(portfolio);
+            assertNotNull("1", portfolio.getIndividualAccount());
 
-		} catch (Exception | AssertionError ex) {
-			String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
-			_log.error(msg);
-			fail(msg);
-		}
-	}
+        } catch (Exception | AssertionError ex) {
+            String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
+            _log.error(msg);
+            fail(msg);
+        }
+    }
 }

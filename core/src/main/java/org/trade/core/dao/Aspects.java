@@ -39,126 +39,119 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ *
  */
 public class Aspects implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 3388042483785305102L;
-	private Integer idAspects;
-	private boolean dirty = false;
-	private List<Aspect> aspect = new ArrayList<Aspect>(0);
+    /**
+     *
+     */
+    private static final long serialVersionUID = 3388042483785305102L;
+    private Integer idAspects;
+    private boolean dirty = false;
+    private List<Aspect> aspect = new ArrayList<Aspect>(0);
 
-	public Aspects() {
-	}
+    public Aspects() {
+    }
 
-	/**
-	 * Constructor for Aspects.
-	 * 
-	 * @param idAspects
-	 *            Integer
-	 */
-	public Aspects(Integer idAspects) {
-		this.idAspects = idAspects;
-	}
+    /**
+     * Constructor for Aspects.
+     *
+     * @param idAspects Integer
+     */
+    public Aspects(Integer idAspects) {
+        this.idAspects = idAspects;
+    }
 
-	/**
-	 * Constructor for Aspects.
-	 * 
-	 * @param aspect
-	 *            List<Aspect>
-	 */
-	public Aspects(List<Aspect> aspect) {
-		this.aspect = aspect;
-	}
+    /**
+     * Constructor for Aspects.
+     *
+     * @param aspect List<Aspect>
+     */
+    public Aspects(List<Aspect> aspect) {
+        this.aspect = aspect;
+    }
 
-	/**
-	 * Constructor for Aspects.
-	 * 
-	 * @param idAspects
-	 *            Integer
-	 * @param aspect
-	 *            List<Aspect>
-	 */
-	public Aspects(Integer idAspects, List<Aspect> aspect) {
-		this.idAspects = idAspects;
-		this.aspect = aspect;
-	}
+    /**
+     * Constructor for Aspects.
+     *
+     * @param idAspects Integer
+     * @param aspect    List<Aspect>
+     */
+    public Aspects(Integer idAspects, List<Aspect> aspect) {
+        this.idAspects = idAspects;
+        this.aspect = aspect;
+    }
 
-	/**
-	 * Method getIdAspects.
-	 * 
-	 * @return Integer
-	 */
-	public Integer getIdAspects() {
-		return this.idAspects;
-	}
+    /**
+     * Method getIdAspects.
+     *
+     * @return Integer
+     */
+    public Integer getIdAspects() {
+        return this.idAspects;
+    }
 
-	/**
-	 * Method setIdAspects.
-	 * 
-	 * @param idAspects
-	 *            Integer
-	 */
-	public void setIdAspects(Integer idAspects) {
-		this.idAspects = idAspects;
-	}
+    /**
+     * Method setIdAspects.
+     *
+     * @param idAspects Integer
+     */
+    public void setIdAspects(Integer idAspects) {
+        this.idAspects = idAspects;
+    }
 
-	/**
-	 * Method add.
-	 * 
-	 * @param aspect
-	 *            Aspect
-	 */
-	public void add(Aspect aspect) {
-		this.aspect.add(aspect);
-	}
+    /**
+     * Method add.
+     *
+     * @param aspect Aspect
+     */
+    public void add(Aspect aspect) {
+        this.aspect.add(aspect);
+    }
 
-	/**
-	 * Method remove.
-	 * 
-	 * @param aspect
-	 *            Aspect
-	 */
-	public void remove(Aspect aspect) {
-		this.aspect.remove(aspect);
-	}
+    /**
+     * Method remove.
+     *
+     * @param aspect Aspect
+     */
+    public void remove(Aspect aspect) {
+        this.aspect.remove(aspect);
+    }
 
-	/**
-	 * Method getAspect.
-	 * 
-	 * @return List<Aspect>
-	 */
-	public List<Aspect> getAspect() {
-		return this.aspect;
-	}
+    /**
+     * Method getAspect.
+     *
+     * @return List<Aspect>
+     */
+    public List<Aspect> getAspect() {
+        return this.aspect;
+    }
 
-	/**
-	 * Method setDirty.
-	 * 
-	 * @param dirty
-	 *            boolean
-	 */
-	public void setDirty(boolean dirty) {
-		this.dirty = dirty;
-	}
+    /**
+     * Method setDirty.
+     *
+     * @param dirty boolean
+     */
+    public void setDirty(boolean dirty) {
+        this.dirty = dirty;
+    }
 
-	/**
-	 * Method isDirty.
-	 * 
-	 * @return boolean
-	 */
-	public boolean isDirty() {
-		for (Aspect aspect : this.getAspect()) {
-			if (aspect.isDirty()) {
-				return true;
-			}
-		}
-		return this.dirty;
-	}
+    /**
+     * Method isDirty.
+     *
+     * @return boolean
+     */
+    public boolean isDirty() {
+        for (Aspect aspect : this.getAspect()) {
+            if (aspect.isDirty()) {
+                return true;
+            }
+        }
+        return this.dirty;
+    }
 
-	public void clear() {
-		getAspect().clear();
-	}
+    public void clear() {
+        getAspect().clear();
+    }
 }

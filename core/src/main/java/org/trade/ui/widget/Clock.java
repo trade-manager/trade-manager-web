@@ -35,38 +35,37 @@
  */
 package org.trade.ui.widget;
 
-import java.awt.BorderLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-
 /**
+ *
  */
 public class Clock extends JPanel {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 2205177128289778533L;
-	private JTextField timeField = new JTextField(5); // set by timer listener
-	private static SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+    /**
+     *
+     */
+    private static final long serialVersionUID = 2205177128289778533L;
+    private JTextField timeField = new JTextField(5); // set by timer listener
+    private static SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
-	public Clock() {
-		// Build the GUI - only one panel
-		this.setLayout(new BorderLayout());
-		this.add(timeField);
-		// Create a 1-second timer and action listener for it.
-		// Specify package because there are two Timer classes
-		javax.swing.Timer t = new javax.swing.Timer(1000, new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				Calendar now = Calendar.getInstance();
-				timeField.setText(dateFormat.format(now.getTime()));
-			}
-		});
-		t.start();
-	}
+    public Clock() {
+        // Build the GUI - only one panel
+        this.setLayout(new BorderLayout());
+        this.add(timeField);
+        // Create a 1-second timer and action listener for it.
+        // Specify package because there are two Timer classes
+        javax.swing.Timer t = new javax.swing.Timer(1000, new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Calendar now = Calendar.getInstance();
+                timeField.setText(dateFormat.format(now.getTime()));
+            }
+        });
+        t.start();
+    }
 }

@@ -35,136 +35,130 @@
  */
 package org.trade.ui.models;
 
-import java.util.Vector;
-
 import org.trade.core.dao.Aspect;
 import org.trade.core.dao.Aspects;
 import org.trade.core.util.CoreUtils;
 import org.trade.persistent.dao.CodeType;
 import org.trade.persistent.dao.StrategyParameters;
 
+import java.util.Vector;
+
 /**
+ *
  */
 public class StrategyParametersTableModel extends AspectTableModel {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 3087514589731145479L;
-	private static final String NAME = "Strategy Name*";
-	private static final String DESCRIPTION = "Description";
+    /**
+     *
+     */
+    private static final long serialVersionUID = 3087514589731145479L;
+    private static final String NAME = "Strategy Name*";
+    private static final String DESCRIPTION = "Description";
 
-	Aspects m_data = null;
+    Aspects m_data = null;
 
-	public StrategyParametersTableModel() {
+    public StrategyParametersTableModel() {
 
-		columnNames = new String[2];
-		columnNames[0] = NAME;
-		columnNames[1] = DESCRIPTION;
+        columnNames = new String[2];
+        columnNames[0] = NAME;
+        columnNames[1] = DESCRIPTION;
 
-	}
+    }
 
-	/**
-	 * Method getData.
-	 * 
-	 * @return Aspects
-	 */
-	public Aspects getData() {
-		return m_data;
-	}
+    /**
+     * Method getData.
+     *
+     * @return Aspects
+     */
+    public Aspects getData() {
+        return m_data;
+    }
 
-	/**
-	 * Method setData.
-	 * 
-	 * @param data
-	 *            Aspects
-	 */
-	public void setData(Aspects data) {
+    /**
+     * Method setData.
+     *
+     * @param data Aspects
+     */
+    public void setData(Aspects data) {
 
-		this.m_data = data;
-		this.clearAll();
-		if (!getData().getAspect().isEmpty()) {
-			for (final Aspect element : getData().getAspect()) {
-				final Vector<Object> newRow = new Vector<Object>();
-				getNewRow(newRow, (CodeType) element);
-				rows.add(newRow);
-			}
-			fireTableDataChanged();
-		}
-	}
+        this.m_data = data;
+        this.clearAll();
+        if (!getData().getAspect().isEmpty()) {
+            for (final Aspect element : getData().getAspect()) {
+                final Vector<Object> newRow = new Vector<Object>();
+                getNewRow(newRow, (CodeType) element);
+                rows.add(newRow);
+            }
+            fireTableDataChanged();
+        }
+    }
 
-	/**
-	 * Method populateDAO.
-	 * 
-	 * @param value
-	 *            Object
-	 * @param row
-	 *            int
-	 * @param column
-	 *            int
-	 */
-	public void populateDAO(Object value, int row, int column) {
+    /**
+     * Method populateDAO.
+     *
+     * @param value  Object
+     * @param row    int
+     * @param column int
+     */
+    public void populateDAO(Object value, int row, int column) {
 
-		final CodeType element = (CodeType) getData().getAspect().get(row);
+        final CodeType element = (CodeType) getData().getAspect().get(row);
 
-		switch (column) {
-		case 0: {
-			element.setName((String) value);
-			break;
-		}
-		case 1: {
-			element.setDescription((String) value);
-			break;
-		}
-		default: {
-		}
-		}
-		element.setDirty(true);
-	}
+        switch (column) {
+            case 0: {
+                element.setName((String) value);
+                break;
+            }
+            case 1: {
+                element.setDescription((String) value);
+                break;
+            }
+            default: {
+            }
+        }
+        element.setDirty(true);
+    }
 
-	/**
-	 * Method deleteRow.
-	 * 
-	 * @param selectedRow
-	 *            int
-	 */
-	public void deleteRow(int selectedRow) {
+    /**
+     * Method deleteRow.
+     *
+     * @param selectedRow int
+     */
+    public void deleteRow(int selectedRow) {
 
-		String name = (String) this.getValueAt(selectedRow, 0);
-		for (final Aspect element : getData().getAspect()) {
-			if (CoreUtils.nullSafeComparator(((CodeType) element).getName(), name) == 0) {
-				getData().remove(element);
-				getData().setDirty(true);
-				final Vector<Object> currRow = rows.get(selectedRow);
-				rows.remove(currRow);
-				this.fireTableRowsDeleted(selectedRow, selectedRow);
-				break;
-			}
-		}
-	}
+        String name = (String) this.getValueAt(selectedRow, 0);
+        for (final Aspect element : getData().getAspect()) {
+            if (CoreUtils.nullSafeComparator(((CodeType) element).getName(), name) == 0) {
+                getData().remove(element);
+                getData().setDirty(true);
+                final Vector<Object> currRow = rows.get(selectedRow);
+                rows.remove(currRow);
+                this.fireTableRowsDeleted(selectedRow, selectedRow);
+                break;
+            }
+        }
+    }
 
-	public void addRow() {
+    public void addRow() {
 
-		final StrategyParameters element = new StrategyParameters("", CodeType.StrategyParameters, "");
-		getData().add(element);
-		getData().setDirty(true);
-		final Vector<Object> newRow = new Vector<Object>();
-		getNewRow(newRow, element);
-		rows.add(newRow);
-		// Tell the listeners a new table has arrived.
-		this.fireTableRowsInserted(rows.size() - 1, rows.size() - 1);
-	}
+        final StrategyParameters element = new StrategyParameters("", CodeType.StrategyParameters, "");
+        getData().add(element);
+        getData().setDirty(true);
+        final Vector<Object> newRow = new Vector<Object>();
+        getNewRow(newRow, element);
+        rows.add(newRow);
+        // Tell the listeners a new table has arrived.
+        this.fireTableRowsInserted(rows.size() - 1, rows.size() - 1);
+    }
 
-	/**
-	 * Method getNewRow.
-	 * 
-	 * @param newRow
-	 *            Vector<Object>
-	 * @param element
-	 *            CodeType
-	 */
-	public void getNewRow(Vector<Object> newRow, CodeType element) {
-		newRow.addElement(element.getName());
-		newRow.addElement(element.getDescription());
+    /**
+     * Method getNewRow.
+     *
+     * @param newRow  Vector<Object>
+     * @param element CodeType
+     */
+    public void getNewRow(Vector<Object> newRow, CodeType element) {
+        newRow.addElement(element.getName());
+        newRow.addElement(element.getDescription());
 
-	}
+    }
 }

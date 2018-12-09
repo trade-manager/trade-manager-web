@@ -38,92 +38,86 @@ package org.trade.core.exception;
 /**
  * Describes the context in which an exception occurred. Contains the
  * information for constructing the message about a specific exception.
- * 
+ *
  * @author Simon Allen
  */
 public class ExceptionContext implements java.io.Serializable {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 4837522639316151345L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 4837522639316151345L;
 
-	// constants
-	private final static String NULL_VALUE = "";
+    // constants
+    private final static String NULL_VALUE = "";
 
-	// member variables
-	private String m_parameterName;
+    // member variables
+    private String m_parameterName;
 
-	private String m_value;
+    private String m_value;
 
-	/**
-	 * Constructor.
-	 * 
-	 * @param parameterName
-	 *            String
-	 * @param value
-	 *            Object
-	 */
-	public ExceptionContext(String parameterName, Object value) {
-		m_parameterName = parameterName;
-		setValue(value);
-	}
+    /**
+     * Constructor.
+     *
+     * @param parameterName String
+     * @param value         Object
+     */
+    public ExceptionContext(String parameterName, Object value) {
+        m_parameterName = parameterName;
+        setValue(value);
+    }
 
-	/**
-	 * Copy constructor.
-	 * 
-	 * @param other
-	 *            ExceptionContext
-	 */
-	public ExceptionContext(ExceptionContext other) {
-		m_parameterName = other.m_parameterName;
-		m_value = other.m_value;
-	}
+    /**
+     * Copy constructor.
+     *
+     * @param other ExceptionContext
+     */
+    public ExceptionContext(ExceptionContext other) {
+        m_parameterName = other.m_parameterName;
+        m_value = other.m_value;
+    }
 
-	/**
-	 * Copy constructor.
-	 * 
-	 * @param other
-	 *            the object to be copied
-	 * @param value
-	 *            the new value for this context (overrides the value of the
-	 *            object being copied
-	 */
-	public ExceptionContext(ExceptionContext other, Object value) {
-		m_parameterName = other.m_parameterName;
-		setValue(value);
-	}
+    /**
+     * Copy constructor.
+     *
+     * @param other the object to be copied
+     * @param value the new value for this context (overrides the value of the
+     *              object being copied
+     */
+    public ExceptionContext(ExceptionContext other, Object value) {
+        m_parameterName = other.m_parameterName;
+        setValue(value);
+    }
 
-	/**
-	 * Represents the name used within exception messages to refer to this
-	 * context.
-	 * 
-	 * @return String
-	 */
-	public String getParameterName() {
-		return m_parameterName;
-	}
+    /**
+     * Represents the name used within exception messages to refer to this
+     * context.
+     *
+     * @return String
+     */
+    public String getParameterName() {
+        return m_parameterName;
+    }
 
-	/**
-	 * Represents the context of the exception. This value should be directly
-	 * substituted into a named parameter in an exception message.
-	 * 
-	 * @return String
-	 */
-	public String getValue() {
-		return m_value;
-	}
+    /**
+     * Represents the context of the exception. This value should be directly
+     * substituted into a named parameter in an exception message.
+     *
+     * @return String
+     */
+    public String getValue() {
+        return m_value;
+    }
 
-	/**
-	 * Method setValue.
-	 * 
-	 * @param value
-	 *            Object
-	 */
-	private void setValue(Object value) {
-		if (null == value) {
-			value = NULL_VALUE;
-		}
+    /**
+     * Method setValue.
+     *
+     * @param value Object
+     */
+    private void setValue(Object value) {
+        if (null == value) {
+            value = NULL_VALUE;
+        }
 
-		m_value = value.toString();
-	}
+        m_value = value.toString();
+    }
 }

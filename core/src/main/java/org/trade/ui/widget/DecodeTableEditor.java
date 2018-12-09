@@ -35,26 +35,25 @@
  */
 package org.trade.ui.widget;
 
-import javax.swing.DefaultCellEditor;
-import javax.swing.JComboBox;
-
 import org.trade.core.valuetype.Decode;
 
+import javax.swing.*;
+
 /**
+ *
  */
 public class DecodeTableEditor extends DefaultCellEditor {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -5749981558651703467L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -5749981558651703467L;
 
-	/**
-	 * Constructor for DecodeTableEditor.
-	 * 
-	 * @param comboBox
-	 *            JComboBox
-	 */
-	public DecodeTableEditor(final JComboBox<Decode> comboBox) {
-		super(comboBox);
-	}
+    /**
+     * Constructor for DecodeTableEditor.
+     *
+     * @param comboBox JComboBox
+     */
+    public DecodeTableEditor(final JComboBox<Decode> comboBox) {
+        super(comboBox);
+    }
 }

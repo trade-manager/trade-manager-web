@@ -42,113 +42,107 @@ import java.util.Enumeration;
 
 /**
  * This class is used to hold generic routines for manipulating exceptions.
- * 
+ *
  * @author Simon Allen
  */
 public class ExceptionUtil implements Serializable {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1278830639842508059L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1278830639842508059L;
 
-	ExceptionUtil() {
-		super();
-	}
+    ExceptionUtil() {
+        super();
+    }
 
-	/**
-	 * Method captureStackTrace.
-	 * 
-	 * @param t
-	 *            Throwable
-	 * @return String
-	 */
-	public static final String captureStackTrace(Throwable t) {
-		String stackTrace = null;
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		PrintWriter writer = new PrintWriter(out);
+    /**
+     * Method captureStackTrace.
+     *
+     * @param t Throwable
+     * @return String
+     */
+    public static final String captureStackTrace(Throwable t) {
+        String stackTrace = null;
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PrintWriter writer = new PrintWriter(out);
 
-		t.printStackTrace(writer);
+        t.printStackTrace(writer);
 
-		writer.flush();
-		stackTrace = out.toString();
-		return stackTrace;
-	}
+        writer.flush();
+        stackTrace = out.toString();
+        return stackTrace;
+    }
 
-	/**
-	 * Method nestStackTrace.
-	 * 
-	 * @param stackTrace
-	 *            String
-	 * @param t
-	 *            Throwable
-	 * @return String
-	 */
-	public static final String nestStackTrace(String stackTrace, Throwable t) {
-		String newStackTrace = null;
+    /**
+     * Method nestStackTrace.
+     *
+     * @param stackTrace String
+     * @param t          Throwable
+     * @return String
+     */
+    public static final String nestStackTrace(String stackTrace, Throwable t) {
+        String newStackTrace = null;
 
-		if (t instanceof NestingException) {
-			NestingException ex = (NestingException) t;
-			newStackTrace = stackTrace + ex.getStackTrace();
-		} else {
-			newStackTrace = stackTrace + captureStackTrace(t);
-		}
+        if (t instanceof NestingException) {
+            NestingException ex = (NestingException) t;
+            newStackTrace = stackTrace + ex.getStackTrace();
+        } else {
+            newStackTrace = stackTrace + captureStackTrace(t);
+        }
 
-		return newStackTrace;
-	}
+        return newStackTrace;
+    }
 
-	/**
-	 * Method fillInExceptionMessage.
-	 * 
-	 * @param nestingException
-	 *            NestingException
-	 * @param stackTrace
-	 *            String
-	 * @param errorMesg
-	 *            String
-	 * @return String
-	 */
-	public static final String fillInExceptionMessage(NestingException nestingException, String stackTrace,
-			String errorMesg) {
-		if (stackTrace != null) {
-			int index = stackTrace.indexOf(':');
+    /**
+     * Method fillInExceptionMessage.
+     *
+     * @param nestingException NestingException
+     * @param stackTrace       String
+     * @param errorMesg        String
+     * @return String
+     */
+    public static final String fillInExceptionMessage(NestingException nestingException, String stackTrace,
+                                                      String errorMesg) {
+        if (stackTrace != null) {
+            int index = stackTrace.indexOf(':');
 
-			String s1 = stackTrace.substring(0, index + 1);
-			index = stackTrace.indexOf("\tat");
-			String s2;
-			if (index >= 0) {
-				s2 = stackTrace.substring(index);
-			} else {
-				s2 = "";
-			}
+            String s1 = stackTrace.substring(0, index + 1);
+            index = stackTrace.indexOf("\tat");
+            String s2;
+            if (index >= 0) {
+                s2 = stackTrace.substring(index);
+            } else {
+                s2 = "";
+            }
 
-			// Construct the first line of the stack trace.
-			StringBuffer buf = new StringBuffer();
-			buf.append(s1);
-			buf.append(' ');
-			buf.append(errorMesg);
-			buf.append('\n');
+            // Construct the first line of the stack trace.
+            StringBuffer buf = new StringBuffer();
+            buf.append(s1);
+            buf.append(' ');
+            buf.append(errorMesg);
+            buf.append('\n');
 
-			// Construct the lines in the stack trace that display the
-			// user friendly messages.
-			Enumeration<?> enumeration = nestingException.getAllExceptionMessages();
-			while (enumeration.hasMoreElements()) {
-				ExceptionMessage exceptionMessage;
-				exceptionMessage = (ExceptionMessage) enumeration.nextElement();
+            // Construct the lines in the stack trace that display the
+            // user friendly messages.
+            Enumeration<?> enumeration = nestingException.getAllExceptionMessages();
+            while (enumeration.hasMoreElements()) {
+                ExceptionMessage exceptionMessage;
+                exceptionMessage = (ExceptionMessage) enumeration.nextElement();
 
-				buf.append('\t');
-				buf.append(exceptionMessage.getExceptionCode());
-				buf.append(": ");
-				buf.append(exceptionMessage.getMessage());
-				buf.append('\n');
-			}
+                buf.append('\t');
+                buf.append(exceptionMessage.getExceptionCode());
+                buf.append(": ");
+                buf.append(exceptionMessage.getMessage());
+                buf.append('\n');
+            }
 
-			// Construct all of the "at ..." lines.
-			buf.append(s2);
-			stackTrace = buf.toString();
-		} else {
-			stackTrace = "";
-		}
+            // Construct all of the "at ..." lines.
+            buf.append(s2);
+            stackTrace = buf.toString();
+        } else {
+            stackTrace = "";
+        }
 
-		return stackTrace;
-	}
+        return stackTrace;
+    }
 }

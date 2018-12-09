@@ -41,41 +41,41 @@ import org.trade.persistent.dao.TradeOrderfill;
 import org.trade.persistent.dao.Tradestrategy;
 
 public interface IClientWrapper {
-	void error(Exception e);
+    void error(Exception e);
 
-	void error(String str);
+    void error(String str);
 
-	void error(int id, int errorCode, String errorMsg);
+    void error(int id, int errorCode, String errorMsg);
 
-	void connectionClosed();
+    void connectionClosed();
 
-	void orderStatus(int orderId, String status, int filled, int remaining, double avgFillPrice, int permId,
-			int parentId, double lastFillPrice, int clientId, String whyHeld);
+    void orderStatus(int orderId, String status, int filled, int remaining, double avgFillPrice, int permId,
+                     int parentId, double lastFillPrice, int clientId, String whyHeld);
 
-	void openOrder(int orderId, Contract contract, TradeOrder order, OrderState orderState);
+    void openOrder(int orderId, Contract contract, TradeOrder order, OrderState orderState);
 
-	void nextValidId(int orderId);
+    void nextValidId(int orderId);
 
-	void contractDetails(int reqId, Contract contract);
+    void contractDetails(int reqId, Contract contract);
 
-	void contractDetailsEnd(int reqId);
+    void contractDetailsEnd(int reqId);
 
-	void execDetails(int reqId, Contract contract, TradeOrderfill execution);
+    void execDetails(int reqId, Contract contract, TradeOrderfill execution);
 
-	void execDetailsEnd(int reqId);
+    void execDetailsEnd(int reqId);
 
-	void historicalData(int reqId, String date, double open, double high, double low, double close, int volume,
-			int count, double WAP, boolean hasGaps);
+    void historicalData(int reqId, String date, double open, double high, double low, double close, int volume,
+                        int count, double WAP, boolean hasGaps);
 
-	void realtimeBar(int reqId, long time, double open, double high, double low, double close, long volume, double wap,
-			int count);
+    void realtimeBar(int reqId, long time, double open, double high, double low, double close, long volume, double wap,
+                     int count);
 
-	void onCancelRealtimeBars(Tradestrategy tradestrategy);
+    void onCancelRealtimeBars(Tradestrategy tradestrategy);
 
-	void onCancelBrokerData(Tradestrategy tradestrategy);
+    void onCancelBrokerData(Tradestrategy tradestrategy);
 
-	void onCancelBrokerData(Contract contract);
+    void onCancelBrokerData(Contract contract);
 
-	void onCancelRealtimeBars(Contract contract);
+    void onCancelRealtimeBars(Contract contract);
 
 }

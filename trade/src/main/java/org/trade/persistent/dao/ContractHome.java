@@ -35,150 +35,139 @@
  */
 package org.trade.persistent.dao;
 
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import org.trade.core.dao.EntityManagerHelper;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-
-import org.trade.core.dao.EntityManagerHelper;
+import javax.persistence.criteria.*;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
+ *
  */
 @Stateless
 public class ContractHome {
 
-	public ContractHome() {
+    public ContractHome() {
 
-	}
+    }
 
-	/**
-	 * Method findByUniqueKey.
-	 * 
-	 * @param SECType
-	 *            String
-	 * @param symbol
-	 *            String
-	 * @param exchange
-	 *            String
-	 * @param currency
-	 *            String
-	 * @param expiryDate
-	 *            ZonedDateTime
-	 * @return Contract
-	 */
-	public Contract findByUniqueKey(String SECType, String symbol, String exchange, String currency,
-			ZonedDateTime expiryDate) {
+    /**
+     * Method findByUniqueKey.
+     *
+     * @param SECType    String
+     * @param symbol     String
+     * @param exchange   String
+     * @param currency   String
+     * @param expiryDate ZonedDateTime
+     * @return Contract
+     */
+    public Contract findByUniqueKey(String SECType, String symbol, String exchange, String currency,
+                                    ZonedDateTime expiryDate) {
 
-		try {
-			EntityManager entityManager = EntityManagerHelper.getEntityManager();
-			entityManager.getTransaction().begin();
-			CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-			CriteriaQuery<Contract> query = builder.createQuery(Contract.class);
-			Root<Contract> from = query.from(Contract.class);
-			query.select(from);
-			List<Predicate> predicates = new ArrayList<Predicate>();
+        try {
+            EntityManager entityManager = EntityManagerHelper.getEntityManager();
+            entityManager.getTransaction().begin();
+            CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+            CriteriaQuery<Contract> query = builder.createQuery(Contract.class);
+            Root<Contract> from = query.from(Contract.class);
+            query.select(from);
+            List<Predicate> predicates = new ArrayList<Predicate>();
 
-			if (null != SECType) {
-				Predicate predicate = builder.equal(from.get("secType"), SECType);
-				predicates.add(predicate);
-			}
-			if (null != symbol) {
-				Predicate predicate = builder.equal(from.get("symbol"), symbol);
-				predicates.add(predicate);
-			}
-			if (null != exchange) {
-				Predicate predicate = builder.equal(from.get("exchange"), exchange);
-				predicates.add(predicate);
-			}
-			if (null != currency) {
-				Predicate predicate = builder.equal(from.get("currency"), currency);
-				predicates.add(predicate);
-			}
-			if (null != expiryDate) {
+            if (null != SECType) {
+                Predicate predicate = builder.equal(from.get("secType"), SECType);
+                predicates.add(predicate);
+            }
+            if (null != symbol) {
+                Predicate predicate = builder.equal(from.get("symbol"), symbol);
+                predicates.add(predicate);
+            }
+            if (null != exchange) {
+                Predicate predicate = builder.equal(from.get("exchange"), exchange);
+                predicates.add(predicate);
+            }
+            if (null != currency) {
+                Predicate predicate = builder.equal(from.get("currency"), currency);
+                predicates.add(predicate);
+            }
+            if (null != expiryDate) {
 
-				Integer yearExpiry = expiryDate.getYear();
-				Expression<Integer> year = builder.function("year", Integer.class, from.get("expiry"));
-				Predicate predicateYear = builder.equal(year, yearExpiry);
-				predicates.add(predicateYear);
+                Integer yearExpiry = expiryDate.getYear();
+                Expression<Integer> year = builder.function("year", Integer.class, from.get("expiry"));
+                Predicate predicateYear = builder.equal(year, yearExpiry);
+                predicates.add(predicateYear);
 
-				Integer monthExpiry = expiryDate.getMonthValue();
-				Expression<Integer> month = builder.function("month", Integer.class, from.get("expiry"));
-				Predicate predicateMonth = builder.equal(month, monthExpiry);
-				predicates.add(predicateMonth);
-			}
-			query.where(predicates.toArray(new Predicate[] {}));
-			TypedQuery<Contract> typedQuery = entityManager.createQuery(query);
-			List<Contract> items = typedQuery.getResultList();
-			entityManager.getTransaction().commit();
-			if (items.size() > 0) {
-				return items.get(0);
-			}
-			return null;
-		} catch (Exception re) {
-			EntityManagerHelper.rollback();
-			throw re;
-		} finally {
-			EntityManagerHelper.close();
-		}
-	}
+                Integer monthExpiry = expiryDate.getMonthValue();
+                Expression<Integer> month = builder.function("month", Integer.class, from.get("expiry"));
+                Predicate predicateMonth = builder.equal(month, monthExpiry);
+                predicates.add(predicateMonth);
+            }
+            query.where(predicates.toArray(new Predicate[]{}));
+            TypedQuery<Contract> typedQuery = entityManager.createQuery(query);
+            List<Contract> items = typedQuery.getResultList();
+            entityManager.getTransaction().commit();
+            if (items.size() > 0) {
+                return items.get(0);
+            }
+            return null;
+        } catch (Exception re) {
+            EntityManagerHelper.rollback();
+            throw re;
+        } finally {
+            EntityManagerHelper.close();
+        }
+    }
 
-	/**
-	 * Method findById.
-	 * 
-	 * @param id
-	 *            Integer
-	 * @return Contract
-	 */
-	public Contract findById(Integer id) {
+    /**
+     * Method findById.
+     *
+     * @param id Integer
+     * @return Contract
+     */
+    public Contract findById(Integer id) {
 
-		try {
-			EntityManager entityManager = EntityManagerHelper.getEntityManager();
-			entityManager.getTransaction().begin();
-			Contract instance = entityManager.find(Contract.class, id);
-			if (null != instance) {
-				instance.getTradePositions().size();
-			}
-			entityManager.getTransaction().commit();
-			return instance;
-		} catch (Exception re) {
-			EntityManagerHelper.rollback();
-			throw re;
-		} finally {
-			EntityManagerHelper.close();
-		}
-	}
+        try {
+            EntityManager entityManager = EntityManagerHelper.getEntityManager();
+            entityManager.getTransaction().begin();
+            Contract instance = entityManager.find(Contract.class, id);
+            if (null != instance) {
+                instance.getTradePositions().size();
+            }
+            entityManager.getTransaction().commit();
+            return instance;
+        } catch (Exception re) {
+            EntityManagerHelper.rollback();
+            throw re;
+        } finally {
+            EntityManagerHelper.close();
+        }
+    }
 
-	/**
-	 * Method findByContractId.
-	 * 
-	 * @param id
-	 *            Integer
-	 * @return ContractId
-	 */
-	public ContractLite findByContractId(Integer id) {
+    /**
+     * Method findByContractId.
+     *
+     * @param id Integer
+     * @return ContractId
+     */
+    public ContractLite findByContractId(Integer id) {
 
-		try {
-			EntityManager entityManager = EntityManagerHelper.getEntityManager();
-			entityManager.getTransaction().begin();
-			ContractLite instance = entityManager.find(ContractLite.class, id);
-			// if (null != instance) {
-			// instance.getTradePositions().size();
-			// }
-			entityManager.getTransaction().commit();
-			return instance;
-		} catch (Exception re) {
-			EntityManagerHelper.rollback();
-			throw re;
-		} finally {
-			EntityManagerHelper.close();
-		}
-	}
+        try {
+            EntityManager entityManager = EntityManagerHelper.getEntityManager();
+            entityManager.getTransaction().begin();
+            ContractLite instance = entityManager.find(ContractLite.class, id);
+            // if (null != instance) {
+            // instance.getTradePositions().size();
+            // }
+            entityManager.getTransaction().commit();
+            return instance;
+        } catch (Exception re) {
+            EntityManagerHelper.rollback();
+            throw re;
+        } finally {
+            EntityManagerHelper.close();
+        }
+    }
 }

@@ -38,39 +38,39 @@ package org.trade.dictionary.valuetype;
 import org.trade.core.valuetype.Decode;
 
 /**
+ *
  */
 public class Action extends Decode {
 
-	private static final long serialVersionUID = -5381026427696898592L;
-	public static final String DECODE = "ACTION";
-	public static final String SELL = "SELL";
-	public static final String BUY = "BUY";
+    private static final long serialVersionUID = -5381026427696898592L;
+    public static final String DECODE = "ACTION";
+    public static final String SELL = "SELL";
+    public static final String BUY = "BUY";
 
-	public Action() {
-		super(DECODE);
-	}
+    public Action() {
+        super(DECODE);
+    }
 
-	/**
-	 * Method newInstance.
-	 * 
-	 * @param value
-	 *            String
-	 * @return Action
-	 */
-	public static Action newInstance(String value) {
-		final Action returnInstance = new Action();
-		returnInstance.setValue(value);
-		return returnInstance;
-	}
+    /**
+     * Method newInstance.
+     *
+     * @param value String
+     * @return Action
+     */
+    public static Action newInstance(String value) {
+        final Action returnInstance = new Action();
+        returnInstance.setValue(value);
+        return returnInstance;
+    }
 
-	/**
-	 * Method newInstance.
-	 * 
-	 * @return Action
-	 */
-	public static Action newInstance() {
-		final Action returnInstance = new Action();
-		returnInstance.setDefaultCode();
-		return returnInstance;
-	}
+    /**
+     * Method newInstance.
+     *
+     * @return Action
+     */
+    public static Action newInstance() {
+        final Action returnInstance = new Action();
+        returnInstance.setDefaultCode();
+        return returnInstance;
+    }
 }

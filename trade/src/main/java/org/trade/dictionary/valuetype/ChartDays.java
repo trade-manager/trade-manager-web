@@ -38,43 +38,43 @@ package org.trade.dictionary.valuetype;
 import org.trade.core.valuetype.Decode;
 
 /**
+ *
  */
 public class ChartDays extends Decode {
 
-	private static final long serialVersionUID = -5381026427696898592L;
-	public static final String DECODE = "CHART_DAYS";
-	public static final int TWO_DAYS = 2;
-	public static final int TWO_MONTHS = 60;
+    private static final long serialVersionUID = -5381026427696898592L;
+    public static final String DECODE = "CHART_DAYS";
+    public static final int TWO_DAYS = 2;
+    public static final int TWO_MONTHS = 60;
 
-	public ChartDays() {
-		super(DECODE);
-	}
+    public ChartDays() {
+        super(DECODE);
+    }
 
-	public ChartDays(boolean optional) {
-		super(DECODE, optional);
-	}
+    public ChartDays(boolean optional) {
+        super(DECODE, optional);
+    }
 
-	/**
-	 * Method newInstance.
-	 * 
-	 * @param value
-	 *            Integer
-	 * @return ChartDays
-	 */
-	public static ChartDays newInstance(Integer value) {
-		final ChartDays returnInstance = new ChartDays();
-		returnInstance.setValue(value);
-		return returnInstance;
-	}
+    /**
+     * Method newInstance.
+     *
+     * @param value Integer
+     * @return ChartDays
+     */
+    public static ChartDays newInstance(Integer value) {
+        final ChartDays returnInstance = new ChartDays();
+        returnInstance.setValue(value);
+        return returnInstance;
+    }
 
-	/**
-	 * Method newInstance.
-	 * 
-	 * @return ChartDays
-	 */
-	public static ChartDays newInstance() {
-		final ChartDays returnInstance = new ChartDays();
-		returnInstance.setDefaultCode();
-		return returnInstance;
-	}
+    /**
+     * Method newInstance.
+     *
+     * @return ChartDays
+     */
+    public static ChartDays newInstance() {
+        final ChartDays returnInstance = new ChartDays();
+        returnInstance.setDefaultCode();
+        return returnInstance;
+    }
 }

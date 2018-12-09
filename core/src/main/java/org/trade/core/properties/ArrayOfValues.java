@@ -37,28 +37,27 @@ package org.trade.core.properties;
 
 /**
  * This class provides a simple container for storing object arrays.
- * 
+ *
  * @author Simon Allen
  */
 public class ArrayOfValues {
-	private Object[] array = null;
+    private Object[] array = null;
 
-	/**
-	 * Constructor for ArrayOfValues.
-	 * 
-	 * @param values
-	 *            Object[]
-	 */
-	public ArrayOfValues(Object[] values) {
-		array = values;
-	}
+    /**
+     * Constructor for ArrayOfValues.
+     *
+     * @param values Object[]
+     */
+    public ArrayOfValues(Object[] values) {
+        array = values;
+    }
 
-	/**
-	 * Method getValues.
-	 * 
-	 * @return Object[]
-	 */
-	public Object[] getValues() {
-		return (array);
-	}
+    /**
+     * Method getValues.
+     *
+     * @return Object[]
+     */
+    public Object[] getValues() {
+        return (array);
+    }
 }

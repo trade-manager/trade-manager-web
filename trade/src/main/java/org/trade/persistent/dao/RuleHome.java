@@ -35,93 +35,86 @@
  */
 package org.trade.persistent.dao;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.trade.core.dao.EntityManagerHelper;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-
-import org.trade.core.dao.EntityManagerHelper;
+import javax.persistence.criteria.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
+ *
  */
 @Stateless
 public class RuleHome {
 
-	public RuleHome() {
+    public RuleHome() {
 
-	}
+    }
 
-	/**
-	 * Method findById.
-	 * 
-	 * @param id
-	 *            Integer
-	 * @return Rule
-	 */
-	public Rule findById(Integer id) {
+    /**
+     * Method findById.
+     *
+     * @param id Integer
+     * @return Rule
+     */
+    public Rule findById(Integer id) {
 
-		try {
-			EntityManager entityManager = EntityManagerHelper.getEntityManager();
-			entityManager.getTransaction().begin();
-			Rule instance = entityManager.find(Rule.class, id);
-			entityManager.getTransaction().commit();
-			return instance;
-		} catch (Exception re) {
-			EntityManagerHelper.rollback();
-			throw re;
-		} finally {
-			EntityManagerHelper.close();
-		}
-	}
+        try {
+            EntityManager entityManager = EntityManagerHelper.getEntityManager();
+            entityManager.getTransaction().begin();
+            Rule instance = entityManager.find(Rule.class, id);
+            entityManager.getTransaction().commit();
+            return instance;
+        } catch (Exception re) {
+            EntityManagerHelper.rollback();
+            throw re;
+        } finally {
+            EntityManagerHelper.close();
+        }
+    }
 
-	/**
-	 * Method findByMaxVersion.
-	 * 
-	 * @param strategy
-	 *            Strategy
-	 * @return Integer
-	 */
-	public Integer findByMaxVersion(Strategy strategy) {
+    /**
+     * Method findByMaxVersion.
+     *
+     * @param strategy Strategy
+     * @return Integer
+     */
+    public Integer findByMaxVersion(Strategy strategy) {
 
-		try {
-			EntityManager entityManager = EntityManagerHelper.getEntityManager();
-			entityManager.getTransaction().begin();
-			CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-			CriteriaQuery<Object> query = builder.createQuery();
-			Root<Rule> from = query.from(Rule.class);
+        try {
+            EntityManager entityManager = EntityManagerHelper.getEntityManager();
+            entityManager.getTransaction().begin();
+            CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+            CriteriaQuery<Object> query = builder.createQuery();
+            Root<Rule> from = query.from(Rule.class);
 
-			Expression<Integer> id = from.get("version");
-			Expression<Integer> minExpression = builder.max(id);
-			CriteriaQuery<Object> select = query.select(minExpression);
+            Expression<Integer> id = from.get("version");
+            Expression<Integer> minExpression = builder.max(id);
+            CriteriaQuery<Object> select = query.select(minExpression);
 
-			List<Predicate> predicates = new ArrayList<Predicate>();
-			if (null != strategy) {
-				Join<Rule, Strategy> strategies = from.join("strategy");
-				Predicate predicate = builder.equal(strategies.get("id"), strategy.getId());
-				predicates.add(predicate);
-			}
-			query.where(predicates.toArray(new Predicate[] {}));
-			TypedQuery<Object> typedQuery = entityManager.createQuery(select);
-			Object item = typedQuery.getSingleResult();
-			entityManager.getTransaction().commit();
-			if (null == item)
-				item = new Integer(0);
+            List<Predicate> predicates = new ArrayList<Predicate>();
+            if (null != strategy) {
+                Join<Rule, Strategy> strategies = from.join("strategy");
+                Predicate predicate = builder.equal(strategies.get("id"), strategy.getId());
+                predicates.add(predicate);
+            }
+            query.where(predicates.toArray(new Predicate[]{}));
+            TypedQuery<Object> typedQuery = entityManager.createQuery(select);
+            Object item = typedQuery.getSingleResult();
+            entityManager.getTransaction().commit();
+            if (null == item)
+                item = new Integer(0);
 
-			return (Integer) item;
+            return (Integer) item;
 
-		} catch (Exception re) {
-			EntityManagerHelper.rollback();
-			throw re;
-		} finally {
-			EntityManagerHelper.close();
-		}
-	}
+        } catch (Exception re) {
+            EntityManagerHelper.rollback();
+            throw re;
+        } finally {
+            EntityManagerHelper.close();
+        }
+    }
 }

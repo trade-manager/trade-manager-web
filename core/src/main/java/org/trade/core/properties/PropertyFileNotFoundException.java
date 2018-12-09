@@ -38,22 +38,20 @@ package org.trade.core.properties;
 import java.io.FileNotFoundException;
 
 /**
- * 
  * @author Simon Allen
  */
 public class PropertyFileNotFoundException extends FileNotFoundException {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -3927055846214700908L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -3927055846214700908L;
 
-	/**
-	 * Constructor for PropertyFileNotFoundException.
-	 * 
-	 * @param message
-	 *            String
-	 */
-	public PropertyFileNotFoundException(String message) {
-		super(message);
-	}
+    /**
+     * Constructor for PropertyFileNotFoundException.
+     *
+     * @param message String
+     */
+    public PropertyFileNotFoundException(String message) {
+        super(message);
+    }
 }

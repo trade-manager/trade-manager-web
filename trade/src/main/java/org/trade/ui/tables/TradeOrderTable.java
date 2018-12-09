@@ -35,86 +35,73 @@
  */
 package org.trade.ui.tables;
 
-import java.text.ParseException;
-import java.util.Calendar;
-import java.util.Vector;
-
-import javax.swing.JComboBox;
-import javax.swing.JTable;
-import javax.swing.text.MaskFormatter;
-
 import org.trade.core.util.TradingCalendar;
 import org.trade.core.valuetype.Decode;
 import org.trade.core.valuetype.ValueTypeException;
 import org.trade.dictionary.valuetype.Action;
-import org.trade.dictionary.valuetype.OCAType;
-import org.trade.dictionary.valuetype.OrderStatus;
-import org.trade.dictionary.valuetype.OrderType;
-import org.trade.dictionary.valuetype.OverrideConstraints;
-import org.trade.dictionary.valuetype.TimeInForce;
-import org.trade.dictionary.valuetype.TriggerMethod;
+import org.trade.dictionary.valuetype.*;
 import org.trade.ui.base.Table;
 import org.trade.ui.base.TableModel;
-import org.trade.ui.widget.DateEditor;
-import org.trade.ui.widget.DateField;
-import org.trade.ui.widget.DateRenderer;
-import org.trade.ui.widget.DecodeTableEditor;
-import org.trade.ui.widget.StringEditor;
-import org.trade.ui.widget.StringField;
-import org.trade.ui.widget.StringRenderer;
+import org.trade.ui.widget.*;
+
+import javax.swing.*;
+import javax.swing.text.MaskFormatter;
+import java.text.ParseException;
+import java.util.Calendar;
+import java.util.Vector;
 
 /**
+ *
  */
 public class TradeOrderTable extends Table {
 
-	private static final long serialVersionUID = 1132297931453070904L;
-	private final String DATETIMEFORMAT = "HH:mm:ss";
-	private String OCA_MASK = "AAAAAA";
-	private String OCA_VALIDCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    private static final long serialVersionUID = 1132297931453070904L;
+    private final String DATETIMEFORMAT = "HH:mm:ss";
+    private String OCA_MASK = "AAAAAA";
+    private String OCA_VALIDCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-	/**
-	 * Constructor for TradeOrderTable.
-	 * 
-	 * @param model
-	 *            TableModel
-	 * @throws ValueTypeException
-	 * @throws ParseException
-	 */
-	public TradeOrderTable(TableModel model) throws ValueTypeException, ParseException {
-		super(model);
+    /**
+     * Constructor for TradeOrderTable.
+     *
+     * @param model TableModel
+     * @throws ValueTypeException
+     * @throws ParseException
+     */
+    public TradeOrderTable(TableModel model) throws ValueTypeException, ParseException {
+        super(model);
 
-		DecodeTableEditor actionEditor = new DecodeTableEditor(
-				new JComboBox<Decode>((Vector<Decode>) (new Action()).getCodesDecodes()));
-		DecodeTableEditor oCATypeEditor = new DecodeTableEditor(
-				new JComboBox<Decode>((Vector<Decode>) (new OCAType()).getCodesDecodes()));
-		DecodeTableEditor orderTypeEditor = new DecodeTableEditor(
-				new JComboBox<Decode>((Vector<Decode>) (new OrderType()).getCodesDecodes()));
-		DecodeTableEditor overrideConstraintsEditor = new DecodeTableEditor(
-				new JComboBox<Decode>((Vector<Decode>) (new OverrideConstraints()).getCodesDecodes()));
-		DecodeTableEditor timeInForceEditor = new DecodeTableEditor(
-				new JComboBox<Decode>((Vector<Decode>) (new TimeInForce()).getCodesDecodes()));
-		DecodeTableEditor triggerMethodEditor = new DecodeTableEditor(
-				new JComboBox<Decode>((Vector<Decode>) (new TriggerMethod()).getCodesDecodes()));
-		DecodeTableEditor orderStatusEditor = new DecodeTableEditor(
-				new JComboBox<Decode>((Vector<Decode>) (new OrderStatus()).getCodesDecodes()));
+        DecodeTableEditor actionEditor = new DecodeTableEditor(
+                new JComboBox<Decode>((Vector<Decode>) (new Action()).getCodesDecodes()));
+        DecodeTableEditor oCATypeEditor = new DecodeTableEditor(
+                new JComboBox<Decode>((Vector<Decode>) (new OCAType()).getCodesDecodes()));
+        DecodeTableEditor orderTypeEditor = new DecodeTableEditor(
+                new JComboBox<Decode>((Vector<Decode>) (new OrderType()).getCodesDecodes()));
+        DecodeTableEditor overrideConstraintsEditor = new DecodeTableEditor(
+                new JComboBox<Decode>((Vector<Decode>) (new OverrideConstraints()).getCodesDecodes()));
+        DecodeTableEditor timeInForceEditor = new DecodeTableEditor(
+                new JComboBox<Decode>((Vector<Decode>) (new TimeInForce()).getCodesDecodes()));
+        DecodeTableEditor triggerMethodEditor = new DecodeTableEditor(
+                new JComboBox<Decode>((Vector<Decode>) (new TriggerMethod()).getCodesDecodes()));
+        DecodeTableEditor orderStatusEditor = new DecodeTableEditor(
+                new JComboBox<Decode>((Vector<Decode>) (new OrderStatus()).getCodesDecodes()));
 
-		StringEditor eString = new StringEditor(new StringField(new MaskFormatter(OCA_MASK), OCA_VALIDCHARS, null));
-		StringRenderer rString = new StringRenderer();
-		this.setDefaultRenderer(String.class, rString);
-		this.setDefaultEditor(String.class, eString);
-		this.setDefaultEditor(Action.class, actionEditor);
-		this.setDefaultEditor(OCAType.class, oCATypeEditor);
-		this.setDefaultEditor(OrderType.class, orderTypeEditor);
-		this.setDefaultEditor(OverrideConstraints.class, overrideConstraintsEditor);
-		this.setDefaultEditor(TimeInForce.class, timeInForceEditor);
-		this.setDefaultEditor(TriggerMethod.class, triggerMethodEditor);
-		this.setDefaultEditor(OrderStatus.class, orderStatusEditor);
-		DateRenderer rDate = new DateRenderer(DATETIMEFORMAT);
-		DateEditor eDate = new DateEditor(new DateField(DATETIMEFORMAT),
-				new org.trade.core.valuetype.Date(TradingCalendar.getDateTimeNowMarketTimeZone()), DATETIMEFORMAT,
-				Calendar.DAY_OF_MONTH);
-		this.setDefaultRenderer(org.trade.core.valuetype.Date.class, rDate);
-		this.setDefaultEditor(org.trade.core.valuetype.Date.class, eDate);
-		this.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-	}
+        StringEditor eString = new StringEditor(new StringField(new MaskFormatter(OCA_MASK), OCA_VALIDCHARS, null));
+        StringRenderer rString = new StringRenderer();
+        this.setDefaultRenderer(String.class, rString);
+        this.setDefaultEditor(String.class, eString);
+        this.setDefaultEditor(Action.class, actionEditor);
+        this.setDefaultEditor(OCAType.class, oCATypeEditor);
+        this.setDefaultEditor(OrderType.class, orderTypeEditor);
+        this.setDefaultEditor(OverrideConstraints.class, overrideConstraintsEditor);
+        this.setDefaultEditor(TimeInForce.class, timeInForceEditor);
+        this.setDefaultEditor(TriggerMethod.class, triggerMethodEditor);
+        this.setDefaultEditor(OrderStatus.class, orderStatusEditor);
+        DateRenderer rDate = new DateRenderer(DATETIMEFORMAT);
+        DateEditor eDate = new DateEditor(new DateField(DATETIMEFORMAT),
+                new org.trade.core.valuetype.Date(TradingCalendar.getDateTimeNowMarketTimeZone()), DATETIMEFORMAT,
+                Calendar.DAY_OF_MONTH);
+        this.setDefaultRenderer(org.trade.core.valuetype.Date.class, rDate);
+        this.setDefaultEditor(org.trade.core.valuetype.Date.class, eDate);
+        this.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+    }
 }

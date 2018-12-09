@@ -38,42 +38,42 @@ package org.trade.dictionary.valuetype;
 import org.trade.core.valuetype.Decode;
 
 /**
+ *
  */
 public class SECType extends Decode {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -5381026427696898592L;
-	public static final String DECODE = "SEC_TYPE";
-	public static final String STOCK = "STK";
-	public static final String FUTURE = "FUT";
+    /**
+     *
+     */
+    private static final long serialVersionUID = -5381026427696898592L;
+    public static final String DECODE = "SEC_TYPE";
+    public static final String STOCK = "STK";
+    public static final String FUTURE = "FUT";
 
-	public SECType() {
-		super(DECODE);
-	}
+    public SECType() {
+        super(DECODE);
+    }
 
-	/**
-	 * Method newInstance.
-	 * 
-	 * @param value
-	 *            String
-	 * @return SECType
-	 */
-	public static SECType newInstance(String value) {
-		final SECType returnInstance = new SECType();
-		returnInstance.setValue(value);
-		return returnInstance;
-	}
+    /**
+     * Method newInstance.
+     *
+     * @param value String
+     * @return SECType
+     */
+    public static SECType newInstance(String value) {
+        final SECType returnInstance = new SECType();
+        returnInstance.setValue(value);
+        return returnInstance;
+    }
 
-	/**
-	 * Method newInstance.
-	 * 
-	 * @return SECType
-	 */
-	public static SECType newInstance() {
-		final SECType returnInstance = new SECType();
-		returnInstance.setDefaultCode();
-		return returnInstance;
-	}
+    /**
+     * Method newInstance.
+     *
+     * @return SECType
+     */
+    public static SECType newInstance() {
+        final SECType returnInstance = new SECType();
+        returnInstance.setDefaultCode();
+        return returnInstance;
+    }
 }

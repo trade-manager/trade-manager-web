@@ -40,53 +40,50 @@ import org.trade.core.conversion.JavaTypeTranslator;
 import org.trade.core.conversion.JavaTypeTranslatorException;
 
 /**
+ *
  */
 public class DecimalToObject implements IJavaDynamicTypeConverter {
 
-	public DecimalToObject() {
-	}
+    public DecimalToObject() {
+    }
 
-	/**
-	 * Method convert.
-	 * 
-	 * @param targetType
-	 *            Class<?>
-	 * @param valueToConvert
-	 *            Object
-	 * @return Object
-	 * @throws JavaTypeTranslatorException
-	 * @see IJavaDynamicTypeConverter#convert(Class<?>,
-	 *      Object)
-	 */
-	public Object convert(Class<?> targetType, Object valueToConvert) throws JavaTypeTranslatorException {
-		Object rVal = null;
+    /**
+     * Method convert.
+     *
+     * @param targetType     Class<?>
+     * @param valueToConvert Object
+     * @return Object
+     * @throws JavaTypeTranslatorException
+     * @see IJavaDynamicTypeConverter#convert(Class<?>,
+     * Object)
+     */
+    public Object convert(Class<?> targetType, Object valueToConvert) throws JavaTypeTranslatorException {
+        Object rVal = null;
 
-		if (valueToConvert instanceof Decimal) {
-			rVal = JavaTypeTranslator.convert(targetType, valueToConvert.toString());
-		} else {
-			throw new JavaTypeTranslatorException("Value to convert must be a Decimal");
-		}
+        if (valueToConvert instanceof Decimal) {
+            rVal = JavaTypeTranslator.convert(targetType, valueToConvert.toString());
+        } else {
+            throw new JavaTypeTranslatorException("Value to convert must be a Decimal");
+        }
 
-		return (rVal);
-	}
+        return (rVal);
+    }
 
-	/**
-	 * Method supportsConversion.
-	 * 
-	 * @param targetType
-	 *            Class<?>
-	 * @param valueToConvert
-	 *            Object
-	 * @return boolean
-	 * @see IJavaDynamicTypeConverter#
-	 *      supportsConversion (Class<?>, Object)
-	 */
-	public boolean supportsConversion(Class<?> targetType, Object valueToConvert) {
-		boolean rVal = false;
-		if (valueToConvert instanceof Decimal) {
-			rVal = true;
-		}
+    /**
+     * Method supportsConversion.
+     *
+     * @param targetType     Class<?>
+     * @param valueToConvert Object
+     * @return boolean
+     * @see IJavaDynamicTypeConverter#
+     * supportsConversion (Class<?>, Object)
+     */
+    public boolean supportsConversion(Class<?> targetType, Object valueToConvert) {
+        boolean rVal = false;
+        if (valueToConvert instanceof Decimal) {
+            rVal = true;
+        }
 
-		return (rVal);
-	}
+        return (rVal);
+    }
 }

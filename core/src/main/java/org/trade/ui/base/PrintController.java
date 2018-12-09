@@ -35,67 +35,53 @@
  */
 package org.trade.ui.base;
 
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Frame;
-import java.awt.Graphics;
-import java.awt.PrintJob;
-import java.awt.Toolkit;
+import javax.swing.*;
+import java.awt.*;
 import java.util.Properties;
 
-import javax.swing.JFrame;
-
 /**
- * 
- * @version $Id: PrintController.java,v 1.3 2001/10/22 18:57:58 simon Exp $
  * @author Simon Allen
+ * @version $Id: PrintController.java,v 1.3 2001/10/22 18:57:58 simon Exp $
  */
 public class PrintController {
-	Properties props = new Properties();
+    Properties props = new Properties();
 
-	public PrintController() {
-	}
+    public PrintController() {
+    }
 
-	/**
-	 * printComponent() - constructor
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * @param frame
-	 *            Frame
-	 * @param comp
-	 *            Component
-	 * @param printJobName
-	 *            String
-	 * @exception *
-	 * 				@see
-	 */
-	public void printComponent(Frame frame, Component comp, String printJobName) {
-		if (printJobName == null) {
-			printJobName = comp.getClass().getName();
-		}
+    /**
+     * printComponent() - constructor
+     *
+     * @param frame        Frame
+     * @param comp         Component
+     * @param printJobName String
+     * @throws *
+     * @see
+     */
+    public void printComponent(Frame frame, Component comp, String printJobName) {
+        if (printJobName == null) {
+            printJobName = comp.getClass().getName();
+        }
 
-		if ((frame != null) && (comp != null)) {
-			PrintJob pj = Toolkit.getDefaultToolkit().getPrintJob(frame, printJobName, props);
+        if ((frame != null) && (comp != null)) {
+            PrintJob pj = Toolkit.getDefaultToolkit().getPrintJob(frame, printJobName, props);
 
-			if (pj != null) {
-				Graphics g = pj.getGraphics();
-				Dimension od = comp.getSize();
-				Dimension pd = pj.getPageDimension();
+            if (pj != null) {
+                Graphics g = pj.getGraphics();
+                Dimension od = comp.getSize();
+                Dimension pd = pj.getPageDimension();
 
-				g.translate((pd.width - od.width) / 2, (pd.height - od.height) / 2);
+                g.translate((pd.width - od.width) / 2, (pd.height - od.height) / 2);
 
-				if (comp instanceof JFrame) {
-					comp.printAll(g);
-				} else {
-					comp.print(g);
-				}
+                if (comp instanceof JFrame) {
+                    comp.printAll(g);
+                } else {
+                    comp.print(g);
+                }
 
-				g.dispose();
-				pj.end();
-			}
-		}
-	}
+                g.dispose();
+                pj.end();
+            }
+        }
+    }
 }

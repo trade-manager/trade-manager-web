@@ -35,17 +35,9 @@
  */
 package org.trade.persistent.dao;
 
-import static org.junit.Assert.*;
-
-import java.time.ZonedDateTime;
-
 import org.jfree.data.DataUtilities;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.TestName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,111 +46,116 @@ import org.trade.core.util.TradingCalendar;
 import org.trade.dictionary.valuetype.MarketBar;
 import org.trade.ui.TradeAppLoadConfig;
 
+import java.time.ZonedDateTime;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
+
 /**
  * Some tests for the {@link DataUtilities} class.
- * 
+ *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
 public class TradingdayTest {
 
-	private final static Logger _log = LoggerFactory.getLogger(TradingdayTest.class);
-	@Rule
-	public TestName name = new TestName();
+    private final static Logger _log = LoggerFactory.getLogger(TradingdayTest.class);
+    @Rule
+    public TestName name = new TestName();
 
-	/**
-	 * Method setUpBeforeClass.
-	 * 
-	 * @throws java.lang.Exception
-	 */
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-	}
+    /**
+     * Method setUpBeforeClass.
+     *
+     * @throws java.lang.Exception
+     */
+    @BeforeClass
+    public static void setUpBeforeClass() throws Exception {
+    }
 
-	/**
-	 * Method setUp.
-	 * 
-	 * @throws java.lang.Exception
-	 */
-	@Before
-	public void setUp() throws Exception {
-		TradeAppLoadConfig.loadAppProperties();
-	}
+    /**
+     * Method setUp.
+     *
+     * @throws java.lang.Exception
+     */
+    @Before
+    public void setUp() throws Exception {
+        TradeAppLoadConfig.loadAppProperties();
+    }
 
-	/**
-	 * Method tearDown.
-	 * 
-	 * @throws java.lang.Exception
-	 */
-	@After
-	public void tearDown() throws Exception {
-	}
+    /**
+     * Method tearDown.
+     *
+     * @throws java.lang.Exception
+     */
+    @After
+    public void tearDown() throws Exception {
+    }
 
-	/**
-	 * Method tearDownAfterClass.
-	 * 
-	 * @throws java.lang.Exception
-	 */
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-	}
+    /**
+     * Method tearDownAfterClass.
+     *
+     * @throws java.lang.Exception
+     */
+    @AfterClass
+    public static void tearDownAfterClass() throws Exception {
+    }
 
-	@Test
-	public void testAddTradingday() {
+    @Test
+    public void testAddTradingday() {
 
-		// Create new instance of Strategy and set
-		// values in it by reading them from form object
+        // Create new instance of Strategy and set
+        // values in it by reading them from form object
 
-		try {
-			_log.debug("Adding Tradingday");
+        try {
+            _log.debug("Adding Tradingday");
 
-			TradingdayHome tradingdayHome = new TradingdayHome();
-			AspectHome aspectHome = new AspectHome();
-			ZonedDateTime open = TradingCalendar.getTradingDayStart(
-					TradingCalendar.getPrevTradingDay(TradingCalendar.getDateTimeNowMarketTimeZone()));
-			Tradingday transientInstance = tradingdayHome.findByOpenCloseDate(open,
-					TradingCalendar.getTradingDayEnd(open));
-			if (null == transientInstance) {
-				transientInstance = Tradingday.newInstance(open);
-			}
-			tradingdayHome.persist(transientInstance);
-			_log.info("Tradingday added Id = " + transientInstance.getId());
-			assertNotNull(transientInstance.getId());
-			aspectHome.remove(transientInstance);
-		} catch (Exception | AssertionError ex) {
-			String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
-			_log.error(msg);
-			fail(msg);
-		}
-	}
+            TradingdayHome tradingdayHome = new TradingdayHome();
+            AspectHome aspectHome = new AspectHome();
+            ZonedDateTime open = TradingCalendar.getTradingDayStart(
+                    TradingCalendar.getPrevTradingDay(TradingCalendar.getDateTimeNowMarketTimeZone()));
+            Tradingday transientInstance = tradingdayHome.findByOpenCloseDate(open,
+                    TradingCalendar.getTradingDayEnd(open));
+            if (null == transientInstance) {
+                transientInstance = Tradingday.newInstance(open);
+            }
+            tradingdayHome.persist(transientInstance);
+            _log.info("Tradingday added Id = " + transientInstance.getId());
+            assertNotNull(transientInstance.getId());
+            aspectHome.remove(transientInstance);
+        } catch (Exception | AssertionError ex) {
+            String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
+            _log.error(msg);
+            fail(msg);
+        }
+    }
 
-	@Test
-	public void testUpdateTradingday() {
+    @Test
+    public void testUpdateTradingday() {
 
-		// Create new instance of Strategy and set
-		// values in it by reading them from form object
+        // Create new instance of Strategy and set
+        // values in it by reading them from form object
 
-		try {
-			_log.debug("Updating Tradingday");
+        try {
+            _log.debug("Updating Tradingday");
 
-			TradingdayHome tradingdayHome = new TradingdayHome();
-			AspectHome aspectHome = new AspectHome();
-			ZonedDateTime open = TradingCalendar.getTradingDayStart(
-					TradingCalendar.getPrevTradingDay(TradingCalendar.getDateTimeNowMarketTimeZone()));
-			Tradingday transientInstance = tradingdayHome.findByOpenCloseDate(open,
-					TradingCalendar.getTradingDayEnd(open));
-			if (null == transientInstance) {
-				transientInstance = Tradingday.newInstance(open);
-			}
-			transientInstance.setMarketBar(MarketBar.newInstance("+WRB").getCode());
-			tradingdayHome.persist(transientInstance);
-			_log.info("Tradingday Update Id = " + transientInstance.getId());
-			assertNotNull(transientInstance.getId());
-			aspectHome.remove(transientInstance);
-		} catch (Exception | AssertionError ex) {
-			String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
-			_log.error(msg);
-			fail(msg);
-		}
-	}
+            TradingdayHome tradingdayHome = new TradingdayHome();
+            AspectHome aspectHome = new AspectHome();
+            ZonedDateTime open = TradingCalendar.getTradingDayStart(
+                    TradingCalendar.getPrevTradingDay(TradingCalendar.getDateTimeNowMarketTimeZone()));
+            Tradingday transientInstance = tradingdayHome.findByOpenCloseDate(open,
+                    TradingCalendar.getTradingDayEnd(open));
+            if (null == transientInstance) {
+                transientInstance = Tradingday.newInstance(open);
+            }
+            transientInstance.setMarketBar(MarketBar.newInstance("+WRB").getCode());
+            tradingdayHome.persist(transientInstance);
+            _log.info("Tradingday Update Id = " + transientInstance.getId());
+            assertNotNull(transientInstance.getId());
+            aspectHome.remove(transientInstance);
+        } catch (Exception | AssertionError ex) {
+            String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
+            _log.error(msg);
+            fail(msg);
+        }
+    }
 }

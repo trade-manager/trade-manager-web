@@ -38,36 +38,32 @@ package org.trade.dictionary.valuetype;
 import org.trade.core.valuetype.Decode;
 
 /**
+ *
  */
 public class OverrideConstraints extends Decode {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -5381026427696898592L;
-	public static final String DECODE = "OVERRIDE_CONSTRAINTS";
-	public static final int YES = 1;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -5381026427696898592L;
+    public static final String DECODE = "OVERRIDE_CONSTRAINTS";
+    public static final int YES = 1;
 
-	public OverrideConstraints() {
-		super(DECODE);
-	}
+    public OverrideConstraints() {
+        super(DECODE);
+    }
 
-	/**
-	 * Create a new instance of this object
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * @return OverrideConstraints
-	 * @exception *
-	 * 				@see
-	 */
+    /**
+     * Create a new instance of this object
+     *
+     * @return OverrideConstraints
+     * @throws *
+     * @see
+     */
 
-	public static OverrideConstraints newInstance() {
-		final OverrideConstraints returnInstance = new OverrideConstraints();
-		returnInstance.setDefaultCode();
-		return returnInstance;
-	}
+    public static OverrideConstraints newInstance() {
+        final OverrideConstraints returnInstance = new OverrideConstraints();
+        returnInstance.setDefaultCode();
+        return returnInstance;
+    }
 }

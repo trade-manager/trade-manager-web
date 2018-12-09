@@ -35,25 +35,26 @@
  */
 package org.trade.ui;
 
-import java.io.IOException;
-
 import org.trade.core.properties.ConfigProperties;
 
+import java.io.IOException;
+
 /**
+ *
  */
 public class AppLoadConfig {
-	private final static String PROPERTIES_PROPERTY_FILE = "core.properties";
-	private final static AppLoadConfig m_AppConfigLoad = new AppLoadConfig();
+    private final static String PROPERTIES_PROPERTY_FILE = "core.properties";
+    private final static AppLoadConfig m_AppConfigLoad = new AppLoadConfig();
 
-	AppLoadConfig() {
-	}
+    AppLoadConfig() {
+    }
 
-	/**
-	 * Method loadAppProperties.
-	 * 
-	 * @throws IOException
-	 */
-	public static void loadAppProperties() throws IOException {
-		ConfigProperties.loadDeploymentProperties(m_AppConfigLoad, PROPERTIES_PROPERTY_FILE);
-	}
+    /**
+     * Method loadAppProperties.
+     *
+     * @throws IOException
+     */
+    public static void loadAppProperties() throws IOException {
+        ConfigProperties.loadDeploymentProperties(m_AppConfigLoad, PROPERTIES_PROPERTY_FILE);
+    }
 }

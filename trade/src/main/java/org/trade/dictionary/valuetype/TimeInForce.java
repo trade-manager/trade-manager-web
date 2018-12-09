@@ -38,42 +38,42 @@ package org.trade.dictionary.valuetype;
 import org.trade.core.valuetype.Decode;
 
 /**
+ *
  */
 public class TimeInForce extends Decode {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -5381026427696898592L;
-	public static final String DECODE = "TIME_IN_FORCE";
-	public static final String DAY = "DAY";
-	public static final String GTC = "GTC";
+    /**
+     *
+     */
+    private static final long serialVersionUID = -5381026427696898592L;
+    public static final String DECODE = "TIME_IN_FORCE";
+    public static final String DAY = "DAY";
+    public static final String GTC = "GTC";
 
-	public TimeInForce() {
-		super(DECODE);
-	}
+    public TimeInForce() {
+        super(DECODE);
+    }
 
-	/**
-	 * Method newInstance.
-	 * 
-	 * @param value
-	 *            String
-	 * @return TimeInForce
-	 */
-	public static TimeInForce newInstance(String value) {
-		final TimeInForce returnInstance = new TimeInForce();
-		returnInstance.setValue(value);
-		return returnInstance;
-	}
+    /**
+     * Method newInstance.
+     *
+     * @param value String
+     * @return TimeInForce
+     */
+    public static TimeInForce newInstance(String value) {
+        final TimeInForce returnInstance = new TimeInForce();
+        returnInstance.setValue(value);
+        return returnInstance;
+    }
 
-	/**
-	 * Method newInstance.
-	 * 
-	 * @return TimeInForce
-	 */
-	public static TimeInForce newInstance() {
-		final TimeInForce returnInstance = new TimeInForce();
-		returnInstance.setDefaultCode();
-		return returnInstance;
-	}
+    /**
+     * Method newInstance.
+     *
+     * @return TimeInForce
+     */
+    public static TimeInForce newInstance() {
+        final TimeInForce returnInstance = new TimeInForce();
+        returnInstance.setDefaultCode();
+        return returnInstance;
+    }
 }

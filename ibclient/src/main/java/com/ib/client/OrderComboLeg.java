@@ -7,9 +7,14 @@ package com.ib.client;
 public class OrderComboLeg {
     private double m_price; // price per leg
 
-    public double price()       { return m_price; }
-    public void price(double v) { m_price = v; }
-    
+    public double price() {
+        return m_price;
+    }
+
+    public void price(double v) {
+        m_price = v;
+    }
+
     public OrderComboLeg() {
         m_price = Double.MAX_VALUE;
     }
@@ -20,17 +25,16 @@ public class OrderComboLeg {
 
     @Override
     public boolean equals(Object p_other) {
-        if ( this == p_other ) {
+        if (this == p_other) {
             return true;
-        }
-        else if ( p_other == null ) {
+        } else if (p_other == null) {
             return false;
         }
 
-        OrderComboLeg l_theOther = (OrderComboLeg)p_other;
+        OrderComboLeg l_theOther = (OrderComboLeg) p_other;
 
         if (m_price != l_theOther.m_price) {
-        	return false;
+            return false;
         }
         return true;
     }

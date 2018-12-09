@@ -6,38 +6,43 @@ package com.ib.controller;
 import com.ib.client.Types;
 
 public enum MarketValueTag {
-	NetLiquidationByCurrency,
-	CashBalance,
-	TotalCashBalance,
-	AccruedCash,
-	StockMarketValue,
-	OptionMarketValue,
-	FutureOptionValue,
-	FuturesPNL,
-	UnrealizedPnL,
-	RealizedPnL,
-	ExchangeRate,
-	FundValue,
-	NetDividend,
-	MutualFundValue,
-	MoneyMarketFundValue,
-	CorporateBondValue,
-	TBondValue,
-	TBillValue,
-	WarrantValue,
-	FxCashBalance;
+    NetLiquidationByCurrency,
+    CashBalance,
+    TotalCashBalance,
+    AccruedCash,
+    StockMarketValue,
+    OptionMarketValue,
+    FutureOptionValue,
+    FuturesPNL,
+    UnrealizedPnL,
+    RealizedPnL,
+    ExchangeRate,
+    FundValue,
+    NetDividend,
+    MutualFundValue,
+    MoneyMarketFundValue,
+    CorporateBondValue,
+    TBondValue,
+    TBillValue,
+    WarrantValue,
+    FxCashBalance;
 
-	public static MarketValueTag get( int i) {
-		return Types.getEnum( i, values() );
-	}
+    public static MarketValueTag get(int i) {
+        return Types.getEnum(i, values());
+    }
 
-	@Override public String toString() {
-		switch( this) {
-			case NetLiquidationByCurrency: return "Net Liq";
-			case StockMarketValue: return "Stocks";
-			case OptionMarketValue: return "Options";
-			case FutureOptionValue: return "Futures";
-		}
-		return super.toString().replaceAll("Value", "");
-	}
+    @Override
+    public String toString() {
+        switch (this) {
+            case NetLiquidationByCurrency:
+                return "Net Liq";
+            case StockMarketValue:
+                return "Stocks";
+            case OptionMarketValue:
+                return "Options";
+            case FutureOptionValue:
+                return "Futures";
+        }
+        return super.toString().replaceAll("Value", "");
+    }
 }

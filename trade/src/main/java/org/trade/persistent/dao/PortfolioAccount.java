@@ -35,149 +35,136 @@
  */
 package org.trade.persistent.dao;
 
-import static javax.persistence.GenerationType.IDENTITY;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Version;
-
 import org.trade.core.dao.Aspect;
 
+import javax.persistence.*;
+
+import static javax.persistence.GenerationType.IDENTITY;
+
 /**
+ *
  */
 @Entity
 @Table(name = "portfolioaccount")
 public class PortfolioAccount extends Aspect implements java.io.Serializable {
 
-	private static final long serialVersionUID = 2273276207080568947L;
+    private static final long serialVersionUID = 2273276207080568947L;
 
-	private Portfolio portfolio;
-	private Account account;
+    private Portfolio portfolio;
+    private Account account;
 
-	public PortfolioAccount() {
-	}
+    public PortfolioAccount() {
+    }
 
-	public PortfolioAccount(Portfolio portfolio, Account account) {
-		this.portfolio = portfolio;
-		this.account = account;
-	}
+    public PortfolioAccount(Portfolio portfolio, Account account) {
+        this.portfolio = portfolio;
+        this.account = account;
+    }
 
-	/**
-	 * Method getId.
-	 * 
-	 * @return Integer
-	 */
-	@Id
-	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "id", unique = true, nullable = false)
-	public Integer getId() {
-		return this.id;
-	}
+    /**
+     * Method getId.
+     *
+     * @return Integer
+     */
+    @Id
+    @GeneratedValue(strategy = IDENTITY)
+    @Column(name = "id", unique = true, nullable = false)
+    public Integer getId() {
+        return this.id;
+    }
 
-	/**
-	 * Method setId.
-	 * 
-	 * @param id
-	 *            Integer
-	 */
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    /**
+     * Method setId.
+     *
+     * @param id Integer
+     */
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-	/**
-	 * Method getPortfolio.
-	 * 
-	 * @return Portfolio
-	 */
-	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH })
-	@JoinColumn(name = "id_portfolio", nullable = false)
-	public Portfolio getPortfolio() {
-		return this.portfolio;
-	}
+    /**
+     * Method getPortfolio.
+     *
+     * @return Portfolio
+     */
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @JoinColumn(name = "id_portfolio", nullable = false)
+    public Portfolio getPortfolio() {
+        return this.portfolio;
+    }
 
-	/**
-	 * Method setPortfolio.
-	 * 
-	 * @param portfolio
-	 *            Portfolio
-	 */
-	public void setPortfolio(Portfolio portfolio) {
-		this.portfolio = portfolio;
-	}
+    /**
+     * Method setPortfolio.
+     *
+     * @param portfolio Portfolio
+     */
+    public void setPortfolio(Portfolio portfolio) {
+        this.portfolio = portfolio;
+    }
 
-	/**
-	 * Method getAccount.
-	 * 
-	 * @return Account
-	 */
-	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH })
-	@JoinColumn(name = "id_account", nullable = false)
-	public Account getAccount() {
-		return this.account;
-	}
+    /**
+     * Method getAccount.
+     *
+     * @return Account
+     */
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @JoinColumn(name = "id_account", nullable = false)
+    public Account getAccount() {
+        return this.account;
+    }
 
-	/**
-	 * Method setAccount.
-	 * 
-	 * @param account
-	 *            Account
-	 */
-	public void setAccount(Account account) {
-		this.account = account;
-	}
+    /**
+     * Method setAccount.
+     *
+     * @param account Account
+     */
+    public void setAccount(Account account) {
+        this.account = account;
+    }
 
-	/**
-	 * Method getVersion.
-	 * 
-	 * @return Integer
-	 */
-	@Version
-	@Column(name = "version")
-	public Integer getVersion() {
-		return this.version;
-	}
+    /**
+     * Method getVersion.
+     *
+     * @return Integer
+     */
+    @Version
+    @Column(name = "version")
+    public Integer getVersion() {
+        return this.version;
+    }
 
-	/**
-	 * Method setVersion.
-	 * 
-	 * @param version
-	 *            Integer
-	 */
-	public void setVersion(Integer version) {
-		this.version = version;
-	}
+    /**
+     * Method setVersion.
+     *
+     * @param version Integer
+     */
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
 
-	/**
-	 * Method equals.
-	 * 
-	 * @param objectToCompare
-	 *            Object
-	 * @return boolean
-	 */
-	public boolean equals(Object objectToCompare) {
+    /**
+     * Method equals.
+     *
+     * @param objectToCompare Object
+     * @return boolean
+     */
+    public boolean equals(Object objectToCompare) {
 
-		if (super.equals(objectToCompare))
-			return true;
+        if (super.equals(objectToCompare))
+            return true;
 
-		if (!(objectToCompare instanceof PortfolioAccount))
-			return false;
+        if (!(objectToCompare instanceof PortfolioAccount))
+            return false;
 
-		PortfolioAccount theOtherOrder = (PortfolioAccount) objectToCompare;
+        PortfolioAccount theOtherOrder = (PortfolioAccount) objectToCompare;
 
-		if (!theOtherOrder.getAccount().getAccountNumber().equals((this.getAccount().getAccountNumber()))) {
-			return false;
-		}
+        if (!theOtherOrder.getAccount().getAccountNumber().equals((this.getAccount().getAccountNumber()))) {
+            return false;
+        }
 
-		if (!theOtherOrder.getPortfolio().getName().equals((this.getPortfolio().getName()))) {
-			return false;
-		}
-		return true;
-	}
+        if (!theOtherOrder.getPortfolio().getName().equals((this.getPortfolio().getName()))) {
+            return false;
+        }
+        return true;
+    }
 }

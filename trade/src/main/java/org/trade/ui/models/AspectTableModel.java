@@ -39,34 +39,34 @@ import org.trade.core.dao.Aspects;
 import org.trade.ui.base.TableModel;
 
 /**
+ *
  */
 public abstract class AspectTableModel extends TableModel {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 3087514589731145479L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 3087514589731145479L;
 
-	public AspectTableModel() {
-	}
+    public AspectTableModel() {
+    }
 
-	public AspectTableModel(String[] columnHeaderToolTip) {
-		super(columnHeaderToolTip);
-	}
+    public AspectTableModel(String[] columnHeaderToolTip) {
+        super(columnHeaderToolTip);
+    }
 
-	/**
-	 * Method getData.
-	 * 
-	 * @return Aspects
-	 */
-	public abstract Aspects getData();
+    /**
+     * Method getData.
+     *
+     * @return Aspects
+     */
+    public abstract Aspects getData();
 
-	/**
-	 * Method setData.
-	 * 
-	 * @param data
-	 *            Aspects
-	 * @throws Exception
-	 */
-	public abstract void setData(Aspects data) throws Exception;
+    /**
+     * Method setData.
+     *
+     * @param data Aspects
+     * @throws Exception
+     */
+    public abstract void setData(Aspects data) throws Exception;
 
 }

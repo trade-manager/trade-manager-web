@@ -36,80 +36,79 @@
 package org.trade.core.valuetype;
 
 /**
+ *
  */
 public class YesNo extends BaseDecode {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -1288975993214301679L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -1288975993214301679L;
 
-	public static final String NO = "false";
-	public static final String YES = "true";
-	public static final String DECODE = "YES_NO";
+    public static final String NO = "false";
+    public static final String YES = "true";
+    public static final String DECODE = "YES_NO";
 
-	public YesNo() {
-		super(DECODE);
-	}
+    public YesNo() {
+        super(DECODE);
+    }
 
-	/**
-	 * isYes
-	 * 
-	 * @return boolean
-	 * @exception *
-	 * 				@see
-	 */
+    /**
+     * isYes
+     *
+     * @return boolean
+     * @throws *
+     * @see
+     */
 
-	public boolean isYes() {
-		return YES.equals(getCode());
-	}
+    public boolean isYes() {
+        return YES.equals(getCode());
+    }
 
-	/**
-	 * isNo
-	 * 
-	 * @return boolean
-	 * @exception *
-	 * 				@see
-	 */
+    /**
+     * isNo
+     *
+     * @return boolean
+     * @throws *
+     * @see
+     */
 
-	public boolean isNo() {
-		return NO.equals(getCode());
-	}
+    public boolean isNo() {
+        return NO.equals(getCode());
+    }
 
-	/**
-	 * Create a new instance of this object
-	 * 
-	 * @param code
-	 *            String
-	 * @return YesNo
-	 * @exception *
-	 * 				@see
-	 */
+    /**
+     * Create a new instance of this object
+     *
+     * @param code String
+     * @return YesNo
+     * @throws *
+     * @see
+     */
 
-	public static YesNo newInstance(String code) {
-		final YesNo returnInstance = new YesNo();
-		returnInstance.setValue(code);
-		return returnInstance;
-	}
+    public static YesNo newInstance(String code) {
+        final YesNo returnInstance = new YesNo();
+        returnInstance.setValue(code);
+        return returnInstance;
+    }
 
-	/**
-	 * Method newInstance.
-	 * 
-	 * @param code
-	 *            Boolean
-	 * @return YesNo
-	 */
-	public static YesNo newInstance(Boolean code) {
-		final YesNo returnInstance = new YesNo();
-		returnInstance.setValue(code.toString());
-		return returnInstance;
-	}
+    /**
+     * Method newInstance.
+     *
+     * @param code Boolean
+     * @return YesNo
+     */
+    public static YesNo newInstance(Boolean code) {
+        final YesNo returnInstance = new YesNo();
+        returnInstance.setValue(code.toString());
+        return returnInstance;
+    }
 
-	/**
-	 * Method convertToUppercase.
-	 * 
-	 * @return boolean
-	 */
-	protected boolean convertToUppercase() {
-		return false;
-	}
+    /**
+     * Method convertToUppercase.
+     *
+     * @return boolean
+     */
+    protected boolean convertToUppercase() {
+        return false;
+    }
 }

@@ -35,290 +35,265 @@
  */
 package org.trade.persistent.dao;
 
-import static javax.persistence.GenerationType.IDENTITY;
-
-import java.math.BigDecimal;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Version;
-import javax.validation.constraints.Min;
-
 import org.trade.core.dao.Aspect;
 
+import javax.persistence.*;
+import javax.validation.constraints.Min;
+import java.math.BigDecimal;
+
+import static javax.persistence.GenerationType.IDENTITY;
+
 /**
+ *
  */
 @Entity
 @Table(name = "entrylimit")
 public class Entrylimit extends Aspect implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -8612117968275040016L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -8612117968275040016L;
 
-	@Min(0)
-	private BigDecimal startPrice;
-	@Min(0)
-	private BigDecimal endPrice;
-	private BigDecimal limitAmount;
-	private BigDecimal percentOfPrice;
-	private BigDecimal percentOfMargin;
-	private BigDecimal priceRound;
-	private Integer shareRound;
-	private BigDecimal pivotRange;
+    @Min(0)
+    private BigDecimal startPrice;
+    @Min(0)
+    private BigDecimal endPrice;
+    private BigDecimal limitAmount;
+    private BigDecimal percentOfPrice;
+    private BigDecimal percentOfMargin;
+    private BigDecimal priceRound;
+    private Integer shareRound;
+    private BigDecimal pivotRange;
 
-	public Entrylimit() {
-	}
+    public Entrylimit() {
+    }
 
-	/**
-	 * Constructor for Entrylimit.
-	 * 
-	 * @param startPrice
-	 *            BigDecimal
-	 * @param endPrice
-	 *            BigDecimal
-	 * @param limitAmount
-	 *            BigDecimal
-	 */
-	public Entrylimit(BigDecimal startPrice, BigDecimal endPrice, BigDecimal limitAmount) {
-		this.startPrice = startPrice;
-		this.endPrice = endPrice;
-		this.limitAmount = limitAmount;
-	}
+    /**
+     * Constructor for Entrylimit.
+     *
+     * @param startPrice  BigDecimal
+     * @param endPrice    BigDecimal
+     * @param limitAmount BigDecimal
+     */
+    public Entrylimit(BigDecimal startPrice, BigDecimal endPrice, BigDecimal limitAmount) {
+        this.startPrice = startPrice;
+        this.endPrice = endPrice;
+        this.limitAmount = limitAmount;
+    }
 
-	/**
-	 * Constructor for Entrylimit.
-	 * 
-	 * @param startPrice
-	 *            BigDecimal
-	 * @param endPrice
-	 *            BigDecimal
-	 * @param limitAmount
-	 *            BigDecimal
-	 * @param percent
-	 *            BigDecimal
-	 * @param priceRound
-	 *            BigDecimal
-	 * @param shareRound
-	 *            Integer
-	 * @param pivotRange
-	 *            BigDecimal
-	 */
-	public Entrylimit(BigDecimal startPrice, BigDecimal endPrice, BigDecimal limitAmount, BigDecimal percentOfPrice,
-			BigDecimal priceRound, BigDecimal percentOfMargin, Integer shareRound, BigDecimal pivotRange) {
-		this.startPrice = startPrice;
-		this.endPrice = endPrice;
-		this.limitAmount = limitAmount;
-		this.percentOfPrice = percentOfPrice;
-		this.percentOfMargin = percentOfMargin;
-		this.pivotRange = pivotRange;
-		this.priceRound = priceRound;
-	}
+    /**
+     * Constructor for Entrylimit.
+     *
+     * @param startPrice  BigDecimal
+     * @param endPrice    BigDecimal
+     * @param limitAmount BigDecimal
+     * @param percent     BigDecimal
+     * @param priceRound  BigDecimal
+     * @param shareRound  Integer
+     * @param pivotRange  BigDecimal
+     */
+    public Entrylimit(BigDecimal startPrice, BigDecimal endPrice, BigDecimal limitAmount, BigDecimal percentOfPrice,
+                      BigDecimal priceRound, BigDecimal percentOfMargin, Integer shareRound, BigDecimal pivotRange) {
+        this.startPrice = startPrice;
+        this.endPrice = endPrice;
+        this.limitAmount = limitAmount;
+        this.percentOfPrice = percentOfPrice;
+        this.percentOfMargin = percentOfMargin;
+        this.pivotRange = pivotRange;
+        this.priceRound = priceRound;
+    }
 
-	/**
-	 * Method getId.
-	 * 
-	 * @return Integer
-	 */
-	@Id
-	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "id", unique = true, nullable = false)
-	public Integer getId() {
-		return this.id;
-	}
+    /**
+     * Method getId.
+     *
+     * @return Integer
+     */
+    @Id
+    @GeneratedValue(strategy = IDENTITY)
+    @Column(name = "id", unique = true, nullable = false)
+    public Integer getId() {
+        return this.id;
+    }
 
-	/**
-	 * Method setId.
-	 * 
-	 * @param id
-	 *            Integer
-	 */
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    /**
+     * Method setId.
+     *
+     * @param id Integer
+     */
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-	/**
-	 * Method getStartPrice.
-	 * 
-	 * @return BigDecimal
-	 */
-	@Column(name = "start_price", nullable = false, precision = 10)
-	public BigDecimal getStartPrice() {
-		return this.startPrice;
-	}
+    /**
+     * Method getStartPrice.
+     *
+     * @return BigDecimal
+     */
+    @Column(name = "start_price", nullable = false, precision = 10)
+    public BigDecimal getStartPrice() {
+        return this.startPrice;
+    }
 
-	/**
-	 * Method setStartPrice.
-	 * 
-	 * @param startPrice
-	 *            BigDecimal
-	 */
-	public void setStartPrice(BigDecimal startPrice) {
-		this.startPrice = startPrice;
-	}
+    /**
+     * Method setStartPrice.
+     *
+     * @param startPrice BigDecimal
+     */
+    public void setStartPrice(BigDecimal startPrice) {
+        this.startPrice = startPrice;
+    }
 
-	/**
-	 * Method getEndPrice.
-	 * 
-	 * @return BigDecimal
-	 */
-	@Column(name = "end_price", nullable = false, precision = 10)
-	public BigDecimal getEndPrice() {
-		return this.endPrice;
-	}
+    /**
+     * Method getEndPrice.
+     *
+     * @return BigDecimal
+     */
+    @Column(name = "end_price", nullable = false, precision = 10)
+    public BigDecimal getEndPrice() {
+        return this.endPrice;
+    }
 
-	/**
-	 * Method setEndPrice.
-	 * 
-	 * @param endPrice
-	 *            BigDecimal
-	 */
-	public void setEndPrice(BigDecimal endPrice) {
-		this.endPrice = endPrice;
-	}
+    /**
+     * Method setEndPrice.
+     *
+     * @param endPrice BigDecimal
+     */
+    public void setEndPrice(BigDecimal endPrice) {
+        this.endPrice = endPrice;
+    }
 
-	/**
-	 * Method getLimitAmount.
-	 * 
-	 * @return BigDecimal
-	 */
-	@Column(name = "limit_amount", nullable = false, precision = 10)
-	public BigDecimal getLimitAmount() {
-		return this.limitAmount;
-	}
+    /**
+     * Method getLimitAmount.
+     *
+     * @return BigDecimal
+     */
+    @Column(name = "limit_amount", nullable = false, precision = 10)
+    public BigDecimal getLimitAmount() {
+        return this.limitAmount;
+    }
 
-	/**
-	 * Method setLimitAmount.
-	 * 
-	 * @param limitAmount
-	 *            BigDecimal
-	 */
-	public void setLimitAmount(BigDecimal limitAmount) {
-		this.limitAmount = limitAmount;
-	}
+    /**
+     * Method setLimitAmount.
+     *
+     * @param limitAmount BigDecimal
+     */
+    public void setLimitAmount(BigDecimal limitAmount) {
+        this.limitAmount = limitAmount;
+    }
 
-	/**
-	 * Method getPercentOfPrice.
-	 * 
-	 * @return BigDecimal
-	 */
-	@Column(name = "percent_of_price", precision = 10)
-	public BigDecimal getPercentOfPrice() {
-		return this.percentOfPrice;
-	}
+    /**
+     * Method getPercentOfPrice.
+     *
+     * @return BigDecimal
+     */
+    @Column(name = "percent_of_price", precision = 10)
+    public BigDecimal getPercentOfPrice() {
+        return this.percentOfPrice;
+    }
 
-	/**
-	 * Method setPercentOfPrice.
-	 * 
-	 * @param percentOfPrice
-	 *            BigDecimal
-	 */
-	public void setPercentOfPrice(BigDecimal percentOfPrice) {
-		this.percentOfPrice = percentOfPrice;
-	}
+    /**
+     * Method setPercentOfPrice.
+     *
+     * @param percentOfPrice BigDecimal
+     */
+    public void setPercentOfPrice(BigDecimal percentOfPrice) {
+        this.percentOfPrice = percentOfPrice;
+    }
 
-	/**
-	 * Method getPivotRange.
-	 * 
-	 * @return BigDecimal
-	 */
-	@Column(name = "pivot_range", precision = 10)
-	public BigDecimal getPivotRange() {
-		return this.pivotRange;
-	}
+    /**
+     * Method getPivotRange.
+     *
+     * @return BigDecimal
+     */
+    @Column(name = "pivot_range", precision = 10)
+    public BigDecimal getPivotRange() {
+        return this.pivotRange;
+    }
 
-	/**
-	 * Method setPivotRange.
-	 * 
-	 * @param pivotRange
-	 *            BigDecimal
-	 */
-	public void setPivotRange(BigDecimal pivotRange) {
-		this.pivotRange = pivotRange;
-	}
+    /**
+     * Method setPivotRange.
+     *
+     * @param pivotRange BigDecimal
+     */
+    public void setPivotRange(BigDecimal pivotRange) {
+        this.pivotRange = pivotRange;
+    }
 
-	/**
-	 * Method getPercentOfMargin.
-	 * 
-	 * @return BigDecimal
-	 */
-	@Column(name = "percent_of_margin", precision = 10)
-	public BigDecimal getPercentOfMargin() {
-		return this.percentOfMargin;
-	}
+    /**
+     * Method getPercentOfMargin.
+     *
+     * @return BigDecimal
+     */
+    @Column(name = "percent_of_margin", precision = 10)
+    public BigDecimal getPercentOfMargin() {
+        return this.percentOfMargin;
+    }
 
-	/**
-	 * Method setPercentOfMargin.
-	 * 
-	 * @param percentOfMargin
-	 *            BigDecimal
-	 */
-	public void setPercentOfMargin(BigDecimal percentOfMargin) {
-		this.percentOfMargin = percentOfMargin;
-	}
+    /**
+     * Method setPercentOfMargin.
+     *
+     * @param percentOfMargin BigDecimal
+     */
+    public void setPercentOfMargin(BigDecimal percentOfMargin) {
+        this.percentOfMargin = percentOfMargin;
+    }
 
-	/**
-	 * Method getPriceRound.
-	 * 
-	 * @return BigDecimal
-	 */
-	@Column(name = "price_round", precision = 10)
-	public BigDecimal getPriceRound() {
-		return this.priceRound;
-	}
+    /**
+     * Method getPriceRound.
+     *
+     * @return BigDecimal
+     */
+    @Column(name = "price_round", precision = 10)
+    public BigDecimal getPriceRound() {
+        return this.priceRound;
+    }
 
-	/**
-	 * Method setPriceRound.
-	 * 
-	 * @param priceRound
-	 *            BigDecimal
-	 */
-	public void setPriceRound(BigDecimal priceRound) {
-		this.priceRound = priceRound;
-	}
+    /**
+     * Method setPriceRound.
+     *
+     * @param priceRound BigDecimal
+     */
+    public void setPriceRound(BigDecimal priceRound) {
+        this.priceRound = priceRound;
+    }
 
-	/**
-	 * Method getShareRound.
-	 * 
-	 * @return Integer
-	 */
-	@Column(name = "share_round")
-	public Integer getShareRound() {
-		return this.shareRound;
-	}
+    /**
+     * Method getShareRound.
+     *
+     * @return Integer
+     */
+    @Column(name = "share_round")
+    public Integer getShareRound() {
+        return this.shareRound;
+    }
 
-	/**
-	 * Method setShareRound.
-	 * 
-	 * @param shareRound
-	 *            Integer
-	 */
-	public void setShareRound(Integer shareRound) {
-		this.shareRound = shareRound;
-	}
+    /**
+     * Method setShareRound.
+     *
+     * @param shareRound Integer
+     */
+    public void setShareRound(Integer shareRound) {
+        this.shareRound = shareRound;
+    }
 
-	/**
-	 * Method getVersion.
-	 * 
-	 * @return Integer
-	 */
-	@Version
-	@Column(name = "version")
-	public Integer getVersion() {
-		return this.version;
-	}
+    /**
+     * Method getVersion.
+     *
+     * @return Integer
+     */
+    @Version
+    @Column(name = "version")
+    public Integer getVersion() {
+        return this.version;
+    }
 
-	/**
-	 * Method setVersion.
-	 * 
-	 * @param version
-	 *            Integer
-	 */
-	public void setVersion(Integer version) {
-		this.version = version;
-	}
+    /**
+     * Method setVersion.
+     *
+     * @param version Integer
+     */
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
 }

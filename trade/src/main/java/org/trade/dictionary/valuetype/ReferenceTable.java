@@ -38,48 +38,48 @@ package org.trade.dictionary.valuetype;
 import org.trade.core.valuetype.Decode;
 
 /**
+ *
  */
 public class ReferenceTable extends Decode {
 
-	private static final long serialVersionUID = -5381026427696898592L;
-	public static final String DECODE = "REF_TABLE";
-	public static final String PORTFOLIO = "Portfolio";
+    private static final long serialVersionUID = -5381026427696898592L;
+    public static final String DECODE = "REF_TABLE";
+    public static final String PORTFOLIO = "Portfolio";
 
-	public ReferenceTable() {
-		super(DECODE);
-	}
+    public ReferenceTable() {
+        super(DECODE);
+    }
 
-	/**
-	 * Method newInstance.
-	 * 
-	 * @param value
-	 *            String
-	 * @return ReferenceTable
-	 */
-	public static ReferenceTable newInstance(String value) {
-		final ReferenceTable returnInstance = new ReferenceTable();
-		returnInstance.setValue(value);
-		return returnInstance;
-	}
+    /**
+     * Method newInstance.
+     *
+     * @param value String
+     * @return ReferenceTable
+     */
+    public static ReferenceTable newInstance(String value) {
+        final ReferenceTable returnInstance = new ReferenceTable();
+        returnInstance.setValue(value);
+        return returnInstance;
+    }
 
-	/**
-	 * Method newInstance.
-	 * 
-	 * @return ReferenceTable
-	 */
-	public static ReferenceTable newInstance() {
-		final ReferenceTable returnInstance = new ReferenceTable();
-		returnInstance.setDefaultCode();
-		return returnInstance;
-	}
+    /**
+     * Method newInstance.
+     *
+     * @return ReferenceTable
+     */
+    public static ReferenceTable newInstance() {
+        final ReferenceTable returnInstance = new ReferenceTable();
+        returnInstance.setDefaultCode();
+        return returnInstance;
+    }
 
-	/**
-	 * Method convertToUppercase.
-	 * 
-	 * @return boolean
-	 */
-	@Override
-	protected boolean convertToUppercase() {
-		return false;
-	}
+    /**
+     * Method convertToUppercase.
+     *
+     * @return boolean
+     */
+    @Override
+    protected boolean convertToUppercase() {
+        return false;
+    }
 }

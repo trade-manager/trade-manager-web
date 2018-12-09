@@ -10,7 +10,7 @@ public class CommissionReport {
     public String m_currency;
     public double m_realizedPNL;
     public double m_yield;
-    public int    m_yieldRedemptionDate; // YYYYMMDD format
+    public int m_yieldRedemptionDate; // YYYYMMDD format
 
     public CommissionReport() {
         m_commission = 0;
@@ -23,15 +23,13 @@ public class CommissionReport {
     public boolean equals(Object p_other) {
         boolean l_bRetVal = false;
 
-        if ( p_other == null ) {
+        if (p_other == null) {
             l_bRetVal = false;
-        }
-        else if ( this == p_other ) {
+        } else if (this == p_other) {
             l_bRetVal = true;
-        }
-        else {
-            CommissionReport l_theOther = (CommissionReport)p_other;
-            l_bRetVal = m_execId.equals( l_theOther.m_execId);
+        } else {
+            CommissionReport l_theOther = (CommissionReport) p_other;
+            l_bRetVal = m_execId.equals(l_theOther.m_execId);
         }
         return l_bRetVal;
     }

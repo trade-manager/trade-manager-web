@@ -99,8 +99,8 @@ INSERT INTO codeattribute (id, name, description, default_value, class_name, cla
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, id_code_type, version) VALUES(29,'MAType','Type of the Moving Average','WEIGHTED','java.lang.String', 'org.trade.dictionary.valuetype.CalculationType',11,0) //
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, id_code_type, version) VALUES(30,'Vostro Period','The number of periods for Vostro calc','5','java.lang.Integer',null, 11,0) //
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, id_code_type, version) VALUES(31,'Vostro Range','The range +/- to indicate a Vostro','8.0','java.math.BigDecimal',null, 11,0) //
-INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, id_code_type, version) VALUES(32,'Price Source','Price source used for calculations','5','java.lang.Integer', 'org.trade.dictionary.valuetype.PriceSource',11,0)// 
-INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, id_code_type, version) VALUES(33,'Price Source','Price source used for calculations','1','java.lang.Integer', 'org.trade.dictionary.valuetype.PriceSource',1,0)// 
+INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, id_code_type, version) VALUES(32,'Price Source','Price source used for calculations','5','java.lang.Integer', 'org.trade.dictionary.valuetype.PriceSource',11,0)//
+INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, id_code_type, version) VALUES(33,'Price Source','Price source used for calculations','1','java.lang.Integer', 'org.trade.dictionary.valuetype.PriceSource',1,0)//
 
 COMMIT//
 

@@ -35,109 +35,78 @@
  */
 package org.trade.ui.base;
 
+import javax.swing.event.EventListenerList;
 import java.util.Vector;
 
-import javax.swing.event.EventListenerList;
-
 /**
- * 
- * @version $Id: MessageNotifier.java,v 1.1 2001/10/18 01:32:15 simon Exp $
  * @author Simon Allen
+ * @version $Id: MessageNotifier.java,v 1.1 2001/10/18 01:32:15 simon Exp $
  */
 public class MessageNotifier {
-	private EventListenerList listeners;
+    private EventListenerList listeners;
 
-	/**
-	 * MessageNotifier() - constructor
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * @exception *
-	 * 				@see
-	 */
-	public MessageNotifier() {
-		this.listeners = new EventListenerList();
-	}
+    /**
+     * MessageNotifier() - constructor
+     *
+     * @throws *
+     * @see
+     */
+    public MessageNotifier() {
+        this.listeners = new EventListenerList();
+    }
 
-	/**
-	 * addMessageListener() -
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * @param listener
-	 *            IMessageListener
-	 * @exception *
-	 * 				@see
-	 */
-	public void add(IMessageListener listener) {
-		this.listeners.add(IMessageListener.class, listener);
-	}
+    /**
+     * addMessageListener() -
+     *
+     * @param listener IMessageListener
+     * @throws *
+     * @see
+     */
+    public void add(IMessageListener listener) {
+        this.listeners.add(IMessageListener.class, listener);
+    }
 
-	/**
-	 * removeMessageListener() -
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * @param listener
-	 *            IMessageListener
-	 * @exception *
-	 * 				@see
-	 */
-	public void remove(IMessageListener listener) {
-		this.listeners.remove(IMessageListener.class, listener);
+    /**
+     * removeMessageListener() -
+     *
+     * @param listener IMessageListener
+     * @throws *
+     * @see
+     */
+    public void remove(IMessageListener listener) {
+        this.listeners.remove(IMessageListener.class, listener);
 
-	}
+    }
 
-	/**
-	 * removeMessageListener() -
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * @exception *
-	 * 				@see
-	 */
-	public void removeAll() {
-		Object[] listenerList = this.listeners.getListenerList();
-		for (int i = listenerList.length - 2; i >= 0; i -= 2) {
-			if (listenerList[i] == IMessageListener.class) {
-				remove(((IMessageListener) listenerList[i + 1]));
-			}
-		}
-	}
+    /**
+     * removeMessageListener() -
+     *
+     * @throws *
+     * @see
+     */
+    public void removeAll() {
+        Object[] listenerList = this.listeners.getListenerList();
+        for (int i = listenerList.length - 2; i >= 0; i -= 2) {
+            if (listenerList[i] == IMessageListener.class) {
+                remove(((IMessageListener) listenerList[i + 1]));
+            }
+        }
+    }
 
-	/**
-	 * notifyEvent() -
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * @param e
-	 *            MessageEvent
-	 * @param parm
-	 *            Vector<Object>
-	 * @exception *
-	 * 				@see
-	 */
-	public void notifyEvent(MessageEvent e, Vector<Object> parm) {
-		Object[] listenerList = this.listeners.getListenerList();
-		for (int i = listenerList.length - 2; i >= 0; i -= 2) {
-			if (listenerList[i] == IMessageListener.class) {
-				((IMessageListener) listenerList[i + 1]).handleEvent(e, parm);
-			}
-		}
-	}
+    /**
+     * notifyEvent() -
+     *
+     * @param e    MessageEvent
+     * @param parm Vector<Object>
+     * @throws *
+     * @see
+     */
+    public void notifyEvent(MessageEvent e, Vector<Object> parm) {
+        Object[] listenerList = this.listeners.getListenerList();
+        for (int i = listenerList.length - 2; i >= 0; i -= 2) {
+            if (listenerList[i] == IMessageListener.class) {
+                ((IMessageListener) listenerList[i + 1]).handleEvent(e, parm);
+            }
+        }
+    }
 }

@@ -39,18 +39,15 @@ import java.util.EventListener;
 import java.util.Vector;
 
 /**
- * 
- * @version $Id: IMessageListener.java,v 1.1 2001/10/18 01:32:15 simon Exp $
  * @author Simon Allen
+ * @version $Id: IMessageListener.java,v 1.1 2001/10/18 01:32:15 simon Exp $
  */
 public interface IMessageListener extends EventListener {
-	/**
-	 * Method handleEvent.
-	 * 
-	 * @param e
-	 *            MessageEvent
-	 * @param parm
-	 *            Vector<Object>
-	 */
-	void handleEvent(MessageEvent e, Vector<Object> parm);
+    /**
+     * Method handleEvent.
+     *
+     * @param e    MessageEvent
+     * @param parm Vector<Object>
+     */
+    void handleEvent(MessageEvent e, Vector<Object> parm);
 }

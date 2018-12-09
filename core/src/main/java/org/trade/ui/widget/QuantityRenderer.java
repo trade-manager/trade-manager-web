@@ -35,54 +35,53 @@
  */
 package org.trade.ui.widget;
 
-import java.text.NumberFormat;
-
-import javax.swing.SwingConstants;
-import javax.swing.table.DefaultTableCellRenderer;
-
 import org.trade.core.valuetype.Quantity;
 
+import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import java.text.NumberFormat;
+
 /**
+ *
  */
 public class QuantityRenderer extends DefaultTableCellRenderer {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 3568483163690718815L;
-	private NumberFormat m_formater = null;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 3568483163690718815L;
+    private NumberFormat m_formater = null;
 
-	public QuantityRenderer() {
-		super();
+    public QuantityRenderer() {
+        super();
 
-		setHorizontalAlignment(SwingConstants.RIGHT);
-		m_formater = NumberFormat.getIntegerInstance();
-		m_formater.setMinimumFractionDigits(0);
-	}
+        setHorizontalAlignment(SwingConstants.RIGHT);
+        m_formater = NumberFormat.getIntegerInstance();
+        m_formater.setMinimumFractionDigits(0);
+    }
 
-	/**
-	 * Method setValue.
-	 * 
-	 * @param value
-	 *            Object
-	 */
-	protected void setValue(Object value) {
-		if (value == null) {
-			setText("");
-		} else {
-			if (value instanceof Quantity) {
+    /**
+     * Method setValue.
+     *
+     * @param value Object
+     */
+    protected void setValue(Object value) {
+        if (value == null) {
+            setText("");
+        } else {
+            if (value instanceof Quantity) {
 
-				Integer integer = ((Quantity) value).getIntegerValue();
-				if (null == integer) {
-					setText(value.toString());
-				} else {
-					setText(m_formater.format(integer));
-				}
+                Integer integer = ((Quantity) value).getIntegerValue();
+                if (null == integer) {
+                    setText(value.toString());
+                } else {
+                    setText(m_formater.format(integer));
+                }
 
-			} else if (value instanceof Integer) {
-				setText(m_formater.format(value));
-			} else {
-				setText(value.toString());
-			}
-		}
-	}
+            } else if (value instanceof Integer) {
+                setText(m_formater.format(value));
+            } else {
+                setText(value.toString());
+            }
+        }
+    }
 }

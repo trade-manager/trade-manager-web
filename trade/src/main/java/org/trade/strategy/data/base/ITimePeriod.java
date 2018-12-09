@@ -21,7 +21,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301,
  * USA.
  *
- * [Oracle and Java are registered trademarks of Oracle and/or its affiliates. 
+ * [Oracle and Java are registered trademarks of Oracle and/or its affiliates.
  * Other names may be trademarks of their respective owners.]
  *
  * ---------------
@@ -49,20 +49,20 @@ import java.time.ZonedDateTime;
  */
 public interface ITimePeriod extends Comparable<ITimePeriod> {
 
-	/**
-	 * Returns the start date/time. This will always be on or before the end
-	 * date.
-	 *
-	 * @return The start date/time (never <code>null</code>).
-	 */
-	public ZonedDateTime getStart();
+    /**
+     * Returns the start date/time. This will always be on or before the end
+     * date.
+     *
+     * @return The start date/time (never <code>null</code>).
+     */
+    public ZonedDateTime getStart();
 
-	/**
-	 * Returns the end date/time. This will always be on or after the start
-	 * date.
-	 *
-	 * @return The end date/time (never <code>null</code>).
-	 */
-	public ZonedDateTime getEnd();
+    /**
+     * Returns the end date/time. This will always be on or after the start
+     * date.
+     *
+     * @return The end date/time (never <code>null</code>).
+     */
+    public ZonedDateTime getEnd();
 
 }

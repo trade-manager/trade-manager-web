@@ -35,80 +35,72 @@
  */
 package org.trade.ui.tables.renderer;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.util.concurrent.ConcurrentHashMap;
-
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableCellRenderer;
-
 import org.trade.dictionary.valuetype.DAOStrategyManager;
 import org.trade.persistent.dao.Strategy;
 import org.trade.persistent.dao.Tradestrategy;
 import org.trade.strategy.IStrategyRule;
 import org.trade.ui.models.TradestrategyTableModel;
 
+import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import java.awt.*;
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
+ *
  */
 public class DAOStrategyManagerRenderer extends DefaultTableCellRenderer {
 
-	private static final long serialVersionUID = -6600633898553131547L;
-	private ConcurrentHashMap<String, IStrategyRule> strategyWorkers = null;
+    private static final long serialVersionUID = -6600633898553131547L;
+    private ConcurrentHashMap<String, IStrategyRule> strategyWorkers = null;
 
-	/**
-	 * Constructor for DAOStrategyManagerRenderer.
-	 * 
-	 * @param strategyWorkers
-	 *            ConcurrentHashMap<String,IStrategyRule>
-	 */
-	public DAOStrategyManagerRenderer(ConcurrentHashMap<String, IStrategyRule> strategyWorkers) {
-		this.strategyWorkers = strategyWorkers;
-	}
+    /**
+     * Constructor for DAOStrategyManagerRenderer.
+     *
+     * @param strategyWorkers ConcurrentHashMap<String,IStrategyRule>
+     */
+    public DAOStrategyManagerRenderer(ConcurrentHashMap<String, IStrategyRule> strategyWorkers) {
+        this.strategyWorkers = strategyWorkers;
+    }
 
-	/**
-	 * Method getTableCellRendererComponent.
-	 * 
-	 * @param table
-	 *            JTable
-	 * @param dAOStrategyManager
-	 *            Object
-	 * @param isSelected
-	 *            boolean
-	 * @param hasFocus
-	 *            boolean
-	 * @param row
-	 *            int
-	 * @param column
-	 *            int
-	 * @return Component
-	 * @see javax.swing.table.TableCellRenderer#getTableCellRendererComponent(JTable,
-	 *      Object, boolean, boolean, int, int)
-	 */
-	public Component getTableCellRendererComponent(JTable table, Object dAOStrategyManager, boolean isSelected,
-			boolean hasFocus, int row, int column) {
+    /**
+     * Method getTableCellRendererComponent.
+     *
+     * @param table              JTable
+     * @param dAOStrategyManager Object
+     * @param isSelected         boolean
+     * @param hasFocus           boolean
+     * @param row                int
+     * @param column             int
+     * @return Component
+     * @see javax.swing.table.TableCellRenderer#getTableCellRendererComponent(JTable,
+     * Object, boolean, boolean, int, int)
+     */
+    public Component getTableCellRendererComponent(JTable table, Object dAOStrategyManager, boolean isSelected,
+                                                   boolean hasFocus, int row, int column) {
 
-		synchronized (dAOStrategyManager) {
-			setBackground(null);
-			super.getTableCellRendererComponent(table, dAOStrategyManager, isSelected, hasFocus, row, column);
-			if (row > -1 && ((DAOStrategyManager) dAOStrategyManager).isValid()) {
-				Tradestrategy transferObject = ((TradestrategyTableModel) table.getModel()).getData()
-						.getTradestrategies().get(table.convertRowIndexToModel(row));
+        synchronized (dAOStrategyManager) {
+            setBackground(null);
+            super.getTableCellRendererComponent(table, dAOStrategyManager, isSelected, hasFocus, row, column);
+            if (row > -1 && ((DAOStrategyManager) dAOStrategyManager).isValid()) {
+                Tradestrategy transferObject = ((TradestrategyTableModel) table.getModel()).getData()
+                        .getTradestrategies().get(table.convertRowIndexToModel(row));
 
-				if (null == ((DAOStrategyManager) dAOStrategyManager).getObject())
-					return this;
-				String key = ((Strategy) ((DAOStrategyManager) dAOStrategyManager).getObject()).getClassName()
-						+ transferObject.getId();
-				if (this.strategyWorkers.containsKey(key) && !isSelected) {
-					if (this.strategyWorkers.get(key).isDone()) {
-						setBackground(Color.YELLOW);
-						setToolTipText("Strategy complete");
-					} else if (this.strategyWorkers.get(key).isRunning()) {
-						setBackground(Color.GREEN);
-						setToolTipText("Strategy running");
-					}
-				}
-			}
-			return this;
-		}
-	}
+                if (null == ((DAOStrategyManager) dAOStrategyManager).getObject())
+                    return this;
+                String key = ((Strategy) ((DAOStrategyManager) dAOStrategyManager).getObject()).getClassName()
+                        + transferObject.getId();
+                if (this.strategyWorkers.containsKey(key) && !isSelected) {
+                    if (this.strategyWorkers.get(key).isDone()) {
+                        setBackground(Color.YELLOW);
+                        setToolTipText("Strategy complete");
+                    } else if (this.strategyWorkers.get(key).isRunning()) {
+                        setBackground(Color.GREEN);
+                        setToolTipText("Strategy running");
+                    }
+                }
+            }
+            return this;
+        }
+    }
 }

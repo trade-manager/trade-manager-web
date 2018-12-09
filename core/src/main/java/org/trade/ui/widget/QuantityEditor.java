@@ -35,44 +35,44 @@
  */
 package org.trade.ui.widget;
 
-import javax.swing.DefaultCellEditor;
-
 import org.trade.core.valuetype.Quantity;
 
+import javax.swing.*;
+
 /**
+ *
  */
 public class QuantityEditor extends DefaultCellEditor {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -3660193231547303276L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -3660193231547303276L;
 
-	/**
-	 * Constructor for QuantityEditor.
-	 * 
-	 * @param textField
-	 *            QuantityField
-	 */
-	public QuantityEditor(final QuantityField textField) {
-		super(textField);
+    /**
+     * Constructor for QuantityEditor.
+     *
+     * @param textField QuantityField
+     */
+    public QuantityEditor(final QuantityField textField) {
+        super(textField);
 
-		editorComponent = textField;
-		this.clickCountToStart = 1;
-		delegate = new EditorDelegate() {
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = -658101805319581454L;
+        editorComponent = textField;
+        this.clickCountToStart = 1;
+        delegate = new EditorDelegate() {
+            /**
+             *
+             */
+            private static final long serialVersionUID = -658101805319581454L;
 
-			public void setValue(Object value) {
-				textField.setQuantity((Quantity) value);
-			}
+            public void setValue(Object value) {
+                textField.setQuantity((Quantity) value);
+            }
 
-			public Object getCellEditorValue() {
-				return textField.getQuantity();
-			}
-		};
+            public Object getCellEditorValue() {
+                return textField.getQuantity();
+            }
+        };
 
-		textField.addActionListener(delegate);
-	}
+        textField.addActionListener(delegate);
+    }
 }

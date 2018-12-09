@@ -35,67 +35,67 @@
  */
 package org.trade.dictionary.valuetype;
 
-import java.util.Enumeration;
-import java.util.Vector;
-
 import org.trade.core.valuetype.DAODecode;
 import org.trade.core.valuetype.Decode;
 import org.trade.core.valuetype.Money;
 import org.trade.core.valuetype.ValueTypeException;
 import org.trade.persistent.dao.Entrylimit;
 
+import java.util.Enumeration;
+import java.util.Vector;
+
 /**
+ *
  */
 public class DAOEntryLimit extends DAODecode {
 
-	private static final long serialVersionUID = -5381026427696898592L;
-	public static final String DECODE = "ENTRY_LIMIT";
-	public static final String _TABLE = "_TABLE";
-	public static final String _TABLE_ID = "_TABLE_ID";
-	public static final String _COLUMN = "_COLUMN";
+    private static final long serialVersionUID = -5381026427696898592L;
+    public static final String DECODE = "ENTRY_LIMIT";
+    public static final String _TABLE = "_TABLE";
+    public static final String _TABLE_ID = "_TABLE_ID";
+    public static final String _COLUMN = "_COLUMN";
 
-	public DAOEntryLimit() {
-		super(DECODE);
-	}
+    public DAOEntryLimit() {
+        super(DECODE);
+    }
 
-	/**
-	 * Method newInstance.
-	 * 
-	 * @return DAOEntryLimit
-	 */
-	public static DAOEntryLimit newInstance() {
-		final DAOEntryLimit returnInstance = new DAOEntryLimit();
-		returnInstance.setDefaultCode();
-		return returnInstance;
-	}
+    /**
+     * Method newInstance.
+     *
+     * @return DAOEntryLimit
+     */
+    public static DAOEntryLimit newInstance() {
+        final DAOEntryLimit returnInstance = new DAOEntryLimit();
+        returnInstance.setDefaultCode();
+        return returnInstance;
+    }
 
-	/**
-	 * Method getValue.
-	 * 
-	 * @param price
-	 *            Money
-	 * @return Entrylimit
-	 */
-	public Entrylimit getValue(Money price) {
+    /**
+     * Method getValue.
+     *
+     * @param price Money
+     * @return Entrylimit
+     */
+    public Entrylimit getValue(Money price) {
 
-		Vector<Decode> decodes;
-		try {
-			decodes = this.getCodesDecodes();
-			final Enumeration<Decode> enumDAODecode = decodes.elements();
-			while (enumDAODecode.hasMoreElements()) {
-				final Decode decode = enumDAODecode.nextElement();
-				final Entrylimit entryLimit = (Entrylimit) decode.getObject();
-				if ((entryLimit.getStartPrice().subtract(price.getBigDecimalValue()).doubleValue() <= 0)
-						&& (entryLimit.getEndPrice().subtract(price.getBigDecimalValue()).doubleValue() >= 0)) {
-					return entryLimit;
-				}
-			}
-		} catch (final ValueTypeException e) {
-			/*
-			 * Do nothing is no code just report to log.
-			 */
+        Vector<Decode> decodes;
+        try {
+            decodes = this.getCodesDecodes();
+            final Enumeration<Decode> enumDAODecode = decodes.elements();
+            while (enumDAODecode.hasMoreElements()) {
+                final Decode decode = enumDAODecode.nextElement();
+                final Entrylimit entryLimit = (Entrylimit) decode.getObject();
+                if ((entryLimit.getStartPrice().subtract(price.getBigDecimalValue()).doubleValue() <= 0)
+                        && (entryLimit.getEndPrice().subtract(price.getBigDecimalValue()).doubleValue() >= 0)) {
+                    return entryLimit;
+                }
+            }
+        } catch (final ValueTypeException e) {
+            /*
+             * Do nothing is no code just report to log.
+             */
 
-		}
-		return null;
-	}
+        }
+        return null;
+    }
 }

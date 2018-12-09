@@ -15,26 +15,26 @@ import org.springframework.stereotype.Component;
 @RepositoryEventHandler(Employee.class)
 public class SpringDataRestEventHandler {
 
-	private final ManagerRepository managerRepository;
+    private final ManagerRepository managerRepository;
 
-	@Autowired
-	public SpringDataRestEventHandler(ManagerRepository managerRepository) {
-		this.managerRepository = managerRepository;
-	}
+    @Autowired
+    public SpringDataRestEventHandler(ManagerRepository managerRepository) {
+        this.managerRepository = managerRepository;
+    }
 
-	@HandleBeforeCreate
-	@HandleBeforeSave
-	public void applyUserInformationUsingSecurityContext(Employee employee) {
+    @HandleBeforeCreate
+    @HandleBeforeSave
+    public void applyUserInformationUsingSecurityContext(Employee employee) {
 
-		String name = SecurityContextHolder.getContext().getAuthentication().getName();
-		Manager manager = this.managerRepository.findByName(name);
-		if (manager == null) {
-			Manager newManager = new Manager();
-			newManager.setName(name);
-			newManager.setRoles(new String[]{"ROLE_MANAGER"});
-			manager = this.managerRepository.save(newManager);
-		}
-		employee.setManager(manager);
-	}
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        Manager manager = this.managerRepository.findByName(name);
+        if (manager == null) {
+            Manager newManager = new Manager();
+            newManager.setName(name);
+            newManager.setRoles(new String[]{"ROLE_MANAGER"});
+            manager = this.managerRepository.save(newManager);
+        }
+        employee.setManager(manager);
+    }
 }
 // end::code[]

@@ -43,47 +43,47 @@ import java.util.Date;
 /**
  * The Identity Service component. The identity service provides globally unique
  * identities for the application.
- * 
+ *
  * @author Simon Allen
  */
 public class IdentityService {
-	private static InetAddress m_localHost = null;
+    private static InetAddress m_localHost = null;
 
-	/**
-	 * Method create.
-	 * 
-	 * @return String
-	 * @throws IdentityServiceException
-	 */
-	public static String create() throws IdentityServiceException {
-		// Obtain a current timestamp.
-		Date date = new Date();
-		// Get an identity unique within the local host.
-		UID hostUniqueId = new UID();
+    /**
+     * Method create.
+     *
+     * @return String
+     * @throws IdentityServiceException
+     */
+    public static String create() throws IdentityServiceException {
+        // Obtain a current timestamp.
+        Date date = new Date();
+        // Get an identity unique within the local host.
+        UID hostUniqueId = new UID();
 
-		// Obtain the host name.
-		if (m_localHost == null) {
-			try {
-				m_localHost = InetAddress.getLocalHost();
-			} catch (UnknownHostException e) {
-				throw new IdentityServiceException(e);
-			}
-		}
+        // Obtain the host name.
+        if (m_localHost == null) {
+            try {
+                m_localHost = InetAddress.getLocalHost();
+            } catch (UnknownHostException e) {
+                throw new IdentityServiceException(e);
+            }
+        }
 
-		if (null == m_localHost) {
-			throw new IdentityServiceException(
-					"Unable to resolve hostname.  " + "Is your networking configured Properly?");
-		}
+        if (null == m_localHost) {
+            throw new IdentityServiceException(
+                    "Unable to resolve hostname.  " + "Is your networking configured Properly?");
+        }
 
-		String hostName;
+        String hostName;
 
-		hostName = m_localHost.getHostName();
+        hostName = m_localHost.getHostName();
 
-		// Construct the identity and return it.
-		String identity;
+        // Construct the identity and return it.
+        String identity;
 
-		identity = "AT-" + date.toString() + "-" + hostName + "-" + hostUniqueId.toString();
+        identity = "AT-" + date.toString() + "-" + hostName + "-" + hostUniqueId.toString();
 
-		return (identity);
-	}
+        return (identity);
+    }
 }

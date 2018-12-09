@@ -35,31 +35,17 @@
  */
 package org.trade.persistent.dao;
 
-import static javax.persistence.GenerationType.IDENTITY;
+import org.trade.core.dao.Aspect;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorColumn;
-import javax.persistence.DiscriminatorType;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-import javax.persistence.Version;
-import javax.validation.constraints.NotNull;
-
-import org.trade.core.dao.Aspect;
+import static javax.persistence.GenerationType.IDENTITY;
 
 /**
+ *
  */
 @Entity
 @Table(name = "codetype")
@@ -68,184 +54,174 @@ import org.trade.core.dao.Aspect;
 @DiscriminatorValue("CodeType")
 public class CodeType extends Aspect implements java.io.Serializable {
 
-	private static final long serialVersionUID = 2273276207080568947L;
+    private static final long serialVersionUID = 2273276207080568947L;
 
-	@NotNull
-	private String name;
-	@NotNull
-	private String type;
-	private String description;
-	private List<CodeAttribute> codeAttributes = new ArrayList<CodeAttribute>(0);
+    @NotNull
+    private String name;
+    @NotNull
+    private String type;
+    private String description;
+    private List<CodeAttribute> codeAttributes = new ArrayList<CodeAttribute>(0);
 
-	public static final String IndicatorParameters = "IndicatorParameters";
-	public static final String StrategyParameters = "StrategyParameters";
+    public static final String IndicatorParameters = "IndicatorParameters";
+    public static final String StrategyParameters = "StrategyParameters";
 
-	/**
-	 * Default constructor for CodeType.
-	 * 
-	 */
+    /**
+     * Default constructor for CodeType.
+     */
 
-	public CodeType() {
-	}
+    public CodeType() {
+    }
 
-	/**
-	 * Constructor for CodeType.
-	 * 
-	 * @param type
-	 *            String
-	 */
-	public CodeType(String type) {
-		this.type = type;
-	}
+    /**
+     * Constructor for CodeType.
+     *
+     * @param type String
+     */
+    public CodeType(String type) {
+        this.type = type;
+    }
 
-	/**
-	 * Constructor for CodeType.
-	 * 
-	 * @param name
-	 *            String
-	 * @param description
-	 *            String
-	 */
-	public CodeType(String name, String type, String description) {
-		this.name = name;
-		this.type = type;
-		this.description = description;
-	}
+    /**
+     * Constructor for CodeType.
+     *
+     * @param name        String
+     * @param description String
+     */
+    public CodeType(String name, String type, String description) {
+        this.name = name;
+        this.type = type;
+        this.description = description;
+    }
 
-	/**
-	 * Method getId.
-	 * 
-	 * @return Integer
-	 */
-	@Id
-	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "id", unique = true, nullable = false)
-	public Integer getId() {
-		return this.id;
-	}
+    /**
+     * Method getId.
+     *
+     * @return Integer
+     */
+    @Id
+    @GeneratedValue(strategy = IDENTITY)
+    @Column(name = "id", unique = true, nullable = false)
+    public Integer getId() {
+        return this.id;
+    }
 
-	/**
-	 * Method setId.
-	 * 
-	 * @param id
-	 *            Integer
-	 */
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    /**
+     * Method setId.
+     *
+     * @param id Integer
+     */
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-	/**
-	 * Method getName.
-	 * 
-	 * @return String
-	 */
-	@Column(name = "name", nullable = false, length = 45)
-	public String getName() {
-		return this.name;
-	}
+    /**
+     * Method getName.
+     *
+     * @return String
+     */
+    @Column(name = "name", nullable = false, length = 45)
+    public String getName() {
+        return this.name;
+    }
 
-	/**
-	 * Method setName.
-	 * 
-	 * @param name
-	 *            String
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+    /**
+     * Method setName.
+     *
+     * @param name String
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	/**
-	 * Method getType.
-	 * 
-	 * @return String
-	 */
-	@Column(name = "type", length = 45, insertable = false, updatable = false, unique = true, nullable = false)
-	public String getType() {
-		return this.type;
-	}
+    /**
+     * Method getType.
+     *
+     * @return String
+     */
+    @Column(name = "type", length = 45, insertable = false, updatable = false, unique = true, nullable = false)
+    public String getType() {
+        return this.type;
+    }
 
-	/**
-	 * Method setType.
-	 * 
-	 * @param type
-	 *            String
-	 */
-	public void setType(String type) {
-		this.type = type;
-	}
+    /**
+     * Method setType.
+     *
+     * @param type String
+     */
+    public void setType(String type) {
+        this.type = type;
+    }
 
-	/**
-	 * Method getDescription.
-	 * 
-	 * @return String
-	 */
-	@Column(name = "description", nullable = false, length = 100)
-	public String getDescription() {
-		return this.description;
-	}
+    /**
+     * Method getDescription.
+     *
+     * @return String
+     */
+    @Column(name = "description", nullable = false, length = 100)
+    public String getDescription() {
+        return this.description;
+    }
 
-	/**
-	 * Method setDescription.
-	 * 
-	 * @param description
-	 *            String
-	 */
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    /**
+     * Method setDescription.
+     *
+     * @param description String
+     */
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	/**
-	 * Method getVersion.
-	 * 
-	 * @return Integer
-	 */
-	@Version
-	@Column(name = "version")
-	public Integer getVersion() {
-		return this.version;
-	}
+    /**
+     * Method getVersion.
+     *
+     * @return Integer
+     */
+    @Version
+    @Column(name = "version")
+    public Integer getVersion() {
+        return this.version;
+    }
 
-	/**
-	 * Method setVersion.
-	 * 
-	 * @param version
-	 *            Integer
-	 */
-	public void setVersion(Integer version) {
-		this.version = version;
-	}
+    /**
+     * Method setVersion.
+     *
+     * @param version Integer
+     */
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
 
-	/**
-	 * Method getCodeAttribute.
-	 * 
-	 * @return List<CodeAttribute>
-	 */
-	@OneToMany(mappedBy = "codeType", fetch = FetchType.EAGER, orphanRemoval = true, cascade = { CascadeType.ALL })
-	public List<CodeAttribute> getCodeAttribute() {
-		return this.codeAttributes;
-	}
+    /**
+     * Method getCodeAttribute.
+     *
+     * @return List<CodeAttribute>
+     */
+    @OneToMany(mappedBy = "codeType", fetch = FetchType.EAGER, orphanRemoval = true, cascade = {CascadeType.ALL})
+    public List<CodeAttribute> getCodeAttribute() {
+        return this.codeAttributes;
+    }
 
-	/**
-	 * Method setCodeAttribute.
-	 * 
-	 * @param codeAttributes
-	 *            List<CodeAttribute>
-	 */
-	public void setCodeAttribute(List<CodeAttribute> codeAttributes) {
-		this.codeAttributes = codeAttributes;
-	}
+    /**
+     * Method setCodeAttribute.
+     *
+     * @param codeAttributes List<CodeAttribute>
+     */
+    public void setCodeAttribute(List<CodeAttribute> codeAttributes) {
+        this.codeAttributes = codeAttributes;
+    }
 
-	/**
-	 * Method isDirty.
-	 * 
-	 * @return boolean
-	 */
-	@Transient
-	public boolean isDirty() {
-		for (CodeAttribute item : this.getCodeAttribute()) {
-			if (item.isDirty())
-				return true;
-		}
-		return super.isDirty();
-	}
+    /**
+     * Method isDirty.
+     *
+     * @return boolean
+     */
+    @Transient
+    public boolean isDirty() {
+        for (CodeAttribute item : this.getCodeAttribute()) {
+            if (item.isDirty())
+                return true;
+        }
+        return super.isDirty();
+    }
 }

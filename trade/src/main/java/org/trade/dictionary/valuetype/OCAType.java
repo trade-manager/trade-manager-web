@@ -38,40 +38,40 @@ package org.trade.dictionary.valuetype;
 import org.trade.core.valuetype.Decode;
 
 /**
+ *
  */
 public class OCAType extends Decode {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -5381026427696898592L;
-	public static final String DECODE = "OCA_TYPE";
+    /**
+     *
+     */
+    private static final long serialVersionUID = -5381026427696898592L;
+    public static final String DECODE = "OCA_TYPE";
 
-	public OCAType() {
-		super(DECODE);
-	}
+    public OCAType() {
+        super(DECODE);
+    }
 
-	/**
-	 * Method newInstance.
-	 * 
-	 * @param value
-	 *            String
-	 * @return OCAType
-	 */
-	public static OCAType newInstance(String value) {
-		final OCAType returnInstance = new OCAType();
-		returnInstance.setValue(value);
-		return returnInstance;
-	}
+    /**
+     * Method newInstance.
+     *
+     * @param value String
+     * @return OCAType
+     */
+    public static OCAType newInstance(String value) {
+        final OCAType returnInstance = new OCAType();
+        returnInstance.setValue(value);
+        return returnInstance;
+    }
 
-	/**
-	 * Method newInstance.
-	 * 
-	 * @return OCAType
-	 */
-	public static OCAType newInstance() {
-		final OCAType returnInstance = new OCAType();
-		returnInstance.setDefaultCode();
-		return returnInstance;
-	}
+    /**
+     * Method newInstance.
+     *
+     * @return OCAType
+     */
+    public static OCAType newInstance() {
+        final OCAType returnInstance = new OCAType();
+        returnInstance.setDefaultCode();
+        return returnInstance;
+    }
 }

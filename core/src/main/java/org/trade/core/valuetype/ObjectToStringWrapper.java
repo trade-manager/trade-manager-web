@@ -39,68 +39,65 @@ import org.trade.core.conversion.IJavaDynamicTypeConverter;
 import org.trade.core.conversion.JavaTypeTranslatorException;
 
 /**
+ *
  */
 public class ObjectToStringWrapper implements IJavaDynamicTypeConverter {
-	/**
-	 * Default constructor.
-	 */
-	public ObjectToStringWrapper() {
-	}
+    /**
+     * Default constructor.
+     */
+    public ObjectToStringWrapper() {
+    }
 
-	/**
-	 * Method convert.
-	 * 
-	 * @param targetType
-	 *            Class<?>
-	 * @param valueToConvert
-	 *            Object
-	 * @return Object
-	 * @throws JavaTypeTranslatorException
-	 * @see IJavaDynamicTypeConverter#convert(Class<?>,
-	 *      Object)
-	 */
-	public Object convert(Class<?> targetType, Object valueToConvert) throws JavaTypeTranslatorException {
-		Object rVal = null;
+    /**
+     * Method convert.
+     *
+     * @param targetType     Class<?>
+     * @param valueToConvert Object
+     * @return Object
+     * @throws JavaTypeTranslatorException
+     * @see IJavaDynamicTypeConverter#convert(Class<?>,
+     * Object)
+     */
+    public Object convert(Class<?> targetType, Object valueToConvert) throws JavaTypeTranslatorException {
+        Object rVal = null;
 
-		if (StringWrapper.class.isAssignableFrom(targetType)) {
-			try {
+        if (StringWrapper.class.isAssignableFrom(targetType)) {
+            try {
 
-				StringWrapper vt = (StringWrapper) targetType.newInstance();
+                StringWrapper vt = (StringWrapper) targetType.newInstance();
 
-				if (valueToConvert instanceof String) {
-					vt.setValue((String) valueToConvert);
-				} else {
-					throw new JavaTypeTranslatorException(
-							"The ObjectToStringWrapper convertor only supports strings at the moment");
-				}
+                if (valueToConvert instanceof String) {
+                    vt.setValue((String) valueToConvert);
+                } else {
+                    throw new JavaTypeTranslatorException(
+                            "The ObjectToStringWrapper convertor only supports strings at the moment");
+                }
 
-				rVal = vt;
-			} catch (Exception ex) {
-				throw new JavaTypeTranslatorException(ex, "Unable to set value for StringWrapper");
-			}
-		} else {
-			throw new JavaTypeTranslatorException("Target type must be a StringWrapper");
-		}
+                rVal = vt;
+            } catch (Exception ex) {
+                throw new JavaTypeTranslatorException(ex, "Unable to set value for StringWrapper");
+            }
+        } else {
+            throw new JavaTypeTranslatorException("Target type must be a StringWrapper");
+        }
 
-		return (rVal);
-	}
+        return (rVal);
+    }
 
-	/**
-	 * Method supportsConversion.
-	 * 
-	 * @param targetType
-	 *            Class<?>
-	 * @param valueToConvert
-	 *            Object
-	 * @return boolean
-	 * @see IJavaDynamicTypeConverter#
-	 *      supportsConversion (Class<?>, Object)
-	 */
-	public boolean supportsConversion(Class<?> targetType, Object valueToConvert) {
-		boolean rVal = false;
-		if (StringWrapper.class.isAssignableFrom(targetType)) {
-			rVal = true;
-		}
-		return (rVal);
-	}
+    /**
+     * Method supportsConversion.
+     *
+     * @param targetType     Class<?>
+     * @param valueToConvert Object
+     * @return boolean
+     * @see IJavaDynamicTypeConverter#
+     * supportsConversion (Class<?>, Object)
+     */
+    public boolean supportsConversion(Class<?> targetType, Object valueToConvert) {
+        boolean rVal = false;
+        if (StringWrapper.class.isAssignableFrom(targetType)) {
+            rVal = true;
+        }
+        return (rVal);
+    }
 }

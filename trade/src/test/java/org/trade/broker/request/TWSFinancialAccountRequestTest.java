@@ -35,14 +35,7 @@
  */
 package org.trade.broker.request;
 
-import static org.junit.Assert.*;
-
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.TestName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,277 +51,280 @@ import org.trade.persistent.dao.Portfolio;
 import org.trade.persistent.dao.PortfolioAccount;
 import org.trade.ui.TradeAppLoadConfig;
 
+import static org.junit.Assert.fail;
+
 /**
+ *
  */
 public class TWSFinancialAccountRequestTest {
 
-	private final static Logger _log = LoggerFactory.getLogger(TWSFinancialAccountRequestTest.class);
-	@Rule
-	public TestName name = new TestName();
+    private final static Logger _log = LoggerFactory.getLogger(TWSFinancialAccountRequestTest.class);
+    @Rule
+    public TestName name = new TestName();
 
-	private IPersistentModel m_tradePersistentModel = null;
+    private IPersistentModel m_tradePersistentModel = null;
 
-	/**
-	 * Method setUpBeforeClass.
-	 * 
-	 * @throws Exception
-	 */
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-	}
+    /**
+     * Method setUpBeforeClass.
+     *
+     * @throws Exception
+     */
+    @BeforeClass
+    public static void setUpBeforeClass() throws Exception {
+    }
 
-	/**
-	 * Method setUp.
-	 * 
-	 * @throws Exception
-	 */
-	@Before
-	public void setUp() throws Exception {
-		TradeAppLoadConfig.loadAppProperties();
-		m_tradePersistentModel = (IPersistentModel) ClassFactory.getServiceForInterface(IPersistentModel._persistentModel,
-				this);
-	}
+    /**
+     * Method setUp.
+     *
+     * @throws Exception
+     */
+    @Before
+    public void setUp() throws Exception {
+        TradeAppLoadConfig.loadAppProperties();
+        m_tradePersistentModel = (IPersistentModel) ClassFactory.getServiceForInterface(IPersistentModel._persistentModel,
+                this);
+    }
 
-	/**
-	 * Method tearDown.
-	 * 
-	 * @throws Exception
-	 */
-	@After
-	public void tearDown() throws Exception {
-		Aspects portfolioAccounts = m_tradePersistentModel.findAspectsByClassName(PortfolioAccount.class.getName());
-		for (Aspect aspect : portfolioAccounts.getAspect()) {
-			m_tradePersistentModel.removeAspect(aspect);
-		}
+    /**
+     * Method tearDown.
+     *
+     * @throws Exception
+     */
+    @After
+    public void tearDown() throws Exception {
+        Aspects portfolioAccounts = m_tradePersistentModel.findAspectsByClassName(PortfolioAccount.class.getName());
+        for (Aspect aspect : portfolioAccounts.getAspect()) {
+            m_tradePersistentModel.removeAspect(aspect);
+        }
 
-		Aspects accounts = m_tradePersistentModel.findAspectsByClassName(Account.class.getName());
-		for (Aspect aspect : accounts.getAspect()) {
-			m_tradePersistentModel.removeAspect(aspect);
-		}
-	}
+        Aspects accounts = m_tradePersistentModel.findAspectsByClassName(Account.class.getName());
+        for (Aspect aspect : accounts.getAspect()) {
+            m_tradePersistentModel.removeAspect(aspect);
+        }
+    }
 
-	/**
-	 * Method tearDownAfterClass.
-	 * 
-	 * @throws Exception
-	 */
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-	}
+    /**
+     * Method tearDownAfterClass.
+     *
+     * @throws Exception
+     */
+    @AfterClass
+    public static void tearDownAfterClass() throws Exception {
+    }
 
-	@Test
-	public void testAliasEmptyRequest() {
+    @Test
+    public void testAliasEmptyRequest() {
 
-		try {
+        try {
 
-			final TWSAccountAliasRequest request = new TWSAccountAliasRequest();
+            final TWSAccountAliasRequest request = new TWSAccountAliasRequest();
 
-			// String xml =
-			// "<?xml version=\"1.0\"
-			// encoding=\"UTF-8\"?><ListOfAccountAliases/>";
-			// ByteArrayInputStream inputSource = new ByteArrayInputStream(
-			// xml.getBytes("utf-8"));
-			// final Aspects aspects = (Aspects) request.fromXML(inputSource);
-			final Aspects aspects = (Aspects) request.fromXML(Thread.currentThread().getContextClassLoader()
-					.getResourceAsStream("org/trade/broker/request/aliasesEmpty.xml"));
-			for (Aspect aspect : aspects.getAspect()) {
-				Account item = (Account) aspect;
-				Account account = m_tradePersistentModel.findAccountByNumber(item.getAccountNumber());
-				account.setAlias(item.getAlias());
-				m_tradePersistentModel.persistAspect(account);
-			}
-		} catch (Exception | AssertionError ex) {
-			String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
-			_log.error(msg);
-			fail(msg);
-		}
-	}
+            // String xml =
+            // "<?xml version=\"1.0\"
+            // encoding=\"UTF-8\"?><ListOfAccountAliases/>";
+            // ByteArrayInputStream inputSource = new ByteArrayInputStream(
+            // xml.getBytes("utf-8"));
+            // final Aspects aspects = (Aspects) request.fromXML(inputSource);
+            final Aspects aspects = (Aspects) request.fromXML(Thread.currentThread().getContextClassLoader()
+                    .getResourceAsStream("org/trade/broker/request/aliasesEmpty.xml"));
+            for (Aspect aspect : aspects.getAspect()) {
+                Account item = (Account) aspect;
+                Account account = m_tradePersistentModel.findAccountByNumber(item.getAccountNumber());
+                account.setAlias(item.getAlias());
+                m_tradePersistentModel.persistAspect(account);
+            }
+        } catch (Exception | AssertionError ex) {
+            String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
+            _log.error(msg);
+            fail(msg);
+        }
+    }
 
-	@Test
-	public void testAliasRequest() {
+    @Test
+    public void testAliasRequest() {
 
-		try {
+        try {
 
-			final TWSAccountAliasRequest request = new TWSAccountAliasRequest();
-			final Aspects aspects = (Aspects) request.fromXML(Thread.currentThread().getContextClassLoader()
-					.getResourceAsStream("org/trade/broker/request/aliases.xml"));
-			for (Aspect aspect : aspects.getAspect()) {
-				Account item = (Account) aspect;
-				Account account = m_tradePersistentModel.findAccountByNumber(item.getAccountNumber());
-				if (null == account) {
-					account = new Account(item.getAccountNumber(), item.getAccountNumber(), Currency.USD,
-							AccountType.INDIVIDUAL);
-				}
-				account.setAlias(item.getAlias());
-				account.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
-				m_tradePersistentModel.persistAspect(account);
-			}
-		} catch (Exception | AssertionError ex) {
-			String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
-			_log.error(msg);
-			fail(msg);
-		}
-	}
+            final TWSAccountAliasRequest request = new TWSAccountAliasRequest();
+            final Aspects aspects = (Aspects) request.fromXML(Thread.currentThread().getContextClassLoader()
+                    .getResourceAsStream("org/trade/broker/request/aliases.xml"));
+            for (Aspect aspect : aspects.getAspect()) {
+                Account item = (Account) aspect;
+                Account account = m_tradePersistentModel.findAccountByNumber(item.getAccountNumber());
+                if (null == account) {
+                    account = new Account(item.getAccountNumber(), item.getAccountNumber(), Currency.USD,
+                            AccountType.INDIVIDUAL);
+                }
+                account.setAlias(item.getAlias());
+                account.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
+                m_tradePersistentModel.persistAspect(account);
+            }
+        } catch (Exception | AssertionError ex) {
+            String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
+            _log.error(msg);
+            fail(msg);
+        }
+    }
 
-	@Test
-	public void testAliasRequest1() {
+    @Test
+    public void testAliasRequest1() {
 
-		try {
+        try {
 
-			final TWSAccountAliasRequest request = new TWSAccountAliasRequest();
-			final Aspects aspects = (Aspects) request.fromXML(Thread.currentThread().getContextClassLoader()
-					.getResourceAsStream("org/trade/broker/request/aliases1.xml"));
-			for (Aspect aspect : aspects.getAspect()) {
-				Account item = (Account) aspect;
-				Account account = m_tradePersistentModel.findAccountByNumber(item.getAccountNumber());
-				if (null == account) {
-					account = new Account(item.getAccountNumber(), item.getAccountNumber(), Currency.USD,
-							AccountType.INDIVIDUAL);
-				}
-				account.setAlias(item.getAlias());
-				account.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
-				m_tradePersistentModel.persistAspect(account);
-			}
-		} catch (Exception | AssertionError ex) {
-			String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
-			_log.error(msg);
-			fail(msg);
-		}
-	}
+            final TWSAccountAliasRequest request = new TWSAccountAliasRequest();
+            final Aspects aspects = (Aspects) request.fromXML(Thread.currentThread().getContextClassLoader()
+                    .getResourceAsStream("org/trade/broker/request/aliases1.xml"));
+            for (Aspect aspect : aspects.getAspect()) {
+                Account item = (Account) aspect;
+                Account account = m_tradePersistentModel.findAccountByNumber(item.getAccountNumber());
+                if (null == account) {
+                    account = new Account(item.getAccountNumber(), item.getAccountNumber(), Currency.USD,
+                            AccountType.INDIVIDUAL);
+                }
+                account.setAlias(item.getAlias());
+                account.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
+                m_tradePersistentModel.persistAspect(account);
+            }
+        } catch (Exception | AssertionError ex) {
+            String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
+            _log.error(msg);
+            fail(msg);
+        }
+    }
 
-	@Test
-	public void testAllocationEmptyRequest() {
+    @Test
+    public void testAllocationEmptyRequest() {
 
-		try {
+        try {
 
-			final TWSAllocationRequest request = new TWSAllocationRequest();
-			final Aspects aspects = (Aspects) request.fromXML(Thread.currentThread().getContextClassLoader()
-					.getResourceAsStream("org/trade/broker/request/allocationEmpty.xml"));
+            final TWSAllocationRequest request = new TWSAllocationRequest();
+            final Aspects aspects = (Aspects) request.fromXML(Thread.currentThread().getContextClassLoader()
+                    .getResourceAsStream("org/trade/broker/request/allocationEmpty.xml"));
 
-			for (Aspect aspect : aspects.getAspect()) {
-				m_tradePersistentModel.persistPortfolio((Portfolio) aspect);
-			}
-		} catch (Exception | AssertionError ex) {
-			String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
-			_log.error(msg);
-			fail(msg);
-		}
-	}
+            for (Aspect aspect : aspects.getAspect()) {
+                m_tradePersistentModel.persistPortfolio((Portfolio) aspect);
+            }
+        } catch (Exception | AssertionError ex) {
+            String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
+            _log.error(msg);
+            fail(msg);
+        }
+    }
 
-	@Test
-	public void testAllocationRequest() {
+    @Test
+    public void testAllocationRequest() {
 
-		try {
+        try {
 
-			final TWSAllocationRequest request = new TWSAllocationRequest();
-			final Aspects aspects = (Aspects) request.fromXML(Thread.currentThread().getContextClassLoader()
-					.getResourceAsStream("org/trade/broker/request/allocation.xml"));
-			for (Aspect aspect : aspects.getAspect()) {
-				m_tradePersistentModel.persistPortfolio((Portfolio) aspect);
-			}
+            final TWSAllocationRequest request = new TWSAllocationRequest();
+            final Aspects aspects = (Aspects) request.fromXML(Thread.currentThread().getContextClassLoader()
+                    .getResourceAsStream("org/trade/broker/request/allocation.xml"));
+            for (Aspect aspect : aspects.getAspect()) {
+                m_tradePersistentModel.persistPortfolio((Portfolio) aspect);
+            }
 
-		} catch (Exception | AssertionError ex) {
-			String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
-			_log.error(msg);
-			fail(msg);
-		}
-	}
+        } catch (Exception | AssertionError ex) {
+            String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
+            _log.error(msg);
+            fail(msg);
+        }
+    }
 
-	@Test
-	public void testAllocationRequest1() {
+    @Test
+    public void testAllocationRequest1() {
 
-		try {
+        try {
 
-			final TWSAllocationRequest request = new TWSAllocationRequest();
-			final Aspects aspects = (Aspects) request.fromXML(Thread.currentThread().getContextClassLoader()
-					.getResourceAsStream("org/trade/broker/request/allocation1.xml"));
-			for (Aspect aspect : aspects.getAspect()) {
-				m_tradePersistentModel.persistPortfolio((Portfolio) aspect);
-			}
+            final TWSAllocationRequest request = new TWSAllocationRequest();
+            final Aspects aspects = (Aspects) request.fromXML(Thread.currentThread().getContextClassLoader()
+                    .getResourceAsStream("org/trade/broker/request/allocation1.xml"));
+            for (Aspect aspect : aspects.getAspect()) {
+                m_tradePersistentModel.persistPortfolio((Portfolio) aspect);
+            }
 
-		} catch (Exception | AssertionError ex) {
-			String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
-			_log.error(msg);
-			fail(msg);
-		}
-	}
+        } catch (Exception | AssertionError ex) {
+            String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
+            _log.error(msg);
+            fail(msg);
+        }
+    }
 
-	@Test
-	public void testAllocationRequestNew() {
+    @Test
+    public void testAllocationRequestNew() {
 
-		try {
-			Aspects aspects = new Aspects();
-			Portfolio portfolio = new Portfolio("pf_eq_daily", "pf_eq_daily");
-			Account account = new Account("DU12345", "DU12345", Currency.USD, AccountType.INDIVIDUAL);
-			PortfolioAccount portfolioAccount = new PortfolioAccount(portfolio, account);
-			portfolio.getPortfolioAccounts().add(portfolioAccount);
-			aspects.add(portfolio);
+        try {
+            Aspects aspects = new Aspects();
+            Portfolio portfolio = new Portfolio("pf_eq_daily", "pf_eq_daily");
+            Account account = new Account("DU12345", "DU12345", Currency.USD, AccountType.INDIVIDUAL);
+            PortfolioAccount portfolioAccount = new PortfolioAccount(portfolio, account);
+            portfolio.getPortfolioAccounts().add(portfolioAccount);
+            aspects.add(portfolio);
 
-			for (Aspect aspect : aspects.getAspect()) {
-				m_tradePersistentModel.persistPortfolio((Portfolio) aspect);
-			}
+            for (Aspect aspect : aspects.getAspect()) {
+                m_tradePersistentModel.persistPortfolio((Portfolio) aspect);
+            }
 
-		} catch (Exception | AssertionError ex) {
-			String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
-			_log.error(msg);
-			fail(msg);
-		}
-	}
+        } catch (Exception | AssertionError ex) {
+            String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
+            _log.error(msg);
+            fail(msg);
+        }
+    }
 
-	@Test
-	public void testGroupEmptyRequest() {
+    @Test
+    public void testGroupEmptyRequest() {
 
-		try {
+        try {
 
-			final TWSGroupRequest request = new TWSGroupRequest();
-			final Aspects aspects = (Aspects) request.fromXML(Thread.currentThread().getContextClassLoader()
-					.getResourceAsStream("org/trade/broker/request/groupsEmpty.xml"));
-			for (Aspect aspect : aspects.getAspect()) {
-				m_tradePersistentModel.persistPortfolio((Portfolio) aspect);
-			}
+            final TWSGroupRequest request = new TWSGroupRequest();
+            final Aspects aspects = (Aspects) request.fromXML(Thread.currentThread().getContextClassLoader()
+                    .getResourceAsStream("org/trade/broker/request/groupsEmpty.xml"));
+            for (Aspect aspect : aspects.getAspect()) {
+                m_tradePersistentModel.persistPortfolio((Portfolio) aspect);
+            }
 
-		} catch (Exception | AssertionError ex) {
-			String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
-			_log.error(msg);
-			fail(msg);
-		}
-	}
+        } catch (Exception | AssertionError ex) {
+            String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
+            _log.error(msg);
+            fail(msg);
+        }
+    }
 
-	@Test
-	public void testGroupRequest() {
+    @Test
+    public void testGroupRequest() {
 
-		try {
+        try {
 
-			final TWSGroupRequest request = new TWSGroupRequest();
-			final Aspects aspects = (Aspects) request.fromXML(Thread.currentThread().getContextClassLoader()
-					.getResourceAsStream("org/trade/broker/request/groups.xml"));
-			for (Aspect aspect : aspects.getAspect()) {
-				m_tradePersistentModel.persistPortfolio((Portfolio) aspect);
-			}
+            final TWSGroupRequest request = new TWSGroupRequest();
+            final Aspects aspects = (Aspects) request.fromXML(Thread.currentThread().getContextClassLoader()
+                    .getResourceAsStream("org/trade/broker/request/groups.xml"));
+            for (Aspect aspect : aspects.getAspect()) {
+                m_tradePersistentModel.persistPortfolio((Portfolio) aspect);
+            }
 
-		} catch (Exception | AssertionError ex) {
-			String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
-			_log.error(msg);
-			fail(msg);
-		}
-	}
+        } catch (Exception | AssertionError ex) {
+            String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
+            _log.error(msg);
+            fail(msg);
+        }
+    }
 
-	@Test
-	public void testGroupRequest1() {
+    @Test
+    public void testGroupRequest1() {
 
-		try {
+        try {
 
-			final TWSGroupRequest request = new TWSGroupRequest();
-			final Aspects aspects = (Aspects) request.fromXML(Thread.currentThread().getContextClassLoader()
-					.getResourceAsStream("org/trade/broker/request/groups1.xml"));
-			for (Aspect aspect : aspects.getAspect()) {
-				m_tradePersistentModel.persistPortfolio((Portfolio) aspect);
-			}
+            final TWSGroupRequest request = new TWSGroupRequest();
+            final Aspects aspects = (Aspects) request.fromXML(Thread.currentThread().getContextClassLoader()
+                    .getResourceAsStream("org/trade/broker/request/groups1.xml"));
+            for (Aspect aspect : aspects.getAspect()) {
+                m_tradePersistentModel.persistPortfolio((Portfolio) aspect);
+            }
 
-		} catch (Exception | AssertionError ex) {
-			String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
-			_log.error(msg);
-			fail(msg);
-		}
-	}
+        } catch (Exception | AssertionError ex) {
+            String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
+            _log.error(msg);
+            fail(msg);
+        }
+    }
 }

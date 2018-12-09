@@ -35,17 +35,18 @@
  */
 package org.trade.ui.widget;
 
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 
 /**
+ *
  */
 public class DecodeTableRenderer extends DefaultTableCellRenderer {
 
-	private static final long serialVersionUID = -3000452614626592712L;
+    private static final long serialVersionUID = -3000452614626592712L;
 
-	public DecodeTableRenderer() {
-		super();
-		setHorizontalAlignment(SwingConstants.LEFT);
-	}
+    public DecodeTableRenderer() {
+        super();
+        setHorizontalAlignment(SwingConstants.LEFT);
+    }
 }

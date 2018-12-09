@@ -38,44 +38,39 @@ package org.trade.persistent;
 import org.trade.core.exception.ModelException;
 
 /**
- * 
- * @version $Id: ConfigProperties.java 1.0 2000/08/08 00:36:40Z Simon.Allen dev
- *          $
  * @author Simon Allen
+ * @version $Id: ConfigProperties.java 1.0 2000/08/08 00:36:40Z Simon.Allen dev
+ * $
  */
 public class PersistentModelException extends ModelException {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -1955474015909463964L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -1955474015909463964L;
 
-	public PersistentModelException() {
-		super();
-	}
+    public PersistentModelException() {
+        super();
+    }
 
-	/**
-	 * Constructor that allows the user to set the exception message.
-	 * 
-	 * @param message
-	 *            The desired message text.
-	 * @param id
-	 *            Integer
-	 * @param code
-	 *            Integer
-	 */
-	public PersistentModelException(Integer id, Integer code, String message) {
-		super(id, code, message);
+    /**
+     * Constructor that allows the user to set the exception message.
+     *
+     * @param message The desired message text.
+     * @param id      Integer
+     * @param code    Integer
+     */
+    public PersistentModelException(Integer id, Integer code, String message) {
+        super(id, code, message);
 
-	}
+    }
 
-	/**
-	 * Constructor that allows the user to set the exception message.
-	 * 
-	 * @param message
-	 *            The desired message text.
-	 */
-	public PersistentModelException(String message) {
-		super(message);
-	}
+    /**
+     * Constructor that allows the user to set the exception message.
+     *
+     * @param message The desired message text.
+     */
+    public PersistentModelException(String message) {
+        super(message);
+    }
 }

@@ -38,39 +38,36 @@ package org.trade.core.util;
 import java.util.Comparator;
 
 /**
- * 
  * @author Simon Allen
  */
 public final class Pair {
 
-	public double x = 0;
-	public double y = 0;
+    public double x = 0;
+    public double y = 0;
 
-	/**
-	 * Constructor for Pair.
-	 * 
-	 * @param x
-	 *            double
-	 * @param y
-	 *            double
-	 */
-	public Pair(double x, double y) {
-		this.x = x;
-		this.y = y;
-	}
+    /**
+     * Constructor for Pair.
+     *
+     * @param x double
+     * @param y double
+     */
+    public Pair(double x, double y) {
+        this.x = x;
+        this.y = y;
+    }
 
-	/**
-	 * Method toString.
-	 * 
-	 * @return String
-	 */
-	public String toString() {
-		return x + "," + y;
-	}
+    /**
+     * Method toString.
+     *
+     * @return String
+     */
+    public String toString() {
+        return x + "," + y;
+    }
 
-	public static final Comparator<Pair> X_VALUE_ASC = new Comparator<Pair>() {
-		public int compare(Pair o1, Pair o2) {
-			return CoreUtils.nullSafeComparator(o1.x, o2.x);
-		}
-	};
+    public static final Comparator<Pair> X_VALUE_ASC = new Comparator<Pair>() {
+        public int compare(Pair o1, Pair o2) {
+            return CoreUtils.nullSafeComparator(o1.x, o2.x);
+        }
+    };
 }

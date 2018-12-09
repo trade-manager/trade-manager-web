@@ -35,40 +35,40 @@
  */
 package org.trade.ui.widget;
 
-import javax.swing.DefaultCellEditor;
+import javax.swing.*;
 
 /**
+ *
  */
 public class StringEditor extends DefaultCellEditor {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -2681004614247446255L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -2681004614247446255L;
 
-	/**
-	 * Constructor for StringEditor.
-	 * 
-	 * @param textField
-	 *            StringField
-	 */
-	public StringEditor(final StringField textField) {
-		super(textField);
-		editorComponent = textField;
-		this.clickCountToStart = 1;
-		delegate = new EditorDelegate() {
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 2354896381826003264L;
+    /**
+     * Constructor for StringEditor.
+     *
+     * @param textField StringField
+     */
+    public StringEditor(final StringField textField) {
+        super(textField);
+        editorComponent = textField;
+        this.clickCountToStart = 1;
+        delegate = new EditorDelegate() {
+            /**
+             *
+             */
+            private static final long serialVersionUID = 2354896381826003264L;
 
-			public void setValue(Object value) {
-				textField.setText((String) value);
-			}
+            public void setValue(Object value) {
+                textField.setText((String) value);
+            }
 
-			public Object getCellEditorValue() {
-				return textField.getText();
-			}
-		};
-		textField.addActionListener(delegate);
-	}
+            public Object getCellEditorValue() {
+                return textField.getText();
+            }
+        };
+        textField.addActionListener(delegate);
+    }
 }

@@ -35,202 +35,192 @@
  */
 package org.trade.persistent.dao;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.trade.core.dao.EntityManagerHelper;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-
-import org.trade.core.dao.EntityManagerHelper;
+import javax.persistence.criteria.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
+ *
  */
 @Stateless
 public class CodeTypeHome {
 
-	public CodeTypeHome() {
+    public CodeTypeHome() {
 
-	}
+    }
 
-	/**
-	 * Method findById.
-	 * 
-	 * @param idCodeType
-	 *            Integer
-	 * @return CodeType
-	 */
-	public CodeType findById(Integer idCodeType) {
+    /**
+     * Method findById.
+     *
+     * @param idCodeType Integer
+     * @return CodeType
+     */
+    public CodeType findById(Integer idCodeType) {
 
-		try {
-			EntityManager entityManager = EntityManagerHelper.getEntityManager();
-			entityManager.getTransaction().begin();
-			CodeType instance = entityManager.find(CodeType.class, idCodeType);
-			entityManager.getTransaction().commit();
-			return instance;
+        try {
+            EntityManager entityManager = EntityManagerHelper.getEntityManager();
+            entityManager.getTransaction().begin();
+            CodeType instance = entityManager.find(CodeType.class, idCodeType);
+            entityManager.getTransaction().commit();
+            return instance;
 
-		} catch (Exception re) {
-			EntityManagerHelper.rollback();
-			throw re;
-		} finally {
-			EntityManagerHelper.close();
-		}
-	}
+        } catch (Exception re) {
+            EntityManagerHelper.rollback();
+            throw re;
+        } finally {
+            EntityManagerHelper.close();
+        }
+    }
 
-	/**
-	 * Method findByName.
-	 * 
-	 * @param name
-	 *            String
-	 * @return CodeType
-	 */
-	public CodeType findByName(String name) {
+    /**
+     * Method findByName.
+     *
+     * @param name String
+     * @return CodeType
+     */
+    public CodeType findByName(String name) {
 
-		try {
-			EntityManager entityManager = EntityManagerHelper.getEntityManager();
-			entityManager.getTransaction().begin();
-			CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-			CriteriaQuery<CodeType> query = builder.createQuery(CodeType.class);
-			Root<CodeType> from = query.from(CodeType.class);
-			query.select(from);
-			query.where(builder.equal(from.get("name"), name));
-			List<CodeType> items = entityManager.createQuery(query).getResultList();
-			entityManager.getTransaction().commit();
-			if (items.size() > 0) {
-				return items.get(0);
-			}
-			return null;
+        try {
+            EntityManager entityManager = EntityManagerHelper.getEntityManager();
+            entityManager.getTransaction().begin();
+            CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+            CriteriaQuery<CodeType> query = builder.createQuery(CodeType.class);
+            Root<CodeType> from = query.from(CodeType.class);
+            query.select(from);
+            query.where(builder.equal(from.get("name"), name));
+            List<CodeType> items = entityManager.createQuery(query).getResultList();
+            entityManager.getTransaction().commit();
+            if (items.size() > 0) {
+                return items.get(0);
+            }
+            return null;
 
-		} catch (Exception re) {
-			EntityManagerHelper.rollback();
-			throw re;
-		} finally {
-			EntityManagerHelper.close();
-		}
-	}
+        } catch (Exception re) {
+            EntityManagerHelper.rollback();
+            throw re;
+        } finally {
+            EntityManagerHelper.close();
+        }
+    }
 
-	/**
-	 * Method findByNameAndType.
-	 * 
-	 * @param codeName
-	 *            String
-	 * @param codeType
-	 *            String
-	 * @return CodeType
-	 */
-	public CodeType findByNameAndType(String codeName, String codeType) {
+    /**
+     * Method findByNameAndType.
+     *
+     * @param codeName String
+     * @param codeType String
+     * @return CodeType
+     */
+    public CodeType findByNameAndType(String codeName, String codeType) {
 
-		try {
-			EntityManager entityManager = EntityManagerHelper.getEntityManager();
-			entityManager.getTransaction().begin();
-			CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-			CriteriaQuery<CodeType> query = builder.createQuery(CodeType.class);
-			Root<CodeType> from = query.from(CodeType.class);
-			query.select(from);
-			List<Predicate> predicates = new ArrayList<Predicate>();
+        try {
+            EntityManager entityManager = EntityManagerHelper.getEntityManager();
+            entityManager.getTransaction().begin();
+            CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+            CriteriaQuery<CodeType> query = builder.createQuery(CodeType.class);
+            Root<CodeType> from = query.from(CodeType.class);
+            query.select(from);
+            List<Predicate> predicates = new ArrayList<Predicate>();
 
-			if (null != codeName) {
-				Predicate predicate = builder.equal(from.get("name"), codeName);
-				predicates.add(predicate);
-			}
-			if (null != codeType) {
-				Predicate predicate = builder.equal(from.get("type"), codeType);
-				predicates.add(predicate);
-			}
-			query.where(predicates.toArray(new Predicate[] {}));
-			TypedQuery<CodeType> typedQuery = entityManager.createQuery(query);
-			List<CodeType> items = typedQuery.getResultList();
-			entityManager.getTransaction().commit();
-			if (items.size() > 0) {
-				return items.get(0);
-			}
-			return null;
+            if (null != codeName) {
+                Predicate predicate = builder.equal(from.get("name"), codeName);
+                predicates.add(predicate);
+            }
+            if (null != codeType) {
+                Predicate predicate = builder.equal(from.get("type"), codeType);
+                predicates.add(predicate);
+            }
+            query.where(predicates.toArray(new Predicate[]{}));
+            TypedQuery<CodeType> typedQuery = entityManager.createQuery(query);
+            List<CodeType> items = typedQuery.getResultList();
+            entityManager.getTransaction().commit();
+            if (items.size() > 0) {
+                return items.get(0);
+            }
+            return null;
 
-		} catch (Exception re) {
-			EntityManagerHelper.rollback();
-			throw re;
-		} finally {
-			EntityManagerHelper.close();
-		}
-	}
+        } catch (Exception re) {
+            EntityManagerHelper.rollback();
+            throw re;
+        } finally {
+            EntityManagerHelper.close();
+        }
+    }
 
-	/**
-	 * Method findByAttributeName.
-	 * 
-	 * @param codeTypeName
-	 *            String
-	 * @param codeAttributeName
-	 *            String
-	 * @return CodeValue
-	 */
-	public CodeValue findByAttributeName(String codeTypeName, String codeAttributeName) {
+    /**
+     * Method findByAttributeName.
+     *
+     * @param codeTypeName      String
+     * @param codeAttributeName String
+     * @return CodeValue
+     */
+    public CodeValue findByAttributeName(String codeTypeName, String codeAttributeName) {
 
-		try {
+        try {
 
-			EntityManager entityManager = EntityManagerHelper.getEntityManager();
-			entityManager.getTransaction().begin();
-			CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-			CriteriaQuery<CodeValue> query = builder.createQuery(CodeValue.class);
-			Root<CodeValue> from = query.from(CodeValue.class);
-			query.select(from);
-			List<Predicate> predicates = new ArrayList<Predicate>();
-			if (null != codeAttributeName) {
-				Join<CodeValue, CodeAttribute> codeAttribute = from.join("codeAttribute");
-				Predicate predicate = builder.equal(codeAttribute.get("name"), codeAttributeName);
-				predicates.add(predicate);
-				Join<CodeAttribute, CodeType> codeType = codeAttribute.join("codeType");
-				Predicate predicate1 = builder.equal(codeType.get("name"), codeTypeName);
-				predicates.add(predicate1);
-			}
+            EntityManager entityManager = EntityManagerHelper.getEntityManager();
+            entityManager.getTransaction().begin();
+            CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+            CriteriaQuery<CodeValue> query = builder.createQuery(CodeValue.class);
+            Root<CodeValue> from = query.from(CodeValue.class);
+            query.select(from);
+            List<Predicate> predicates = new ArrayList<Predicate>();
+            if (null != codeAttributeName) {
+                Join<CodeValue, CodeAttribute> codeAttribute = from.join("codeAttribute");
+                Predicate predicate = builder.equal(codeAttribute.get("name"), codeAttributeName);
+                predicates.add(predicate);
+                Join<CodeAttribute, CodeType> codeType = codeAttribute.join("codeType");
+                Predicate predicate1 = builder.equal(codeType.get("name"), codeTypeName);
+                predicates.add(predicate1);
+            }
 
-			query.where(predicates.toArray(new Predicate[] {}));
-			TypedQuery<CodeValue> typedQuery = entityManager.createQuery(query);
-			List<CodeValue> items = typedQuery.getResultList();
-			entityManager.getTransaction().commit();
-			if (items.size() > 0) {
-				return items.get(0);
-			}
-			return null;
+            query.where(predicates.toArray(new Predicate[]{}));
+            TypedQuery<CodeValue> typedQuery = entityManager.createQuery(query);
+            List<CodeValue> items = typedQuery.getResultList();
+            entityManager.getTransaction().commit();
+            if (items.size() > 0) {
+                return items.get(0);
+            }
+            return null;
 
-		} catch (Exception re) {
-			EntityManagerHelper.rollback();
-			throw re;
-		} finally {
-			EntityManagerHelper.close();
-		}
-	}
+        } catch (Exception re) {
+            EntityManagerHelper.rollback();
+            throw re;
+        } finally {
+            EntityManagerHelper.close();
+        }
+    }
 
-	/**
-	 * Method findAll.
-	 * 
-	 * @return List<CodeType>
-	 */
-	public List<CodeType> findAll() {
+    /**
+     * Method findAll.
+     *
+     * @return List<CodeType>
+     */
+    public List<CodeType> findAll() {
 
-		try {
-			EntityManager entityManager = EntityManagerHelper.getEntityManager();
-			entityManager.getTransaction().begin();
-			CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-			CriteriaQuery<CodeType> query = builder.createQuery(CodeType.class);
-			Root<CodeType> from = query.from(CodeType.class);
-			query.select(from);
-			List<CodeType> items = entityManager.createQuery(query).getResultList();
-			for (CodeType codeType : items) {
-				codeType.getCodeAttribute().size();
-			}
-			entityManager.getTransaction().commit();
-			return items;
+        try {
+            EntityManager entityManager = EntityManagerHelper.getEntityManager();
+            entityManager.getTransaction().begin();
+            CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+            CriteriaQuery<CodeType> query = builder.createQuery(CodeType.class);
+            Root<CodeType> from = query.from(CodeType.class);
+            query.select(from);
+            List<CodeType> items = entityManager.createQuery(query).getResultList();
+            for (CodeType codeType : items) {
+                codeType.getCodeAttribute().size();
+            }
+            entityManager.getTransaction().commit();
+            return items;
 
-		} catch (Exception re) {
-			EntityManagerHelper.rollback();
-			throw re;
-		} finally {
-			EntityManagerHelper.close();
-		}
-	}
+        } catch (Exception re) {
+            EntityManagerHelper.rollback();
+            throw re;
+        } finally {
+            EntityManagerHelper.close();
+        }
+    }
 }

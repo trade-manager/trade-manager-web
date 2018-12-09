@@ -38,41 +38,41 @@ package org.trade.dictionary.valuetype;
 import org.trade.core.valuetype.Decode;
 
 /**
+ *
  */
 public class TriggerMethod extends Decode {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -5381026427696898592L;
-	public static final String DECODE = "TRIGGER_METHOD";
-	public static final int DEFAULT = 0;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -5381026427696898592L;
+    public static final String DECODE = "TRIGGER_METHOD";
+    public static final int DEFAULT = 0;
 
-	public TriggerMethod() {
-		super(DECODE);
-	}
+    public TriggerMethod() {
+        super(DECODE);
+    }
 
-	/**
-	 * Method newInstance.
-	 * 
-	 * @param value
-	 *            String
-	 * @return TriggerMethod
-	 */
-	public static TriggerMethod newInstance(String value) {
-		final TriggerMethod returnInstance = new TriggerMethod();
-		returnInstance.setValue(value);
-		return returnInstance;
-	}
+    /**
+     * Method newInstance.
+     *
+     * @param value String
+     * @return TriggerMethod
+     */
+    public static TriggerMethod newInstance(String value) {
+        final TriggerMethod returnInstance = new TriggerMethod();
+        returnInstance.setValue(value);
+        return returnInstance;
+    }
 
-	/**
-	 * Method newInstance.
-	 * 
-	 * @return TriggerMethod
-	 */
-	public static TriggerMethod newInstance() {
-		final TriggerMethod returnInstance = new TriggerMethod();
-		returnInstance.setDefaultCode();
-		return returnInstance;
-	}
+    /**
+     * Method newInstance.
+     *
+     * @return TriggerMethod
+     */
+    public static TriggerMethod newInstance() {
+        final TriggerMethod returnInstance = new TriggerMethod();
+        returnInstance.setDefaultCode();
+        return returnInstance;
+    }
 }

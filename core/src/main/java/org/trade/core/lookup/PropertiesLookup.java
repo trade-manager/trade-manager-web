@@ -40,267 +40,249 @@ import java.util.Vector;
 /**
  * Implementation of the ILookup interface that uses data from the
  * ConfigProperties object for providing its ILookup information.
- * 
+ *
  * @author Simon Allen
  */
 public class PropertiesLookup implements ILookup, Cloneable, java.io.Serializable {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 5263608853348477640L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 5263608853348477640L;
 
-	//
-	// Private Attributes
-	//
-	private Vector<?> m_data = null;
+    //
+    // Private Attributes
+    //
+    private Vector<?> m_data = null;
 
-	private Vector<?> m_columnNames = null;
+    private Vector<?> m_columnNames = null;
 
-	private int m_currentRowPos = -1;
+    private int m_currentRowPos = -1;
 
-	/**
-	 * Constructor
-	 * 
-	 * 
-	 * 
-	 * @param columnNames
-	 *            Vector<?>
-	 * @param data
-	 *            Vector<?>
-	 */
-	public PropertiesLookup(Vector<?> columnNames, Vector<?> data) {
-		m_columnNames = columnNames;
-		m_data = data;
+    /**
+     * Constructor
+     *
+     * @param columnNames Vector<?>
+     * @param data        Vector<?>
+     */
+    public PropertiesLookup(Vector<?> columnNames, Vector<?> data) {
+        m_columnNames = columnNames;
+        m_data = data;
 
-		// A precaustion to make sure that calls to my API won't throw
-		// nulls
-		if (null == m_columnNames) {
-			m_columnNames = new Vector<Object>();
-		}
+        // A precaustion to make sure that calls to my API won't throw
+        // nulls
+        if (null == m_columnNames) {
+            m_columnNames = new Vector<Object>();
+        }
 
-		if (null == m_data) {
-			m_data = new Vector<Object>();
-		}
-	}
+        if (null == m_data) {
+            m_data = new Vector<Object>();
+        }
+    }
 
-	/**
-	 * Method getColumnCount.
-	 * 
-	 * @return int
-	 * @throws LookupException
-	 * @see ILookup#getColumnCount()
-	 */
-	public int getColumnCount() throws LookupException {
-		return (m_columnNames.size());
-	}
+    /**
+     * Method getColumnCount.
+     *
+     * @return int
+     * @throws LookupException
+     * @see ILookup#getColumnCount()
+     */
+    public int getColumnCount() throws LookupException {
+        return (m_columnNames.size());
+    }
 
-	/**
-	 * Method getRowCount.
-	 * 
-	 * @return int
-	 * @throws LookupException
-	 * @see ILookup#getRowCount()
-	 */
-	public int getRowCount() throws LookupException {
-		return (m_data.size());
-	}
+    /**
+     * Method getRowCount.
+     *
+     * @return int
+     * @throws LookupException
+     * @see ILookup#getRowCount()
+     */
+    public int getRowCount() throws LookupException {
+        return (m_data.size());
+    }
 
-	/**
-	 * Method getValueAt.
-	 * 
-	 * @param col
-	 *            int
-	 * @return Object
-	 * @throws LookupException
-	 * @see ILookup#getValueAt(int)
-	 */
-	public Object getValueAt(int col) throws LookupException {
-		return (doGetValue(m_currentRowPos, col));
-	}
+    /**
+     * Method getValueAt.
+     *
+     * @param col int
+     * @return Object
+     * @throws LookupException
+     * @see ILookup#getValueAt(int)
+     */
+    public Object getValueAt(int col) throws LookupException {
+        return (doGetValue(m_currentRowPos, col));
+    }
 
-	/**
-	 * Method getValueAt.
-	 * 
-	 * @param colName
-	 *            String
-	 * @return Object
-	 * @throws LookupException
-	 * @see ILookup#getValueAt(String)
-	 */
-	public Object getValueAt(String colName) throws LookupException {
-		return (doGetValue(m_currentRowPos, doGetColPos(colName)));
-	}
+    /**
+     * Method getValueAt.
+     *
+     * @param colName String
+     * @return Object
+     * @throws LookupException
+     * @see ILookup#getValueAt(String)
+     */
+    public Object getValueAt(String colName) throws LookupException {
+        return (doGetValue(m_currentRowPos, doGetColPos(colName)));
+    }
 
-	/**
-	 * Method getValueAt.
-	 * 
-	 * @param row
-	 *            int
-	 * @param col
-	 *            int
-	 * @return Object
-	 * @throws LookupException
-	 * @see ILookup#getValueAt(int, int)
-	 */
-	public Object getValueAt(int row, int col) throws LookupException {
-		return (doGetValue(row, col));
-	}
+    /**
+     * Method getValueAt.
+     *
+     * @param row int
+     * @param col int
+     * @return Object
+     * @throws LookupException
+     * @see ILookup#getValueAt(int, int)
+     */
+    public Object getValueAt(int row, int col) throws LookupException {
+        return (doGetValue(row, col));
+    }
 
-	/**
-	 * Method getColumnName.
-	 * 
-	 * @param colPos
-	 *            int
-	 * @return String
-	 * @throws LookupException
-	 * @see ILookup#getColumnName(int)
-	 */
-	public String getColumnName(int colPos) throws LookupException {
-		String colName = null;
+    /**
+     * Method getColumnName.
+     *
+     * @param colPos int
+     * @return String
+     * @throws LookupException
+     * @see ILookup#getColumnName(int)
+     */
+    public String getColumnName(int colPos) throws LookupException {
+        String colName = null;
 
-		try {
-			colName = "" + m_columnNames.elementAt(colPos);
-		} catch (Throwable t) {
-			throw new LookupException(t, "Not a valid column position");
-		}
+        try {
+            colName = "" + m_columnNames.elementAt(colPos);
+        } catch (Throwable t) {
+            throw new LookupException(t, "Not a valid column position");
+        }
 
-		return (colName);
-	}
+        return (colName);
+    }
 
-	/**
-	 * Method setDefaultPos.
-	 * 
-	 * @param colName
-	 *            String
-	 * @return boolean
-	 * @throws LookupException
-	 * @see ILookup#setDefaultPos(String)
-	 */
-	public boolean setDefaultPos(String colName) throws LookupException {
-		return (doSetPos(doGetValue(0, doGetColPos(colName)), doGetColPos(colName)));
-	}
+    /**
+     * Method setDefaultPos.
+     *
+     * @param colName String
+     * @return boolean
+     * @throws LookupException
+     * @see ILookup#setDefaultPos(String)
+     */
+    public boolean setDefaultPos(String colName) throws LookupException {
+        return (doSetPos(doGetValue(0, doGetColPos(colName)), doGetColPos(colName)));
+    }
 
-	/**
-	 * Method setPos.
-	 * 
-	 * @param colValue
-	 *            Object
-	 * @param colName
-	 *            String
-	 * @return boolean
-	 * @throws LookupException
-	 * @see ILookup#setPos(Object, String)
-	 */
-	public boolean setPos(Object colValue, String colName) throws LookupException {
-		return (doSetPos(colValue, doGetColPos(colName)));
-	}
+    /**
+     * Method setPos.
+     *
+     * @param colValue Object
+     * @param colName  String
+     * @return boolean
+     * @throws LookupException
+     * @see ILookup#setPos(Object, String)
+     */
+    public boolean setPos(Object colValue, String colName) throws LookupException {
+        return (doSetPos(colValue, doGetColPos(colName)));
+    }
 
-	/**
-	 * Method setPos.
-	 * 
-	 * @param colValue
-	 *            Object
-	 * @param col
-	 *            int
-	 * @return boolean
-	 * @throws LookupException
-	 * @see ILookup#setPos(Object, int)
-	 */
-	public boolean setPos(Object colValue, int col) throws LookupException {
-		return (doSetPos(colValue, col));
-	}
+    /**
+     * Method setPos.
+     *
+     * @param colValue Object
+     * @param col      int
+     * @return boolean
+     * @throws LookupException
+     * @see ILookup#setPos(Object, int)
+     */
+    public boolean setPos(Object colValue, int col) throws LookupException {
+        return (doSetPos(colValue, col));
+    }
 
-	/**
-	 * Method clone.
-	 * 
-	 * @return Object
-	 * @see ILookup#clone()
-	 */
-	public Object clone() {
-		return (new PropertiesLookup(m_columnNames, m_data));
-	}
+    /**
+     * Method clone.
+     *
+     * @return Object
+     * @see ILookup#clone()
+     */
+    public Object clone() {
+        return (new PropertiesLookup(m_columnNames, m_data));
+    }
 
-	//
-	// Private Methods
-	//
-	/**
-	 * Method doGetColPos.
-	 * 
-	 * @param colName
-	 *            String
-	 * @return int
-	 * @throws LookupException
-	 */
-	private int doGetColPos(String colName) throws LookupException {
-		int pos = -1;
-		int columnNamesSize = m_columnNames.size();
+    //
+    // Private Methods
+    //
 
-		for (int i = 0; i < columnNamesSize; i++) {
-			if (m_columnNames.elementAt(i).equals(colName)) {
-				// Have found the position
-				pos = i;
-				break;
-			}
-		}
+    /**
+     * Method doGetColPos.
+     *
+     * @param colName String
+     * @return int
+     * @throws LookupException
+     */
+    private int doGetColPos(String colName) throws LookupException {
+        int pos = -1;
+        int columnNamesSize = m_columnNames.size();
 
-		if (-1 == pos) {
-			throw new LookupException("Invalid Column Name");
-		}
+        for (int i = 0; i < columnNamesSize; i++) {
+            if (m_columnNames.elementAt(i).equals(colName)) {
+                // Have found the position
+                pos = i;
+                break;
+            }
+        }
 
-		return (pos);
-	}
+        if (-1 == pos) {
+            throw new LookupException("Invalid Column Name");
+        }
 
-	/**
-	 * Method doGetValue.
-	 * 
-	 * @param rowPos
-	 *            int
-	 * @param colPos
-	 *            int
-	 * @return Object
-	 * @throws LookupException
-	 */
-	private Object doGetValue(int rowPos, int colPos) throws LookupException {
-		Object rVal = null;
+        return (pos);
+    }
 
-		if (rowPos != -1) // i.e a setPos was not performed.
-		{
-			try {
-				Vector<?> row = (Vector<?>) m_data.elementAt(rowPos);
-				rVal = row.elementAt(colPos);
-			} catch (Throwable t) {
-				throw new LookupException(t, "Out of bounds");
-			}
-		}
-		return (rVal);
-	}
+    /**
+     * Method doGetValue.
+     *
+     * @param rowPos int
+     * @param colPos int
+     * @return Object
+     * @throws LookupException
+     */
+    private Object doGetValue(int rowPos, int colPos) throws LookupException {
+        Object rVal = null;
 
-	/**
-	 * Method doSetPos.
-	 * 
-	 * @param colValue
-	 *            Object
-	 * @param col
-	 *            int
-	 * @return boolean
-	 */
-	private boolean doSetPos(Object colValue, int col) {
-		boolean rVal = false;
+        if (rowPos != -1) // i.e a setPos was not performed.
+        {
+            try {
+                Vector<?> row = (Vector<?>) m_data.elementAt(rowPos);
+                rVal = row.elementAt(colPos);
+            } catch (Throwable t) {
+                throw new LookupException(t, "Out of bounds");
+            }
+        }
+        return (rVal);
+    }
 
-		m_currentRowPos = -1;
+    /**
+     * Method doSetPos.
+     *
+     * @param colValue Object
+     * @param col      int
+     * @return boolean
+     */
+    private boolean doSetPos(Object colValue, int col) {
+        boolean rVal = false;
 
-		int dataSize = m_data.size();
+        m_currentRowPos = -1;
 
-		for (int i = 0; i < dataSize; i++) {
-			Vector<?> row = (Vector<?>) m_data.elementAt(i);
+        int dataSize = m_data.size();
 
-			if (row.elementAt(col).equals(colValue)) {
-				m_currentRowPos = i;
-				rVal = true;
+        for (int i = 0; i < dataSize; i++) {
+            Vector<?> row = (Vector<?>) m_data.elementAt(i);
 
-				break;
-			}
-		}
-		return (rVal);
-	}
+            if (row.elementAt(col).equals(colValue)) {
+                m_currentRowPos = i;
+                rVal = true;
+
+                break;
+            }
+        }
+        return (rVal);
+    }
 }

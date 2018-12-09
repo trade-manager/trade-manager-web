@@ -35,28 +35,28 @@
  */
 package org.trade.ui.tables;
 
-import javax.swing.JTable;
-
 import org.trade.core.valuetype.ValueTypeException;
 import org.trade.ui.base.Table;
 import org.trade.ui.base.TableModel;
 
+import javax.swing.*;
+
 /**
+ *
  */
 public class TradelogSummaryTable extends Table {
 
-	private static final long serialVersionUID = 1132297931453070904L;
+    private static final long serialVersionUID = 1132297931453070904L;
 
-	/**
-	 * Constructor for TradelogSummaryTable.
-	 * 
-	 * @param model
-	 *            TableModel
-	 * @throws ValueTypeException
-	 */
-	public TradelogSummaryTable(TableModel model) throws ValueTypeException {
-		super(model);
-		this.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-		this.enablePopupMenu(false);
-	}
+    /**
+     * Constructor for TradelogSummaryTable.
+     *
+     * @param model TableModel
+     * @throws ValueTypeException
+     */
+    public TradelogSummaryTable(TableModel model) throws ValueTypeException {
+        super(model);
+        this.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        this.enablePopupMenu(false);
+    }
 }

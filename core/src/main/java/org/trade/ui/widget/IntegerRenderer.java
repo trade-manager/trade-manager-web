@@ -35,42 +35,41 @@
  */
 package org.trade.ui.widget;
 
+import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import java.text.NumberFormat;
 
-import javax.swing.SwingConstants;
-import javax.swing.table.DefaultTableCellRenderer;
-
 /**
+ *
  */
 public class IntegerRenderer extends DefaultTableCellRenderer {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 3568483163690718815L;
-	private NumberFormat m_formater = null;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 3568483163690718815L;
+    private NumberFormat m_formater = null;
 
-	public IntegerRenderer() {
-		super();
-		setHorizontalAlignment(SwingConstants.RIGHT);
-		m_formater = NumberFormat.getIntegerInstance();
-		m_formater.setMinimumFractionDigits(0);
-	}
+    public IntegerRenderer() {
+        super();
+        setHorizontalAlignment(SwingConstants.RIGHT);
+        m_formater = NumberFormat.getIntegerInstance();
+        m_formater.setMinimumFractionDigits(0);
+    }
 
-	/**
-	 * Method setValue.
-	 * 
-	 * @param value
-	 *            Object
-	 */
-	protected void setValue(Object value) {
-		if (value == null) {
-			setText("");
-		} else {
-			if (value instanceof Integer) {
-				setText(m_formater.format(value));
-			} else {
-				setText(value.toString());
-			}
-		}
-	}
+    /**
+     * Method setValue.
+     *
+     * @param value Object
+     */
+    protected void setValue(Object value) {
+        if (value == null) {
+            setText("");
+        } else {
+            if (value instanceof Integer) {
+                setText(m_formater.format(value));
+            } else {
+                setText(value.toString());
+            }
+        }
+    }
 }

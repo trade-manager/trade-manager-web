@@ -35,169 +35,157 @@
  */
 package org.trade.persistent.dao;
 
-import java.math.BigDecimal;
-import java.time.ZonedDateTime;
+import org.trade.core.dao.EntityManagerHelper;
+import org.trade.core.util.TradingCalendar;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
-
-import org.trade.core.dao.EntityManagerHelper;
-import org.trade.core.util.TradingCalendar;
+import java.math.BigDecimal;
+import java.time.ZonedDateTime;
 
 /**
+ *
  */
 @Stateless
 public class TradelogHome {
-	private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
-	public TradelogHome() {
+    public TradelogHome() {
 
-	}
+    }
 
-	/**
-	 * Method findByTradelogReport.
-	 * 
-	 * @param portfolio
-	 *            Portfolio
-	 * @param start
-	 *            ZonedDateTime
-	 * @param end
-	 *            ZonedDateTime
-	 * @param filter
-	 *            boolean
-	 * @param symbol
-	 *            String
-	 * @return TradelogReport
-	 */
-	public TradelogReport findByTradelogReport(Portfolio portfolio, ZonedDateTime start, ZonedDateTime end,
-			boolean filter, String symbol, BigDecimal winLossAmount) {
-		EntityManager entityManagerLocal = EntityManagerHelper.getLocalEntityManager();
-		try {
-			entityManagerLocal.getTransaction().begin();
-			Query queryDetail = entityManagerLocal.createNativeQuery(TradelogDetail.getSQLString(),
-					TradelogDetail.class);
+    /**
+     * Method findByTradelogReport.
+     *
+     * @param portfolio Portfolio
+     * @param start     ZonedDateTime
+     * @param end       ZonedDateTime
+     * @param filter    boolean
+     * @param symbol    String
+     * @return TradelogReport
+     */
+    public TradelogReport findByTradelogReport(Portfolio portfolio, ZonedDateTime start, ZonedDateTime end,
+                                               boolean filter, String symbol, BigDecimal winLossAmount) {
+        EntityManager entityManagerLocal = EntityManagerHelper.getLocalEntityManager();
+        try {
+            entityManagerLocal.getTransaction().begin();
+            Query queryDetail = entityManagerLocal.createNativeQuery(TradelogDetail.getSQLString(),
+                    TradelogDetail.class);
 
-			queryDetail.setParameter("idPortfolio", portfolio.getId());
-			queryDetail.setParameter("start", TradingCalendar.getFormattedDate(start, DATE_FORMAT));
-			queryDetail.setParameter("end", TradingCalendar.getFormattedDate(end, DATE_FORMAT));
-			queryDetail.setParameter("filter", filter);
-			queryDetail.setParameter("symbol", symbol);
+            queryDetail.setParameter("idPortfolio", portfolio.getId());
+            queryDetail.setParameter("start", TradingCalendar.getFormattedDate(start, DATE_FORMAT));
+            queryDetail.setParameter("end", TradingCalendar.getFormattedDate(end, DATE_FORMAT));
+            queryDetail.setParameter("filter", filter);
+            queryDetail.setParameter("symbol", symbol);
 
-			TradelogReport tradelogReport = new TradelogReport();
+            TradelogReport tradelogReport = new TradelogReport();
 
-			for (Object item : queryDetail.getResultList()) {
-				tradelogReport.add((TradelogDetail) item);
-			}
-			Query querySummary = entityManagerLocal.createNativeQuery(TradelogSummary.getSQLString(),
-					TradelogSummary.class);
+            for (Object item : queryDetail.getResultList()) {
+                tradelogReport.add((TradelogDetail) item);
+            }
+            Query querySummary = entityManagerLocal.createNativeQuery(TradelogSummary.getSQLString(),
+                    TradelogSummary.class);
 
-			querySummary.setParameter("idPortfolio", portfolio.getId());
-			querySummary.setParameter("start", TradingCalendar.getFormattedDate(start, DATE_FORMAT));
-			querySummary.setParameter("end", TradingCalendar.getFormattedDate(end, DATE_FORMAT));
-			querySummary.setParameter("symbol", symbol);
-			querySummary.setParameter("winLossAmount", winLossAmount);
+            querySummary.setParameter("idPortfolio", portfolio.getId());
+            querySummary.setParameter("start", TradingCalendar.getFormattedDate(start, DATE_FORMAT));
+            querySummary.setParameter("end", TradingCalendar.getFormattedDate(end, DATE_FORMAT));
+            querySummary.setParameter("symbol", symbol);
+            querySummary.setParameter("winLossAmount", winLossAmount);
 
-			for (Object item : querySummary.getResultList()) {
-				tradelogReport.add((TradelogSummary) item);
-			}
-			entityManagerLocal.getTransaction().commit();
-			return tradelogReport;
+            for (Object item : querySummary.getResultList()) {
+                tradelogReport.add((TradelogSummary) item);
+            }
+            entityManagerLocal.getTransaction().commit();
+            return tradelogReport;
 
-		} catch (Exception re) {
-			if ((entityManagerLocal.getTransaction() != null) && entityManagerLocal.getTransaction().isActive()) {
-				entityManagerLocal.getTransaction().rollback();
-			}
-			throw re;
-		} finally {
-			entityManagerLocal.close();
-		}
-	}
+        } catch (Exception re) {
+            if ((entityManagerLocal.getTransaction() != null) && entityManagerLocal.getTransaction().isActive()) {
+                entityManagerLocal.getTransaction().rollback();
+            }
+            throw re;
+        } finally {
+            entityManagerLocal.close();
+        }
+    }
 
-	/**
-	 * Method findByTradelogDetail.
-	 * 
-	 * @param portfolio
-	 *            Portfolio
-	 * @param start
-	 *            ZonedDateTime
-	 * @param end
-	 *            ZonedDateTime
-	 * @param filter
-	 *            boolean
-	 * @return TradelogReport
-	 */
-	public TradelogReport findByTradelogDetail(Portfolio portfolio, ZonedDateTime start, ZonedDateTime end,
-			boolean filter, String symbol) {
-		EntityManager entityManagerLocal = EntityManagerHelper.getLocalEntityManager();
-		try {
-			entityManagerLocal.getTransaction().begin();
-			Query queryDetail = entityManagerLocal.createNativeQuery(TradelogDetail.getSQLString(),
-					"TradelogDetailMapping");
+    /**
+     * Method findByTradelogDetail.
+     *
+     * @param portfolio Portfolio
+     * @param start     ZonedDateTime
+     * @param end       ZonedDateTime
+     * @param filter    boolean
+     * @return TradelogReport
+     */
+    public TradelogReport findByTradelogDetail(Portfolio portfolio, ZonedDateTime start, ZonedDateTime end,
+                                               boolean filter, String symbol) {
+        EntityManager entityManagerLocal = EntityManagerHelper.getLocalEntityManager();
+        try {
+            entityManagerLocal.getTransaction().begin();
+            Query queryDetail = entityManagerLocal.createNativeQuery(TradelogDetail.getSQLString(),
+                    "TradelogDetailMapping");
 
-			queryDetail.setParameter("idPortfolio", portfolio.getId());
-			queryDetail.setParameter("start", TradingCalendar.getFormattedDate(start, DATE_FORMAT));
-			queryDetail.setParameter("end", TradingCalendar.getFormattedDate(end, DATE_FORMAT));
-			queryDetail.setParameter("filter", filter);
-			queryDetail.setParameter("symbol", symbol);
+            queryDetail.setParameter("idPortfolio", portfolio.getId());
+            queryDetail.setParameter("start", TradingCalendar.getFormattedDate(start, DATE_FORMAT));
+            queryDetail.setParameter("end", TradingCalendar.getFormattedDate(end, DATE_FORMAT));
+            queryDetail.setParameter("filter", filter);
+            queryDetail.setParameter("symbol", symbol);
 
-			TradelogReport tradelogReport = new TradelogReport();
-			for (Object item : queryDetail.getResultList()) {
-				tradelogReport.add((TradelogDetail) item);
-			}
-			entityManagerLocal.getTransaction().commit();
-			return tradelogReport;
+            TradelogReport tradelogReport = new TradelogReport();
+            for (Object item : queryDetail.getResultList()) {
+                tradelogReport.add((TradelogDetail) item);
+            }
+            entityManagerLocal.getTransaction().commit();
+            return tradelogReport;
 
-		} catch (Exception re) {
-			if ((entityManagerLocal.getTransaction() != null) && entityManagerLocal.getTransaction().isActive()) {
-				entityManagerLocal.getTransaction().rollback();
-			}
-			throw re;
-		} finally {
-			entityManagerLocal.close();
-		}
-	}
+        } catch (Exception re) {
+            if ((entityManagerLocal.getTransaction() != null) && entityManagerLocal.getTransaction().isActive()) {
+                entityManagerLocal.getTransaction().rollback();
+            }
+            throw re;
+        } finally {
+            entityManagerLocal.close();
+        }
+    }
 
-	/**
-	 * Method findByTradelogSummary.
-	 * 
-	 * @param portfolio
-	 *            Portfolio
-	 * @param start
-	 *            ZonedDateTime
-	 * @param end
-	 *            ZonedDateTime
-	 * @return TradelogReport
-	 */
-	public TradelogReport findByTradelogSummary(Portfolio portfolio, ZonedDateTime start, ZonedDateTime end,
-			String symbol, BigDecimal winLossAmount) {
-		EntityManager entityManagerLocal = EntityManagerHelper.getLocalEntityManager();
-		try {
-			entityManagerLocal.getTransaction().begin();
-			Query querySummary = entityManagerLocal.createNativeQuery(TradelogSummary.getSQLString(),
-					TradelogSummary.class);
+    /**
+     * Method findByTradelogSummary.
+     *
+     * @param portfolio Portfolio
+     * @param start     ZonedDateTime
+     * @param end       ZonedDateTime
+     * @return TradelogReport
+     */
+    public TradelogReport findByTradelogSummary(Portfolio portfolio, ZonedDateTime start, ZonedDateTime end,
+                                                String symbol, BigDecimal winLossAmount) {
+        EntityManager entityManagerLocal = EntityManagerHelper.getLocalEntityManager();
+        try {
+            entityManagerLocal.getTransaction().begin();
+            Query querySummary = entityManagerLocal.createNativeQuery(TradelogSummary.getSQLString(),
+                    TradelogSummary.class);
 
-			querySummary.setParameter("idPortfolio", portfolio.getId());
-			querySummary.setParameter("start", TradingCalendar.getFormattedDate(start, DATE_FORMAT));
-			querySummary.setParameter("end", TradingCalendar.getFormattedDate(end, DATE_FORMAT));
-			querySummary.setParameter("symbol", symbol);
-			querySummary.setParameter("winLossAmount", winLossAmount);
+            querySummary.setParameter("idPortfolio", portfolio.getId());
+            querySummary.setParameter("start", TradingCalendar.getFormattedDate(start, DATE_FORMAT));
+            querySummary.setParameter("end", TradingCalendar.getFormattedDate(end, DATE_FORMAT));
+            querySummary.setParameter("symbol", symbol);
+            querySummary.setParameter("winLossAmount", winLossAmount);
 
-			TradelogReport tradelogReport = new TradelogReport();
+            TradelogReport tradelogReport = new TradelogReport();
 
-			for (Object item : querySummary.getResultList()) {
-				tradelogReport.add((TradelogSummary) item);
-			}
-			entityManagerLocal.getTransaction().commit();
-			return tradelogReport;
+            for (Object item : querySummary.getResultList()) {
+                tradelogReport.add((TradelogSummary) item);
+            }
+            entityManagerLocal.getTransaction().commit();
+            return tradelogReport;
 
-		} catch (Exception re) {
-			if ((entityManagerLocal.getTransaction() != null) && entityManagerLocal.getTransaction().isActive()) {
-				entityManagerLocal.getTransaction().rollback();
-			}
-			throw re;
-		} finally {
-			entityManagerLocal.close();
-		}
-	}
+        } catch (Exception re) {
+            if ((entityManagerLocal.getTransaction() != null) && entityManagerLocal.getTransaction().isActive()) {
+                entityManagerLocal.getTransaction().rollback();
+            }
+            throw re;
+        } finally {
+            entityManagerLocal.close();
+        }
+    }
 }
