@@ -34,7 +34,9 @@ $mvn -N io.takari:maven:wrapper
 5/ Create the MySQL DB. From project dir, cd web, then run (make sure $JAVA_HOME is version 1.8, check with $>echo $JAVA_HOME).
 
 >$mvn clean install
+
 >$ cd web
+
 web>$ mvnw initialize sql:execute 
 
 6/ To run the old Swing UI. From project dir, cd web, then run
