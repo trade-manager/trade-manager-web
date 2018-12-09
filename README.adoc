@@ -31,9 +31,11 @@ $mvn -N io.takari:maven:wrapper
 
 4/ Change the following properties in the project dir db.properties file: db-dba.username(root is default)/db-dba.password. Note the db-dba.username must have schema create privaledges i.e. root. The other values can be changed if so desired.
 
-5/ Create the MySQL DB. From project dir, cd web, then run
+5/ Create the MySQL DB. From project dir, cd web, then run (make sure $JAVA_HOME is version 1.8, check with $>echo $JAVA_HOME).
 
-web>$ mvnw initialize clean install sql:execute (make sure $JAVA_HOME is version 1.8, check with $>echo $JAVA_HOME)
+>$mvn clean install
+>$ cd web
+web>$ mvnw initialize sql:execute 
 
 6/ To run the old Swing UI. From project dir, cd web, then run
 
