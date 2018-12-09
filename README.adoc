@@ -43,6 +43,6 @@ OR the new Spring boot Web app
 
 web>$mvnw spring-boot:run   Note WIP so not much to see yet
 
-7/ Open IntelliJ and import the parent pom.xml from the project dir. You can now set run configurations for 6/ and 7/ 
+7/ Open IntelliJ and import the parent pom.xml from the project dir. You can now set run configurations for 6/
 
 In IntelliJ, Edit Configuration add a Maven set working dir to /web then set command line to above without mvnw.
