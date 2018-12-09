@@ -13,10 +13,9 @@ Environment
 
 Maven 3.2 or higher, 
 Git,  
-MySQL 5.6.24,   
+MySQL 5.6.24 or higher,   
 Java 1.8.x recommend latest version, 
 IntelliJ open source version  
-
 
 1/ To clone from command line  
 
@@ -32,15 +31,11 @@ $mvn install:install-file -Dfile=lib/tools-1.8.0.jar -DgroupId=com.sun -Dartifac
 
 $mvn -N io.takari:maven:wrapper
 
-5/ Build the project from the project dir 
+5/ Create the MySQL DB. From project dir, cd web, then run
 
-$mvn clean install (make sure $JAVA_HOME is version 1.8, check with $>echo $JAVA_HOME)
+$ mvnw initialize clean install sql:execute (make sure $JAVA_HOME is version 1.8, check with $>echo $JAVA_HOME)
 
-6/ Create the MySQL DB. From project dir, cd web, then run
-
-$ mvnw initialize sql:execute
-
-7/ To run the old Swing UI. From project dir, cd web, then run
+6/ To run the old Swing UI. From project dir, cd web, then run
 
 $mvnw -Duser.timezone=America/New_York -Dlog4j.configuration=file:../config.properties exec:java  
 
@@ -48,6 +43,6 @@ OR the new Spring boot Web app
 
 $mvnw spring-boot:run   Note WIP so not much to see yet
 
-8/ Open IntelliJ and import the parent pom.xml from the project dir. You can now set run configurations for 6/ and 7/ 
+7/ Open IntelliJ and import the parent pom.xml from the project dir. You can now set run configurations for 6/ and 7/ 
 
 In IntelliJ, Edit Configuration add a Maven set working dir to /web then set command line to above without mvnw.
