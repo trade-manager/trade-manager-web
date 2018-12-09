@@ -5,10 +5,10 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0//
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL'//
 
 
-DROP SCHEMA IF EXISTS @db-dba.SCHEMA@//
-CREATE SCHEMA IF NOT EXISTS @db-dba.SCHEMA@//
+DROP SCHEMA IF EXISTS @db-dba.schema@//
+CREATE SCHEMA IF NOT EXISTS @db-dba.schema@//
 SHOW WARNINGS//
-USE @db-dba.SCHEMA@//
+USE @db-dba.schema@//
 
 -- -----------------------------------------------------
 -- Table EntryLimits
