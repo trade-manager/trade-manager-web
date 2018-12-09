@@ -35,39 +35,39 @@
  */
 package org.trade.ui;
 
-import javax.swing.JMenu;
-
 import org.trade.ui.base.BasePanel;
 import org.trade.ui.base.BasePanelMenu;
 
+import javax.swing.*;
+
 /**
+ *
  */
 public class MainPanelMenu extends BasePanelMenu {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -2716722655140661891L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -2716722655140661891L;
 
-	/**
-	 * Constructor for MainPanelMenu.
-	 * 
-	 * @param basePanel
-	 *            BasePanel
-	 */
-	public MainPanelMenu(BasePanel basePanel) {
-		super(basePanel);
+    /**
+     * Constructor for MainPanelMenu.
+     *
+     * @param basePanel BasePanel
+     */
+    public MainPanelMenu(BasePanel basePanel) {
+        super(basePanel);
 
-		JMenu actionMenu = new JMenu("Action");
-		menuBar.add(actionMenu, 2);
-		this.editMenu.setVisible(false);
-		fileMenu.insertSeparator(4);
+        JMenu actionMenu = new JMenu("Action");
+        menuBar.add(actionMenu, 2);
+        this.editMenu.setVisible(false);
+        fileMenu.insertSeparator(4);
 
-		// windowMenu.add(close, 0);
-		// windowMenu.add(closeAll, 1);
-		// windowMenu.add(cascade, 2);
-		// windowMenu.add(cascadeAll, 3);
-		// windowMenu.add(tileAll, 4);
-		// windowMenu.insertSeparator(5);
+        // windowMenu.add(close, 0);
+        // windowMenu.add(closeAll, 1);
+        // windowMenu.add(cascade, 2);
+        // windowMenu.add(cascadeAll, 3);
+        // windowMenu.add(tileAll, 4);
+        // windowMenu.insertSeparator(5);
 
-	}
+    }
 }

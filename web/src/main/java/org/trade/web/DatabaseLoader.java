@@ -26,7 +26,7 @@ public class DatabaseLoader implements CommandLineRunner {
     }
 
 
-    public void run(String... strings)  {
+    public void run(String... strings) {
 
         Domain global = this.domains.findByName("global");
         if (null == global) {

@@ -37,41 +37,41 @@
 package org.trade.ui.widget;
 
 public class ComboItem {
-	private Object value;
-	private String label;
+    private Object value;
+    private String label;
 
-	public ComboItem(Object value, String label) {
-		this.value = value;
-		this.label = label;
-	}
+    public ComboItem(Object value, String label) {
+        this.value = value;
+        this.label = label;
+    }
 
-	/**
-	 * Method getValue
-	 * 
-	 * @return Object
-	 */
-	public Object getValue() {
-		return this.value;
-	}
+    /**
+     * Method getValue
+     *
+     * @return Object
+     */
+    public Object getValue() {
+        return this.value;
+    }
 
-	/**
-	 * Method getLabel
-	 * 
-	 * @return String
-	 */
-	public String getLabel() {
-		return this.label;
-	}
+    /**
+     * Method getLabel
+     *
+     * @return String
+     */
+    public String getLabel() {
+        return this.label;
+    }
 
-	/**
-	 * Method toString
-	 * 
-	 * @return String
-	 */
-	public String toString() {
+    /**
+     * Method toString
+     *
+     * @return String
+     */
+    public String toString() {
 
-		if (null == this.label)
-			return this.value.toString();
-		return this.label;
-	}
+        if (null == this.label)
+            return this.value.toString();
+        return this.label;
+    }
 }

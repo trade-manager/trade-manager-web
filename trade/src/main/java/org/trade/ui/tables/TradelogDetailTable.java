@@ -35,22 +35,11 @@
  */
 package org.trade.ui.tables;
 
-import java.util.Calendar;
-import java.util.Vector;
-
-import javax.swing.JComboBox;
-import javax.swing.JTable;
-
 import org.trade.core.util.TradingCalendar;
 import org.trade.core.valuetype.Decode;
 import org.trade.core.valuetype.ValueTypeException;
 import org.trade.dictionary.valuetype.Action;
-import org.trade.dictionary.valuetype.DAOStrategy;
-import org.trade.dictionary.valuetype.MarketBar;
-import org.trade.dictionary.valuetype.MarketBias;
-import org.trade.dictionary.valuetype.Side;
-import org.trade.dictionary.valuetype.Tier;
-import org.trade.dictionary.valuetype.TradestrategyStatus;
+import org.trade.dictionary.valuetype.*;
 import org.trade.ui.base.Table;
 import org.trade.ui.base.TableModel;
 import org.trade.ui.widget.DateEditor;
@@ -58,53 +47,57 @@ import org.trade.ui.widget.DateField;
 import org.trade.ui.widget.DateRenderer;
 import org.trade.ui.widget.DecodeTableEditor;
 
+import javax.swing.*;
+import java.util.Calendar;
+import java.util.Vector;
+
 /**
+ *
  */
 public class TradelogDetailTable extends Table {
 
-	private static final long serialVersionUID = 1132297931453070904L;
+    private static final long serialVersionUID = 1132297931453070904L;
 
-	private static final String DATETIMEFORMAT = "HH:mm:ss";
+    private static final String DATETIMEFORMAT = "HH:mm:ss";
 
-	/**
-	 * Constructor for TradelogDetailTable.
-	 * 
-	 * @param model
-	 *            TableModel
-	 * @throws ValueTypeException
-	 */
-	public TradelogDetailTable(TableModel model) throws ValueTypeException {
-		super(model);
-		DecodeTableEditor sideEditor = new DecodeTableEditor(
-				new JComboBox<Decode>((Vector<Decode>) (new Side()).getCodesDecodes()));
-		DecodeTableEditor tierEditor = new DecodeTableEditor(
-				new JComboBox<Decode>((Vector<Decode>) (new Tier()).getCodesDecodes()));
-		DecodeTableEditor tradestrategyStatusEditor = new DecodeTableEditor(
-				new JComboBox<Decode>((Vector<Decode>) (new TradestrategyStatus()).getCodesDecodes()));
-		DecodeTableEditor strategyEditor = new DecodeTableEditor(
-				new JComboBox<Decode>((Vector<Decode>) (new DAOStrategy()).getCodesDecodes()));
-		DecodeTableEditor marketBiasEditor = new DecodeTableEditor(
-				new JComboBox<Decode>((Vector<Decode>) (new MarketBias()).getCodesDecodes()));
-		DecodeTableEditor marketBarEditor = new DecodeTableEditor(
-				new JComboBox<Decode>((Vector<Decode>) (new MarketBar()).getCodesDecodes()));
-		DecodeTableEditor actionEditor = new DecodeTableEditor(
-				new JComboBox<Decode>((Vector<Decode>) (new Action()).getCodesDecodes()));
-		this.setDefaultEditor(DAOStrategy.class, strategyEditor);
-		this.setDefaultEditor(Side.class, sideEditor);
-		this.setDefaultEditor(Tier.class, tierEditor);
-		this.setDefaultEditor(TradestrategyStatus.class, tradestrategyStatusEditor);
-		this.setDefaultEditor(MarketBias.class, marketBiasEditor);
-		this.setDefaultEditor(MarketBar.class, marketBarEditor);
-		this.setDefaultEditor(Action.class, actionEditor);
+    /**
+     * Constructor for TradelogDetailTable.
+     *
+     * @param model TableModel
+     * @throws ValueTypeException
+     */
+    public TradelogDetailTable(TableModel model) throws ValueTypeException {
+        super(model);
+        DecodeTableEditor sideEditor = new DecodeTableEditor(
+                new JComboBox<Decode>((Vector<Decode>) (new Side()).getCodesDecodes()));
+        DecodeTableEditor tierEditor = new DecodeTableEditor(
+                new JComboBox<Decode>((Vector<Decode>) (new Tier()).getCodesDecodes()));
+        DecodeTableEditor tradestrategyStatusEditor = new DecodeTableEditor(
+                new JComboBox<Decode>((Vector<Decode>) (new TradestrategyStatus()).getCodesDecodes()));
+        DecodeTableEditor strategyEditor = new DecodeTableEditor(
+                new JComboBox<Decode>((Vector<Decode>) (new DAOStrategy()).getCodesDecodes()));
+        DecodeTableEditor marketBiasEditor = new DecodeTableEditor(
+                new JComboBox<Decode>((Vector<Decode>) (new MarketBias()).getCodesDecodes()));
+        DecodeTableEditor marketBarEditor = new DecodeTableEditor(
+                new JComboBox<Decode>((Vector<Decode>) (new MarketBar()).getCodesDecodes()));
+        DecodeTableEditor actionEditor = new DecodeTableEditor(
+                new JComboBox<Decode>((Vector<Decode>) (new Action()).getCodesDecodes()));
+        this.setDefaultEditor(DAOStrategy.class, strategyEditor);
+        this.setDefaultEditor(Side.class, sideEditor);
+        this.setDefaultEditor(Tier.class, tierEditor);
+        this.setDefaultEditor(TradestrategyStatus.class, tradestrategyStatusEditor);
+        this.setDefaultEditor(MarketBias.class, marketBiasEditor);
+        this.setDefaultEditor(MarketBar.class, marketBarEditor);
+        this.setDefaultEditor(Action.class, actionEditor);
 
-		DateRenderer rDate = new DateRenderer(DATETIMEFORMAT);
-		DateEditor eDate = new DateEditor(new DateField(DATETIMEFORMAT),
-				new org.trade.core.valuetype.Date(TradingCalendar.getDateTimeNowMarketTimeZone()), DATETIMEFORMAT,
-				Calendar.DAY_OF_MONTH);
-		this.setDefaultRenderer(org.trade.core.valuetype.Date.class, rDate);
-		this.setDefaultEditor(org.trade.core.valuetype.Date.class, eDate);
-		this.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-		this.enablePopupMenu(false);
+        DateRenderer rDate = new DateRenderer(DATETIMEFORMAT);
+        DateEditor eDate = new DateEditor(new DateField(DATETIMEFORMAT),
+                new org.trade.core.valuetype.Date(TradingCalendar.getDateTimeNowMarketTimeZone()), DATETIMEFORMAT,
+                Calendar.DAY_OF_MONTH);
+        this.setDefaultRenderer(org.trade.core.valuetype.Date.class, rDate);
+        this.setDefaultEditor(org.trade.core.valuetype.Date.class, eDate);
+        this.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        this.enablePopupMenu(false);
 
-	}
+    }
 }

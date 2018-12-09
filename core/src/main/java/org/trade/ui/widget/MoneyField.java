@@ -35,59 +35,55 @@
  */
 package org.trade.ui.widget;
 
-import java.text.NumberFormat;
-
-import javax.swing.JFormattedTextField;
-import javax.swing.SwingConstants;
-import javax.swing.text.DefaultFormatterFactory;
-import javax.swing.text.NumberFormatter;
-
 import org.trade.core.valuetype.Money;
 
+import javax.swing.*;
+import javax.swing.text.DefaultFormatterFactory;
+import javax.swing.text.NumberFormatter;
+import java.text.NumberFormat;
+
 /**
- * 
- * @version $Id: MoneyField.java,v 1.2 2001/12/28 21:14:55 simon Exp $
  * @author Simon Allen
+ * @version $Id: MoneyField.java,v 1.2 2001/12/28 21:14:55 simon Exp $
  */
 public class MoneyField extends JFormattedTextField {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -4264304378113205235L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -4264304378113205235L;
 
-	public MoneyField() {
-		NumberFormat displayFormat = NumberFormat.getCurrencyInstance();
-		displayFormat.setMinimumFractionDigits(2);
-		NumberFormat editFormat = NumberFormat.getNumberInstance();
-		editFormat.setMinimumFractionDigits(2);
-		this.setFormatterFactory(new DefaultFormatterFactory(new NumberFormatter(displayFormat),
-				new NumberFormatter(displayFormat), new NumberFormatter(editFormat)));
-		this.setHorizontalAlignment(SwingConstants.RIGHT);
-		this.setValue(new Double(0));
-		this.setColumns(10);
-	}
+    public MoneyField() {
+        NumberFormat displayFormat = NumberFormat.getCurrencyInstance();
+        displayFormat.setMinimumFractionDigits(2);
+        NumberFormat editFormat = NumberFormat.getNumberInstance();
+        editFormat.setMinimumFractionDigits(2);
+        this.setFormatterFactory(new DefaultFormatterFactory(new NumberFormatter(displayFormat),
+                new NumberFormatter(displayFormat), new NumberFormatter(editFormat)));
+        this.setHorizontalAlignment(SwingConstants.RIGHT);
+        this.setValue(new Double(0));
+        this.setColumns(10);
+    }
 
-	/**
-	 * Method getMoney.
-	 * 
-	 * @return Money
-	 */
-	public Money getMoney() {
-		try {
-			this.setValue(new Double(this.getText()));
-		} catch (Exception ex) {
-			// Do nothing will return the current value.
-		}
-		return new Money(((Number) this.getValue()).doubleValue());
-	}
+    /**
+     * Method getMoney.
+     *
+     * @return Money
+     */
+    public Money getMoney() {
+        try {
+            this.setValue(new Double(this.getText()));
+        } catch (Exception ex) {
+            // Do nothing will return the current value.
+        }
+        return new Money(((Number) this.getValue()).doubleValue());
+    }
 
-	/**
-	 * Method setMoney.
-	 * 
-	 * @param number
-	 *            Money
-	 */
-	public void setMoney(Money number) {
-		super.setValue(number.doubleValue());
-	}
+    /**
+     * Method setMoney.
+     *
+     * @param number Money
+     */
+    public void setMoney(Money number) {
+        super.setValue(number.doubleValue());
+    }
 }

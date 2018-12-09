@@ -41,89 +41,86 @@ import java.util.Enumeration;
 /**
  * This class is used internally to help with handling nesting of exceptions and
  * handling the associated messages.
- * 
+ *
  * @author Simon Allen
  */
 class Enumerator implements Enumeration<Object> {
-	private Enumeration<?> m_mine;
+    private Enumeration<?> m_mine;
 
-	private Enumerator m_next = null;
+    private Enumerator m_next = null;
 
-	private Enumerator() {
-	}
+    private Enumerator() {
+    }
 
-	/**
-	 * Constructor for Enumerator.
-	 * 
-	 * @param enumeration
-	 *            Enumeration<?>
-	 */
-	Enumerator(Enumeration<?> enumeration) {
-		m_mine = enumeration;
-	}
+    /**
+     * Constructor for Enumerator.
+     *
+     * @param enumeration Enumeration<?>
+     */
+    Enumerator(Enumeration<?> enumeration) {
+        m_mine = enumeration;
+    }
 
-	/**
-	 * Method appendEnumeration.
-	 * 
-	 * @param enumeration
-	 *            Enumeration<?>
-	 */
-	void appendEnumeration(Enumeration<?> enumeration) {
-		if (m_next == null) {
-			m_next = new Enumerator(enumeration);
-		} else {
-			m_next.appendEnumeration(enumeration);
-		}
-	}
+    /**
+     * Method appendEnumeration.
+     *
+     * @param enumeration Enumeration<?>
+     */
+    void appendEnumeration(Enumeration<?> enumeration) {
+        if (m_next == null) {
+            m_next = new Enumerator(enumeration);
+        } else {
+            m_next.appendEnumeration(enumeration);
+        }
+    }
 
-	/**
-	 * Method prependEnumeration.
-	 * 
-	 * @param enumeration
-	 *            Enumeration<?>
-	 */
-	void prependEnumeration(Enumeration<?> enumeration) {
-		Enumerator e = new Enumerator();
-		e.m_mine = m_mine;
-		e.m_next = m_next;
-		m_next = e;
-		m_mine = enumeration;
-	}
+    /**
+     * Method prependEnumeration.
+     *
+     * @param enumeration Enumeration<?>
+     */
+    void prependEnumeration(Enumeration<?> enumeration) {
+        Enumerator e = new Enumerator();
+        e.m_mine = m_mine;
+        e.m_next = m_next;
+        m_next = e;
+        m_mine = enumeration;
+    }
 
-	/**
-	 * Method nextElement.
-	 * 
-	 * @return Object
-	 * @see java.util.Enumeration#nextElement()
-	 */
-	public Object nextElement() {
-		if (m_mine.hasMoreElements()) {
-			return m_mine.nextElement();
-		}
-		if (m_next != null) {
-			// Here we eliminate the next in the list
-			m_mine = m_next.m_mine;
-			m_next = m_next.m_next;
+    /**
+     * Method nextElement.
+     *
+     * @return Object
+     * @see java.util.Enumeration#nextElement()
+     */
+    public Object nextElement() {
+        if (m_mine.hasMoreElements()) {
+            return m_mine.nextElement();
+        }
+        if (m_next != null) {
+            // Here we eliminate the next in the list
+            m_mine = m_next.m_mine;
+            m_next = m_next.m_next;
 
-			// Recurse on this method
-			return nextElement();
-		}
-		return null;
-	}
+            // Recurse on this method
+            return nextElement();
+        }
+        return null;
+    }
 
-	/**
-	 * Method hasMoreElements.
-	 * 
-	 * @return boolean
-	 * @see java.util.Enumeration#hasMoreElements()
-	 */
-	public boolean hasMoreElements() {
-		if (m_mine.hasMoreElements()) {
-			return true;
-		}
-		if (m_next != null) {
-			return m_next.hasMoreElements();
-		}
-		return false;
-	}
+    /**
+     * Method hasMoreElements.
+     *
+     * @return boolean
+     * @see java.util.Enumeration#hasMoreElements()
+     */
+    public boolean hasMoreElements() {
+        if (m_mine.hasMoreElements()) {
+            return true;
+        }
+        if (m_next != null) {
+            return m_next.hasMoreElements();
+        }
+        return false;
+    }
 }

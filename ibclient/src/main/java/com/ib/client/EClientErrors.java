@@ -8,9 +8,9 @@ public class EClientErrors {
     public static final int NO_VALID_ID = -1;
     static final CodeMsgPair ALREADY_CONNECTED = new CodeMsgPair(501, "Already connected.");
     static final CodeMsgPair CONNECT_FAIL = new CodeMsgPair(502, "Couldn't connect to TWS. Confirm that \"Enable ActiveX and Socket Clients\" "
-    		+ "is enabled and connection port is the same as \"Socket Port\" on the TWS \"Edit->Global Configuration...->API->Settings\" menu. "
-    		+ "Live Trading ports: TWS: 7496; IB Gateway: 4001. Simulated Trading ports for new installations of version 954.1 or newer: "
-    		+ "TWS: 7497; IB Gateway: 4002");
+            + "is enabled and connection port is the same as \"Socket Port\" on the TWS \"Edit->Global Configuration...->API->Settings\" menu. "
+            + "Live Trading ports: TWS: 7496; IB Gateway: 4001. Simulated Trading ports for new installations of version 954.1 or newer: "
+            + "TWS: 7497; IB Gateway: 4002");
     public static final CodeMsgPair UPDATE_TWS = new CodeMsgPair(503, "The TWS is out of date and must be upgraded.");
     public static final CodeMsgPair NOT_CONNECTED = new CodeMsgPair(504, "Not connected");
     static final CodeMsgPair UNKNOWN_ID = new CodeMsgPair(505, "Fatal Error: Unknown message id.");
@@ -78,10 +78,17 @@ public class EClientErrors {
         String m_errorMsg;
 
         // Get/Set methods
-        public int code()    { return m_errorCode; }
-        public String msg()  { return m_errorMsg; }
+        public int code() {
+            return m_errorCode;
+        }
 
-        /** Constructor */
+        public String msg() {
+            return m_errorMsg;
+        }
+
+        /**
+         * Constructor
+         */
         public CodeMsgPair(int i, String errString) {
             m_errorCode = i;
             m_errorMsg = errString;

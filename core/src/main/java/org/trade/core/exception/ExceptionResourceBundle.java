@@ -42,61 +42,55 @@ import java.util.PropertyResourceBundle;
 
 /**
  * ExceptionResourceBundle handles storing messages for each Exception.
- * 
+ *
  * @author Simon Allen
  */
 public class ExceptionResourceBundle extends PropertyResourceBundle implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 3004803155454107541L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 3004803155454107541L;
 
-	/**
-	 * Takes an InputStream to the properties file where the Exception messages
-	 * are stored
-	 * 
-	 * @param resourceStream
-	 *            the input stream to the resource
-	 * 
-	 * @throws IOException
-	 * @exception java.io.IOException
-	 *                : thrown when the input stream doesn't find the resource
-	 */
-	public ExceptionResourceBundle(InputStream resourceStream) throws IOException {
-		super(resourceStream);
-	}
+    /**
+     * Takes an InputStream to the properties file where the Exception messages
+     * are stored
+     *
+     * @param resourceStream the input stream to the resource
+     * @throws IOException
+     * @throws java.io.IOException : thrown when the input stream doesn't find the resource
+     */
+    public ExceptionResourceBundle(InputStream resourceStream) throws IOException {
+        super(resourceStream);
+    }
 
-	/**
-	 * Returns the message for the given <code>code</code>
-	 * 
-	 * @param code
-	 *            exception code
-	 * 
-	 * @return the exception message
-	 */
-	public String getMessage(ExceptionCode code) {
-		String message = getString(code.getCode());
+    /**
+     * Returns the message for the given <code>code</code>
+     *
+     * @param code exception code
+     * @return the exception message
+     */
+    public String getMessage(ExceptionCode code) {
+        String message = getString(code.getCode());
 
-		// return the package default message if no class message is available
-		if (message == null) {
-			message = getMessage();
-		}
+        // return the package default message if no class message is available
+        if (message == null) {
+            message = getMessage();
+        }
 
-		return message;
-	}
+        return message;
+    }
 
-	/**
-	 * Returns the default exception message for the package
-	 * 
-	 * 
-	 * @return the exception message
-	 */
-	public String getMessage() {
-		return getString(DEFAULT);
-	}
+    /**
+     * Returns the default exception message for the package
+     *
+     * @return the exception message
+     */
+    public String getMessage() {
+        return getString(DEFAULT);
+    }
 
-	// constants
-	private final static String DEFAULT = "default";
+    // constants
+    private final static String DEFAULT = "default";
 
 } // end ExceptionResourceBundle

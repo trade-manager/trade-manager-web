@@ -35,43 +35,43 @@
  */
 package org.trade.ui.widget;
 
-import javax.swing.DefaultCellEditor;
-
 import org.trade.core.valuetype.Money;
 
+import javax.swing.*;
+
 /**
+ *
  */
 public class MoneyEditor extends DefaultCellEditor {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 5190255283548436894L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 5190255283548436894L;
 
-	/**
-	 * Constructor for MoneyEditor.
-	 * 
-	 * @param textField
-	 *            MoneyField
-	 */
-	public MoneyEditor(final MoneyField textField) {
-		super(textField);
-		editorComponent = textField;
-		this.clickCountToStart = 1;
-		delegate = new EditorDelegate() {
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 2424965279339363773L;
+    /**
+     * Constructor for MoneyEditor.
+     *
+     * @param textField MoneyField
+     */
+    public MoneyEditor(final MoneyField textField) {
+        super(textField);
+        editorComponent = textField;
+        this.clickCountToStart = 1;
+        delegate = new EditorDelegate() {
+            /**
+             *
+             */
+            private static final long serialVersionUID = 2424965279339363773L;
 
-			public void setValue(Object value) {
-				textField.setMoney((Money) value);
-			}
+            public void setValue(Object value) {
+                textField.setMoney((Money) value);
+            }
 
-			public Object getCellEditorValue() {
-				return textField.getMoney();
-			}
-		};
+            public Object getCellEditorValue() {
+                return textField.getMoney();
+            }
+        };
 
-		textField.addActionListener(delegate);
-	}
+        textField.addActionListener(delegate);
+    }
 }

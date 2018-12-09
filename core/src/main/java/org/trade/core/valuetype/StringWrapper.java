@@ -42,189 +42,180 @@ import org.trade.core.validator.IExceptionMessageListener;
 import org.trade.core.validator.IValidator;
 
 /**
+ *
  */
 public abstract class StringWrapper extends ValueType {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 8867039181191953504L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 8867039181191953504L;
 
-	static {
-		// Register the appropriate converters
-		JavaTypeTranslator.registerDynamicTypeConverter(new ObjectToStringWrapper());
-		JavaTypeTranslator.registerDynamicTypeConverter(new StringWrapperToObject());
-	}
+    static {
+        // Register the appropriate converters
+        JavaTypeTranslator.registerDynamicTypeConverter(new ObjectToStringWrapper());
+        JavaTypeTranslator.registerDynamicTypeConverter(new StringWrapperToObject());
+    }
 
-	private String m_value = "";
+    private String m_value = "";
 
-	/**
-	 * Default Constructor
-	 */
-	public StringWrapper() {
-	}
+    /**
+     * Default Constructor
+     */
+    public StringWrapper() {
+    }
 
-	/**
-	 * Constructor for StringWrapper.
-	 * 
-	 * @param value
-	 *            String
-	 */
-	public StringWrapper(String value) {
-		setInternalValue(value);
-	}
+    /**
+     * Constructor for StringWrapper.
+     *
+     * @param value String
+     */
+    public StringWrapper(String value) {
+        setInternalValue(value);
+    }
 
-	/**
-	 * Convenience method. Validate using default validator and discard
-	 * messages. Assumes the value is optional.
-	 * 
-	 * @return boolean
-	 */
-	public boolean isValid() {
-		return isValid(getDefaultOptionalValidator(MessageFactory.SYSTEM_ERROR), null);
-	}
+    /**
+     * Convenience method. Validate using default validator and discard
+     * messages. Assumes the value is optional.
+     *
+     * @return boolean
+     */
+    public boolean isValid() {
+        return isValid(getDefaultOptionalValidator(MessageFactory.SYSTEM_ERROR), null);
+    }
 
-	/**
-	 * Method isValid.
-	 * 
-	 * @param validator
-	 *            IValidator
-	 * @param receiver
-	 *            IExceptionMessageListener
-	 * @return boolean
-	 */
-	public boolean isValid(IValidator validator, IExceptionMessageListener receiver) {
-		return validator.isValid(m_value, null, null, receiver);
-	}
+    /**
+     * Method isValid.
+     *
+     * @param validator IValidator
+     * @param receiver  IExceptionMessageListener
+     * @return boolean
+     */
+    public boolean isValid(IValidator validator, IExceptionMessageListener receiver) {
+        return validator.isValid(m_value, null, null, receiver);
+    }
 
-	/**
-	 * Method getDefaultOptionalValidator.
-	 * 
-	 * @param messageFactory
-	 *            IMessageFactory
-	 * @return IValidator
-	 */
-	public IValidator getDefaultOptionalValidator(IMessageFactory messageFactory) {
-		return getDefaultValidator(messageFactory, false);
-	}
+    /**
+     * Method getDefaultOptionalValidator.
+     *
+     * @param messageFactory IMessageFactory
+     * @return IValidator
+     */
+    public IValidator getDefaultOptionalValidator(IMessageFactory messageFactory) {
+        return getDefaultValidator(messageFactory, false);
+    }
 
-	/**
-	 * Method getDefaultMandatoryValidator.
-	 * 
-	 * @param messageFactory
-	 *            IMessageFactory
-	 * @return IValidator
-	 */
-	public IValidator getDefaultMandatoryValidator(IMessageFactory messageFactory) {
-		return getDefaultValidator(messageFactory, true);
-	}
+    /**
+     * Method getDefaultMandatoryValidator.
+     *
+     * @param messageFactory IMessageFactory
+     * @return IValidator
+     */
+    public IValidator getDefaultMandatoryValidator(IMessageFactory messageFactory) {
+        return getDefaultValidator(messageFactory, true);
+    }
 
-	/**
-	 * Method getDefaultValidator.
-	 * 
-	 * @param messageFactory
-	 *            IMessageFactory
-	 * @param isMandatory
-	 *            boolean
-	 * @return IValidator
-	 */
-	protected abstract IValidator getDefaultValidator(IMessageFactory messageFactory, boolean isMandatory);
+    /**
+     * Method getDefaultValidator.
+     *
+     * @param messageFactory IMessageFactory
+     * @param isMandatory    boolean
+     * @return IValidator
+     */
+    protected abstract IValidator getDefaultValidator(IMessageFactory messageFactory, boolean isMandatory);
 
-	/**
-	 * Method isEmpty.
-	 * 
-	 * @return boolean
-	 */
-	public boolean isEmpty() {
-		return (m_value.length() == 0);
-	}
+    /**
+     * Method isEmpty.
+     *
+     * @return boolean
+     */
+    public boolean isEmpty() {
+        return (m_value.length() == 0);
+    }
 
-	/**
-	 * Method equals.
-	 * 
-	 * @param objectToCompare
-	 *            Object
-	 * @return boolean
-	 */
-	public boolean equals(Object objectToCompare) {
-		if (this == objectToCompare) {
-			return true;
-		}
-		if (objectToCompare == null) {
-			return false;
-		}
+    /**
+     * Method equals.
+     *
+     * @param objectToCompare Object
+     * @return boolean
+     */
+    public boolean equals(Object objectToCompare) {
+        if (this == objectToCompare) {
+            return true;
+        }
+        if (objectToCompare == null) {
+            return false;
+        }
 
-		if (!(objectToCompare instanceof StringWrapper)) {
-			return false;
-		}
+        if (!(objectToCompare instanceof StringWrapper)) {
+            return false;
+        }
 
-		return (getInternalValue().equals(((StringWrapper) objectToCompare).getInternalValue()));
-	}
+        return (getInternalValue().equals(((StringWrapper) objectToCompare).getInternalValue()));
+    }
 
-	/**
-	 * Method hashCode.
-	 * 
-	 * @return int
-	 */
-	public int hashCode() {
-		return this.toString().hashCode();
-	}
+    /**
+     * Method hashCode.
+     *
+     * @return int
+     */
+    public int hashCode() {
+        return this.toString().hashCode();
+    }
 
-	/**
-	 * Method toString.
-	 * 
-	 * @return String
-	 */
-	public String toString() {
-		return (getInternalValue());
-	}
+    /**
+     * Method toString.
+     *
+     * @return String
+     */
+    public String toString() {
+        return (getInternalValue());
+    }
 
-	/**
-	 * Method setValue.
-	 * 
-	 * @param value
-	 *            String
-	 */
-	public void setValue(String value) {
-		setInternalValue(value);
-	}
+    /**
+     * Method setValue.
+     *
+     * @param value String
+     */
+    public void setValue(String value) {
+        setInternalValue(value);
+    }
 
-	/**
-	 * Method setValue.
-	 * 
-	 * @param value
-	 *            StringWrapper
-	 */
-	public void setValue(StringWrapper value) {
-		if (null != value) {
-			setInternalValue(value.m_value);
-		} else {
-			setInternalValue(null);
-		}
-	}
+    /**
+     * Method setValue.
+     *
+     * @param value StringWrapper
+     */
+    public void setValue(StringWrapper value) {
+        if (null != value) {
+            setInternalValue(value.m_value);
+        } else {
+            setInternalValue(null);
+        }
+    }
 
-	//
-	// Protected Methods
-	//
-	/**
-	 * Method getInternalValue.
-	 * 
-	 * @return String
-	 */
-	protected String getInternalValue() {
-		return (m_value);
-	}
+    //
+    // Protected Methods
+    //
 
-	/**
-	 * Method setInternalValue.
-	 * 
-	 * @param value
-	 *            String
-	 */
-	protected void setInternalValue(String value) {
-		if (null == value) {
-			m_value = "";
-		} else {
-			m_value = value.trim();
-		}
-	}
+    /**
+     * Method getInternalValue.
+     *
+     * @return String
+     */
+    protected String getInternalValue() {
+        return (m_value);
+    }
+
+    /**
+     * Method setInternalValue.
+     *
+     * @param value String
+     */
+    protected void setInternalValue(String value) {
+        if (null == value) {
+            m_value = "";
+        } else {
+            m_value = value.trim();
+        }
+    }
 }

@@ -35,204 +35,146 @@
  */
 package org.trade.ui.base;
 
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Rectangle;
-
-import javax.swing.BorderFactory;
-import javax.swing.DefaultDesktopManager;
-import javax.swing.JComponent;
-import javax.swing.JDesktopPane;
-import javax.swing.JLayeredPane;
-import javax.swing.JPanel;
+import javax.swing.*;
+import java.awt.*;
 
 /**
- * 
- * @version $Id: ExtendedDesktopManager.java,v 1.1 2001/10/18 01:32:16 simon Exp
- *          $
  * @author Simon Allen
+ * @version $Id: ExtendedDesktopManager.java,v 1.1 2001/10/18 01:32:16 simon Exp
+ * $
  */
 public class ExtendedDesktopManager extends DefaultDesktopManager {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -6690132949361620306L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -6690132949361620306L;
 
-	/**
-	 * ExtendedDesktopManager() - constructor
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * @param targetPane
-	 *            JDesktopPane
-	 * @exception *
-	 * 				@see
-	 */
-	public ExtendedDesktopManager(JDesktopPane targetPane) {
-		ghostPanel = new JPanel();
+    /**
+     * ExtendedDesktopManager() - constructor
+     *
+     * @param targetPane JDesktopPane
+     * @throws *
+     * @see
+     */
+    public ExtendedDesktopManager(JDesktopPane targetPane) {
+        ghostPanel = new JPanel();
 
-		ghostPanel.setOpaque(false);
-		ghostPanel.setBorder(BorderFactory.createLineBorder(BORDER_COLOR, BORDER_THICKNESS));
+        ghostPanel.setOpaque(false);
+        ghostPanel.setBorder(BorderFactory.createLineBorder(BORDER_COLOR, BORDER_THICKNESS));
 
-		this.targetPane = targetPane;
-	}
+        this.targetPane = targetPane;
+    }
 
-	/**
-	 * beginDraggingFrame() -
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * @param f
-	 *            JComponent
-	 * @exception *
-	 * 				@see
-	 */
-	public void beginDraggingFrame(JComponent f) {
-		Rectangle r = f.getBounds();
+    /**
+     * beginDraggingFrame() -
+     *
+     * @param f JComponent
+     * @throws *
+     * @see
+     */
+    public void beginDraggingFrame(JComponent f) {
+        Rectangle r = f.getBounds();
 
-		ghostPanel.setBounds(r);
-		f.setVisible(false);
-		targetPane.add(ghostPanel);
-		targetPane.setLayer(ghostPanel, JLayeredPane.DRAG_LAYER.intValue());
-		targetPane.setVisible(true);
-	}
+        ghostPanel.setBounds(r);
+        f.setVisible(false);
+        targetPane.add(ghostPanel);
+        targetPane.setLayer(ghostPanel, JLayeredPane.DRAG_LAYER.intValue());
+        targetPane.setVisible(true);
+    }
 
-	/**
-	 * dragFrame() -
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * @param f
-	 *            JComponent
-	 * @param newX
-	 *            int
-	 * @param newY
-	 *            int
-	 * @exception *
-	 * 				@see
-	 */
-	public void dragFrame(JComponent f, int newX, int newY) {
-		setBoundsForFrame(ghostPanel, newX, newY, ghostPanel.getWidth(), ghostPanel.getHeight());
-	}
+    /**
+     * dragFrame() -
+     *
+     * @param f    JComponent
+     * @param newX int
+     * @param newY int
+     * @throws *
+     * @see
+     */
+    public void dragFrame(JComponent f, int newX, int newY) {
+        setBoundsForFrame(ghostPanel, newX, newY, ghostPanel.getWidth(), ghostPanel.getHeight());
+    }
 
-	/**
-	 * endDraggingFrame() -
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * @param f
-	 *            JComponent
-	 * @exception *
-	 * 				@see
-	 */
-	public void endDraggingFrame(JComponent f) {
-		Rectangle r = ghostPanel.getBounds();
+    /**
+     * endDraggingFrame() -
+     *
+     * @param f JComponent
+     * @throws *
+     * @see
+     */
+    public void endDraggingFrame(JComponent f) {
+        Rectangle r = ghostPanel.getBounds();
 
-		f.setVisible(true);
-		f.setBounds(r);
-		targetPane.remove(ghostPanel);
-	}
+        f.setVisible(true);
+        f.setBounds(r);
+        targetPane.remove(ghostPanel);
+    }
 
-	/**
-	 * beginResizingFrame() -
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * @param f
-	 *            JComponent
-	 * @param direction
-	 *            int
-	 * @exception *
-	 * 				@see
-	 */
-	public void beginResizingFrame(JComponent f, int direction) {
-		oldCursor = f.getCursor();
+    /**
+     * beginResizingFrame() -
+     *
+     * @param f         JComponent
+     * @param direction int
+     * @throws *
+     * @see
+     */
+    public void beginResizingFrame(JComponent f, int direction) {
+        oldCursor = f.getCursor();
 
-		super.beginResizingFrame(f, direction);
+        super.beginResizingFrame(f, direction);
 
-		Cursor cursor = f.getCursor();
-		Rectangle r = f.getBounds();
+        Cursor cursor = f.getCursor();
+        Rectangle r = f.getBounds();
 
-		ghostPanel.setBounds(r);
-		f.setVisible(false);
-		targetPane.add(ghostPanel);
-		targetPane.setLayer(ghostPanel, JLayeredPane.DRAG_LAYER.intValue());
-		ghostPanel.setCursor(cursor);
-		targetPane.setVisible(true);
-	}
+        ghostPanel.setBounds(r);
+        f.setVisible(false);
+        targetPane.add(ghostPanel);
+        targetPane.setLayer(ghostPanel, JLayeredPane.DRAG_LAYER.intValue());
+        ghostPanel.setCursor(cursor);
+        targetPane.setVisible(true);
+    }
 
-	/**
-	 * resizeFrame() -
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * @param f
-	 *            JComponent
-	 * @param newX
-	 *            int
-	 * @param newY
-	 *            int
-	 * @param newWidth
-	 *            int
-	 * @param newHeight
-	 *            int
-	 * @exception *
-	 * 				@see
-	 */
-	public void resizeFrame(JComponent f, int newX, int newY, int newWidth, int newHeight) {
-		setBoundsForFrame(ghostPanel, newX, newY, newWidth, newHeight);
-	}
+    /**
+     * resizeFrame() -
+     *
+     * @param f         JComponent
+     * @param newX      int
+     * @param newY      int
+     * @param newWidth  int
+     * @param newHeight int
+     * @throws *
+     * @see
+     */
+    public void resizeFrame(JComponent f, int newX, int newY, int newWidth, int newHeight) {
+        setBoundsForFrame(ghostPanel, newX, newY, newWidth, newHeight);
+    }
 
-	/**
-	 * endResizingFrame() -
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * @param f
-	 *            JComponent
-	 * @exception *
-	 * 				@see
-	 */
-	public void endResizingFrame(JComponent f) {
-		Rectangle r = ghostPanel.getBounds();
+    /**
+     * endResizingFrame() -
+     *
+     * @param f JComponent
+     * @throws *
+     * @see
+     */
+    public void endResizingFrame(JComponent f) {
+        Rectangle r = ghostPanel.getBounds();
 
-		f.setVisible(true);
-		f.setBounds(r);
-		ghostPanel.setCursor(oldCursor);
-		targetPane.remove(ghostPanel);
-		f.validate();
-	}
+        f.setVisible(true);
+        f.setBounds(r);
+        ghostPanel.setCursor(oldCursor);
+        targetPane.remove(ghostPanel);
+        f.validate();
+    }
 
-	protected JPanel ghostPanel;
+    protected JPanel ghostPanel;
 
-	protected JComponent targetComponent;
+    protected JComponent targetComponent;
 
-	protected JDesktopPane targetPane;
+    protected JDesktopPane targetPane;
 
-	protected Cursor oldCursor;
+    protected Cursor oldCursor;
 
-	protected static final Color BORDER_COLOR = Color.black;
+    protected static final Color BORDER_COLOR = Color.black;
 
-	protected static final int BORDER_THICKNESS = 2;
+    protected static final int BORDER_THICKNESS = 2;
 }

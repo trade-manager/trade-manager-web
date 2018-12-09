@@ -35,68 +35,67 @@
  */
 package org.trade.persistent.dao;
 
+import org.trade.core.dao.EntityManagerHelper;
+
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 
-import org.trade.core.dao.EntityManagerHelper;
-
 /**
+ *
  */
 @Stateless
 public class TradePositionHome {
 
-	public TradePositionHome() {
+    public TradePositionHome() {
 
-	}
+    }
 
-	/**
-	 * Method remove.
-	 * 
-	 * @param transientInstance
-	 *            TradePosition
-	 */
-	public void remove(final TradePosition transientInstance) {
+    /**
+     * Method remove.
+     *
+     * @param transientInstance TradePosition
+     */
+    public void remove(final TradePosition transientInstance) {
 
-		try {
-			EntityManager entityManager = EntityManagerHelper.getEntityManager();
-			entityManager.getTransaction().begin();
-			TradePosition tradePosition = entityManager.find(TradePosition.class,
-					transientInstance.getId());
-			if (null != tradePosition) {
-				entityManager.remove(tradePosition);
-			}
-			entityManager.getTransaction().commit();
+        try {
+            EntityManager entityManager = EntityManagerHelper.getEntityManager();
+            entityManager.getTransaction().begin();
+            TradePosition tradePosition = entityManager.find(TradePosition.class,
+                    transientInstance.getId());
+            if (null != tradePosition) {
+                entityManager.remove(tradePosition);
+            }
+            entityManager.getTransaction().commit();
 
-		} catch (Exception re) {
-			EntityManagerHelper.rollback();
-			throw re;
-		} finally {
-			EntityManagerHelper.close();
-		}
-	}
+        } catch (Exception re) {
+            EntityManagerHelper.rollback();
+            throw re;
+        } finally {
+            EntityManagerHelper.close();
+        }
+    }
 
-	/**
-	 * Method findById.
-	 * 
-	 * @param id
-	 *            Integer
-	 * @return TradePosition
-	 */
-	public TradePosition findById(Integer id) {
+    /**
+     * Method findById.
+     *
+     * @param id Integer
+     * @return TradePosition
+     */
+    public TradePosition findById(Integer id) {
 
-		try {
-			EntityManager entityManager = EntityManagerHelper.getEntityManager();
-			entityManager.getTransaction().begin();
-			TradePosition instance = entityManager.find(TradePosition.class, id);
-			if (null != instance)
-				instance.getTradeOrders().size();
-			entityManager.getTransaction().commit();
-			return instance;
-		} catch (Exception re) {
-			EntityManagerHelper.rollback();
-			throw re;
-		} finally {
-			EntityManagerHelper.close();
-		}
-	}
+        try {
+            EntityManager entityManager = EntityManagerHelper.getEntityManager();
+            entityManager.getTransaction().begin();
+            TradePosition instance = entityManager.find(TradePosition.class, id);
+            if (null != instance)
+                instance.getTradeOrders().size();
+            entityManager.getTransaction().commit();
+            return instance;
+        } catch (Exception re) {
+            EntityManagerHelper.rollback();
+            throw re;
+        } finally {
+            EntityManagerHelper.close();
+        }
+    }
 }

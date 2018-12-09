@@ -35,198 +35,190 @@
  */
 package org.trade.ui.widget;
 
-import java.awt.Color;
-import java.awt.Insets;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.util.Hashtable;
-
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.PlainDocument;
+import java.awt.*;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.util.Hashtable;
 
 /**
+ *
  */
 public class TextField extends JTextField implements FocusListener {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 339471596367850297L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 339471596367850297L;
 
-	private static Hashtable<Integer, Character> editMask = new Hashtable<Integer, Character>();
+    private static Hashtable<Integer, Character> editMask = new Hashtable<Integer, Character>();
 
-	private static Color originalColor = null;
+    private static Color originalColor = null;
 
-	/**
-	 * Constructor for TextField.
-	 * 
-	 * @param mask
-	 *            String
-	 */
-	public TextField(String mask) {
-		super();
+    /**
+     * Constructor for TextField.
+     *
+     * @param mask String
+     */
+    public TextField(String mask) {
+        super();
 
-		originalColor = this.getBackground();
+        originalColor = this.getBackground();
 
-		this.addFocusListener(this);
-		this.setBorder(new EmptyBorder(new Insets(2, 2, 2, 2)));
+        this.addFocusListener(this);
+        this.setBorder(new EmptyBorder(new Insets(2, 2, 2, 2)));
 
-		char[] maskChars = mask.toCharArray();
+        char[] maskChars = mask.toCharArray();
 
-		for (int i = 0; i < maskChars.length; i++) {
-			editMask.put(new Integer(i), new Character(maskChars[i]));
-		}
-	}
+        for (int i = 0; i < maskChars.length; i++) {
+            editMask.put(new Integer(i), new Character(maskChars[i]));
+        }
+    }
 
-	/**
-	 * Method createDefaultModel.
-	 * 
-	 * @return Document
-	 */
-	protected Document createDefaultModel() {
-		TextDocument doc = new TextDocument();
+    /**
+     * Method createDefaultModel.
+     *
+     * @return Document
+     */
+    protected Document createDefaultModel() {
+        TextDocument doc = new TextDocument();
 
-		/*
-		 * 
-		 * DocumentListener d = new DocumentListener() { public void
-		 * changedUpdate (DocumentEvent evt) { } public void insertUpdate
-		 * (DocumentEvent evt) { } public void removeUpdate (DocumentEvent evt)
-		 * { int i = evt.getOffset(); if (evt.getOffset() == 1 ||
-		 * evt.getOffset() == 4) { moveCursor(evt.getOffset()); } } };
-		 * doc.addDocumentListener(d);
-		 */
+        /*
+         *
+         * DocumentListener d = new DocumentListener() { public void
+         * changedUpdate (DocumentEvent evt) { } public void insertUpdate
+         * (DocumentEvent evt) { } public void removeUpdate (DocumentEvent evt)
+         * { int i = evt.getOffset(); if (evt.getOffset() == 1 ||
+         * evt.getOffset() == 4) { moveCursor(evt.getOffset()); } } };
+         * doc.addDocumentListener(d);
+         */
 
-		return doc;
-	}
+        return doc;
+    }
 
-	/**
-	 * Method getText.
-	 * 
-	 * @return String
-	 */
-	public String getText() {
-		String text;
+    /**
+     * Method getText.
+     *
+     * @return String
+     */
+    public String getText() {
+        String text;
 
-		text = super.getText();
+        text = super.getText();
 
-		return text;
-	}
+        return text;
+    }
 
-	/**
-	 * Method focusGained.
-	 * 
-	 * @param evt
-	 *            FocusEvent
-	 * @see java.awt.event.FocusListener#focusGained(FocusEvent)
-	 */
-	public void focusGained(FocusEvent evt) {
-		this.setSelectionStart(0);
-		this.setSelectionEnd(0);
-	}
+    /**
+     * Method focusGained.
+     *
+     * @param evt FocusEvent
+     * @see java.awt.event.FocusListener#focusGained(FocusEvent)
+     */
+    public void focusGained(FocusEvent evt) {
+        this.setSelectionStart(0);
+        this.setSelectionEnd(0);
+    }
 
-	/**
-	 * Method focusLost.
-	 * 
-	 * @param evt
-	 *            FocusEvent
-	 * @see java.awt.event.FocusListener#focusLost(FocusEvent)
-	 */
-	public void focusLost(FocusEvent evt) {
-		if (!(isValid())) {
-			this.setSelectionStart(0);
-			this.setSelectionEnd(0);
-		}
-	}
+    /**
+     * Method focusLost.
+     *
+     * @param evt FocusEvent
+     * @see java.awt.event.FocusListener#focusLost(FocusEvent)
+     */
+    public void focusLost(FocusEvent evt) {
+        if (!(isValid())) {
+            this.setSelectionStart(0);
+            this.setSelectionEnd(0);
+        }
+    }
 
-	/**
-	 * Method isValid.
-	 * 
-	 * @return boolean
-	 */
-	public boolean isValid() {
-		boolean isValid = false;
+    /**
+     * Method isValid.
+     *
+     * @return boolean
+     */
+    public boolean isValid() {
+        boolean isValid = false;
 
-		if (this.getText().trim().length() > 0) {
-			this.setBackground(Color.red);
+        if (this.getText().trim().length() > 0) {
+            this.setBackground(Color.red);
 
-			isValid = true;
+            isValid = true;
 
-			this.setBackground(originalColor);
-		} else {
-			isValid = true;
-		}
+            this.setBackground(originalColor);
+        } else {
+            isValid = true;
+        }
 
-		this.repaint();
+        this.repaint();
 
-		return isValid;
-	}
+        return isValid;
+    }
 
-	/**
-	 * 
-	 * @version $Id: TextField.java,v 1.2 2001/12/28 21:14:55 simon Exp $
-	 * @author Simon Allen
-	 */
-	static class TextDocument extends PlainDocument {
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = -2258034828743548985L;
+    /**
+     * @author Simon Allen
+     * @version $Id: TextField.java,v 1.2 2001/12/28 21:14:55 simon Exp $
+     */
+    static class TextDocument extends PlainDocument {
+        /**
+         *
+         */
+        private static final long serialVersionUID = -2258034828743548985L;
 
-		/**
-		 * Method insertString.
-		 * 
-		 * @param offs
-		 *            int
-		 * @param str
-		 *            String
-		 * @param a
-		 *            AttributeSet
-		 * @throws BadLocationException
-		 * @see javax.swing.text.Document#insertString(int, String,
-		 *      AttributeSet)
-		 */
-		public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
-			if (str != null) {
-				if (!(editMask.isEmpty())) {
-					Character selected = editMask.get(new Integer(offs));
+        /**
+         * Method insertString.
+         *
+         * @param offs int
+         * @param str  String
+         * @param a    AttributeSet
+         * @throws BadLocationException
+         * @see javax.swing.text.Document#insertString(int, String,
+         * AttributeSet)
+         */
+        public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
+            if (str != null) {
+                if (!(editMask.isEmpty())) {
+                    Character selected = editMask.get(new Integer(offs));
 
-					if (selected != null) {
-						if (Character.isLetter(selected.charValue())) {
-						} else {
-							str = selected.charValue() + str;
-						}
-					} else {
-						return;
-					}
-				}
-			} else {
-				return;
-			}
+                    if (selected != null) {
+                        if (Character.isLetter(selected.charValue())) {
+                        } else {
+                            str = selected.charValue() + str;
+                        }
+                    } else {
+                        return;
+                    }
+                }
+            } else {
+                return;
+            }
 
-			char[] upper = str.toCharArray();
+            char[] upper = str.toCharArray();
 
-			for (int i = 0; i < upper.length; i++) {
-				upper[i] = Character.toUpperCase(upper[i]);
+            for (int i = 0; i < upper.length; i++) {
+                upper[i] = Character.toUpperCase(upper[i]);
 
-				Character selected = editMask.get(new Integer(offs + i));
+                Character selected = editMask.get(new Integer(offs + i));
 
-				if (selected != null) {
-					if (Character.isLetter(selected.charValue())) {
-						if (!(Character.isDigit(upper[i]))) {
-							return;
-						}
-					}
-				}
-			}
+                if (selected != null) {
+                    if (Character.isLetter(selected.charValue())) {
+                        if (!(Character.isDigit(upper[i]))) {
+                            return;
+                        }
+                    }
+                }
+            }
 
-			if (super.getLength() > offs) {
-				super.remove(offs, upper.length);
-			}
+            if (super.getLength() > offs) {
+                super.remove(offs, upper.length);
+            }
 
-			super.insertString(offs, new String(upper), a);
-		}
-	}
+            super.insertString(offs, new String(upper), a);
+        }
+    }
 }

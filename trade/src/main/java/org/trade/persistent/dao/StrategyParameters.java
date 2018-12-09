@@ -39,32 +39,30 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
 /**
+ *
  */
 @Entity
 @DiscriminatorValue("StrategyParameters")
 public class StrategyParameters extends CodeType {
 
-	private static final long serialVersionUID = 2273276207080568947L;
+    private static final long serialVersionUID = 2273276207080568947L;
 
-	public StrategyParameters(String name, String description) {
-		super(name, CodeType.StrategyParameters, description);
-	}
+    public StrategyParameters(String name, String description) {
+        super(name, CodeType.StrategyParameters, description);
+    }
 
-	public StrategyParameters() {
-		super(CodeType.StrategyParameters);
-	}
+    public StrategyParameters() {
+        super(CodeType.StrategyParameters);
+    }
 
-	/**
-	 * Constructor for CodeType.
-	 * 
-	 * @param name
-	 *            String
-	 * @param type
-	 *            String
-	 * @param description
-	 *            String
-	 */
-	public StrategyParameters(String name, String type, String description) {
-		super(name, type, description);
-	}
+    /**
+     * Constructor for CodeType.
+     *
+     * @param name        String
+     * @param type        String
+     * @param description String
+     */
+    public StrategyParameters(String name, String type, String description) {
+        super(name, type, description);
+    }
 }

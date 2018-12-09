@@ -40,36 +40,34 @@ import org.trade.core.exception.NestingException;
 /**
  * This class servers as a general purpose exception for the identity service
  * component.
- * 
+ *
  * @author Simon Allen
  */
 public class IdentityServiceException extends NestingException {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -5500569043989306886L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -5500569043989306886L;
 
-	public IdentityServiceException() {
-		super();
-	}
+    public IdentityServiceException() {
+        super();
+    }
 
-	/**
-	 * Constructor for IdentityServiceException.
-	 * 
-	 * @param t
-	 *            Throwable
-	 */
-	public IdentityServiceException(Throwable t) {
-		super(t);
-	}
+    /**
+     * Constructor for IdentityServiceException.
+     *
+     * @param t Throwable
+     */
+    public IdentityServiceException(Throwable t) {
+        super(t);
+    }
 
-	/**
-	 * Constructor for IdentityServiceException.
-	 * 
-	 * @param message
-	 *            String
-	 */
-	public IdentityServiceException(String message) {
-		super(message);
-	}
+    /**
+     * Constructor for IdentityServiceException.
+     *
+     * @param message String
+     */
+    public IdentityServiceException(String message) {
+        super(message);
+    }
 }

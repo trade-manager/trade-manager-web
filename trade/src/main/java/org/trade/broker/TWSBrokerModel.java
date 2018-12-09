@@ -15,13 +15,13 @@ import org.trade.core.util.CoreUtils;
 import org.trade.core.util.TradingCalendar;
 import org.trade.core.valuetype.Money;
 import org.trade.core.valuetype.Percent;
-import org.trade.dictionary.valuetype.*;
 import org.trade.dictionary.valuetype.Currency;
 import org.trade.dictionary.valuetype.OrderStatus;
 import org.trade.dictionary.valuetype.OrderType;
+import org.trade.dictionary.valuetype.*;
 import org.trade.persistent.IPersistentModel;
-import org.trade.persistent.dao.*;
 import org.trade.persistent.dao.Contract;
+import org.trade.persistent.dao.*;
 import org.trade.strategy.data.CandleSeries;
 import org.trade.strategy.data.StrategyData;
 import org.trade.strategy.data.candle.CandleItem;
@@ -37,6 +37,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
+ *
  */
 public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, EReaderSignal {
 
@@ -1774,7 +1775,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
         return valid;
     }
 
-    public static com.ib.client.Contract getIBContract(Contract contract)  {
+    public static com.ib.client.Contract getIBContract(Contract contract) {
         com.ib.client.Contract ibContract = new com.ib.client.Contract();
         if (null != contract.getIdContractIB()) {
             // ibContract.m_conId = contract.getIdContractIB();
@@ -1909,7 +1910,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
     }
 
     private static boolean updateTradeOrder(com.ib.client.Order ibOrder, com.ib.client.OrderState ibOrderState,
-                                           TradeOrder order) {
+                                            TradeOrder order) {
 
         boolean changed = false;
 
@@ -2248,8 +2249,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
         return changed;
     }
 
-    public static void populateTradeOrderfill(com.ib.client.Execution execution, TradeOrderfill tradeOrderfill)
-             {
+    public static void populateTradeOrderfill(com.ib.client.Execution execution, TradeOrderfill tradeOrderfill) {
 
         ZonedDateTime date = TradingCalendar.getZonedDateTimeFromDateTimeString(execution.time().replaceAll("\\s", ""),
                 "yyyyMMddHH:mm:ss", TradingCalendar.LOCAL_TIMEZONE);
@@ -2267,7 +2267,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
     }
 
     private static com.ib.client.ExecutionFilter getIBExecutionFilter(Integer clientId, ZonedDateTime mktOpen,
-                                                                     String secType, String symbol) throws IOException {
+                                                                      String secType, String symbol) throws IOException {
 
         com.ib.client.ExecutionFilter executionFilter = new com.ib.client.ExecutionFilter();
         if (null != secType)
@@ -2285,9 +2285,8 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
     }
 
 
-
     public static void logOrderStatus(int orderId, String status, double filled, double remaining, double avgFillPrice,
-                                         int permId, int parentId, double lastFillPrice, int clientId, String whyHeld) {
+                                      int permId, int parentId, double lastFillPrice, int clientId, String whyHeld) {
 
         _log.info("orderId: " + orderId + " status: " + status + " filled: " + filled + " remaining: " + remaining
                 + " avgFillPrice: " + avgFillPrice + " permId: " + permId + " parentId: " + parentId
@@ -2354,6 +2353,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
                 + commissionReport.m_yield);
 
     }
+
     public void softDollarTiers(int reqId, SoftDollarTier[] tiers) {
         _log.debug("softDollarTiers: ");
     }

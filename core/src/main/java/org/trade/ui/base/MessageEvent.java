@@ -38,31 +38,24 @@ package org.trade.ui.base;
 import java.util.EventObject;
 
 /**
- * 
- * @version $Id: MessageEvent.java,v 1.1 2001/10/18 01:32:15 simon Exp $
  * @author Simon Allen
+ * @version $Id: MessageEvent.java,v 1.1 2001/10/18 01:32:15 simon Exp $
  */
 public class MessageEvent extends EventObject {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -6303732297647598634L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -6303732297647598634L;
 
-	/**
-	 * MessageEvent() -
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * @param source
-	 *            Object
-	 * @exception *
-	 * 				@see
-	 */
-	public MessageEvent(Object source) {
-		super(source);
-	}
+    /**
+     * MessageEvent() -
+     *
+     * @param source Object
+     * @throws *
+     * @see
+     */
+    public MessageEvent(Object source) {
+        super(source);
+    }
 }

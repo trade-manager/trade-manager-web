@@ -38,40 +38,40 @@ package org.trade.dictionary.valuetype;
 import org.trade.core.valuetype.DAODecode;
 
 /**
+ *
  */
 public class DAOIndicatorSeries extends DAODecode {
 
-	private static final long serialVersionUID = -5381026427696898592L;
-	public static final String DECODE = "INDICATOR_DATA";
-	public static final String _TABLE = "_TABLE";
-	public static final String _TABLE_ID = "_TABLE_ID";
-	public static final String _COLUMN = "_COLUMN";
+    private static final long serialVersionUID = -5381026427696898592L;
+    public static final String DECODE = "INDICATOR_DATA";
+    public static final String _TABLE = "_TABLE";
+    public static final String _TABLE_ID = "_TABLE_ID";
+    public static final String _COLUMN = "_COLUMN";
 
-	public DAOIndicatorSeries() {
-		super(DECODE);
-	}
+    public DAOIndicatorSeries() {
+        super(DECODE);
+    }
 
-	/**
-	 * Method newInstance.
-	 * 
-	 * @param value
-	 *            String
-	 * @return DAOIndicatorSeries
-	 */
-	public static DAOIndicatorSeries newInstance(String displayName) {
-		final DAOIndicatorSeries returnInstance = new DAOIndicatorSeries();
-		returnInstance.setDisplayName(displayName);
-		return returnInstance;
-	}
+    /**
+     * Method newInstance.
+     *
+     * @param value String
+     * @return DAOIndicatorSeries
+     */
+    public static DAOIndicatorSeries newInstance(String displayName) {
+        final DAOIndicatorSeries returnInstance = new DAOIndicatorSeries();
+        returnInstance.setDisplayName(displayName);
+        return returnInstance;
+    }
 
-	/**
-	 * Method newInstance.
-	 * 
-	 * @return DAOIndicatorSeries
-	 */
-	public static DAOIndicatorSeries newInstance() {
-		final DAOIndicatorSeries returnInstance = new DAOIndicatorSeries();
-		returnInstance.setDefaultCode();
-		return returnInstance;
-	}
+    /**
+     * Method newInstance.
+     *
+     * @return DAOIndicatorSeries
+     */
+    public static DAOIndicatorSeries newInstance() {
+        final DAOIndicatorSeries returnInstance = new DAOIndicatorSeries();
+        returnInstance.setDefaultCode();
+        return returnInstance;
+    }
 }

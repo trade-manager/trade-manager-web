@@ -42,65 +42,61 @@ import org.trade.core.conversion.JavaTypeTranslatorException;
  * This class converts instances of java.lang.Object to instances of
  * com.cbsinc.esc.devtools.valuetype.base.CodeDecodeValueType. The conversion
  * will set the value passed as the code that this valuetype represents.
- * 
+ *
  * @author Simon Allen
  */
 public class ObjectToDecode implements IJavaDynamicTypeConverter {
 
-	public ObjectToDecode() {
-	}
+    public ObjectToDecode() {
+    }
 
-	/**
-	 * Method convert.
-	 * 
-	 * @param targetType
-	 *            Class<?>
-	 * @param valueToConvert
-	 *            Object
-	 * @return Object
-	 * @throws JavaTypeTranslatorException
-	 * @see IJavaDynamicTypeConverter#convert(Class<?>,
-	 *      Object)
-	 */
-	public Object convert(Class<?> targetType, Object valueToConvert) throws JavaTypeTranslatorException {
-		Object rVal = null;
+    /**
+     * Method convert.
+     *
+     * @param targetType     Class<?>
+     * @param valueToConvert Object
+     * @return Object
+     * @throws JavaTypeTranslatorException
+     * @see IJavaDynamicTypeConverter#convert(Class<?>,
+     * Object)
+     */
+    public Object convert(Class<?> targetType, Object valueToConvert) throws JavaTypeTranslatorException {
+        Object rVal = null;
 
-		if (Decode.class.isAssignableFrom(targetType)) {
-			try {
-				Decode vt = (Decode) targetType.newInstance();
+        if (Decode.class.isAssignableFrom(targetType)) {
+            try {
+                Decode vt = (Decode) targetType.newInstance();
 
-				// Assign the value for the valuetype
-				vt.setValue(valueToConvert);
+                // Assign the value for the valuetype
+                vt.setValue(valueToConvert);
 
-				rVal = vt;
-			} catch (Exception ex) {
-				throw new JavaTypeTranslatorException(ex, "Unable to set code");
-			}
-		} else {
-			throw new JavaTypeTranslatorException("Target type must be a com.aceva.devtools.valuetype.base.Decode");
-		}
+                rVal = vt;
+            } catch (Exception ex) {
+                throw new JavaTypeTranslatorException(ex, "Unable to set code");
+            }
+        } else {
+            throw new JavaTypeTranslatorException("Target type must be a com.aceva.devtools.valuetype.base.Decode");
+        }
 
-		return (rVal);
-	}
+        return (rVal);
+    }
 
-	/**
-	 * Method supportsConversion.
-	 * 
-	 * @param targetType
-	 *            Class<?>
-	 * @param valueToConvert
-	 *            Object
-	 * @return boolean
-	 * @see IJavaDynamicTypeConverter#
-	 *      supportsConversion (Class<?>, Object)
-	 */
-	public boolean supportsConversion(Class<?> targetType, Object valueToConvert) {
-		boolean rVal = false;
+    /**
+     * Method supportsConversion.
+     *
+     * @param targetType     Class<?>
+     * @param valueToConvert Object
+     * @return boolean
+     * @see IJavaDynamicTypeConverter#
+     * supportsConversion (Class<?>, Object)
+     */
+    public boolean supportsConversion(Class<?> targetType, Object valueToConvert) {
+        boolean rVal = false;
 
-		if (Decode.class.isAssignableFrom(targetType)) {
-			rVal = true;
-		}
+        if (Decode.class.isAssignableFrom(targetType)) {
+            rVal = true;
+        }
 
-		return (rVal);
-	}
+        return (rVal);
+    }
 }

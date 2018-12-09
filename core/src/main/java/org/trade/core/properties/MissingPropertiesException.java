@@ -40,99 +40,98 @@ import java.util.Vector;
 
 /**
  * Exception thrown by PropertyUtils class.
- * 
+ *
  * @author : Simon Allen
  */
 public class MissingPropertiesException extends java.lang.Exception {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -5377864368236421685L;
-	private Vector<String> m_missingProperties = null;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -5377864368236421685L;
+    private Vector<String> m_missingProperties = null;
 
-	public MissingPropertiesException() {
-		super();
-	}
+    public MissingPropertiesException() {
+        super();
+    }
 
-	/**
-	 * Method addProperty.
-	 * 
-	 * @param p
-	 *            String
-	 */
-	public void addProperty(String p) {
-		if (m_missingProperties == null) {
-			m_missingProperties = new Vector<String>();
-		}
+    /**
+     * Method addProperty.
+     *
+     * @param p String
+     */
+    public void addProperty(String p) {
+        if (m_missingProperties == null) {
+            m_missingProperties = new Vector<String>();
+        }
 
-		m_missingProperties.addElement(p);
-	}
+        m_missingProperties.addElement(p);
+    }
 
-	/**
-	 * Method getMessage.
-	 * 
-	 * @return String
-	 */
-	public String getMessage() {
-		StringBuffer message = new StringBuffer("The following properties are missing: ");
-		Enumeration<String> missingProperties = getMissingProperties();
+    /**
+     * Method getMessage.
+     *
+     * @return String
+     */
+    public String getMessage() {
+        StringBuffer message = new StringBuffer("The following properties are missing: ");
+        Enumeration<String> missingProperties = getMissingProperties();
 
-		if (null == missingProperties) {
-			message.append("No properties missing!");
-		} else {
-			boolean first = true;
+        if (null == missingProperties) {
+            message.append("No properties missing!");
+        } else {
+            boolean first = true;
 
-			while (missingProperties.hasMoreElements()) {
-				if (first) {
-					first = false;
-				} else {
-					message.append(", ");
-				}
+            while (missingProperties.hasMoreElements()) {
+                if (first) {
+                    first = false;
+                } else {
+                    message.append(", ");
+                }
 
-				message.append(missingProperties.nextElement());
-			}
-		}
+                message.append(missingProperties.nextElement());
+            }
+        }
 
-		return message.toString();
-	}
+        return message.toString();
+    }
 
-	/**
-	 * Method getMissingProperties.
-	 * 
-	 * @return Enumeration<String>
-	 */
-	public Enumeration<String> getMissingProperties() {
-		if (m_missingProperties == null) {
-			m_missingProperties = new Vector<String>();
-		}
+    /**
+     * Method getMissingProperties.
+     *
+     * @return Enumeration<String>
+     */
+    public Enumeration<String> getMissingProperties() {
+        if (m_missingProperties == null) {
+            m_missingProperties = new Vector<String>();
+        }
 
-		return m_missingProperties.elements();
-	}
+        return m_missingProperties.elements();
+    }
 
-	/**
-	 * Method toString.
-	 * 
-	 * @return String
-	 */
-	public String toString() {
-		if (m_missingProperties == null) {
-			return "No properties missing";
-		}
+    /**
+     * Method toString.
+     *
+     * @return String
+     */
+    public String toString() {
+        if (m_missingProperties == null) {
+            return "No properties missing";
+        }
 
-		StringBuffer sb = new StringBuffer("The following [");
+        StringBuffer sb = new StringBuffer("The following [");
 
-		sb.append(m_missingProperties.size());
-		sb.append("] properties are missing: ");
+        sb.append(m_missingProperties.size());
+        sb.append("] properties are missing: ");
 
-		int missingPropSize = m_missingProperties.size();
+        int missingPropSize = m_missingProperties.size();
 
-		for (int ii = 0; ii < missingPropSize; ii++) {
-			sb.append(m_missingProperties.elementAt(ii));
-			sb.append(", ");
-		}
+        for (int ii = 0; ii < missingPropSize; ii++) {
+            sb.append(m_missingProperties.elementAt(ii));
+            sb.append(", ");
+        }
 
-		sb.append('.');
+        sb.append('.');
 
-		return sb.toString();
-	}
+        return sb.toString();
+    }
 }

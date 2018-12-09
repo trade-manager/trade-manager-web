@@ -21,7 +21,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301,
  * USA.
  *
- * [Oracle and Java are registered trademarks of Oracle and/or its affiliates. 
+ * [Oracle and Java are registered trademarks of Oracle and/or its affiliates.
  * Other names may be trademarks of their respective owners.]
  *
  * ---------------------
@@ -50,95 +50,100 @@ import java.io.Serializable;
  */
 public final class TimePeriodAnchor implements Serializable {
 
-	/** For serialization. */
-	private static final long serialVersionUID = 2011955697457548862L;
+    /**
+     * For serialization.
+     */
+    private static final long serialVersionUID = 2011955697457548862L;
 
-	/** Start of period. */
-	public static final TimePeriodAnchor START = new TimePeriodAnchor("TimePeriodAnchor.START");
+    /**
+     * Start of period.
+     */
+    public static final TimePeriodAnchor START = new TimePeriodAnchor("TimePeriodAnchor.START");
 
-	/** Middle of period. */
-	public static final TimePeriodAnchor MIDDLE = new TimePeriodAnchor("TimePeriodAnchor.MIDDLE");
+    /**
+     * Middle of period.
+     */
+    public static final TimePeriodAnchor MIDDLE = new TimePeriodAnchor("TimePeriodAnchor.MIDDLE");
 
-	/** End of period. */
-	public static final TimePeriodAnchor END = new TimePeriodAnchor("TimePeriodAnchor.END");
+    /**
+     * End of period.
+     */
+    public static final TimePeriodAnchor END = new TimePeriodAnchor("TimePeriodAnchor.END");
 
-	/** The name. */
-	private String name;
+    /**
+     * The name.
+     */
+    private String name;
 
-	/**
-	 * Private constructor.
-	 *
-	 * @param name
-	 *            the name.
-	 */
-	private TimePeriodAnchor(String name) {
-		this.name = name;
-	}
+    /**
+     * Private constructor.
+     *
+     * @param name the name.
+     */
+    private TimePeriodAnchor(String name) {
+        this.name = name;
+    }
 
-	/**
-	 * Returns a string representing the object.
-	 *
-	 * @return The string.
-	 */
-	@Override
-	public String toString() {
-		return this.name;
-	}
+    /**
+     * Returns a string representing the object.
+     *
+     * @return The string.
+     */
+    @Override
+    public String toString() {
+        return this.name;
+    }
 
-	/**
-	 * Returns <code>true</code> if this object is equal to the specified
-	 * object, and <code>false</code> otherwise.
-	 *
-	 * @param obj
-	 *            the other object.
-	 *
-	 * @return A boolean.
-	 */
-	@Override
-	public boolean equals(Object obj) {
+    /**
+     * Returns <code>true</code> if this object is equal to the specified
+     * object, and <code>false</code> otherwise.
+     *
+     * @param obj the other object.
+     * @return A boolean.
+     */
+    @Override
+    public boolean equals(Object obj) {
 
-		if (this == obj) {
-			return true;
-		}
-		if (!(obj instanceof TimePeriodAnchor)) {
-			return false;
-		}
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof TimePeriodAnchor)) {
+            return false;
+        }
 
-		TimePeriodAnchor position = (TimePeriodAnchor) obj;
-		if (!this.name.equals(position.name)) {
-			return false;
-		}
+        TimePeriodAnchor position = (TimePeriodAnchor) obj;
+        if (!this.name.equals(position.name)) {
+            return false;
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	/**
-	 * Returns a hash code value for the object.
-	 *
-	 * @return The hashcode
-	 */
-	@Override
-	public int hashCode() {
-		return this.name.hashCode();
-	}
+    /**
+     * Returns a hash code value for the object.
+     *
+     * @return The hashcode
+     */
+    @Override
+    public int hashCode() {
+        return this.name.hashCode();
+    }
 
-	/**
-	 * Ensures that serialization returns the unique instances.
-	 *
-	 * @return The object.
-	 *
-	 * @throws ObjectStreamException
-	 *             if there is a problem.
-	 */
-	private Object readResolve() throws ObjectStreamException {
-		if (this.equals(TimePeriodAnchor.START)) {
-			return TimePeriodAnchor.START;
-		} else if (this.equals(TimePeriodAnchor.MIDDLE)) {
-			return TimePeriodAnchor.MIDDLE;
-		} else if (this.equals(TimePeriodAnchor.END)) {
-			return TimePeriodAnchor.END;
-		}
-		return null;
-	}
+    /**
+     * Ensures that serialization returns the unique instances.
+     *
+     * @return The object.
+     * @throws ObjectStreamException if there is a problem.
+     */
+    private Object readResolve() throws ObjectStreamException {
+        if (this.equals(TimePeriodAnchor.START)) {
+            return TimePeriodAnchor.START;
+        } else if (this.equals(TimePeriodAnchor.MIDDLE)) {
+            return TimePeriodAnchor.MIDDLE;
+        } else if (this.equals(TimePeriodAnchor.END)) {
+            return TimePeriodAnchor.END;
+        }
+        return null;
+    }
 
 }

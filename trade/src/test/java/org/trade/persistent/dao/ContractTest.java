@@ -35,17 +35,8 @@
  */
 package org.trade.persistent.dao;
 
-import java.math.BigDecimal;
-import java.time.ZonedDateTime;
-
-import static org.junit.Assert.*;
-
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.TestName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,118 +46,125 @@ import org.trade.dictionary.valuetype.Currency;
 import org.trade.dictionary.valuetype.Exchange;
 import org.trade.dictionary.valuetype.SECType;
 
+import java.math.BigDecimal;
+import java.time.ZonedDateTime;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
+
 /**
+ *
  */
 public class ContractTest {
 
-	private final static Logger _log = LoggerFactory.getLogger(ContractTest.class);
-	@Rule
-	public TestName name = new TestName();
+    private final static Logger _log = LoggerFactory.getLogger(ContractTest.class);
+    @Rule
+    public TestName name = new TestName();
 
-	/**
-	 * Method setUpBeforeClass.
-	 * 
-	 * @throws java.lang.Exception
-	 */
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-	}
+    /**
+     * Method setUpBeforeClass.
+     *
+     * @throws java.lang.Exception
+     */
+    @BeforeClass
+    public static void setUpBeforeClass() throws Exception {
+    }
 
-	/**
-	 * Method setUp.
-	 * 
-	 * @throws java.lang.Exception
-	 */
-	@Before
-	public void setUp() throws Exception {
-	}
+    /**
+     * Method setUp.
+     *
+     * @throws java.lang.Exception
+     */
+    @Before
+    public void setUp() throws Exception {
+    }
 
-	/**
-	 * Method tearDown.
-	 * 
-	 * @throws java.lang.Exception
-	 */
-	@After
-	public void tearDown() throws Exception {
-	}
+    /**
+     * Method tearDown.
+     *
+     * @throws java.lang.Exception
+     */
+    @After
+    public void tearDown() throws Exception {
+    }
 
-	/**
-	 * Method tearDownAfterClass.
-	 * 
-	 * @throws java.lang.Exception
-	 */
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-	}
+    /**
+     * Method tearDownAfterClass.
+     *
+     * @throws java.lang.Exception
+     */
+    @AfterClass
+    public static void tearDownAfterClass() throws Exception {
+    }
 
-	@Test
-	public void testFindDeleteAddContract() {
+    @Test
+    public void testFindDeleteAddContract() {
 
-		try {
+        try {
 
-			// Create new instance of Strategy and set
-			// values in it by reading them from form object
-			AspectHome aspectHome = new AspectHome();
-			ContractHome contractHome = new ContractHome();
-			Contract transientInstance = new Contract(SECType.STOCK, "QQQ", Exchange.SMART, Currency.USD, null, null);
+            // Create new instance of Strategy and set
+            // values in it by reading them from form object
+            AspectHome aspectHome = new AspectHome();
+            ContractHome contractHome = new ContractHome();
+            Contract transientInstance = new Contract(SECType.STOCK, "QQQ", Exchange.SMART, Currency.USD, null, null);
 
-			transientInstance = aspectHome.persist(transientInstance);
-			_log.info("Contract added Id:" + transientInstance.getId());
+            transientInstance = aspectHome.persist(transientInstance);
+            _log.info("Contract added Id:" + transientInstance.getId());
 
-			Contract contract = contractHome.findByUniqueKey(transientInstance.getSecType(),
-					transientInstance.getSymbol(), transientInstance.getExchange(), transientInstance.getCurrency(),
-					null);
-			assertNotNull("Contract not found: " + contract.getSymbol(), contract);
+            Contract contract = contractHome.findByUniqueKey(transientInstance.getSecType(),
+                    transientInstance.getSymbol(), transientInstance.getExchange(), transientInstance.getCurrency(),
+                    null);
+            assertNotNull("Contract not found: " + contract.getSymbol(), contract);
 
-			if (null != contract) {
-				aspectHome.remove(contract);
-				_log.info("Contract deleted Id:" + transientInstance.getId());
-			}
+            if (null != contract) {
+                aspectHome.remove(contract);
+                _log.info("Contract deleted Id:" + transientInstance.getId());
+            }
 
-		} catch (Exception | AssertionError ex) {
-			String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
-			_log.error(msg);
-			fail(msg);
-		}
-	}
+        } catch (Exception | AssertionError ex) {
+            String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
+            _log.error(msg);
+            fail(msg);
+        }
+    }
 
-	@Test
-	public void testFindDeleteAddFuture() {
+    @Test
+    public void testFindDeleteAddFuture() {
 
-		try {
+        try {
 
-			// Create new instance of Strategy and set
-			// values in it by reading them from form object
-			AspectHome aspectHome = new AspectHome();
-			ContractHome contractHome = new ContractHome();
+            // Create new instance of Strategy and set
+            // values in it by reading them from form object
+            AspectHome aspectHome = new AspectHome();
+            ContractHome contractHome = new ContractHome();
 
-			ZonedDateTime expiry = TradingCalendar.getDateAtTime(TradingCalendar.getDateTimeNowMarketTimeZone(), 19, 0,
-					0);
-			expiry = expiry.plusMonths(1);
+            ZonedDateTime expiry = TradingCalendar.getDateAtTime(TradingCalendar.getDateTimeNowMarketTimeZone(), 19, 0,
+                    0);
+            expiry = expiry.plusMonths(1);
 
-			_log.info("Expiry Date: " + expiry);
-			Contract transientInstance = new Contract(SECType.FUTURE, "ES", Exchange.SMART, Currency.USD, expiry,
-					new BigDecimal(50));
-			transientInstance = aspectHome.persist(transientInstance);
-			_log.info("Contract added Id:" + transientInstance.getId());
+            _log.info("Expiry Date: " + expiry);
+            Contract transientInstance = new Contract(SECType.FUTURE, "ES", Exchange.SMART, Currency.USD, expiry,
+                    new BigDecimal(50));
+            transientInstance = aspectHome.persist(transientInstance);
+            _log.info("Contract added Id:" + transientInstance.getId());
 
-			expiry = expiry.plusDays(1);
-			_log.info("Expiry Date: " + expiry);
-			Contract contract = contractHome.findByUniqueKey(transientInstance.getSecType(),
-					transientInstance.getSymbol(), transientInstance.getExchange(), transientInstance.getCurrency(),
-					expiry);
-			assertNotNull("Contract not found: " + contract.getSymbol(), contract);
+            expiry = expiry.plusDays(1);
+            _log.info("Expiry Date: " + expiry);
+            Contract contract = contractHome.findByUniqueKey(transientInstance.getSecType(),
+                    transientInstance.getSymbol(), transientInstance.getExchange(), transientInstance.getCurrency(),
+                    expiry);
+            assertNotNull("Contract not found: " + contract.getSymbol(), contract);
 
-			if (null != contract) {
-				aspectHome.remove(contract);
-				_log.info("Contract deleted Id:" + transientInstance.getId());
-			}
-			_log.info("Contract added Id:" + transientInstance.getId());
+            if (null != contract) {
+                aspectHome.remove(contract);
+                _log.info("Contract deleted Id:" + transientInstance.getId());
+            }
+            _log.info("Contract added Id:" + transientInstance.getId());
 
-		} catch (Exception | AssertionError ex) {
-			String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
-			_log.error(msg);
-			fail(msg);
-		}
-	}
+        } catch (Exception | AssertionError ex) {
+            String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
+            _log.error(msg);
+            fail(msg);
+        }
+    }
 }

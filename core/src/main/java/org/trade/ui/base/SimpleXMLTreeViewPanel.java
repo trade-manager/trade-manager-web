@@ -1,191 +1,185 @@
 package org.trade.ui.base;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Image;
-import java.util.Vector;
-
-import javax.swing.BorderFactory;
-import javax.swing.JComponent;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.TreeSelectionModel;
-
 import org.trade.core.xml.DOMParserSaveEncoding;
 import org.w3c.dom.Document;
 
+import javax.swing.*;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.TreeSelectionModel;
+import java.awt.*;
+import java.util.Vector;
+
 public class SimpleXMLTreeViewPanel extends BasePanel {
 
-	private static final long serialVersionUID = -6919104650081619931L;
+    private static final long serialVersionUID = -6919104650081619931L;
 
-	/** Default parser name. */
-	static final String DEFAULT_PARSER_NAME = "org.apache.xerces.parsers.DOMParser";
+    /**
+     * Default parser name.
+     */
+    static final String DEFAULT_PARSER_NAME = "org.apache.xerces.parsers.DOMParser";
 
-	static int WARNING = 0;
-	static int ERROR = 1;
-	static int FATAL_ERROR = 2;
+    static int WARNING = 0;
+    static int ERROR = 1;
+    static int FATAL_ERROR = 2;
 
-	static final String title = "TreeViewer";
-	static final String openString = "Open";
-	static final String quitString = "Quit";
-	static final String reloadString = "Reload current XML file";
-	static final String expandString = "Expand Tree";
-	static final String collapseString = "Collapse Tree";
+    static final String title = "TreeViewer";
+    static final String openString = "Open";
+    static final String quitString = "Quit";
+    static final String reloadString = "Reload current XML file";
+    static final String expandString = "Expand Tree";
+    static final String collapseString = "Collapse Tree";
 
-	//
-	// Data
-	//
+    //
+    // Data
+    //
 
-	// ErrorStorer ef = null;
-	String fname = null;
+    // ErrorStorer ef = null;
+    String fname = null;
 
-	// DOMTree m_tree = null;
-	Vector<String> textLine = null;
+    // DOMTree m_tree = null;
+    Vector<String> textLine = null;
 
-	// DOMParserSaveEncoding parser = null;
-	Image openFolder = null;
+    // DOMParserSaveEncoding parser = null;
+    Image openFolder = null;
 
-	Image closedFolder = null;
+    Image closedFolder = null;
 
-	Image leafImage = null;
+    Image leafImage = null;
 
-	BorderLayout borderLayout1 = new BorderLayout();
+    BorderLayout borderLayout1 = new BorderLayout();
 
-	// JTextArea messageText = new JTextArea();
+    // JTextArea messageText = new JTextArea();
 
-	/**
-	 * Constructor
-	 */
-	public SimpleXMLTreeViewPanel(String xml) {
-		this.setLayout(borderLayout1);
+    /**
+     * Constructor
+     */
+    public SimpleXMLTreeViewPanel(String xml) {
+        this.setLayout(borderLayout1);
 
-		openFolder = DefaultImages.createOpenFolderImage();
-		closedFolder = DefaultImages.createClosedFolderImage();
-		leafImage = DefaultImages.createLeafImage();
+        openFolder = DefaultImages.createOpenFolderImage();
+        closedFolder = DefaultImages.createClosedFolderImage();
+        leafImage = DefaultImages.createLeafImage();
 
-		this.add(createUI(xml), BorderLayout.CENTER);
+        this.add(createUI(xml), BorderLayout.CENTER);
 
-	}
+    }
 
-	/**
-	 * create and return the entire UI from the root TreeNode
-	 */
-	JComponent createUI(String xml) {
+    /**
+     * create and return the entire UI from the root TreeNode
+     */
+    JComponent createUI(String xml) {
 
-		// create the JTree and scroll pane.
-		final JPanel treePanel = new JPanel(new BorderLayout());
+        // create the JTree and scroll pane.
+        final JPanel treePanel = new JPanel(new BorderLayout());
 
-		final DOMTree m_tree = new DOMTree(this);
+        final DOMTree m_tree = new DOMTree(this);
 
-		m_tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+        m_tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 
-		// Listen for when the selection changes, call nodeSelected(node)
-		m_tree.addTreeSelectionListener(new TreeSelectionListener() {
-			public void valueChanged(TreeSelectionEvent e) {
+        // Listen for when the selection changes, call nodeSelected(node)
+        m_tree.addTreeSelectionListener(new TreeSelectionListener() {
+            public void valueChanged(TreeSelectionEvent e) {
 
-				// nodeSelected(node, m_tree);
-			}
-		});
-		m_tree.setRowHeight(18);
-		m_tree.setFont(new Font("dialog", Font.PLAIN, 12));
+                // nodeSelected(node, m_tree);
+            }
+        });
+        m_tree.setRowHeight(18);
+        m_tree.setFont(new Font("dialog", Font.PLAIN, 12));
 
-		treePanel.add(new JScrollPane(m_tree) {
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = -8726326914798956438L;
+        treePanel.add(new JScrollPane(m_tree) {
+            /**
+             *
+             */
+            private static final long serialVersionUID = -8726326914798956438L;
 
-			@Override
-			public Dimension getPreferredSize() {
-				final Dimension size = SimpleXMLTreeViewPanel.this.getSize();
-				return new Dimension(size.width / 2, (size.height * 3) / 5);
-			}
+            @Override
+            public Dimension getPreferredSize() {
+                final Dimension size = SimpleXMLTreeViewPanel.this.getSize();
+                return new Dimension(size.width / 2, (size.height * 3) / 5);
+            }
 
-			@Override
-			public Dimension getMinimumSize() {
-				return new Dimension(100, 10);
-			}
-		}, BorderLayout.CENTER);
+            @Override
+            public Dimension getMinimumSize() {
+                return new Dimension(100, 10);
+            }
+        }, BorderLayout.CENTER);
 
-		treePanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder("Tree View"),
-				BorderFactory.createEmptyBorder(4, 4, 4, 4)));
+        treePanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder("Tree View"),
+                BorderFactory.createEmptyBorder(4, 4, 4, 4)));
 
-		// refreshUI loads everthything !
-		refreshUI(xml, m_tree);
+        // refreshUI loads everthything !
+        refreshUI(xml, m_tree);
 
-		return treePanel;
-	}
+        return treePanel;
+    }
 
-	public void doOpen(String xml) {
-		// refreshUI(xml);
-	}
+    public void doOpen(String xml) {
+        // refreshUI(xml);
+    }
 
-	/**
-	 * refreshUI is called when we have a new filename to parse.
-	 */
-	void refreshUI(String xml, DOMTree m_tree) {
+    /**
+     * refreshUI is called when we have a new filename to parse.
+     */
+    void refreshUI(String xml, DOMTree m_tree) {
 
-		if ((xml == null) || xml.equals("")) {
-			setErrorMessage("Error", "No input XML  specified \n");
-			return;
-		}
+        if ((xml == null) || xml.equals("")) {
+            setErrorMessage("Error", "No input XML  specified \n");
+            return;
+        }
 
-		final Document newRoot = getRoot(xml);
-		if (newRoot == null) {
-			setErrorMessage("Error", "Unable to get new DOM Tree \n");
-			return;
-		}
-		m_tree.setDocument(newRoot);
+        final Document newRoot = getRoot(xml);
+        if (newRoot == null) {
+            setErrorMessage("Error", "Unable to get new DOM Tree \n");
+            return;
+        }
+        m_tree.setDocument(newRoot);
 
-	}
+    }
 
-	/**
-	 * Invoke the Parser on fname and return the root TreeNode.
-	 */
-	public Document getRoot(String xml) {
+    /**
+     * Invoke the Parser on fname and return the root TreeNode.
+     */
+    public Document getRoot(String xml) {
 
-		if ((xml == null) || xml.equals("")) {
-			setErrorMessage("Error:", " Invalid XML document could not get ROOT");
-			return null;
-		}
+        if ((xml == null) || xml.equals("")) {
+            setErrorMessage("Error:", " Invalid XML document could not get ROOT");
+            return null;
+        }
 
-		try {
-			//
-			// Reset the Error Storage and handling
-			//
-			final DOMParserSaveEncoding parser = new DOMParserSaveEncoding();
-			final Document document = parser.parse(xml);
-			/***/
-			return document;
-		} catch (final Exception e) {
-			setErrorMessage("Error: Invalid XML document could not get ROOT", e);
-		}
-		return null;
-	}
+        try {
+            //
+            // Reset the Error Storage and handling
+            //
+            final DOMParserSaveEncoding parser = new DOMParserSaveEncoding();
+            final Document document = parser.parse(xml);
+            /***/
+            return document;
+        } catch (final Exception e) {
+            setErrorMessage("Error: Invalid XML document could not get ROOT", e);
+        }
+        return null;
+    }
 
-	public void setErrorMessage(String title, Throwable t) {
-		JOptionPane.showMessageDialog(this.getRootPane(), t.getMessage(), title, JOptionPane.ERROR_MESSAGE);
-	}
+    public void setErrorMessage(String title, Throwable t) {
+        JOptionPane.showMessageDialog(this.getRootPane(), t.getMessage(), title, JOptionPane.ERROR_MESSAGE);
+    }
 
-	public void setErrorMessage(String title, String message) {
-		JOptionPane.showMessageDialog(this.getRootPane(), message, title, JOptionPane.ERROR_MESSAGE);
-	}
+    public void setErrorMessage(String title, String message) {
+        JOptionPane.showMessageDialog(this.getRootPane(), message, title, JOptionPane.ERROR_MESSAGE);
+    }
 
-	public void doWindowOpen() {
-	}
+    public void doWindowOpen() {
+    }
 
-	public void doWindowClose() {
+    public void doWindowClose() {
 
-	}
+    }
 
-	public void doWindowActivated() {
-	}
+    public void doWindowActivated() {
+    }
 
-	public boolean doWindowDeActivated() {
-		return true;
-	}
+    public boolean doWindowDeActivated() {
+        return true;
+    }
 }

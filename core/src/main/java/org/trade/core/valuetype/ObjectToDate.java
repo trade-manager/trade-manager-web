@@ -40,73 +40,70 @@ import org.trade.core.conversion.JavaFormatForObject;
 import org.trade.core.conversion.JavaTypeTranslatorException;
 
 /**
+ *
  */
 public class ObjectToDate implements IJavaDynamicTypeConverter {
 
-	public ObjectToDate() {
-	}
+    public ObjectToDate() {
+    }
 
-	/**
-	 * Method convert.
-	 * 
-	 * @param targetType
-	 *            Class<?>
-	 * @param valueToConvert
-	 *            Object
-	 * @return Object
-	 * @throws JavaTypeTranslatorException
-	 * @see IJavaDynamicTypeConverter#convert(Class<?>,
-	 *      Object)
-	 */
-	public Object convert(Class<?> targetType, Object valueToConvert) throws JavaTypeTranslatorException {
-		Date rVal = null;
+    /**
+     * Method convert.
+     *
+     * @param targetType     Class<?>
+     * @param valueToConvert Object
+     * @return Object
+     * @throws JavaTypeTranslatorException
+     * @see IJavaDynamicTypeConverter#convert(Class<?>,
+     * Object)
+     */
+    public Object convert(Class<?> targetType, Object valueToConvert) throws JavaTypeTranslatorException {
+        Date rVal = null;
 
-		if (!Date.class.equals(targetType)) {
-			throw new JavaTypeTranslatorException("The target type must be an Date");
-		}
+        if (!Date.class.equals(targetType)) {
+            throw new JavaTypeTranslatorException("The target type must be an Date");
+        }
 
-		if (valueToConvert == null) {
-			throw new JavaTypeTranslatorException("The object to be converted cannot be null");
-		}
+        if (valueToConvert == null) {
+            throw new JavaTypeTranslatorException("The object to be converted cannot be null");
+        }
 
-		String dateFormat = null;
+        String dateFormat = null;
 
-		if (valueToConvert instanceof JavaFormatForObject) {
-			valueToConvert = ((JavaFormatForObject) valueToConvert).getForObject();
-			dateFormat = ((JavaFormatForObject) valueToConvert).getFormat();
+        if (valueToConvert instanceof JavaFormatForObject) {
+            valueToConvert = ((JavaFormatForObject) valueToConvert).getForObject();
+            dateFormat = ((JavaFormatForObject) valueToConvert).getFormat();
 
-		}
+        }
 
-		if (valueToConvert instanceof String) {
-			String val = (String) valueToConvert;
+        if (valueToConvert instanceof String) {
+            String val = (String) valueToConvert;
 
-			rVal = new Date(val, dateFormat); // dateFormat may be null, but
-			// that is okay
-		} else {
-			throw new JavaTypeTranslatorException(
-					"The object to be converted cannot be a " + valueToConvert.getClass());
-		}
+            rVal = new Date(val, dateFormat); // dateFormat may be null, but
+            // that is okay
+        } else {
+            throw new JavaTypeTranslatorException(
+                    "The object to be converted cannot be a " + valueToConvert.getClass());
+        }
 
-		return (rVal);
-	}
+        return (rVal);
+    }
 
-	/**
-	 * Method supportsConversion.
-	 * 
-	 * @param targetType
-	 *            Class<?>
-	 * @param valueToConvert
-	 *            Object
-	 * @return boolean
-	 * @see IJavaDynamicTypeConverter#
-	 *      supportsConversion (Class<?>, Object)
-	 */
-	public boolean supportsConversion(Class<?> targetType, Object valueToConvert) {
-		boolean rVal = false;
-		if (Date.class.equals(targetType)) {
-			rVal = true;
-		}
+    /**
+     * Method supportsConversion.
+     *
+     * @param targetType     Class<?>
+     * @param valueToConvert Object
+     * @return boolean
+     * @see IJavaDynamicTypeConverter#
+     * supportsConversion (Class<?>, Object)
+     */
+    public boolean supportsConversion(Class<?> targetType, Object valueToConvert) {
+        boolean rVal = false;
+        if (Date.class.equals(targetType)) {
+            rVal = true;
+        }
 
-		return (rVal);
-	}
+        return (rVal);
+    }
 }

@@ -7,33 +7,31 @@ import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
-import static org.trade.web.DatabaseLoader.ROLE_MANAGER;
-
 
 @Component
 @RepositoryEventHandler(Employee.class)
 public class SpringDataRestEventHandler {
 
-	private final UserRepository userRepository;
+    private final UserRepository userRepository;
 
-	@Autowired
-	public SpringDataRestEventHandler(UserRepository userRepository) {
-		this.userRepository = userRepository;
-	}
+    @Autowired
+    public SpringDataRestEventHandler(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
-	@HandleBeforeCreate
-	@HandleBeforeSave
-	public void applyUserInformationUsingSecurityContext(Employee employee) {
+    @HandleBeforeCreate
+    @HandleBeforeSave
+    public void applyUserInformationUsingSecurityContext(Employee employee) {
 
-		String name = SecurityContextHolder.getContext().getAuthentication().getName();
-		User user = this.userRepository.findByName(name);
-		if (user == null) {
-			User newUser = new User();
-			newUser.setName(name);
-			newUser.setRoles(new String[]{"ROLE_MANAGER"});
-			user = this.userRepository.save(newUser);
-		}
-		employee.setUser(user);
-	}
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = this.userRepository.findByName(name);
+        if (user == null) {
+            User newUser = new User();
+            newUser.setName(name);
+            newUser.setRoles(new String[]{"ROLE_MANAGER"});
+            user = this.userRepository.save(newUser);
+        }
+        employee.setUser(user);
+    }
 }
 

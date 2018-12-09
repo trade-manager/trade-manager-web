@@ -36,121 +36,109 @@
 package org.trade.core.exception;
 
 /**
+ *
  */
 public class ModelException extends NestingException {
-	/**
-	 * 
-	 */
+    /**
+     *
+     */
 
-	private Integer id = new Integer(0);
+    private Integer id = new Integer(0);
 
-	private Integer code = new Integer(0);
+    private Integer code = new Integer(0);
 
-	private static final long serialVersionUID = -4931142657824969686L;
+    private static final long serialVersionUID = -4931142657824969686L;
 
-	public ModelException() {
-		super();
-	}
+    public ModelException() {
+        super();
+    }
 
-	/**
-	 * Constructor allowing a reference to another exception to be embedded.
-	 * 
-	 * @param t
-	 *            The <code>Throwable</code> to be nested.
-	 */
-	public ModelException(Throwable t) {
-		super(t, t.getMessage());
-	}
+    /**
+     * Constructor allowing a reference to another exception to be embedded.
+     *
+     * @param t The <code>Throwable</code> to be nested.
+     */
+    public ModelException(Throwable t) {
+        super(t, t.getMessage());
+    }
 
-	/**
-	 * Constructor that allows the user to set the exception message.
-	 * 
-	 * @param message
-	 *            The desired message text.
-	 * @param id
-	 *            Integer
-	 * @param code
-	 *            Integer
-	 */
-	public ModelException(Integer id, Integer code, String message) {
-		super(message);
-		this.id = id;
-		this.code = code;
-	}
+    /**
+     * Constructor that allows the user to set the exception message.
+     *
+     * @param message The desired message text.
+     * @param id      Integer
+     * @param code    Integer
+     */
+    public ModelException(Integer id, Integer code, String message) {
+        super(message);
+        this.id = id;
+        this.code = code;
+    }
 
-	/**
-	 * Constructor that allows the user to set the exception message.
-	 * 
-	 * @param message
-	 *            The desired message text.
-	 */
-	public ModelException(String message) {
-		super(message);
-	}
+    /**
+     * Constructor that allows the user to set the exception message.
+     *
+     * @param message The desired message text.
+     */
+    public ModelException(String message) {
+        super(message);
+    }
 
-	/**
-	 * Constructor for ModelException.
-	 * 
-	 * @param exceptionMessage
-	 *            ExceptionMessage
-	 * @param gruesomeDetails
-	 *            String
-	 */
-	public ModelException(ExceptionMessage exceptionMessage, String gruesomeDetails) {
-		super(exceptionMessage, gruesomeDetails);
-	}
+    /**
+     * Constructor for ModelException.
+     *
+     * @param exceptionMessage ExceptionMessage
+     * @param gruesomeDetails  String
+     */
+    public ModelException(ExceptionMessage exceptionMessage, String gruesomeDetails) {
+        super(exceptionMessage, gruesomeDetails);
+    }
 
-	/**
-	 * Constructor for ModelException.
-	 * 
-	 * @param exceptionMessage
-	 *            ExceptionMessage
-	 * @param gruesomeDetails
-	 *            String
-	 * @param t
-	 *            Throwable
-	 */
-	public ModelException(ExceptionMessage exceptionMessage, String gruesomeDetails, Throwable t) {
-		super(exceptionMessage, gruesomeDetails, t);
-	}
+    /**
+     * Constructor for ModelException.
+     *
+     * @param exceptionMessage ExceptionMessage
+     * @param gruesomeDetails  String
+     * @param t                Throwable
+     */
+    public ModelException(ExceptionMessage exceptionMessage, String gruesomeDetails, Throwable t) {
+        super(exceptionMessage, gruesomeDetails, t);
+    }
 
-	/**
-	 * Constructor for ModelException.
-	 * 
-	 * @param exceptionMessage
-	 *            ExceptionMessage
-	 */
-	public ModelException(ExceptionMessage exceptionMessage) {
-		super(exceptionMessage);
-	}
+    /**
+     * Constructor for ModelException.
+     *
+     * @param exceptionMessage ExceptionMessage
+     */
+    public ModelException(ExceptionMessage exceptionMessage) {
+        super(exceptionMessage);
+    }
 
-	/**
-	 * Constructor for ModelException.
-	 * 
-	 * @param exceptionMessage
-	 *            ExceptionMessage
-	 * @param t
-	 *            Throwable
-	 */
-	public ModelException(ExceptionMessage exceptionMessage, Throwable t) {
-		super(exceptionMessage, t);
-	}
+    /**
+     * Constructor for ModelException.
+     *
+     * @param exceptionMessage ExceptionMessage
+     * @param t                Throwable
+     */
+    public ModelException(ExceptionMessage exceptionMessage, Throwable t) {
+        super(exceptionMessage, t);
+    }
 
-	/**
-	 * Method getErrorCode.
-	 * 
-	 * @return Integer
-	 */
-	public Integer getErrorCode() {
-		return this.code;
-	}
+    /**
+     * Method getErrorCode.
+     *
+     * @return Integer
+     */
+    public Integer getErrorCode() {
+        return this.code;
+    }
 
-	/**
-	 * Method getErrorId.
-	 * 
-	 * @return Integer
-	 */
-	public Integer getErrorId() {
-		return this.id;
-	}
+    /**
+     * Method getErrorId.
+     *
+     * @return Integer
+     */
+    public Integer getErrorId() {
+        return this.id;
+    }
 }

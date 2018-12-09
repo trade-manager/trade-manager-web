@@ -35,43 +35,43 @@
  */
 package org.trade.ui.widget;
 
-import javax.swing.DefaultCellEditor;
-
 import org.trade.core.valuetype.Percent;
 
+import javax.swing.*;
+
 /**
+ *
  */
 public class PercentEditor extends DefaultCellEditor {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -373016324201689041L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -373016324201689041L;
 
-	/**
-	 * Constructor for PercentEditor.
-	 * 
-	 * @param textField
-	 *            PercentField
-	 */
-	public PercentEditor(final PercentField textField) {
-		super(textField);
-		editorComponent = textField;
-		this.clickCountToStart = 1;
-		delegate = new EditorDelegate() {
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 2424965279339363773L;
+    /**
+     * Constructor for PercentEditor.
+     *
+     * @param textField PercentField
+     */
+    public PercentEditor(final PercentField textField) {
+        super(textField);
+        editorComponent = textField;
+        this.clickCountToStart = 1;
+        delegate = new EditorDelegate() {
+            /**
+             *
+             */
+            private static final long serialVersionUID = 2424965279339363773L;
 
-			public void setValue(Object value) {
-				textField.setPercent((Percent) value);
-			}
+            public void setValue(Object value) {
+                textField.setPercent((Percent) value);
+            }
 
-			public Object getCellEditorValue() {
-				return textField.getPercent();
-			}
-		};
+            public Object getCellEditorValue() {
+                return textField.getPercent();
+            }
+        };
 
-		textField.addActionListener(delegate);
-	}
+        textField.addActionListener(delegate);
+    }
 }

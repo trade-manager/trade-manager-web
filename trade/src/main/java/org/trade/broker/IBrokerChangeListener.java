@@ -35,117 +35,104 @@
  */
 package org.trade.broker;
 
+import org.trade.persistent.dao.TradeOrder;
+import org.trade.persistent.dao.TradePosition;
+import org.trade.persistent.dao.Tradestrategy;
+
 import java.util.EventListener;
 import java.util.concurrent.ConcurrentHashMap;
-
-import org.trade.persistent.dao.TradePosition;
-import org.trade.persistent.dao.TradeOrder;
-import org.trade.persistent.dao.Tradestrategy;
 
 /**
  * The interface that must be supported by classes that wish to receive
  * notification of changes to a dataset.
- * 
+ *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
 public interface IBrokerChangeListener extends EventListener {
 
-	/**
-	 * Receives notification of an brokerManagerModel change event.
-	 * 
-	 */
+    /**
+     * Receives notification of an brokerManagerModel change event.
+     */
 
-	public void connectionOpened();
+    public void connectionOpened();
 
-	public void connectionClosed(boolean forced);
+    public void connectionClosed(boolean forced);
 
-	/**
-	 * Method executionDetailsEnd.
-	 * 
-	 * @param execDetails
-	 *            ConcurrentHashMap<Integer,TradeOrder>
-	 */
-	public void executionDetailsEnd(ConcurrentHashMap<Integer, TradeOrder> execDetails);
+    /**
+     * Method executionDetailsEnd.
+     *
+     * @param execDetails ConcurrentHashMap<Integer,TradeOrder>
+     */
+    public void executionDetailsEnd(ConcurrentHashMap<Integer, TradeOrder> execDetails);
 
-	/**
-	 * Method historicalDataComplete.
-	 * 
-	 * 
-	 * @param tradestrategy
-	 *            Tradestrategy
-	 */
-	public void historicalDataComplete(Tradestrategy tradestrategy);
+    /**
+     * Method historicalDataComplete.
+     *
+     * @param tradestrategy Tradestrategy
+     */
+    public void historicalDataComplete(Tradestrategy tradestrategy);
 
-	/**
-	 * Method managedAccountsUpdated.
-	 * 
-	 * @param accountNumber
-	 *            String
-	 */
-	public void managedAccountsUpdated(String accountNumber);
+    /**
+     * Method managedAccountsUpdated.
+     *
+     * @param accountNumber String
+     */
+    public void managedAccountsUpdated(String accountNumber);
 
-	/**
-	 * Method fAAccountsCompleted. Notifies all registered listeners that the
-	 * brokerManagerModel has received all FA Accounts information.
-	 * 
-	 */
-	public void fAAccountsCompleted();
+    /**
+     * Method fAAccountsCompleted. Notifies all registered listeners that the
+     * brokerManagerModel has received all FA Accounts information.
+     */
+    public void fAAccountsCompleted();
 
-	/**
-	 * Method updateAccountTime.
-	 * 
-	 * @param accountNumber
-	 *            String
-	 */
-	public void updateAccountTime(String accountNumber);
+    /**
+     * Method updateAccountTime.
+     *
+     * @param accountNumber String
+     */
+    public void updateAccountTime(String accountNumber);
 
-	/**
-	 * Method brokerError.
-	 * 
-	 * @param brokerError
-	 *            BrokerModelException
-	 */
-	public void brokerError(BrokerModelException brokerError);
+    /**
+     * Method brokerError.
+     *
+     * @param brokerError BrokerModelException
+     */
+    public void brokerError(BrokerModelException brokerError);
 
-	/**
-	 * Method tradeOrderFilled.
-	 * 
-	 * @param tradeOrder
-	 *            TradeOrder
-	 */
-	public void tradeOrderFilled(TradeOrder tradeOrder);
+    /**
+     * Method tradeOrderFilled.
+     *
+     * @param tradeOrder TradeOrder
+     */
+    public void tradeOrderFilled(TradeOrder tradeOrder);
 
-	/**
-	 * Method tradeOrderCancelled.
-	 * 
-	 * @param tradeOrder
-	 *            TradeOrder
-	 */
-	public void tradeOrderCancelled(TradeOrder tradeOrder);
+    /**
+     * Method tradeOrderCancelled.
+     *
+     * @param tradeOrder TradeOrder
+     */
+    public void tradeOrderCancelled(TradeOrder tradeOrder);
 
-	/**
-	 * Method tradeOrderStatusChanged.
-	 * 
-	 * @param tradeOrder
-	 *            TradeOrder
-	 */
-	public void tradeOrderStatusChanged(TradeOrder tradeOrder);
+    /**
+     * Method tradeOrderStatusChanged.
+     *
+     * @param tradeOrder TradeOrder
+     */
+    public void tradeOrderStatusChanged(TradeOrder tradeOrder);
 
-	/**
-	 * Method positionClosed.
-	 * 
-	 * @param tradePosition
-	 *            TradePosition
-	 */
-	public void positionClosed(TradePosition tradePosition);
+    /**
+     * Method positionClosed.
+     *
+     * @param tradePosition TradePosition
+     */
+    public void positionClosed(TradePosition tradePosition);
 
-	/**
-	 * Method openOrderEnd.
-	 * 
-	 * @param openOrders
-	 *            ConcurrentHashMap<Integer,TradeOrder>
-	 */
-	public void openOrderEnd(ConcurrentHashMap<Integer, TradeOrder> openOrders);
+    /**
+     * Method openOrderEnd.
+     *
+     * @param openOrders ConcurrentHashMap<Integer,TradeOrder>
+     */
+    public void openOrderEnd(ConcurrentHashMap<Integer, TradeOrder> openOrders);
 
 }

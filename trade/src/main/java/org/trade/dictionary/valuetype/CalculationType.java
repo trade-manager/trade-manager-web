@@ -38,42 +38,42 @@ package org.trade.dictionary.valuetype;
 import org.trade.core.valuetype.Decode;
 
 /**
+ *
  */
 public class CalculationType extends Decode {
 
-	private static final long serialVersionUID = -5381026427696898592L;
-	public static final String DECODE = "CALC_TYPE";
-	public static final String EXPONENTIAL = "EXPONENTIAL";
-	public static final String LINEAR = "LINEAR";
-	public static final String WEIGHTED = "WEIGHTED";
-	public static final String WEIGHTED_VOLUME = "WEIGHTED_VOLUME";
-	public static final String TRIANGULAR = "TRIANGULAR";
+    private static final long serialVersionUID = -5381026427696898592L;
+    public static final String DECODE = "CALC_TYPE";
+    public static final String EXPONENTIAL = "EXPONENTIAL";
+    public static final String LINEAR = "LINEAR";
+    public static final String WEIGHTED = "WEIGHTED";
+    public static final String WEIGHTED_VOLUME = "WEIGHTED_VOLUME";
+    public static final String TRIANGULAR = "TRIANGULAR";
 
-	public CalculationType() {
-		super(DECODE);
-	}
+    public CalculationType() {
+        super(DECODE);
+    }
 
-	/**
-	 * Method newInstance.
-	 * 
-	 * @param value
-	 *            String
-	 * @return CalculationType
-	 */
-	public static CalculationType newInstance(String value) {
-		final CalculationType returnInstance = new CalculationType();
-		returnInstance.setValue(value);
-		return returnInstance;
-	}
+    /**
+     * Method newInstance.
+     *
+     * @param value String
+     * @return CalculationType
+     */
+    public static CalculationType newInstance(String value) {
+        final CalculationType returnInstance = new CalculationType();
+        returnInstance.setValue(value);
+        return returnInstance;
+    }
 
-	/**
-	 * Method newInstance.
-	 * 
-	 * @return CalculationType
-	 */
-	public static CalculationType newInstance() {
-		final CalculationType returnInstance = new CalculationType();
-		returnInstance.setDefaultCode();
-		return returnInstance;
-	}
+    /**
+     * Method newInstance.
+     *
+     * @return CalculationType
+     */
+    public static CalculationType newInstance() {
+        final CalculationType returnInstance = new CalculationType();
+        returnInstance.setDefaultCode();
+        return returnInstance;
+    }
 }

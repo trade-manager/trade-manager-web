@@ -41,50 +41,48 @@ import java.math.BigDecimal;
 
 /**
  * BollingerBands
- * 
+ *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
 
 public class BollingerBands implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 7644763985378994305L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 7644763985378994305L;
 
-	private BigDecimal bollingerBands;
+    private BigDecimal bollingerBands;
 
-	public BollingerBands() {
-	}
+    public BollingerBands() {
+    }
 
-	/**
-	 * Constructor for BollingerBands.
-	 * 
-	 * @param movingAverage
-	 *            BigDecimal
-	 */
-	public BollingerBands(BigDecimal bollingerBands) {
-		this.bollingerBands = bollingerBands;
-	}
+    /**
+     * Constructor for BollingerBands.
+     *
+     * @param movingAverage BigDecimal
+     */
+    public BollingerBands(BigDecimal bollingerBands) {
+        this.bollingerBands = bollingerBands;
+    }
 
-	/**
-	 * Method getBollingerBands.
-	 * 
-	 * @return BigDecimal
-	 */
-	public BigDecimal getBollingerBands() {
-		return this.bollingerBands;
-	}
+    /**
+     * Method getBollingerBands.
+     *
+     * @return BigDecimal
+     */
+    public BigDecimal getBollingerBands() {
+        return this.bollingerBands;
+    }
 
-	/**
-	 * Method setBollingerBands.
-	 * 
-	 * @param bollingerBands
-	 *            BigDecimal
-	 */
-	public void setBollingerBands(BigDecimal bollingerBands) {
-		this.bollingerBands = bollingerBands;
-	}
+    /**
+     * Method setBollingerBands.
+     *
+     * @param bollingerBands BigDecimal
+     */
+    public void setBollingerBands(BigDecimal bollingerBands) {
+        this.bollingerBands = bollingerBands;
+    }
 
 }

@@ -35,212 +35,168 @@
  */
 package org.trade.ui.base;
 
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.util.Vector;
-
-import javax.swing.JMenuItem;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.util.Vector;
+
 /**
- * 
- * @version $Id: BaseMenuItem.java,v 1.6 2001/11/09 18:24:58 garrick Exp $
  * @author Simon Allen
+ * @version $Id: BaseMenuItem.java,v 1.6 2001/11/09 18:24:58 garrick Exp $
  */
 public class BaseMenuItem extends JMenuItem {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 5816221538464868893L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 5816221538464868893L;
 
-	private final static Logger _log = LoggerFactory.getLogger(BaseMenuItem.class);
+    private final static Logger _log = LoggerFactory.getLogger(BaseMenuItem.class);
 
-	protected MessageNotifier m_notifier = new MessageNotifier();
+    protected MessageNotifier m_notifier = new MessageNotifier();
 
-	private String m_method = null;
+    private String m_method = null;
 
-	/**
-	 * BaseMenuItem() - constructor
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * @param p
-	 *            BasePanel
-	 * @param basePropertyCodes
-	 *            BaseUIPropertyCodes
-	 * @exception *
-	 * 				@see
-	 */
-	public BaseMenuItem(BasePanel p, BaseUIPropertyCodes basePropertyCodes) {
-		try {
-			if (p != null) {
-				this.addMessageListener(p);
-			}
+    /**
+     * BaseMenuItem() - constructor
+     *
+     * @param p                 BasePanel
+     * @param basePropertyCodes BaseUIPropertyCodes
+     * @throws *
+     * @see
+     */
+    public BaseMenuItem(BasePanel p, BaseUIPropertyCodes basePropertyCodes) {
+        try {
+            if (p != null) {
+                this.addMessageListener(p);
+            }
 
-			if (basePropertyCodes.getDisplayName().length() == 0) {
-				setIcon(ImageBuilder.getImageIcon(basePropertyCodes.getImage()));
-			} else {
-				setText(basePropertyCodes.getDisplayName());
-				setMnemonic(basePropertyCodes.getMnemonic());
-			}
+            if (basePropertyCodes.getDisplayName().length() == 0) {
+                setIcon(ImageBuilder.getImageIcon(basePropertyCodes.getImage()));
+            } else {
+                setText(basePropertyCodes.getDisplayName());
+                setMnemonic(basePropertyCodes.getMnemonic());
+            }
 
-			setMargin(new Insets(2, 2, 2, 2));
-			setHorizontalTextPosition(0);
-			setToolTipText(basePropertyCodes.getToolTip());
-			setEnabled(basePropertyCodes.isEnabled());
-			setMethod(basePropertyCodes.getMethod());
-			this.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					buttonPressed();
-				}
-			});
-		} catch (Exception ex) {
-			_log.error(" Error instanciating Base Menu Item ", ex);
-		}
-	}
+            setMargin(new Insets(2, 2, 2, 2));
+            setHorizontalTextPosition(0);
+            setToolTipText(basePropertyCodes.getToolTip());
+            setEnabled(basePropertyCodes.isEnabled());
+            setMethod(basePropertyCodes.getMethod());
+            this.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    buttonPressed();
+                }
+            });
+        } catch (Exception ex) {
+            _log.error(" Error instanciating Base Menu Item ", ex);
+        }
+    }
 
-	/**
-	 * BaseMenuItem() - constructor
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * @param p
-	 *            BasePanel
-	 * @param UICode
-	 *            String
-	 * @exception *
-	 * 				@see
-	 */
-	public BaseMenuItem(BasePanel p, String UICode) {
-		try {
-			if (p != null) {
-				this.addMessageListener(p);
-			}
+    /**
+     * BaseMenuItem() - constructor
+     *
+     * @param p      BasePanel
+     * @param UICode String
+     * @throws *
+     * @see
+     */
+    public BaseMenuItem(BasePanel p, String UICode) {
+        try {
+            if (p != null) {
+                this.addMessageListener(p);
+            }
 
-			BaseUIPropertyCodes basePropertyCodes = BaseUIPropertyCodes.newInstance(UICode);
+            BaseUIPropertyCodes basePropertyCodes = BaseUIPropertyCodes.newInstance(UICode);
 
-			if (basePropertyCodes.getDisplayName().length() == 0) {
-				setIcon(ImageBuilder.getImageIcon(basePropertyCodes.getImage()));
-			} else {
-				setText(basePropertyCodes.getDisplayName());
-				setMnemonic(basePropertyCodes.getMnemonic());
-			}
+            if (basePropertyCodes.getDisplayName().length() == 0) {
+                setIcon(ImageBuilder.getImageIcon(basePropertyCodes.getImage()));
+            } else {
+                setText(basePropertyCodes.getDisplayName());
+                setMnemonic(basePropertyCodes.getMnemonic());
+            }
 
-			setMargin(new Insets(2, 2, 2, 2));
-			setHorizontalTextPosition(0);
-			setToolTipText(basePropertyCodes.getToolTip());
-			setEnabled(basePropertyCodes.isEnabled());
-			setMethod(basePropertyCodes.getMethod());
-			this.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					buttonPressed();
-				}
-			});
-		} catch (Exception ex) {
-			_log.error(" Error instanciating Base Menu Item ", ex);
-		}
-	}
+            setMargin(new Insets(2, 2, 2, 2));
+            setHorizontalTextPosition(0);
+            setToolTipText(basePropertyCodes.getToolTip());
+            setEnabled(basePropertyCodes.isEnabled());
+            setMethod(basePropertyCodes.getMethod());
+            this.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    buttonPressed();
+                }
+            });
+        } catch (Exception ex) {
+            _log.error(" Error instanciating Base Menu Item ", ex);
+        }
+    }
 
-	/**
-	 * actionPerformed() - button action performed
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * @exception *
-	 * 				@see
-	 */
-	private void buttonPressed() {
-		if (getMethod() != null) {
-			this.messageEvent(getMethod());
-		}
-	}
+    /**
+     * actionPerformed() - button action performed
+     *
+     * @throws *
+     * @see
+     */
+    private void buttonPressed() {
+        if (getMethod() != null) {
+            this.messageEvent(getMethod());
+        }
+    }
 
-	/**
-	 * addMessageListener() -
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * @param listener
-	 *            IMessageListener
-	 * @exception *
-	 * 				@see
-	 */
-	public void addMessageListener(IMessageListener listener) {
-		m_notifier.add(listener);
-	}
+    /**
+     * addMessageListener() -
+     *
+     * @param listener IMessageListener
+     * @throws *
+     * @see
+     */
+    public void addMessageListener(IMessageListener listener) {
+        m_notifier.add(listener);
+    }
 
-	/**
-	 * removeMessageListener() -
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * @param listener
-	 *            IMessageListener
-	 * @exception *
-	 * 				@see
-	 */
-	public void removeMessageListener(IMessageListener listener) {
-		m_notifier.remove(listener);
-	}
+    /**
+     * removeMessageListener() -
+     *
+     * @param listener IMessageListener
+     * @throws *
+     * @see
+     */
+    public void removeMessageListener(IMessageListener listener) {
+        m_notifier.remove(listener);
+    }
 
-	/**
-	 * messageEvent() -
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * @param selection
-	 *            String
-	 * @exception *
-	 * 				@see
-	 */
-	protected void messageEvent(String selection) {
-		m_notifier.notifyEvent(new MessageEvent(selection), new Vector<Object>());
-	}
+    /**
+     * messageEvent() -
+     *
+     * @param selection String
+     * @throws *
+     * @see
+     */
+    protected void messageEvent(String selection) {
+        m_notifier.notifyEvent(new MessageEvent(selection), new Vector<Object>());
+    }
 
-	/**
-	 * setMethod() - button action performed
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * @param method
-	 *            String
-	 * @exception *
-	 * 				@see
-	 */
-	private void setMethod(String method) {
-		m_method = method;
-	}
+    /**
+     * setMethod() - button action performed
+     *
+     * @param method String
+     * @throws *
+     * @see
+     */
+    private void setMethod(String method) {
+        m_method = method;
+    }
 
-	/**
-	 * getMethod() - button action performed
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * @return String
-	 * @exception *
-	 * 				@see
-	 */
-	public String getMethod() {
-		return m_method;
-	}
+    /**
+     * getMethod() - button action performed
+     *
+     * @return String
+     * @throws *
+     * @see
+     */
+    public String getMethod() {
+        return m_method;
+    }
 }

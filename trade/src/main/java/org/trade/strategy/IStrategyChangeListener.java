@@ -35,54 +35,48 @@
  */
 package org.trade.strategy;
 
-import java.util.EventListener;
-
 import org.trade.persistent.dao.Tradestrategy;
+
+import java.util.EventListener;
 
 /**
  * The interface that must be supported by classes that wish to receive
  * notification of changes to a dataset.
- * 
+ *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
 public interface IStrategyChangeListener extends EventListener {
 
-	/**
-	 * Receives notification of an strategRule change event.
-	 * 
-	 * @param strategyClassName
-	 *            String
-	 * @param tradestrategy
-	 *            Tradestrategy
-	 */
+    /**
+     * Receives notification of an strategRule change event.
+     *
+     * @param strategyClassName String
+     * @param tradestrategy     Tradestrategy
+     */
 
-	public void strategyComplete(String strategyClassName, Tradestrategy tradestrategy);
+    public void strategyComplete(String strategyClassName, Tradestrategy tradestrategy);
 
-	/**
-	 * Method strategyStarted.
-	 * 
-	 * @param strategyClassName
-	 *            String
-	 * @param tradestrategy
-	 *            Tradestrategy
-	 */
-	public void strategyStarted(String strategyClassName, Tradestrategy tradestrategy);
+    /**
+     * Method strategyStarted.
+     *
+     * @param strategyClassName String
+     * @param tradestrategy     Tradestrategy
+     */
+    public void strategyStarted(String strategyClassName, Tradestrategy tradestrategy);
 
-	/**
-	 * Method ruleComplete.
-	 * 
-	 * @param tradestrategy
-	 *            Tradestrategy
-	 */
-	public void ruleComplete(Tradestrategy tradestrategy);
+    /**
+     * Method ruleComplete.
+     *
+     * @param tradestrategy Tradestrategy
+     */
+    public void ruleComplete(Tradestrategy tradestrategy);
 
-	/**
-	 * Method strategyError.
-	 * 
-	 * @param strategyError
-	 *            StrategyRuleException
-	 */
-	public void strategyError(StrategyRuleException strategyError);
+    /**
+     * Method strategyError.
+     *
+     * @param strategyError StrategyRuleException
+     */
+    public void strategyError(StrategyRuleException strategyError);
 
 }

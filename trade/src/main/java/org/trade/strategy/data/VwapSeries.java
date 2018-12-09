@@ -35,15 +35,14 @@
  */
 package org.trade.strategy.data;
 
-import java.math.BigDecimal;
-
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-
 import org.jfree.data.time.ohlc.OHLCSeriesCollection;
 import org.trade.persistent.dao.Strategy;
 import org.trade.strategy.data.base.RegularTimePeriod;
 import org.trade.strategy.data.vwap.VwapItem;
+
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import java.math.BigDecimal;
 
 /**
  * Volume-Weighted Average Price (VWAP) is exactly what it sounds like: the
@@ -52,179 +51,153 @@ import org.trade.strategy.data.vwap.VwapItem;
  * starts when trading opens and ends when trading closes. Because it is good
  * for the current trading day only, intraday periods and data are used in the
  * calculation.
- * 
+ * <p>
  * Cumulative(Volume x Typical Price)/Cumulative(Volume)
- * 
- * @since 1.0.4
- * 
- * @see OHLCSeriesCollection
+ *
  * @author Simon Allen
  * @version $Revision: 1.0 $
+ * @see OHLCSeriesCollection
+ * @since 1.0.4
  */
 @Entity
 @DiscriminatorValue("VwapSeries")
 public class VwapSeries extends IndicatorSeries {
 
-	private static final long serialVersionUID = 20183087035446657L;
+    private static final long serialVersionUID = 20183087035446657L;
 
-	/**
-	 * Creates a new empty series. By default, items added to the series will be
-	 * sorted into ascending order by period, and duplicate periods will not be
-	 * allowed.
-	 * 
-	 * 
-	 * 
-	 * @param strategy
-	 *            Strategy
-	 * @param name
-	 *            String
-	 * @param type
-	 *            String
-	 * @param description
-	 *            String
-	 * @param displayOnChart
-	 *            Boolean
-	 * @param chartRGBColor
-	 *            Integer
-	 * @param subChart
-	 *            Boolean
-	 */
-	public VwapSeries(Strategy strategy, String name, String type, String description, Boolean displayOnChart,
-			Integer chartRGBColor, Boolean subChart) {
-		super(strategy, name, type, description, displayOnChart, chartRGBColor, subChart);
-	}
+    /**
+     * Creates a new empty series. By default, items added to the series will be
+     * sorted into ascending order by period, and duplicate periods will not be
+     * allowed.
+     *
+     * @param strategy       Strategy
+     * @param name           String
+     * @param type           String
+     * @param description    String
+     * @param displayOnChart Boolean
+     * @param chartRGBColor  Integer
+     * @param subChart       Boolean
+     */
+    public VwapSeries(Strategy strategy, String name, String type, String description, Boolean displayOnChart,
+                      Integer chartRGBColor, Boolean subChart) {
+        super(strategy, name, type, description, displayOnChart, chartRGBColor, subChart);
+    }
 
-	public VwapSeries() {
-		super(IndicatorSeries.VwapSeries);
-	}
+    public VwapSeries() {
+        super(IndicatorSeries.VwapSeries);
+    }
 
-	/**
-	 * Returns the time period for the specified item.
-	 * 
-	 * @param index
-	 *            the item index.
-	 * 
-	 * 
-	 * @return The time period.
-	 */
-	public RegularTimePeriod getPeriod(int index) {
-		final VwapItem item = (VwapItem) getDataItem(index);
-		return item.getPeriod();
-	}
+    /**
+     * Returns the time period for the specified item.
+     *
+     * @param index the item index.
+     * @return The time period.
+     */
+    public RegularTimePeriod getPeriod(int index) {
+        final VwapItem item = (VwapItem) getDataItem(index);
+        return item.getPeriod();
+    }
 
-	/**
-	 * Adds a data item to the series.
-	 * 
-	 * @param period
-	 *            the period.
-	 * 
-	 * 
-	 * @param vwapPrice
-	 *            BigDecimal
-	 */
-	public void add(RegularTimePeriod period, BigDecimal vwapPrice) {
-		if (!this.isEmpty()) {
-			VwapItem item0 = (VwapItem) this.getDataItem(0);
-			if (!period.getClass().equals(item0.getPeriod().getClass())) {
-				throw new IllegalArgumentException("Can't mix RegularTimePeriod class types.");
-			}
-		}
-		super.add(new VwapItem(period, vwapPrice), true);
-	}
+    /**
+     * Adds a data item to the series.
+     *
+     * @param period    the period.
+     * @param vwapPrice BigDecimal
+     */
+    public void add(RegularTimePeriod period, BigDecimal vwapPrice) {
+        if (!this.isEmpty()) {
+            VwapItem item0 = (VwapItem) this.getDataItem(0);
+            if (!period.getClass().equals(item0.getPeriod().getClass())) {
+                throw new IllegalArgumentException("Can't mix RegularTimePeriod class types.");
+            }
+        }
+        super.add(new VwapItem(period, vwapPrice), true);
+    }
 
-	/**
-	 * Adds a data item to the series.
-	 * 
-	 * 
-	 * @param notify
-	 *            the notify listeners.
-	 * @param dataItem
-	 *            VwapItem
-	 */
-	public void add(VwapItem dataItem, boolean notify) {
-		if (!this.isEmpty()) {
-			VwapItem item0 = (VwapItem) this.getDataItem(0);
-			if (!dataItem.getPeriod().getClass().equals(item0.getPeriod().getClass())) {
-				throw new IllegalArgumentException("Can't mix RegularTimePeriod class types.");
-			}
-		}
-		super.add(dataItem, notify);
-	}
+    /**
+     * Adds a data item to the series.
+     *
+     * @param notify   the notify listeners.
+     * @param dataItem VwapItem
+     */
+    public void add(VwapItem dataItem, boolean notify) {
+        if (!this.isEmpty()) {
+            VwapItem item0 = (VwapItem) this.getDataItem(0);
+            if (!dataItem.getPeriod().getClass().equals(item0.getPeriod().getClass())) {
+                throw new IllegalArgumentException("Can't mix RegularTimePeriod class types.");
+            }
+        }
+        super.add(dataItem, notify);
+    }
 
-	/**
-	 * Method createSeries.
-	 * 
-	 * @param candleDataset
-	 *            CandleDataset
-	 * @param seriesIndex
-	 *            int
-	 */
-	public void createSeries(CandleDataset source, int seriesIndex) {
+    /**
+     * Method createSeries.
+     *
+     * @param candleDataset CandleDataset
+     * @param seriesIndex   int
+     */
+    public void createSeries(CandleDataset source, int seriesIndex) {
 
-		if (source.getSeries(seriesIndex) == null) {
-			throw new IllegalArgumentException("Null source (XYDataset).");
-		}
+        if (source.getSeries(seriesIndex) == null) {
+            throw new IllegalArgumentException("Null source (XYDataset).");
+        }
 
-		for (int i = 0; i < source.getSeries(seriesIndex).getItemCount(); i++) {
-			this.updateSeries(source.getSeries(seriesIndex), i, true);
-		}
-	}
+        for (int i = 0; i < source.getSeries(seriesIndex).getItemCount(); i++) {
+            this.updateSeries(source.getSeries(seriesIndex), i, true);
+        }
+    }
 
-	/**
-	 * Method updateSeries.
-	 * 
-	 * @param source
-	 *            CandleSeries
-	 * @param skip
-	 *            int
-	 * @param newBar
-	 *            boolean
-	 */
-	public void updateSeries(CandleSeries source, int skip, boolean newBar) {
+    /**
+     * Method updateSeries.
+     *
+     * @param source CandleSeries
+     * @param skip   int
+     * @param newBar boolean
+     */
+    public void updateSeries(CandleSeries source, int skip, boolean newBar) {
 
-		if (source == null) {
-			throw new IllegalArgumentException("Null source (CandleSeries).");
-		}
+        if (source == null) {
+            throw new IllegalArgumentException("Null source (CandleSeries).");
+        }
 
-		if (source.getItemCount() > skip) {
+        if (source.getItemCount() > skip) {
 
-			/*
-			 * If the item does not exist in the series then this is a new time
-			 * period and so we need to remove the last in the set and add the
-			 * new periods values. Otherwise we just update the last value in
-			 * the set.
-			 */
-			if (newBar) {
-				VwapItem dataItem = new VwapItem(source.getRollingCandle().getPeriod(),
-						new BigDecimal(source.getRollingCandle().getVwap()));
-				this.add(dataItem, false);
-			} else {
-				VwapItem dataItem = (VwapItem) this.getDataItem(this.getItemCount() - 1);
-				dataItem.setVwapPrice(source.getRollingCandle().getVwap());
-			}
-		}
-	}
+            /*
+             * If the item does not exist in the series then this is a new time
+             * period and so we need to remove the last in the set and add the
+             * new periods values. Otherwise we just update the last value in
+             * the set.
+             */
+            if (newBar) {
+                VwapItem dataItem = new VwapItem(source.getRollingCandle().getPeriod(),
+                        new BigDecimal(source.getRollingCandle().getVwap()));
+                this.add(dataItem, false);
+            } else {
+                VwapItem dataItem = (VwapItem) this.getDataItem(this.getItemCount() - 1);
+                dataItem.setVwapPrice(source.getRollingCandle().getVwap());
+            }
+        }
+    }
 
-	/**
-	 * Method printSeries.
-	 * 
-	 */
-	public void printSeries() {
-		for (int i = 0; i < this.getItemCount(); i++) {
-			VwapItem dataItem = (VwapItem) this.getDataItem(i);
-			_log.debug("Type: " + this.getType() + " Time: " + dataItem.getPeriod().getStart() + " Value: "
-					+ dataItem.getVwapPrice());
-		}
-	}
+    /**
+     * Method printSeries.
+     */
+    public void printSeries() {
+        for (int i = 0; i < this.getItemCount(); i++) {
+            VwapItem dataItem = (VwapItem) this.getDataItem(i);
+            _log.debug("Type: " + this.getType() + " Time: " + dataItem.getPeriod().getStart() + " Value: "
+                    + dataItem.getVwapPrice());
+        }
+    }
 
-	/**
-	 * Method clone.
-	 * 
-	 * @return Object
-	 * @throws CloneNotSupportedException
-	 */
-	public Object clone() throws CloneNotSupportedException {
-		VwapSeries clone = (VwapSeries) super.clone();
-		return clone;
-	}
+    /**
+     * Method clone.
+     *
+     * @return Object
+     * @throws CloneNotSupportedException
+     */
+    public Object clone() throws CloneNotSupportedException {
+        VwapSeries clone = (VwapSeries) super.clone();
+        return clone;
+    }
 }

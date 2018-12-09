@@ -35,58 +35,56 @@
  */
 package org.trade.ui.widget;
 
+import org.trade.core.valuetype.Date;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-import javax.swing.SwingConstants;
-import javax.swing.table.DefaultTableCellRenderer;
-
-import org.trade.core.valuetype.Date;
-
 /**
+ *
  */
 public class DateRenderer extends DefaultTableCellRenderer {
 
-	private static final long serialVersionUID = -7703222115247216081L;
-	private SimpleDateFormat dateFormat = null;
+    private static final long serialVersionUID = -7703222115247216081L;
+    private SimpleDateFormat dateFormat = null;
 
-	/**
-	 * Constructor for DateRenderer.
-	 * 
-	 * @param mask
-	 *            String
-	 */
-	public DateRenderer(String mask) {
-		super();
+    /**
+     * Constructor for DateRenderer.
+     *
+     * @param mask String
+     */
+    public DateRenderer(String mask) {
+        super();
 
-		setHorizontalAlignment(SwingConstants.CENTER);
-		dateFormat = new SimpleDateFormat(mask, Locale.getDefault());
-		dateFormat.setLenient(false);
-	}
+        setHorizontalAlignment(SwingConstants.CENTER);
+        dateFormat = new SimpleDateFormat(mask, Locale.getDefault());
+        dateFormat.setLenient(false);
+    }
 
-	/**
-	 * Method setValue.
-	 * 
-	 * @param value
-	 *            Object
-	 */
-	protected void setValue(Object value) {
+    /**
+     * Method setValue.
+     *
+     * @param value Object
+     */
+    protected void setValue(Object value) {
 
-		if (value == null) {
-			setText("");
-		} else {
-			if (value instanceof java.util.Date) {
-				setText(dateFormat.format(value));
-			} else if (value instanceof Date) {
-				java.util.Date date = ((Date) value).getDate();
-				if (null == date) {
-					setText(value.toString());
-				} else {
-					setText(dateFormat.format(date));
-				}
-			} else {
-				setText(value.toString());
-			}
-		}
-	}
+        if (value == null) {
+            setText("");
+        } else {
+            if (value instanceof java.util.Date) {
+                setText(dateFormat.format(value));
+            } else if (value instanceof Date) {
+                java.util.Date date = ((Date) value).getDate();
+                if (null == date) {
+                    setText(value.toString());
+                } else {
+                    setText(dateFormat.format(date));
+                }
+            } else {
+                setText(value.toString());
+            }
+        }
+    }
 }

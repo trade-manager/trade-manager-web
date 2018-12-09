@@ -35,188 +35,141 @@
  */
 package org.trade.ui.base;
 
-import java.util.Vector;
-
-import javax.swing.JList;
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import java.util.Vector;
 
 /**
- * 
- * @version $Id: BaseList.java,v 1.4 2001/11/06 22:37:27 simon Exp $
  * @author Simon Allen
+ * @version $Id: BaseList.java,v 1.4 2001/11/06 22:37:27 simon Exp $
  */
 
 public class BaseList extends JList<Object> {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -3629905211019895353L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -3629905211019895353L;
 
-	private String m_method = null;
+    private String m_method = null;
 
-	protected MessageNotifier m_notifier = new MessageNotifier();
+    protected MessageNotifier m_notifier = new MessageNotifier();
 
-	/**
-	 * CustomButton() - constructor
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * @param p
-	 *            BasePanel
-	 * @param UICode
-	 *            String
-	 * @param items
-	 *            Vector<Object>
-	 * @exception *
-	 * 				@see
-	 */
-	public BaseList(BasePanel p, String UICode, Vector<Object> items) {
-		super(items);
+    /**
+     * CustomButton() - constructor
+     *
+     * @param p      BasePanel
+     * @param UICode String
+     * @param items  Vector<Object>
+     * @throws *
+     * @see
+     */
+    public BaseList(BasePanel p, String UICode, Vector<Object> items) {
+        super(items);
 
-		jbInit(p, UICode);
-	}
+        jbInit(p, UICode);
+    }
 
-	/**
-	 * CustomButton() - constructor
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * @param p
-	 *            BasePanel
-	 * @param UICode
-	 *            String
-	 * @exception *
-	 * 				@see
-	 */
-	public BaseList(BasePanel p, String UICode) {
-		jbInit(p, UICode);
-	}
+    /**
+     * CustomButton() - constructor
+     *
+     * @param p      BasePanel
+     * @param UICode String
+     * @throws *
+     * @see
+     */
+    public BaseList(BasePanel p, String UICode) {
+        jbInit(p, UICode);
+    }
 
-	/**
-	 * Method jbInit.
-	 * 
-	 * @param p
-	 *            BasePanel
-	 * @param UICode
-	 *            String
-	 */
-	private void jbInit(BasePanel p, String UICode) {
-		if (p != null) {
-			this.addMessageListener(p);
-		}
+    /**
+     * Method jbInit.
+     *
+     * @param p      BasePanel
+     * @param UICode String
+     */
+    private void jbInit(BasePanel p, String UICode) {
+        if (p != null) {
+            this.addMessageListener(p);
+        }
 
-		BaseUIPropertyCodes basePropertyCodes = BaseUIPropertyCodes.newInstance(UICode);
+        BaseUIPropertyCodes basePropertyCodes = BaseUIPropertyCodes.newInstance(UICode);
 
-		setMethod(basePropertyCodes.getMethod());
-		this.setName(basePropertyCodes.getDisplayName());
-		this.setEnabled(basePropertyCodes.isEnabled());
-		this.setToolTipText(basePropertyCodes.getToolTip());
-		this.addListSelectionListener(new ListSelectionListener() {
-			public void valueChanged(ListSelectionEvent e) {
-				doValueChanged();
-			}
-		});
-	}
+        setMethod(basePropertyCodes.getMethod());
+        this.setName(basePropertyCodes.getDisplayName());
+        this.setEnabled(basePropertyCodes.isEnabled());
+        this.setToolTipText(basePropertyCodes.getToolTip());
+        this.addListSelectionListener(new ListSelectionListener() {
+            public void valueChanged(ListSelectionEvent e) {
+                doValueChanged();
+            }
+        });
+    }
 
-	/**
-	 * addMessageListener() -
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * @param listener
-	 *            IMessageListener
-	 * @exception *
-	 * 				@see
-	 */
-	public void addMessageListener(IMessageListener listener) {
-		m_notifier.add(listener);
-	}
+    /**
+     * addMessageListener() -
+     *
+     * @param listener IMessageListener
+     * @throws *
+     * @see
+     */
+    public void addMessageListener(IMessageListener listener) {
+        m_notifier.add(listener);
+    }
 
-	/**
-	 * removeMessageListener() -
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * @param listener
-	 *            IMessageListener
-	 * @exception *
-	 * 				@see
-	 */
-	public void removeMessageListener(IMessageListener listener) {
-		m_notifier.remove(listener);
-	}
+    /**
+     * removeMessageListener() -
+     *
+     * @param listener IMessageListener
+     * @throws *
+     * @see
+     */
+    public void removeMessageListener(IMessageListener listener) {
+        m_notifier.remove(listener);
+    }
 
-	/**
-	 * messageEvent() -
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * @param selection
-	 *            String
-	 * @exception *
-	 * 				@see
-	 */
-	protected void messageEvent(String selection) {
-		m_notifier.notifyEvent(new MessageEvent(selection), new Vector<Object>());
-	}
+    /**
+     * messageEvent() -
+     *
+     * @param selection String
+     * @throws *
+     * @see
+     */
+    protected void messageEvent(String selection) {
+        m_notifier.notifyEvent(new MessageEvent(selection), new Vector<Object>());
+    }
 
-	/**
-	 * actionPerformed() - combo box action performed
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * @exception *
-	 * 				@see
-	 */
-	private void doValueChanged() {
-		if (getMethod() != null) {
-			this.messageEvent(getMethod());
-		}
-	}
+    /**
+     * actionPerformed() - combo box action performed
+     *
+     * @throws *
+     * @see
+     */
+    private void doValueChanged() {
+        if (getMethod() != null) {
+            this.messageEvent(getMethod());
+        }
+    }
 
-	/**
-	 * setMethod() - button action performed
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * @param method
-	 *            String
-	 * @exception *
-	 * 				@see
-	 */
-	private void setMethod(String method) {
-		m_method = method;
-	}
+    /**
+     * setMethod() - button action performed
+     *
+     * @param method String
+     * @throws *
+     * @see
+     */
+    private void setMethod(String method) {
+        m_method = method;
+    }
 
-	/**
-	 * getMethod() - button action performed
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * @return String
-	 * @exception *
-	 * 				@see
-	 */
-	private String getMethod() {
-		return m_method;
-	}
+    /**
+     * getMethod() - button action performed
+     *
+     * @return String
+     * @throws *
+     * @see
+     */
+    private String getMethod() {
+        return m_method;
+    }
 }

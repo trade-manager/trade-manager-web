@@ -35,83 +35,75 @@
  */
 package org.trade.ui.tables.renderer;
 
-import java.awt.Color;
-import java.awt.Component;
-
-import javax.swing.JTree;
-import javax.swing.tree.DefaultTreeCellRenderer;
-
 import org.trade.dictionary.valuetype.Side;
 import org.trade.persistent.dao.TradeOrder;
 import org.trade.persistent.dao.Tradestrategy;
 import org.trade.ui.models.TradingdayTreeModel;
 
+import javax.swing.*;
+import javax.swing.tree.DefaultTreeCellRenderer;
+import java.awt.*;
+
 /**
+ *
  */
 public class TradingdayTreeCellRenderer extends DefaultTreeCellRenderer {
 
-	private static final long serialVersionUID = 7664391812385841364L;
-	private Color backgroundSelectionColor = null;
+    private static final long serialVersionUID = 7664391812385841364L;
+    private Color backgroundSelectionColor = null;
 
-	public TradingdayTreeCellRenderer() {
-		super();
-		backgroundSelectionColor = this.getBackgroundSelectionColor();
-	}
+    public TradingdayTreeCellRenderer() {
+        super();
+        backgroundSelectionColor = this.getBackgroundSelectionColor();
+    }
 
-	/**
-	 * Method getTreeCellRendererComponent.
-	 * 
-	 * @param tree
-	 *            JTree
-	 * @param value
-	 *            Object
-	 * @param selected
-	 *            boolean
-	 * @param expanded
-	 *            boolean
-	 * @param leaf
-	 *            boolean
-	 * @param row
-	 *            int
-	 * @param hasFocus
-	 *            boolean
-	 * @return Component
-	 * @see javax.swing.tree.TreeCellRenderer#getTreeCellRendererComponent(JTree,
-	 *      Object, boolean, boolean, boolean, int, boolean)
-	 */
-	public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded,
-			boolean leaf, int row, boolean hasFocus) {
+    /**
+     * Method getTreeCellRendererComponent.
+     *
+     * @param tree     JTree
+     * @param value    Object
+     * @param selected boolean
+     * @param expanded boolean
+     * @param leaf     boolean
+     * @param row      int
+     * @param hasFocus boolean
+     * @return Component
+     * @see javax.swing.tree.TreeCellRenderer#getTreeCellRendererComponent(JTree,
+     * Object, boolean, boolean, boolean, int, boolean)
+     */
+    public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded,
+                                                  boolean leaf, int row, boolean hasFocus) {
 
-		Object node = ((TradingdayTreeModel) tree.getModel()).getNode(value);
+        Object node = ((TradingdayTreeModel) tree.getModel()).getNode(value);
 
-		Component comp = super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus);
-		if (selected) {
-			this.setBackgroundSelectionColor(backgroundSelectionColor);
-		}
-		if (node != null) {
-			if ((node instanceof Tradestrategy) /* leaf */) {
-				Tradestrategy tradestrategy = (Tradestrategy) node;
-				if (!tradestrategy.getTradeOrders().isEmpty()) {
-					TradeOrder tradeOrder = tradestrategy.getTradeOrders().get(0);
-					if (tradeOrder.hasTradePosition()) {
-						if (Side.BOT.equals(tradeOrder.getTradePosition().getSide())) {
-							comp.setForeground(Color.GREEN);
-						} else {
-							comp.setForeground(Color.RED);
-						}
-					}
+        Component comp = super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus);
+        if (selected) {
+            this.setBackgroundSelectionColor(backgroundSelectionColor);
+        }
+        if (node != null) {
+            if ((node instanceof Tradestrategy) /* leaf */) {
+                Tradestrategy tradestrategy = (Tradestrategy) node;
+                if (!tradestrategy.getTradeOrders().isEmpty()) {
+                    TradeOrder tradeOrder = tradestrategy.getTradeOrders().get(0);
+                    if (tradeOrder.hasTradePosition()) {
+                        if (Side.BOT.equals(tradeOrder.getTradePosition().getSide())) {
+                            comp.setForeground(Color.GREEN);
+                        } else {
+                            comp.setForeground(Color.RED);
+                        }
+                    }
 
-					if (selected) {
-						this.setBackgroundSelectionColor(backgroundSelectionColor);
-					}
-				}
-				this.setToolTipText("Select to open chart.");
-			} else if (expanded) {
+                    if (selected) {
+                        this.setBackgroundSelectionColor(backgroundSelectionColor);
+                    }
+                }
+                this.setToolTipText("Select to open chart.");
+            } else if (expanded) {
 
-			} else {
+            } else {
 
-			}
-		}
-		return comp;
-	}
+            }
+        }
+        return comp;
+    }
 }

@@ -35,58 +35,54 @@
  */
 package org.trade.ui.widget;
 
-import java.text.NumberFormat;
-
-import javax.swing.JFormattedTextField;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.NumberFormatter;
+import java.text.NumberFormat;
 
 /**
- * 
- * @version $Id: IntegerField.java,v 1.2 2001/12/28 21:14:55 simon Exp $
  * @author Simon Allen
+ * @version $Id: IntegerField.java,v 1.2 2001/12/28 21:14:55 simon Exp $
  */
 public class IntegerField extends JFormattedTextField {
-	/**
-	* 
-	*/
-	private static final long serialVersionUID = 3445299380677561974L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 3445299380677561974L;
 
-	public IntegerField() {
-		super();
-		NumberFormat displayFormat = NumberFormat.getIntegerInstance();
-		displayFormat.setMinimumFractionDigits(0);
-		NumberFormat editFormat = NumberFormat.getNumberInstance();
-		editFormat.setMinimumFractionDigits(0);
-		this.setFormatterFactory(new DefaultFormatterFactory(new NumberFormatter(displayFormat),
-				new NumberFormatter(displayFormat), new NumberFormatter(editFormat)));
-		this.setHorizontalAlignment(SwingConstants.RIGHT);
-		this.setValue(new Integer(0));
-		this.setColumns(10);
-	}
+    public IntegerField() {
+        super();
+        NumberFormat displayFormat = NumberFormat.getIntegerInstance();
+        displayFormat.setMinimumFractionDigits(0);
+        NumberFormat editFormat = NumberFormat.getNumberInstance();
+        editFormat.setMinimumFractionDigits(0);
+        this.setFormatterFactory(new DefaultFormatterFactory(new NumberFormatter(displayFormat),
+                new NumberFormatter(displayFormat), new NumberFormatter(editFormat)));
+        this.setHorizontalAlignment(SwingConstants.RIGHT);
+        this.setValue(new Integer(0));
+        this.setColumns(10);
+    }
 
-	/**
-	 * Method getInteger.
-	 * 
-	 * @return Integer
-	 */
-	public Integer getInteger() {
-		try {
-			this.setValue(new Integer(this.getText()));
-		} catch (Exception ex) {
-			// Do nothing will return the current value.
-		}
-		return new Integer(((Number) this.getValue()).intValue());
-	}
+    /**
+     * Method getInteger.
+     *
+     * @return Integer
+     */
+    public Integer getInteger() {
+        try {
+            this.setValue(new Integer(this.getText()));
+        } catch (Exception ex) {
+            // Do nothing will return the current value.
+        }
+        return new Integer(((Number) this.getValue()).intValue());
+    }
 
-	/**
-	 * Method setInteger.
-	 * 
-	 * @param number
-	 *            Integer
-	 */
-	public void setInteger(Integer number) {
-		this.setValue(number);
-	}
+    /**
+     * Method setInteger.
+     *
+     * @param number Integer
+     */
+    public void setInteger(Integer number) {
+        this.setValue(number);
+    }
 }

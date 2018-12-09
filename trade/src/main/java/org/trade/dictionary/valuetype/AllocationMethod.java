@@ -38,46 +38,46 @@ package org.trade.dictionary.valuetype;
 import org.trade.core.valuetype.Decode;
 
 /**
+ *
  */
 public class AllocationMethod extends Decode {
 
-	private static final long serialVersionUID = -5381026427696898592L;
-	public static final String DECODE = "ALLOCATION_METHOD";
+    private static final long serialVersionUID = -5381026427696898592L;
+    public static final String DECODE = "ALLOCATION_METHOD";
 
-	public AllocationMethod() {
-		super(DECODE, true);
-	}
+    public AllocationMethod() {
+        super(DECODE, true);
+    }
 
-	/**
-	 * Method newInstance.
-	 * 
-	 * @param value
-	 *            Integer
-	 * @return BarSize
-	 */
-	public static AllocationMethod newInstance(String value) {
-		final AllocationMethod returnInstance = new AllocationMethod();
-		returnInstance.setValue(value);
-		return returnInstance;
-	}
+    /**
+     * Method newInstance.
+     *
+     * @param value Integer
+     * @return BarSize
+     */
+    public static AllocationMethod newInstance(String value) {
+        final AllocationMethod returnInstance = new AllocationMethod();
+        returnInstance.setValue(value);
+        return returnInstance;
+    }
 
-	/**
-	 * Method newInstance.
-	 * 
-	 * @return BarSize
-	 */
-	public static AllocationMethod newInstance() {
-		final AllocationMethod returnInstance = new AllocationMethod();
-		returnInstance.setDefaultCode();
-		return returnInstance;
-	}
+    /**
+     * Method newInstance.
+     *
+     * @return BarSize
+     */
+    public static AllocationMethod newInstance() {
+        final AllocationMethod returnInstance = new AllocationMethod();
+        returnInstance.setDefaultCode();
+        return returnInstance;
+    }
 
-	/**
-	 * Method convertToUppercase.
-	 * 
-	 * @return boolean
-	 */
-	protected boolean convertToUppercase() {
-		return false;
-	}
+    /**
+     * Method convertToUppercase.
+     *
+     * @return boolean
+     */
+    protected boolean convertToUppercase() {
+        return false;
+    }
 }

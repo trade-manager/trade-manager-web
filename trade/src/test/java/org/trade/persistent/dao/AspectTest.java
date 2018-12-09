@@ -35,88 +35,83 @@
  */
 package org.trade.persistent.dao;
 
-import static org.junit.Assert.*;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
-
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trade.core.dao.Aspect;
 import org.trade.core.dao.AspectHome;
 import org.trade.core.dao.Aspects;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
+
 /**
  * Some tests for the {@link DataUtilities} class.
- * 
+ *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
 public class AspectTest {
 
-	private final static Logger _log = LoggerFactory.getLogger(AspectTest.class);
+    private final static Logger _log = LoggerFactory.getLogger(AspectTest.class);
 
-	AspectHome aspectHome = null;
+    AspectHome aspectHome = null;
 
-	/**
-	 * Method setUpBeforeClass.
-	 * 
-	 * @throws Exception
-	 */
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-	}
+    /**
+     * Method setUpBeforeClass.
+     *
+     * @throws Exception
+     */
+    @BeforeClass
+    public static void setUpBeforeClass() throws Exception {
+    }
 
-	/**
-	 * Method setUp.
-	 *
-	 * @throws Exception
-	 */
-	@Before
-	public void setUp() throws Exception {
-		aspectHome = new AspectHome();
-	}
+    /**
+     * Method setUp.
+     *
+     * @throws Exception
+     */
+    @Before
+    public void setUp() throws Exception {
+        aspectHome = new AspectHome();
+    }
 
-	/**
-	 * Method tearDown.
-	 *
-	 * @throws Exception
-	 */
-	@After
-	public void tearDown() throws Exception {
-	}
+    /**
+     * Method tearDown.
+     *
+     * @throws Exception
+     */
+    @After
+    public void tearDown() throws Exception {
+    }
 
-	/**
-	 * Method tearDownAfterClass.
-	 *
-	 * @throws Exception
-	 */
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-	}
+    /**
+     * Method tearDownAfterClass.
+     *
+     * @throws Exception
+     */
+    @AfterClass
+    public static void tearDownAfterClass() throws Exception {
+    }
 
-	@Test
-	public void testFindAspectByClassName() {
+    @Test
+    public void testFindAspectByClassName() {
 
-		// Create new instance of Strategy and set
-		// values in it by reading them from form object
+        // Create new instance of Strategy and set
+        // values in it by reading them from form object
 
-		try {
-			String className = "org.trade.persistent.dao.Strategy";
-			_log.info("Find Aspects by className: " + className);
+        try {
+            String className = "org.trade.persistent.dao.Strategy";
+            _log.info("Find Aspects by className: " + className);
 
-			Aspects transientInstance = aspectHome.findByClassName(className);
-			assertNotNull(transientInstance);
-			for (Aspect aspect : transientInstance.getAspect()) {
-				_log.info("Aspect added Id = " + aspect.getId());
-			}
+            Aspects transientInstance = aspectHome.findByClassName(className);
+            assertNotNull(transientInstance);
+            for (Aspect aspect : transientInstance.getAspect()) {
+                _log.info("Aspect added Id = " + aspect.getId());
+            }
 
-		} catch (Exception ex) {
-			fail("Error finding row " + ex.getMessage());
-		}
-	}
+        } catch (Exception ex) {
+            fail("Error finding row " + ex.getMessage());
+        }
+    }
 }

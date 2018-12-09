@@ -38,40 +38,41 @@ package org.trade.core.valuetype;
 import java.io.Serializable;
 
 /**
+ *
  */
 public abstract class ValueType implements Cloneable, Serializable {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -8054819773979644420L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -8054819773979644420L;
 
-	// All well-behaved ValueTypes must implement this
-	/**
-	 * Method isEmpty.
-	 * 
-	 * @return boolean
-	 */
-	public abstract boolean isEmpty();
+    // All well-behaved ValueTypes must implement this
 
-	/**
-	 * The default implementation of this method calls the ValueTypes toString()
-	 * object. If a different type of object needs to be returned this method
-	 * should have be overridden by the specific subclass.
-	 * 
-	 * 
-	 * @return An SQL representation of the object so that it can be stored via
-	 *         JDBC.
-	 */
-	public Object getSQLObject() {
-		return (toString());
-	}
+    /**
+     * Method isEmpty.
+     *
+     * @return boolean
+     */
+    public abstract boolean isEmpty();
 
-	/**
-	 * Method getSQLObjectType.
-	 * 
-	 * @return Class<?>
-	 */
-	public Class<?> getSQLObjectType() {
-		return String.class;
-	}
+    /**
+     * The default implementation of this method calls the ValueTypes toString()
+     * object. If a different type of object needs to be returned this method
+     * should have be overridden by the specific subclass.
+     *
+     * @return An SQL representation of the object so that it can be stored via
+     * JDBC.
+     */
+    public Object getSQLObject() {
+        return (toString());
+    }
+
+    /**
+     * Method getSQLObjectType.
+     *
+     * @return Class<?>
+     */
+    public Class<?> getSQLObjectType() {
+        return String.class;
+    }
 }

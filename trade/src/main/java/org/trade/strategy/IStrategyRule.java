@@ -39,87 +39,80 @@ import org.trade.persistent.dao.TradeOrder;
 import org.trade.strategy.data.CandleSeries;
 
 /**
+ *
  */
 public interface IStrategyRule {
 
-	public final String PACKAGE = "org.trade.strategy.";
+    public final String PACKAGE = "org.trade.strategy.";
 
-	/**
-	 * Method runStrategy.
-	 * 
-	 * @param candleSeries
-	 *            CandleSeries
-	 * @param newBar
-	 *            boolean
-	 * @throws StrategyRuleException
-	 */
-	void runStrategy(CandleSeries candleSeries, boolean newBar) throws StrategyRuleException;
+    /**
+     * Method runStrategy.
+     *
+     * @param candleSeries CandleSeries
+     * @param newBar       boolean
+     * @throws StrategyRuleException
+     */
+    void runStrategy(CandleSeries candleSeries, boolean newBar) throws StrategyRuleException;
 
-	/**
-	 * Method error.
-	 * 
-	 * @param id
-	 *            int
-	 * @param errorCode
-	 *            int
-	 * @param errorMsg
-	 *            String
-	 */
-	void error(int id, int errorCode, String errorMsg);
+    /**
+     * Method error.
+     *
+     * @param id        int
+     * @param errorCode int
+     * @param errorMsg  String
+     */
+    void error(int id, int errorCode, String errorMsg);
 
-	void execute();
+    void execute();
 
-	void cancel();
+    void cancel();
 
-	/**
-	 * Method isCancelled.
-	 * 
-	 * @return boolean
-	 */
-	boolean isCancelled();
+    /**
+     * Method isCancelled.
+     *
+     * @return boolean
+     */
+    boolean isCancelled();
 
-	/**
-	 * Method isDone.
-	 * 
-	 * @return boolean
-	 */
-	boolean isDone();
+    /**
+     * Method isDone.
+     *
+     * @return boolean
+     */
+    boolean isDone();
 
-	/**
-	 * Method isRunning.
-	 * 
-	 * @return boolean
-	 */
-	boolean isRunning();
+    /**
+     * Method isRunning.
+     *
+     * @return boolean
+     */
+    boolean isRunning();
 
-	/**
-	 * Method isWaiting.
-	 * 
-	 * @return boolean
-	 */
-	boolean isWaiting();
+    /**
+     * Method isWaiting.
+     *
+     * @return boolean
+     */
+    boolean isWaiting();
 
-	/**
-	 * Method addMessageListener.
-	 * 
-	 * @param listener
-	 *            IStrategyChangeListener
-	 */
-	void addMessageListener(IStrategyChangeListener listener);
+    /**
+     * Method addMessageListener.
+     *
+     * @param listener IStrategyChangeListener
+     */
+    void addMessageListener(IStrategyChangeListener listener);
 
-	/**
-	 * Method removeMessageListener.
-	 * 
-	 * @param listener
-	 *            IStrategyChangeListener
-	 */
-	void removeMessageListener(IStrategyChangeListener listener);
+    /**
+     * Method removeMessageListener.
+     *
+     * @param listener IStrategyChangeListener
+     */
+    void removeMessageListener(IStrategyChangeListener listener);
 
-	/**
-	 * Method tradeOrderFilled.
-	 * 
-	 * @param tradeOrder
-	 *            TradeOrder
-	 */
-	void tradeOrderFilled(TradeOrder tradeOrder);
+    /**
+     * Method tradeOrderFilled.
+     *
+     * @param tradeOrder TradeOrder
+     */
+    void tradeOrderFilled(TradeOrder tradeOrder);
 }

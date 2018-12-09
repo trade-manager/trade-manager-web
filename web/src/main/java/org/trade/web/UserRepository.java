@@ -7,9 +7,9 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 @RepositoryRestResource(exported = false)
 public interface UserRepository extends Repository<User, Long> {
 
-	User save(User user);
+    User save(User user);
 
-	User findByName(String name);
+    User findByName(String name);
 
 }
 

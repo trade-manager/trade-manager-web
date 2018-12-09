@@ -38,38 +38,38 @@ package org.trade.dictionary.valuetype;
 import org.trade.core.valuetype.Decode;
 
 /**
+ *
  */
 public class AccountType extends Decode {
 
-	private static final long serialVersionUID = -5381026427696898592L;
-	public static final String DECODE = "ACCOUNT_TYPE";
-	public static final String INDIVIDUAL = "INDIVIDUAL";
+    private static final long serialVersionUID = -5381026427696898592L;
+    public static final String DECODE = "ACCOUNT_TYPE";
+    public static final String INDIVIDUAL = "INDIVIDUAL";
 
-	public AccountType() {
-		super(DECODE, true);
-	}
+    public AccountType() {
+        super(DECODE, true);
+    }
 
-	/**
-	 * Method newInstance.
-	 * 
-	 * @param value
-	 *            Integer
-	 * @return BarSize
-	 */
-	public static AccountType newInstance(String value) {
-		final AccountType returnInstance = new AccountType();
-		returnInstance.setValue(value);
-		return returnInstance;
-	}
+    /**
+     * Method newInstance.
+     *
+     * @param value Integer
+     * @return BarSize
+     */
+    public static AccountType newInstance(String value) {
+        final AccountType returnInstance = new AccountType();
+        returnInstance.setValue(value);
+        return returnInstance;
+    }
 
-	/**
-	 * Method newInstance.
-	 * 
-	 * @return BarSize
-	 */
-	public static AccountType newInstance() {
-		final AccountType returnInstance = new AccountType();
-		returnInstance.setDefaultCode();
-		return returnInstance;
-	}
+    /**
+     * Method newInstance.
+     *
+     * @return BarSize
+     */
+    public static AccountType newInstance() {
+        final AccountType returnInstance = new AccountType();
+        returnInstance.setDefaultCode();
+        return returnInstance;
+    }
 }

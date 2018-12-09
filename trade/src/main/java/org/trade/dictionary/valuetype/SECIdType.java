@@ -38,40 +38,40 @@ package org.trade.dictionary.valuetype;
 import org.trade.core.valuetype.Decode;
 
 /**
+ *
  */
 public class SECIdType extends Decode {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -5381026427696898592L;
-	public static final String DECODE = "SEC_ID_TYPE";
+    /**
+     *
+     */
+    private static final long serialVersionUID = -5381026427696898592L;
+    public static final String DECODE = "SEC_ID_TYPE";
 
-	public SECIdType() {
-		super(DECODE);
-	}
+    public SECIdType() {
+        super(DECODE);
+    }
 
-	/**
-	 * Method newInstance.
-	 * 
-	 * @param value
-	 *            String
-	 * @return SECIdType
-	 */
-	public static SECIdType newInstance(String value) {
-		final SECIdType returnInstance = new SECIdType();
-		returnInstance.setValue(value);
-		return returnInstance;
-	}
+    /**
+     * Method newInstance.
+     *
+     * @param value String
+     * @return SECIdType
+     */
+    public static SECIdType newInstance(String value) {
+        final SECIdType returnInstance = new SECIdType();
+        returnInstance.setValue(value);
+        return returnInstance;
+    }
 
-	/**
-	 * Method newInstance.
-	 * 
-	 * @return SECIdType
-	 */
-	public static SECIdType newInstance() {
-		final SECIdType returnInstance = new SECIdType();
-		returnInstance.setDefaultCode();
-		return returnInstance;
-	}
+    /**
+     * Method newInstance.
+     *
+     * @return SECIdType
+     */
+    public static SECIdType newInstance() {
+        final SECIdType returnInstance = new SECIdType();
+        returnInstance.setDefaultCode();
+        return returnInstance;
+    }
 }

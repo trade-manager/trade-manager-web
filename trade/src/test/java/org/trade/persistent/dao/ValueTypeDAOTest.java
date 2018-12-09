@@ -35,18 +35,9 @@
  */
 package org.trade.persistent.dao;
 
-import java.util.Enumeration;
-import java.util.Vector;
-
-import static org.junit.Assert.*;
-
 import org.jfree.data.DataUtilities;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.TestName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,134 +50,140 @@ import org.trade.dictionary.valuetype.DAOStrategy;
 import org.trade.dictionary.valuetype.DAOStrategyManager;
 import org.trade.ui.TradeAppLoadConfig;
 
+import java.util.Enumeration;
+import java.util.Vector;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.fail;
+
 /**
  * Some tests for the {@link DataUtilities} class.
- * 
+ *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
 public class ValueTypeDAOTest {
 
-	private final static Logger _log = LoggerFactory.getLogger(ValueTypeDAOTest.class);
-	@Rule
-	public TestName name = new TestName();
+    private final static Logger _log = LoggerFactory.getLogger(ValueTypeDAOTest.class);
+    @Rule
+    public TestName name = new TestName();
 
-	/**
-	 * Method setUpBeforeClass.
-	 * 
-	 * @throws java.lang.Exception
-	 */
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-	}
+    /**
+     * Method setUpBeforeClass.
+     *
+     * @throws java.lang.Exception
+     */
+    @BeforeClass
+    public static void setUpBeforeClass() throws Exception {
+    }
 
-	/**
-	 * Method setUp.
-	 * 
-	 * @throws java.lang.Exception
-	 */
-	@Before
-	public void setUp() throws Exception {
-		TradeAppLoadConfig.loadAppProperties();
-	}
+    /**
+     * Method setUp.
+     *
+     * @throws java.lang.Exception
+     */
+    @Before
+    public void setUp() throws Exception {
+        TradeAppLoadConfig.loadAppProperties();
+    }
 
-	/**
-	 * Method tearDown.
-	 * 
-	 * @throws java.lang.Exception
-	 */
-	@After
-	public void tearDown() throws Exception {
-	}
+    /**
+     * Method tearDown.
+     *
+     * @throws java.lang.Exception
+     */
+    @After
+    public void tearDown() throws Exception {
+    }
 
-	/**
-	 * Method tearDownAfterClass.
-	 * 
-	 * @throws java.lang.Exception
-	 */
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-	}
+    /**
+     * Method tearDownAfterClass.
+     *
+     * @throws java.lang.Exception
+     */
+    @AfterClass
+    public static void tearDownAfterClass() throws Exception {
+    }
 
-	@Test
-	public void testDOAStrategies() {
-		try {
-			DAOStrategy strategies = new DAOStrategy();
-			Vector<Decode> decodes = strategies.getCodesDecodes();
-			Enumeration<Decode> eDecodes = decodes.elements();
-			assertFalse(decodes.isEmpty());
-			while (eDecodes.hasMoreElements()) {
-				Decode decode = eDecodes.nextElement();
-				_log.info("TYPE:" + decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._TYPE));
-				_log.info("CODE:" + decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._CODE));
-				_log.info(
-						"DISPLAY_NAME:" + decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._DISPLAY_NAME));
+    @Test
+    public void testDOAStrategies() {
+        try {
+            DAOStrategy strategies = new DAOStrategy();
+            Vector<Decode> decodes = strategies.getCodesDecodes();
+            Enumeration<Decode> eDecodes = decodes.elements();
+            assertFalse(decodes.isEmpty());
+            while (eDecodes.hasMoreElements()) {
+                Decode decode = eDecodes.nextElement();
+                _log.info("TYPE:" + decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._TYPE));
+                _log.info("CODE:" + decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._CODE));
+                _log.info(
+                        "DISPLAY_NAME:" + decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._DISPLAY_NAME));
 
-			}
+            }
 
-			DAOStrategyManager strategyManagers = new DAOStrategyManager();
-			decodes = strategyManagers.getCodesDecodes();
-			assertFalse(decodes.isEmpty());
-			eDecodes = decodes.elements();
-			while (eDecodes.hasMoreElements()) {
-				Decode decode = eDecodes.nextElement();
-				_log.info("TYPE:" + decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._TYPE));
-				_log.info("CODE:" + decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._CODE));
-				_log.info(
-						"DISPLAY_NAME:" + decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._DISPLAY_NAME));
+            DAOStrategyManager strategyManagers = new DAOStrategyManager();
+            decodes = strategyManagers.getCodesDecodes();
+            assertFalse(decodes.isEmpty());
+            eDecodes = decodes.elements();
+            while (eDecodes.hasMoreElements()) {
+                Decode decode = eDecodes.nextElement();
+                _log.info("TYPE:" + decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._TYPE));
+                _log.info("CODE:" + decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._CODE));
+                _log.info(
+                        "DISPLAY_NAME:" + decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._DISPLAY_NAME));
 
-			}
-		} catch (Exception | AssertionError ex) {
-			String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
-			_log.error(msg);
-			fail(msg);
-		}
-	}
+            }
+        } catch (Exception | AssertionError ex) {
+            String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
+            _log.error(msg);
+            fail(msg);
+        }
+    }
 
-	@Test
-	public void testDOAEntryLimit() {
-		try {
-			DAOEntryLimit entryLimits = new DAOEntryLimit();
-			Vector<Decode> decodes = entryLimits.getCodesDecodes();
-			assertFalse(decodes.isEmpty());
-			Enumeration<Decode> eDecodes = decodes.elements();
-			while (eDecodes.hasMoreElements()) {
-				Decode decode = eDecodes.nextElement();
-				_log.info("TYPE:" + decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._TYPE));
-				_log.info("CODE:" + decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._CODE));
-				_log.info(
-						"DISPLAY_NAME:" + decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._DISPLAY_NAME));
+    @Test
+    public void testDOAEntryLimit() {
+        try {
+            DAOEntryLimit entryLimits = new DAOEntryLimit();
+            Vector<Decode> decodes = entryLimits.getCodesDecodes();
+            assertFalse(decodes.isEmpty());
+            Enumeration<Decode> eDecodes = decodes.elements();
+            while (eDecodes.hasMoreElements()) {
+                Decode decode = eDecodes.nextElement();
+                _log.info("TYPE:" + decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._TYPE));
+                _log.info("CODE:" + decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._CODE));
+                _log.info(
+                        "DISPLAY_NAME:" + decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._DISPLAY_NAME));
 
-			}
-			Money price = new Money(20.22);
-			Entrylimit entrylimit = entryLimits.getValue(price);
-			_log.info("Price:" + price + " Percent:" + entrylimit.getPercentOfPrice() + " LimitAmount:"
-					+ entrylimit.getLimitAmount());
-		} catch (Exception | AssertionError ex) {
-			String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
-			_log.error(msg);
-			fail(msg);
-		}
-	}
+            }
+            Money price = new Money(20.22);
+            Entrylimit entrylimit = entryLimits.getValue(price);
+            _log.info("Price:" + price + " Percent:" + entrylimit.getPercentOfPrice() + " LimitAmount:"
+                    + entrylimit.getLimitAmount());
+        } catch (Exception | AssertionError ex) {
+            String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
+            _log.error(msg);
+            fail(msg);
+        }
+    }
 
-	@Test
-	public void testChartDays() {
-		try {
-			ChartDays DAOValues = new ChartDays();
-			Vector<Decode> decodes = DAOValues.getCodesDecodes();
-			assertFalse(decodes.isEmpty());
-			Enumeration<Decode> eDecodes = decodes.elements();
-			while (eDecodes.hasMoreElements()) {
-				Decode decode = eDecodes.nextElement();
-				_log.info("TYPE:" + decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._TYPE));
-				_log.info("CODE:" + decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._CODE));
-				_log.info(
-						"DISPLAY_NAME:" + decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._DISPLAY_NAME));
-			}
-		} catch (Exception | AssertionError ex) {
-			String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
-			_log.error(msg);
-			fail(msg);
-		}
-	}
+    @Test
+    public void testChartDays() {
+        try {
+            ChartDays DAOValues = new ChartDays();
+            Vector<Decode> decodes = DAOValues.getCodesDecodes();
+            assertFalse(decodes.isEmpty());
+            Enumeration<Decode> eDecodes = decodes.elements();
+            while (eDecodes.hasMoreElements()) {
+                Decode decode = eDecodes.nextElement();
+                _log.info("TYPE:" + decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._TYPE));
+                _log.info("CODE:" + decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._CODE));
+                _log.info(
+                        "DISPLAY_NAME:" + decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._DISPLAY_NAME));
+            }
+        } catch (Exception | AssertionError ex) {
+            String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
+            _log.error(msg);
+            fail(msg);
+        }
+    }
 }

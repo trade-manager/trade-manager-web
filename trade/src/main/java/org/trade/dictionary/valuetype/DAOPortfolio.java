@@ -35,71 +35,71 @@
  */
 package org.trade.dictionary.valuetype;
 
-import java.util.Iterator;
-
 import org.trade.core.valuetype.DAODecode;
 import org.trade.core.valuetype.Decode;
 import org.trade.core.valuetype.ValueTypeException;
 import org.trade.persistent.dao.Portfolio;
 
+import java.util.Iterator;
+
 /**
+ *
  */
 public class DAOPortfolio extends DAODecode {
 
-	private static final long serialVersionUID = -5381026427696898592L;
-	public static final String DECODE = "PORTFOLIO";
-	public static final String _TABLE = "_TABLE";
-	public static final String _TABLE_ID = "_TABLE_ID";
-	public static final String _COLUMN = "_COLUMN";
+    private static final long serialVersionUID = -5381026427696898592L;
+    public static final String DECODE = "PORTFOLIO";
+    public static final String _TABLE = "_TABLE";
+    public static final String _TABLE_ID = "_TABLE_ID";
+    public static final String _COLUMN = "_COLUMN";
 
-	public DAOPortfolio() {
-		super(DECODE);
-	}
+    public DAOPortfolio() {
+        super(DECODE);
+    }
 
-	/**
-	 * Method newInstance.
-	 * 
-	 * @param value
-	 *            String
-	 * @return DAOPortfolio
-	 */
-	public static DAOPortfolio newInstance(String displayName) {
-		final DAOPortfolio returnInstance = new DAOPortfolio();
-		returnInstance.setDisplayName(displayName);
-		return returnInstance;
-	}
+    /**
+     * Method newInstance.
+     *
+     * @param value String
+     * @return DAOPortfolio
+     */
+    public static DAOPortfolio newInstance(String displayName) {
+        final DAOPortfolio returnInstance = new DAOPortfolio();
+        returnInstance.setDisplayName(displayName);
+        return returnInstance;
+    }
 
-	/**
-	 * Method newInstance.
-	 * 
-	 * @return DAOPortfolio
-	 */
-	public static DAOPortfolio newInstance() {
+    /**
+     * Method newInstance.
+     *
+     * @return DAOPortfolio
+     */
+    public static DAOPortfolio newInstance() {
 
-		try {
-			final DAOPortfolio returnInstance = new DAOPortfolio();
-			DAOPortfolio code = null;
-			for (Iterator<Decode> iterCodes = returnInstance.getCodesDecodes().iterator(); iterCodes.hasNext();) {
-				code = (DAOPortfolio) iterCodes.next();
-				Portfolio portfolio = (Portfolio) code.getObject();
-				if (portfolio.getIsDefault())
-					return code;
-			}
-			if (null == code) {
-				code = returnInstance;
-			}
-			return code;
-		} catch (ValueTypeException e) {
-			return null;
-		}
-	}
+        try {
+            final DAOPortfolio returnInstance = new DAOPortfolio();
+            DAOPortfolio code = null;
+            for (Iterator<Decode> iterCodes = returnInstance.getCodesDecodes().iterator(); iterCodes.hasNext(); ) {
+                code = (DAOPortfolio) iterCodes.next();
+                Portfolio portfolio = (Portfolio) code.getObject();
+                if (portfolio.getIsDefault())
+                    return code;
+            }
+            if (null == code) {
+                code = returnInstance;
+            }
+            return code;
+        } catch (ValueTypeException e) {
+            return null;
+        }
+    }
 
-	/**
-	 * Method convertToUppercase.
-	 * 
-	 * @return boolean
-	 */
-	protected boolean convertToUppercase() {
-		return false;
-	}
+    /**
+     * Method convertToUppercase.
+     *
+     * @return boolean
+     */
+    protected boolean convertToUppercase() {
+        return false;
+    }
 }

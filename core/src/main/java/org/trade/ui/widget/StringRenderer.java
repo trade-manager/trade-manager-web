@@ -35,37 +35,37 @@
  */
 package org.trade.ui.widget;
 
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 
 /**
+ *
  */
 public class StringRenderer extends DefaultTableCellRenderer {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 8447756819964236715L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 8447756819964236715L;
 
-	public StringRenderer() {
-		super();
-		setHorizontalAlignment(SwingConstants.LEFT);
-	}
+    public StringRenderer() {
+        super();
+        setHorizontalAlignment(SwingConstants.LEFT);
+    }
 
-	/**
-	 * Method setValue.
-	 * 
-	 * @param value
-	 *            Object
-	 */
-	protected void setValue(Object value) {
-		if (value == null) {
-			setText("");
-		} else {
-			if (value instanceof String) {
-				setText((String) value);
-			} else {
-				setText(value.toString());
-			}
-		}
-	}
+    /**
+     * Method setValue.
+     *
+     * @param value Object
+     */
+    protected void setValue(Object value) {
+        if (value == null) {
+            setText("");
+        } else {
+            if (value instanceof String) {
+                setText((String) value);
+            } else {
+                setText(value.toString());
+            }
+        }
+    }
 }

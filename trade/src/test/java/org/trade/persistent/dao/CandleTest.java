@@ -35,17 +35,8 @@
  */
 package org.trade.persistent.dao;
 
-import static org.junit.Assert.*;
-
-import java.math.BigDecimal;
-import java.time.ZonedDateTime;
-
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.TestName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,120 +49,125 @@ import org.trade.strategy.data.candle.CandleItem;
 import org.trade.strategy.data.candle.CandlePeriod;
 import org.trade.ui.TradeAppLoadConfig;
 
+import java.math.BigDecimal;
+import java.time.ZonedDateTime;
+
+import static org.junit.Assert.*;
+
 /**
  * Some tests for the {@link DataUtilities} class.
- * 
+ *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
 public class CandleTest {
 
-	private final static Logger _log = LoggerFactory.getLogger(CandleTest.class);
-	@Rule
-	public TestName name = new TestName();
+    private final static Logger _log = LoggerFactory.getLogger(CandleTest.class);
+    @Rule
+    public TestName name = new TestName();
 
-	private String symbol = "TEST";
-	private Tradestrategy tradestrategy = null;
+    private String symbol = "TEST";
+    private Tradestrategy tradestrategy = null;
 
-	/**
-	 * Method setUpBeforeClass.
-	 * 
-	 * @throws java.lang.Exception
-	 */
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-	}
+    /**
+     * Method setUpBeforeClass.
+     *
+     * @throws java.lang.Exception
+     */
+    @BeforeClass
+    public static void setUpBeforeClass() throws Exception {
+    }
 
-	/**
-	 * Method setUp.
-	 * 
-	 * @throws java.lang.Exception
-	 */
-	@Before
-	public void setUp() throws Exception {
+    /**
+     * Method setUp.
+     *
+     * @throws java.lang.Exception
+     */
+    @Before
+    public void setUp() throws Exception {
 
-		TradeAppLoadConfig.loadAppProperties();
-		this.tradestrategy = TradestrategyTest.getTestTradestrategy(symbol);
-		assertNotNull("1", this.tradestrategy);
-	}
+        TradeAppLoadConfig.loadAppProperties();
+        this.tradestrategy = TradestrategyTest.getTestTradestrategy(symbol);
+        assertNotNull("1", this.tradestrategy);
+    }
 
-	/**
-	 * Method tearDown.
-	 * 
-	 * @throws java.lang.Exception
-	 */
-	@After
-	public void tearDown() throws Exception {
-		TradestrategyTest.clearDBData();
-	}
+    /**
+     * Method tearDown.
+     *
+     * @throws java.lang.Exception
+     */
+    @After
+    public void tearDown() throws Exception {
+        TradestrategyTest.clearDBData();
+    }
 
-	/**
-	 * Method tearDownAfterClass.
-	 * 
-	 * @throws java.lang.Exception
-	 */
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-	}
+    /**
+     * Method tearDownAfterClass.
+     *
+     * @throws java.lang.Exception
+     */
+    @AfterClass
+    public static void tearDownAfterClass() throws Exception {
+    }
 
-	@Test
-	public void testAddCandle() {
+    @Test
+    public void testAddCandle() {
 
-		try {
+        try {
 
-			AspectHome aspectHome = new AspectHome();
+            AspectHome aspectHome = new AspectHome();
 
-			RegularTimePeriod period = new CandlePeriod(
-					TradingCalendar.getTradingDayStart(TradingCalendar.getDateTimeNowMarketTimeZone()), 300);
+            RegularTimePeriod period = new CandlePeriod(
+                    TradingCalendar.getTradingDayStart(TradingCalendar.getDateTimeNowMarketTimeZone()), 300);
 
-			Candle transientInstance = new Candle(this.tradestrategy.getContract(), this.tradestrategy.getTradingday(),
-					period, period.getStart());
-			transientInstance.setHigh(new BigDecimal(20.33));
-			transientInstance.setLow(new BigDecimal(20.11));
-			transientInstance.setOpen(new BigDecimal(20.23));
-			transientInstance.setClose(new BigDecimal(20.28));
-			transientInstance.setVolume(1500L);
-			transientInstance.setVwap(new BigDecimal(20.1));
-			transientInstance.setTradeCount(10);
+            Candle transientInstance = new Candle(this.tradestrategy.getContract(), this.tradestrategy.getTradingday(),
+                    period, period.getStart());
+            transientInstance.setHigh(new BigDecimal(20.33));
+            transientInstance.setLow(new BigDecimal(20.11));
+            transientInstance.setOpen(new BigDecimal(20.23));
+            transientInstance.setClose(new BigDecimal(20.28));
+            transientInstance.setVolume(1500L);
+            transientInstance.setVwap(new BigDecimal(20.1));
+            transientInstance.setTradeCount(10);
 
-			transientInstance = aspectHome.persist(transientInstance);
-			assertNotNull("1", transientInstance.getId());
-			_log.info("testAddCandle IdCandle: " + transientInstance.getId());
+            transientInstance = aspectHome.persist(transientInstance);
+            assertNotNull("1", transientInstance.getId());
+            _log.info("testAddCandle IdCandle: " + transientInstance.getId());
 
-		} catch (Exception | AssertionError ex) {
-			String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
-			_log.error(msg);
-			fail(msg);
-		}
-	}
+        } catch (Exception | AssertionError ex) {
+            String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
+            _log.error(msg);
+            fail(msg);
+        }
+    }
 
-	@Test
-	public void testAddCandleSeries() {
+    @Test
+    public void testAddCandleSeries() {
 
-		try {
+        try {
 
-			TradestrategyHome tradestrategyHome = new TradestrategyHome();
-			CandleHome candleHome = new CandleHome();
-			for (Tradestrategy tradestrategy : tradestrategyHome.findAll()) {
-				tradestrategy = tradestrategyHome.findById(tradestrategy.getId());
-				tradestrategy.setStrategyData(StrategyData.create(tradestrategy));
-				ZonedDateTime prevTradingday = TradingCalendar.addTradingDays(tradestrategy.getTradingday().getOpen(),
-						(-1 * (tradestrategy.getChartDays() - 1)));
-				StrategyData.doDummyData(tradestrategy.getStrategyData().getBaseCandleSeries(),
-						Tradingday.newInstance(prevTradingday), 2, BarSize.FIVE_MIN, true, 0);
-				assertFalse("1", tradestrategy.getStrategyData().getBaseCandleSeries().isEmpty());
-				candleHome.persistCandleSeries(tradestrategy.getStrategyData().getBaseCandleSeries());
+            TradestrategyHome tradestrategyHome = new TradestrategyHome();
+            CandleHome candleHome = new CandleHome();
+            for (Tradestrategy tradestrategy : tradestrategyHome.findAll()) {
+                tradestrategy = tradestrategyHome.findById(tradestrategy.getId());
+                tradestrategy.setStrategyData(StrategyData.create(tradestrategy));
+                ZonedDateTime prevTradingday = TradingCalendar.addTradingDays(tradestrategy.getTradingday().getOpen(),
+                        (-1 * (tradestrategy.getChartDays() - 1)));
+                StrategyData.doDummyData(tradestrategy.getStrategyData().getBaseCandleSeries(),
+                        Tradingday.newInstance(prevTradingday), 2, BarSize.FIVE_MIN, true, 0);
+                assertFalse("1", tradestrategy.getStrategyData().getBaseCandleSeries().isEmpty());
+                candleHome.persistCandleSeries(tradestrategy.getStrategyData().getBaseCandleSeries());
 
-				_log.info("testAddCandle IdTradeStrategy: " + tradestrategy.getId());
-				assertNotNull("2", ((CandleItem) tradestrategy.getStrategyData().getBaseCandleSeries().getDataItem(0))
-						.getCandle().getId());
+                _log.info("testAddCandle IdTradeStrategy: " + tradestrategy.getId());
+                assertNotNull("2", ((CandleItem) tradestrategy.getStrategyData().getBaseCandleSeries().getDataItem(0))
+                        .getCandle().getId());
 
-			}
+            }
 
-		} catch (Exception | AssertionError ex) {
-			String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
-			_log.error(msg);
-			fail(msg);
-		}
-	}
+        } catch (Exception | AssertionError ex) {
+            String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
+            _log.error(msg);
+            fail(msg);
+        }
+    }
 }

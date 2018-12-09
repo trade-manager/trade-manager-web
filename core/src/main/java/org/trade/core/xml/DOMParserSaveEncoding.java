@@ -42,37 +42,36 @@ import org.trade.core.util.XMLDOMParserWrapper;
  * Encoding of the XML document by overriding the startDocument method and
  * providing a way to capture the MIME encoding from the XML document which in
  * turn is converted to the Java Encoding by the internal MIME2Java class.
- * 
  */
 
 public class DOMParserSaveEncoding extends XMLDOMParserWrapper {
-	/*
-	 * Default MIME so we check the file.encoding
-	 */
-	String _mimeEncoding = "DEFAULT";
+    /*
+     * Default MIME so we check the file.encoding
+     */
+    String _mimeEncoding = "DEFAULT";
 
-	public DOMParserSaveEncoding() {
-		super(false, true);
-	}
+    public DOMParserSaveEncoding() {
+        super(false, true);
+    }
 
-	private String getMimeEncoding() {
-		return (_mimeEncoding);
-	}
+    private String getMimeEncoding() {
+        return (_mimeEncoding);
+    }
 
-	public String getJavaEncoding() {
-		String javaEncoding = null;
-		final String mimeEncoding = getMimeEncoding();
+    public String getJavaEncoding() {
+        String javaEncoding = null;
+        final String mimeEncoding = getMimeEncoding();
 
-		if (mimeEncoding != null) {
-			if (mimeEncoding.equals("DEFAULT")) {
-				javaEncoding = System.getProperty("file.encoding");
-			}
-		}
+        if (mimeEncoding != null) {
+            if (mimeEncoding.equals("DEFAULT")) {
+                javaEncoding = System.getProperty("file.encoding");
+            }
+        }
 
-		if (javaEncoding == null) // Should never return null
-		{
-			javaEncoding = "UTF8";
-		}
-		return (javaEncoding);
-	}
+        if (javaEncoding == null) // Should never return null
+        {
+            javaEncoding = "UTF8";
+        }
+        return (javaEncoding);
+    }
 }

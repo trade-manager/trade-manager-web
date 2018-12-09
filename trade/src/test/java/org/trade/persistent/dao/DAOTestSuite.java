@@ -39,38 +39,38 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 /**
+ *
  */
 public class DAOTestSuite {
 
-	/**
-	 * Method suite.
-	 * 
-	 * @return Test
-	 */
-	public static Test suite() {
+    /**
+     * Method suite.
+     *
+     * @return Test
+     */
+    public static Test suite() {
 
-		TestSuite suite = new TestSuite();
+        TestSuite suite = new TestSuite();
 
-		// suite.addTestSuite(ContractTest.class);
-		// suite.addTestSuite(ValueTypeDAOTest.class);
-		// suite.addTestSuite(StrategyTest.class);
-		// suite.addTestSuite(TradingdayTest.class);
-		// suite.addTestSuite(TradestrategyTest.class);
-		// suite.addTestSuite(CandleTest.class);
-		// suite.addTestSuite(TradeTest.class);
-		// suite.addTestSuite(TradeOrderTest.class);
-		// suite.addTestSuite(TradelogReportTest.class);
+        // suite.addTestSuite(ContractTest.class);
+        // suite.addTestSuite(ValueTypeDAOTest.class);
+        // suite.addTestSuite(StrategyTest.class);
+        // suite.addTestSuite(TradingdayTest.class);
+        // suite.addTestSuite(TradestrategyTest.class);
+        // suite.addTestSuite(CandleTest.class);
+        // suite.addTestSuite(TradeTest.class);
+        // suite.addTestSuite(TradeOrderTest.class);
+        // suite.addTestSuite(TradelogReportTest.class);
 
-		return suite;
-	}
+        return suite;
+    }
 
-	/**
-	 * Runs the test suite using the textual runner.
-	 * 
-	 * @param args
-	 *            String[]
-	 */
-	public static void main(String[] args) {
-		junit.textui.TestRunner.run(suite());
-	}
+    /**
+     * Runs the test suite using the textual runner.
+     *
+     * @param args String[]
+     */
+    public static void main(String[] args) {
+        junit.textui.TestRunner.run(suite());
+    }
 }

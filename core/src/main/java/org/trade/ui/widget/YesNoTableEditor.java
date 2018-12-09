@@ -35,71 +35,68 @@
  */
 package org.trade.ui.widget;
 
-import javax.swing.DefaultCellEditor;
-import javax.swing.JCheckBox;
-import javax.swing.SwingConstants;
-
 import org.trade.core.valuetype.YesNo;
 
+import javax.swing.*;
+
 /**
+ *
  */
 public class YesNoTableEditor extends DefaultCellEditor {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 2148534921779125768L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 2148534921779125768L;
 
-	public YesNoTableEditor() {
-		this(new JCheckBox());
-	}
+    public YesNoTableEditor() {
+        this(new JCheckBox());
+    }
 
-	/**
-	 * Constructs a DefaultCellEditor object that uses a check box.
-	 * 
-	 * 
-	 * @param checkBox
-	 *            JCheckBox
-	 */
-	public YesNoTableEditor(final JCheckBox checkBox) {
-		super(checkBox);
+    /**
+     * Constructs a DefaultCellEditor object that uses a check box.
+     *
+     * @param checkBox JCheckBox
+     */
+    public YesNoTableEditor(final JCheckBox checkBox) {
+        super(checkBox);
 
-		checkBox.setHorizontalAlignment(SwingConstants.CENTER);
+        checkBox.setHorizontalAlignment(SwingConstants.CENTER);
 
-		editorComponent = checkBox;
-		delegate = new EditorDelegate() {
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 6696276657185790230L;
+        editorComponent = checkBox;
+        delegate = new EditorDelegate() {
+            /**
+             *
+             */
+            private static final long serialVersionUID = 6696276657185790230L;
 
-			public void setValue(Object value) {
-				boolean selected = false;
+            public void setValue(Object value) {
+                boolean selected = false;
 
-				if (value instanceof Boolean) {
-					selected = ((Boolean) value).booleanValue();
-				} else if (value instanceof YesNo) {
-					if (((YesNo) value).isYes()) {
-						selected = true;
-					}
-				} else if (value instanceof String) {
-					selected = value.equals("true");
-				}
+                if (value instanceof Boolean) {
+                    selected = ((Boolean) value).booleanValue();
+                } else if (value instanceof YesNo) {
+                    if (((YesNo) value).isYes()) {
+                        selected = true;
+                    }
+                } else if (value instanceof String) {
+                    selected = value.equals("true");
+                }
 
-				checkBox.setSelected(selected);
-			}
+                checkBox.setSelected(selected);
+            }
 
-			public Object getCellEditorValue() {
-				YesNo yesNo = null;
-				if (checkBox.isSelected()) {
-					yesNo = YesNo.newInstance(YesNo.YES);
-				} else {
-					yesNo = YesNo.newInstance(YesNo.NO);
-				}
-				return yesNo;
-			}
-		};
+            public Object getCellEditorValue() {
+                YesNo yesNo = null;
+                if (checkBox.isSelected()) {
+                    yesNo = YesNo.newInstance(YesNo.YES);
+                } else {
+                    yesNo = YesNo.newInstance(YesNo.NO);
+                }
+                return yesNo;
+            }
+        };
 
-		checkBox.addActionListener(delegate);
-	}
+        checkBox.addActionListener(delegate);
+    }
 }

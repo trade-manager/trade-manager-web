@@ -44,59 +44,55 @@ import org.trade.core.conversion.JavaTypeTranslatorException;
  * com.cbsinc.esc.devtoold.valuetype.base.CodeDecodeValueType to instances of
  * the object code they where set up with. The conversion will return the code
  * the valuetype is representing.
- * 
- * @version $Id: DecodeToObject.java,v 1.1 2001/11/06 16:51:55 simon Exp $
+ *
  * @author Simon Allen
+ * @version $Id: DecodeToObject.java,v 1.1 2001/11/06 16:51:55 simon Exp $
  */
 public class DecodeToObject implements IJavaDynamicTypeConverter {
 
-	public DecodeToObject() {
-	}
+    public DecodeToObject() {
+    }
 
-	/**
-	 * Method convert.
-	 * 
-	 * @param targetType
-	 *            Class<?>
-	 * @param valueToConvert
-	 *            Object
-	 * @return Object
-	 * @throws JavaTypeTranslatorException
-	 * @see IJavaDynamicTypeConverter#convert(Class<?>,
-	 *      Object)
-	 */
-	public Object convert(Class<?> targetType, Object valueToConvert) throws JavaTypeTranslatorException {
-		Object rVal = null;
+    /**
+     * Method convert.
+     *
+     * @param targetType     Class<?>
+     * @param valueToConvert Object
+     * @return Object
+     * @throws JavaTypeTranslatorException
+     * @see IJavaDynamicTypeConverter#convert(Class<?>,
+     * Object)
+     */
+    public Object convert(Class<?> targetType, Object valueToConvert) throws JavaTypeTranslatorException {
+        Object rVal = null;
 
-		if (valueToConvert instanceof Decode) {
-			rVal = ((Decode) valueToConvert).getCode();
-			rVal = JavaTypeTranslator.convert(targetType, rVal);
-		} else {
-			throw new JavaTypeTranslatorException(
-					"Value to convert must be a com.aceva.devtools.valuetype.base.Decode");
-		}
+        if (valueToConvert instanceof Decode) {
+            rVal = ((Decode) valueToConvert).getCode();
+            rVal = JavaTypeTranslator.convert(targetType, rVal);
+        } else {
+            throw new JavaTypeTranslatorException(
+                    "Value to convert must be a com.aceva.devtools.valuetype.base.Decode");
+        }
 
-		return (rVal);
-	}
+        return (rVal);
+    }
 
-	/**
-	 * Method supportsConversion.
-	 * 
-	 * @param targetType
-	 *            Class<?>
-	 * @param valueToConvert
-	 *            Object
-	 * @return boolean
-	 * @see IJavaDynamicTypeConverter#
-	 *      supportsConversion (Class<?>, Object)
-	 */
-	public boolean supportsConversion(Class<?> targetType, Object valueToConvert) {
-		boolean rVal = false;
+    /**
+     * Method supportsConversion.
+     *
+     * @param targetType     Class<?>
+     * @param valueToConvert Object
+     * @return boolean
+     * @see IJavaDynamicTypeConverter#
+     * supportsConversion (Class<?>, Object)
+     */
+    public boolean supportsConversion(Class<?> targetType, Object valueToConvert) {
+        boolean rVal = false;
 
-		if (valueToConvert instanceof Decode) {
-			rVal = true;
-		}
+        if (valueToConvert instanceof Decode) {
+            rVal = true;
+        }
 
-		return (rVal);
-	}
+        return (rVal);
+    }
 }

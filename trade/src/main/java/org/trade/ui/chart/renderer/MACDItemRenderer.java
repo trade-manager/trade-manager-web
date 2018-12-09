@@ -21,7 +21,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301,
  * USA.
  *
- * [Oracle and Java are registered trademarks of Oracle and/or its affiliates. 
+ * [Oracle and Java are registered trademarks of Oracle and/or its affiliates.
  * Other names may be trademarks of their respective owners.]
  *
  * ---------------------------
@@ -110,15 +110,6 @@
 
 package org.trade.ui.chart.renderer;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Paint;
-import java.awt.Point;
-import java.awt.Shape;
-import java.awt.Stroke;
-import java.awt.geom.GeneralPath;
-import java.awt.geom.Rectangle2D;
 import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.entity.EntityCollection;
 import org.jfree.chart.labels.XYToolTipGenerator;
@@ -136,391 +127,382 @@ import org.jfree.util.UnitType;
 import org.trade.strategy.data.MACDDataset;
 import org.trade.strategy.data.macd.MACDItem;
 
+import java.awt.*;
+import java.awt.geom.GeneralPath;
+import java.awt.geom.Rectangle2D;
+
 /**
  * Standard item renderer for an {@link XYPlot}. This class can draw (a) shapes
  * at each point, or (b) lines between points, or (c) both shapes and lines.
- * <P>
+ * <p>
  * This renderer has been retained for historical reasons and, in general, you
  * should use the {@link XYLineAndShapeRenderer} class instead.
  */
 public class MACDItemRenderer extends StandardXYItemRenderer {
 
-	/** For serialization. */
-	private static final long serialVersionUID = -3271351259436865995L;
+    /**
+     * For serialization.
+     */
+    private static final long serialVersionUID = -3271351259436865995L;
 
-	/** Specifies how the gap threshold value is interpreted. */
-	private UnitType gapThresholdType = UnitType.RELATIVE;
+    /**
+     * Specifies how the gap threshold value is interpreted.
+     */
+    private UnitType gapThresholdType = UnitType.RELATIVE;
 
-	/** Threshold for deciding when to discontinue a line. */
-	private double gapThreshold = 1.0;
+    /**
+     * Threshold for deciding when to discontinue a line.
+     */
+    private double gapThreshold = 1.0;
 
-	/**
-	 * A flag that controls whether or not each series is drawn as a single
-	 * path.
-	 */
-	private boolean drawSeriesLineAsPath;
+    /**
+     * A flag that controls whether or not each series is drawn as a single
+     * path.
+     */
+    private boolean drawSeriesLineAsPath;
 
-	/**
-	 * Constructs a new renderer.
-	 */
-	public MACDItemRenderer() {
-		super(LINES, null);
-	}
+    /**
+     * Constructs a new renderer.
+     */
+    public MACDItemRenderer() {
+        super(LINES, null);
+    }
 
-	/**
-	 * Constructs a new renderer. To specify the type of renderer, use one of
-	 * the constants: {@link #SHAPES}, {@link #LINES} or
-	 * {@link #SHAPES_AND_LINES}.
-	 * 
-	 * @param type
-	 *            the type.
-	 */
-	public MACDItemRenderer(int type) {
-		super(type, null);
-	}
+    /**
+     * Constructs a new renderer. To specify the type of renderer, use one of
+     * the constants: {@link #SHAPES}, {@link #LINES} or
+     * {@link #SHAPES_AND_LINES}.
+     *
+     * @param type the type.
+     */
+    public MACDItemRenderer(int type) {
+        super(type, null);
+    }
 
-	/**
-	 * Constructs a new renderer. To specify the type of renderer, use one of
-	 * the constants: {@link #SHAPES}, {@link #LINES} or
-	 * {@link #SHAPES_AND_LINES}.
-	 * 
-	 * @param type
-	 *            the type of renderer.
-	 * @param toolTipGenerator
-	 *            the item label generator (<code>null</code> permitted).
-	 */
-	public MACDItemRenderer(int type, XYToolTipGenerator toolTipGenerator) {
-		super(type, toolTipGenerator, null);
-	}
+    /**
+     * Constructs a new renderer. To specify the type of renderer, use one of
+     * the constants: {@link #SHAPES}, {@link #LINES} or
+     * {@link #SHAPES_AND_LINES}.
+     *
+     * @param type             the type of renderer.
+     * @param toolTipGenerator the item label generator (<code>null</code> permitted).
+     */
+    public MACDItemRenderer(int type, XYToolTipGenerator toolTipGenerator) {
+        super(type, toolTipGenerator, null);
+    }
 
-	/**
-	 * Constructs a new renderer. To specify the type of renderer, use one of
-	 * the constants: {@link #SHAPES}, {@link #LINES} or
-	 * {@link #SHAPES_AND_LINES}.
-	 * 
-	 * @param type
-	 *            the type of renderer.
-	 * @param toolTipGenerator
-	 *            the item label generator (<code>null</code> permitted).
-	 * @param urlGenerator
-	 *            the URL generator.
-	 */
-	public MACDItemRenderer(int type, XYToolTipGenerator toolTipGenerator, XYURLGenerator urlGenerator) {
-		super();
-	}
+    /**
+     * Constructs a new renderer. To specify the type of renderer, use one of
+     * the constants: {@link #SHAPES}, {@link #LINES} or
+     * {@link #SHAPES_AND_LINES}.
+     *
+     * @param type             the type of renderer.
+     * @param toolTipGenerator the item label generator (<code>null</code> permitted).
+     * @param urlGenerator     the URL generator.
+     */
+    public MACDItemRenderer(int type, XYToolTipGenerator toolTipGenerator, XYURLGenerator urlGenerator) {
+        super();
+    }
 
-	/**
-	 * Draws the visual representation of a single data item.
-	 * 
-	 * @param g2
-	 *            the graphics device.
-	 * @param state
-	 *            the renderer state.
-	 * @param dataArea
-	 *            the area within which the data is being drawn.
-	 * @param info
-	 *            collects information about the drawing.
-	 * @param plot
-	 *            the plot (can be used to obtain standard color information
-	 *            etc).
-	 * @param domainAxis
-	 *            the domain axis.
-	 * @param rangeAxis
-	 *            the range axis.
-	 * @param dataset
-	 *            the dataset.
-	 * @param series
-	 *            the series index (zero-based).
-	 * @param item
-	 *            the item index (zero-based).
-	 * @param crosshairState
-	 *            crosshair information for the plot (<code>null</code>
-	 *            permitted).
-	 * @param pass
-	 *            the pass index.
-	 */
-	@Override
-	public void drawItem(Graphics2D g2, XYItemRendererState state, Rectangle2D dataArea, PlotRenderingInfo info,
-			XYPlot plot, ValueAxis domainAxis, ValueAxis rangeAxis, XYDataset dataset, int series, int item,
-			CrosshairState crosshairState, int pass) {
+    /**
+     * Draws the visual representation of a single data item.
+     *
+     * @param g2             the graphics device.
+     * @param state          the renderer state.
+     * @param dataArea       the area within which the data is being drawn.
+     * @param info           collects information about the drawing.
+     * @param plot           the plot (can be used to obtain standard color information
+     *                       etc).
+     * @param domainAxis     the domain axis.
+     * @param rangeAxis      the range axis.
+     * @param dataset        the dataset.
+     * @param series         the series index (zero-based).
+     * @param item           the item index (zero-based).
+     * @param crosshairState crosshair information for the plot (<code>null</code>
+     *                       permitted).
+     * @param pass           the pass index.
+     */
+    @Override
+    public void drawItem(Graphics2D g2, XYItemRendererState state, Rectangle2D dataArea, PlotRenderingInfo info,
+                         XYPlot plot, ValueAxis domainAxis, ValueAxis rangeAxis, XYDataset dataset, int series, int item,
+                         CrosshairState crosshairState, int pass) {
 
-		// get the data point...
-		MACDDataset mACDDataset = (MACDDataset) dataset;
-		MACDItem mACDItem = (MACDItem) mACDDataset.getSeries(series).getDataItem(item);
-		double x1 = dataset.getXValue(series, item);
-		double y1 = mACDItem.getMACD();
-		double x0 = 0;
-		double y0 = 0;
-		int lastItem = 0;
-		MACDItem prevMACDItem = null;
+        // get the data point...
+        MACDDataset mACDDataset = (MACDDataset) dataset;
+        MACDItem mACDItem = (MACDItem) mACDDataset.getSeries(series).getDataItem(item);
+        double x1 = dataset.getXValue(series, item);
+        double y1 = mACDItem.getMACD();
+        double x0 = 0;
+        double y0 = 0;
+        int lastItem = 0;
+        MACDItem prevMACDItem = null;
 
-		if (item != 0) {
-			prevMACDItem = (MACDItem) mACDDataset.getSeries(series).getDataItem(item - 1);
-			x0 = mACDDataset.getXValue(series, item - 1);
-			y0 = prevMACDItem.getMACD();
-			lastItem = mACDDataset.getItemCount(series) - 1;
-		}
-		int numX = mACDDataset.getItemCount(series);
-		double minX = mACDDataset.getXValue(series, 0);
-		double maxX = mACDDataset.getXValue(series, numX - 1);
-		/*
-		 * Draw MACD.
-		 */
+        if (item != 0) {
+            prevMACDItem = (MACDItem) mACDDataset.getSeries(series).getDataItem(item - 1);
+            x0 = mACDDataset.getXValue(series, item - 1);
+            y0 = prevMACDItem.getMACD();
+            lastItem = mACDDataset.getItemCount(series) - 1;
+        }
+        int numX = mACDDataset.getItemCount(series);
+        double minX = mACDDataset.getXValue(series, 0);
+        double maxX = mACDDataset.getXValue(series, numX - 1);
+        /*
+         * Draw MACD.
+         */
 
-		drawItem(g2, state, dataArea, info, plot, domainAxis, rangeAxis, x0, y0, x1, y1, lastItem, series, item,
-				crosshairState, pass, numX, minX, maxX, mACDDataset.getSeriesColor(0), dataset);
+        drawItem(g2, state, dataArea, info, plot, domainAxis, rangeAxis, x0, y0, x1, y1, lastItem, series, item,
+                crosshairState, pass, numX, minX, maxX, mACDDataset.getSeriesColor(0), dataset);
 
-		y1 = mACDItem.getSignalLine();
-		if (item != 0) {
-			y0 = prevMACDItem.getSignalLine();
-		}
-		/*
-		 * Draw MACD smoothing.
-		 */
-		drawItem(g2, state, dataArea, info, plot, domainAxis, rangeAxis, x0, y0, x1, y1, lastItem, series, item,
-				crosshairState, pass, numX, minX, maxX, Color.RED, dataset);
-		y1 = mACDItem.getMACDHistogram();
-		if (item != 0) {
-			y0 = prevMACDItem.getMACDHistogram();
-		}
-		/*
-		 * Draw MACD histogram.
-		 */
-		y0 = 0;
-		x0 = x1;
-		drawItem(g2, state, dataArea, info, plot, domainAxis, rangeAxis, x0, y0, x1, y1, lastItem, series, item,
-				crosshairState, pass, numX, minX, maxX, Color.BLACK, dataset);
+        y1 = mACDItem.getSignalLine();
+        if (item != 0) {
+            y0 = prevMACDItem.getSignalLine();
+        }
+        /*
+         * Draw MACD smoothing.
+         */
+        drawItem(g2, state, dataArea, info, plot, domainAxis, rangeAxis, x0, y0, x1, y1, lastItem, series, item,
+                crosshairState, pass, numX, minX, maxX, Color.RED, dataset);
+        y1 = mACDItem.getMACDHistogram();
+        if (item != 0) {
+            y0 = prevMACDItem.getMACDHistogram();
+        }
+        /*
+         * Draw MACD histogram.
+         */
+        y0 = 0;
+        x0 = x1;
+        drawItem(g2, state, dataArea, info, plot, domainAxis, rangeAxis, x0, y0, x1, y1, lastItem, series, item,
+                crosshairState, pass, numX, minX, maxX, Color.BLACK, dataset);
 
-	}
+    }
 
-	public void drawItem(Graphics2D g2, XYItemRendererState state, Rectangle2D dataArea, PlotRenderingInfo info,
-			XYPlot plot, ValueAxis domainAxis, ValueAxis rangeAxis, double x0, double y0, double x1, double y1,
-			int lastItem, int series, int item, CrosshairState crosshairState, int pass, int numX, double minX,
-			double maxX, Paint color, XYDataset dataset) {
+    public void drawItem(Graphics2D g2, XYItemRendererState state, Rectangle2D dataArea, PlotRenderingInfo info,
+                         XYPlot plot, ValueAxis domainAxis, ValueAxis rangeAxis, double x0, double y0, double x1, double y1,
+                         int lastItem, int series, int item, CrosshairState crosshairState, int pass, int numX, double minX,
+                         double maxX, Paint color, XYDataset dataset) {
 
-		boolean itemVisible = getItemVisible(series, item);
+        boolean itemVisible = getItemVisible(series, item);
 
-		// setup for collecting optional entity info...
-		Shape entityArea = null;
-		EntityCollection entities = null;
-		if (info != null) {
-			entities = info.getOwner().getEntityCollection();
-		}
+        // setup for collecting optional entity info...
+        Shape entityArea = null;
+        EntityCollection entities = null;
+        if (info != null) {
+            entities = info.getOwner().getEntityCollection();
+        }
 
-		PlotOrientation orientation = plot.getOrientation();
-		Paint paint = getItemPaint(series, item);
-		paint = color;
-		Stroke seriesStroke = getItemStroke(series, item);
-		g2.setPaint(paint);
-		g2.setStroke(seriesStroke);
+        PlotOrientation orientation = plot.getOrientation();
+        Paint paint = getItemPaint(series, item);
+        paint = color;
+        Stroke seriesStroke = getItemStroke(series, item);
+        g2.setPaint(paint);
+        g2.setStroke(seriesStroke);
 
-		RectangleEdge xAxisLocation = plot.getDomainAxisEdge();
-		RectangleEdge yAxisLocation = plot.getRangeAxisEdge();
-		double transX1 = domainAxis.valueToJava2D(x1, dataArea, xAxisLocation);
-		double transY1 = rangeAxis.valueToJava2D(y1, dataArea, yAxisLocation);
+        RectangleEdge xAxisLocation = plot.getDomainAxisEdge();
+        RectangleEdge yAxisLocation = plot.getRangeAxisEdge();
+        double transX1 = domainAxis.valueToJava2D(x1, dataArea, xAxisLocation);
+        double transY1 = rangeAxis.valueToJava2D(y1, dataArea, yAxisLocation);
 
-		if (getPlotLines()) {
-			if (this.drawSeriesLineAsPath) {
-				State s = (State) state;
-				if (s.getSeriesIndex() != series) {
-					// we are starting a new series path
-					s.seriesPath.reset();
-					s.lastPointGood = false;
-					s.setSeriesIndex(series);
-				}
+        if (getPlotLines()) {
+            if (this.drawSeriesLineAsPath) {
+                State s = (State) state;
+                if (s.getSeriesIndex() != series) {
+                    // we are starting a new series path
+                    s.seriesPath.reset();
+                    s.lastPointGood = false;
+                    s.setSeriesIndex(series);
+                }
 
-				// update path to reflect latest point
-				if (itemVisible && !Double.isNaN(transX1) && !Double.isNaN(transY1)) {
-					float x = (float) transX1;
-					float y = (float) transY1;
-					if (orientation == PlotOrientation.HORIZONTAL) {
-						x = (float) transY1;
-						y = (float) transX1;
-					}
-					if (s.isLastPointGood()) {
-						// TODO: check threshold
-						s.seriesPath.lineTo(x, y);
-					} else {
-						s.seriesPath.moveTo(x, y);
-					}
-					s.setLastPointGood(true);
-				} else {
-					s.setLastPointGood(false);
-				}
-				if (item == lastItem) {
-					if (s.seriesIndex == series) {
-						// draw path
-						g2.setStroke(lookupSeriesStroke(series));
-						g2.setPaint(lookupSeriesPaint(series));
-						g2.draw(s.seriesPath);
-					}
-				}
-			}
+                // update path to reflect latest point
+                if (itemVisible && !Double.isNaN(transX1) && !Double.isNaN(transY1)) {
+                    float x = (float) transX1;
+                    float y = (float) transY1;
+                    if (orientation == PlotOrientation.HORIZONTAL) {
+                        x = (float) transY1;
+                        y = (float) transX1;
+                    }
+                    if (s.isLastPointGood()) {
+                        // TODO: check threshold
+                        s.seriesPath.lineTo(x, y);
+                    } else {
+                        s.seriesPath.moveTo(x, y);
+                    }
+                    s.setLastPointGood(true);
+                } else {
+                    s.setLastPointGood(false);
+                }
+                if (item == lastItem) {
+                    if (s.seriesIndex == series) {
+                        // draw path
+                        g2.setStroke(lookupSeriesStroke(series));
+                        g2.setPaint(lookupSeriesPaint(series));
+                        g2.draw(s.seriesPath);
+                    }
+                }
+            } else if (item != 0 && itemVisible) {
+                // get the previous data point...
 
-			else if (item != 0 && itemVisible) {
-				// get the previous data point...
+                if (!Double.isNaN(x0) && !Double.isNaN(y0)) {
+                    boolean drawLine = true;
+                    if (getPlotDiscontinuous()) {
+                        // only draw a line if the gap between the current and
+                        // previous data point is within the threshold
+                        if (this.gapThresholdType == UnitType.ABSOLUTE) {
+                            drawLine = Math.abs(x1 - x0) <= this.gapThreshold;
+                        } else {
+                            drawLine = Math.abs(x1 - x0) <= ((maxX - minX) / numX * getGapThreshold());
+                        }
+                    }
+                    if (drawLine) {
+                        double transX0 = domainAxis.valueToJava2D(x0, dataArea, xAxisLocation);
+                        double transY0 = rangeAxis.valueToJava2D(y0, dataArea, yAxisLocation);
 
-				if (!Double.isNaN(x0) && !Double.isNaN(y0)) {
-					boolean drawLine = true;
-					if (getPlotDiscontinuous()) {
-						// only draw a line if the gap between the current and
-						// previous data point is within the threshold
-						if (this.gapThresholdType == UnitType.ABSOLUTE) {
-							drawLine = Math.abs(x1 - x0) <= this.gapThreshold;
-						} else {
-							drawLine = Math.abs(x1 - x0) <= ((maxX - minX) / numX * getGapThreshold());
-						}
-					}
-					if (drawLine) {
-						double transX0 = domainAxis.valueToJava2D(x0, dataArea, xAxisLocation);
-						double transY0 = rangeAxis.valueToJava2D(y0, dataArea, yAxisLocation);
+                        // only draw if we have good values
+                        if (Double.isNaN(transX0) || Double.isNaN(transY0) || Double.isNaN(transX1)
+                                || Double.isNaN(transY1)) {
+                            return;
+                        }
 
-						// only draw if we have good values
-						if (Double.isNaN(transX0) || Double.isNaN(transY0) || Double.isNaN(transX1)
-								|| Double.isNaN(transY1)) {
-							return;
-						}
+                        if (orientation == PlotOrientation.HORIZONTAL) {
+                            state.workingLine.setLine(transY0, transX0, transY1, transX1);
+                        } else if (orientation == PlotOrientation.VERTICAL) {
+                            state.workingLine.setLine(transX0, transY0, transX1, transY1);
+                        }
 
-						if (orientation == PlotOrientation.HORIZONTAL) {
-							state.workingLine.setLine(transY0, transX0, transY1, transX1);
-						} else if (orientation == PlotOrientation.VERTICAL) {
-							state.workingLine.setLine(transX0, transY0, transX1, transY1);
-						}
+                        if (state.workingLine.intersects(dataArea)) {
+                            g2.draw(state.workingLine);
+                        }
+                    }
+                }
+            }
+        }
 
-						if (state.workingLine.intersects(dataArea)) {
-							g2.draw(state.workingLine);
-						}
-					}
-				}
-			}
-		}
+        // we needed to get this far even for invisible items, to ensure that
+        // seriesPath updates happened, but now there is nothing more we need
+        // to do for non-visible items...
+        if (!itemVisible) {
+            return;
+        }
 
-		// we needed to get this far even for invisible items, to ensure that
-		// seriesPath updates happened, but now there is nothing more we need
-		// to do for non-visible items...
-		if (!itemVisible) {
-			return;
-		}
+        if (getBaseShapesVisible()) {
 
-		if (getBaseShapesVisible()) {
+            Shape shape = getItemShape(series, item);
+            if (orientation == PlotOrientation.HORIZONTAL) {
+                shape = ShapeUtilities.createTranslatedShape(shape, transY1, transX1);
+            } else if (orientation == PlotOrientation.VERTICAL) {
+                shape = ShapeUtilities.createTranslatedShape(shape, transX1, transY1);
+            }
+            if (shape.intersects(dataArea)) {
+                if (getItemShapeFilled(series, item)) {
+                    g2.fill(shape);
+                } else {
+                    g2.draw(shape);
+                }
+            }
+            entityArea = shape;
 
-			Shape shape = getItemShape(series, item);
-			if (orientation == PlotOrientation.HORIZONTAL) {
-				shape = ShapeUtilities.createTranslatedShape(shape, transY1, transX1);
-			} else if (orientation == PlotOrientation.VERTICAL) {
-				shape = ShapeUtilities.createTranslatedShape(shape, transX1, transY1);
-			}
-			if (shape.intersects(dataArea)) {
-				if (getItemShapeFilled(series, item)) {
-					g2.fill(shape);
-				} else {
-					g2.draw(shape);
-				}
-			}
-			entityArea = shape;
+        }
 
-		}
+        if (getPlotImages()) {
+            Image image = getImage(plot, series, item, transX1, transY1);
+            if (image != null) {
+                Point hotspot = getImageHotspot(plot, series, item, transX1, transY1, image);
+                g2.drawImage(image, (int) (transX1 - hotspot.getX()), (int) (transY1 - hotspot.getY()), null);
+                entityArea = new Rectangle2D.Double(transX1 - hotspot.getX(), transY1 - hotspot.getY(),
+                        image.getWidth(null), image.getHeight(null));
+            }
 
-		if (getPlotImages()) {
-			Image image = getImage(plot, series, item, transX1, transY1);
-			if (image != null) {
-				Point hotspot = getImageHotspot(plot, series, item, transX1, transY1, image);
-				g2.drawImage(image, (int) (transX1 - hotspot.getX()), (int) (transY1 - hotspot.getY()), null);
-				entityArea = new Rectangle2D.Double(transX1 - hotspot.getX(), transY1 - hotspot.getY(),
-						image.getWidth(null), image.getHeight(null));
-			}
+        }
 
-		}
+        double xx = transX1;
+        double yy = transY1;
+        if (orientation == PlotOrientation.HORIZONTAL) {
+            xx = transY1;
+            yy = transX1;
+        }
 
-		double xx = transX1;
-		double yy = transY1;
-		if (orientation == PlotOrientation.HORIZONTAL) {
-			xx = transY1;
-			yy = transX1;
-		}
+        // draw the item label if there is one...
+        if (isItemLabelVisible(series, item)) {
+            drawItemLabel(g2, orientation, dataset, series, item, xx, yy, (y1 < 0.0));
+        }
 
-		// draw the item label if there is one...
-		if (isItemLabelVisible(series, item)) {
-			drawItemLabel(g2, orientation, dataset, series, item, xx, yy, (y1 < 0.0));
-		}
+        int domainAxisIndex = plot.getDomainAxisIndex(domainAxis);
+        int rangeAxisIndex = plot.getRangeAxisIndex(rangeAxis);
+        updateCrosshairValues(crosshairState, x1, y1, domainAxisIndex, rangeAxisIndex, transX1, transY1, orientation);
 
-		int domainAxisIndex = plot.getDomainAxisIndex(domainAxis);
-		int rangeAxisIndex = plot.getRangeAxisIndex(rangeAxis);
-		updateCrosshairValues(crosshairState, x1, y1, domainAxisIndex, rangeAxisIndex, transX1, transY1, orientation);
+        // add an entity for the item...
+        if (entities != null && isPointInRect(dataArea, xx, yy)) {
+            addEntity(entities, entityArea, dataset, series, item, xx, yy);
+        }
+    }
 
-		// add an entity for the item...
-		if (entities != null && isPointInRect(dataArea, xx, yy)) {
-			addEntity(entities, entityArea, dataset, series, item, xx, yy);
-		}
-	}
+    /**
+     * Records the state for the renderer. This is used to preserve state
+     * information between calls to the drawItem() method for a single chart
+     * drawing.
+     */
+    public static class State extends XYItemRendererState {
 
-	/**
-	 * Records the state for the renderer. This is used to preserve state
-	 * information between calls to the drawItem() method for a single chart
-	 * drawing.
-	 */
-	public static class State extends XYItemRendererState {
+        /**
+         * The path for the current series.
+         */
+        public GeneralPath seriesPath;
 
-		/** The path for the current series. */
-		public GeneralPath seriesPath;
+        /**
+         * The series index.
+         */
+        private int seriesIndex;
 
-		/** The series index. */
-		private int seriesIndex;
+        /**
+         * A flag that indicates if the last (x, y) point was 'good' (non-null).
+         */
+        private boolean lastPointGood;
 
-		/**
-		 * A flag that indicates if the last (x, y) point was 'good' (non-null).
-		 */
-		private boolean lastPointGood;
+        /**
+         * Creates a new state instance.
+         *
+         * @param info the plot rendering info.
+         */
+        public State(PlotRenderingInfo info) {
+            super(info);
+        }
 
-		/**
-		 * Creates a new state instance.
-		 * 
-		 * @param info
-		 *            the plot rendering info.
-		 */
-		public State(PlotRenderingInfo info) {
-			super(info);
-		}
+        /**
+         * Returns a flag that indicates if the last point drawn (in the current
+         * series) was 'good' (non-null).
+         *
+         * @return A boolean.
+         */
+        public boolean isLastPointGood() {
+            return this.lastPointGood;
+        }
 
-		/**
-		 * Returns a flag that indicates if the last point drawn (in the current
-		 * series) was 'good' (non-null).
-		 * 
-		 * @return A boolean.
-		 */
-		public boolean isLastPointGood() {
-			return this.lastPointGood;
-		}
+        /**
+         * Sets a flag that indicates if the last point drawn (in the current
+         * series) was 'good' (non-null).
+         *
+         * @param good the flag.
+         */
+        public void setLastPointGood(boolean good) {
+            this.lastPointGood = good;
+        }
 
-		/**
-		 * Sets a flag that indicates if the last point drawn (in the current
-		 * series) was 'good' (non-null).
-		 * 
-		 * @param good
-		 *            the flag.
-		 */
-		public void setLastPointGood(boolean good) {
-			this.lastPointGood = good;
-		}
+        /**
+         * Returns the series index for the current path.
+         *
+         * @return The series index for the current path.
+         */
+        public int getSeriesIndex() {
+            return this.seriesIndex;
+        }
 
-		/**
-		 * Returns the series index for the current path.
-		 * 
-		 * @return The series index for the current path.
-		 */
-		public int getSeriesIndex() {
-			return this.seriesIndex;
-		}
-
-		/**
-		 * Sets the series index for the current path.
-		 * 
-		 * @param index
-		 *            the index.
-		 */
-		public void setSeriesIndex(int index) {
-			this.seriesIndex = index;
-		}
-	}
+        /**
+         * Sets the series index for the current path.
+         *
+         * @param index the index.
+         */
+        public void setSeriesIndex(int index) {
+            this.seriesIndex = index;
+        }
+    }
 
 }

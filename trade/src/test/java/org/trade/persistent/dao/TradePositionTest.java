@@ -35,14 +35,8 @@
  */
 package org.trade.persistent.dao;
 
-import static org.junit.Assert.*;
-
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.TestName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,82 +45,85 @@ import org.trade.core.util.TradingCalendar;
 import org.trade.dictionary.valuetype.Side;
 import org.trade.ui.TradeAppLoadConfig;
 
+import static org.junit.Assert.*;
+
 /**
+ *
  */
 public class TradePositionTest {
 
-	private final static Logger _log = LoggerFactory.getLogger(TradePositionTest.class);
-	@Rule
-	public TestName name = new TestName();
+    private final static Logger _log = LoggerFactory.getLogger(TradePositionTest.class);
+    @Rule
+    public TestName name = new TestName();
 
-	private String symbol = "TEST";
-	private TradePositionHome tradePositionHome = null;
-	private AspectHome aspectHome = null;
-	private Tradestrategy tradestrategy = null;
+    private String symbol = "TEST";
+    private TradePositionHome tradePositionHome = null;
+    private AspectHome aspectHome = null;
+    private Tradestrategy tradestrategy = null;
 
-	/**
-	 * Method setUpBeforeClass.
-	 * 
-	 * @throws java.lang.Exception
-	 */
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-	}
+    /**
+     * Method setUpBeforeClass.
+     *
+     * @throws java.lang.Exception
+     */
+    @BeforeClass
+    public static void setUpBeforeClass() throws Exception {
+    }
 
-	/**
-	 * Method setUp.
-	 * 
-	 * @throws java.lang.Exception
-	 */
-	@Before
-	public void setUp() throws Exception {
-		TradeAppLoadConfig.loadAppProperties();
-		tradePositionHome = new TradePositionHome();
-		aspectHome = new AspectHome();
-		this.tradestrategy = TradestrategyTest.getTestTradestrategy(symbol);
-		assertNotNull(this.tradestrategy);
-	}
+    /**
+     * Method setUp.
+     *
+     * @throws java.lang.Exception
+     */
+    @Before
+    public void setUp() throws Exception {
+        TradeAppLoadConfig.loadAppProperties();
+        tradePositionHome = new TradePositionHome();
+        aspectHome = new AspectHome();
+        this.tradestrategy = TradestrategyTest.getTestTradestrategy(symbol);
+        assertNotNull(this.tradestrategy);
+    }
 
-	/**
-	 * Method tearDown.
-	 * 
-	 * @throws java.lang.Exception
-	 */
-	@After
-	public void tearDown() throws Exception {
-		TradestrategyTest.clearDBData();
-	}
+    /**
+     * Method tearDown.
+     *
+     * @throws java.lang.Exception
+     */
+    @After
+    public void tearDown() throws Exception {
+        TradestrategyTest.clearDBData();
+    }
 
-	/**
-	 * Method tearDownAfterClass.
-	 * 
-	 * @throws java.lang.Exception
-	 */
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-	}
+    /**
+     * Method tearDownAfterClass.
+     *
+     * @throws java.lang.Exception
+     */
+    @AfterClass
+    public static void tearDownAfterClass() throws Exception {
+    }
 
-	@Test
-	public void testAddRemoveTradePosition() {
+    @Test
+    public void testAddRemoveTradePosition() {
 
-		try {
-			TradePosition instance = new TradePosition(this.tradestrategy.getContract(),
-					TradingCalendar.getDateTimeNowMarketTimeZone(), Side.BOT);
+        try {
+            TradePosition instance = new TradePosition(this.tradestrategy.getContract(),
+                    TradingCalendar.getDateTimeNowMarketTimeZone(), Side.BOT);
 
-			TradePosition tradePosition = aspectHome.persist(instance);
+            TradePosition tradePosition = aspectHome.persist(instance);
 
-			assertNotNull("1", tradePosition.getId());
-			_log.info("testAddTradePosition IdTradeStrategy: " + this.tradestrategy.getId()
-					+ "IdTradePosition: " + tradePosition.getId());
+            assertNotNull("1", tradePosition.getId());
+            _log.info("testAddTradePosition IdTradeStrategy: " + this.tradestrategy.getId()
+                    + "IdTradePosition: " + tradePosition.getId());
 
-			tradePositionHome.remove(tradePosition);
-			_log.info("testDeleteTradePosition IdTradeStrategy: " + tradestrategy.getId());
-			tradePosition = tradePositionHome.findById(tradePosition.getId());
-			assertNull("2", tradePosition);
-		} catch (Exception | AssertionError ex) {
-			String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
-			_log.error(msg);
-			fail(msg);
-		}
-	}
+            tradePositionHome.remove(tradePosition);
+            _log.info("testDeleteTradePosition IdTradeStrategy: " + tradestrategy.getId());
+            tradePosition = tradePositionHome.findById(tradePosition.getId());
+            assertNull("2", tradePosition);
+        } catch (Exception | AssertionError ex) {
+            String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
+            _log.error(msg);
+            fail(msg);
+        }
+    }
 }

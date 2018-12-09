@@ -41,49 +41,47 @@ import java.math.BigDecimal;
 
 /**
  * Vostro
- * 
+ *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
 
 public class Vostro implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 7644763985378994305L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 7644763985378994305L;
 
-	private BigDecimal vostro;
+    private BigDecimal vostro;
 
-	public Vostro() {
-	}
+    public Vostro() {
+    }
 
-	/**
-	 * Constructor for Vostro.
-	 * 
-	 * @param vostro
-	 *            BigDecimal
-	 */
-	public Vostro(BigDecimal vostro) {
-		this.vostro = vostro;
-	}
+    /**
+     * Constructor for Vostro.
+     *
+     * @param vostro BigDecimal
+     */
+    public Vostro(BigDecimal vostro) {
+        this.vostro = vostro;
+    }
 
-	/**
-	 * Method getVostro.
-	 * 
-	 * @return BigDecimal
-	 */
-	public BigDecimal getVostro() {
-		return this.vostro;
-	}
+    /**
+     * Method getVostro.
+     *
+     * @return BigDecimal
+     */
+    public BigDecimal getVostro() {
+        return this.vostro;
+    }
 
-	/**
-	 * Method setVostro.
-	 * 
-	 * @param vostro
-	 *            BigDecimal
-	 */
-	public void setVostro(BigDecimal vostro) {
-		this.vostro = vostro;
-	}
+    /**
+     * Method setVostro.
+     *
+     * @param vostro BigDecimal
+     */
+    public void setVostro(BigDecimal vostro) {
+        this.vostro = vostro;
+    }
 }

@@ -75,6 +75,7 @@ import java.util.List;
 import java.util.Vector;
 
 /**
+ *
  */
 public class StrategyPanel extends BasePanel implements TreeSelectionListener {
 
@@ -737,6 +738,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
             }
             return ext;
         }
+
         public String getDescription() {
             return "Java Files";
         }

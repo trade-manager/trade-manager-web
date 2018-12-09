@@ -41,49 +41,47 @@ import java.math.BigDecimal;
 
 /**
  * MovingAverage
- * 
+ *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
 
 public class MovingAverage implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 7644763985378994305L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 7644763985378994305L;
 
-	private BigDecimal movingAverage;
+    private BigDecimal movingAverage;
 
-	public MovingAverage() {
-	}
+    public MovingAverage() {
+    }
 
-	/**
-	 * Constructor for MovingAverage.
-	 * 
-	 * @param movingAverage
-	 *            BigDecimal
-	 */
-	public MovingAverage(BigDecimal movingAverage) {
-		this.movingAverage = movingAverage;
-	}
+    /**
+     * Constructor for MovingAverage.
+     *
+     * @param movingAverage BigDecimal
+     */
+    public MovingAverage(BigDecimal movingAverage) {
+        this.movingAverage = movingAverage;
+    }
 
-	/**
-	 * Method getMovingAverage.
-	 * 
-	 * @return BigDecimal
-	 */
-	public BigDecimal getMovingAverage() {
-		return this.movingAverage;
-	}
+    /**
+     * Method getMovingAverage.
+     *
+     * @return BigDecimal
+     */
+    public BigDecimal getMovingAverage() {
+        return this.movingAverage;
+    }
 
-	/**
-	 * Method setMovingAverage.
-	 * 
-	 * @param movingAverage
-	 *            BigDecimal
-	 */
-	public void setMovingAverage(BigDecimal movingAverage) {
-		this.movingAverage = movingAverage;
-	}
+    /**
+     * Method setMovingAverage.
+     *
+     * @param movingAverage BigDecimal
+     */
+    public void setMovingAverage(BigDecimal movingAverage) {
+        this.movingAverage = movingAverage;
+    }
 }

@@ -38,49 +38,49 @@ package org.trade.dictionary.valuetype;
 import org.trade.core.valuetype.DAODecode;
 
 /**
+ *
  */
 public class DAOAccount extends DAODecode {
 
-	private static final long serialVersionUID = -5381026427696898592L;
-	public static final String DECODE = "ACCOUNT";
-	public static final String _TABLE = "_TABLE";
-	public static final String _TABLE_ID = "_TABLE_ID";
-	public static final String _COLUMN = "_COLUMN";
+    private static final long serialVersionUID = -5381026427696898592L;
+    public static final String DECODE = "ACCOUNT";
+    public static final String _TABLE = "_TABLE";
+    public static final String _TABLE_ID = "_TABLE_ID";
+    public static final String _COLUMN = "_COLUMN";
 
-	public DAOAccount() {
-		super(DECODE, true);
-	}
+    public DAOAccount() {
+        super(DECODE, true);
+    }
 
-	/**
-	 * Method newInstance.
-	 * 
-	 * @param value
-	 *            String
-	 * @return DAOAccount
-	 */
-	public static DAOAccount newInstance(String displayName) {
-		final DAOAccount returnInstance = new DAOAccount();
-		returnInstance.setDisplayName(displayName);
-		return returnInstance;
-	}
+    /**
+     * Method newInstance.
+     *
+     * @param value String
+     * @return DAOAccount
+     */
+    public static DAOAccount newInstance(String displayName) {
+        final DAOAccount returnInstance = new DAOAccount();
+        returnInstance.setDisplayName(displayName);
+        return returnInstance;
+    }
 
-	/**
-	 * Method newInstance.
-	 * 
-	 * @return DAOAccount
-	 */
-	public static DAOAccount newInstance() {
-		final DAOAccount returnInstance = new DAOAccount();
-		returnInstance.setDefaultCode();
-		return returnInstance;
-	}
+    /**
+     * Method newInstance.
+     *
+     * @return DAOAccount
+     */
+    public static DAOAccount newInstance() {
+        final DAOAccount returnInstance = new DAOAccount();
+        returnInstance.setDefaultCode();
+        return returnInstance;
+    }
 
-	/**
-	 * Method convertToUppercase.
-	 * 
-	 * @return boolean
-	 */
-	protected boolean convertToUppercase() {
-		return false;
-	}
+    /**
+     * Method convertToUppercase.
+     *
+     * @return boolean
+     */
+    protected boolean convertToUppercase() {
+        return false;
+    }
 }

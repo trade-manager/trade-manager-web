@@ -38,42 +38,42 @@ package org.trade.dictionary.valuetype;
 import org.trade.core.valuetype.Decode;
 
 /**
+ *
  */
 public class Side extends Decode {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -5381026427696898592L;
-	public static final String DECODE = "SIDE";
-	public static final String BOT = "BOT";
-	public static final String SLD = "SLD";
+    /**
+     *
+     */
+    private static final long serialVersionUID = -5381026427696898592L;
+    public static final String DECODE = "SIDE";
+    public static final String BOT = "BOT";
+    public static final String SLD = "SLD";
 
-	public Side() {
-		super(DECODE);
-	}
+    public Side() {
+        super(DECODE);
+    }
 
-	/**
-	 * Method newInstance.
-	 * 
-	 * @param value
-	 *            String
-	 * @return Side
-	 */
-	public static Side newInstance(String value) {
-		final Side returnInstance = new Side();
-		returnInstance.setValue(value);
-		return returnInstance;
-	}
+    /**
+     * Method newInstance.
+     *
+     * @param value String
+     * @return Side
+     */
+    public static Side newInstance(String value) {
+        final Side returnInstance = new Side();
+        returnInstance.setValue(value);
+        return returnInstance;
+    }
 
-	/**
-	 * Method newInstance.
-	 * 
-	 * @return Side
-	 */
-	public static Side newInstance() {
-		final Side returnInstance = new Side();
-		returnInstance.setDefaultCode();
-		return returnInstance;
-	}
+    /**
+     * Method newInstance.
+     *
+     * @return Side
+     */
+    public static Side newInstance() {
+        final Side returnInstance = new Side();
+        returnInstance.setDefaultCode();
+        return returnInstance;
+    }
 }

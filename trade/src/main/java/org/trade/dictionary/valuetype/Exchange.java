@@ -38,38 +38,38 @@ package org.trade.dictionary.valuetype;
 import org.trade.core.valuetype.Decode;
 
 /**
+ *
  */
 public class Exchange extends Decode {
 
-	private static final long serialVersionUID = -5381026427696898592L;
-	public static final String DECODE = "EXCHANGE";
-	public static final String SMART = "SMART";
+    private static final long serialVersionUID = -5381026427696898592L;
+    public static final String DECODE = "EXCHANGE";
+    public static final String SMART = "SMART";
 
-	public Exchange() {
-		super(DECODE);
-	}
+    public Exchange() {
+        super(DECODE);
+    }
 
-	/**
-	 * Method newInstance.
-	 * 
-	 * @param value
-	 *            String
-	 * @return Exchange
-	 */
-	public static Exchange newInstance(String value) {
-		final Exchange returnInstance = new Exchange();
-		returnInstance.setValue(value);
-		return returnInstance;
-	}
+    /**
+     * Method newInstance.
+     *
+     * @param value String
+     * @return Exchange
+     */
+    public static Exchange newInstance(String value) {
+        final Exchange returnInstance = new Exchange();
+        returnInstance.setValue(value);
+        return returnInstance;
+    }
 
-	/**
-	 * Method newInstance.
-	 * 
-	 * @return Exchange
-	 */
-	public static Exchange newInstance() {
-		final Exchange returnInstance = new Exchange();
-		returnInstance.setDefaultCode();
-		return returnInstance;
-	}
+    /**
+     * Method newInstance.
+     *
+     * @return Exchange
+     */
+    public static Exchange newInstance() {
+        final Exchange returnInstance = new Exchange();
+        returnInstance.setDefaultCode();
+        return returnInstance;
+    }
 }

@@ -35,19 +35,6 @@
  */
 package org.trade.ui.tables;
 
-import java.awt.Dimension;
-import java.awt.Font;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Vector;
-
-import javax.swing.JComboBox;
-import javax.swing.JTable;
-import javax.swing.RowSorter;
-import javax.swing.SortOrder;
-import javax.swing.table.TableRowSorter;
-
 import org.trade.core.util.TradingCalendar;
 import org.trade.core.valuetype.Decode;
 import org.trade.core.valuetype.ValueTypeException;
@@ -59,40 +46,48 @@ import org.trade.ui.widget.DateField;
 import org.trade.ui.widget.DateRenderer;
 import org.trade.ui.widget.DecodeTableEditor;
 
+import javax.swing.*;
+import javax.swing.table.TableRowSorter;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Vector;
+
 /**
+ *
  */
 public class TradingdayTable extends Table {
 
-	private static final long serialVersionUID = 1132297931453070904L;
+    private static final long serialVersionUID = 1132297931453070904L;
 
-	private static final String DATETIMEFORMAT = "MM/dd/yyyy HH:mm";
+    private static final String DATETIMEFORMAT = "MM/dd/yyyy HH:mm";
 
-	/**
-	 * Constructor for TradingdayTable.
-	 * 
-	 * @param model
-	 *            TableModel
-	 * @throws ValueTypeException
-	 */
-	public TradingdayTable(TableModel model) throws ValueTypeException {
-		super(model);
-		DecodeTableEditor marketBarEditor = new DecodeTableEditor(
-				new JComboBox<Decode>((Vector<Decode>) (new MarketBar()).getCodesDecodes()));
-		this.setDefaultEditor(MarketBar.class, marketBarEditor);
-		DateRenderer rDate = new DateRenderer(DATETIMEFORMAT);
-		DateEditor eDate = new DateEditor(new DateField(DATETIMEFORMAT),
-				new org.trade.core.valuetype.Date(TradingCalendar.getDateTimeNowMarketTimeZone()), DATETIMEFORMAT,
-				Calendar.MINUTE);
-		this.setDefaultRenderer(org.trade.core.valuetype.Date.class, rDate);
-		this.setDefaultEditor(org.trade.core.valuetype.Date.class, eDate);
-		this.setFont(new Font("Monospaced", Font.PLAIN, 12));
-		this.setPreferredScrollableViewportSize(new Dimension(250, 40));
-		this.setFillsViewportHeight(true);
-		this.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(model);
-		this.setRowSorter(sorter);
-		List<RowSorter.SortKey> sortKeys = new ArrayList<RowSorter.SortKey>();
-		sortKeys.add(new RowSorter.SortKey(0, SortOrder.DESCENDING));
-		sorter.setSortKeys(sortKeys);
-	}
+    /**
+     * Constructor for TradingdayTable.
+     *
+     * @param model TableModel
+     * @throws ValueTypeException
+     */
+    public TradingdayTable(TableModel model) throws ValueTypeException {
+        super(model);
+        DecodeTableEditor marketBarEditor = new DecodeTableEditor(
+                new JComboBox<Decode>((Vector<Decode>) (new MarketBar()).getCodesDecodes()));
+        this.setDefaultEditor(MarketBar.class, marketBarEditor);
+        DateRenderer rDate = new DateRenderer(DATETIMEFORMAT);
+        DateEditor eDate = new DateEditor(new DateField(DATETIMEFORMAT),
+                new org.trade.core.valuetype.Date(TradingCalendar.getDateTimeNowMarketTimeZone()), DATETIMEFORMAT,
+                Calendar.MINUTE);
+        this.setDefaultRenderer(org.trade.core.valuetype.Date.class, rDate);
+        this.setDefaultEditor(org.trade.core.valuetype.Date.class, eDate);
+        this.setFont(new Font("Monospaced", Font.PLAIN, 12));
+        this.setPreferredScrollableViewportSize(new Dimension(250, 40));
+        this.setFillsViewportHeight(true);
+        this.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(model);
+        this.setRowSorter(sorter);
+        List<RowSorter.SortKey> sortKeys = new ArrayList<RowSorter.SortKey>();
+        sortKeys.add(new RowSorter.SortKey(0, SortOrder.DESCENDING));
+        sorter.setSortKeys(sortKeys);
+    }
 }

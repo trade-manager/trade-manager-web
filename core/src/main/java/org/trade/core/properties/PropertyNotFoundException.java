@@ -38,22 +38,20 @@ package org.trade.core.properties;
 import java.io.IOException;
 
 /**
- * 
  * @author Simon Allen
  */
 public class PropertyNotFoundException extends IOException {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 6644254900539719502L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 6644254900539719502L;
 
-	/**
-	 * Constructor for PropertyNotFoundException.
-	 * 
-	 * @param message
-	 *            String
-	 */
-	public PropertyNotFoundException(String message) {
-		super(message);
-	}
+    /**
+     * Constructor for PropertyNotFoundException.
+     *
+     * @param message String
+     */
+    public PropertyNotFoundException(String message) {
+        super(message);
+    }
 }

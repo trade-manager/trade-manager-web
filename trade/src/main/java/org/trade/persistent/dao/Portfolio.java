@@ -35,336 +35,315 @@
  */
 package org.trade.persistent.dao;
 
-import static javax.persistence.GenerationType.IDENTITY;
+import org.trade.core.dao.Aspect;
+import org.trade.core.util.TradingCalendar;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-import javax.persistence.Version;
-import javax.validation.constraints.NotNull;
-
-import org.trade.core.dao.Aspect;
-import org.trade.core.util.TradingCalendar;
+import static javax.persistence.GenerationType.IDENTITY;
 
 /**
+ *
  */
 @Entity
 @Table(name = "portfolio")
 public class Portfolio extends Aspect implements Serializable, Cloneable {
 
-	private static final long serialVersionUID = 2273276207080568947L;
+    private static final long serialVersionUID = 2273276207080568947L;
 
-	@NotNull
-	private String name;
-	private String alias;
-	private String allocationMethod;
-	private String description;
-	private Boolean isDefault = new Boolean(false);
-	private ZonedDateTime lastUpdateDate;
-	private List<Tradestrategy> tradestrategies = new ArrayList<Tradestrategy>(0);
-	private List<PortfolioAccount> portfolioAccounts = new ArrayList<PortfolioAccount>(0);
+    @NotNull
+    private String name;
+    private String alias;
+    private String allocationMethod;
+    private String description;
+    private Boolean isDefault = new Boolean(false);
+    private ZonedDateTime lastUpdateDate;
+    private List<Tradestrategy> tradestrategies = new ArrayList<Tradestrategy>(0);
+    private List<PortfolioAccount> portfolioAccounts = new ArrayList<PortfolioAccount>(0);
 
-	public Portfolio() {
-		this.lastUpdateDate = TradingCalendar.getDateTimeNowMarketTimeZone();
-	}
+    public Portfolio() {
+        this.lastUpdateDate = TradingCalendar.getDateTimeNowMarketTimeZone();
+    }
 
-	/**
-	 * Constructor for Portfolio.
-	 * 
-	 * @param name
-	 *            String
-	 * @param description
-	 *            String
-	 */
-	public Portfolio(String name, String description) {
-		this.name = name;
-		this.description = description;
-		this.lastUpdateDate = TradingCalendar.getDateTimeNowMarketTimeZone();
-	}
+    /**
+     * Constructor for Portfolio.
+     *
+     * @param name        String
+     * @param description String
+     */
+    public Portfolio(String name, String description) {
+        this.name = name;
+        this.description = description;
+        this.lastUpdateDate = TradingCalendar.getDateTimeNowMarketTimeZone();
+    }
 
-	/**
-	 * Method getId.
-	 * 
-	 * @return Integer
-	 */
-	@Id
-	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "id", unique = true, nullable = false)
-	public Integer getId() {
-		return this.id;
-	}
+    /**
+     * Method getId.
+     *
+     * @return Integer
+     */
+    @Id
+    @GeneratedValue(strategy = IDENTITY)
+    @Column(name = "id", unique = true, nullable = false)
+    public Integer getId() {
+        return this.id;
+    }
 
-	/**
-	 * Method setId.
-	 * 
-	 * @param id
-	 *            Integer
-	 */
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    /**
+     * Method setId.
+     *
+     * @param id Integer
+     */
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-	/**
-	 * Method getName.
-	 * 
-	 * @return String
-	 */
-	@Column(name = "name", nullable = false, length = 45)
-	public String getName() {
-		return this.name;
-	}
+    /**
+     * Method getName.
+     *
+     * @return String
+     */
+    @Column(name = "name", nullable = false, length = 45)
+    public String getName() {
+        return this.name;
+    }
 
-	/**
-	 * Method setName.
-	 * 
-	 * @param name
-	 *            String
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+    /**
+     * Method setName.
+     *
+     * @param name String
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	/**
-	 * Method getAlias.
-	 * 
-	 * @return String
-	 */
-	@Column(name = "alias", unique = true, nullable = true, length = 45)
-	public String getAlias() {
-		return this.alias;
-	}
+    /**
+     * Method getAlias.
+     *
+     * @return String
+     */
+    @Column(name = "alias", unique = true, nullable = true, length = 45)
+    public String getAlias() {
+        return this.alias;
+    }
 
-	/**
-	 * Method setAlias.
-	 * 
-	 * @param alias
-	 *            String
-	 */
-	public void setAlias(String alias) {
-		this.alias = alias;
-	}
+    /**
+     * Method setAlias.
+     *
+     * @param alias String
+     */
+    public void setAlias(String alias) {
+        this.alias = alias;
+    }
 
-	/**
-	 * Method getAllocationMethod.
-	 * 
-	 * @return String
-	 */
-	@Column(name = "allocation_method", nullable = false, length = 20)
-	public String getAllocationMethod() {
-		return this.allocationMethod;
-	}
+    /**
+     * Method getAllocationMethod.
+     *
+     * @return String
+     */
+    @Column(name = "allocation_method", nullable = false, length = 20)
+    public String getAllocationMethod() {
+        return this.allocationMethod;
+    }
 
-	/**
-	 * Method setAllocationMethod.
-	 * 
-	 * @param allocationMethod
-	 *            String
-	 */
-	public void setAllocationMethod(String allocationMethod) {
-		this.allocationMethod = allocationMethod;
-	}
+    /**
+     * Method setAllocationMethod.
+     *
+     * @param allocationMethod String
+     */
+    public void setAllocationMethod(String allocationMethod) {
+        this.allocationMethod = allocationMethod;
+    }
 
-	/**
-	 * Method getDescription.
-	 * 
-	 * @return String
-	 */
-	@Column(name = "description", nullable = false, length = 240)
-	public String getDescription() {
-		return this.description;
-	}
+    /**
+     * Method getDescription.
+     *
+     * @return String
+     */
+    @Column(name = "description", nullable = false, length = 240)
+    public String getDescription() {
+        return this.description;
+    }
 
-	/**
-	 * Method setDescription.
-	 * 
-	 * @param description
-	 *            String
-	 */
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    /**
+     * Method setDescription.
+     *
+     * @param description String
+     */
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	/**
-	 * Method getIsDefault.
-	 * 
-	 * @return Boolean
-	 */
-	@Column(name = "is_default", nullable = false)
-	public Boolean getIsDefault() {
-		return this.isDefault;
-	}
+    /**
+     * Method getIsDefault.
+     *
+     * @return Boolean
+     */
+    @Column(name = "is_default", nullable = false)
+    public Boolean getIsDefault() {
+        return this.isDefault;
+    }
 
-	/**
-	 * Method setIsDefault.
-	 * 
-	 * @param isDefault
-	 *            Boolean
-	 */
-	public void setIsDefault(Boolean isDefault) {
-		this.isDefault = isDefault;
-	}
+    /**
+     * Method setIsDefault.
+     *
+     * @param isDefault Boolean
+     */
+    public void setIsDefault(Boolean isDefault) {
+        this.isDefault = isDefault;
+    }
 
-	/**
-	 * Method getLastUpdateDate.
-	 * 
-	 * @return ZonedDateTime
-	 */
-	@Column(name = "last_update_date", nullable = false)
-	public ZonedDateTime getLastUpdateDate() {
-		return this.lastUpdateDate;
-	}
+    /**
+     * Method getLastUpdateDate.
+     *
+     * @return ZonedDateTime
+     */
+    @Column(name = "last_update_date", nullable = false)
+    public ZonedDateTime getLastUpdateDate() {
+        return this.lastUpdateDate;
+    }
 
-	/**
-	 * Method setLastUpdateDate.
-	 * 
-	 * @param lastUpdateDate
-	 *            ZonedDateTime
-	 */
-	public void setLastUpdateDate(ZonedDateTime lastUpdateDate) {
-		this.lastUpdateDate = lastUpdateDate;
-	}
+    /**
+     * Method setLastUpdateDate.
+     *
+     * @param lastUpdateDate ZonedDateTime
+     */
+    public void setLastUpdateDate(ZonedDateTime lastUpdateDate) {
+        this.lastUpdateDate = lastUpdateDate;
+    }
 
-	/**
-	 * Method getVersion.
-	 * 
-	 * @return Integer
-	 */
-	@Version
-	@Column(name = "version")
-	public Integer getVersion() {
-		return this.version;
-	}
+    /**
+     * Method getVersion.
+     *
+     * @return Integer
+     */
+    @Version
+    @Column(name = "version")
+    public Integer getVersion() {
+        return this.version;
+    }
 
-	/**
-	 * Method setVersion.
-	 * 
-	 * @param version
-	 *            Integer
-	 */
-	public void setVersion(Integer version) {
-		this.version = version;
-	}
+    /**
+     * Method setVersion.
+     *
+     * @param version Integer
+     */
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
 
-	/**
-	 * Method getTradestrategies.
-	 * 
-	 * @return List<Tradestrategy>
-	 */
-	@OneToMany(mappedBy = "portfolio", fetch = FetchType.LAZY)
-	public List<Tradestrategy> getTradestrategies() {
-		return this.tradestrategies;
-	}
+    /**
+     * Method getTradestrategies.
+     *
+     * @return List<Tradestrategy>
+     */
+    @OneToMany(mappedBy = "portfolio", fetch = FetchType.LAZY)
+    public List<Tradestrategy> getTradestrategies() {
+        return this.tradestrategies;
+    }
 
-	/**
-	 * Method setTradestrategies.
-	 * 
-	 * @param tradestrategies
-	 *            List<Tradestrategy>
-	 */
-	public void setTradestrategies(List<Tradestrategy> tradestrategies) {
-		this.tradestrategies = tradestrategies;
-	}
+    /**
+     * Method setTradestrategies.
+     *
+     * @param tradestrategies List<Tradestrategy>
+     */
+    public void setTradestrategies(List<Tradestrategy> tradestrategies) {
+        this.tradestrategies = tradestrategies;
+    }
 
-	/**
-	 * Method getPortfolioAccounts.
-	 * 
-	 * @return List<PortfolioAccounts>
-	 */
-	@OneToMany(mappedBy = "portfolio", fetch = FetchType.LAZY, orphanRemoval = true, cascade = { CascadeType.ALL })
-	public List<PortfolioAccount> getPortfolioAccounts() {
-		return this.portfolioAccounts;
-	}
+    /**
+     * Method getPortfolioAccounts.
+     *
+     * @return List<PortfolioAccounts>
+     */
+    @OneToMany(mappedBy = "portfolio", fetch = FetchType.LAZY, orphanRemoval = true, cascade = {CascadeType.ALL})
+    public List<PortfolioAccount> getPortfolioAccounts() {
+        return this.portfolioAccounts;
+    }
 
-	/**
-	 * Method setPortfolioAccounts.
-	 * 
-	 * @param codeAttributes
-	 *            List<CodeAttribute>
-	 */
-	public void setPortfolioAccounts(List<PortfolioAccount> portfolioAccounts) {
-		this.portfolioAccounts = portfolioAccounts;
-	}
+    /**
+     * Method setPortfolioAccounts.
+     *
+     * @param codeAttributes List<CodeAttribute>
+     */
+    public void setPortfolioAccounts(List<PortfolioAccount> portfolioAccounts) {
+        this.portfolioAccounts = portfolioAccounts;
+    }
 
-	/**
-	 * Method getIndividualAccount.
-	 * 
-	 * @return account
-	 */
-	@Transient
-	public Account getIndividualAccount() {
-		if (this.getPortfolioAccounts().size() == 1) {
-			return this.getPortfolioAccounts().get(0).getAccount();
-		}
-		return null;
-	}
+    /**
+     * Method getIndividualAccount.
+     *
+     * @return account
+     */
+    @Transient
+    public Account getIndividualAccount() {
+        if (this.getPortfolioAccounts().size() == 1) {
+            return this.getPortfolioAccounts().get(0).getAccount();
+        }
+        return null;
+    }
 
-	/**
-	 * Method isDirty.
-	 * 
-	 * @return boolean
-	 */
-	@Transient
-	public boolean isDirty() {
-		for (PortfolioAccount item : this.getPortfolioAccounts()) {
-			if (item.isDirty())
-				return true;
-		}
-		return super.isDirty();
-	}
+    /**
+     * Method isDirty.
+     *
+     * @return boolean
+     */
+    @Transient
+    public boolean isDirty() {
+        for (PortfolioAccount item : this.getPortfolioAccounts()) {
+            if (item.isDirty())
+                return true;
+        }
+        return super.isDirty();
+    }
 
-	/**
-	 * Method hashCode.
-	 * 
-	 * For every field tested in the equals-Method, calculate a hash code c by:
-	 * 
-	 * If the field f is a boolean: calculate * (f ? 0 : 1);
-	 * 
-	 * If the field f is a byte, char, short or int: calculate (int)f;
-	 * 
-	 * If the field f is a long: calculate (int)(f ^ (f >>> 32));
-	 * 
-	 * If the field f is a float: calculate Float.floatToIntBits(f);
-	 * 
-	 * If the field f is a double: calculate Double.doubleToLongBits(f) and
-	 * handle the return value like every long value;
-	 * 
-	 * If the field f is an object: Use the result of the hashCode() method or 0
-	 * if f == null;
-	 * 
-	 * If the field f is an array: See every field as separate element and
-	 * calculate the hash value in a recursive fashion and combine the values as
-	 * described next.
-	 * 
-	 * @return int
-	 */
-	public int hashCode() {
-		int hash = super.hashCode();
-		hash = hash + (this.getName() == null ? 0 : this.getName().hashCode());
-		return hash;
-	}
+    /**
+     * Method hashCode.
+     * <p>
+     * For every field tested in the equals-Method, calculate a hash code c by:
+     * <p>
+     * If the field f is a boolean: calculate * (f ? 0 : 1);
+     * <p>
+     * If the field f is a byte, char, short or int: calculate (int)f;
+     * <p>
+     * If the field f is a long: calculate (int)(f ^ (f >>> 32));
+     * <p>
+     * If the field f is a float: calculate Float.floatToIntBits(f);
+     * <p>
+     * If the field f is a double: calculate Double.doubleToLongBits(f) and
+     * handle the return value like every long value;
+     * <p>
+     * If the field f is an object: Use the result of the hashCode() method or 0
+     * if f == null;
+     * <p>
+     * If the field f is an array: See every field as separate element and
+     * calculate the hash value in a recursive fashion and combine the values as
+     * described next.
+     *
+     * @return int
+     */
+    public int hashCode() {
+        int hash = super.hashCode();
+        hash = hash + (this.getName() == null ? 0 : this.getName().hashCode());
+        return hash;
+    }
 
-	/**
-	 * Method clone.
-	 * 
-	 * @return Object
-	 * @throws CloneNotSupportedException
-	 */
-	public Object clone() throws CloneNotSupportedException {
+    /**
+     * Method clone.
+     *
+     * @return Object
+     * @throws CloneNotSupportedException
+     */
+    public Object clone() throws CloneNotSupportedException {
 
-		Portfolio portfolio = (Portfolio) super.clone();
-		List<Tradestrategy> tradestrategies = new ArrayList<Tradestrategy>(0);
-		portfolio.setTradestrategies(tradestrategies);
-		return portfolio;
-	}
+        Portfolio portfolio = (Portfolio) super.clone();
+        List<Tradestrategy> tradestrategies = new ArrayList<Tradestrategy>(0);
+        portfolio.setTradestrategies(tradestrategies);
+        return portfolio;
+    }
 }

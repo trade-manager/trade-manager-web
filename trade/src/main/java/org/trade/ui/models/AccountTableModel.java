@@ -35,8 +35,6 @@
  */
 package org.trade.ui.models;
 
-import java.util.Vector;
-
 import org.trade.core.util.CoreUtils;
 import org.trade.core.valuetype.Date;
 import org.trade.core.valuetype.Money;
@@ -47,232 +45,228 @@ import org.trade.persistent.dao.Portfolio;
 import org.trade.persistent.dao.PortfolioAccount;
 import org.trade.ui.base.TableModel;
 
+import java.util.Vector;
+
 /**
+ *
  */
 public class AccountTableModel extends TableModel {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 3087514589731145479L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 3087514589731145479L;
 
-	private static final String NAME = "Name*";
-	private static final String ACCT_NUMBER = "Acct #*";
-	private static final String ACCT_TYPE = "Type*";
-	private static final String ACCT_ALIAS = "Alias";
-	private static final String CURRENCY = "Currency*";
-	private static final String AVAILABLE_FUNDS = "Availble Funds";
-	private static final String BUYING_POWER = " Buying Power";
-	private static final String CASH_BALANCE = "Cash Bal";
-	private static final String GROSS_POSITION_VALUE = "Gross Pos Val";
-	private static final String REALIZED_PL = "Realized P/L";
-	private static final String UNREALIZED_PL = "Unrealized P/L";
-	private static final String LAST_UPDATED = "  Last Update  ";
+    private static final String NAME = "Name*";
+    private static final String ACCT_NUMBER = "Acct #*";
+    private static final String ACCT_TYPE = "Type*";
+    private static final String ACCT_ALIAS = "Alias";
+    private static final String CURRENCY = "Currency*";
+    private static final String AVAILABLE_FUNDS = "Availble Funds";
+    private static final String BUYING_POWER = " Buying Power";
+    private static final String CASH_BALANCE = "Cash Bal";
+    private static final String GROSS_POSITION_VALUE = "Gross Pos Val";
+    private static final String REALIZED_PL = "Realized P/L";
+    private static final String UNREALIZED_PL = "Unrealized P/L";
+    private static final String LAST_UPDATED = "  Last Update  ";
 
-	private static final String[] columnHeaderToolTip = { null, null, "Use Corp for FA accounts", null, null, null,
-			null, null, null, null, null, null };
+    private static final String[] columnHeaderToolTip = {null, null, "Use Corp for FA accounts", null, null, null,
+            null, null, null, null, null, null};
 
-	private Portfolio m_data = null;
+    private Portfolio m_data = null;
 
-	public AccountTableModel() {
-		super(columnHeaderToolTip);
-		columnNames = new String[12];
-		columnNames[0] = NAME;
-		columnNames[1] = ACCT_NUMBER;
-		columnNames[2] = ACCT_TYPE;
-		columnNames[3] = ACCT_ALIAS;
-		columnNames[4] = CURRENCY;
-		columnNames[5] = AVAILABLE_FUNDS;
-		columnNames[6] = BUYING_POWER;
-		columnNames[7] = CASH_BALANCE;
-		columnNames[8] = GROSS_POSITION_VALUE;
-		columnNames[9] = REALIZED_PL;
-		columnNames[10] = UNREALIZED_PL;
-		columnNames[11] = LAST_UPDATED;
-	}
+    public AccountTableModel() {
+        super(columnHeaderToolTip);
+        columnNames = new String[12];
+        columnNames[0] = NAME;
+        columnNames[1] = ACCT_NUMBER;
+        columnNames[2] = ACCT_TYPE;
+        columnNames[3] = ACCT_ALIAS;
+        columnNames[4] = CURRENCY;
+        columnNames[5] = AVAILABLE_FUNDS;
+        columnNames[6] = BUYING_POWER;
+        columnNames[7] = CASH_BALANCE;
+        columnNames[8] = GROSS_POSITION_VALUE;
+        columnNames[9] = REALIZED_PL;
+        columnNames[10] = UNREALIZED_PL;
+        columnNames[11] = LAST_UPDATED;
+    }
 
-	/**
-	 * Method getData.
-	 * 
-	 * @return Aspects
-	 */
-	public Portfolio getData() {
-		return m_data;
-	}
+    /**
+     * Method getData.
+     *
+     * @return Aspects
+     */
+    public Portfolio getData() {
+        return m_data;
+    }
 
-	/**
-	 * Method setData.
-	 * 
-	 * @param data
-	 *            Aspects
-	 */
-	public void setData(Portfolio data) {
+    /**
+     * Method setData.
+     *
+     * @param data Aspects
+     */
+    public void setData(Portfolio data) {
 
-		this.m_data = data;
-		this.clearAll();
-		if (!getData().getPortfolioAccounts().isEmpty()) {
+        this.m_data = data;
+        this.clearAll();
+        if (!getData().getPortfolioAccounts().isEmpty()) {
 
-			for (final PortfolioAccount element : getData().getPortfolioAccounts()) {
-				final Vector<Object> newRow = new Vector<Object>();
-				getNewRow(newRow, element);
-				rows.add(newRow);
-			}
-			fireTableDataChanged();
-		}
-	}
+            for (final PortfolioAccount element : getData().getPortfolioAccounts()) {
+                final Vector<Object> newRow = new Vector<Object>();
+                getNewRow(newRow, element);
+                rows.add(newRow);
+            }
+            fireTableDataChanged();
+        }
+    }
 
-	/**
-	 * Method populateDAO.
-	 * 
-	 * @param value
-	 *            Object
-	 * @param row
-	 *            int
-	 * @param column
-	 *            int
-	 */
-	public void populateDAO(Object value, int row, int column) {
+    /**
+     * Method populateDAO.
+     *
+     * @param value  Object
+     * @param row    int
+     * @param column int
+     */
+    public void populateDAO(Object value, int row, int column) {
 
-		final PortfolioAccount element = (PortfolioAccount) getData().getPortfolioAccounts().get(row);
+        final PortfolioAccount element = (PortfolioAccount) getData().getPortfolioAccounts().get(row);
 
-		switch (column) {
-		case 0: {
-			element.getAccount().setName((String) value);
-			break;
-		}
-		case 1: {
-			element.getAccount().setAccountNumber((String) value);
-			break;
-		}
-		case 2: {
-			element.getAccount().setAccountType(((AccountType) value).getCode());
-			break;
-		}
-		case 3: {
-			element.getAccount().setAlias((String) value);
-			break;
-		}
-		case 4: {
-			element.getAccount().setCurrency(((Currency) value).getCode());
-			break;
-		}
-		case 5: {
-			element.getAccount().setAvailableFunds(((Money) value).getBigDecimalValue());
-			break;
-		}
-		case 6: {
-			element.getAccount().setBuyingPower(((Money) value).getBigDecimalValue());
-			break;
-		}
-		case 7: {
-			element.getAccount().setCashBalance(((Money) value).getBigDecimalValue());
-			break;
-		}
-		case 8: {
-			element.getAccount().setGrossPositionValue(((Money) value).getBigDecimalValue());
-			break;
-		}
-		case 9: {
-			element.getAccount().setRealizedPnL(((Money) value).getBigDecimalValue());
-			break;
-		}
-		case 10: {
-			element.getAccount().setUnrealizedPnL(((Money) value).getBigDecimalValue());
-			break;
-		}
-		case 11: {
-			element.getAccount().setLastUpdateDate(((Date) value).getZonedDateTime());
-			break;
-		}
-		default: {
-		}
-		}
-		element.setDirty(true);
-	}
+        switch (column) {
+            case 0: {
+                element.getAccount().setName((String) value);
+                break;
+            }
+            case 1: {
+                element.getAccount().setAccountNumber((String) value);
+                break;
+            }
+            case 2: {
+                element.getAccount().setAccountType(((AccountType) value).getCode());
+                break;
+            }
+            case 3: {
+                element.getAccount().setAlias((String) value);
+                break;
+            }
+            case 4: {
+                element.getAccount().setCurrency(((Currency) value).getCode());
+                break;
+            }
+            case 5: {
+                element.getAccount().setAvailableFunds(((Money) value).getBigDecimalValue());
+                break;
+            }
+            case 6: {
+                element.getAccount().setBuyingPower(((Money) value).getBigDecimalValue());
+                break;
+            }
+            case 7: {
+                element.getAccount().setCashBalance(((Money) value).getBigDecimalValue());
+                break;
+            }
+            case 8: {
+                element.getAccount().setGrossPositionValue(((Money) value).getBigDecimalValue());
+                break;
+            }
+            case 9: {
+                element.getAccount().setRealizedPnL(((Money) value).getBigDecimalValue());
+                break;
+            }
+            case 10: {
+                element.getAccount().setUnrealizedPnL(((Money) value).getBigDecimalValue());
+                break;
+            }
+            case 11: {
+                element.getAccount().setLastUpdateDate(((Date) value).getZonedDateTime());
+                break;
+            }
+            default: {
+            }
+        }
+        element.setDirty(true);
+    }
 
-	/**
-	 * Method deleteRow.
-	 * 
-	 * @param selectedRow
-	 *            int
-	 */
-	public void deleteRow(int selectedRow) {
+    /**
+     * Method deleteRow.
+     *
+     * @param selectedRow int
+     */
+    public void deleteRow(int selectedRow) {
 
-		String acctNumber = (String) this.getValueAt(selectedRow, 1);
-		for (final PortfolioAccount element : getData().getPortfolioAccounts()) {
-			if (CoreUtils.nullSafeComparator(element.getAccount().getAccountNumber(), acctNumber) == 0) {
-				getData().getPortfolioAccounts().remove(element);
-				getData().setDirty(true);
-				final Vector<Object> currRow = rows.get(selectedRow);
-				rows.remove(currRow);
-				this.fireTableRowsDeleted(selectedRow, selectedRow);
-				break;
-			}
-		}
-	}
+        String acctNumber = (String) this.getValueAt(selectedRow, 1);
+        for (final PortfolioAccount element : getData().getPortfolioAccounts()) {
+            if (CoreUtils.nullSafeComparator(element.getAccount().getAccountNumber(), acctNumber) == 0) {
+                getData().getPortfolioAccounts().remove(element);
+                getData().setDirty(true);
+                final Vector<Object> currRow = rows.get(selectedRow);
+                rows.remove(currRow);
+                this.fireTableRowsDeleted(selectedRow, selectedRow);
+                break;
+            }
+        }
+    }
 
-	public void addRow() {
-		final Account account = new Account();
-		final PortfolioAccount element = new PortfolioAccount(getData(), account);
-		getData().getPortfolioAccounts().add(element);
-		final Vector<Object> newRow = new Vector<Object>();
-		getNewRow(newRow, element);
-		rows.add(newRow);
-		// Tell the listeners a new table has arrived.
-		this.fireTableRowsInserted(rows.size() - 1, rows.size() - 1);
-	}
+    public void addRow() {
+        final Account account = new Account();
+        final PortfolioAccount element = new PortfolioAccount(getData(), account);
+        getData().getPortfolioAccounts().add(element);
+        final Vector<Object> newRow = new Vector<Object>();
+        getNewRow(newRow, element);
+        rows.add(newRow);
+        // Tell the listeners a new table has arrived.
+        this.fireTableRowsInserted(rows.size() - 1, rows.size() - 1);
+    }
 
-	/**
-	 * Method getNewRow.
-	 * 
-	 * @param newRow
-	 *            Vector<Object>
-	 * @param element
-	 *            Account
-	 */
-	public void getNewRow(Vector<Object> newRow, PortfolioAccount element) {
-		newRow.addElement(element.getAccount().getName());
-		newRow.addElement(element.getAccount().getAccountNumber());
-		if (null == element.getAccount().getAccountType()) {
-			newRow.addElement(new AccountType());
-		} else {
-			newRow.addElement(AccountType.newInstance(element.getAccount().getAccountType()));
-		}
-		newRow.addElement(element.getAccount().getAlias());
-		newRow.addElement(Currency.newInstance(element.getAccount().getCurrency()));
-		if (null == element.getAccount().getAvailableFunds()) {
-			newRow.addElement(new Money(0));
-		} else {
-			newRow.addElement(new Money(element.getAccount().getAvailableFunds()));
-		}
-		if (null == element.getAccount().getBuyingPower()) {
-			newRow.addElement(new Money(0));
-		} else {
-			newRow.addElement(new Money(element.getAccount().getBuyingPower()));
-		}
-		if (null == element.getAccount().getCashBalance()) {
-			newRow.addElement(new Money(0));
-		} else {
-			newRow.addElement(new Money(element.getAccount().getCashBalance()));
-		}
-		if (null == element.getAccount().getGrossPositionValue()) {
-			newRow.addElement(new Money(0));
-		} else {
-			newRow.addElement(new Money(element.getAccount().getGrossPositionValue()));
-		}
-		if (null == element.getAccount().getRealizedPnL()) {
-			newRow.addElement(new Money(0));
-		} else {
-			newRow.addElement(new Money(element.getAccount().getRealizedPnL()));
-		}
-		if (null == element.getAccount().getUnrealizedPnL()) {
-			newRow.addElement(new Money(0));
-		} else {
-			newRow.addElement(new Money(element.getAccount().getUnrealizedPnL()));
-		}
-		if (null == element.getAccount().getLastUpdateDate()) {
-			newRow.addElement(new Date());
-		} else {
-			newRow.addElement(new Date(element.getAccount().getLastUpdateDate()));
-		}
-	}
+    /**
+     * Method getNewRow.
+     *
+     * @param newRow  Vector<Object>
+     * @param element Account
+     */
+    public void getNewRow(Vector<Object> newRow, PortfolioAccount element) {
+        newRow.addElement(element.getAccount().getName());
+        newRow.addElement(element.getAccount().getAccountNumber());
+        if (null == element.getAccount().getAccountType()) {
+            newRow.addElement(new AccountType());
+        } else {
+            newRow.addElement(AccountType.newInstance(element.getAccount().getAccountType()));
+        }
+        newRow.addElement(element.getAccount().getAlias());
+        newRow.addElement(Currency.newInstance(element.getAccount().getCurrency()));
+        if (null == element.getAccount().getAvailableFunds()) {
+            newRow.addElement(new Money(0));
+        } else {
+            newRow.addElement(new Money(element.getAccount().getAvailableFunds()));
+        }
+        if (null == element.getAccount().getBuyingPower()) {
+            newRow.addElement(new Money(0));
+        } else {
+            newRow.addElement(new Money(element.getAccount().getBuyingPower()));
+        }
+        if (null == element.getAccount().getCashBalance()) {
+            newRow.addElement(new Money(0));
+        } else {
+            newRow.addElement(new Money(element.getAccount().getCashBalance()));
+        }
+        if (null == element.getAccount().getGrossPositionValue()) {
+            newRow.addElement(new Money(0));
+        } else {
+            newRow.addElement(new Money(element.getAccount().getGrossPositionValue()));
+        }
+        if (null == element.getAccount().getRealizedPnL()) {
+            newRow.addElement(new Money(0));
+        } else {
+            newRow.addElement(new Money(element.getAccount().getRealizedPnL()));
+        }
+        if (null == element.getAccount().getUnrealizedPnL()) {
+            newRow.addElement(new Money(0));
+        } else {
+            newRow.addElement(new Money(element.getAccount().getUnrealizedPnL()));
+        }
+        if (null == element.getAccount().getLastUpdateDate()) {
+            newRow.addElement(new Date());
+        } else {
+            newRow.addElement(new Date(element.getAccount().getLastUpdateDate()));
+        }
+    }
 }

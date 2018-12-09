@@ -2,38 +2,39 @@ package com.ib.client;
 
 public class PercentChangeCondition extends ContractCondition {
 
-	public static final OrderConditionType conditionType = OrderConditionType.PercentChange;
-	
-	protected PercentChangeCondition() { }
-	
-	@Override
-	public String toString(ContractLookuper lookuper) {
-		return super.toString(lookuper);
-	}
+    public static final OrderConditionType conditionType = OrderConditionType.PercentChange;
 
-	@Override
-	public String toString() {
-		return toString(null);
-	}
+    protected PercentChangeCondition() {
+    }
 
-	private double m_changePercent = Double.MAX_VALUE;
+    @Override
+    public String toString(ContractLookuper lookuper) {
+        return super.toString(lookuper);
+    }
 
-	public double changePercent() {
-		return m_changePercent;
-	}
+    @Override
+    public String toString() {
+        return toString(null);
+    }
 
-	public void changePercent(double m_changePercent) {
-		this.m_changePercent = m_changePercent;
-	}
+    private double m_changePercent = Double.MAX_VALUE;
 
-	@Override
-	protected String valueToString() {
-		return "" + m_changePercent;
-	}
+    public double changePercent() {
+        return m_changePercent;
+    }
 
-	@Override
-	protected void valueFromString(String v) {
-		m_changePercent = Double.parseDouble(v);
-	} 
-	
+    public void changePercent(double m_changePercent) {
+        this.m_changePercent = m_changePercent;
+    }
+
+    @Override
+    protected String valueToString() {
+        return "" + m_changePercent;
+    }
+
+    @Override
+    protected void valueFromString(String v) {
+        m_changePercent = Double.parseDouble(v);
+    }
+
 }

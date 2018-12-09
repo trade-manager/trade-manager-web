@@ -35,7 +35,8 @@
  */
 package org.trade.persistent.dao;
 
-import java.util.List;
+import org.trade.core.dao.EntityManagerHelper;
+import org.trade.core.util.TradingCalendar;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -44,147 +45,143 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Root;
-
-import org.trade.core.dao.EntityManagerHelper;
-import org.trade.core.util.TradingCalendar;
+import java.util.List;
 
 /**
+ *
  */
 @Stateless
 public class TradeOrderHome {
 
-	public TradeOrderHome() {
+    public TradeOrderHome() {
 
-	}
+    }
 
-	/**
-	 * Method persist.
-	 * 
-	 * @param transientInstance
-	 *            TradeOrder
-	 * @return TradeOrder
-	 */
-	public synchronized TradeOrder persist(final TradeOrder transientInstance) {
+    /**
+     * Method persist.
+     *
+     * @param transientInstance TradeOrder
+     * @return TradeOrder
+     */
+    public synchronized TradeOrder persist(final TradeOrder transientInstance) {
 
-		try {
-			EntityManager entityManager = EntityManagerHelper.getEntityManager();
-			entityManager.getTransaction().begin();
-			transientInstance.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
-			if (null == transientInstance.getId()) {
-				if (null != transientInstance.getTradePosition()) {
-					if (null != transientInstance.getTradePosition().getId()) {
-						entityManager.find(TradePosition.class,
-								transientInstance.getTradePosition().getId());
-						TradePosition instance = entityManager.merge(transientInstance.getTradePosition());
-						transientInstance.setTradePosition(instance);
-					}
-				}
-				entityManager.persist(transientInstance);
-				entityManager.getTransaction().commit();
-				return transientInstance;
-			} else {
-				TradeOrder instance = entityManager.merge(transientInstance);
-				entityManager.getTransaction().commit();
-				transientInstance.setVersion(instance.getVersion());
-				return instance;
-			}
-		} catch (Exception re) {
-			EntityManagerHelper.logError("ERROR saving TradeOrder Msg: " + re.getCause().getMessage(), re);
-			EntityManagerHelper.rollback();
-			throw re;
-		} finally {
-			EntityManagerHelper.close();
-		}
-	}
+        try {
+            EntityManager entityManager = EntityManagerHelper.getEntityManager();
+            entityManager.getTransaction().begin();
+            transientInstance.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
+            if (null == transientInstance.getId()) {
+                if (null != transientInstance.getTradePosition()) {
+                    if (null != transientInstance.getTradePosition().getId()) {
+                        entityManager.find(TradePosition.class,
+                                transientInstance.getTradePosition().getId());
+                        TradePosition instance = entityManager.merge(transientInstance.getTradePosition());
+                        transientInstance.setTradePosition(instance);
+                    }
+                }
+                entityManager.persist(transientInstance);
+                entityManager.getTransaction().commit();
+                return transientInstance;
+            } else {
+                TradeOrder instance = entityManager.merge(transientInstance);
+                entityManager.getTransaction().commit();
+                transientInstance.setVersion(instance.getVersion());
+                return instance;
+            }
+        } catch (Exception re) {
+            EntityManagerHelper.logError("ERROR saving TradeOrder Msg: " + re.getCause().getMessage(), re);
+            EntityManagerHelper.rollback();
+            throw re;
+        } finally {
+            EntityManagerHelper.close();
+        }
+    }
 
-	/**
-	 * Method findById.
-	 * 
-	 * @param id
-	 *            Integer
-	 * @return TradeOrder
-	 */
-	public TradeOrder findById(Integer id) {
+    /**
+     * Method findById.
+     *
+     * @param id Integer
+     * @return TradeOrder
+     */
+    public TradeOrder findById(Integer id) {
 
-		try {
-			EntityManager entityManager = EntityManagerHelper.getEntityManager();
-			entityManager.getTransaction().begin();
-			TradeOrder instance = entityManager.find(TradeOrder.class, id);
-			entityManager.getTransaction().commit();
-			return instance;
-		} catch (Exception re) {
-			EntityManagerHelper.rollback();
-			throw re;
-		} finally {
-			EntityManagerHelper.close();
-		}
-	}
+        try {
+            EntityManager entityManager = EntityManagerHelper.getEntityManager();
+            entityManager.getTransaction().begin();
+            TradeOrder instance = entityManager.find(TradeOrder.class, id);
+            entityManager.getTransaction().commit();
+            return instance;
+        } catch (Exception re) {
+            EntityManagerHelper.rollback();
+            throw re;
+        } finally {
+            EntityManagerHelper.close();
+        }
+    }
 
-	/**
-	 * Method findTradeOrderByKey.
-	 * 
-	 * @param orderKey
-	 *            Integer
-	 * @return TradeOrder
-	 */
-	public synchronized TradeOrder findTradeOrderByKey(Integer orderKey) {
+    /**
+     * Method findTradeOrderByKey.
+     *
+     * @param orderKey Integer
+     * @return TradeOrder
+     */
+    public synchronized TradeOrder findTradeOrderByKey(Integer orderKey) {
 
-		try {
-			EntityManager entityManager = EntityManagerHelper.getEntityManager();
-			entityManager.getTransaction().begin();
-			CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-			CriteriaQuery<TradeOrder> query = builder.createQuery(TradeOrder.class);
-			Root<TradeOrder> from = query.from(TradeOrder.class);
-			query.select(from);
-			query.where(builder.equal(from.get("orderKey"), orderKey));
-			List<TradeOrder> items = entityManager.createQuery(query).getResultList();
-			for (TradeOrder tradeOrder : items) {
-				tradeOrder.getTradeOrderfills().size();
-			}
-			entityManager.getTransaction().commit();
-			if (items.size() > 0) {
-				return items.get(0);
-			}
-			return null;
+        try {
+            EntityManager entityManager = EntityManagerHelper.getEntityManager();
+            entityManager.getTransaction().begin();
+            CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+            CriteriaQuery<TradeOrder> query = builder.createQuery(TradeOrder.class);
+            Root<TradeOrder> from = query.from(TradeOrder.class);
+            query.select(from);
+            query.where(builder.equal(from.get("orderKey"), orderKey));
+            List<TradeOrder> items = entityManager.createQuery(query).getResultList();
+            for (TradeOrder tradeOrder : items) {
+                tradeOrder.getTradeOrderfills().size();
+            }
+            entityManager.getTransaction().commit();
+            if (items.size() > 0) {
+                return items.get(0);
+            }
+            return null;
 
-		} catch (Exception re) {
-			EntityManagerHelper.rollback();
-			throw re;
-		} finally {
-			EntityManagerHelper.close();
-		}
-	}
+        } catch (Exception re) {
+            EntityManagerHelper.rollback();
+            throw re;
+        } finally {
+            EntityManagerHelper.close();
+        }
+    }
 
-	/**
-	 * Method findTradeOrderByMaxKey.
-	 * 
-	 * @return Integer
-	 */
-	public Integer findTradeOrderByMaxKey() {
+    /**
+     * Method findTradeOrderByMaxKey.
+     *
+     * @return Integer
+     */
+    public Integer findTradeOrderByMaxKey() {
 
-		try {
-			EntityManager entityManager = EntityManagerHelper.getEntityManager();
-			entityManager.getTransaction().begin();
-			CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-			CriteriaQuery<Object> query = builder.createQuery();
-			Root<TradeOrder> from = query.from(TradeOrder.class);
+        try {
+            EntityManager entityManager = EntityManagerHelper.getEntityManager();
+            entityManager.getTransaction().begin();
+            CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+            CriteriaQuery<Object> query = builder.createQuery();
+            Root<TradeOrder> from = query.from(TradeOrder.class);
 
-			Expression<Integer> id = from.get("orderKey");
-			Expression<Integer> minExpression = builder.max(id);
-			CriteriaQuery<Object> select = query.select(minExpression);
-			TypedQuery<Object> typedQuery = entityManager.createQuery(select);
-			Object item = typedQuery.getSingleResult();
-			entityManager.getTransaction().commit();
-			if (null == item)
-				item = new Integer(0);
+            Expression<Integer> id = from.get("orderKey");
+            Expression<Integer> minExpression = builder.max(id);
+            CriteriaQuery<Object> select = query.select(minExpression);
+            TypedQuery<Object> typedQuery = entityManager.createQuery(select);
+            Object item = typedQuery.getSingleResult();
+            entityManager.getTransaction().commit();
+            if (null == item)
+                item = new Integer(0);
 
-			return (Integer) item;
+            return (Integer) item;
 
-		} catch (Exception re) {
-			EntityManagerHelper.rollback();
-			throw re;
-		} finally {
-			EntityManagerHelper.close();
-		}
-	}
+        } catch (Exception re) {
+            EntityManagerHelper.rollback();
+            throw re;
+        } finally {
+            EntityManagerHelper.close();
+        }
+    }
 }

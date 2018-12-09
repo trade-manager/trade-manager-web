@@ -13,22 +13,22 @@ import org.springframework.stereotype.Component;
 @Component
 public class SpringDataJpaUserDetailsService implements UserDetailsService {
 
-	private final UserRepository repository;
+    private final UserRepository repository;
 
-	private static final Logger _log = LogManager.getLogger(EmployeeRepository.class);
+    private static final Logger _log = LogManager.getLogger(SpringDataJpaUserDetailsService.class);
 
-	@Autowired
-	public SpringDataJpaUserDetailsService(UserRepository repository) {
-		this.repository = repository;
-	}
+    @Autowired
+    public SpringDataJpaUserDetailsService(UserRepository repository) {
+        this.repository = repository;
+    }
 
-	public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
-		User user = this.repository.findByName(name);
+    public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
+        User user = this.repository.findByName(name);
 
-		_log.info("User found: " + user.getName() + " " + user.getPassword() + " " +  String.join(",", user.getRoles()));
+        _log.info("User found: " + user.getName() + " " + user.getPassword() + " " + String.join(",", user.getRoles()));
 
-		return new org.springframework.security.core.userdetails.User(user.getName(), user.getPassword(),
-				AuthorityUtils.createAuthorityList(user.getRoles()));
-	}
+        return new org.springframework.security.core.userdetails.User(user.getName(), user.getPassword(),
+                AuthorityUtils.createAuthorityList(user.getRoles()));
+    }
 
 }

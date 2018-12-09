@@ -35,80 +35,80 @@
  */
 package org.trade.dictionary.valuetype;
 
-import java.util.Vector;
-
 import org.trade.core.valuetype.DAODecode;
 import org.trade.core.valuetype.Decode;
 import org.trade.core.valuetype.ValueTypeException;
 import org.trade.persistent.dao.Strategy;
 
+import java.util.Vector;
+
 /**
+ *
  */
 public class DAOStrategy extends DAODecode {
 
-	private static final long serialVersionUID = -5381026427696898592L;
-	public static final String DECODE = "STRATEGY";
-	public static final String _TABLE = "_TABLE";
-	public static final String _TABLE_ID = "_TABLE_ID";
-	public static final String _COLUMN = "_COLUMN";
+    private static final long serialVersionUID = -5381026427696898592L;
+    public static final String DECODE = "STRATEGY";
+    public static final String _TABLE = "_TABLE";
+    public static final String _TABLE_ID = "_TABLE_ID";
+    public static final String _COLUMN = "_COLUMN";
 
-	public DAOStrategy() {
-		super(DECODE);
-	}
+    public DAOStrategy() {
+        super(DECODE);
+    }
 
-	/**
-	 * Method getCodesDecodes.
-	 * 
-	 * @return Vector<Decode>
-	 * @throws ValueTypeException
-	 */
-	@Override
-	public Vector<Decode> getCodesDecodes() throws ValueTypeException {
-		final Vector<Decode> decodes = new Vector<Decode>();
+    /**
+     * Method getCodesDecodes.
+     *
+     * @return Vector<Decode>
+     * @throws ValueTypeException
+     */
+    @Override
+    public Vector<Decode> getCodesDecodes() throws ValueTypeException {
+        final Vector<Decode> decodes = new Vector<Decode>();
 
-		final Vector<Decode> decodesAll = super.getCodesDecodes();
-		for (final Decode decode : decodesAll) {
-			final Strategy strategy = (Strategy) decode.getObject();
-			boolean isMgr = false;
-			if (!strategy.hasStrategyManager()) {
-				for (final Decode mgrdecode : decodesAll) {
-					final Strategy strategyMgr = (Strategy) mgrdecode.getObject();
-					if (strategyMgr.hasStrategyManager()) {
-						if (strategyMgr.getStrategyManager().equals(strategy)) {
-							isMgr = true;
-							break;
-						}
-					}
-				}
-			}
-			if (!isMgr) {
-				decodes.add(decode);
-			}
-		}
-		return decodes;
-	}
+        final Vector<Decode> decodesAll = super.getCodesDecodes();
+        for (final Decode decode : decodesAll) {
+            final Strategy strategy = (Strategy) decode.getObject();
+            boolean isMgr = false;
+            if (!strategy.hasStrategyManager()) {
+                for (final Decode mgrdecode : decodesAll) {
+                    final Strategy strategyMgr = (Strategy) mgrdecode.getObject();
+                    if (strategyMgr.hasStrategyManager()) {
+                        if (strategyMgr.getStrategyManager().equals(strategy)) {
+                            isMgr = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            if (!isMgr) {
+                decodes.add(decode);
+            }
+        }
+        return decodes;
+    }
 
-	/**
-	 * Method newInstance.
-	 * 
-	 * @param displayName
-	 *            String
-	 * @return DAOStrategy
-	 */
-	public static DAOStrategy newInstance(String displayName) {
-		final DAOStrategy returnInstance = new DAOStrategy();
-		returnInstance.setDisplayName(displayName);
-		return returnInstance;
-	}
+    /**
+     * Method newInstance.
+     *
+     * @param displayName String
+     * @return DAOStrategy
+     */
+    public static DAOStrategy newInstance(String displayName) {
+        final DAOStrategy returnInstance = new DAOStrategy();
+        returnInstance.setDisplayName(displayName);
+        return returnInstance;
+    }
 
-	/**
-	 * Method newInstance.
-	 * 
-	 * @return DAOStrategy
-	 */
-	public static DAOStrategy newInstance() {
-		final DAOStrategy returnInstance = new DAOStrategy();
-		returnInstance.setDefaultCode();
-		return returnInstance;
-	}
+    /**
+     * Method newInstance.
+     *
+     * @return DAOStrategy
+     */
+    public static DAOStrategy newInstance() {
+        final DAOStrategy returnInstance = new DAOStrategy();
+        returnInstance.setDefaultCode();
+        return returnInstance;
+    }
 }

@@ -56,6 +56,7 @@ import java.util.Hashtable;
 import java.util.List;
 
 /**
+ *
  */
 public class TradePersistentModel implements IPersistentModel {
 
@@ -324,6 +325,7 @@ public class TradePersistentModel implements IPersistentModel {
     public TradeOrderfill findTradeOrderfillByExecId(String execId) throws PersistentModelException {
         return m_tradeOrderfillHome.findOrderFillByExecId(execId);
     }
+
     public Integer findTradeOrderByMaxKey() {
         return m_tradeOrderHome.findTradeOrderByMaxKey();
     }
