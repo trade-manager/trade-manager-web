@@ -84,7 +84,7 @@
 		</dependency>
 	</dependencies>
 	<build>
-<!-- Substitute parms in schema script, persistence.xml and application.properties -->
+		<!-- Substitute parms in schema script, persistence.xml and application.properties -->
 		<filters>
 			<filter>${basedir}/../db.properties</filter>
 		</filters>
@@ -95,23 +95,19 @@
 			</resource>
 		</resources>
 		<pluginManagement>
-		<plugins>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>properties-maven-plugin</artifactId>
-				<version>1.0.0</version>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>3.0.0-M1</version>
-				<configuration>
-					<skipTests>${skip.tests}</skipTests>
-					<argLine>-Duser.timezone=America/New_York -Dlog4j.configuration=${basedir}/../config.properties
-					</argLine>
-				</configuration>
-			</plugin>
-		</plugins>
+			<plugins>
+				<!-- To run the test suite -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>3.0.0-M1</version>
+					<configuration>
+						<skipTests>${skip.tests}</skipTests>
+						<argLine>-Duser.timezone=America/New_York -Dlog4j.configuration=${basedir}/../config.properties
+						</argLine>
+					</configuration>
+				</plugin>
+			</plugins>
 		</pluginManagement>
 	</build>
 </project>
