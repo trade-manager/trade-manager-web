@@ -50,3 +50,13 @@ web>$mvnw spring-boot:run   Note WIP so not much to see yet
 7/ Open IntelliJ and import the parent pom.xml from the project dir. You can now set run configurations for 6/
 
 In IntelliJ, Edit Configuration add a Maven set working dir to /web then set command line to above without mvnw.
+
+If you wish to deploy the app to another director after building it complete the following:
+
+a/ Copy config.properties, web/target/trade-manager-web-0.0.1-SNAPSHOT.jar, strategies dir and web/pom.xml to your new directory.
+
+b/ Change the following config.properties values to trade.csv.default.dir=temp and trade.strategy.default.dir=strategies
+
+c/ To run the old Swing UI from the command line"
+
+>$mvn exec:java -Dexec.mainClass="org.trade.ui.TradeAppMain" -Dexec.args="-Duser.timezone=America/New_York -Dlog4j.configuration=config.properties"
