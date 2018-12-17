@@ -35,7 +35,7 @@
  */
 package org.trade.persistent.dao;
 
-import org.jfree.data.DataUtilities;
+import org.jfree.data.DataUtils;
 import org.junit.Rule;
 import org.junit.*;
 import org.junit.rules.TestName;

@@ -36,7 +36,7 @@
 package org.trade.persistent;
 
 import com.ib.client.Execution;
-import org.jfree.data.DataUtilities;
+import org.jfree.data.DataUtils;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;

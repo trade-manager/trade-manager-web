@@ -46,7 +46,7 @@ import org.jfree.chart.renderer.xy.CandlestickRenderer;
 import org.jfree.chart.renderer.xy.XYItemRendererState;
 import org.jfree.data.xy.OHLCDataset;
 import org.jfree.data.xy.XYDataset;
-import org.jfree.ui.RectangleEdge;
+import org.jfree.chart.ui.RectangleEdge;
 import org.trade.core.valuetype.Money;
 import org.trade.core.valuetype.Quantity;
 import org.trade.strategy.data.CandleDataset;
@@ -94,7 +94,7 @@ public class CandleRenderer extends CandlestickRenderer {
     }
 
     private void configureToolTips() {
-        setBaseToolTipGenerator(new XYToolTipGenerator() {
+        setDefaultToolTipGenerator(new XYToolTipGenerator() {
             public String generateToolTip(XYDataset dataset, int series, int item) {
                 StringBuilder result = new StringBuilder("<html>");
                 if (dataset instanceof CandleDataset) {
@@ -313,7 +313,7 @@ public class CandleRenderer extends CandlestickRenderer {
             double transY1 = rangeAxis.valueToJava2D(y1, dataArea, plot.getRangeAxisEdge());
             int domainAxisIndex = plot.getDomainAxisIndex(domainAxis);
             int rangeAxisIndex = plot.getRangeAxisIndex(rangeAxis);
-            updateCrosshairValues(crosshairState, x1, y1, domainAxisIndex, rangeAxisIndex, transX1, transY1,
+            updateCrosshairValues(crosshairState, x1, y1, domainAxisIndex, transX1, transY1,
                     plot.getOrientation());
         }
     }
