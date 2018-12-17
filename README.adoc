@@ -39,6 +39,8 @@ $mvn -N io.takari:maven:wrapper
 
 web>$ mvnw initialize sql:execute 
 
+Note demo data for 2016 is added by default comment out the file in the web/pom.xml if not needed.
+
 6/ To run the old Swing UI. From project dir, cd web, then run
 
 web>$mvnw -Duser.timezone=America/New_York -Dlog4j.configuration=file:../config.properties exec:java  
