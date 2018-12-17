@@ -48,7 +48,7 @@ import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYBarRenderer;
 import org.jfree.chart.renderer.xy.XYItemRendererState;
 import org.jfree.data.xy.XYDataset;
-import org.jfree.ui.RectangleEdge;
+import org.jfree.chart.ui.RectangleEdge;
 import org.trade.core.valuetype.Quantity;
 import org.trade.strategy.data.VolumeDataset;
 import org.trade.strategy.data.volume.VolumeItem;
@@ -81,7 +81,7 @@ public class VolumeBarRenderer extends XYBarRenderer {
     }
 
     private void configureToolTips() {
-        setBaseToolTipGenerator(new XYToolTipGenerator() {
+        setDefaultToolTipGenerator(new XYToolTipGenerator() {
             public String generateToolTip(XYDataset dataset, int series, int item) {
                 StringBuilder result = new StringBuilder("<html>");
                 if (dataset instanceof VolumeDataset) {
@@ -262,7 +262,7 @@ public class VolumeBarRenderer extends XYBarRenderer {
         double transY1 = rangeAxis.valueToJava2D(y1, dataArea, plot.getRangeAxisEdge());
         int domainAxisIndex = plot.getDomainAxisIndex(domainAxis);
         int rangeAxisIndex = plot.getRangeAxisIndex(rangeAxis);
-        updateCrosshairValues(crosshairState, x1, y1, domainAxisIndex, rangeAxisIndex, transX1, transY1,
+        updateCrosshairValues(crosshairState, x1, y1, domainAxisIndex, transX1, transY1,
                 plot.getOrientation());
 
         EntityCollection entities = state.getEntityCollection();

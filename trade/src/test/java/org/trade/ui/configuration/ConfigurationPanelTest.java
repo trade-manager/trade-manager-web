@@ -35,7 +35,7 @@
  */
 package org.trade.ui.configuration;
 
-import org.jfree.data.DataUtilities;
+import org.jfree.data.DataUtils;
 import org.junit.*;
 import org.junit.rules.TestName;
 import org.slf4j.Logger;

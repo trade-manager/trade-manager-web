@@ -43,12 +43,12 @@ import org.jfree.chart.renderer.xy.AbstractXYItemRenderer;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.renderer.xy.XYItemRendererState;
 import org.jfree.data.xy.XYDataset;
-import org.jfree.io.SerialUtilities;
-import org.jfree.text.TextUtilities;
-import org.jfree.ui.RectangleEdge;
-import org.jfree.ui.TextAnchor;
-import org.jfree.util.PublicCloneable;
-import org.jfree.util.ShapeUtilities;
+import org.jfree.chart.util.SerialUtils;
+import org.jfree.chart.text.TextUtils;
+import org.jfree.chart.ui.RectangleEdge;
+import org.jfree.chart.ui.TextAnchor;
+import org.jfree.chart.util.PublicCloneable;
+import org.jfree.chart.util.ShapeUtils;
 import org.trade.dictionary.valuetype.Side;
 import org.trade.strategy.data.PivotDataset;
 
@@ -288,7 +288,7 @@ public class PivotRenderer extends AbstractXYItemRenderer implements XYItemRende
 
             int domainAxisIndex = plot.getDomainAxisIndex(domainAxis);
             int rangeAxisIndex = plot.getRangeAxisIndex(rangeAxis);
-            updateCrosshairValues(crosshairState, x, y, domainAxisIndex, rangeAxisIndex, transX, transY, orientation);
+            updateCrosshairValues(crosshairState, x, y, domainAxisIndex,  transX, transY, orientation);
 
             PivotDataset pivotDataset = (PivotDataset) dataset;
             if (null != pivotDataset.getPivotSide(series, item)) {
@@ -383,10 +383,10 @@ public class PivotRenderer extends AbstractXYItemRenderer implements XYItemRende
         double labelX = j2DX + (Math.cos(angle) * (baseRadius + labelOffset));
         double labelY = j2DY + (Math.sin(angle) * (baseRadius + labelOffset));
         g2.setFont(font);
-        Shape hotspot = TextUtilities.calculateRotatedStringBounds(ledgend, g2, (float) labelX, (float) labelY,
+        Shape hotspot = TextUtils.calculateRotatedStringBounds(ledgend, g2, (float) labelX, (float) labelY,
                 textAnchor, rotationAngle, rotationAnchor);
         g2.setPaint(paint);
-        TextUtilities.drawRotatedString(ledgend, g2, (float) labelX, (float) labelY, textAnchor, rotationAngle,
+        TextUtils.drawRotatedString(ledgend, g2, (float) labelX, (float) labelY, textAnchor, rotationAngle,
                 rotationAnchor);
         if (outlineVisible) {
             g2.setStroke(outlineStroke);
@@ -481,7 +481,7 @@ public class PivotRenderer extends AbstractXYItemRenderer implements XYItemRende
         if (this.dotHeight != that.dotHeight) {
             return false;
         }
-        if (!ShapeUtilities.equal(this.legendShape, that.legendShape)) {
+        if (!ShapeUtils.equal(this.legendShape, that.legendShape)) {
             return false;
         }
         return super.equals(obj);
@@ -506,7 +506,7 @@ public class PivotRenderer extends AbstractXYItemRenderer implements XYItemRende
      */
     private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
         stream.defaultReadObject();
-        this.legendShape = SerialUtilities.readShape(stream);
+        this.legendShape = SerialUtils.readShape(stream);
     }
 
     /**
@@ -517,7 +517,7 @@ public class PivotRenderer extends AbstractXYItemRenderer implements XYItemRende
      */
     private void writeObject(ObjectOutputStream stream) throws IOException {
         stream.defaultWriteObject();
-        SerialUtilities.writeShape(this.legendShape, stream);
+        SerialUtils.writeShape(this.legendShape, stream);
     }
 
 }

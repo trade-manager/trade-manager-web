@@ -46,7 +46,7 @@ import org.jfree.chart.renderer.xy.CandlestickRenderer;
 import org.jfree.chart.renderer.xy.XYItemRendererState;
 import org.jfree.data.xy.OHLCDataset;
 import org.jfree.data.xy.XYDataset;
-import org.jfree.ui.RectangleEdge;
+import org.jfree.chart.ui.RectangleEdge;
 import org.trade.core.valuetype.Money;
 import org.trade.strategy.data.HeikinAshiDataset;
 
@@ -90,7 +90,7 @@ public class HeikinAshiRenderer extends CandlestickRenderer {
     }
 
     private void configureToolTips() {
-        setBaseToolTipGenerator(new XYToolTipGenerator() {
+        setDefaultToolTipGenerator(new XYToolTipGenerator() {
             public String generateToolTip(XYDataset dataset, int series, int item) {
                 StringBuilder result = new StringBuilder("<html>");
                 if (dataset instanceof HeikinAshiDataset) {

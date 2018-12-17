@@ -139,6 +139,8 @@
 								<srcFile>target/classes/schema/schema-mysql.sql</srcFile>
 								<srcFile>target/classes/schema/drop-create-user-mysql.sql</srcFile>
 								<srcFile>target/classes/schema/data-mysql.sql</srcFile>
+								<!-- Demo data for 2016 comment out if not needed -->
+								<srcFile>target/classes/schema/demo-data-mysql.sql</srcFile>
 							</srcFiles>
 						</configuration>
 					</execution>

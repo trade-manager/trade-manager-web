@@ -40,7 +40,7 @@ import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.data.general.DatasetChangeEvent;
 import org.jfree.data.xy.AbstractXYDataset;
 import org.jfree.data.xy.XYDataset;
-import org.jfree.util.ObjectUtilities;
+import org.jfree.chart.util.ObjectUtils;
 import org.trade.strategy.data.base.RegularTimePeriod;
 import org.trade.strategy.data.base.TimePeriodAnchor;
 import org.trade.strategy.data.movingaverage.IMovingAverageDataset;
@@ -320,7 +320,7 @@ public class MovingAverageDataset extends AbstractXYDataset
         if (!this.xPosition.equals(that.xPosition)) {
             return false;
         }
-        return ObjectUtilities.equal(this.data, that.data);
+        return ObjectUtils.equal(this.data, that.data);
     }
 
     /**
@@ -332,7 +332,7 @@ public class MovingAverageDataset extends AbstractXYDataset
     @SuppressWarnings("unchecked")
     public Object clone() throws CloneNotSupportedException {
         MovingAverageDataset clone = (MovingAverageDataset) super.clone();
-        clone.data = (List<IndicatorSeries>) ObjectUtilities.deepClone(this.data);
+        clone.data = (List<IndicatorSeries>) ObjectUtils.deepClone(this.data);
         return clone;
     }
 

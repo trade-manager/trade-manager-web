@@ -110,6 +110,8 @@
 
 package org.trade.ui.chart.renderer;
 
+import static org.jfree.chart.util.ShapeUtils.isPointInRect;
+
 import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.entity.EntityCollection;
 import org.jfree.chart.labels.XYToolTipGenerator;
@@ -121,9 +123,9 @@ import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
 import org.jfree.chart.renderer.xy.XYItemRendererState;
 import org.jfree.chart.urls.XYURLGenerator;
 import org.jfree.data.xy.XYDataset;
-import org.jfree.ui.RectangleEdge;
-import org.jfree.util.ShapeUtilities;
-import org.jfree.util.UnitType;
+import org.jfree.chart.ui.RectangleEdge;
+import org.jfree.chart.util.ShapeUtils;
+import org.jfree.chart.util.UnitType;
 import org.trade.strategy.data.MACDDataset;
 import org.trade.strategy.data.macd.MACDItem;
 
@@ -387,9 +389,9 @@ public class MACDItemRenderer extends StandardXYItemRenderer {
 
             Shape shape = getItemShape(series, item);
             if (orientation == PlotOrientation.HORIZONTAL) {
-                shape = ShapeUtilities.createTranslatedShape(shape, transY1, transX1);
+                shape = ShapeUtils.createTranslatedShape(shape, transY1, transX1);
             } else if (orientation == PlotOrientation.VERTICAL) {
-                shape = ShapeUtilities.createTranslatedShape(shape, transX1, transY1);
+                shape = ShapeUtils.createTranslatedShape(shape, transX1, transY1);
             }
             if (shape.intersects(dataArea)) {
                 if (getItemShapeFilled(series, item)) {
@@ -427,7 +429,7 @@ public class MACDItemRenderer extends StandardXYItemRenderer {
 
         int domainAxisIndex = plot.getDomainAxisIndex(domainAxis);
         int rangeAxisIndex = plot.getRangeAxisIndex(rangeAxis);
-        updateCrosshairValues(crosshairState, x1, y1, domainAxisIndex, rangeAxisIndex, transX1, transY1, orientation);
+        updateCrosshairValues(crosshairState, x1, y1, domainAxisIndex, transX1, transY1, orientation);
 
         // add an entity for the item...
         if (entities != null && isPointInRect(dataArea, xx, yy)) {
