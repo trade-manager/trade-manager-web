@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.trade</groupId>
+		<artifactId>trade-manager</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>trade-manager-web</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>Trade Manager - Web</name>
+	<description>Trade Manager - Web</description>
+	<dependencies>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>javax.xml.bind</groupId>
+			<artifactId>jaxb-api</artifactId>
+			<version>2.3.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.trade</groupId>
+			<artifactId>trade-manager-trade</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies>
+	<build>
+		<plugins>
+			<!-- Used to load params for sql:execute -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>properties-maven-plugin</artifactId>
+				<version>1.0.0</version>
+				<executions>
+					<execution>
+						<phase>initialize</phase>
+						<goals>
+							<goal>read-project-properties</goal>
+						</goals>
+						<configuration>
+							<files>
+								<file>${basedir}/../db.properties</file>
+							</files>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- To execute the old Swing UI -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.6.0</version>
+				<configuration>
+					<mainClass>org.trade.ui.TradeAppMain</mainClass>
+				</configuration>
+			</plugin>
+			<!-- To execute Spring boot -->
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<!-- To build REACT UX npm -->
+			<plugin>
+				<groupId>com.github.eirslett</groupId>
+				<artifactId>frontend-maven-plugin</artifactId>
+				<version>1.6</version>
+				<configuration>
+					<installDirectory>target</installDirectory>
+				</configuration>
+				<executions>
+					<execution>
+						<id>install node and npm</id>
+						<goals>
+							<goal>install-node-and-npm</goal>
+						</goals>
+						<configuration>
+							<nodeVersion>v10.11.0</nodeVersion>
+							<npmVersion>6.4.1</npmVersion>
+						</configuration>
+					</execution>
+					<execution>
+						<id>npm install</id>
+						<goals>
+							<goal>npm</goal>
+						</goals>
+						<configuration>
+							<arguments>install</arguments>
+						</configuration>
+					</execution>
+					<execution>
+						<id>webpack build</id>
+						<goals>
+							<goal>webpack</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- Used to buidl the database i.e. run sql -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>sql-maven-plugin</artifactId>
+				<version>1.5</version>
+				<dependencies>
+					<dependency>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>sql-maven-plugin</artifactId>
+						<version>1.5</version>
+					</dependency>
+					<dependency>
+						<groupId>mysql</groupId>
+						<artifactId>mysql-connector-java</artifactId>
+						<version>8.0.13</version>
+					</dependency>
+				</dependencies>
+				<!-- Must run initialize first i.e. initialize sql:execute -->
+				<configuration>
+					<driver>com.mysql.cj.jdbc.Driver</driver>
+					<url>${db-dba.url}</url>
+					<username>${db-dba.username}</username>
+					<password>${db-dba.password}</password>
+					<settingsKey>sensibleKey</settingsKey>
+					<!--all executions are ignored if -Dmaven.test.skip=true-->
+					<skip>false</skip>
+				</configuration>
+				<executions>
+					<execution>
+						<id>default-cli</id>
+						<goals>
+							<goal>execute</goal>
+						</goals>
+						<configuration>
+							<delimiter>//</delimiter>
+							<autocommit>true</autocommit>
+							<srcFiles>
+								<srcFile>target/classes/schema/schema-mysql.sql</srcFile>
+								<srcFile>target/classes/schema/drop-create-user-mysql.sql</srcFile>
+								<srcFile>target/classes/schema/data-mysql.sql</srcFile>
+								<!-- Demo data for 2016 comment out if not needed -->
+								<srcFile>target/classes/schema/demo-data-mysql.sql</srcFile>
+							</srcFiles>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>
