@@ -37,9 +37,9 @@ package org.trade.persistent.dao;
 
 import org.trade.core.dao.Aspect;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
-import static javax.persistence.GenerationType.IDENTITY;
+import static jakarta.persistence.GenerationType.IDENTITY;
 
 /**
  *

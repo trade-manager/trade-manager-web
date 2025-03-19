@@ -41,9 +41,8 @@ import org.trade.strategy.data.base.RegularTimePeriod;
 import org.trade.strategy.data.candle.CandleItem;
 import org.trade.strategy.data.volume.VolumeItem;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.Transient;
+import jakarta.persistence.*;
+import jakarta.persistence.criteria.*;
 
 /**
  * A list of (RegularTimePeriod, open, high, low, close) data items.

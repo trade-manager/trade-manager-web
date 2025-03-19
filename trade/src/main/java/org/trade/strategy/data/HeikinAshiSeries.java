@@ -42,8 +42,8 @@ import org.trade.strategy.data.base.RegularTimePeriod;
 import org.trade.strategy.data.candle.CandleItem;
 import org.trade.strategy.data.heikinashi.HeikinAshiItem;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
+import jakarta.persistence.*;
+import jakarta.persistence.criteria.*;
 import java.time.ZonedDateTime;
 
 /**

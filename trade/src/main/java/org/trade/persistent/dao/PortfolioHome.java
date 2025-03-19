@@ -42,9 +42,8 @@ import org.trade.dictionary.valuetype.Currency;
 import org.trade.persistent.PersistentModelException;
 
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.*;
+import jakarta.persistence.*;
+import jakarta.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
 

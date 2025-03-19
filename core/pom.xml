@@ -11,6 +11,7 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>Trade Manager - Core</name>
     <description>Trade Manager core components</description>
+    <!--
     <dependencies>
         <dependency>
             <groupId>com.sun</groupId>
@@ -20,4 +21,5 @@
             <systemPath>${java.home}/../lib/tools.jar</systemPath>
         </dependency>
     </dependencies>
+    -->
 </project>

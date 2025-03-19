@@ -35,8 +35,8 @@
  */
 package org.trade.persistent.dao;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
+import jakarta.persistence.*;
+import jakarta.persistence.criteria.*;
 
 /**
  *

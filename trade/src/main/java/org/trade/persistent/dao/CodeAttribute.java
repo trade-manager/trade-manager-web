@@ -35,14 +35,15 @@
  */
 package org.trade.persistent.dao;
 
+import jakarta.validation.constraints.NotNull;
 import org.trade.core.dao.Aspect;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static javax.persistence.GenerationType.IDENTITY;
+import static jakarta.persistence.GenerationType.IDENTITY;
+
 
 /**
  *

@@ -40,8 +40,8 @@ import org.trade.persistent.dao.Strategy;
 import org.trade.strategy.data.base.RegularTimePeriod;
 import org.trade.strategy.data.vwap.VwapItem;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
+import jakarta.persistence.*;
+import jakarta.persistence.criteria.*;
 import java.math.BigDecimal;
 
 /**

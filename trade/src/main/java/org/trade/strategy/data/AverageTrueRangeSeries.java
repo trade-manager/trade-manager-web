@@ -43,9 +43,8 @@ import org.trade.strategy.data.atr.AverageTrueRangeItem;
 import org.trade.strategy.data.base.RegularTimePeriod;
 import org.trade.strategy.data.candle.CandleItem;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.Transient;
+import jakarta.persistence.*;
+import jakarta.persistence.criteria.*;
 import java.math.BigDecimal;
 
 /**

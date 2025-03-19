@@ -36,16 +36,13 @@
 
 package org.trade.core.dao;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
+import jakarta.persistence.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.persistence.Query;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
 
 /**
  * <p>
@@ -75,13 +72,12 @@ public class EntityManagerHelper {
     static final String PERSISTENCE_UNIT = "dbresource";
 
     private static final EntityManagerFactory factory;
-    private static ValidatorFactory validatorFactory;
+
     private static final ThreadLocal<EntityManager> threadLocal;
     private final static Logger _log = LoggerFactory.getLogger(EntityManagerHelper.class);
 
     static {
         factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT);
-        validatorFactory = Validation.buildDefaultValidatorFactory();
         threadLocal = new ThreadLocal<EntityManager>();
     }
 
@@ -214,15 +210,6 @@ public class EntityManagerHelper {
         if ((getEntityManager().getTransaction() != null) && getEntityManager().getTransaction().isActive()) {
             getEntityManager().getTransaction().rollback();
         }
-    }
-
-    /**
-     * Method getValidator
-     *
-     * @return IValidator
-     */
-    public static Validator getValidator() {
-        return validatorFactory.getValidator();
     }
 
 }

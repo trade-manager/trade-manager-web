@@ -35,6 +35,7 @@
  */
 package org.trade.strategy.data;
 
+import jakarta.validation.constraints.NotNull;
 import org.jfree.data.ComparableObjectItem;
 import org.jfree.data.ComparableObjectSeries;
 import org.slf4j.Logger;
@@ -42,14 +43,14 @@ import org.slf4j.LoggerFactory;
 import org.trade.persistent.dao.CodeValue;
 import org.trade.persistent.dao.Strategy;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.*;
 import java.awt.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static javax.persistence.GenerationType.IDENTITY;
+import static jakarta.persistence.GenerationType.IDENTITY;
+
 
 /**
  *

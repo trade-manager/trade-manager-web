@@ -39,8 +39,8 @@ import org.trade.core.dao.EntityManagerHelper;
 import org.trade.core.util.TradingCalendar;
 
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
+import jakarta.persistence.*;
+import jakarta.persistence.criteria.*;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 

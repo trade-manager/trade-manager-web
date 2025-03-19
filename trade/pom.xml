@@ -12,11 +12,13 @@
     <name>Trade Manager - Trade</name>
     <description>Trade Manager components</description>
     <dependencies>
+        <!--
         <dependency>
             <groupId>com.sun</groupId>
             <artifactId>tools</artifactId>
             <version>1.8.0</version>
         </dependency>
+        -->
         <dependency>
             <groupId>org.jfree</groupId>
             <artifactId>jfreechart</artifactId>

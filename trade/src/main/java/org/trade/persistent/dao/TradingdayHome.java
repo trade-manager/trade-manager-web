@@ -38,9 +38,8 @@ package org.trade.persistent.dao;
 import org.trade.core.dao.EntityManagerHelper;
 
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.*;
+import jakarta.persistence.*;
+import jakarta.persistence.criteria.*;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;

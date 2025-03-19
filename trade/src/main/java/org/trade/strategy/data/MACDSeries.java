@@ -43,9 +43,8 @@ import org.trade.strategy.data.base.RegularTimePeriod;
 import org.trade.strategy.data.candle.CandleItem;
 import org.trade.strategy.data.macd.MACDItem;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.Transient;
+import jakarta.persistence.*;
+import jakarta.persistence.criteria.*;
 import java.math.BigDecimal;
 import java.util.LinkedList;
 
