@@ -93,7 +93,7 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
     private BigDecimal limitPrice;
     private String ocaGroupName;
     private Integer ocaType;
-   // @Min(1)
+    // @Min(1)
     private Integer orderKey;
     private String orderReference;
     @NotNull
@@ -101,7 +101,7 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
     private Integer overrideConstraints;
     private Integer permId;
     private Integer parentId;
-   // @Min(0)
+    // @Min(0)
     private Integer quantity;
     private String timeInForce;
     private String status;

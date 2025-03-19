@@ -35,11 +35,13 @@
  */
 package org.trade.persistent.dao;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import org.trade.core.dao.EntityManagerHelper;
 
 import javax.ejb.Stateless;
-import jakarta.persistence.*;
-import jakarta.persistence.criteria.*;
 import java.util.List;
 
 /**

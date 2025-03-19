@@ -36,9 +36,8 @@
 package org.trade.persistent.dao;
 
 import com.ib.client.Execution;
-import org.jfree.data.DataUtils;
-import org.junit.Rule;
 import org.junit.*;
+import org.junit.Rule;
 import org.junit.rules.TestName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -35,10 +35,10 @@
  */
 package org.trade.persistent.dao;
 
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import org.trade.core.dao.Aspect;
 
-import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 

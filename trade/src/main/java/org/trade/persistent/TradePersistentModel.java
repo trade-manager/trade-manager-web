@@ -49,7 +49,6 @@ import org.trade.dictionary.valuetype.TradestrategyStatus;
 import org.trade.persistent.dao.*;
 import org.trade.strategy.data.CandleSeries;
 
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.ZonedDateTime;

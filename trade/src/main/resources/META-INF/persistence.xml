@@ -34,7 +34,7 @@
         <shared-cache-mode>ENABLE_SELECTIVE</shared-cache-mode>
         <validation-mode>CALLBACK</validation-mode>
         <properties>
-            <property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver"/>
+            <property name="hibernate.connection.driver_class" value="com.mysql.cj.jdbc.Driver"/>
 
             <property name="hibernate.connection.url" value="@db-dba.url@/@db-dba.schema@"/>
             <property name="hibernate.default_schema" value="@db-dba.schema@"/>

@@ -35,7 +35,8 @@
  */
 package org.trade.persistent.dao;
 
-import jakarta.persistence.*;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
 import org.trade.core.dao.EntityManagerHelper;
 

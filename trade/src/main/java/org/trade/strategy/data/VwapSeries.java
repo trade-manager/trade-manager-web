@@ -35,13 +35,13 @@
  */
 package org.trade.strategy.data;
 
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
 import org.jfree.data.time.ohlc.OHLCSeriesCollection;
 import org.trade.persistent.dao.Strategy;
 import org.trade.strategy.data.base.RegularTimePeriod;
 import org.trade.strategy.data.vwap.VwapItem;
 
-import jakarta.persistence.*;
-import jakarta.persistence.criteria.*;
 import java.math.BigDecimal;
 
 /**

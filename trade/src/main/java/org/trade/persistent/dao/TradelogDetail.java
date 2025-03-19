@@ -35,10 +35,10 @@
  */
 package org.trade.persistent.dao;
 
+import jakarta.persistence.*;
 import org.trade.core.dao.Aspect;
 import org.trade.core.properties.ConfigProperties;
 
-import jakarta.persistence.*;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;

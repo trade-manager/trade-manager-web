@@ -35,13 +35,14 @@
  */
 package org.trade.persistent.dao;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.*;
 import org.trade.core.dao.EntityManagerHelper;
 import org.trade.strategy.data.CandleSeries;
 import org.trade.strategy.data.candle.CandleItem;
 
 import javax.ejb.Stateless;
-import jakarta.persistence.*;
-import jakarta.persistence.criteria.*;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;

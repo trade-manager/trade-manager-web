@@ -35,6 +35,7 @@
  */
 package org.trade.strategy.data;
 
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import org.jfree.data.ComparableObjectItem;
 import org.jfree.data.ComparableObjectSeries;
@@ -43,7 +44,6 @@ import org.slf4j.LoggerFactory;
 import org.trade.persistent.dao.CodeValue;
 import org.trade.persistent.dao.Strategy;
 
-import jakarta.persistence.*;
 import java.awt.*;
 import java.io.Serializable;
 import java.util.ArrayList;

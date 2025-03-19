@@ -37,12 +37,12 @@ package org.trade.persistent.dao;
 
 // Generated Feb 21, 2011 12:43:33 PM by Hibernate Tools 3.4.0.CR1
 
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import org.trade.core.dao.Aspect;
 import org.trade.core.util.TradingCalendar;
 import org.trade.strategy.data.base.RegularTimePeriod;
 
-import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.ZonedDateTime;

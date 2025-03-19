@@ -38,7 +38,6 @@ package org.trade.persistent.dao;
 import jakarta.persistence.*;
 import org.trade.core.dao.Aspect;
 
-
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 

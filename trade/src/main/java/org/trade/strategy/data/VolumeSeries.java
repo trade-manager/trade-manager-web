@@ -35,14 +35,14 @@
  */
 package org.trade.strategy.data;
 
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Transient;
 import org.jfree.data.time.ohlc.OHLCSeriesCollection;
 import org.trade.persistent.dao.Strategy;
 import org.trade.strategy.data.base.RegularTimePeriod;
 import org.trade.strategy.data.candle.CandleItem;
 import org.trade.strategy.data.volume.VolumeItem;
-
-import jakarta.persistence.*;
-import jakarta.persistence.criteria.*;
 
 /**
  * A list of (RegularTimePeriod, open, high, low, close) data items.

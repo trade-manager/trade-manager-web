@@ -35,6 +35,9 @@
  */
 package org.trade.strategy.data;
 
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Transient;
 import org.jfree.data.general.SeriesChangeEvent;
 import org.jfree.data.time.ohlc.OHLCSeriesCollection;
 import org.trade.dictionary.valuetype.CalculationType;
@@ -44,8 +47,6 @@ import org.trade.strategy.data.base.RegularTimePeriod;
 import org.trade.strategy.data.candle.CandleItem;
 import org.trade.strategy.data.vostro.VostroItem;
 
-import jakarta.persistence.*;
-import jakarta.persistence.criteria.*;
 import java.math.BigDecimal;
 import java.util.LinkedList;
 

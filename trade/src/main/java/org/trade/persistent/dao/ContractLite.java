@@ -37,9 +37,9 @@ package org.trade.persistent.dao;
 
 // Generated Feb 21, 2011 12:43:33 PM by Hibernate Tools 3.4.0.CR1
 
+import jakarta.persistence.*;
 import org.trade.core.dao.Aspect;
 
-import jakarta.persistence.*;
 import java.io.Serializable;
 
 import static jakarta.persistence.GenerationType.IDENTITY;

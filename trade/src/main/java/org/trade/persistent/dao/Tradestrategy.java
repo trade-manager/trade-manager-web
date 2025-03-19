@@ -35,6 +35,7 @@
  */
 package org.trade.persistent.dao;
 
+import jakarta.persistence.*;
 import org.trade.core.dao.Aspect;
 import org.trade.core.factory.ClassFactory;
 import org.trade.core.util.CoreUtils;
@@ -50,8 +51,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Vector;
-
-import jakarta.persistence.*;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 

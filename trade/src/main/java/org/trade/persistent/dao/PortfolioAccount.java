@@ -35,9 +35,8 @@
  */
 package org.trade.persistent.dao;
 
-import org.trade.core.dao.Aspect;
-
 import jakarta.persistence.*;
+import org.trade.core.dao.Aspect;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
