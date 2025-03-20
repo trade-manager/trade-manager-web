@@ -2,31 +2,32 @@
   "name": "trade-manager",
   "version": "0.0.1",
   "description": "Trade Manager",
-  "keywords": [
-    "rest",
-    "hateoas",
-    "spring",
-    "data",
-    "react"
-  ],
   "author": "Simon Allen",
   "license": "Apache-2.0",
   "dependencies": {
-    "react": "^16.5.2",
-    "react-dom": "^16.5.2",
-    "sockjs-client": "^1.0.3",
-    "rest": "^1.3.1",
-    "stompjs": "^2.3.3"
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "react-scripts": "3.4.0"
   },
   "scripts": {
-    "watch": "webpack --watch -d"
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "testInteractive": "react-scripts test --env=jsdom",
+    "test": "react-scripts test --env=jsdom --watchAll=false",
+    "eject": "react-scripts eject"
   },
-  "devDependencies": {
-    "@babel/core": "^7.1.0",
-    "@babel/preset-env": "^7.1.0",
-    "@babel/preset-react": "^7.0.0",
-    "babel-loader": "^8.0.2",
-    "webpack": "^4.19.1",
-    "webpack-cli": "^3.1.0"
+  "proxy": "http://localhost:8080",
+  "devDependencies": {},
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }

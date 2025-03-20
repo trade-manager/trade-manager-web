@@ -37,7 +37,7 @@ $mvn -N io.takari:maven:wrapper
 
 >$ cd web
 
-web>$ mvnw initialize sql:execute 
+web>$mvnw initialize sql:execute
 
 Note demo data for 2016 is added by default comment out the file in the web/pom.xml if not needed.
 

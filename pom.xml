@@ -24,6 +24,7 @@
         <module>ibclient</module>
         <module>core</module>
         <module>trade</module>
+        <module>web</module>
     </modules>
     <dependencies>
         <dependency>

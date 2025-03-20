@@ -78,8 +78,8 @@
 							<goal>install-node-and-npm</goal>
 						</goals>
 						<configuration>
-							<nodeVersion>v10.11.0</nodeVersion>
-							<npmVersion>6.4.1</npmVersion>
+							<nodeVersion>v23.10.0</nodeVersion>
+							<npmVersion>10.9.2</npmVersion>
 						</configuration>
 					</execution>
 					<execution>
@@ -119,7 +119,7 @@
 				<!-- Must run initialize first i.e. initialize sql:execute -->
 				<configuration>
 					<driver>com.mysql.cj.jdbc.Driver</driver>
-					<url>${db-dba.url}</url>
+					<url>${db-dba.url}?serverTimezone=${db-dba.time_zone}</url>
 					<username>${db-dba.username}</username>
 					<password>${db-dba.password}</password>
 					<settingsKey>sensibleKey</settingsKey>

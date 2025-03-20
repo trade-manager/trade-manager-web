@@ -36,13 +36,14 @@
         <properties>
             <property name="hibernate.connection.driver_class" value="com.mysql.cj.jdbc.Driver"/>
 
-            <property name="hibernate.connection.url" value="@db-dba.url@/@db-dba.schema@"/>
+            <property name="hibernate.connection.url" value="@db-dba.url@/@db-dba.schema@?serverTimezone=@db-dba.time_zone@"/>
             <property name="hibernate.default_schema" value="@db-dba.schema@"/>
-            <property name="hibernate.connection.username" value="@db-user.username@"/>
+            <property name="hibernate.default_schema" value="@db-dba.schema@"/>
             <property name="hibernate.connection.password" value="@db-user.password@"/>
             <property name="hibernate.connection.autocommit" value="false"/>
             <property name="hibernate.show_sql" value="false"/>
             <property name="hibernate.use_sql_comments" value="false"/>
+            <property name="hibernate.jdbc.time_zone" value="@db-dba.time_zone@"/>
 
             <!--
             <property name="hibernate.max_fetch_depth" value="5" />
