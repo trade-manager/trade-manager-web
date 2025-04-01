@@ -44,7 +44,7 @@ import org.trade.core.util.TradingCalendar;
 import org.trade.dictionary.valuetype.Currency;
 import org.trade.persistent.PersistentModelException;
 
-import javax.ejb.Stateless;
+import jakarta.ejb.Stateless;
 import java.util.ArrayList;
 import java.util.List;
 

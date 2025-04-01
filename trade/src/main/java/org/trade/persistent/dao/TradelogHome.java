@@ -40,7 +40,7 @@ import jakarta.persistence.Query;
 import org.trade.core.dao.EntityManagerHelper;
 import org.trade.core.util.TradingCalendar;
 
-import javax.ejb.Stateless;
+import jakarta.ejb.Stateless;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 

@@ -42,7 +42,7 @@ import org.trade.core.dao.EntityManagerHelper;
 import org.trade.strategy.data.CandleSeries;
 import org.trade.strategy.data.candle.CandleItem;
 
-import javax.ejb.Stateless;
+import jakarta.ejb.Stateless;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;

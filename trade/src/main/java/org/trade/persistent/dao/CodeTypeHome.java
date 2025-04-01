@@ -40,7 +40,7 @@ import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
 import org.trade.core.dao.EntityManagerHelper;
 
-import javax.ejb.Stateless;
+import jakarta.ejb.Stateless;
 import java.util.ArrayList;
 import java.util.List;
 

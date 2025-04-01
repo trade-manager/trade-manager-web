@@ -93,6 +93,7 @@ public class EntityManagerHelper {
      * @return EntityManager singleton for this thread
      */
     public static EntityManager getEntityManager() {
+
         EntityManager manager = threadLocal.get();
         if ((manager == null) || !manager.isOpen()) {
             manager = factory.createEntityManager();

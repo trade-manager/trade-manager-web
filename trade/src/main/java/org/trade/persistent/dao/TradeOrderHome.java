@@ -44,7 +44,7 @@ import jakarta.persistence.criteria.Root;
 import org.trade.core.dao.EntityManagerHelper;
 import org.trade.core.util.TradingCalendar;
 
-import javax.ejb.Stateless;
+import jakarta.ejb.Stateless;
 import java.util.List;
 
 /**

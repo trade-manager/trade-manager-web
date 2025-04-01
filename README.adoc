@@ -13,8 +13,8 @@ Environment
 
 Maven 3.2 or higher, 
 Git,  
-MySQL 5.6.24 or higher,   
-Java 1.8.x recommend latest version, 
+mariadb 11.7.2 or higher,
+Java 23.x recommend latest version,
 IntelliJ open source version  
 
 1/ To clone the repo from the command line  
@@ -31,7 +31,7 @@ $mvn -N io.takari:maven:wrapper
 
 4/ Change the following properties in the project dir db.properties file: db-dba.username(root is default)/db-dba.password. Note the db-dba.username must have schema create privaledges i.e. root. The other values can be changed if so desired.
 
-5/ Create the MySQL DB. From project dir, cd web, then run (make sure $JAVA_HOME is version 1.8, check with $>echo $JAVA_HOME).
+5/ Create the mariadb DB. From project dir, cd web, then run (make sure $JAVA_HOME is version 1.8, check with $>echo $JAVA_HOME).
 
 >$mvn clean install
 
@@ -39,7 +39,7 @@ $mvn -N io.takari:maven:wrapper
 
 web>$mvnw initialize sql:execute
 
-Note demo data for 2016 is added by default comment out the file in the web/pom.xml if not needed.
+Note demo data for 2023 is added by default comment out the file in the web/pom.xml if not needed.
 
 6/ To run the old Swing UI. From project dir, cd web, then run
 

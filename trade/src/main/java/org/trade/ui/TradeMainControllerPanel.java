@@ -139,7 +139,9 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
      */
 
     public TradeMainControllerPanel(Frame frame) {
+
         super(frame);
+
         try {
 
             /*

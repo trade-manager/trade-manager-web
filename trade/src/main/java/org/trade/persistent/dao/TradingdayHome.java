@@ -40,7 +40,7 @@ import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
 import org.trade.core.dao.EntityManagerHelper;
 
-import javax.ejb.Stateless;
+import jakarta.ejb.Stateless;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -279,9 +279,9 @@ public class TradingdayHome {
             }
             return null;
 
-        } catch (Exception re) {
+        } catch (Exception ex) {
             EntityManagerHelper.rollback();
-            throw re;
+            throw ex;
         } finally {
             EntityManagerHelper.close();
         }
@@ -351,7 +351,7 @@ public class TradingdayHome {
     /**
      * Method findTradestrategyByDate.
      *
-     * @param open Date
+     * @param idTradingday Integer
      * @return List<Tradestrategy>
      */
     private List<Tradestrategy> findTradestrategyByIdTradingday(Integer idTradingday) {
@@ -425,7 +425,7 @@ public class TradingdayHome {
 
                 Integer monthExpiry = expiryDate.getMonthValue();
                 Expression<Integer> month = builder.function("month", Integer.class, from.get("expiry"));
-                Predicate predicateMonth = builder.equal(month, new Integer(1 + monthExpiry.intValue()));
+                Predicate predicateMonth = builder.equal(month, 1 + monthExpiry.intValue());
                 predicates.add(predicateMonth);
             }
             query.where(predicates.toArray(new Predicate[]{}));
