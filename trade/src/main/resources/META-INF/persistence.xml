@@ -37,9 +37,9 @@
         <properties>
 
             <property name="jakarta.persistence.jdbc.driver" value="org.mariadb.jdbc.Driver" />
-            <property name="jakarta.persistence.jdbc.url" value="jdbc:mariadb://localhost:3306/tradeprod?serverTimezone=America/Los_Angeles" />
-            <property name="jakarta.persistence.jdbc.user" value="trader" />
-            <property name="jakarta.persistence.jdbc.password" value="ledzepplin" />
+            <property name="jakarta.persistence.jdbc.url" value="@db-dba.url@/@db-dba.schema@?serverTimezone=@db-dba.time_zone@" />
+            <property name="jakarta.persistence.jdbc.user" value="@db-user.username@" />
+            <property name="jakarta.persistence.jdbc.password" value="@db-user.password@" />
             <property name="show_sql" value="true" />
 
             <property name="hibernate.connection.autocommit" value="false"/>

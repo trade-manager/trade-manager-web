@@ -335,7 +335,9 @@ public final class DynamicCode {
 
             // compile, if required
             String error = null;
+
             if (binFile.lastModified() < srcFile.lastModified()) {
+
                 error = srcDir.javac.compile(new File[]{srcFile});
             }
 
