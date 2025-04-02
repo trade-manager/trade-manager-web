@@ -35,10 +35,9 @@
  */
 package org.trade.persistent.dao;
 
+import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import org.trade.core.dao.EntityManagerHelper;
-
-import jakarta.ejb.Stateless;
 
 /**
  *

@@ -1,6 +1,10 @@
 package com.ib.client;
 
-import java.io.*;
+import java.io.Closeable;
+import java.io.EOFException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInput;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;

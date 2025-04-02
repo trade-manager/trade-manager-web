@@ -35,7 +35,12 @@
  */
 package org.trade.persistent.dao;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EntityResult;
+import jakarta.persistence.Id;
+import jakarta.persistence.SqlResultSetMapping;
+import jakarta.persistence.SqlResultSetMappings;
 import org.trade.core.dao.Aspect;
 import org.trade.core.properties.ConfigProperties;
 

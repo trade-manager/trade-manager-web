@@ -3,7 +3,26 @@
 
 package com.ib.client;
 
-import static com.ib.client.Types.AlgoParam.*;
+import static com.ib.client.Types.AlgoParam.allowPastEndTime;
+import static com.ib.client.Types.AlgoParam.catchUp;
+import static com.ib.client.Types.AlgoParam.componentSize;
+import static com.ib.client.Types.AlgoParam.displaySize;
+import static com.ib.client.Types.AlgoParam.endTime;
+import static com.ib.client.Types.AlgoParam.forceCompletion;
+import static com.ib.client.Types.AlgoParam.getDone;
+import static com.ib.client.Types.AlgoParam.giveUp;
+import static com.ib.client.Types.AlgoParam.maxPctVol;
+import static com.ib.client.Types.AlgoParam.noTakeLiq;
+import static com.ib.client.Types.AlgoParam.noTradeAhead;
+import static com.ib.client.Types.AlgoParam.pctVol;
+import static com.ib.client.Types.AlgoParam.randomizeSize55;
+import static com.ib.client.Types.AlgoParam.randomizeTime20;
+import static com.ib.client.Types.AlgoParam.riskAversion;
+import static com.ib.client.Types.AlgoParam.startTime;
+import static com.ib.client.Types.AlgoParam.strategyType;
+import static com.ib.client.Types.AlgoParam.timeBetweenOrders;
+import static com.ib.client.Types.AlgoParam.useOddLots;
+import static com.ib.client.Types.AlgoParam.waitForFill;
 
 public class Types {
     public static enum ComboParam {

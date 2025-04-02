@@ -37,7 +37,22 @@ package org.trade.persistent;
 
 import org.trade.core.dao.Aspect;
 import org.trade.core.dao.Aspects;
-import org.trade.persistent.dao.*;
+import org.trade.persistent.dao.Account;
+import org.trade.persistent.dao.Candle;
+import org.trade.persistent.dao.CodeType;
+import org.trade.persistent.dao.Contract;
+import org.trade.persistent.dao.Portfolio;
+import org.trade.persistent.dao.Rule;
+import org.trade.persistent.dao.Strategy;
+import org.trade.persistent.dao.TradeOrder;
+import org.trade.persistent.dao.TradeOrderfill;
+import org.trade.persistent.dao.TradePosition;
+import org.trade.persistent.dao.TradelogReport;
+import org.trade.persistent.dao.Tradestrategy;
+import org.trade.persistent.dao.TradestrategyLite;
+import org.trade.persistent.dao.TradestrategyOrders;
+import org.trade.persistent.dao.Tradingday;
+import org.trade.persistent.dao.Tradingdays;
 import org.trade.strategy.data.CandleSeries;
 
 import java.math.BigDecimal;
