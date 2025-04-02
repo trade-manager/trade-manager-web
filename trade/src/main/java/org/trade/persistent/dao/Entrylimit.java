@@ -35,13 +35,12 @@
  */
 package org.trade.persistent.dao;
 
+import jakarta.persistence.*;
 import org.trade.core.dao.Aspect;
 
-import javax.persistence.*;
-import javax.validation.constraints.Min;
 import java.math.BigDecimal;
 
-import static javax.persistence.GenerationType.IDENTITY;
+import static jakarta.persistence.GenerationType.IDENTITY;
 
 /**
  *
@@ -55,9 +54,8 @@ public class Entrylimit extends Aspect implements java.io.Serializable {
      */
     private static final long serialVersionUID = -8612117968275040016L;
 
-    @Min(0)
+
     private BigDecimal startPrice;
-    @Min(0)
     private BigDecimal endPrice;
     private BigDecimal limitAmount;
     private BigDecimal percentOfPrice;

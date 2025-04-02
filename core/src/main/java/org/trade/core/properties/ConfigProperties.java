@@ -278,6 +278,7 @@ public class ConfigProperties {
         String ret = null;
 
         if (null == m_properties) {
+
             Properties systemProperties = new Properties();
 
             loadPropertiesAsResource(m_theConfig, getSystemPropertyFileName(), systemProperties);

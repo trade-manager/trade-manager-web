@@ -340,7 +340,7 @@ public interface IBrokerModel {
     /**
      * Method getHistoricalData.
      *
-     * @return ConcurrentHashMap<Integer   ,   Tradestrategy>
+     * @return ConcurrentHashMap<Integer, Tradestrategy>
      */
     ConcurrentHashMap<Integer, Tradestrategy> getHistoricalData();
 

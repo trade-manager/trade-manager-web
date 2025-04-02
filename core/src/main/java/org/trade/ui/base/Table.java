@@ -384,7 +384,7 @@ public class Table extends JTable implements MouseListener, ActionListener {
      * print all rows() -
      *
      * @exception *
-     * 				@see
+     *                @see
      */
 
     /**

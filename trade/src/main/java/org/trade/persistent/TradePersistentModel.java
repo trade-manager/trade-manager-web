@@ -35,6 +35,7 @@
  */
 package org.trade.persistent;
 
+import jakarta.persistence.OptimisticLockException;
 import org.trade.core.dao.Aspect;
 import org.trade.core.dao.AspectHome;
 import org.trade.core.dao.Aspects;
@@ -48,7 +49,6 @@ import org.trade.dictionary.valuetype.TradestrategyStatus;
 import org.trade.persistent.dao.*;
 import org.trade.strategy.data.CandleSeries;
 
-import javax.persistence.OptimisticLockException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.ZonedDateTime;
@@ -458,7 +458,7 @@ public class TradePersistentModel implements IPersistentModel {
              * If a partial filled order is cancelled mark the order as filled.
              */
             if (OrderStatus.CANCELLED.equals(tradeOrder.getStatus()) && !tradeOrder.getIsFilled()
-                    && CoreUtils.nullSafeComparator(tradeOrder.getFilledQuantity(), new Integer(0)) == 1) {
+                    && CoreUtils.nullSafeComparator(tradeOrder.getFilledQuantity(), 0) == 1) {
                 tradeOrder.setIsFilled(true);
                 tradeOrder.setStatus(OrderStatus.FILLED);
             }
@@ -567,8 +567,8 @@ public class TradePersistentModel implements IPersistentModel {
              * values.
              */
             Money comms = new Money(totalCommission);
-            if (CoreUtils.nullSafeComparator(new Integer(totalBuyQuantity), tradePosition.getTotalBuyQuantity()) != 0
-                    || CoreUtils.nullSafeComparator(new Integer(totalSellQuantity),
+            if (CoreUtils.nullSafeComparator(totalBuyQuantity, tradePosition.getTotalBuyQuantity()) != 0
+                    || CoreUtils.nullSafeComparator(totalSellQuantity,
                     tradePosition.getTotalSellQuantity()) != 0) {
 
                 int openQuantity = totalBuyQuantity - totalSellQuantity;

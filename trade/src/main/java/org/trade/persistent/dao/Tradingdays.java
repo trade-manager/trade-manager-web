@@ -39,8 +39,8 @@ import org.trade.core.dao.Aspect;
 import org.trade.core.lookup.DBTableLookupServiceProvider;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.TradingCalendar;
-import org.trade.dictionary.valuetype.Currency;
 import org.trade.dictionary.valuetype.*;
+import org.trade.dictionary.valuetype.Currency;
 import org.trade.persistent.PersistentModelException;
 
 import java.io.*;
@@ -153,7 +153,7 @@ public class Tradingdays extends Aspect implements java.io.Serializable {
     /**
      * Method getTradingdays.
      *
-     * @return ConcurrentHashMap<Date   ,   Tradingday>
+     * @return ConcurrentHashMap<Date, Tradingday>
      */
     public List<Tradingday> getTradingdays() {
         return this.tradingdays;

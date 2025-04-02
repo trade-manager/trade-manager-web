@@ -125,7 +125,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
     /**
      * Method getHistoricalData.
      *
-     * @return ConcurrentHashMap<Integer   ,   Tradestrategy>
+     * @return ConcurrentHashMap<Integer, Tradestrategy>
      * @see IBrokerModel#getHistoricalData()
      */
     public ConcurrentHashMap<Integer, Tradestrategy> getHistoricalData() {

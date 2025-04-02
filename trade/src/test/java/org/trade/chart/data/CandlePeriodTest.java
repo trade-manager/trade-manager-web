@@ -137,7 +137,7 @@ public class CandlePeriodTest {
             assertFalse(this.tradestrategy.getStrategyData().getBaseCandleSeries().isEmpty());
             Candle candle = this.tradestrategy.getStrategyData().getBaseCandleSeries()
                     .getBar(TradingCalendar.getDateAtTime(TradingCalendar.getPrevTradingDay(startPeriod),
-                            this.tradestrategy.getTradingday().getOpen()),
+                                    this.tradestrategy.getTradingday().getOpen()),
                             TradingCalendar.getDateAtTime(TradingCalendar.getPrevTradingDay(startPeriod),
                                     this.tradestrategy.getTradingday().getClose()));
             _log.info("Bar for Contract: " + candle.getContract().getSymbol() + " Start Period: " + candle.getPeriod()

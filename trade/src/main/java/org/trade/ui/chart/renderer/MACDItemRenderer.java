@@ -110,8 +110,6 @@
 
 package org.trade.ui.chart.renderer;
 
-import static org.jfree.chart.util.ShapeUtils.isPointInRect;
-
 import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.entity.EntityCollection;
 import org.jfree.chart.labels.XYToolTipGenerator;
@@ -121,17 +119,19 @@ import org.jfree.chart.plot.PlotRenderingInfo;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
 import org.jfree.chart.renderer.xy.XYItemRendererState;
-import org.jfree.chart.urls.XYURLGenerator;
-import org.jfree.data.xy.XYDataset;
 import org.jfree.chart.ui.RectangleEdge;
+import org.jfree.chart.urls.XYURLGenerator;
 import org.jfree.chart.util.ShapeUtils;
 import org.jfree.chart.util.UnitType;
+import org.jfree.data.xy.XYDataset;
 import org.trade.strategy.data.MACDDataset;
 import org.trade.strategy.data.macd.MACDItem;
 
 import java.awt.*;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Rectangle2D;
+
+import static org.jfree.chart.util.ShapeUtils.isPointInRect;
 
 /**
  * Standard item renderer for an {@link XYPlot}. This class can draw (a) shapes

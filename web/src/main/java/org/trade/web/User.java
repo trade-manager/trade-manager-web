@@ -1,10 +1,9 @@
 package org.trade.web;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import javax.persistence.*;
 
 @Entity
 @Table(name = "user")

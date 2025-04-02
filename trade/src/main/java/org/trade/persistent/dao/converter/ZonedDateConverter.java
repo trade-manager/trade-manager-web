@@ -1,9 +1,9 @@
 package org.trade.persistent.dao.converter;
 
+import jakarta.persistence.AttributeConverter;
+import jakarta.persistence.Converter;
 import org.trade.core.util.TradingCalendar;
 
-import javax.persistence.AttributeConverter;
-import javax.persistence.Converter;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;

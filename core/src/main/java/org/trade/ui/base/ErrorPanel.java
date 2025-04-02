@@ -496,7 +496,7 @@ public class ErrorPanel extends BasePanel {
      *
      *
      * @exception *
-     * 				@see
+     *                @see
      *
      *                private void doDataChanged() { if (!dirty) { dirty = true;
      *

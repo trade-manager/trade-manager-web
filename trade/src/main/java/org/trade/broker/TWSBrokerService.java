@@ -14,13 +14,13 @@ import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.CoreUtils;
 import org.trade.core.util.TradingCalendar;
 import org.trade.core.valuetype.Money;
+import org.trade.dictionary.valuetype.*;
 import org.trade.dictionary.valuetype.OrderStatus;
 import org.trade.dictionary.valuetype.OrderType;
-import org.trade.dictionary.valuetype.*;
 import org.trade.persistent.IPersistentModel;
 import org.trade.persistent.PersistentModelException;
-import org.trade.persistent.dao.Contract;
 import org.trade.persistent.dao.*;
+import org.trade.persistent.dao.Contract;
 import org.trade.strategy.data.CandleSeries;
 import org.trade.strategy.data.StrategyData;
 import org.trade.strategy.data.candle.CandleItem;
@@ -460,7 +460,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
                 executionDetails.clear();
                 Integer reqId = this.getNextRequestId();
                 controller().reqExecutions(getIBExecutionFilter(m_clientId, mktOpenDate,
-                        null, null)
+                                null, null)
                         , new TradeReportHandler(this, reqId));
 //                controller().client().reqExecutions(reqId, getIBExecutionFilter(m_clientId, mktOpenDate, null, null));
             } else {
@@ -492,7 +492,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
 
                 Integer reqId = tradestrategy.getId();
                 controller().reqExecutions(getIBExecutionFilter(clientId, tradestrategy.getTradingday().getOpen(),
-                        tradestrategy.getContract().getSecType(), tradestrategy.getContract().getSymbol())
+                                tradestrategy.getContract().getSecType(), tradestrategy.getContract().getSymbol())
                         , new TradeReportHandler(this, reqId));
 
 //                controller().client().reqExecutions(reqId,

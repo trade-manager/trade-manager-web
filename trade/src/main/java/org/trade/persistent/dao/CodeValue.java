@@ -35,17 +35,18 @@
  */
 package org.trade.persistent.dao;
 
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import org.trade.core.dao.Aspect;
 import org.trade.core.factory.ClassFactory;
 import org.trade.strategy.data.IndicatorSeries;
 import org.trade.ui.configuration.CodeAttributePanel;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Vector;
 
-import static javax.persistence.GenerationType.IDENTITY;
+import static jakarta.persistence.GenerationType.IDENTITY;
+
 
 /**
  *
