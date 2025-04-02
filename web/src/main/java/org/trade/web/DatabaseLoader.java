@@ -37,12 +37,13 @@ public class DatabaseLoader implements CommandLineRunner {
 
         User admin = this.users.findByName("admin");
         if (null == admin) {
-            
+
             admin = this.users.save(new User("admin", "admin",
                     global, ROLE_MANAGER));
         }
         User oliver = this.users.findByName("oliver");
         if (null == oliver) {
+            
             oliver = this.users.save(new User("oliver", "admin",
                     global, ROLE_MANAGER));
         }
