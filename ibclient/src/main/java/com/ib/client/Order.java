@@ -3,7 +3,16 @@
 
 package com.ib.client;
 
-import com.ib.client.Types.*;
+import com.ib.client.Types.Action;
+import com.ib.client.Types.AlgoStrategy;
+import com.ib.client.Types.HedgeType;
+import com.ib.client.Types.Method;
+import com.ib.client.Types.OcaType;
+import com.ib.client.Types.ReferencePriceType;
+import com.ib.client.Types.Rule80A;
+import com.ib.client.Types.TimeInForce;
+import com.ib.client.Types.TriggerMethod;
+import com.ib.client.Types.VolatilityType;
 
 import java.util.ArrayList;
 

@@ -3,13 +3,44 @@
 
 package com.ib.controller;
 
-import com.ib.client.*;
-import com.ib.client.Types.*;
+import com.ib.client.CommissionReport;
+import com.ib.client.Contract;
+import com.ib.client.ContractDetails;
+import com.ib.client.DeltaNeutralContract;
+import com.ib.client.EClientErrors;
+import com.ib.client.EJavaSignal;
+import com.ib.client.EReader;
+import com.ib.client.EReaderSignal;
+import com.ib.client.EWrapper;
+import com.ib.client.Execution;
+import com.ib.client.ExecutionFilter;
+import com.ib.client.Order;
+import com.ib.client.OrderState;
+import com.ib.client.OrderStatus;
+import com.ib.client.ScannerSubscription;
+import com.ib.client.SoftDollarTier;
+import com.ib.client.TagValue;
+import com.ib.client.TickType;
+import com.ib.client.Types.BarSize;
+import com.ib.client.Types.DeepSide;
+import com.ib.client.Types.DeepType;
+import com.ib.client.Types.DurationUnit;
+import com.ib.client.Types.ExerciseType;
+import com.ib.client.Types.FADataType;
+import com.ib.client.Types.FundamentalType;
+import com.ib.client.Types.MktDataType;
+import com.ib.client.Types.NewsType;
+import com.ib.client.Types.WhatToShow;
 import com.ib.controller.ApiConnection.ILogger;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.Set;
+import java.util.StringTokenizer;
 
 public class ApiController implements EWrapper {
     private ApiConnection m_client;

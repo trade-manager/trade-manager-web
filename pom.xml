@@ -21,7 +21,6 @@
     <name>Trade Manager - Root</name>
     <description>Trade Manager - Root</description>
     <modules>
-        <module>ibclient</module>
         <module>core</module>
         <module>trade</module>
         <module>web</module>
