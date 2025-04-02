@@ -29,17 +29,21 @@ public class DatabaseLoader implements CommandLineRunner {
     public void run(String... strings) {
 
         Domain global = this.domains.findByName("global");
+
         if (null == global) {
+
             global = this.domains.save(new Domain("global", "global"));
         }
 
         User admin = this.users.findByName("admin");
         if (null == admin) {
+
             admin = this.users.save(new User("admin", "admin",
                     global, ROLE_MANAGER));
         }
         User oliver = this.users.findByName("oliver");
         if (null == oliver) {
+            
             oliver = this.users.save(new User("oliver", "admin",
                     global, ROLE_MANAGER));
         }
