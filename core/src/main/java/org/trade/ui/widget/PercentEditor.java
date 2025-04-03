@@ -38,6 +38,7 @@ package org.trade.ui.widget;
 import org.trade.core.valuetype.Percent;
 
 import javax.swing.*;
+import java.io.Serial;
 
 /**
  *
@@ -46,6 +47,7 @@ public class PercentEditor extends DefaultCellEditor {
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = -373016324201689041L;
 
     /**
@@ -61,6 +63,7 @@ public class PercentEditor extends DefaultCellEditor {
             /**
              *
              */
+            @Serial
             private static final long serialVersionUID = 2424965279339363773L;
 
             public void setValue(Object value) {

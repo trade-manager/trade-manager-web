@@ -53,11 +53,9 @@ public class PercentToObject implements IJavaDynamicTypeConverter {
      * @param targetType     Class<?>
      * @param valueToConvert Object
      * @return Object
-     * @throws JavaTypeTranslatorException
-     * @see com.cbsinc.esc.devtools.conversion.JavaDynamicTypeConverter
      */
     public Object convert(Class<?> targetType, Object valueToConvert) throws JavaTypeTranslatorException {
-        Object rVal = null;
+        Object rVal;
 
         if (valueToConvert instanceof Percent) {
             rVal = JavaTypeTranslator.convert(targetType, valueToConvert.toString());
@@ -72,14 +70,9 @@ public class PercentToObject implements IJavaDynamicTypeConverter {
      * @param targetType     Class<?>
      * @param valueToConvert Object
      * @return boolean
-     * @see com.cbsinc.esc.devtools.conversion.JavaDynamicTypeConverter
      */
     public boolean supportsConversion(Class<?> targetType, Object valueToConvert) {
-        boolean rVal = false;
-        if (valueToConvert instanceof Percent) {
-            rVal = true;
-        }
 
-        return (rVal);
+        return (valueToConvert instanceof Percent);
     }
 }

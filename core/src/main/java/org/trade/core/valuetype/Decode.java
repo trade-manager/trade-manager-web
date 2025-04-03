@@ -43,6 +43,7 @@ import org.trade.core.lookup.LookupService;
 import org.trade.core.lookup.PropertiesLookup;
 import org.trade.core.util.CoreUtils;
 
+import java.io.Serial;
 import java.util.Comparator;
 import java.util.Vector;
 
@@ -62,6 +63,7 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = -5356057478795774210L;
 
     /**
@@ -89,7 +91,7 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
     private ILookup m_lookup = null;
     private Object m_badValue = null;
 
-    protected static Boolean m_ascending = new Boolean(true);
+    protected static Boolean m_ascending = true;
 
     /**
      * Default Constructor
@@ -185,11 +187,7 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
      * will give the error message and isValid will be false
      */
     public boolean isEmpty() {
-        if ((getCode().equals("")) && ((null == m_badValue) || (m_badValue.equals("")))) {
-            return (true);
-        }
-
-        return (false);
+        return (getCode().isEmpty()) && ((null == m_badValue) || (m_badValue.equals("")));
     }
 
     /**
@@ -200,11 +198,7 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
             return true;
         }
 
-        if (getCode().equals("")) {
-            return (false);
-        }
-
-        return (true);
+        return !getCode().isEmpty();
     }
 
     /**
@@ -316,13 +310,8 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
      * @return boolean
      */
     public boolean equalsCode(String code) {
-        boolean equals = false;
 
-        if (getCode().equalsIgnoreCase(code)) {
-            equals = true;
-        }
-
-        return equals;
+        return getCode().equalsIgnoreCase(code);
     }
 
     /**
@@ -345,9 +334,7 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
         if (objectToCompare instanceof Decode) {
             if (null == this.getCode())
                 return false;
-            if (this.getCode().equals(((Decode) objectToCompare).getCode())) {
-                return true;
-            }
+            return this.getCode().equals(((Decode) objectToCompare).getCode());
         }
         return false;
     }
@@ -368,7 +355,6 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
      * Method clone.
      *
      * @return Object
-     * @throws java.lang.CloneNotSupportedException
      */
     public Object clone() throws java.lang.CloneNotSupportedException {
         return (super.clone());
@@ -400,16 +386,15 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
      * Method getCodesDecodes.
      *
      * @return Vector<Decode>
-     * @throws ValueTypeException
      */
     public Vector<Decode> getCodesDecodes() throws ValueTypeException {
-        Vector<Decode> decodes = new Vector<Decode>();
+        Vector<Decode> decodes = new Vector<>();
 
         try {
             final int columns = getLookup().getColumnCount();
             final int rows = getLookup().getRowCount();
-            String columnName = null;
-            Decode newDecode = null;
+            String columnName;
+            Decode newDecode;
 
             for (int i = 0; i < columns; i++) {
                 columnName = getLookup().getColumnName(i);
@@ -419,7 +404,7 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
                         final Class<?> c = Class.forName(this.getClass().getName());
 
                         // construct a new business object
-                        newDecode = (Decode) c.newInstance();
+                        newDecode = (Decode) c.getDeclaredConstructor().newInstance();
                         newDecode.m_lookup = (ILookup) getLookup().clone();
 
                         newDecode.setValue(getLookup().getValueAt(y, i));
@@ -449,7 +434,7 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
 
             try {
                 setCode((String) JavaTypeTranslator.convert(String.class, value));
-            } catch (final Exception ex) {
+            } catch (final Exception _) {
 
             }
         }
@@ -474,7 +459,7 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
      */
     private void setCode(String code) {
         try {
-            String codeToLookup = null;
+            String codeToLookup;
 
             if (convertToUppercase()) {
                 codeToLookup = code.toUpperCase();
@@ -525,7 +510,7 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
      */
     public void setDisplayName(String displayName) {
         try {
-            String displayNameToLookup = null;
+            String displayNameToLookup;
 
             if (convertToUppercase()) {
                 displayNameToLookup = displayName.toUpperCase();

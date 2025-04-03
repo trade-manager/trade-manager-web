@@ -84,7 +84,9 @@ import java.awt.image.BufferedImage;
 import java.awt.print.PrinterException;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serial;
 import java.util.Calendar;
+import java.util.Objects;
 
 /**
  * @author Simon Allen
@@ -93,10 +95,10 @@ import java.util.Calendar;
  */
 public class Table extends JTable implements MouseListener, ActionListener {
 
+    @Serial
     private static final long serialVersionUID = -6753202830151175785L;
 
     private static final String DATEFORMAT = "MM/dd/yyyy";
-    private JPopupMenu popup = null;
     private boolean popupMenu = true;
     private String m_pngDefaultDir = null;
 
@@ -104,7 +106,6 @@ public class Table extends JTable implements MouseListener, ActionListener {
      * Constructor for Table.
      *
      * @param tableModel TableModel
-     * @throws ValueTypeException
      */
     public Table(TableModel tableModel) throws ValueTypeException {
 
@@ -181,8 +182,6 @@ public class Table extends JTable implements MouseListener, ActionListener {
      * mousePressed() -
      *
      * @param evt MouseEvent
-     * @throws *
-     * @see
      */
     public void mousePressed(MouseEvent evt) {
         if (evt.isPopupTrigger()) {
@@ -194,8 +193,6 @@ public class Table extends JTable implements MouseListener, ActionListener {
      * mouseReleased() -
      *
      * @param evt MouseEvent
-     * @throws *
-     * @see
      */
     public void mouseReleased(MouseEvent evt) {
         if (evt.isPopupTrigger()) {
@@ -207,8 +204,6 @@ public class Table extends JTable implements MouseListener, ActionListener {
      * mouseClicked() -
      *
      * @param evt MouseEvent
-     * @throws *
-     * @see
      */
     public void mouseClicked(MouseEvent evt) {
         if (evt.isPopupTrigger()) {
@@ -220,8 +215,6 @@ public class Table extends JTable implements MouseListener, ActionListener {
      * mouseEntered() -
      *
      * @param evt MouseEvent
-     * @throws *
-     * @see
      */
     public void mouseEntered(MouseEvent evt) {
     }
@@ -230,8 +223,6 @@ public class Table extends JTable implements MouseListener, ActionListener {
      * mouseExited() -
      *
      * @param evt MouseEvent
-     * @throws *
-     * @see
      */
     public void mouseExited(MouseEvent evt) {
     }
@@ -243,6 +234,7 @@ public class Table extends JTable implements MouseListener, ActionListener {
      */
     protected JTableHeader createDefaultTableHeader() {
         return new JTableHeader(columnModel) {
+            @Serial
             private static final long serialVersionUID = -2667248411137081167L;
 
             public String getToolTipText(MouseEvent e) {
@@ -261,12 +253,10 @@ public class Table extends JTable implements MouseListener, ActionListener {
      * createPopup() -
      *
      * @param point Point
-     * @throws *
-     * @see
      */
     public void createPopup(Point point) {
 
-        popup = new JPopupMenu();
+        JPopupMenu popup = new JPopupMenu();
         if (popupMenu) {
             JMenuItem addMenuItem = popup.add(new JMenuItem("Add"));
             addMenuItem.addActionListener(this);
@@ -294,8 +284,6 @@ public class Table extends JTable implements MouseListener, ActionListener {
      * actionPerformed() -
      *
      * @param evt ActionEvent
-     * @throws *
-     * @see
      */
     public void actionPerformed(ActionEvent evt) {
         JMenuItem mi = (JMenuItem) evt.getSource();
@@ -389,9 +377,6 @@ public class Table extends JTable implements MouseListener, ActionListener {
 
     /**
      * delete a row() -
-     *
-     * @throws *
-     * @see
      */
     public void delete() {
         if (this.getSelectedRow() > -1) {
@@ -401,9 +386,6 @@ public class Table extends JTable implements MouseListener, ActionListener {
 
     /**
      * clear all rows() -
-     *
-     * @throws *
-     * @see
      */
     public void clearAll() {
         int rowCount = this.getRowCount();
@@ -412,7 +394,7 @@ public class Table extends JTable implements MouseListener, ActionListener {
         }
     }
 
-    /**
+    /*
      * print all rows() -
      *
      * @exception *
@@ -421,10 +403,6 @@ public class Table extends JTable implements MouseListener, ActionListener {
 
     /**
      * add a row() -
-     *
-     * @param <B> Component c </B> Returns the container of the component
-     * @return Component
-     * @throws @see
      */
     public void add() {
         ((TableModel) this.getModel()).addRow();
@@ -432,11 +410,6 @@ public class Table extends JTable implements MouseListener, ActionListener {
 
     /**
      * saveAs - Save the image as a PNG
-     *
-     * @param <B> Component c </B> Returns the container of the component
-     * @return Component
-     * @throws IOException
-     * @throws @see
      */
     private void saveAs() throws IOException {
 
@@ -449,7 +422,7 @@ public class Table extends JTable implements MouseListener, ActionListener {
         g2.translate(0, this.getTableHeader().getHeight());
         this.paint(g2);
         g2.dispose();
-        ImageIO.write(bi, "png", new File(openFileChooser()));
+        ImageIO.write(bi, "png", new File(Objects.requireNonNull(openFileChooser())));
 
     }
 
@@ -460,7 +433,7 @@ public class Table extends JTable implements MouseListener, ActionListener {
      */
     private String openFileChooser() {
 
-        String fileName = null;
+        String fileName;
         ExampleFileFilter filter = new ExampleFileFilter(new String[]{"png"}, "PNG Files");
         // Start in the curr dir
 
@@ -475,7 +448,7 @@ public class Table extends JTable implements MouseListener, ActionListener {
         filer1.setFileFilter(filter);
         filer1.setAccessory(new FilePreviewer(filer1));
 
-        int returnVal = 0;
+        int returnVal;
 
         returnVal = filer1.showSaveDialog(this);
 

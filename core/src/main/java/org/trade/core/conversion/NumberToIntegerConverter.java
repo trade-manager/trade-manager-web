@@ -80,6 +80,6 @@ public class NumberToIntegerConverter extends NumberToNumberConverter {
      * @return Integer the Number converted to an Integer
      */
     protected Number getConvertedNumber(Number aNumber) {
-        return new Integer(aNumber.intValue());
+        return aNumber.intValue();
     }
 }

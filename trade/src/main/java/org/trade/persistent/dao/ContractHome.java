@@ -73,6 +73,7 @@ public class ContractHome {
                                     ZonedDateTime expiryDate) {
 
         try {
+
             EntityManager entityManager = EntityManagerHelper.getEntityManager();
             entityManager.getTransaction().begin();
             CriteriaBuilder builder = entityManager.getCriteriaBuilder();
@@ -82,18 +83,24 @@ public class ContractHome {
             List<Predicate> predicates = new ArrayList<Predicate>();
 
             if (null != SECType) {
+
                 Predicate predicate = builder.equal(from.get("secType"), SECType);
                 predicates.add(predicate);
             }
+
             if (null != symbol) {
+
                 Predicate predicate = builder.equal(from.get("symbol"), symbol);
                 predicates.add(predicate);
             }
             if (null != exchange) {
+
                 Predicate predicate = builder.equal(from.get("exchange"), exchange);
                 predicates.add(predicate);
             }
+
             if (null != currency) {
+
                 Predicate predicate = builder.equal(from.get("currency"), currency);
                 predicates.add(predicate);
             }
@@ -109,11 +116,14 @@ public class ContractHome {
                 Predicate predicateMonth = builder.equal(month, monthExpiry);
                 predicates.add(predicateMonth);
             }
+
             query.where(predicates.toArray(new Predicate[]{}));
             TypedQuery<Contract> typedQuery = entityManager.createQuery(query);
             List<Contract> items = typedQuery.getResultList();
             entityManager.getTransaction().commit();
+
             if (items.size() > 0) {
+
                 return items.get(0);
             }
             return null;
@@ -134,10 +144,13 @@ public class ContractHome {
     public Contract findById(Integer id) {
 
         try {
+
             EntityManager entityManager = EntityManagerHelper.getEntityManager();
             entityManager.getTransaction().begin();
             Contract instance = entityManager.find(Contract.class, id);
+
             if (null != instance) {
+
                 instance.getTradePositions().size();
             }
             entityManager.getTransaction().commit();

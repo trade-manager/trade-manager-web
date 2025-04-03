@@ -42,20 +42,23 @@ import org.trade.core.validator.DecimalValidator;
 import org.trade.core.validator.IExceptionMessageListener;
 import org.trade.core.validator.IValidator;
 
+import java.io.Serial;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.Comparator;
+import java.util.Objects;
 
 /**
  *
  */
 public class Decimal extends ValueType implements Comparator<Decimal>, Comparable<Decimal> {
+    @Serial
     private static final long serialVersionUID = 4937298768811778585L;
 
     public final static Decimal ZERO = new Decimal(0L, 0);
 
-    protected static Boolean m_ascending = new Boolean(true);
+    protected static Boolean m_ascending = true;
 
     static {
         // Register the appropriate converters
@@ -101,7 +104,7 @@ public class Decimal extends ValueType implements Comparator<Decimal>, Comparabl
      */
     public Decimal(String deciamlString, int scale) {
         this(scale);
-        if ((null != deciamlString) && (deciamlString.length() != 0)) {
+        if ((null != deciamlString) && (!deciamlString.isEmpty())) {
             // This is necessary because Java will parse strings with multiple
             // dashes
             if (deciamlString.indexOf("-") != deciamlString.lastIndexOf("-")) {
@@ -133,7 +136,7 @@ public class Decimal extends ValueType implements Comparator<Decimal>, Comparabl
      */
     public Decimal(Double d, int scale) {
         this(scale);
-        setBigDecimal(new BigDecimal(d.doubleValue()));
+        setBigDecimal(BigDecimal.valueOf(d));
     }
 
     /**
@@ -231,8 +234,7 @@ public class Decimal extends ValueType implements Comparator<Decimal>, Comparabl
      * @return boolean
      */
     public boolean canBeNegative() {
-        boolean negative = true;
-        return negative;
+        return true;
     }
 
     /**
@@ -242,11 +244,7 @@ public class Decimal extends ValueType implements Comparator<Decimal>, Comparabl
      */
     public boolean isNegative() {
         assertDefined();
-        boolean negative = false;
-        if (m_value.compareTo(new BigDecimal(0)) < 0) {
-            negative = true;
-        }
-        return negative;
+        return m_value.compareTo(new BigDecimal(0)) < 0;
     }
 
     /**
@@ -255,13 +253,8 @@ public class Decimal extends ValueType implements Comparator<Decimal>, Comparabl
      * @return boolean
      */
     public boolean isEmpty() {
-        boolean empty = false;
 
-        if ((null == m_value) || (null != m_invalidValue)) {
-            empty = true;
-        }
-
-        return empty;
+        return (null == m_value) || (null != m_invalidValue);
     }
 
     /**
@@ -330,25 +323,20 @@ public class Decimal extends ValueType implements Comparator<Decimal>, Comparabl
     public String toString() {
         if (null != m_value) {
             return (m_value.toString());
-        } else if (null != m_invalidValue) {
-            return m_invalidValue;
-        } else {
-            return "";
-        }
+        } else return Objects.requireNonNullElse(m_invalidValue, "");
     }
 
     /**
      * Method setValue.
      *
      * @param value Object
-     * @throws ValueTypeException
      */
     public void setValue(Object value) throws ValueTypeException {
         if (value instanceof Decimal) {
             setBigDecimal(((Decimal) value).m_value);
         } else {
             try {
-                setBigDecimal(((Decimal) JavaTypeTranslator.convert(Decimal.class, value)).getBigDecimalValue());
+                setBigDecimal(((Decimal) Objects.requireNonNull(JavaTypeTranslator.convert(Decimal.class, value))).getBigDecimalValue());
             } catch (Exception ex) {
                 throw new ValueTypeException(ex);
             }
@@ -493,14 +481,11 @@ public class Decimal extends ValueType implements Comparator<Decimal>, Comparabl
      * Overrides Cloneable
      *
      * @return Object
-     * @throws *
-     * @see
      */
 
     public Object clone() {
         try {
-            Decimal other = (Decimal) super.clone();
-            return other;
+            return super.clone();
         } catch (CloneNotSupportedException e) {
             // will never happen
             return null;
@@ -545,9 +530,8 @@ public class Decimal extends ValueType implements Comparator<Decimal>, Comparabl
             return true;
 
         if (objectToCompare instanceof Decimal) {
-            if (CoreUtils.nullSafeComparator(((Decimal) objectToCompare).getBigDecimalValue(),
-                    this.getBigDecimalValue()) == 0)
-                return true;
+            return CoreUtils.nullSafeComparator(((Decimal) objectToCompare).getBigDecimalValue(),
+                    this.getBigDecimalValue()) == 0;
         }
         return false;
     }
@@ -563,7 +547,7 @@ public class Decimal extends ValueType implements Comparator<Decimal>, Comparabl
      */
     private void setBigDecimal(BigDecimal value) {
         if (value == null) {
-            m_value = new BigDecimal(0.0);
+            m_value = new BigDecimal("0.0");
         } else {
             // m_value = value;
             m_value = value.setScale(SCALE, RoundingMode.HALF_EVEN);
@@ -581,7 +565,7 @@ public class Decimal extends ValueType implements Comparator<Decimal>, Comparabl
      */
     private BigDecimal notNull(Decimal value) {
         if (null == value) {
-            return (new BigDecimal(0.0D));
+            return (new BigDecimal("0.0"));
         } else {
             return (value.getBigDecimalValue());
         }

@@ -37,6 +37,8 @@ package org.trade.persistent;
 
 import org.trade.core.exception.ModelException;
 
+import java.io.Serial;
+
 /**
  * @author Simon Allen
  * @version $Id: ConfigProperties.java 1.0 2000/08/08 00:36:40Z Simon.Allen dev
@@ -47,6 +49,7 @@ public class PersistentModelException extends ModelException {
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = -1955474015909463964L;
 
     public PersistentModelException() {

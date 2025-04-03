@@ -41,11 +41,14 @@ import org.trade.core.validator.IExceptionMessageListener;
 import org.trade.core.validator.IValidator;
 import org.trade.core.validator.StringValidator;
 
+import java.io.Serial;
+
 /**
  *
  */
 public abstract class AbstractNumberValueType extends StringWrapper {
 
+    @Serial
     private static final long serialVersionUID = 2808106869428773106L;
 
     public AbstractNumberValueType() {
@@ -87,11 +90,7 @@ public abstract class AbstractNumberValueType extends StringWrapper {
         long value = 0;
 
         if (!isEmpty()) {
-            try {
-                value = Long.parseLong(getInternalValue());
-            } catch (NumberFormatException t) {
-                throw t;
-            }
+            value = Long.parseLong(getInternalValue());
         }
 
         return (value);
@@ -103,7 +102,7 @@ public abstract class AbstractNumberValueType extends StringWrapper {
      * @return Long
      */
     public Long getLong() {
-        return (new Long(getNumber()));
+        return (getNumber());
     }
 
     /**
@@ -178,7 +177,7 @@ public abstract class AbstractNumberValueType extends StringWrapper {
                     if (valid && !AbstractNumberValueType.this.isEmpty()) {
                         Long max = AbstractNumberValueType.this.getMaximumValue();
                         Long min = AbstractNumberValueType.this.getMinimumValue();
-                        long longValue = 0;
+                        long longValue;
 
                         try {
                             longValue = Long.parseLong((String) value);
@@ -188,12 +187,12 @@ public abstract class AbstractNumberValueType extends StringWrapper {
                             break;
                         }
 
-                        if ((max != null) && (longValue > max.longValue())) {
+                        if ((max != null) && (longValue > max)) {
                             receiver.addExceptionMessage(getMessageFactory().create(
                                     new ExceptionContext("edit_check", "Value can not be greater than " + max)));
 
                         }
-                        if ((min != null) && (longValue < min.longValue())) {
+                        if ((min != null) && (longValue < min)) {
                             receiver.addExceptionMessage(getMessageFactory()
                                     .create(new ExceptionContext("edit_check", "Value can not be less than " + min)));
                         }

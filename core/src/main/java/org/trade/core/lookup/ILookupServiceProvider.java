@@ -46,7 +46,6 @@ public interface ILookupServiceProvider {
      * @param qualifier  LookupQualifier
      * @param optional   boolean
      * @return ILookup
-     * @throws LookupException
      */
     ILookup getLookup(String lookupName, LookupQualifier qualifier, boolean optional) throws LookupException;
 

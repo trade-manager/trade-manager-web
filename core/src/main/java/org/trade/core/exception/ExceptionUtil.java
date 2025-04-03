@@ -37,7 +37,9 @@ package org.trade.core.exception;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
+import java.io.Serial;
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Enumeration;
 
 /**
@@ -49,6 +51,7 @@ public class ExceptionUtil implements Serializable {
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = 1278830639842508059L;
 
     ExceptionUtil() {
@@ -61,8 +64,8 @@ public class ExceptionUtil implements Serializable {
      * @param t Throwable
      * @return String
      */
-    public static final String captureStackTrace(Throwable t) {
-        String stackTrace = null;
+    public static String captureStackTrace(Throwable t) {
+        String stackTrace;
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         PrintWriter writer = new PrintWriter(out);
 
@@ -80,12 +83,11 @@ public class ExceptionUtil implements Serializable {
      * @param t          Throwable
      * @return String
      */
-    public static final String nestStackTrace(String stackTrace, Throwable t) {
-        String newStackTrace = null;
+    public static String nestStackTrace(String stackTrace, Throwable t) {
+        String newStackTrace;
 
-        if (t instanceof NestingException) {
-            NestingException ex = (NestingException) t;
-            newStackTrace = stackTrace + ex.getStackTrace();
+        if (t instanceof NestingException ex) {
+            newStackTrace = stackTrace + Arrays.toString(ex.getStackTrace());
         } else {
             newStackTrace = stackTrace + captureStackTrace(t);
         }
@@ -98,11 +100,11 @@ public class ExceptionUtil implements Serializable {
      *
      * @param nestingException NestingException
      * @param stackTrace       String
-     * @param errorMesg        String
+     * @param errorMsg         String
      * @return String
      */
-    public static final String fillInExceptionMessage(NestingException nestingException, String stackTrace,
-                                                      String errorMesg) {
+    public static String fillInExceptionMessage(NestingException nestingException, String stackTrace,
+                                                String errorMsg) {
         if (stackTrace != null) {
             int index = stackTrace.indexOf(':');
 
@@ -116,14 +118,14 @@ public class ExceptionUtil implements Serializable {
             }
 
             // Construct the first line of the stack trace.
-            StringBuffer buf = new StringBuffer();
+            StringBuilder buf = new StringBuilder();
             buf.append(s1);
             buf.append(' ');
-            buf.append(errorMesg);
+            buf.append(errorMsg);
             buf.append('\n');
 
             // Construct the lines in the stack trace that display the
-            // user friendly messages.
+            // user-friendly messages.
             Enumeration<?> enumeration = nestingException.getAllExceptionMessages();
             while (enumeration.hasMoreElements()) {
                 ExceptionMessage exceptionMessage;
@@ -136,7 +138,7 @@ public class ExceptionUtil implements Serializable {
                 buf.append('\n');
             }
 
-            // Construct all of the "at ..." lines.
+            // Construct all the "at ..." lines.
             buf.append(s2);
             stackTrace = buf.toString();
         } else {

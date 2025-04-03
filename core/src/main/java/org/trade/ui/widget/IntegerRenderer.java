@@ -37,6 +37,7 @@ package org.trade.ui.widget;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
+import java.io.Serial;
 import java.text.NumberFormat;
 
 /**
@@ -46,8 +47,9 @@ public class IntegerRenderer extends DefaultTableCellRenderer {
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = 3568483163690718815L;
-    private NumberFormat m_formater = null;
+    private final NumberFormat m_formater;
 
     public IntegerRenderer() {
         super();

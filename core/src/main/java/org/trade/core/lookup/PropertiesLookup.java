@@ -35,6 +35,7 @@
  */
 package org.trade.core.lookup;
 
+import java.io.Serial;
 import java.util.Vector;
 
 /**
@@ -47,14 +48,15 @@ public class PropertiesLookup implements ILookup, Cloneable, java.io.Serializabl
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = 5263608853348477640L;
 
     //
     // Private Attributes
     //
-    private Vector<?> m_data = null;
+    private Vector<?> m_data;
 
-    private Vector<?> m_columnNames = null;
+    private Vector<?> m_columnNames;
 
     private int m_currentRowPos = -1;
 
@@ -71,11 +73,11 @@ public class PropertiesLookup implements ILookup, Cloneable, java.io.Serializabl
         // A precaustion to make sure that calls to my API won't throw
         // nulls
         if (null == m_columnNames) {
-            m_columnNames = new Vector<Object>();
+            m_columnNames = new Vector<>();
         }
 
         if (null == m_data) {
-            m_data = new Vector<Object>();
+            m_data = new Vector<>();
         }
     }
 
@@ -83,10 +85,9 @@ public class PropertiesLookup implements ILookup, Cloneable, java.io.Serializabl
      * Method getColumnCount.
      *
      * @return int
-     * @throws LookupException
      * @see ILookup#getColumnCount()
      */
-    public int getColumnCount() throws LookupException {
+    public int getColumnCount() {
         return (m_columnNames.size());
     }
 
@@ -94,7 +95,6 @@ public class PropertiesLookup implements ILookup, Cloneable, java.io.Serializabl
      * Method getRowCount.
      *
      * @return int
-     * @throws LookupException
      * @see ILookup#getRowCount()
      */
     public int getRowCount() throws LookupException {
@@ -106,7 +106,6 @@ public class PropertiesLookup implements ILookup, Cloneable, java.io.Serializabl
      *
      * @param col int
      * @return Object
-     * @throws LookupException
      * @see ILookup#getValueAt(int)
      */
     public Object getValueAt(int col) throws LookupException {
@@ -118,7 +117,6 @@ public class PropertiesLookup implements ILookup, Cloneable, java.io.Serializabl
      *
      * @param colName String
      * @return Object
-     * @throws LookupException
      * @see ILookup#getValueAt(String)
      */
     public Object getValueAt(String colName) throws LookupException {
@@ -131,7 +129,6 @@ public class PropertiesLookup implements ILookup, Cloneable, java.io.Serializabl
      * @param row int
      * @param col int
      * @return Object
-     * @throws LookupException
      * @see ILookup#getValueAt(int, int)
      */
     public Object getValueAt(int row, int col) throws LookupException {
@@ -143,11 +140,10 @@ public class PropertiesLookup implements ILookup, Cloneable, java.io.Serializabl
      *
      * @param colPos int
      * @return String
-     * @throws LookupException
      * @see ILookup#getColumnName(int)
      */
     public String getColumnName(int colPos) throws LookupException {
-        String colName = null;
+        String colName;
 
         try {
             colName = "" + m_columnNames.elementAt(colPos);
@@ -163,7 +159,6 @@ public class PropertiesLookup implements ILookup, Cloneable, java.io.Serializabl
      *
      * @param colName String
      * @return boolean
-     * @throws LookupException
      * @see ILookup#setDefaultPos(String)
      */
     public boolean setDefaultPos(String colName) throws LookupException {
@@ -176,7 +171,6 @@ public class PropertiesLookup implements ILookup, Cloneable, java.io.Serializabl
      * @param colValue Object
      * @param colName  String
      * @return boolean
-     * @throws LookupException
      * @see ILookup#setPos(Object, String)
      */
     public boolean setPos(Object colValue, String colName) throws LookupException {
@@ -189,10 +183,9 @@ public class PropertiesLookup implements ILookup, Cloneable, java.io.Serializabl
      * @param colValue Object
      * @param col      int
      * @return boolean
-     * @throws LookupException
      * @see ILookup#setPos(Object, int)
      */
-    public boolean setPos(Object colValue, int col) throws LookupException {
+    public boolean setPos(Object colValue, int col) {
         return (doSetPos(colValue, col));
     }
 
@@ -203,6 +196,7 @@ public class PropertiesLookup implements ILookup, Cloneable, java.io.Serializabl
      * @see ILookup#clone()
      */
     public Object clone() {
+
         return (new PropertiesLookup(m_columnNames, m_data));
     }
 
@@ -215,7 +209,6 @@ public class PropertiesLookup implements ILookup, Cloneable, java.io.Serializabl
      *
      * @param colName String
      * @return int
-     * @throws LookupException
      */
     private int doGetColPos(String colName) throws LookupException {
         int pos = -1;
@@ -242,7 +235,6 @@ public class PropertiesLookup implements ILookup, Cloneable, java.io.Serializabl
      * @param rowPos int
      * @param colPos int
      * @return Object
-     * @throws LookupException
      */
     private Object doGetValue(int rowPos, int colPos) throws LookupException {
         Object rVal = null;

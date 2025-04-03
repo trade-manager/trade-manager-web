@@ -559,7 +559,7 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
         if (e.getStateChange() == ItemEvent.SELECTED) {
 
             ChartPanel currentTab = (ChartPanel) m_jTabbedPaneContract.getSelectedComponent();
-            Integer newPeriod = new Integer(((BarSize) e.getItem()).getCode());
+            Integer newPeriod =  Integer.valueOf(((BarSize) e.getItem()).getCode());
 
             if (null != currentTab && !this.isConnected()) {
                 if (newPeriod.equals(BarSize.DAY)) {

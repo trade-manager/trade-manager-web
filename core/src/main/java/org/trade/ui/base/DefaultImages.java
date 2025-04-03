@@ -46,7 +46,7 @@ public class DefaultImages {
      * @return java.awt.Image
      */
     public static java.awt.Image createOpenFolderImage() {
-        byte data[] = {(byte) 71, (byte) 73, (byte) 70, (byte) 56, (byte) 57, (byte) 97, (byte) 18, (byte) 0,
+        byte[] data = {(byte) 71, (byte) 73, (byte) 70, (byte) 56, (byte) 57, (byte) 97, (byte) 18, (byte) 0,
                 (byte) 15, (byte) 0, (byte) 247, (byte) 0, (byte) 0, (byte) 74, (byte) 99, (byte) 123, (byte) 99,
                 (byte) 99, (byte) 99, (byte) 156, (byte) 156, (byte) 99, (byte) 206, (byte) 206, (byte) 99, (byte) 206,
                 (byte) 206, (byte) 156, (byte) 239, (byte) 231, (byte) 115, (byte) 247, (byte) 239, (byte) 132,
@@ -168,7 +168,7 @@ public class DefaultImages {
      * @return java.awt.Image
      */
     public static java.awt.Image createClosedFolderImage() {
-        byte data[] = {(byte) 71, (byte) 73, (byte) 70, (byte) 56, (byte) 57, (byte) 97, (byte) 18, (byte) 0,
+        byte[] data = {(byte) 71, (byte) 73, (byte) 70, (byte) 56, (byte) 57, (byte) 97, (byte) 18, (byte) 0,
                 (byte) 15, (byte) 0, (byte) 247, (byte) 0, (byte) 0, (byte) 99, (byte) 99, (byte) 99, (byte) 156,
                 (byte) 156, (byte) 99, (byte) 206, (byte) 206, (byte) 99, (byte) 239, (byte) 231, (byte) 115,
                 (byte) 247, (byte) 239, (byte) 132, (byte) 247, (byte) 247, (byte) 247, (byte) 255, (byte) 255,
@@ -288,7 +288,7 @@ public class DefaultImages {
      * @return java.awt.Image
      */
     public static java.awt.Image createLeafImage() {
-        byte data[] = {(byte) 71, (byte) 73, (byte) 70, (byte) 56, (byte) 57, (byte) 97, (byte) 14, (byte) 0,
+        byte[] data = {(byte) 71, (byte) 73, (byte) 70, (byte) 56, (byte) 57, (byte) 97, (byte) 14, (byte) 0,
                 (byte) 15, (byte) 0, (byte) 247, (byte) 0, (byte) 0, (byte) 0, (byte) 0, (byte) 0, (byte) 1, (byte) 1,
                 (byte) 1, (byte) 2, (byte) 2, (byte) 2, (byte) 3, (byte) 3, (byte) 3, (byte) 4, (byte) 4, (byte) 4,
                 (byte) 5, (byte) 5, (byte) 5, (byte) 6, (byte) 6, (byte) 6, (byte) 7, (byte) 7, (byte) 7, (byte) 8,

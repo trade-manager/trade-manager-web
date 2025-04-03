@@ -62,6 +62,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
+import java.io.Serial;
 import java.io.Writer;
 import java.net.URLConnection;
 
@@ -73,6 +74,7 @@ import java.net.URLConnection;
  */
 public class StreamEditorPane extends JEditorPane implements MouseListener, ActionListener {
 
+    @Serial
     private static final long serialVersionUID = -8068406289677664715L;
 
     private final static Logger _log = LoggerFactory.getLogger(StreamEditorPane.class);
@@ -81,11 +83,9 @@ public class StreamEditorPane extends JEditorPane implements MouseListener, Acti
 
     protected UndoManager undo = new UndoManager();
 
-    private UndoAction undoAction = new UndoAction();
+    private final UndoAction undoAction = new UndoAction();
 
-    private RedoAction redoAction = new RedoAction();
-
-    private JPopupMenu popup = null;
+    private final RedoAction redoAction = new RedoAction();
 
     private String m_currFileName = null;
 
@@ -103,7 +103,6 @@ public class StreamEditorPane extends JEditorPane implements MouseListener, Acti
      * Constructor for StreamEditorPane.
      *
      * @param type String
-     * @throws IOException
      */
     public StreamEditorPane(String type) {
         super();
@@ -150,8 +149,6 @@ public class StreamEditorPane extends JEditorPane implements MouseListener, Acti
      * Method setInputStream.
      *
      * @param is InputStream
-     * @throws IOException
-     * @throws BadLocationException
      */
     public void setInputStream(InputStream is) throws IOException, BadLocationException {
         String type = guessContentType(is);
@@ -213,7 +210,7 @@ public class StreamEditorPane extends JEditorPane implements MouseListener, Acti
      * @return false means user cancelled the SaveAs
      */
     public boolean saveAs() {
-        boolean retSaveAs = false;
+        boolean retSaveAs;
         // Make the dialog visible as a modal (default) dialog box.
         ExampleFileFilter filter = new ExampleFileFilter(new String[]{"*"}, "All Files");
 
@@ -298,8 +295,6 @@ public class StreamEditorPane extends JEditorPane implements MouseListener, Acti
 
                 retOpenFile = openFileReader(getFileName());
             }
-        } else {
-            retOpenFile = false;
         }
 
         return retOpenFile;
@@ -348,7 +343,7 @@ public class StreamEditorPane extends JEditorPane implements MouseListener, Acti
      * @return boolean
      */
     public boolean openFileReader(String fileName) {
-        boolean result = false;
+        boolean result;
 
         try {
             Reader read = new FileReader(fileName);
@@ -373,7 +368,7 @@ public class StreamEditorPane extends JEditorPane implements MouseListener, Acti
      * @return boolean
      */
     public boolean saveFileWriter(String fileName) {
-        boolean result = false;
+        boolean result;
 
         try {
             Writer w = new FileWriter(fileName);
@@ -445,7 +440,6 @@ public class StreamEditorPane extends JEditorPane implements MouseListener, Acti
      *
      * @param is InputStream
      * @return String
-     * @throws IOException
      */
     protected String guessContentType(InputStream is) throws IOException {
         String type = URLConnection.guessContentTypeFromStream(is);
@@ -474,8 +468,6 @@ public class StreamEditorPane extends JEditorPane implements MouseListener, Acti
      * mousePressed() -
      *
      * @param evt MouseEvent
-     * @throws *
-     * @see
      */
     public void mousePressed(MouseEvent evt) {
         if (evt.isPopupTrigger()) {
@@ -487,8 +479,6 @@ public class StreamEditorPane extends JEditorPane implements MouseListener, Acti
      * mouseReleased() -
      *
      * @param evt MouseEvent
-     * @throws *
-     * @see
      */
     public void mouseReleased(MouseEvent evt) {
         if (evt.isPopupTrigger()) {
@@ -500,8 +490,6 @@ public class StreamEditorPane extends JEditorPane implements MouseListener, Acti
      * mouseClicked() -
      *
      * @param evt MouseEvent
-     * @throws *
-     * @see
      */
     public void mouseClicked(MouseEvent evt) {
         if (evt.isPopupTrigger()) {
@@ -515,8 +503,6 @@ public class StreamEditorPane extends JEditorPane implements MouseListener, Acti
      * mouseEntered() -
      *
      * @param evt MouseEvent
-     * @throws *
-     * @see
      */
     public void mouseEntered(MouseEvent evt) {
     }
@@ -525,8 +511,6 @@ public class StreamEditorPane extends JEditorPane implements MouseListener, Acti
      * mouseExited() -
      *
      * @param evt MouseEvent
-     * @throws *
-     * @see
      */
     public void mouseExited(MouseEvent evt) {
     }
@@ -535,12 +519,10 @@ public class StreamEditorPane extends JEditorPane implements MouseListener, Acti
      * createPopup() -
      *
      * @param point Point
-     * @throws *
-     * @see
      */
     protected void createPopup(Point point) {
 
-        popup = new JPopupMenu();
+        JPopupMenu popup = new JPopupMenu();
 
         JMenuItem undo = new JMenuItem("Undo");
         undo.setMnemonic('Z');
@@ -606,8 +588,6 @@ public class StreamEditorPane extends JEditorPane implements MouseListener, Acti
      * actionPerformed() -
      *
      * @param evt ActionEvent
-     * @throws *
-     * @see
      */
     public void actionPerformed(ActionEvent evt) {
         JMenuItem mi = (JMenuItem) evt.getSource();
@@ -694,8 +674,6 @@ public class StreamEditorPane extends JEditorPane implements MouseListener, Acti
     private void replace() {
 
         String textToReplace = this.getSelectedText().toUpperCase();
-        if (null == textToReplace)
-            return;
 
         String replaceText = (String) JOptionPane.showInputDialog(this.getRootPane(), "Replace",
                 "Replace selected text with", JOptionPane.INFORMATION_MESSAGE, null, null, null);
@@ -731,7 +709,7 @@ public class StreamEditorPane extends JEditorPane implements MouseListener, Acti
     }
 
     private void find() {
-        String findText = null;
+        String findText;
         Object findObj = JOptionPane.showInputDialog(this.getRootPane(), "Find ", "Find",
                 JOptionPane.INFORMATION_MESSAGE, null, null, this.getSelectedText());
 
@@ -802,6 +780,7 @@ public class StreamEditorPane extends JEditorPane implements MouseListener, Acti
         /**
          *
          */
+        @Serial
         private static final long serialVersionUID = -1274054242153556791L;
 
         public UndoAction() {
@@ -847,6 +826,7 @@ public class StreamEditorPane extends JEditorPane implements MouseListener, Acti
         /**
          *
          */
+        @Serial
         private static final long serialVersionUID = 519980226158345645L;
 
         public RedoAction() {

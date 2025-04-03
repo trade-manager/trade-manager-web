@@ -37,6 +37,8 @@ package org.trade.ui.base;
 
 import org.trade.core.valuetype.Decode;
 
+import java.io.Serial;
+
 /**
  * Example implementation of how to subclass the CodeDecodeValueType Object this
  * object represents the State codes and Descriptions in the US.
@@ -48,6 +50,7 @@ public class BaseUIPropertyCodes extends Decode {
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = -2178313262496336078L;
 
     public final static String BASE_UI_WIDGET_PROP = "BASE_UI_WIDGET_PROP";
@@ -134,13 +137,8 @@ public class BaseUIPropertyCodes extends Decode {
      * @return boolean
      */
     public boolean isEnabled() {
-        boolean enabled = false;
 
-        if (getValue(BASE_UI_WIDGET_ENABLED).equalsIgnoreCase("true")) {
-            enabled = true;
-        }
-
-        return enabled;
+        return getValue(BASE_UI_WIDGET_ENABLED).equalsIgnoreCase("true");
     }
 
     /**
@@ -178,7 +176,7 @@ public class BaseUIPropertyCodes extends Decode {
     public int getMnemonic() {
         int returnValue = 0;
 
-        if ((null != getValue(BASE_UI_WIDGET_MNEMONIC)) && (getValue(BASE_UI_WIDGET_MNEMONIC).length() > 0)) {
+        if ((null != getValue(BASE_UI_WIDGET_MNEMONIC)) && (!getValue(BASE_UI_WIDGET_MNEMONIC).isEmpty())) {
             returnValue = getValue(BASE_UI_WIDGET_MNEMONIC).charAt(0);
         }
 
@@ -190,12 +188,10 @@ public class BaseUIPropertyCodes extends Decode {
      *
      * @param code String
      * @return BaseUIPropertyCodes
-     * @throws *
-     * @see
      */
     public static BaseUIPropertyCodes newInstance(String code) {
-        BaseUIPropertyCodes returnInstance = null;
-        returnInstance = new BaseUIPropertyCodes();
+
+        BaseUIPropertyCodes returnInstance = new BaseUIPropertyCodes();
         returnInstance.setValue(code);
         return returnInstance;
     }

@@ -51,7 +51,6 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
@@ -61,12 +60,12 @@ import java.util.Vector;
 public final class DynamicCode {
 
     private final static Logger _log = LoggerFactory.getLogger(DynamicCode.class);
-    private String compileClasspath;
-    private ClassLoader parentClassLoader;
-    private List<SourceDir> sourceDirs = new ArrayList<SourceDir>();
+    private final String compileClasspath;
+    private final ClassLoader parentClassLoader;
+    private final List<SourceDir> sourceDirs = new ArrayList<>();
 
     // class name => LoadedClass
-    private HashMap<String, LoadedClass> loadedClasses = new HashMap<String, LoadedClass>();
+    private final HashMap<String, LoadedClass> loadedClasses = new HashMap<>();
 
     public DynamicCode() {
         this(Thread.currentThread().getContextClassLoader());
@@ -95,7 +94,6 @@ public final class DynamicCode {
     /**
      * Add a directory that contains the source of dynamic java code.
      *
-     * @param srcDir
      * @return true if the add is successful
      */
     public boolean addSourceDir(File srcDir) {
@@ -109,8 +107,7 @@ public final class DynamicCode {
         synchronized (sourceDirs) {
 
             // check existence
-            for (int i = 0; i < sourceDirs.size(); i++) {
-                SourceDir src = sourceDirs.get(i);
+            for (SourceDir src : sourceDirs) {
                 if (src.srcDir.equals(srcDir)) {
                     return false;
                 }
@@ -127,13 +124,11 @@ public final class DynamicCode {
     /**
      * Returns the up-to-date dynamic class by name.
      *
-     * @param className
      * @return Class<?>
-     * @throws Exception
      */
     public Class<?> loadClass(String className) throws Exception {
 
-        LoadedClass loadedClass = null;
+        LoadedClass loadedClass;
         synchronized (loadedClasses) {
             loadedClass = loadedClasses.get(className);
         }
@@ -177,8 +172,7 @@ public final class DynamicCode {
      * @return SourceDir
      */
     private SourceDir locateResource(String resource) {
-        for (int i = 0; i < sourceDirs.size(); i++) {
-            SourceDir src = sourceDirs.get(i);
+        for (SourceDir src : sourceDirs) {
             if (new File(src.srcDir, resource).exists()) {
                 return src;
             }
@@ -194,12 +188,7 @@ public final class DynamicCode {
     private void unload(SourceDir src) {
         // clear loaded classes
         synchronized (loadedClasses) {
-            for (Iterator<LoadedClass> iter = loadedClasses.values().iterator(); iter.hasNext(); ) {
-                LoadedClass loadedClass = iter.next();
-                if (loadedClass.srcDir == src) {
-                    iter.remove();
-                }
-            }
+            loadedClasses.values().removeIf(loadedClass -> loadedClass.srcDir == src);
         }
 
         // create new class loader
@@ -209,7 +198,6 @@ public final class DynamicCode {
     /**
      * Get a resource from added source directories.
      *
-     * @param resource
      * @return the resource URL, or null if resource not found
      */
     public URL getResource(String resource) {
@@ -248,7 +236,6 @@ public final class DynamicCode {
      * @param implClassName  String
      * @param parm           Vector<Object>
      * @return Object
-     * @throws Exception
      */
     public Object newProxyInstance(Class<?> interfaceClass, String implClassName, Vector<Object> parm)
             throws Exception {
@@ -313,7 +300,6 @@ public final class DynamicCode {
          *
          * @param className String
          * @param src       SourceDir
-         * @throws Exception
          */
         LoadedClass(String className, SourceDir src) throws Exception {
             this.className = className;
@@ -381,7 +367,6 @@ public final class DynamicCode {
          *
          * @param className String
          * @param parm      Vector<Object>
-         * @throws Exception
          */
         MyInvocationHandler(String className, Vector<Object> parm) throws Exception {
             backendClassName = className;
@@ -399,7 +384,6 @@ public final class DynamicCode {
          * Constructor for MyInvocationHandler.
          *
          * @param className String
-         * @throws Exception
          */
         MyInvocationHandler(String className) throws Exception {
             backendClassName = className;
@@ -420,7 +404,6 @@ public final class DynamicCode {
          * @param method Method
          * @param args   Object[]
          * @return Object
-         * @throws Throwable
          * @see java.lang.reflect.InvocationHandler#invoke(Object, Method,
          * Object[])
          */
@@ -446,7 +429,6 @@ public final class DynamicCode {
          *
          * @param clz Class<?>
          * @return Object
-         * @throws Exception
          */
         private Object newDynaCodeInstance(Class<?> clz) throws Exception {
             try {
@@ -465,58 +447,49 @@ public final class DynamicCode {
      * @param clz  Class<?>
      * @param parm Vector<Object>
      * @return Object
-     * @throws IOException
-     * @throws ClassNotFoundException
-     * @throws InstantiationException
-     * @throws IllegalAccessException
-     * @throws NoSuchMethodException
-     * @throws InvocationTargetException
      */
-    private static Object getCreateClass(Class<?> clz, Vector<Object> parm) throws IOException, ClassNotFoundException,
+    private static Object getCreateClass(Class<?> clz, Vector<Object> parm) throws
             InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-        int vectorSize = 0;
+        int vectorSize;
         vectorSize = parm.size();
         Object instance = null;
 
         Class<?>[] parms = new Class[vectorSize];
         Object[] object = new Object[vectorSize];
-        StringBuffer classes = new StringBuffer();
+        StringBuilder classes = new StringBuilder();
         int i = 0;
         for (Object obj : parm) {
-            if (classes.length() == 0) {
+            if (classes.isEmpty()) {
                 classes.append(obj.getClass().getName());
             } else {
-                classes.append("," + obj.getClass().getName());
+                classes.append(",").append(obj.getClass().getName());
             }
             parms[i] = obj.getClass();
             object[i] = obj;
             i++;
         }
 
-        Constructor<?> constructor = null;
+        Constructor<?> constructor;
 
         try {
             constructor = clz.getDeclaredConstructor(parms);
             instance = constructor.newInstance(object);
         } catch (Exception e) {
 
-            _log.debug("Could not find constructor for default parms[" + classes + "] will test all constructors.");
+            _log.debug("Could not find constructor for default parms[{}] will test all constructors.", classes);
             Constructor<?>[] constructors = clz.getConstructors();
             for (Constructor<?> constructor2 : constructors) {
                 try {
                     instance = constructor2.newInstance(object);
-                    if (null != instance) {
-                        _log.debug(
-                                "Found constructor: " + constructor2.toGenericString() + " for parms[" + classes + "]");
-                        break;
-                    }
+                    _log.debug("Found constructor: {} for parms[{}]", constructor2.toGenericString(), classes);
+                    break;
                 } catch (Exception ex) {
-                    _log.info("Constructor: " + constructor2.toGenericString() + " failed!!");
+                    _log.info("Constructor: {} failed!!", constructor2.toGenericString());
                 }
             }
         }
         if (null == instance) {
-            instance = clz.newInstance();
+            instance = clz.getDeclaredConstructor().newInstance();
         }
 
         return instance;
@@ -530,16 +503,16 @@ public final class DynamicCode {
      * @return String
      */
     private static String extractClasspath(ClassLoader cl) {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
 
         while (cl != null) {
             if (cl instanceof URLClassLoader) {
-                URL urls[] = ((URLClassLoader) cl).getURLs();
-                for (int i = 0; i < urls.length; i++) {
-                    if (buf.length() > 0) {
+                URL[] urls = ((URLClassLoader) cl).getURLs();
+                for (URL url : urls) {
+                    if (!buf.isEmpty()) {
                         buf.append(File.pathSeparatorChar);
                     }
-                    buf.append(urls[i].getFile().toString());
+                    buf.append(url.getFile());
                 }
             }
             cl = cl.getParent();

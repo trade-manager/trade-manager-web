@@ -83,7 +83,7 @@ public class StringToCharacterConverter extends StringToObjectConverter {
      */
     protected Object getConvertedString(String aString) throws IllegalArgumentException {
         try {
-            return new Character(aString.charAt(0));
+            return aString.charAt(0);
         } catch (Exception e) {
             throw new IllegalArgumentException();
         }

@@ -80,6 +80,6 @@ public class NumberToLongConverter extends NumberToNumberConverter {
      * @return Long the Number converted to a Long
      */
     protected Number getConvertedNumber(Number aNumber) {
-        return new Long(aNumber.longValue());
+        return aNumber.longValue();
     }
 }

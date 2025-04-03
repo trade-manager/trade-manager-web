@@ -40,6 +40,7 @@ import org.trade.core.valuetype.Percent;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
+import java.io.Serial;
 import java.text.NumberFormat;
 
 /**
@@ -50,8 +51,9 @@ public class PercentRenderer extends DefaultTableCellRenderer {
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = 1531259426058273458L;
-    private NumberFormat m_formater = null;
+    private final NumberFormat m_formater;
 
     public PercentRenderer() {
         super();

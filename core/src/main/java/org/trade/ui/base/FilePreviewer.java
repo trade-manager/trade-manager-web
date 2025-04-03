@@ -40,6 +40,7 @@ import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.io.Serial;
 
 /**
  * @author Simon Allen
@@ -49,6 +50,7 @@ public class FilePreviewer extends JComponent implements PropertyChangeListener 
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = 2163573903688220675L;
 
     ImageIcon thumbnail = null;

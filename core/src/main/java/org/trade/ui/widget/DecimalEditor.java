@@ -38,6 +38,7 @@ package org.trade.ui.widget;
 import org.trade.core.valuetype.Decimal;
 
 import javax.swing.*;
+import java.io.Serial;
 
 /**
  *
@@ -46,6 +47,7 @@ public class DecimalEditor extends DefaultCellEditor {
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = -3633663882477548304L;
 
     /**
@@ -62,6 +64,7 @@ public class DecimalEditor extends DefaultCellEditor {
             /**
              *
              */
+            @Serial
             private static final long serialVersionUID = -5844604630045985498L;
 
             public void setValue(Object value) {

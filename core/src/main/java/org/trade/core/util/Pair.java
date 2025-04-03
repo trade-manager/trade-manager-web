@@ -42,8 +42,8 @@ import java.util.Comparator;
  */
 public final class Pair {
 
-    public double x = 0;
-    public double y = 0;
+    public double x;
+    public double y;
 
     /**
      * Constructor for Pair.
@@ -65,9 +65,5 @@ public final class Pair {
         return x + "," + y;
     }
 
-    public static final Comparator<Pair> X_VALUE_ASC = new Comparator<Pair>() {
-        public int compare(Pair o1, Pair o2) {
-            return CoreUtils.nullSafeComparator(o1.x, o2.x);
-        }
-    };
+    public static final Comparator<Pair> X_VALUE_ASC = (o1, o2) -> CoreUtils.nullSafeComparator(o1.x, o2.x);
 }

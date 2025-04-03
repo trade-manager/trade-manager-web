@@ -40,6 +40,7 @@ import org.trade.core.valuetype.Quantity;
 import javax.swing.*;
 import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.NumberFormatter;
+import java.io.Serial;
 import java.text.NumberFormat;
 
 /**
@@ -50,6 +51,7 @@ public class QuantityField extends JFormattedTextField {
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = 3445299380677561974L;
 
     public QuantityField() {
@@ -61,7 +63,7 @@ public class QuantityField extends JFormattedTextField {
         this.setFormatterFactory(new DefaultFormatterFactory(new NumberFormatter(displayFormat),
                 new NumberFormatter(displayFormat), new NumberFormatter(editFormat)));
         this.setHorizontalAlignment(SwingConstants.RIGHT);
-        this.setValue(new Integer(0));
+        this.setValue(0);
         this.setColumns(10);
     }
 
@@ -72,7 +74,7 @@ public class QuantityField extends JFormattedTextField {
      */
     public Quantity getQuantity() {
         try {
-            this.setValue(new Integer(this.getText()));
+            this.setValue(Integer.valueOf(this.getText()));
         } catch (Exception ex) {
             // Do nothing will return the current value.
         }

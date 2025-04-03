@@ -68,7 +68,7 @@ public class Reflector extends Object {
                 if (currentCl == null) {
                     // Break the loop - the method does not exist in the classes
                     // class hierarchy
-                    notFound = false;
+                    //notFound = false;
 
                     break;
                 }
@@ -108,7 +108,7 @@ public class Reflector extends Object {
                 if (currentCl == null) {
                     // Break the loop - the Field does not exist in the classes
                     // class hierarchy
-                    notFound = false;
+                    // notFound = false;
 
                     break;
                 }

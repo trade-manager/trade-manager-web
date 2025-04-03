@@ -16,7 +16,7 @@ public class ZonedDateTimeConverter implements AttributeConverter<ZonedDateTime,
             return null;
         }
         final Instant instant = date.toInstant();
-        return ((Date) Date.from(instant));
+        return Date.from(instant);
 
     }
 

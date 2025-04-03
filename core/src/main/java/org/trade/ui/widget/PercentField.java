@@ -40,6 +40,7 @@ import org.trade.core.valuetype.Percent;
 import javax.swing.*;
 import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.NumberFormatter;
+import java.io.Serial;
 import java.text.NumberFormat;
 
 /**
@@ -50,6 +51,7 @@ public class PercentField extends JFormattedTextField {
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = 3445299380677561974L;
 
     public PercentField() {
@@ -61,7 +63,7 @@ public class PercentField extends JFormattedTextField {
         this.setFormatterFactory(new DefaultFormatterFactory(new NumberFormatter(displayFormat),
                 new NumberFormatter(displayFormat), new NumberFormatter(editFormat)));
         this.setHorizontalAlignment(SwingConstants.RIGHT);
-        this.setValue(new Double(0));
+        this.setValue(0);
         this.setColumns(10);
 
     }
@@ -73,7 +75,7 @@ public class PercentField extends JFormattedTextField {
      */
     public Percent getPercent() {
         try {
-            this.setValue(new Double(this.getText()));
+            this.setValue(Double.valueOf(this.getText()));
         } catch (Exception ex) {
             // Do nothing will return the current value.
         }
