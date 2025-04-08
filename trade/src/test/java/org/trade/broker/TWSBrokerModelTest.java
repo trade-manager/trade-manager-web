@@ -35,8 +35,12 @@
  */
 package org.trade.broker;
 
-import org.junit.*;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.TestName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,14 +51,17 @@ import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.TradingCalendar;
 import org.trade.persistent.IPersistentModel;
 import org.trade.persistent.PersistentModelException;
-import org.trade.persistent.dao.*;
+import org.trade.persistent.dao.Candle;
+import org.trade.persistent.dao.Contract;
+import org.trade.persistent.dao.TradeOrder;
+import org.trade.persistent.dao.TradePosition;
+import org.trade.persistent.dao.Tradestrategy;
+import org.trade.persistent.dao.Tradingday;
+import org.trade.persistent.dao.Tradingdays;
 import org.trade.ui.TradeAppLoadConfig;
 import org.trade.ui.base.BasePanel;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
 import java.time.ZonedDateTime;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -62,7 +69,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static org.junit.Assert.fail;
 
 /**
- * Some tests for the {@link DataUtilities} class.
+ * Some tests for the  DataUtilities class.
  *
  * @author Simon Allen
  * @version $Revision: 1.0 $
@@ -79,7 +86,7 @@ public class TWSBrokerModelTest implements IBrokerChangeListener {
     private static Integer clientId;
     private static Integer port = null;
     private static String host = null;
-    private static int testCaseGrandTotal = 0;
+    private static final int testCaseGrandTotal = 0;
     private static Timer timer = null;
     private boolean connectionFailed = false;
     private static AtomicInteger timerRunning = null;
@@ -90,8 +97,6 @@ public class TWSBrokerModelTest implements IBrokerChangeListener {
 
     /**
      * Method setUpBeforeClass.
-     *
-     * @throws Exception
      */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
@@ -99,15 +104,13 @@ public class TWSBrokerModelTest implements IBrokerChangeListener {
             TradeAppLoadConfig.loadAppProperties();
 
             clientId = ConfigProperties.getPropAsInt("trade.tws.clientId");
-            port = new Integer(ConfigProperties.getPropAsString("trade.tws.port"));
+            port = Integer.valueOf(ConfigProperties.getPropAsString("trade.tws.port"));
             host = ConfigProperties.getPropAsString("trade.tws.host");
 
-            timer = new Timer(250, new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    synchronized (lockCoreUtilsTest) {
-                        timerRunning.addAndGet(250);
-                        lockCoreUtilsTest.notifyAll();
-                    }
+            timer = new Timer(250, _ -> {
+                synchronized (lockCoreUtilsTest) {
+                    timerRunning.addAndGet(250);
+                    lockCoreUtilsTest.notifyAll();
                 }
             });
 
@@ -119,8 +122,6 @@ public class TWSBrokerModelTest implements IBrokerChangeListener {
     /**
      * Method setUp. Try to connect to the Broker for these tests that but
      * candle data from the broker and test the throtle monitor.
-     *
-     * @throws Exception
      */
     @Before
     public void setUp() throws Exception {
@@ -142,14 +143,12 @@ public class TWSBrokerModelTest implements IBrokerChangeListener {
                 _log.warn("Could not connect to TWS test will be ignored.", tWSBrokerModel.isConnected());
 
         } catch (InterruptedException e) {
-            _log.info("Thread interrupt: " + e.getMessage());
+            _log.info("Thread interrupt: {}", e.getMessage());
         }
     }
 
     /**
      * Method tearDown.
-     *
-     * @throws Exception
      */
     @After
     public void tearDown() throws Exception {
@@ -180,8 +179,6 @@ public class TWSBrokerModelTest implements IBrokerChangeListener {
 
     /**
      * Method tearDownAfterClass.
-     *
-     * @throws Exception
      */
     @AfterClass
     public static void tearDownAfterClass() throws Exception {
@@ -207,22 +204,20 @@ public class TWSBrokerModelTest implements IBrokerChangeListener {
                 }
                 brokerDataRequestProgressMonitor = new BrokerDataRequestMonitor(tWSBrokerModel, tradePersistentModel,
                         tradingdays);
-                brokerDataRequestProgressMonitor.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-                    public void propertyChange(PropertyChangeEvent evt) {
-                        if ("progress".equals(evt.getPropertyName())) {
-                            int progress = (Integer) evt.getNewValue();
-                            String message = String.format("Completed %d%%.", progress);
+                brokerDataRequestProgressMonitor.addPropertyChangeListener(evt -> {
+                    if ("progress".equals(evt.getPropertyName())) {
+                        int progress = (Integer) evt.getNewValue();
+                        String message = String.format("Completed %d%%.", progress);
+                        _log.warn(message);
+                    } else if ("information".equals(evt.getPropertyName())) {
+                        _log.warn("Information message: {}", evt.getNewValue());
+                        if (brokerDataRequestProgressMonitor.isDone()) {
+                            String message = String.format("Completed %d%%.", 100);
                             _log.warn(message);
-                        } else if ("information".equals(evt.getPropertyName())) {
-                            _log.warn("Information message: " + (String) evt.getNewValue());
-                            if (brokerDataRequestProgressMonitor.isDone()) {
-                                String message = String.format("Completed %d%%.", 100);
-                                _log.warn(message);
-                            }
-
-                        } else if ("error".equals(evt.getPropertyName())) {
-                            _log.error("Error getting history data." + ((Exception) evt.getNewValue()).getMessage());
                         }
+
+                    } else if ("error".equals(evt.getPropertyName())) {
+                        _log.error("Error getting history data.{}", ((Exception) evt.getNewValue()).getMessage());
                     }
                 });
                 brokerDataRequestProgressMonitor.execute();
@@ -260,22 +255,20 @@ public class TWSBrokerModelTest implements IBrokerChangeListener {
                 }
                 brokerDataRequestProgressMonitor = new BrokerDataRequestMonitor(tWSBrokerModel, tradePersistentModel,
                         tradingdays);
-                brokerDataRequestProgressMonitor.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-                    public void propertyChange(PropertyChangeEvent evt) {
-                        if ("progress".equals(evt.getPropertyName())) {
-                            int progress = (Integer) evt.getNewValue();
-                            String message = String.format("Completed %d%%.", progress);
+                brokerDataRequestProgressMonitor.addPropertyChangeListener(evt -> {
+                    if ("progress".equals(evt.getPropertyName())) {
+                        int progress = (Integer) evt.getNewValue();
+                        String message = String.format("Completed %d%%.", progress);
+                        _log.warn(message);
+                    } else if ("information".equals(evt.getPropertyName())) {
+                        _log.warn("Information message: {}", evt.getNewValue());
+                        if (brokerDataRequestProgressMonitor.isDone()) {
+                            String message = String.format("Completed %d%%.", 100);
                             _log.warn(message);
-                        } else if ("information".equals(evt.getPropertyName())) {
-                            _log.warn("Information message: " + (String) evt.getNewValue());
-                            if (brokerDataRequestProgressMonitor.isDone()) {
-                                String message = String.format("Completed %d%%.", 100);
-                                _log.warn(message);
-                            }
-
-                        } else if ("error".equals(evt.getPropertyName())) {
-                            _log.error("Error getting history data." + ((Exception) evt.getNewValue()).getMessage());
                         }
+
+                    } else if ("error".equals(evt.getPropertyName())) {
+                        _log.error("Error getting history data.{}", ((Exception) evt.getNewValue()).getMessage());
                     }
                 });
                 brokerDataRequestProgressMonitor.execute();
@@ -322,22 +315,20 @@ public class TWSBrokerModelTest implements IBrokerChangeListener {
 
                 brokerDataRequestProgressMonitor = new BrokerDataRequestMonitor(tWSBrokerModel, tradePersistentModel,
                         tradingdays);
-                brokerDataRequestProgressMonitor.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-                    public void propertyChange(PropertyChangeEvent evt) {
-                        if ("progress".equals(evt.getPropertyName())) {
-                            int progress = (Integer) evt.getNewValue();
-                            String message = String.format("Completed %d%%.", progress);
+                brokerDataRequestProgressMonitor.addPropertyChangeListener(evt -> {
+                    if ("progress".equals(evt.getPropertyName())) {
+                        int progress = (Integer) evt.getNewValue();
+                        String message = String.format("Completed %d%%.", progress);
+                        _log.warn(message);
+                    } else if ("information".equals(evt.getPropertyName())) {
+                        _log.warn("Information message: {}", evt.getNewValue());
+                        if (brokerDataRequestProgressMonitor.isDone()) {
+                            String message = String.format("Completed %d%%.", 100);
                             _log.warn(message);
-                        } else if ("information".equals(evt.getPropertyName())) {
-                            _log.warn("Information message: " + (String) evt.getNewValue());
-                            if (brokerDataRequestProgressMonitor.isDone()) {
-                                String message = String.format("Completed %d%%.", 100);
-                                _log.warn(message);
-                            }
-
-                        } else if ("error".equals(evt.getPropertyName())) {
-                            _log.error("Error getting history data." + ((Exception) evt.getNewValue()).getMessage());
                         }
+
+                    } else if ("error".equals(evt.getPropertyName())) {
+                        _log.error("Error getting history data.{}", ((Exception) evt.getNewValue()).getMessage());
                     }
                 });
                 brokerDataRequestProgressMonitor.execute();
@@ -384,22 +375,20 @@ public class TWSBrokerModelTest implements IBrokerChangeListener {
 
                 brokerDataRequestProgressMonitor = new BrokerDataRequestMonitor(tWSBrokerModel, tradePersistentModel,
                         tradingdays);
-                brokerDataRequestProgressMonitor.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-                    public void propertyChange(PropertyChangeEvent evt) {
-                        if ("progress".equals(evt.getPropertyName())) {
-                            int progress = (Integer) evt.getNewValue();
-                            String message = String.format("Completed %d%%.", progress);
+                brokerDataRequestProgressMonitor.addPropertyChangeListener(evt -> {
+                    if ("progress".equals(evt.getPropertyName())) {
+                        int progress = (Integer) evt.getNewValue();
+                        String message = String.format("Completed %d%%.", progress);
+                        _log.warn(message);
+                    } else if ("information".equals(evt.getPropertyName())) {
+                        _log.warn("Information message: {}", evt.getNewValue());
+                        if (brokerDataRequestProgressMonitor.isDone()) {
+                            String message = String.format("Completed %d%%.", 100);
                             _log.warn(message);
-                        } else if ("information".equals(evt.getPropertyName())) {
-                            _log.warn("Information message: " + (String) evt.getNewValue());
-                            if (brokerDataRequestProgressMonitor.isDone()) {
-                                String message = String.format("Completed %d%%.", 100);
-                                _log.warn(message);
-                            }
-
-                        } else if ("error".equals(evt.getPropertyName())) {
-                            _log.error("Error getting history data." + ((Exception) evt.getNewValue()).getMessage());
                         }
+
+                    } else if ("error".equals(evt.getPropertyName())) {
+                        _log.error("Error getting history data.{}", ((Exception) evt.getNewValue()).getMessage());
                     }
                 });
                 brokerDataRequestProgressMonitor.execute();
@@ -476,11 +465,10 @@ public class TWSBrokerModelTest implements IBrokerChangeListener {
     public void historicalDataComplete(Tradestrategy tradestrategy) {
 
         try {
-            _log.info("Symbol: " + tradestrategy.getContract().getSymbol() + " Candles  saved: "
-                    + tradePersistentModel.findCandleCount(tradestrategy.getTradingday().getId(),
+            _log.info("Symbol: {} Candles  saved: {}", tradestrategy.getContract().getSymbol(), tradePersistentModel.findCandleCount(tradestrategy.getTradingday().getId(),
                     tradestrategy.getContract().getId()));
         } catch (PersistentModelException ex) {
-            _log.error("Error historicalDataComplete Msg: " + ex.getMessage());
+            _log.error("Error historicalDataComplete Msg: {}", ex.getMessage());
         }
     }
 
@@ -513,7 +501,7 @@ public class TWSBrokerModelTest implements IBrokerChangeListener {
     /**
      * Method brokerError.
      *
-     * @param brokerError BrokerModelException
+     * @param ex BrokerModelException
      */
     public void brokerError(BrokerModelException ex) {
         if (502 == ex.getErrorCode()) {
@@ -521,13 +509,13 @@ public class TWSBrokerModelTest implements IBrokerChangeListener {
             return;
         }
         if (ex.getErrorId() == 1) {
-            _log.error("Error: " + ex.getErrorCode(), ex.getMessage(), ex);
+            _log.error("Error: {}", ex.getErrorCode(), ex.getMessage(), ex);
         } else if (ex.getErrorId() == 2) {
-            _log.warn("Warning: " + ex.getMessage(), BasePanel.WARNING);
+            _log.warn("Warning: {}", ex.getMessage(), BasePanel.WARNING);
         } else if (ex.getErrorId() == 3) {
-            _log.info("Information: " + ex.getMessage(), BasePanel.INFORMATION);
+            _log.info("Information: {}", ex.getMessage(), BasePanel.INFORMATION);
         } else {
-            _log.error("Unknown Error Id Code: " + ex.getErrorCode(), ex.getMessage(), ex);
+            _log.error("Unknown Error Id Code: {}", ex.getErrorCode(), ex.getMessage(), ex);
         }
     }
 

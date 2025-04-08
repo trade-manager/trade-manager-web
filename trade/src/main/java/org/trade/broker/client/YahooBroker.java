@@ -47,8 +47,9 @@ import org.trade.strategy.data.candle.CandlePeriod;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
-import java.text.ParseException;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -60,12 +61,12 @@ public class YahooBroker extends Broker {
 
     private final static Logger _log = LoggerFactory.getLogger(YahooBroker.class);
 
-    private Integer reqId = null;
-    private Contract contract = null;
-    private String durationStr = null;
-    private String barSizeSetting = null;
-    private String endDateTime = null;
-    private IClientWrapper brokerModel = null;
+    private final Integer reqId;
+    private final Contract contract;
+    private final String durationStr;
+    private final String barSizeSetting;
+    private final String endDateTime;
+    private final IClientWrapper brokerModel;
 
 
     public YahooBroker(Integer reqId, Contract contract, String endDateTime, String durationStr, String barSizeSetting,
@@ -105,23 +106,21 @@ public class YahooBroker extends Broker {
                 this.setYahooPriceDataIntraday(this.reqId, this.contract.getSymbol(),
                         Integer.parseInt(chartDays.getCode()), startDate, endDate);
             }
-            _log.debug("YahooBroker.doInBackground finished ReqId: " + this.reqId + " Symbol: "
-                    + this.contract.getSymbol() + " Start Date: " + startDate + " End Date: " + endDate + " BarSize: "
-                    + barSize.getCode() + " ChartDays: " + chartDays.getCode());
+            _log.debug("YahooBroker.doInBackground finished ReqId: {} Symbol: {} Start Date: {} End Date: {} BarSize: {} ChartDays: {}", this.reqId, this.contract.getSymbol(), startDate, endDate, barSize.getCode(), chartDays.getCode());
             this.brokerModel.historicalData(this.reqId, "finished- at yyyyMMdd HH:mm:ss", 0, 0, 0, 0, 0, 0, 0, false);
 
         } catch (Exception ex) {
-            _log.error("Error YahooBroker Symbol: " + contract.getSymbol() + " Msg: " + ex.getMessage(), ex);
+            _log.error("Error YahooBroker Symbol: {} Msg: {}", contract.getSymbol(), ex.getMessage(), ex);
         }
         return null;
     }
 
     public void done() {
-        _log.debug("YahooBroker done for: " + contract.getSymbol());
+        _log.debug("YahooBroker done for: {}", contract.getSymbol());
     }
 
 
-    private void setYahooContractDetails(Contract contract) throws IOException {
+    private void setYahooContractDetails(Contract contract) throws IOException, URISyntaxException {
 
         /*
          * Yahoo finance http://finance.yahoo.com/d/quotes.csv?s=XOM&f=n
@@ -129,7 +128,9 @@ public class YahooBroker extends Broker {
         String strUrl = "http://finance.yahoo.com/d/quotes.csv?s=" + contract.getSymbol() + "&f=n";
 
         // _log.info("URL : " + strUrl);
-        URL url = new URL(strUrl);
+        URI uri = new URI(strUrl);
+        URL url = uri.toURL();
+
         BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
         String inputLine;
         if ((inputLine = in.readLine()) != null) {
@@ -139,7 +140,7 @@ public class YahooBroker extends Broker {
     }
 
     private void setYahooPriceDataIntraday(int reqId, String symbol, int chartDays, ZonedDateTime startDate,
-                                           ZonedDateTime endDate) throws IOException {
+                                           ZonedDateTime endDate) throws IOException, URISyntaxException {
 
         /*
          * Yahoo finance http://chartapi.finance.yahoo.com/instrument/1.0/IBM
@@ -151,14 +152,15 @@ public class YahooBroker extends Broker {
         String strUrl = "http://chartapi.finance.yahoo.com/instrument/1.0/" + symbol + "/chartdata;type=quote;range="
                 + days + "d/csv/";
 
-        _log.debug("URL : " + strUrl);
-        URL url = new URL(strUrl);
+        _log.debug("URL : {}", strUrl);
+        URI uri = new URI(strUrl);
+        URL url = uri.toURL();
         BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
         String inputLine;
         in.readLine();
         while ((inputLine = in.readLine()) != null) {
 
-            if (inputLine.indexOf(":") == -1) {
+            if (!inputLine.contains(":")) {
                 StringTokenizer scanLine = new StringTokenizer(inputLine, ",");
                 while (scanLine.hasMoreTokens()) {
                     String dateString = scanLine.nextToken();
@@ -184,21 +186,22 @@ public class YahooBroker extends Broker {
     }
 
     private void setYahooPriceDataDay(int reqId, String symbol, ZonedDateTime startDate, ZonedDateTime endDate)
-            throws IOException, ParseException {
+            throws IOException, URISyntaxException {
 
         /*
          * Yahoo finance So IBM form 1/1/2012 thru 06/30/2012
          * http://ichart.finance .yahoo.com/table.csv?s=IBM&a=0&b=1&c=2012&d=5
          * &e=30&f=2012&ignore=.csv"
          */
-        List<Candle> candles = new ArrayList<Candle>();
+        List<Candle> candles = new ArrayList<>();
 
         String strUrl = "http://ichart.finance.yahoo.com/table.csv?s=" + symbol + "&a=" + startDate.getMonthValue()
                 + "&b=" + startDate.getDayOfMonth() + "&c=" + startDate.getYear() + "&d=" + endDate.getMonth() + "&e="
                 + endDate.getDayOfMonth() + "&f=" + endDate.getYear() + "&ignore=.csv";
 
         // _log.info(strUrl);
-        URL url = new URL(strUrl);
+        URI uri = new URI(strUrl);
+        URL url = uri.toURL();
         BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
         String inputLine;
         in.readLine();

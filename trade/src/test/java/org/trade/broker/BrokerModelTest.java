@@ -35,7 +35,12 @@
  */
 package org.trade.broker;
 
-import org.junit.*;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.TestName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,16 +66,16 @@ import org.trade.ui.TradeAppLoadConfig;
 import org.trade.ui.base.BasePanel;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.math.BigDecimal;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 /**
- * Some tests for the {@link DataUtilities} class.
+ * Some tests for the DataUtilities class.
  *
  * @author Simon Allen
  * @version $Revision: 1.0 $
@@ -82,9 +87,8 @@ public class BrokerModelTest implements IBrokerChangeListener {
     @Rule
     public TestName name = new TestName();
 
-    private String symbol = "TEST";
     private IBrokerModel backTestbrokerModel;
-    private BigDecimal price = new BigDecimal(108.85);
+    private final BigDecimal price = new BigDecimal("108.85");
     private Tradestrategy tradestrategy = null;
     private static Integer port = null;
     private static String host = null;
@@ -97,34 +101,29 @@ public class BrokerModelTest implements IBrokerChangeListener {
 
     /**
      * Method setUpBeforeClass.
-     *
-     * @throws Exception
      */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
         TradeAppLoadConfig.loadAppProperties();
         clientId = ConfigProperties.getPropAsInt("trade.tws.clientId");
-        port = new Integer(ConfigProperties.getPropAsString("trade.tws.port"));
+        port = Integer.valueOf(ConfigProperties.getPropAsString("trade.tws.port"));
         host = ConfigProperties.getPropAsString("trade.tws.host");
 
-        timer = new Timer(250, new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                synchronized (lockCoreUtilsTest) {
-                    timerRunning.addAndGet(250);
-                    lockCoreUtilsTest.notifyAll();
-                }
+        timer = new Timer(250, _ -> {
+            synchronized (lockCoreUtilsTest) {
+                timerRunning.addAndGet(250);
+                lockCoreUtilsTest.notifyAll();
             }
         });
     }
 
     /**
      * Method setUp.
-     *
-     * @throws Exception
      */
     @Before
     public void setUp() throws Exception {
         try {
+            String symbol = "TEST";
             this.tradestrategy = TradestrategyTest.getTestTradestrategy(symbol);
             backTestbrokerModel = (IBrokerModel) ClassFactory.getServiceForInterface(_broker, BrokerModelTest.class);
             backTestbrokerModel.onConnect(host, port, clientId);
@@ -155,8 +154,6 @@ public class BrokerModelTest implements IBrokerChangeListener {
 
     /**
      * Method tearDown.
-     *
-     * @throws Exception
      */
     @After
     public void tearDown() throws Exception {
@@ -184,8 +181,6 @@ public class BrokerModelTest implements IBrokerChangeListener {
 
     /**
      * Method tearDownAfterClass.
-     *
-     * @throws Exception
      */
     @AfterClass
     public static void tearDownAfterClass() throws Exception {
@@ -197,14 +192,14 @@ public class BrokerModelTest implements IBrokerChangeListener {
         try {
 
             TradeOrder tradeOrder = new TradeOrder(this.tradestrategy, Action.BUY, OrderType.STPLMT, 100, price,
-                    price.add(new BigDecimal(0.02)), TradingCalendar.getDateTimeNowMarketTimeZone());
+                    price.add(new BigDecimal("0.02")), TradingCalendar.getDateTimeNowMarketTimeZone());
             tradeOrder.setClientId(clientId);
-            tradeOrder.setTransmit(new Boolean(true));
+            tradeOrder.setTransmit(true);
             tradeOrder.setStatus(OrderStatus.UNSUBMIT);
 
             tradeOrder = backTestbrokerModel.onPlaceOrder(this.tradestrategy.getContract(), tradeOrder);
 
-            _log.info("IdTradeOrder: " + tradeOrder.getId() + " OrderKey: " + tradeOrder.getOrderKey());
+            _log.info("IdTradeOrder: {} OrderKey: {}", tradeOrder.getId(), tradeOrder.getOrderKey());
             assertNotNull("1", tradeOrder);
 
         } catch (Exception | AssertionError ex) {
@@ -218,18 +213,18 @@ public class BrokerModelTest implements IBrokerChangeListener {
     public void testSubmitSellShortOrder() {
 
         try {
-            _log.info("Symbol: " + this.tradestrategy.getContract().getSymbol());
+            _log.info("Symbol: {}", this.tradestrategy.getContract().getSymbol());
 
             TradeOrder tradeOrder = new TradeOrder(this.tradestrategy, Action.SELL, OrderType.STPLMT, 100,
-                    price.subtract(new BigDecimal(0.70)), price.subtract(new BigDecimal(0.73)),
+                    price.subtract(new BigDecimal("0.70")), price.subtract(new BigDecimal("0.73")),
                     TradingCalendar.getDateTimeNowMarketTimeZone());
 
             tradeOrder.setClientId(clientId);
-            tradeOrder.setTransmit(new Boolean(true));
+            tradeOrder.setTransmit(true);
             tradeOrder.setStatus(OrderStatus.UNSUBMIT);
             tradeOrder = backTestbrokerModel.onPlaceOrder(this.tradestrategy.getContract(), tradeOrder);
 
-            _log.info("IdTradeOrder: " + tradeOrder.getId() + " OrderKey: " + tradeOrder.getOrderKey());
+            _log.info("IdTradeOrder: {} OrderKey: {}", tradeOrder.getId(), tradeOrder.getOrderKey());
             assertNotNull("1", tradeOrder.getId());
 
         } catch (Exception | AssertionError ex) {
@@ -243,10 +238,10 @@ public class BrokerModelTest implements IBrokerChangeListener {
     public void testSubmitComboOrder() {
 
         try {
-            String ocaID = new String(Integer.toString((new BigDecimal(Math.random() * 1000000)).intValue()));
+            String ocaID = Integer.toString((BigDecimal.valueOf(Math.random() * 1000000)).intValue());
 
             TradeOrder tradeOrder = new TradeOrder(this.tradestrategy, Action.SELL, OrderType.LMT, 50, null,
-                    price.add(new BigDecimal(1.0)), TradingCalendar.getDateTimeNowMarketTimeZone());
+                    price.add(new BigDecimal("1.0")), TradingCalendar.getDateTimeNowMarketTimeZone());
 
             tradeOrder.setClientId(clientId);
             tradeOrder.setOcaType(2);
@@ -257,7 +252,7 @@ public class BrokerModelTest implements IBrokerChangeListener {
             assertNotNull("1", tradeOrder.getId());
 
             TradeOrder tradeOrder1 = new TradeOrder(this.tradestrategy, Action.SELL, OrderType.LMT, 50,
-                    price.subtract(new BigDecimal(1.0)), price.add(new BigDecimal(2.0)),
+                    price.subtract(new BigDecimal("1.0")), price.add(new BigDecimal("2.0")),
                     TradingCalendar.getDateTimeNowMarketTimeZone());
 
             tradeOrder1.setClientId(clientId);
@@ -270,7 +265,7 @@ public class BrokerModelTest implements IBrokerChangeListener {
             assertNotNull("2", tradeOrder1.getId());
 
             TradeOrder tradeOrder2 = new TradeOrder(this.tradestrategy, Action.SELL, OrderType.STP, 50,
-                    price.subtract(new BigDecimal(1.0)), null, TradingCalendar.getDateTimeNowMarketTimeZone());
+                    price.subtract(new BigDecimal("1.0")), null, TradingCalendar.getDateTimeNowMarketTimeZone());
             ocaID = ocaID + "abc";
             tradeOrder2.setClientId(clientId);
             tradeOrder2.setOcaType(2);
@@ -281,7 +276,7 @@ public class BrokerModelTest implements IBrokerChangeListener {
             assertNotNull("3", tradeOrder2.getId());
 
             TradeOrder tradeOrder3 = new TradeOrder(this.tradestrategy, Action.SELL, OrderType.STP, 50,
-                    price.subtract(new BigDecimal(2.0)), null, TradingCalendar.getDateTimeNowMarketTimeZone());
+                    price.subtract(new BigDecimal("2.0")), null, TradingCalendar.getDateTimeNowMarketTimeZone());
             tradeOrder3.setClientId(clientId);
             tradeOrder3.setOcaType(2);
             tradeOrder3.setOcaGroupName(ocaID);
@@ -289,26 +284,22 @@ public class BrokerModelTest implements IBrokerChangeListener {
             tradeOrder3.setStatus(OrderStatus.UNSUBMIT);
             tradeOrder3 = backTestbrokerModel.onPlaceOrder(this.tradestrategy.getContract(), tradeOrder3);
             assertNotNull("4", tradeOrder3.getId());
-            _log.info("IdTradeOrder: " + tradeOrder3.getId() + " OrderKey2: " + tradeOrder2.getOrderKey()
-                    + " OrderKey2 Price: " + tradeOrder2.getLimitPrice() + " OrderKey3: " + tradeOrder3.getOrderKey()
-                    + " OrderKey3 Price: " + tradeOrder3.getAuxPrice());
+            _log.info("IdTradeOrder: {} OrderKey2: {} OrderKey2 Price: {} OrderKey3: {} OrderKey3 Price: {}", tradeOrder3.getId(), tradeOrder2.getOrderKey(), tradeOrder2.getLimitPrice(), tradeOrder3.getOrderKey(), tradeOrder3.getAuxPrice());
             // Update the Stop price
-            tradeOrder2.setAuxPrice(price.subtract(new BigDecimal(0.9)));
+            tradeOrder2.setAuxPrice(price.subtract(new BigDecimal("0.9")));
             tradeOrder2.setStatus(OrderStatus.UNSUBMIT);
             tradeOrder2 = backTestbrokerModel.onPlaceOrder(this.tradestrategy.getContract(), tradeOrder2);
 
-            tradeOrder3.setAuxPrice(price.subtract(new BigDecimal(0.9)));
+            tradeOrder3.setAuxPrice(price.subtract(new BigDecimal("0.9")));
             tradeOrder3.setStatus(OrderStatus.UNSUBMIT);
             tradeOrder3 = backTestbrokerModel.onPlaceOrder(this.tradestrategy.getContract(), tradeOrder3);
-            _log.info("IdTradeOrder: " + tradeOrder3.getId() + " OrderKey2: " + tradeOrder2.getOrderKey()
-                    + " OrderKey2 Price: " + tradeOrder2.getLimitPrice() + " OrderKey3: " + tradeOrder3.getOrderKey()
-                    + " OrderKey3 Price: " + tradeOrder3.getAuxPrice());
+            _log.info("IdTradeOrder: {} OrderKey2: {} OrderKey2 Price: {} OrderKey3: {} OrderKey3 Price: {}", tradeOrder3.getId(), tradeOrder2.getOrderKey(), tradeOrder2.getLimitPrice(), tradeOrder3.getOrderKey(), tradeOrder3.getAuxPrice());
 
-            tradeOrder3.setTransmit(new Boolean(true));
+            tradeOrder3.setTransmit(true);
             tradeOrder3.setStatus(OrderStatus.UNSUBMIT);
             tradeOrder3 = backTestbrokerModel.onPlaceOrder(this.tradestrategy.getContract(), tradeOrder3);
 
-            _log.info("IdTradeOrder: " + tradeOrder2.getId() + " OrderKey: " + tradeOrder3.getOrderKey());
+            _log.info("IdTradeOrder: {} OrderKey: {}", tradeOrder2.getId(), tradeOrder3.getOrderKey());
             assertNotNull("5", tradeOrder3);
 
         } catch (Exception | AssertionError ex) {
@@ -353,40 +344,30 @@ public class BrokerModelTest implements IBrokerChangeListener {
                     heikinAshiCandle = (CandleItem) heikinAshiSeries.getDataItem(b);
                 }
 
-                int c = vwapSeries.indexOf(new Long(period.getMiddleMillisecond()));
+                int c = vwapSeries.indexOf(period.getMiddleMillisecond());
                 if (c > -1) {
                     vwap = (VwapItem) vwapSeries.getDataItem(c);
                 }
-                int d = sma1Series.indexOf(new Long(period.getMiddleMillisecond()));
+                int d = sma1Series.indexOf(period.getMiddleMillisecond());
                 if (d > -1) {
                     sma1 = (MovingAverageItem) sma1Series.getDataItem(d);
                 }
-                int e = sma2Series.indexOf(new Long(period.getMiddleMillisecond()));
+                int e = sma2Series.indexOf(period.getMiddleMillisecond());
                 if (e > -1) {
                     sma2 = (MovingAverageItem) sma2Series.getDataItem(e);
                 }
-                if (null != candle) {
-                    _log.info("    Period Start: " + period.getStart() + " Period End: " + period.getEnd() + " H: "
-                            + new Money(candle.getHigh()) + " L: " + new Money(candle.getLow()) + " O: "
-                            + new Money(candle.getOpen()) + " C: " + new Money(candle.getClose()) + " Vol: "
-                            + new Money(candle.getVolume()) + " Vwap: " + new Money(candle.getVwap()));
-                }
+                _log.info("    Period Start: {} Period End: {} H: {} L: {} O: {} C: {} Vol: {} Vwap: {}", period.getStart(), period.getEnd(), new Money(candle.getHigh()), new Money(candle.getLow()), new Money(candle.getOpen()), new Money(candle.getClose()), new Money(candle.getVolume()), new Money(candle.getVwap()));
                 if (null != heikinAshiCandle) {
-                    _log.info("HA  Period Start: " + period.getStart() + " Period End: " + period.getEnd() + " HA H: "
-                            + new Money(heikinAshiCandle.getHigh()) + " HA L: " + new Money(heikinAshiCandle.getLow())
-                            + " HA O: " + new Money(heikinAshiCandle.getOpen()) + " HA C: "
-                            + new Money(heikinAshiCandle.getClose()) + " HA Vol: "
-                            + new Money(heikinAshiCandle.getVolume()) + " HA Vwap: "
-                            + new Money(heikinAshiCandle.getVwap()));
+                    _log.info("HA  Period Start: {} Period End: {} HA H: {} HA L: {} HA O: {} HA C: {} HA Vol: {} HA Vwap: {}", period.getStart(), period.getEnd(), new Money(heikinAshiCandle.getHigh()), new Money(heikinAshiCandle.getLow()), new Money(heikinAshiCandle.getOpen()), new Money(heikinAshiCandle.getClose()), new Money(heikinAshiCandle.getVolume()), new Money(heikinAshiCandle.getVwap()));
                 }
                 if (null != vwap) {
-                    _log.info("Vwp Period Start: " + period + " Vwap: " + new Money(vwap.getY()));
+                    _log.info("Vwp Period Start: {} Vwap: {}", period, new Money(vwap.getY()));
                 }
                 if (null != sma1) {
-                    _log.info("S8  Period Start: " + period + " Sma 8: " + new Money(sma1.getY()));
+                    _log.info("S8  Period Start: {} Sma 8: {}", period, new Money(sma1.getY()));
                 }
                 if (null != sma2) {
-                    _log.info("S20 Period Start: " + period + " Sma 20: " + new Money(sma2.getY()));
+                    _log.info("S20 Period Start: {} Sma 20: {}", period, new Money(sma2.getY()));
                 }
             }
 
@@ -401,11 +382,7 @@ public class BrokerModelTest implements IBrokerChangeListener {
     public void testOnConnect() {
         try {
             backTestbrokerModel.onConnect(host, port, clientId);
-            if (_broker.equals(IBrokerModel._brokerTest)) {
-                assertFalse("1", backTestbrokerModel.isConnected());
-            } else {
-                assertTrue("2", backTestbrokerModel.isConnected());
-            }
+            assertFalse("1", backTestbrokerModel.isConnected());
         } catch (Exception | AssertionError ex) {
             String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
             _log.error(msg);
@@ -418,11 +395,7 @@ public class BrokerModelTest implements IBrokerChangeListener {
 
         try {
             backTestbrokerModel.onDisconnect();
-            if (_broker.equals(IBrokerModel._brokerTest)) {
-                assertFalse("1", backTestbrokerModel.isConnected());
-            } else {
-                assertTrue("2", backTestbrokerModel.isConnected());
-            }
+            assertFalse("1", backTestbrokerModel.isConnected());
         } catch (Exception | AssertionError ex) {
             String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
             _log.error(msg);
@@ -783,7 +756,7 @@ public class BrokerModelTest implements IBrokerChangeListener {
     /**
      * Method brokerError.
      *
-     * @param brokerError BrokerModelException
+     * @param ex BrokerModelException
      */
     public void brokerError(BrokerModelException ex) {
         if (502 == ex.getErrorCode()) {
@@ -791,13 +764,13 @@ public class BrokerModelTest implements IBrokerChangeListener {
             return;
         }
         if (ex.getErrorId() == 1) {
-            _log.error("Error: " + ex.getErrorCode(), ex.getMessage(), ex);
+            _log.error("Error: {}", ex.getErrorCode(), ex.getMessage(), ex);
         } else if (ex.getErrorId() == 2) {
-            _log.warn("Warning: " + ex.getMessage(), BasePanel.WARNING);
+            _log.warn("Warning: {}", ex.getMessage(), BasePanel.WARNING);
         } else if (ex.getErrorId() == 3) {
-            _log.info("Information: " + ex.getMessage(), BasePanel.INFORMATION);
+            _log.info("Information: {}", ex.getMessage(), BasePanel.INFORMATION);
         } else {
-            _log.error("Unknown Error Id Code: " + ex.getErrorCode(), ex.getMessage(), ex);
+            _log.error("Unknown Error Id Code: {}", ex.getErrorCode(), ex.getMessage(), ex);
         }
     }
 

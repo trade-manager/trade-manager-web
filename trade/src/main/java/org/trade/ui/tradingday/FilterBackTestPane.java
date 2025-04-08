@@ -37,7 +37,6 @@ package org.trade.ui.tradingday;
 
 import org.trade.core.util.TradingCalendar;
 import org.trade.core.valuetype.Date;
-import org.trade.core.valuetype.ValueTypeException;
 import org.trade.dictionary.valuetype.BarSize;
 import org.trade.dictionary.valuetype.ChartDays;
 import org.trade.persistent.dao.Contract;
@@ -47,6 +46,7 @@ import org.trade.ui.widget.DecodeComboBoxRenderer;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.Serial;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,22 +57,22 @@ import java.util.Vector;
  */
 public class FilterBackTestPane extends JPanel {
 
+    @Serial
     private static final long serialVersionUID = -4696247761711464150L;
 
-    private JComboBox<ComboItem> strategyBarSizeChartHistComboBox = null;
-    private JList<ComboItem> contractsHistList = null;
-    private JSpinner spinnerStart = new JSpinner();
-    private JSpinner spinnerEnd = new JSpinner();
+    private final JComboBox<ComboItem> strategyBarSizeChartHistComboBox;
+    private final JList<ComboItem> contractsHistList;
+    private final JSpinner spinnerStart = new JSpinner();
+    private final JSpinner spinnerEnd = new JSpinner();
 
-    private ComboItem comboItemAll = new ComboItem(null, "All");
+    private final ComboItem comboItemAll = new ComboItem(null, "All");
 
     private static final String DATEFORMAT = "MM/dd/yyyy";
 
     public FilterBackTestPane(ZonedDateTime startDate, ZonedDateTime endDate,
-                              List<Tradestrategy> strategyBarSizeChartHistItems, List<Tradestrategy> contractItems)
-            throws ValueTypeException {
+                              List<Tradestrategy> strategyBarSizeChartHistItems, List<Tradestrategy> contractItems) {
 
-        Vector<ComboItem> items = new Vector<ComboItem>();
+        Vector<ComboItem> items = new Vector<>();
         for (Tradestrategy item : strategyBarSizeChartHistItems) {
             String label = item.getStrategy().getName() + " " + BarSize.newInstance(item.getBarSize()).getDisplayName()
                     + " " + ChartDays.newInstance(item.getChartDays()).getDisplayName();
@@ -80,7 +80,7 @@ public class FilterBackTestPane extends JPanel {
             items.add(comboItem);
         }
 
-        DefaultListModel<ComboItem> listModel = new DefaultListModel<ComboItem>();
+        DefaultListModel<ComboItem> listModel = new DefaultListModel<>();
 
         listModel.addElement(comboItemAll);
         for (Tradestrategy item : contractItems) {
@@ -112,11 +112,11 @@ public class FilterBackTestPane extends JPanel {
         spinnerEnd.setEditor(de1);
         spinnerEnd.setValue((new Date(endDate)).getDate());
 
-        strategyBarSizeChartHistComboBox = new JComboBox<ComboItem>(items);
+        strategyBarSizeChartHistComboBox = new JComboBox<>(items);
         strategyBarSizeChartHistComboBox.setRenderer(new DecodeComboBoxRenderer());
         strategyBarSizeChartHistComboBox.setEditable(true);
 
-        contractsHistList = new JList<ComboItem>(listModel);
+        contractsHistList = new JList<>(listModel);
         contractsHistList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         contractsHistList.setLayoutOrientation(JList.VERTICAL);
         contractsHistList.setVisibleRowCount(-1);
@@ -160,8 +160,7 @@ public class FilterBackTestPane extends JPanel {
         if (null == comboItem)
             return null;
 
-        Tradestrategy tradestrategy = ((Tradestrategy) comboItem.getValue());
-        return tradestrategy;
+        return ((Tradestrategy) comboItem.getValue());
     }
 
     /**
@@ -170,14 +169,14 @@ public class FilterBackTestPane extends JPanel {
      * @return List<Contract>
      */
     public List<Contract> getSelectedContracts() {
-        List<Contract> contracts = new ArrayList<Contract>(0);
+        List<Contract> contracts = new ArrayList<>(0);
         List<ComboItem> comboItems = contractsHistList.getSelectedValuesList();
 
         if (null == comboItems)
             return contracts;
         for (ComboItem item : comboItems) {
             if (comboItemAll.equals(item))
-                return new ArrayList<Contract>(0);
+                return new ArrayList<>(0);
             Tradestrategy tradestrategy = (Tradestrategy) item.getValue();
             contracts.add(tradestrategy.getContract());
         }

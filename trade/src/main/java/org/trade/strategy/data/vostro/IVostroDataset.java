@@ -52,7 +52,7 @@ public interface IVostroDataset extends XYDataset {
      * @param item   the item index.
      * @return The Vostro.
      */
-    public double getVostroValue(int series, int item);
+    double getVostroValue(int series, int item);
 
     /**
      * Returns the Vostro for an item within a series.
@@ -61,6 +61,6 @@ public interface IVostroDataset extends XYDataset {
      * @param item   the item index.
      * @return The Vostro.
      */
-    public Number getVostro(int series, int item);
+    Number getVostro(int series, int item);
 
 }

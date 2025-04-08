@@ -53,7 +53,7 @@ public interface IMovingAverageDataset extends XYDataset {
      * @param item   the item index.
      * @return The Moving Average.
      */
-    public double getMovingAverageValue(int series, int item);
+    double getMovingAverageValue(int series, int item);
 
     /**
      * Returns the Moving Average for an item within a series.
@@ -62,6 +62,6 @@ public interface IMovingAverageDataset extends XYDataset {
      * @param item   the item index.
      * @return The Moving Average.
      */
-    public Number getMovingAverage(int series, int item);
+    Number getMovingAverage(int series, int item);
 
 }

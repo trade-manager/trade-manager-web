@@ -55,84 +55,84 @@ public interface IBrokerChangeListener extends EventListener {
      * Receives notification of an brokerManagerModel change event.
      */
 
-    public void connectionOpened();
+    void connectionOpened();
 
-    public void connectionClosed(boolean forced);
+    void connectionClosed(boolean forced);
 
     /**
      * Method executionDetailsEnd.
      *
      * @param execDetails ConcurrentHashMap<Integer,TradeOrder>
      */
-    public void executionDetailsEnd(ConcurrentHashMap<Integer, TradeOrder> execDetails);
+    void executionDetailsEnd(ConcurrentHashMap<Integer, TradeOrder> execDetails);
 
     /**
      * Method historicalDataComplete.
      *
      * @param tradestrategy Tradestrategy
      */
-    public void historicalDataComplete(Tradestrategy tradestrategy);
+    void historicalDataComplete(Tradestrategy tradestrategy);
 
     /**
      * Method managedAccountsUpdated.
      *
      * @param accountNumber String
      */
-    public void managedAccountsUpdated(String accountNumber);
+    void managedAccountsUpdated(String accountNumber);
 
     /**
      * Method fAAccountsCompleted. Notifies all registered listeners that the
      * brokerManagerModel has received all FA Accounts information.
      */
-    public void fAAccountsCompleted();
+    void fAAccountsCompleted();
 
     /**
      * Method updateAccountTime.
      *
      * @param accountNumber String
      */
-    public void updateAccountTime(String accountNumber);
+    void updateAccountTime(String accountNumber);
 
     /**
      * Method brokerError.
      *
      * @param brokerError BrokerModelException
      */
-    public void brokerError(BrokerModelException brokerError);
+    void brokerError(BrokerModelException brokerError);
 
     /**
      * Method tradeOrderFilled.
      *
      * @param tradeOrder TradeOrder
      */
-    public void tradeOrderFilled(TradeOrder tradeOrder);
+    void tradeOrderFilled(TradeOrder tradeOrder);
 
     /**
      * Method tradeOrderCancelled.
      *
      * @param tradeOrder TradeOrder
      */
-    public void tradeOrderCancelled(TradeOrder tradeOrder);
+    void tradeOrderCancelled(TradeOrder tradeOrder);
 
     /**
      * Method tradeOrderStatusChanged.
      *
      * @param tradeOrder TradeOrder
      */
-    public void tradeOrderStatusChanged(TradeOrder tradeOrder);
+    void tradeOrderStatusChanged(TradeOrder tradeOrder);
 
     /**
      * Method positionClosed.
      *
      * @param tradePosition TradePosition
      */
-    public void positionClosed(TradePosition tradePosition);
+    void positionClosed(TradePosition tradePosition);
 
     /**
      * Method openOrderEnd.
      *
      * @param openOrders ConcurrentHashMap<Integer,TradeOrder>
      */
-    public void openOrderEnd(ConcurrentHashMap<Integer, TradeOrder> openOrders);
+    void openOrderEnd(ConcurrentHashMap<Integer, TradeOrder> openOrders);
 
 }

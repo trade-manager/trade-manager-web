@@ -98,7 +98,7 @@ public class AccountHome {
             }
             entityManager.getTransaction().commit();
             if (!items.isEmpty()) {
-                return items.get(0);
+                return items.getFirst();
             }
             return null;
 

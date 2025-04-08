@@ -41,6 +41,7 @@ import org.trade.persistent.dao.CodeAttribute;
 import org.trade.persistent.dao.CodeType;
 import org.trade.ui.base.TableModel;
 
+import java.io.Serial;
 import java.util.Vector;
 
 /**
@@ -50,6 +51,7 @@ public class CodeAttributeTableModel extends TableModel {
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = 3087514589731145479L;
     private static final String NAME = "Parm Name*";
     private static final String DESCRIPTION = "Description";
@@ -90,7 +92,7 @@ public class CodeAttributeTableModel extends TableModel {
         if (!getData().getCodeAttribute().isEmpty()) {
 
             for (final CodeAttribute element : getData().getCodeAttribute()) {
-                final Vector<Object> newRow = new Vector<Object>();
+                final Vector<Object> newRow = new Vector<>();
                 getNewRow(newRow, element);
                 rows.add(newRow);
             }
@@ -161,7 +163,7 @@ public class CodeAttributeTableModel extends TableModel {
         final CodeAttribute element = new CodeAttribute(this.m_data, "", "", null, "", null);
         getData().getCodeAttribute().add(element);
         getData().setDirty(true);
-        final Vector<Object> newRow = new Vector<Object>();
+        final Vector<Object> newRow = new Vector<>();
         getNewRow(newRow, element);
         rows.add(newRow);
 

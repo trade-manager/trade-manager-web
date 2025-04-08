@@ -35,7 +35,12 @@
  */
 package org.trade.broker.request;
 
-import org.junit.*;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.TestName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,8 +71,6 @@ public class TWSFinancialAccountRequestTest {
 
     /**
      * Method setUpBeforeClass.
-     *
-     * @throws Exception
      */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
@@ -75,8 +78,6 @@ public class TWSFinancialAccountRequestTest {
 
     /**
      * Method setUp.
-     *
-     * @throws Exception
      */
     @Before
     public void setUp() throws Exception {
@@ -87,8 +88,6 @@ public class TWSFinancialAccountRequestTest {
 
     /**
      * Method tearDown.
-     *
-     * @throws Exception
      */
     @After
     public void tearDown() throws Exception {
@@ -105,8 +104,6 @@ public class TWSFinancialAccountRequestTest {
 
     /**
      * Method tearDownAfterClass.
-     *
-     * @throws Exception
      */
     @AfterClass
     public static void tearDownAfterClass() throws Exception {

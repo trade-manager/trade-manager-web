@@ -47,6 +47,7 @@ import org.trade.strategy.data.base.RegularTimePeriod;
 import org.trade.strategy.data.candle.CandleItem;
 import org.trade.strategy.data.vostro.VostroItem;
 
+import java.io.Serial;
 import java.math.BigDecimal;
 import java.util.LinkedList;
 
@@ -63,6 +64,7 @@ import java.util.LinkedList;
 @DiscriminatorValue("VostroSeries")
 public class VostroSeries extends IndicatorSeries {
 
+    @Serial
     private static final long serialVersionUID = 20183087035446657L;
 
     public static final String LENGTH = "Length";
@@ -85,14 +87,14 @@ public class VostroSeries extends IndicatorSeries {
     private double sum = 0.0;
     private double vostro1 = Double.MAX_VALUE;
     private double vostro2 = Double.MAX_VALUE;
-    private LinkedList<Double> yyValues = new LinkedList<Double>();
-    private LinkedList<Long> volValues = new LinkedList<Long>();
+    private LinkedList<Double> yyValues = new LinkedList<>();
+    private LinkedList<Long> volValues = new LinkedList<>();
     private double highPlusLowSum = 0.0;
-    private LinkedList<Double> highPlusLowValues = new LinkedList<Double>();
+    private LinkedList<Double> highPlusLowValues = new LinkedList<>();
     private double highLessLowSum = 0.0;
-    private LinkedList<Double> highLessLowValues = new LinkedList<Double>();
-    private LinkedList<Double> vostro1Values = new LinkedList<Double>();
-    private LinkedList<Double> vostro2Values = new LinkedList<Double>();
+    private LinkedList<Double> highLessLowValues = new LinkedList<>();
+    private LinkedList<Double> vostro1Values = new LinkedList<>();
+    private LinkedList<Double> vostro2Values = new LinkedList<>();
 
     /**
      * Creates a new empty series. By default, items added to the series will be
@@ -140,16 +142,15 @@ public class VostroSeries extends IndicatorSeries {
      * Method clone.
      *
      * @return Object
-     * @throws CloneNotSupportedException
      */
     public Object clone() throws CloneNotSupportedException {
         VostroSeries clone = (VostroSeries) super.clone();
-        clone.yyValues = new LinkedList<Double>();
-        clone.highPlusLowValues = new LinkedList<Double>();
-        clone.highLessLowValues = new LinkedList<Double>();
-        clone.volValues = new LinkedList<Long>();
-        clone.vostro1Values = new LinkedList<Double>();
-        clone.vostro2Values = new LinkedList<Double>();
+        clone.yyValues = new LinkedList<>();
+        clone.highPlusLowValues = new LinkedList<>();
+        clone.highLessLowValues = new LinkedList<>();
+        clone.volValues = new LinkedList<>();
+        clone.vostro1Values = new LinkedList<>();
+        clone.vostro2Values = new LinkedList<>();
         return clone;
     }
 
@@ -539,7 +540,7 @@ public class VostroSeries extends IndicatorSeries {
                     this.vostro1 = (candleItem.getLow() - gd_128) / gd_136;
                     this.vostro2 = (candleItem.getHigh() - gd_128) / gd_136;
 
-                    double vostro = 0;
+                    double vostro;
                     if (vostro2 > this.getVostroRange().doubleValue() && candleItem.getHigh() > ma) {
                         vostro = 90.0;
                     } else {
@@ -549,7 +550,7 @@ public class VostroSeries extends IndicatorSeries {
                             vostro = 0.0;
                         }
                     }
-                    if (vostro2Values.size() > 0) {
+                    if (!vostro2Values.isEmpty()) {
                         if (vostro2 > this.getVostroRange().doubleValue()
                                 && vostro2Values.getFirst() > this.getVostroRange().doubleValue()) {
                             vostro = 0;
@@ -563,7 +564,7 @@ public class VostroSeries extends IndicatorSeries {
                             vostro = 0;
                         }
                     }
-                    if (vostro2Values.size() > 0) {
+                    if (!vostro2Values.isEmpty()) {
                         if (vostro1 < (-1 * this.getVostroRange().doubleValue())
                                 && vostro1Values.getFirst() < (-1 * this.getVostroRange().doubleValue())) {
                             vostro = 0;
@@ -602,8 +603,7 @@ public class VostroSeries extends IndicatorSeries {
     public void printSeries() {
         for (int i = 0; i < this.getItemCount(); i++) {
             VostroItem dataItem = (VostroItem) this.getDataItem(i);
-            _log.debug("Type: " + this.getType() + " Time: " + dataItem.getPeriod().getStart() + " Value: "
-                    + dataItem.getVostro());
+            _log.debug("Type: {} Time: {} Value: {}", this.getType(), dataItem.getPeriod().getStart(), dataItem.getVostro());
         }
     }
 
@@ -671,31 +671,15 @@ public class VostroSeries extends IndicatorSeries {
      */
     private double getPrice(CandleItem candle) {
 
-        switch (this.getPriceSource()) {
-            case 1: {
-                return candle.getClose();
-            }
-            case 2: {
-                return candle.getOpen();
-            }
-            case 3: {
-                return candle.getHigh();
-            }
-            case 4: {
-                return candle.getLow();
-            }
-            case 5: {
-                return (candle.getHigh() + candle.getLow()) / 2.0d;
-            }
-            case 6: {
-                return (candle.getHigh() + candle.getLow() + candle.getClose()) / 3.0d;
-            }
-            case 7: {
-                return (candle.getOpen() + candle.getHigh() + candle.getLow() + candle.getClose()) / 4.0d;
-            }
-            default: {
-                return candle.getClose();
-            }
-        }
+        return switch (this.getPriceSource()) {
+            case 1 -> candle.getClose();
+            case 2 -> candle.getOpen();
+            case 3 -> candle.getHigh();
+            case 4 -> candle.getLow();
+            case 5 -> (candle.getHigh() + candle.getLow()) / 2.0d;
+            case 6 -> (candle.getHigh() + candle.getLow() + candle.getClose()) / 3.0d;
+            case 7 -> (candle.getOpen() + candle.getHigh() + candle.getLow() + candle.getClose()) / 4.0d;
+            default -> candle.getClose();
+        };
     }
 }

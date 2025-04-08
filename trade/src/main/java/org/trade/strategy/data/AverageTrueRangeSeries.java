@@ -46,6 +46,7 @@ import org.trade.strategy.data.atr.AverageTrueRangeItem;
 import org.trade.strategy.data.base.RegularTimePeriod;
 import org.trade.strategy.data.candle.CandleItem;
 
+import java.io.Serial;
 import java.math.BigDecimal;
 
 /**
@@ -74,6 +75,7 @@ import java.math.BigDecimal;
 @DiscriminatorValue("AverageTrueRangeSeries")
 public class AverageTrueRangeSeries extends IndicatorSeries {
 
+    @Serial
     private static final long serialVersionUID = 20183087035446657L;
 
     public static final String LENGTH = "Length";
@@ -134,11 +136,9 @@ public class AverageTrueRangeSeries extends IndicatorSeries {
      * Method clone.
      *
      * @return Object
-     * @throws CloneNotSupportedException
      */
     public Object clone() throws CloneNotSupportedException {
-        AverageTrueRangeSeries clone = (AverageTrueRangeSeries) super.clone();
-        return clone;
+        return super.clone();
     }
 
     /**
@@ -291,8 +291,8 @@ public class AverageTrueRangeSeries extends IndicatorSeries {
                 highLessLow = source.getRollingCandle().getHigh() - source.getRollingCandle().getLow();
             }
 
-            double absHighLessPrevClose = 0;
-            double absLowLessPrevClose = 0;
+            double absHighLessPrevClose;
+            double absLowLessPrevClose;
             if (source.getItemCount() > 1) {
                 CandleItem prevCandleItem = (CandleItem) source.getDataItem(skip - 1);
 
@@ -341,14 +341,11 @@ public class AverageTrueRangeSeries extends IndicatorSeries {
 
     /**
      * Method printSeries.
-     *
-     * @param series IndicatorSeries
      */
     public void printSeries() {
         for (int i = 0; i < this.getItemCount(); i++) {
             AverageTrueRangeItem dataItem = (AverageTrueRangeItem) this.getDataItem(i);
-            _log.debug("Type: " + this.getType() + " Time: " + dataItem.getPeriod().getStart() + " Value: "
-                    + dataItem.getAverageTrueRange());
+            _log.debug("Type: {} Time: {} Value: {}", this.getType(), dataItem.getPeriod().getStart(), dataItem.getAverageTrueRange());
         }
     }
 }

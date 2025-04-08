@@ -53,6 +53,7 @@ import jakarta.validation.constraints.NotNull;
 import org.trade.core.dao.Aspect;
 import org.trade.strategy.data.IndicatorSeries;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -73,6 +74,7 @@ public class Strategy extends Aspect implements Serializable, Cloneable {
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = -5704206226348654910L;
 
     @NotNull
@@ -80,12 +82,12 @@ public class Strategy extends Aspect implements Serializable, Cloneable {
     @NotNull
     private String name;
     private String description;
-    private Boolean marketData = new Boolean(false);
+    private Boolean marketData = false;
     private Strategy strategy;
-    private List<Tradestrategy> tradestrategies = new ArrayList<Tradestrategy>(0);
-    private List<Rule> rules = new ArrayList<Rule>(0);
-    private List<IndicatorSeries> indicators = new ArrayList<IndicatorSeries>(0);
-    private List<Strategy> strategies = new ArrayList<Strategy>(0);
+    private List<Tradestrategy> tradestrategies = new ArrayList<>(0);
+    private List<Rule> rules = new ArrayList<>(0);
+    private List<IndicatorSeries> indicators = new ArrayList<>(0);
+    private List<Strategy> strategies = new ArrayList<>(0);
 
     public Strategy() {
     }
@@ -146,15 +148,6 @@ public class Strategy extends Aspect implements Serializable, Cloneable {
     }
 
     /**
-     * Method setId.
-     *
-     * @param id Integer
-     */
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    /**
      * Method getName.
      *
      * @return String
@@ -178,7 +171,7 @@ public class Strategy extends Aspect implements Serializable, Cloneable {
      *
      * @return String
      */
-    @Column(name = "class_name", unique = false, nullable = false, length = 100)
+    @Column(name = "class_name", nullable = false, length = 100)
     public String getClassName() {
         return this.className;
     }
@@ -239,15 +232,6 @@ public class Strategy extends Aspect implements Serializable, Cloneable {
     @Column(name = "version")
     public Integer getVersion() {
         return this.version;
-    }
-
-    /**
-     * Method setVersion.
-     *
-     * @param version Integer
-     */
-    public void setVersion(Integer version) {
-        this.version = version;
     }
 
     /**
@@ -342,7 +326,7 @@ public class Strategy extends Aspect implements Serializable, Cloneable {
      * @return Strategy
      */
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_strategy_manager", insertable = true, updatable = true, nullable = true)
+    @JoinColumn(name = "id_strategy_manager")
     public Strategy getStrategyManager() {
         return this.strategy;
     }
@@ -362,9 +346,7 @@ public class Strategy extends Aspect implements Serializable, Cloneable {
      * @return boolean
      */
     public boolean hasStrategyManager() {
-        if (null == getStrategyManager())
-            return false;
-        return true;
+        return null != getStrategyManager();
     }
 
     /**
@@ -385,12 +367,11 @@ public class Strategy extends Aspect implements Serializable, Cloneable {
      * Method clone.
      *
      * @return Object
-     * @throws CloneNotSupportedException
      */
     public Object clone() throws CloneNotSupportedException {
 
         Strategy strategy = (Strategy) super.clone();
-        List<Tradestrategy> tradestrategies = new ArrayList<Tradestrategy>(0);
+        List<Tradestrategy> tradestrategies = new ArrayList<>(0);
         strategy.setTradestrategies(tradestrategies);
         strategy.setIndicatorSeries(this.getIndicatorSeries());
         return strategy;

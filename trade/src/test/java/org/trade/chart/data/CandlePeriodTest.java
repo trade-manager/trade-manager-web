@@ -35,7 +35,12 @@
  */
 package org.trade.chart.data;
 
-import org.junit.*;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.TestName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,7 +64,9 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.TimeZone;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 /**
  *
@@ -70,14 +77,11 @@ public class CandlePeriodTest {
     @Rule
     public TestName name = new TestName();
 
-    private String symbol = "TEST";
     private IPersistentModel tradePersistentModel = null;
     private Tradestrategy tradestrategy = null;
 
     /**
      * Method setUpBeforeClass.
-     *
-     * @throws java.lang.Exception
      */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
@@ -85,22 +89,19 @@ public class CandlePeriodTest {
 
     /**
      * Method setUp.
-     *
-     * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
         TradeAppLoadConfig.loadAppProperties();
         tradePersistentModel = (IPersistentModel) ClassFactory.getServiceForInterface(IPersistentModel._persistentModel,
                 this);
+        String symbol = "TEST";
         this.tradestrategy = TradestrategyTest.getTestTradestrategy(symbol);
         assertNotNull("1", this.tradestrategy);
     }
 
     /**
      * Method tearDown.
-     *
-     * @throws java.lang.Exception
      */
     @After
     public void tearDown() throws Exception {
@@ -109,8 +110,6 @@ public class CandlePeriodTest {
 
     /**
      * Method tearDownAfterClass.
-     *
-     * @throws java.lang.Exception
      */
     @AfterClass
     public static void tearDownAfterClass() throws Exception {
@@ -140,9 +139,7 @@ public class CandlePeriodTest {
                                     this.tradestrategy.getTradingday().getOpen()),
                             TradingCalendar.getDateAtTime(TradingCalendar.getPrevTradingDay(startPeriod),
                                     this.tradestrategy.getTradingday().getClose()));
-            _log.info("Bar for Contract: " + candle.getContract().getSymbol() + " Start Period: " + candle.getPeriod()
-                    + " Open: " + candle.getOpen() + " High: " + candle.getHigh() + " Low: " + candle.getLow()
-                    + " Close: " + candle.getClose() + " Vwap: " + candle.getVwap() + " Volume: " + candle.getVolume());
+            _log.info("Bar for Contract: {} Start Period: {} Open: {} High: {} Low: {} Close: {} Vwap: {} Volume: {}", candle.getContract().getSymbol(), candle.getPeriod(), candle.getOpen(), candle.getHigh(), candle.getLow(), candle.getClose(), candle.getVwap(), candle.getVolume());
 
         } catch (Exception | AssertionError ex) {
             String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
@@ -176,10 +173,7 @@ public class CandlePeriodTest {
                     TradingCalendar.getDateAtTime(TradingCalendar.getPrevTradingDay(startPeriod),
                             this.tradestrategy.getTradingday().getClose()),
                     false);
-            _log.info("Non wieghted avg bar for Contract: " + candle.getContract().getSymbol() + " Start Period: "
-                    + candle.getPeriod() + " Open: " + candle.getOpen() + " High: " + candle.getHigh() + " Low: "
-                    + candle.getLow() + " Close: " + candle.getClose() + " Vwap: " + candle.getVwap() + " Volume: "
-                    + candle.getVolume());
+            _log.info("Non wieghted avg bar for Contract: {} Start Period: {} Open: {} High: {} Low: {} Close: {} Vwap: {} Volume: {}", candle.getContract().getSymbol(), candle.getPeriod(), candle.getOpen(), candle.getHigh(), candle.getLow(), candle.getClose(), candle.getVwap(), candle.getVolume());
 
             candle = this.tradestrategy.getStrategyData().getBaseCandleSeries().getAverageBar(
                     TradingCalendar.getDateAtTime(TradingCalendar.getPrevTradingDay(startPeriod),
@@ -187,10 +181,7 @@ public class CandlePeriodTest {
                     TradingCalendar.getDateAtTime(TradingCalendar.getPrevTradingDay(startPeriod),
                             this.tradestrategy.getTradingday().getClose()),
                     true);
-            _log.info("Wieghted avg bar for Contract: " + candle.getContract().getSymbol() + " Start Period: "
-                    + candle.getPeriod() + " Open: " + candle.getOpen() + " High: " + candle.getHigh() + " Low: "
-                    + candle.getLow() + " Close: " + candle.getClose() + " Vwap: " + candle.getVwap() + " Volume: "
-                    + candle.getVolume());
+            _log.info("Wieghted avg bar for Contract: {} Start Period: {} Open: {} High: {} Low: {} Close: {} Vwap: {} Volume: {}", candle.getContract().getSymbol(), candle.getPeriod(), candle.getOpen(), candle.getHigh(), candle.getLow(), candle.getClose(), candle.getVwap(), candle.getVolume());
 
         } catch (Exception | AssertionError ex) {
             String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
@@ -207,16 +198,16 @@ public class CandlePeriodTest {
             LocalDateTime formattedDate = TradingCalendar.getLocalDateTimeFromDateTimeString(dateString,
                     "yyyyMMdd HH:mm:ss");
 
-            _log.info("Date  time: " + formattedDate);
+            _log.info("Date  time: {}", formattedDate);
             ZonedDateTime date = ZonedDateTime.of(formattedDate, TradingCalendar.MKT_TIMEZONE);
-            _log.info("Date EST time: " + date);
+            _log.info("Date EST time: {}", date);
 
             ZoneId defaultZone = TimeZone.getDefault().toZoneId();
             ZonedDateTime newLocal = date.withZoneSameInstant(defaultZone);
-            _log.info("Date PST time: " + newLocal);
+            _log.info("Date PST time: {}", newLocal);
 
             ZonedDateTime newInstant = date.withZoneSameLocal(defaultZone);
-            _log.info("Date PST time: " + newInstant);
+            _log.info("Date PST time: {}", newInstant);
 
             assertNotNull("1", date);
         } catch (Exception | AssertionError ex) {
@@ -236,7 +227,7 @@ public class CandlePeriodTest {
                 TradingCalendar.getTradingDayStart(TradingCalendar.getDateTimeNowMarketTimeZone()), secondsLength);
 
         for (int i = 0; i < size; i++) {
-            _log.info("Time is : " + period.toString() + " Start: " + period.getStart() + " End: " + period.getEnd());
+            _log.info("Time is : {} Start: {} End: {}", period, period.getStart(), period.getEnd());
             period = period.next();
             assertNotNull("1", period);
         }
@@ -252,7 +243,7 @@ public class CandlePeriodTest {
                 TradingCalendar.getTradingDayStart(TradingCalendar.getDateTimeNowMarketTimeZone()), secondsLength);
 
         for (int i = 0; i < size; i++) {
-            _log.info("Time is : " + period.toString() + " Start: " + period.getStart() + " End: " + period.getEnd());
+            _log.info("Time is : {} Start: {} End: {}", period, period.getStart(), period.getEnd());
             period = period.previous();
             assertNotNull("1", period);
         }
@@ -268,8 +259,7 @@ public class CandlePeriodTest {
         startBusDate = startBusDate.plusSeconds(periods);
 
         RegularTimePeriod period = new CandlePeriod(startBusDate, secondsLength);
-        _log.info("\n Bus Day Start : " + startBusDate.toString() + "\n Start: " + period.getStart() + "\n End: "
-                + period.getEnd() + "\n Periods: " + periods);
+        _log.info("\n Bus Day Start : {}\n Start: {}\n End: {}\n Periods: {}", startBusDate, period.getStart(), period.getEnd(), periods);
         assertNotNull("1", period);
     }
 }

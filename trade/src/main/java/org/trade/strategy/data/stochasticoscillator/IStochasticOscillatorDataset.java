@@ -53,7 +53,7 @@ public interface IStochasticOscillatorDataset extends XYDataset {
      * @param item   the item index.
      * @return The Stochastic Oscillator.
      */
-    public double getStochasticOscillatorValue(int series, int item);
+    double getStochasticOscillatorValue(int series, int item);
 
     /**
      * Returns the Stochastic Oscillator for an item within a series.
@@ -62,6 +62,6 @@ public interface IStochasticOscillatorDataset extends XYDataset {
      * @param item   the item index.
      * @return The Stochastic Oscillator.
      */
-    public Number getStochasticOscillator(int series, int item);
+    Number getStochasticOscillator(int series, int item);
 
 }

@@ -72,7 +72,7 @@ public class CandleHome {
         Candle transientInstance;
         try {
 
-            if (candleSeries.isEmpty()){
+            if (candleSeries.isEmpty()) {
                 return;
             }
 

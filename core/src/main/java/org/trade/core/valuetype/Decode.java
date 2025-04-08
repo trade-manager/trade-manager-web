@@ -84,6 +84,7 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
     public static final String _TYPE = "_TYPE";
     public static final String _CODE = "_CODE";
     public static final String _DISPLAY_NAME = "_DISPLAY_NAME";
+    public static final String _VALUE = "_VALUE";
 
     private String m_codeDecodeType = "";
     private String m_codeDecodeIdentifier = "";
@@ -242,6 +243,25 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
 
         try {
             final Object val = m_lookup.getValueAt(m_codeDecodeIdentifier + _CODE);
+
+            if (val != null) {
+                rVal += val;
+            }
+        } catch (final Exception ex) {
+            // ignore
+        }
+
+        return (rVal);
+    }
+
+    /**
+     * @return
+     */
+    public String getValue() {
+        String rVal = "";
+
+        try {
+            final Object val = m_lookup.getValueAt(m_codeDecodeIdentifier + _VALUE);
 
             if (val != null) {
                 rVal += val;

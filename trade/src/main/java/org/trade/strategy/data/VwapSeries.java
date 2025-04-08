@@ -42,6 +42,7 @@ import org.trade.persistent.dao.Strategy;
 import org.trade.strategy.data.base.RegularTimePeriod;
 import org.trade.strategy.data.vwap.VwapItem;
 
+import java.io.Serial;
 import java.math.BigDecimal;
 
 /**
@@ -63,6 +64,7 @@ import java.math.BigDecimal;
 @DiscriminatorValue("VwapSeries")
 public class VwapSeries extends IndicatorSeries {
 
+    @Serial
     private static final long serialVersionUID = 20183087035446657L;
 
     /**
@@ -133,8 +135,8 @@ public class VwapSeries extends IndicatorSeries {
     /**
      * Method createSeries.
      *
-     * @param candleDataset CandleDataset
-     * @param seriesIndex   int
+     * @param source      CandleDataset
+     * @param seriesIndex int
      */
     public void createSeries(CandleDataset source, int seriesIndex) {
 
@@ -170,7 +172,7 @@ public class VwapSeries extends IndicatorSeries {
              */
             if (newBar) {
                 VwapItem dataItem = new VwapItem(source.getRollingCandle().getPeriod(),
-                        new BigDecimal(source.getRollingCandle().getVwap()));
+                        BigDecimal.valueOf(source.getRollingCandle().getVwap()));
                 this.add(dataItem, false);
             } else {
                 VwapItem dataItem = (VwapItem) this.getDataItem(this.getItemCount() - 1);
@@ -185,8 +187,7 @@ public class VwapSeries extends IndicatorSeries {
     public void printSeries() {
         for (int i = 0; i < this.getItemCount(); i++) {
             VwapItem dataItem = (VwapItem) this.getDataItem(i);
-            _log.debug("Type: " + this.getType() + " Time: " + dataItem.getPeriod().getStart() + " Value: "
-                    + dataItem.getVwapPrice());
+            _log.debug("Type: {} Time: {} Value: {}", this.getType(), dataItem.getPeriod().getStart(), dataItem.getVwapPrice());
         }
     }
 
@@ -194,10 +195,8 @@ public class VwapSeries extends IndicatorSeries {
      * Method clone.
      *
      * @return Object
-     * @throws CloneNotSupportedException
      */
     public Object clone() throws CloneNotSupportedException {
-        VwapSeries clone = (VwapSeries) super.clone();
-        return clone;
+        return super.clone();
     }
 }

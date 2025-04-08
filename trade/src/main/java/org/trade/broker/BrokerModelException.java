@@ -37,11 +37,14 @@ package org.trade.broker;
 
 import org.trade.core.exception.ModelException;
 
+import java.io.Serial;
+
 /**
  *
  */
 public class BrokerModelException extends ModelException {
 
+    @Serial
     private static final long serialVersionUID = -504416118492103075L;
 
     public BrokerModelException() {

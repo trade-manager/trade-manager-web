@@ -35,7 +35,11 @@
  */
 package org.trade.persistent.dao;
 
-import org.junit.*;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trade.core.dao.Aspect;
@@ -46,7 +50,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 /**
- * Some tests for the {@link DataUtilities} class.
+ * Some tests for the DataUtilities class.
  *
  * @author Simon Allen
  * @version $Revision: 1.0 $
@@ -59,8 +63,6 @@ public class AspectTest {
 
     /**
      * Method setUpBeforeClass.
-     *
-     * @throws Exception
      */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
@@ -68,8 +70,6 @@ public class AspectTest {
 
     /**
      * Method setUp.
-     *
-     * @throws Exception
      */
     @Before
     public void setUp() throws Exception {
@@ -78,8 +78,6 @@ public class AspectTest {
 
     /**
      * Method tearDown.
-     *
-     * @throws Exception
      */
     @After
     public void tearDown() throws Exception {
@@ -87,8 +85,6 @@ public class AspectTest {
 
     /**
      * Method tearDownAfterClass.
-     *
-     * @throws Exception
      */
     @AfterClass
     public static void tearDownAfterClass() throws Exception {
@@ -102,12 +98,12 @@ public class AspectTest {
 
         try {
             String className = "org.trade.persistent.dao.Strategy";
-            _log.info("Find Aspects by className: " + className);
+            _log.info("Find Aspects by className: {}", className);
 
             Aspects transientInstance = aspectHome.findByClassName(className);
             assertNotNull(transientInstance);
             for (Aspect aspect : transientInstance.getAspect()) {
-                _log.info("Aspect added Id = " + aspect.getId());
+                _log.info("Aspect added Id = {}", aspect.getId());
             }
 
         } catch (Exception ex) {

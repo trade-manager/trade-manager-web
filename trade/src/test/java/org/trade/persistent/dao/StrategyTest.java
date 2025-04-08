@@ -35,8 +35,12 @@
  */
 package org.trade.persistent.dao;
 
-import org.junit.*;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.TestName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +50,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 /**
- * Some tests for the {@link DataUtilities} class.
+ * Some tests for the DataUtilities class.
  *
  * @author Simon Allen
  * @version $Revision: 1.0 $
@@ -59,8 +63,6 @@ public class StrategyTest {
 
     /**
      * Method setUpBeforeClass.
-     *
-     * @throws java.lang.Exception
      */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
@@ -68,8 +70,6 @@ public class StrategyTest {
 
     /**
      * Method setUp.
-     *
-     * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
@@ -77,8 +77,6 @@ public class StrategyTest {
 
     /**
      * Method tearDown.
-     *
-     * @throws java.lang.Exception
      */
     @After
     public void tearDown() throws Exception {
@@ -86,8 +84,6 @@ public class StrategyTest {
 
     /**
      * Method tearDownAfterClass.
-     *
-     * @throws java.lang.Exception
      */
     @AfterClass
     public static void tearDownAfterClass() throws Exception {
@@ -109,7 +105,7 @@ public class StrategyTest {
                 transientInstance = new Strategy(name);
             }
             transientInstance = aspectHome.persist(transientInstance);
-            _log.info("Strategy added Id = " + transientInstance.getId());
+            _log.info("Strategy added Id = {}", transientInstance.getId());
             assertNotNull("1", transientInstance.getId());
             aspectHome.remove(transientInstance);
 

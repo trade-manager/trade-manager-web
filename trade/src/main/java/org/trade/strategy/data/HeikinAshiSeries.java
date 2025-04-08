@@ -44,6 +44,7 @@ import org.trade.strategy.data.base.RegularTimePeriod;
 import org.trade.strategy.data.candle.CandleItem;
 import org.trade.strategy.data.heikinashi.HeikinAshiItem;
 
+import java.io.Serial;
 import java.time.ZonedDateTime;
 
 /**
@@ -99,6 +100,7 @@ import java.time.ZonedDateTime;
 @DiscriminatorValue("HeikinAshiSeries")
 public class HeikinAshiSeries extends IndicatorSeries {
 
+    @Serial
     private static final long serialVersionUID = 20183087035446657L;
 
     /**
@@ -194,11 +196,9 @@ public class HeikinAshiSeries extends IndicatorSeries {
      * Method clone.
      *
      * @return Object
-     * @throws CloneNotSupportedException
      */
     public Object clone() throws CloneNotSupportedException {
-        HeikinAshiSeries clone = (HeikinAshiSeries) super.clone();
-        return clone;
+        return super.clone();
     }
 
     /**
@@ -237,8 +237,8 @@ public class HeikinAshiSeries extends IndicatorSeries {
                  * from completed bars.
                  */
                 int index = this.indexOf(candleItem.getPeriod());
-                double xOpenPrev = 0;
-                double xClosePrev = 0;
+                double xOpenPrev;
+                double xClosePrev;
                 if (index < 1) {
                     if (this.isEmpty()) {
                         xOpenPrev = candleItem.getOpen();
@@ -284,9 +284,7 @@ public class HeikinAshiSeries extends IndicatorSeries {
     public void printSeries() {
         for (int i = 0; i < this.getItemCount(); i++) {
             HeikinAshiItem dataItem = (HeikinAshiItem) this.getDataItem(i);
-            _log.debug("Type: " + this.getType() + " Time: " + dataItem.getPeriod().getStart() + " Open: "
-                    + dataItem.getOpen() + " Close: " + dataItem.getClose() + " High: " + dataItem.getHigh() + " Low: "
-                    + dataItem.getLow());
+            _log.debug("Type: {} Time: {} Open: {} Close: {} High: {} Low: {}", this.getType(), dataItem.getPeriod().getStart(), dataItem.getOpen(), dataItem.getClose(), dataItem.getHigh(), dataItem.getLow());
         }
     }
 }

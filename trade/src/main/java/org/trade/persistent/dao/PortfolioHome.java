@@ -47,7 +47,6 @@ import org.trade.core.dao.EntityManagerHelper;
 import org.trade.core.util.CoreUtils;
 import org.trade.core.util.TradingCalendar;
 import org.trade.dictionary.valuetype.Currency;
-import org.trade.persistent.PersistentModelException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -179,9 +178,9 @@ public class PortfolioHome {
 
             entityManager.getTransaction().commit();
 
-            if (items.size() > 0) {
+            if (!items.isEmpty()) {
 
-                return items.get(0);
+                return items.getFirst();
             }
             return null;
 
@@ -211,13 +210,7 @@ public class PortfolioHome {
 
             for (Portfolio item : items) {
 
-                if (item.getId().equals(defaultPortfolio.getId())) {
-
-                    item.setIsDefault(true);
-                } else {
-
-                    item.setIsDefault(false);
-                }
+                item.setIsDefault(item.getId().equals(defaultPortfolio.getId()));
                 entityManager.persist(item);
             }
             entityManager.getTransaction().commit();
@@ -232,12 +225,11 @@ public class PortfolioHome {
     /**
      * Method persistPortfolio.
      *
-     * @param portfolio Portfolio
+     * @param instance Portfolio
      * @return Portfolio
-     * @throws PersistentModelException
      */
 
-    public synchronized Portfolio persistPortfolio(final Portfolio instance) throws PersistentModelException {
+    public synchronized Portfolio persistPortfolio(final Portfolio instance) {
 
         try {
 
@@ -316,25 +308,20 @@ public class PortfolioHome {
      */
     private Account findByAccountNumber(String accountNumber) {
 
-        try {
+        EntityManager entityManager = EntityManagerHelper.getEntityManager();
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Account> query = builder.createQuery(Account.class);
+        Root<Account> from = query.from(Account.class);
+        query.select(from);
+        query.where(builder.equal(from.get("accountNumber"), accountNumber));
+        List<Account> items = entityManager.createQuery(query).getResultList();
 
-            EntityManager entityManager = EntityManagerHelper.getEntityManager();
-            CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-            CriteriaQuery<Account> query = builder.createQuery(Account.class);
-            Root<Account> from = query.from(Account.class);
-            query.select(from);
-            query.where(builder.equal(from.get("accountNumber"), accountNumber));
-            List<Account> items = entityManager.createQuery(query).getResultList();
+        if (!items.isEmpty()) {
 
-            if (items.size() > 0) {
-
-                return items.get(0);
-            }
-            return null;
-
-        } catch (Exception re) {
-            throw re;
+            return items.getFirst();
         }
+        return null;
+
     }
 
     /**
@@ -345,25 +332,20 @@ public class PortfolioHome {
      */
     private Portfolio findPortfolioByName(String name) {
 
-        try {
+        EntityManager entityManager = EntityManagerHelper.getEntityManager();
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Portfolio> query = builder.createQuery(Portfolio.class);
+        Root<Portfolio> from = query.from(Portfolio.class);
+        query.select(from);
+        query.where(builder.equal(from.get("name"), name));
+        List<Portfolio> items = entityManager.createQuery(query).getResultList();
 
-            EntityManager entityManager = EntityManagerHelper.getEntityManager();
-            CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-            CriteriaQuery<Portfolio> query = builder.createQuery(Portfolio.class);
-            Root<Portfolio> from = query.from(Portfolio.class);
-            query.select(from);
-            query.where(builder.equal(from.get("name"), name));
-            List<Portfolio> items = entityManager.createQuery(query).getResultList();
+        if (!items.isEmpty()) {
 
-            if (items.size() > 0) {
-
-                return items.get(0);
-            }
-            return null;
-
-        } catch (Exception re) {
-            throw re;
+            return items.getFirst();
         }
+        return null;
+
     }
 
     /**
@@ -375,40 +357,35 @@ public class PortfolioHome {
      */
     private PortfolioAccount findByNameAndAccountNumber(String portfolioName, String accountNumber) {
 
-        try {
+        EntityManager entityManager = EntityManagerHelper.getEntityManager();
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<PortfolioAccount> query = builder.createQuery(PortfolioAccount.class);
+        Root<PortfolioAccount> from = query.from(PortfolioAccount.class);
+        query.select(from);
+        List<Predicate> predicates = new ArrayList<>();
 
-            EntityManager entityManager = EntityManagerHelper.getEntityManager();
-            CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-            CriteriaQuery<PortfolioAccount> query = builder.createQuery(PortfolioAccount.class);
-            Root<PortfolioAccount> from = query.from(PortfolioAccount.class);
-            query.select(from);
-            List<Predicate> predicates = new ArrayList<Predicate>();
+        if (null != accountNumber) {
 
-            if (null != accountNumber) {
-
-                Join<PortfolioAccount, Account> account = from.join("account");
-                Predicate predicate = builder.equal(account.get("accountNumber"), accountNumber);
-                predicates.add(predicate);
-            }
-            if (null != portfolioName) {
-
-                Join<PortfolioAccount, Portfolio> portfolio = from.join("portfolio");
-                Predicate predicate = builder.equal(portfolio.get("name"), portfolioName);
-                predicates.add(predicate);
-            }
-
-            query.where(predicates.toArray(new Predicate[]{}));
-            TypedQuery<PortfolioAccount> typedQuery = entityManager.createQuery(query);
-            List<PortfolioAccount> items = typedQuery.getResultList();
-
-            if (items.size() > 0) {
-
-                return items.get(0);
-            }
-            return null;
-
-        } catch (Exception re) {
-            throw re;
+            Join<PortfolioAccount, Account> account = from.join("account");
+            Predicate predicate = builder.equal(account.get("accountNumber"), accountNumber);
+            predicates.add(predicate);
         }
+        if (null != portfolioName) {
+
+            Join<PortfolioAccount, Portfolio> portfolio = from.join("portfolio");
+            Predicate predicate = builder.equal(portfolio.get("name"), portfolioName);
+            predicates.add(predicate);
+        }
+
+        query.where(predicates.toArray(new Predicate[]{}));
+        TypedQuery<PortfolioAccount> typedQuery = entityManager.createQuery(query);
+        List<PortfolioAccount> items = typedQuery.getResultList();
+
+        if (!items.isEmpty()) {
+
+            return items.getFirst();
+        }
+        return null;
+
     }
 }

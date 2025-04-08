@@ -10,9 +10,13 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
+import lombok.Getter;
+import lombok.Setter;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
+@Setter
+@Getter
 @Entity
 @Table(name = "employee")
 public class Employee {
@@ -32,7 +36,7 @@ public class Employee {
     private String description;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id", insertable = true, updatable = true, nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @Version
@@ -50,51 +54,4 @@ public class Employee {
         this.user = user;
     }
 
-    public Long getId() {
-        return this.id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getFirstName() {
-        return this.firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return this.lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getDescription() {
-        return this.description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Long getVersion() {
-        return this.version;
-    }
-
-    public void setVersion(Long version) {
-        this.version = version;
-    }
-
-    public User getUser() {
-        return this.user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
 }

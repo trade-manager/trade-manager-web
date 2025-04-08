@@ -80,7 +80,7 @@ public class ContractHome {
             CriteriaQuery<Contract> query = builder.createQuery(Contract.class);
             Root<Contract> from = query.from(Contract.class);
             query.select(from);
-            List<Predicate> predicates = new ArrayList<Predicate>();
+            List<Predicate> predicates = new ArrayList<>();
 
             if (null != SECType) {
 
@@ -122,9 +122,9 @@ public class ContractHome {
             List<Contract> items = typedQuery.getResultList();
             entityManager.getTransaction().commit();
 
-            if (items.size() > 0) {
+            if (!items.isEmpty()) {
 
-                return items.get(0);
+                return items.getFirst();
             }
             return null;
         } catch (Exception re) {

@@ -56,6 +56,7 @@ import org.trade.strategy.data.candle.OHLCVwapDataset;
 import java.awt.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
+import java.io.Serial;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
@@ -67,10 +68,11 @@ public class CandleRenderer extends CandlestickRenderer {
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = -6761905072507196822L;
 
     private final DateFormat TOOLTIP_DATE_FORMAT = new SimpleDateFormat("H:mma MM/dd/yy");
-    public boolean nightMode = false;
+    public boolean nightMode;
     private double margin = 0.25;
 
     Paint upPaint;
@@ -84,38 +86,30 @@ public class CandleRenderer extends CandlestickRenderer {
     public CandleRenderer(boolean nightMode) {
         this.nightMode = nightMode;
         configureToolTips();
-        if (nightMode) {
-            upPaint = Color.green;
-            downPaint = Color.red;
-        } else {
-            upPaint = Color.green;
-            downPaint = Color.red;
-        }
+        upPaint = Color.green;
+        downPaint = Color.red;
     }
 
     private void configureToolTips() {
-        setDefaultToolTipGenerator(new XYToolTipGenerator() {
-            public String generateToolTip(XYDataset dataset, int series, int item) {
-                StringBuilder result = new StringBuilder("<html>");
-                if (dataset instanceof CandleDataset) {
-                    CandleDataset d = (CandleDataset) dataset;
-                    Number time = d.getX(series, item);
-                    Number high = d.getHigh(series, item);
-                    Number low = d.getLow(series, item);
-                    Number open = d.getOpen(series, item);
-                    Number close = d.getClose(series, item);
-                    Number vwap = d.getVwap(series, item);
-                    Number volume = d.getVolume(series, item);
-                    result.append("<b>Open:</b> ").append(new Money(open.doubleValue())).append("<br/>");
-                    result.append("<b>High:</b> ").append(new Money(high.doubleValue())).append("<br/>");
-                    result.append("<b>Low:</b> ").append(new Money(low.doubleValue())).append("<br/>");
-                    result.append("<b>Close:</b> ").append(new Money(close.doubleValue())).append("<br/>");
-                    result.append("<b>Vwap:</b> ").append(new Money(vwap.doubleValue())).append("<br/>");
-                    result.append("<b>Volume:</b> ").append(new Quantity(volume.intValue())).append("<br/>");
-                    result.append("<b>Date:</b> ").append(TOOLTIP_DATE_FORMAT.format(time)).append("<br/>");
-                }
-                return result.toString();
+        setDefaultToolTipGenerator((dataset, series, item) -> {
+            StringBuilder result = new StringBuilder("<html>");
+            if (dataset instanceof CandleDataset d) {
+                Number time = d.getX(series, item);
+                Number high = d.getHigh(series, item);
+                Number low = d.getLow(series, item);
+                Number open = d.getOpen(series, item);
+                Number close = d.getClose(series, item);
+                Number vwap = d.getVwap(series, item);
+                Number volume = d.getVolume(series, item);
+                result.append("<b>Open:</b> ").append(new Money(open.doubleValue())).append("<br/>");
+                result.append("<b>High:</b> ").append(new Money(high.doubleValue())).append("<br/>");
+                result.append("<b>Low:</b> ").append(new Money(low.doubleValue())).append("<br/>");
+                result.append("<b>Close:</b> ").append(new Money(close.doubleValue())).append("<br/>");
+                result.append("<b>Vwap:</b> ").append(new Money(vwap.doubleValue())).append("<br/>");
+                result.append("<b>Volume:</b> ").append(new Quantity(volume.intValue())).append("<br/>");
+                result.append("<b>Date:</b> ").append(TOOLTIP_DATE_FORMAT.format(time)).append("<br/>");
             }
+            return result.toString();
         });
     }
 
@@ -154,13 +148,7 @@ public class CandleRenderer extends CandlestickRenderer {
             CandleItem candle = (CandleItem) candleDataset.getSeries(series).getDataItem(item);
 
             double startX = candle.getPeriod().getFirstMillisecond();
-            if (Double.isNaN(startX)) {
-                return;
-            }
             double endX = candle.getPeriod().getLastMillisecond();
-            if (Double.isNaN(endX)) {
-                return;
-            }
 
             if (startX <= endX) {
                 if (!domainAxis.getRange().intersects(startX, endX)) {
@@ -198,7 +186,7 @@ public class CandleRenderer extends CandlestickRenderer {
             double yyOpen = rangeAxis.valueToJava2D(yOpen, dataArea, edge);
             double yyClose = rangeAxis.valueToJava2D(yClose, dataArea, edge);
 
-            Paint outlinePaint = null;
+            Paint outlinePaint;
             outlinePaint = getItemOutlinePaint(series, item);
             g2.setStroke(getItemStroke(series, item));
             g2.setPaint(outlinePaint);
@@ -208,11 +196,11 @@ public class CandleRenderer extends CandlestickRenderer {
             double maxOpenClose = Math.max(yOpen, yClose);
             double minOpenClose = Math.min(yOpen, yClose);
 
-            Shape body = null;
+            Shape body;
             boolean highlight = highlight(series, item);
-            /**********************************
+            /*
              * draw the upper shadow START
-             **********************************/
+             */
 
             if (yHigh > maxOpenClose) {
                 if (highlight) {
@@ -238,9 +226,9 @@ public class CandleRenderer extends CandlestickRenderer {
                 g2.draw(new Line2D.Double(xx, yyHigh, xx, yyMaxOpenClose));
             }
 
-            /**********************************
+            /*
              * draw the lower shadow START
-             **********************************/
+             */
             if (yLow < minOpenClose) {
                 if (highlight) {
                     body = new Rectangle2D.Double(xx - (translatedWidth / 2), yyMinOpenClose, translatedWidth,
@@ -249,23 +237,21 @@ public class CandleRenderer extends CandlestickRenderer {
                     g2.fill(body);
                     g2.draw(body);
                 }
-                if (yLow < minOpenClose) {
-                    if (nightMode) {
-                        if (yClose > yOpen) {
-                            g2.setPaint(upPaint);
-                        } else {
-                            g2.setPaint(downPaint);
-                        }
+                if (nightMode) {
+                    if (yClose > yOpen) {
+                        g2.setPaint(upPaint);
                     } else {
-                        g2.setPaint(Color.BLACK);
+                        g2.setPaint(downPaint);
                     }
-                    g2.draw(new Line2D.Double(xx, yyLow, xx, yyMinOpenClose));
+                } else {
+                    g2.setPaint(Color.BLACK);
                 }
+                g2.draw(new Line2D.Double(xx, yyLow, xx, yyMinOpenClose));
             }
 
-            /**********************************
+            /*
              * draw the body
-             **********************************/
+             */
 
             body = new Rectangle2D.Double(xx - (translatedWidth / 2), yyMinOpenClose, translatedWidth,
                     yyMaxOpenClose - yyMinOpenClose);
@@ -329,11 +315,7 @@ public class CandleRenderer extends CandlestickRenderer {
         XYPlot plot = getPlot();
         OHLCDataset highLowData = (OHLCDataset) plot.getDataset();
         int total_elements = highLowData.getItemCount(0);
-        boolean isLast = column == (total_elements - 1);
-        if (isLast) {
-            return true;
-        }
-        return false;
+        return column == (total_elements - 1);
     }
 
     /**

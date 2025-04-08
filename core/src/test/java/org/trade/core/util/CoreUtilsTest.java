@@ -39,6 +39,7 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
@@ -47,9 +48,19 @@ import org.slf4j.LoggerFactory;
 import org.trade.core.valuetype.Money;
 
 import javax.swing.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -294,4 +305,77 @@ public class CoreUtilsTest {
             fail(msg);
         }
     }
+
+    @Ignore
+    @Test
+    public void fixDemoData() {
+
+        try {
+
+            String filePath = "src/test/resources/demo-data-temp.sql";
+            String tempFilePath = "src/test/resources/demo-data-temp1.sql";
+
+            // 01/22/2024 and 2024-01-22
+            String datePattern = "\\d{4}-\\d{2}-\\d{2}"; // Example: YYYY-MM-DD
+            String dateFormat = "yyyy-MM-dd";
+            //String datePattern = "\\d{2}/\\d{2}/\\d{4}";
+            //String dateFormat ="MM/dd/yyyy";
+
+            SimpleDateFormat formatter = new SimpleDateFormat(dateFormat);
+
+            File inputFile = new File(filePath);
+            File tempFile = new File(tempFilePath);
+
+            BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
+
+            Pattern pattern = Pattern.compile(datePattern);
+            String currentLine;
+
+            while ((currentLine = reader.readLine()) != null) {
+
+                Matcher matcher = pattern.matcher(currentLine);
+                StringBuilder sb = new StringBuilder();
+
+                while (matcher.find()) {
+
+                    String matchedValue = matcher.group();
+                    Date date = formatter.parse(matchedValue);
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(date);
+                    calendar.add(Calendar.YEAR, 8);
+
+                    if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {  //or sunday
+                        calendar.add(Calendar.DAY_OF_WEEK, 2);
+                    } else if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+                        calendar.add(Calendar.DAY_OF_WEEK, 2);
+                    }
+
+                    SimpleDateFormat formatterNew = new SimpleDateFormat(dateFormat);
+                    String formattedDate = formatterNew.format(calendar.getTime());
+                    matcher.appendReplacement(sb, formattedDate);
+                }
+                matcher.appendTail(sb);
+                writer.write(sb + System.lineSeparator());
+            }
+            writer.close();
+            reader.close();
+/*
+            if (inputFile.delete()) {
+
+                if (!tempFile.renameTo(inputFile)) {
+                    throw new IOException("Could not rename temp file!");
+                }
+            } else {
+                throw new IOException("Could not delete original file!");
+            }
+*/
+            System.out.println("Dates replaced successfully!");
+
+        } catch (Exception ex) {
+            System.err.println("Error processing file: " + ex.getMessage());
+        }
+    }
+
+
 }

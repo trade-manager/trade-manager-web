@@ -48,8 +48,10 @@ import org.trade.ui.base.TableModel;
 
 import javax.swing.event.TableModelEvent;
 import java.awt.*;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Vector;
 
 /**
@@ -59,6 +61,7 @@ public class IndicatorSeriesTableModel extends TableModel {
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = 3087514589731145479L;
     private static final String STRATEGY = "  Strategy* ";
     private static final String TYPE = "  Indicator* ";
@@ -110,7 +113,7 @@ public class IndicatorSeriesTableModel extends TableModel {
         if (!getData().getIndicatorSeries().isEmpty()) {
 
             for (final IndicatorSeries element : getData().getIndicatorSeries()) {
-                final Vector<Object> newRow = new Vector<Object>();
+                final Vector<Object> newRow = new Vector<>();
                 getNewRow(newRow, element);
                 rows.add(newRow);
             }
@@ -130,11 +133,9 @@ public class IndicatorSeriesTableModel extends TableModel {
         if (column == 0) {
             return false;
         }
-        if (columnNames[column] == TYPE) {
+        if (Objects.equals(columnNames[column], TYPE)) {
             IndicatorSeries element = getData().getIndicatorSeries().get(row);
-            if (null != element.getIdIndicatorSeries()) {
-                return false;
-            }
+            return null == element.getIdIndicatorSeries();
         }
         return true;
     }
@@ -158,8 +159,8 @@ public class IndicatorSeriesTableModel extends TableModel {
             case 1: {
                 String type = ((org.trade.dictionary.valuetype.IndicatorSeries) value).getCode();
                 String indicatorName = type.substring(0, type.indexOf("Series"));
-                element = this.getIndicatorSeries(element.getStrategy(), indicatorName, type, indicatorName,
-                        new Boolean(false), new Integer(0), new Boolean(false));
+                element = this.getIndicatorSeries(element.getStrategy(), indicatorName, type, indicatorName
+                );
                 this.replaceRow(element, row);
                 break;
             }
@@ -172,11 +173,11 @@ public class IndicatorSeriesTableModel extends TableModel {
                 break;
             }
             case 4: {
-                element.setDisplaySeries(new Boolean(((YesNo) value).getCode()));
+                element.setDisplaySeries(Boolean.valueOf(((YesNo) value).getCode()));
                 break;
             }
             case 5: {
-                element.setSubChart(new Boolean(((YesNo) value).getCode()));
+                element.setSubChart(Boolean.valueOf(((YesNo) value).getCode()));
                 break;
             }
             case 6: {
@@ -195,7 +196,7 @@ public class IndicatorSeriesTableModel extends TableModel {
             default: {
             }
         }
-        element.setDirty(true);
+        Objects.requireNonNull(element).setDirty(true);
     }
 
     /**
@@ -207,7 +208,7 @@ public class IndicatorSeriesTableModel extends TableModel {
     public void replaceRow(IndicatorSeries newElement, int selectedRow) {
 
         getData().getIndicatorSeries().set(selectedRow, newElement);
-        final Vector<Object> newRow = new Vector<Object>();
+        final Vector<Object> newRow = new Vector<>();
         getNewRow(newRow, newElement);
         rows.set(selectedRow, newRow);
         // Tell the listeners a new table has arrived.
@@ -239,29 +240,24 @@ public class IndicatorSeriesTableModel extends TableModel {
     /**
      * Method getIndicatorSeries.
      *
-     * @param strategy        Strategy
-     * @param name            String
-     * @param type            String
-     * @param description     String
-     * @param displaySeries   Boolean
-     * @param seriesRGBColory Integer
-     * @param subChart        Boolean
+     * @param strategy    Strategy
+     * @param name        String
+     * @param type        String
+     * @param description String
      * @return IndicatorSeries
      */
-    private IndicatorSeries getIndicatorSeries(Strategy strategy, String name, String type, String description,
-                                               Boolean displaySeries, Integer seriesRGBColory, Boolean subChart) {
+    private IndicatorSeries getIndicatorSeries(Strategy strategy, String name, String type, String description) {
         try {
-            Vector<Object> parm = new Vector<Object>();
+            Vector<Object> parm = new Vector<>();
             parm.add(strategy);
             parm.add(name);
             parm.add(type);
             parm.add(description);
-            parm.add(displaySeries);
-            parm.add(seriesRGBColory);
-            parm.add(subChart);
+            parm.add(false);
+            parm.add(0);
+            parm.add(false);
             String className = "org.trade.strategy.data." + type;
-            IndicatorSeries instance = (IndicatorSeries) ClassFactory.getCreateClass(className, parm, this);
-            return instance;
+            return (IndicatorSeries) ClassFactory.getCreateClass(className, parm, this);
         } catch (Exception e) {
             /*
              * will only ever happen is IndicatorSeries does not exist.
@@ -275,11 +271,11 @@ public class IndicatorSeriesTableModel extends TableModel {
         String indicatorName = IndicatorSeries.MovingAverageSeries.substring(0,
                 IndicatorSeries.MovingAverageSeries.indexOf("Series"));
         IndicatorSeries element = getIndicatorSeries(getData(), indicatorName, IndicatorSeries.MovingAverageSeries,
-                indicatorName, new Boolean(false), new Integer(0), new Boolean(false));
+                indicatorName);
         getData().getIndicatorSeries().add(element);
         getData().setDirty(true);
-        final Vector<Object> newRow = new Vector<Object>();
-        getNewRow(newRow, element);
+        final Vector<Object> newRow = new Vector<>();
+        getNewRow(newRow, Objects.requireNonNull(element));
         rows.add(newRow);
         // Tell the listeners a new table has arrived.
         this.fireTableRowsInserted(rows.size() - 1, rows.size() - 1);

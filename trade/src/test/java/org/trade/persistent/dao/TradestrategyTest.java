@@ -35,8 +35,12 @@
  */
 package org.trade.persistent.dao;
 
-import org.junit.*;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.TestName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,7 +48,15 @@ import org.trade.core.dao.Aspect;
 import org.trade.core.dao.AspectHome;
 import org.trade.core.dao.Aspects;
 import org.trade.core.util.TradingCalendar;
-import org.trade.dictionary.valuetype.*;
+import org.trade.dictionary.valuetype.AccountType;
+import org.trade.dictionary.valuetype.BarSize;
+import org.trade.dictionary.valuetype.ChartDays;
+import org.trade.dictionary.valuetype.Currency;
+import org.trade.dictionary.valuetype.DAOPortfolio;
+import org.trade.dictionary.valuetype.DAOStrategy;
+import org.trade.dictionary.valuetype.Exchange;
+import org.trade.dictionary.valuetype.SECType;
+import org.trade.dictionary.valuetype.TradestrategyStatus;
 import org.trade.strategy.data.StrategyData;
 import org.trade.ui.TradeAppLoadConfig;
 
@@ -52,8 +64,12 @@ import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Objects;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 /**
  *
@@ -64,13 +80,11 @@ public class TradestrategyTest {
     @Rule
     public TestName name = new TestName();
 
-    private String symbol = "TEST";
+    private final String symbol = "TEST";
     private TradestrategyHome tradestrategyHome = null;
 
     /**
      * Method setUpBeforeClass.
-     *
-     * @throws java.lang.Exception
      */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
@@ -78,8 +92,6 @@ public class TradestrategyTest {
 
     /**
      * Method setUp.
-     *
-     * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
@@ -89,8 +101,6 @@ public class TradestrategyTest {
 
     /**
      * Method tearDown.
-     *
-     * @throws java.lang.Exception
      */
     @After
     public void tearDown() throws Exception {
@@ -99,8 +109,6 @@ public class TradestrategyTest {
 
     /**
      * Method tearDownAfterClass.
-     *
-     * @throws java.lang.Exception
      */
     @AfterClass
     public static void tearDownAfterClass() throws Exception {
@@ -114,8 +122,7 @@ public class TradestrategyTest {
 
             Integer version = tradestrategyHome.findVersionById(tradestrategy.getId());
             assertNotNull("2", version);
-            _log.info("testFindVersionById IdTradeStrategy:" + tradestrategy.getId() + " version: "
-                    + version);
+            _log.info("testFindVersionById IdTradeStrategy:{} version: {}", tradestrategy.getId(), version);
         } catch (Exception | AssertionError ex) {
             String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
             _log.error(msg);
@@ -128,19 +135,17 @@ public class TradestrategyTest {
         try {
             Tradestrategy tradestrategy = TradestrategyTest.getTestTradestrategy(symbol);
             assertNotNull("1", tradestrategy);
-            _log.info("testTradingdaysSave IdTradeStrategy:" + tradestrategy.getId());
+            _log.info("testTradingdaysSave IdTradeStrategy:{}", tradestrategy.getId());
 
             TradestrategyOrders positionOrders = tradestrategyHome
                     .findPositionOrdersByTradestrategyId(tradestrategy.getId());
             assertNotNull("2", positionOrders);
-            _log.info("testTradingdaysSave PositionOrders IdTradeStrategy:" + positionOrders.getId()
-                    + "found.");
+            _log.info("testTradingdaysSave PositionOrders IdTradeStrategy:{}found.", positionOrders.getId());
             positionOrders.setStatus(TradestrategyStatus.CANCELLED);
             AspectHome aspectHome = new AspectHome();
             positionOrders = aspectHome.persist(positionOrders);
             positionOrders = tradestrategyHome.findPositionOrdersByTradestrategyId(tradestrategy.getId());
-            _log.info("testTradingdaysSave PositionOrders IdTradeStrategy:" + positionOrders.getId()
-                    + "found Status: " + positionOrders.getStatus());
+            _log.info("testTradingdaysSave PositionOrders IdTradeStrategy:{}found Status: {}", positionOrders.getId(), positionOrders.getStatus());
             assertEquals("3", TradestrategyStatus.CANCELLED, positionOrders.getStatus());
         } catch (Exception | AssertionError ex) {
             String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
@@ -156,10 +161,10 @@ public class TradestrategyTest {
 
             Tradestrategy tradestrategy = TradestrategyTest.getTestTradestrategy(symbol);
             assertNotNull("1", tradestrategy);
-            _log.info("testTradingdaysSave IdTradeStrategy:" + tradestrategy.getId());
+            _log.info("testTradingdaysSave IdTradeStrategy:{}", tradestrategy.getId());
             tradestrategy = tradestrategyHome.findById(tradestrategy.getId());
             assertNotNull("2", tradestrategy);
-            _log.info("testTradingdaysSave IdTradeStrategy:" + tradestrategy.getId() + "found.");
+            _log.info("testTradingdaysSave IdTradeStrategy:{}found.", tradestrategy.getId());
         } catch (Exception | AssertionError ex) {
             String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
             _log.error(msg);
@@ -183,8 +188,7 @@ public class TradestrategyTest {
 
                 for (Tradestrategy tradestrategy : tradingday.getTradestrategies()) {
 
-                    _log.info("testTradingdaysUpdate IdTradeStrategy:" + tradestrategy.getId()
-                            + "  Status: " + tradestrategy.getStatus());
+                    _log.info("testTradingdaysUpdate IdTradeStrategy:{}  Status: {}", tradestrategy.getId(), tradestrategy.getStatus());
                     assertEquals("1", TradestrategyStatus.OPEN, tradestrategy.getStatus());
                 }
             }
@@ -212,7 +216,7 @@ public class TradestrategyTest {
             for (Tradingday tradingday : tradingdays.getTradingdays()) {
                 tradingdayHome.persist(tradingday);
                 for (Tradestrategy tradestrategy : tradingday.getTradestrategies()) {
-                    _log.info("testTradingdaysUpdate IdTradeStrategy:" + tradestrategy.getId());
+                    _log.info("testTradingdaysUpdate IdTradeStrategy:{}", tradestrategy.getId());
                     aspectHome.remove(tradestrategy);
                     aspectHome.remove(tradestrategy.getContract());
 
@@ -244,7 +248,7 @@ public class TradestrategyTest {
                 tradingdayHome.persist(tradingday);
                 for (Tradestrategy tradestrategy : tradingday.getTradestrategies()) {
 
-                    _log.info("testTradingdaysUpdate IdTradeStrategy:" + tradestrategy.getId());
+                    _log.info("testTradingdaysUpdate IdTradeStrategy:{}", tradestrategy.getId());
                     aspectHome.remove(tradestrategy);
                     aspectHome.remove(tradestrategy.getContract());
                 }
@@ -261,7 +265,6 @@ public class TradestrategyTest {
      * Method getTestTradestrategy.
      *
      * @return Tradestrategy
-     * @throws Exception
      */
     public static Tradestrategy getTestTradestrategy(String symbol) throws Exception {
         ContractHome contractHome = new ContractHome();
@@ -269,9 +272,9 @@ public class TradestrategyTest {
         TradestrategyHome tradestrategyHome = new TradestrategyHome();
         AspectHome aspectHome = new AspectHome();
 
-        Tradestrategy tradestrategy = null;
+        Tradestrategy tradestrategy;
         Strategy strategy = (Strategy) DAOStrategy.newInstance().getObject();
-        Portfolio portfolio = (Portfolio) DAOPortfolio.newInstance().getObject();
+        Portfolio portfolio = (Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
         portfolio = portfolioHome.findByName(portfolio.getName());
         if (portfolio.getPortfolioAccounts().isEmpty()) {
             Account account = new Account("Test", "T123456", Currency.USD, AccountType.INDIVIDUAL);
@@ -298,7 +301,7 @@ public class TradestrategyTest {
                 transientInstance.setStatus(null);
                 aspectHome.persist(transientInstance);
 
-                Hashtable<Integer, TradePosition> tradePositions = new Hashtable<Integer, TradePosition>();
+                Hashtable<Integer, TradePosition> tradePositions = new Hashtable<>();
                 for (TradeOrder tradeOrder : transientInstance.getTradeOrders()) {
                     if (tradeOrder.hasTradePosition())
                         tradePositions.put(tradeOrder.getTradePosition().getId(),
@@ -344,8 +347,6 @@ public class TradestrategyTest {
 
     /**
      * Method clearDBData.
-     *
-     * @throws Exception
      */
     public static void clearDBData() throws Exception {
 
@@ -392,12 +393,11 @@ public class TradestrategyTest {
         try {
             Tradestrategy tradestrategy = TradestrategyTest.getTestTradestrategy(symbol);
             assertNotNull("1", tradestrategy);
-            _log.info("testTradingdaysSave IdTradeStrategy:" + tradestrategy.getId());
+            _log.info("testTradingdaysSave IdTradeStrategy:{}", tradestrategy.getId());
             List<Tradestrategy> results = tradestrategyHome.findTradestrategyDistinctByDateRange(
                     tradestrategy.getTradingday().getOpen(), tradestrategy.getTradingday().getOpen());
             for (Tradestrategy value : results) {
-                _log.info("BarSize: " + value.getBarSize() + " ChartDays: " + value.getChartDays() + " Strategy: "
-                        + value.getStrategy().getName());
+                _log.info("BarSize: {} ChartDays: {} Strategy: {}", value.getBarSize(), value.getChartDays(), value.getStrategy().getName());
             }
             assertNotNull("2", results);
         } catch (Exception | AssertionError ex) {
@@ -412,11 +412,11 @@ public class TradestrategyTest {
         try {
             Tradestrategy tradestrategy = TradestrategyTest.getTestTradestrategy(symbol);
             assertNotNull("1", tradestrategy);
-            _log.info("testTradingdaysSave IdTradeStrategy:" + tradestrategy.getId());
+            _log.info("testTradingdaysSave IdTradeStrategy:{}", tradestrategy.getId());
             List<Tradestrategy> results = tradestrategyHome.findTradestrategyContractDistinctByDateRange(
                     tradestrategy.getTradingday().getOpen(), tradestrategy.getTradingday().getOpen());
             for (Tradestrategy value : results) {
-                _log.info("Contract: " + value.getContract().getSymbol());
+                _log.info("Contract: {}", value.getContract().getSymbol());
             }
             assertNotNull("2", results);
         } catch (Exception | AssertionError ex) {

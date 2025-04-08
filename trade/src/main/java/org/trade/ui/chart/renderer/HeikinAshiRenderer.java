@@ -53,6 +53,7 @@ import org.trade.strategy.data.HeikinAshiDataset;
 import java.awt.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
+import java.io.Serial;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
@@ -64,10 +65,11 @@ public class HeikinAshiRenderer extends CandlestickRenderer {
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = -6761905072507196822L;
 
     final DateFormat TOOLTIP_DATE_FORMAT = new SimpleDateFormat("H:mma MM/dd/yy");
-    public boolean nightMode = false;
+    public boolean nightMode;
 
     Paint upPaint;
     Paint downPaint;
@@ -80,38 +82,27 @@ public class HeikinAshiRenderer extends CandlestickRenderer {
     public HeikinAshiRenderer(boolean nightMode) {
         this.nightMode = nightMode;
         configureToolTips();
-        if (nightMode) {
-            upPaint = Color.green;
-            downPaint = Color.red;
-        } else {
-            upPaint = Color.green;
-            downPaint = Color.red;
-        }
+        upPaint = Color.green;
+        downPaint = Color.red;
     }
 
     private void configureToolTips() {
-        setDefaultToolTipGenerator(new XYToolTipGenerator() {
-            public String generateToolTip(XYDataset dataset, int series, int item) {
-                StringBuilder result = new StringBuilder("<html>");
-                if (dataset instanceof HeikinAshiDataset) {
-                    HeikinAshiDataset d = (HeikinAshiDataset) dataset;
-                    Number time = d.getX(series, item);
-                    Number high = d.getHigh(series, item);
-                    Number low = d.getLow(series, item);
-                    Number open = d.getOpen(series, item);
-                    Number close = d.getClose(series, item);
+        setDefaultToolTipGenerator((dataset, series, item) -> {
+            StringBuilder result = new StringBuilder("<html>");
+            if (dataset instanceof HeikinAshiDataset d) {
+                Number time = d.getX(series, item);
+                Number high = d.getHigh(series, item);
+                Number low = d.getLow(series, item);
+                Number open = d.getOpen(series, item);
+                Number close = d.getClose(series, item);
 
-                    result.append("<b>Open:</b> ").append(new Money(open.doubleValue())).append("<br/>");
-                    result.append("<b>High:</b> ").append(new Money(high.doubleValue())).append("<br/>");
-                    result.append("<b>Low:</b> ").append(new Money(low.doubleValue())).append("<br/>");
-                    result.append("<b>Close:</b> ").append(new Money(close.doubleValue())).append("<br/>");
-                    result.append("<b>Date:</b> ").append(TOOLTIP_DATE_FORMAT.format(time)).append("<br/>");
-                } else {
-
-                }
-                return result.toString();
+                result.append("<b>Open:</b> ").append(new Money(open.doubleValue())).append("<br/>");
+                result.append("<b>High:</b> ").append(new Money(high.doubleValue())).append("<br/>");
+                result.append("<b>Low:</b> ").append(new Money(low.doubleValue())).append("<br/>");
+                result.append("<b>Close:</b> ").append(new Money(close.doubleValue())).append("<br/>");
+                result.append("<b>Date:</b> ").append(TOOLTIP_DATE_FORMAT.format(time)).append("<br/>");
             }
-
+            return result.toString();
         });
     }
 
@@ -143,15 +134,13 @@ public class HeikinAshiRenderer extends CandlestickRenderer {
                          XYPlot plot, ValueAxis domainAxis, ValueAxis rangeAxis, XYDataset dataset, int series, int item,
                          CrosshairState crosshairState, int pass) {
 
-        if (dataset instanceof HeikinAshiDataset) {
+        if (dataset instanceof HeikinAshiDataset highLowData) {
 
             // setup for collecting optional entity info...
             EntityCollection entities = null;
             if (info != null) {
                 entities = info.getOwner().getEntityCollection();
             }
-
-            HeikinAshiDataset highLowData = (HeikinAshiDataset) dataset;
 
             double x = highLowData.getXValue(series, item);
             double yHigh = highLowData.getHighValue(series, item);
@@ -176,7 +165,7 @@ public class HeikinAshiRenderer extends CandlestickRenderer {
             xxWidth = Math.min(xxWidth, this.maxCandleWidth);
             double stickWidth = Math.max(Math.min(3, this.maxCandleWidth), xxWidth);
 
-            Paint outlinePaint = null;
+            Paint outlinePaint;
             outlinePaint = getItemOutlinePaint(series, item);
             g2.setStroke(getItemStroke(series, item));
             g2.setPaint(outlinePaint);
@@ -186,11 +175,11 @@ public class HeikinAshiRenderer extends CandlestickRenderer {
             double maxOpenClose = Math.max(yOpen, yClose);
             double minOpenClose = Math.min(yOpen, yClose);
 
-            Shape body = null;
+            Shape body;
             boolean highlight = highlight(series, item);
-            /**********************************
+            /*
              * draw the upper shadow START
-             **********************************/
+             */
 
             if (yHigh > maxOpenClose) {
                 if (highlight) {
@@ -216,9 +205,9 @@ public class HeikinAshiRenderer extends CandlestickRenderer {
                 g2.draw(new Line2D.Double(xx, yyHigh, xx, yyMaxOpenClose));
             }
 
-            /**********************************
+            /*
              * draw the lower shadow START
-             **********************************/
+             */
             if (yLow < minOpenClose) {
                 if (highlight) {
                     body = new Rectangle2D.Double(xx - (stickWidth / 2), yyMinOpenClose, stickWidth,
@@ -227,23 +216,21 @@ public class HeikinAshiRenderer extends CandlestickRenderer {
                     g2.fill(body);
                     g2.draw(body);
                 }
-                if (yLow < minOpenClose) {
-                    if (nightMode) {
-                        if (yClose > yOpen) {
-                            g2.setPaint(upPaint);
-                        } else {
-                            g2.setPaint(downPaint);
-                        }
+                if (nightMode) {
+                    if (yClose > yOpen) {
+                        g2.setPaint(upPaint);
                     } else {
-                        g2.setPaint(Color.BLACK);
+                        g2.setPaint(downPaint);
                     }
-                    g2.draw(new Line2D.Double(xx, yyLow, xx, yyMinOpenClose));
+                } else {
+                    g2.setPaint(Color.BLACK);
                 }
+                g2.draw(new Line2D.Double(xx, yyLow, xx, yyMinOpenClose));
             }
 
-            /**********************************
+            /*
              * draw the body
-             **********************************/
+             */
 
             body = new Rectangle2D.Double(xx - (stickWidth / 2), yyMinOpenClose, stickWidth,
                     yyMaxOpenClose - yyMinOpenClose);
@@ -322,11 +309,7 @@ public class HeikinAshiRenderer extends CandlestickRenderer {
         XYPlot plot = getPlot();
         OHLCDataset highLowData = (OHLCDataset) plot.getDataset();
         int total_elements = highLowData.getItemCount(0);
-        boolean isLast = column == (total_elements - 1);
-        if (isLast) {
-            return true;
-        }
-        return false;
+        return column == (total_elements - 1);
     }
 
 }

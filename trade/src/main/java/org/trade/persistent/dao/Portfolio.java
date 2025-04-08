@@ -49,6 +49,7 @@ import jakarta.validation.constraints.NotNull;
 import org.trade.core.dao.Aspect;
 import org.trade.core.util.TradingCalendar;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -64,6 +65,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @Table(name = "portfolio")
 public class Portfolio extends Aspect implements Serializable, Cloneable {
 
+    @Serial
     private static final long serialVersionUID = 2273276207080568947L;
 
     @NotNull
@@ -71,10 +73,10 @@ public class Portfolio extends Aspect implements Serializable, Cloneable {
     private String alias;
     private String allocationMethod;
     private String description;
-    private Boolean isDefault = new Boolean(false);
+    private Boolean isDefault = false;
     private ZonedDateTime lastUpdateDate;
-    private List<Tradestrategy> tradestrategies = new ArrayList<Tradestrategy>(0);
-    private List<PortfolioAccount> portfolioAccounts = new ArrayList<PortfolioAccount>(0);
+    private List<Tradestrategy> tradestrategies = new ArrayList<>(0);
+    private List<PortfolioAccount> portfolioAccounts = new ArrayList<>(0);
 
     public Portfolio() {
         this.lastUpdateDate = TradingCalendar.getDateTimeNowMarketTimeZone();
@@ -105,15 +107,6 @@ public class Portfolio extends Aspect implements Serializable, Cloneable {
     }
 
     /**
-     * Method setId.
-     *
-     * @param id Integer
-     */
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    /**
      * Method getName.
      *
      * @return String
@@ -137,7 +130,7 @@ public class Portfolio extends Aspect implements Serializable, Cloneable {
      *
      * @return String
      */
-    @Column(name = "alias", unique = true, nullable = true, length = 45)
+    @Column(name = "alias", unique = true, length = 45)
     public String getAlias() {
         return this.alias;
     }
@@ -239,15 +232,6 @@ public class Portfolio extends Aspect implements Serializable, Cloneable {
     }
 
     /**
-     * Method setVersion.
-     *
-     * @param version Integer
-     */
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
-
-    /**
      * Method getTradestrategies.
      *
      * @return List<Tradestrategy>
@@ -279,7 +263,7 @@ public class Portfolio extends Aspect implements Serializable, Cloneable {
     /**
      * Method setPortfolioAccounts.
      *
-     * @param codeAttributes List<CodeAttribute>
+     * @param portfolioAccounts List<CodeAttribute>
      */
     public void setPortfolioAccounts(List<PortfolioAccount> portfolioAccounts) {
         this.portfolioAccounts = portfolioAccounts;
@@ -293,7 +277,7 @@ public class Portfolio extends Aspect implements Serializable, Cloneable {
     @Transient
     public Account getIndividualAccount() {
         if (this.getPortfolioAccounts().size() == 1) {
-            return this.getPortfolioAccounts().get(0).getAccount();
+            return this.getPortfolioAccounts().getFirst().getAccount();
         }
         return null;
     }
@@ -347,12 +331,11 @@ public class Portfolio extends Aspect implements Serializable, Cloneable {
      * Method clone.
      *
      * @return Object
-     * @throws CloneNotSupportedException
      */
     public Object clone() throws CloneNotSupportedException {
 
         Portfolio portfolio = (Portfolio) super.clone();
-        List<Tradestrategy> tradestrategies = new ArrayList<Tradestrategy>(0);
+        List<Tradestrategy> tradestrategies = new ArrayList<>(0);
         portfolio.setTradestrategies(tradestrategies);
         return portfolio;
     }

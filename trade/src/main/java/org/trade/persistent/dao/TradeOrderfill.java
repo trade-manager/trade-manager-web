@@ -50,6 +50,7 @@ import jakarta.validation.constraints.NotNull;
 import org.trade.core.dao.Aspect;
 import org.trade.core.valuetype.Money;
 
+import java.io.Serial;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 
@@ -66,6 +67,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @Table(name = "tradeorderfill")
 public class TradeOrderfill extends Aspect implements java.io.Serializable, Cloneable {
 
+    @Serial
     private static final long serialVersionUID = -4345234694835258864L;
 
     private String accountNumber;
@@ -128,21 +130,12 @@ public class TradeOrderfill extends Aspect implements java.io.Serializable, Clon
     }
 
     /**
-     * Method setId.
-     *
-     * @param id Integer
-     */
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    /**
      * Method getTradeOrder.
      *
      * @return TradeOrder
      */
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_trade_order", insertable = true, updatable = true, nullable = false)
+    @JoinColumn(name = "id_trade_order", nullable = false)
     public TradeOrder getTradeOrder() {
         return this.tradeOrder;
     }
@@ -256,7 +249,7 @@ public class TradeOrderfill extends Aspect implements java.io.Serializable, Clon
      *
      * @return String
      */
-    @Column(name = "order_reference", nullable = true, length = 45)
+    @Column(name = "order_reference", length = 45)
     public String getOrderReference() {
         return this.orderReference;
     }
@@ -264,7 +257,7 @@ public class TradeOrderfill extends Aspect implements java.io.Serializable, Clon
     /**
      * Method setOrderReference.
      *
-     * @param orderRefeference String
+     * @param orderReference String
      */
     public void setOrderReference(String orderReference) {
         this.orderReference = orderReference;
@@ -396,24 +389,14 @@ public class TradeOrderfill extends Aspect implements java.io.Serializable, Clon
     }
 
     /**
-     * Method setVersion.
-     *
-     * @param version Integer
-     */
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
-
-    /**
      * Method clone.
      *
      * @return TradeOrderfill
      */
     public TradeOrderfill clone() {
         try {
-            TradeOrderfill tradeOrderfill = (TradeOrderfill) super.clone();
 
-            return tradeOrderfill;
+            return (TradeOrderfill) super.clone();
         } catch (CloneNotSupportedException e) {
             // will never happen
             return null;
