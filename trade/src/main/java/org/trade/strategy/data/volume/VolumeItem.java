@@ -38,8 +38,6 @@ package org.trade.strategy.data.volume;
 import org.jfree.data.ComparableObjectItem;
 import org.trade.strategy.data.base.RegularTimePeriod;
 
-import java.io.Serial;
-
 /**
  * An item representing data in the form (period, open, high, low, close).
  *
@@ -52,7 +50,6 @@ public class VolumeItem extends ComparableObjectItem {
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = -3888996139640449109L;
 
     /**
@@ -92,7 +89,7 @@ public class VolumeItem extends ComparableObjectItem {
     public void setVolume(long volume) {
         Volume dataItem = (Volume) getObject();
         if (dataItem != null) {
-            dataItem.setVolume(volume);
+            dataItem.setVolume(new Long(volume));
         }
 
     }
@@ -108,7 +105,7 @@ public class VolumeItem extends ComparableObjectItem {
             if (null == dataItem.getVolume()) {
                 return 0;
             }
-            return dataItem.getVolume();
+            return dataItem.getVolume().longValue();
         } else {
             return 0;
         }

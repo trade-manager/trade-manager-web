@@ -53,7 +53,7 @@ public interface IVwapDataset extends XYDataset {
      * @param item   the item index.
      * @return The Vwap.
      */
-    double getVwapValue(int series, int item);
+    public double getVwapValue(int series, int item);
 
     /**
      * Returns the Pivot for an item within a series.
@@ -62,6 +62,6 @@ public interface IVwapDataset extends XYDataset {
      * @param item   the item index.
      * @return The Pivot.
      */
-    Number getVwap(int series, int item);
+    public Number getVwap(int series, int item);
 
 }

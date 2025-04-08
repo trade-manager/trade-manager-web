@@ -38,7 +38,6 @@ package org.trade.strategy.data.rsi;
 import org.jfree.data.ComparableObjectItem;
 import org.trade.strategy.data.base.RegularTimePeriod;
 
-import java.io.Serial;
 import java.math.BigDecimal;
 
 /**
@@ -53,7 +52,6 @@ public class RelativeStrengthIndexItem extends ComparableObjectItem {
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = -3888996139640449109L;
 
     /**

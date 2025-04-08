@@ -37,8 +37,6 @@ package org.trade.dictionary.valuetype;
 
 import org.trade.core.valuetype.Decode;
 
-import java.io.Serial;
-
 /**
  *
  */
@@ -47,7 +45,6 @@ public class OverrideConstraints extends Decode {
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = -5381026427696898592L;
     public static final String DECODE = "OVERRIDE_CONSTRAINTS";
     public static final int YES = 1;
@@ -60,6 +57,8 @@ public class OverrideConstraints extends Decode {
      * Create a new instance of this object
      *
      * @return OverrideConstraints
+     * @throws *
+     * @see
      */
 
     public static OverrideConstraints newInstance() {

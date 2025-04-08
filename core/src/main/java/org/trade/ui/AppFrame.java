@@ -38,7 +38,6 @@ package org.trade.ui;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowEvent;
-import java.io.Serial;
 
 /**
  *
@@ -48,9 +47,8 @@ public class AppFrame extends JFrame {
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = -6191549867093963518L;
-    private final MainControllerPanel mainPanel;
+    private MainControllerPanel mainPanel = null;
 
     public AppFrame() {
         super();

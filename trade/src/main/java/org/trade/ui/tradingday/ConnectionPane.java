@@ -49,16 +49,14 @@ import javax.swing.*;
 import javax.swing.text.MaskFormatter;
 import java.awt.*;
 import java.awt.event.ItemEvent;
-import java.io.Serial;
+import java.awt.event.ItemListener;
 import java.text.ParseException;
-import java.util.Objects;
 
 /**
  *
  */
 public class ConnectionPane extends JPanel {
 
-    @Serial
     private static final long serialVersionUID = -4696247761711464150L;
     private final static Logger _log = LoggerFactory.getLogger(ConnectionPane.class);
 
@@ -72,30 +70,32 @@ public class ConnectionPane extends JPanel {
         portTextField = new JFormattedTextField(createFormatter("####"));
         clientIdTextField = new JFormattedTextField(createFormatter("#"));
         hostTextField = new JTextField();
-        portfolio = (Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
-        int clientId = 0;
-        int port = 7496;
+        portfolio = (Portfolio) DAOPortfolio.newInstance().getObject();
+        Integer clientId = new Integer(0);
+        Integer port = new Integer(7496);
         String host = "localhost";
         try {
-            clientId = Integer.parseInt(ConfigProperties.getPropAsString("trade.tws.clientId"));
-            port = Integer.parseInt(ConfigProperties.getPropAsString("trade.tws.port"));
+            clientId = new Integer(ConfigProperties.getPropAsString("trade.tws.clientId"));
+            port = new Integer(ConfigProperties.getPropAsString("trade.tws.port"));
             host = ConfigProperties.getPropAsString("trade.tws.host");
         } catch (Exception ex) {
             _log.error("Could not find config.properties in root Dir", ex);
         }
         hostTextField.setText(host);
-        portTextField.setText(Integer.toString(port));
-        clientIdTextField.setText(Integer.toString(clientId));
+        portTextField.setText(port.toString());
+        clientIdTextField.setText(clientId.toString());
         DecodeComboBoxEditor portfolioEditorComboBox = new DecodeComboBoxEditor(
-                Objects.requireNonNull(DAOPortfolio.newInstance()).getCodesDecodes());
+                DAOPortfolio.newInstance().getCodesDecodes());
         DecodeComboBoxRenderer portfolioTableRenderer = new DecodeComboBoxRenderer();
         portfolioEditorComboBox.setRenderer(portfolioTableRenderer);
         if (null != portfolio)
             portfolioEditorComboBox.setItem(DAOPortfolio.newInstance(portfolio.getName()));
-        portfolioEditorComboBox.addItemListener(e -> {
-            if (e.getStateChange() == ItemEvent.SELECTED) {
-                if (!Decode.NONE.equals(((DAOPortfolio) e.getItem()).getDisplayName())) {
-                    portfolio = (Portfolio) ((DAOPortfolio) e.getItem()).getObject();
+        portfolioEditorComboBox.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    if (!Decode.NONE.equals(((DAOPortfolio) e.getItem()).getDisplayName())) {
+                        portfolio = (Portfolio) ((DAOPortfolio) e.getItem()).getObject();
+                    }
                 }
             }
         });
@@ -151,7 +151,7 @@ public class ConnectionPane extends JPanel {
      * @return Integer
      */
     public Integer getPort() {
-        return Integer.valueOf(portTextField.getText());
+        return new Integer(portTextField.getText());
     }
 
     /**
@@ -169,7 +169,7 @@ public class ConnectionPane extends JPanel {
      * @return Integer
      */
     public Integer getClientId() {
-        return Integer.valueOf(clientIdTextField.getText());
+        return new Integer(clientIdTextField.getText());
     }
 
     /**
@@ -182,7 +182,7 @@ public class ConnectionPane extends JPanel {
         try {
             return new MaskFormatter(s);
         } catch (ParseException exc) {
-            _log.error("Error creating formatter: {}", exc.getMessage());
+            _log.error("Error creating formatter: " + exc.getMessage());
         }
         return null;
     }

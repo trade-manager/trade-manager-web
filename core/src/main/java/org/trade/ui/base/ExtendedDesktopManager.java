@@ -37,7 +37,6 @@ package org.trade.ui.base;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.Serial;
 
 /**
  * @author Simon Allen
@@ -48,13 +47,14 @@ public class ExtendedDesktopManager extends DefaultDesktopManager {
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = -6690132949361620306L;
 
     /**
      * ExtendedDesktopManager() - constructor
      *
      * @param targetPane JDesktopPane
+     * @throws *
+     * @see
      */
     public ExtendedDesktopManager(JDesktopPane targetPane) {
         ghostPanel = new JPanel();
@@ -69,6 +69,8 @@ public class ExtendedDesktopManager extends DefaultDesktopManager {
      * beginDraggingFrame() -
      *
      * @param f JComponent
+     * @throws *
+     * @see
      */
     public void beginDraggingFrame(JComponent f) {
         Rectangle r = f.getBounds();
@@ -76,7 +78,7 @@ public class ExtendedDesktopManager extends DefaultDesktopManager {
         ghostPanel.setBounds(r);
         f.setVisible(false);
         targetPane.add(ghostPanel);
-        targetPane.setLayer(ghostPanel, JLayeredPane.DRAG_LAYER);
+        targetPane.setLayer(ghostPanel, JLayeredPane.DRAG_LAYER.intValue());
         targetPane.setVisible(true);
     }
 
@@ -86,6 +88,8 @@ public class ExtendedDesktopManager extends DefaultDesktopManager {
      * @param f    JComponent
      * @param newX int
      * @param newY int
+     * @throws *
+     * @see
      */
     public void dragFrame(JComponent f, int newX, int newY) {
         setBoundsForFrame(ghostPanel, newX, newY, ghostPanel.getWidth(), ghostPanel.getHeight());
@@ -95,6 +99,8 @@ public class ExtendedDesktopManager extends DefaultDesktopManager {
      * endDraggingFrame() -
      *
      * @param f JComponent
+     * @throws *
+     * @see
      */
     public void endDraggingFrame(JComponent f) {
         Rectangle r = ghostPanel.getBounds();
@@ -109,6 +115,8 @@ public class ExtendedDesktopManager extends DefaultDesktopManager {
      *
      * @param f         JComponent
      * @param direction int
+     * @throws *
+     * @see
      */
     public void beginResizingFrame(JComponent f, int direction) {
         oldCursor = f.getCursor();
@@ -121,7 +129,7 @@ public class ExtendedDesktopManager extends DefaultDesktopManager {
         ghostPanel.setBounds(r);
         f.setVisible(false);
         targetPane.add(ghostPanel);
-        targetPane.setLayer(ghostPanel, JLayeredPane.DRAG_LAYER);
+        targetPane.setLayer(ghostPanel, JLayeredPane.DRAG_LAYER.intValue());
         ghostPanel.setCursor(cursor);
         targetPane.setVisible(true);
     }
@@ -134,6 +142,8 @@ public class ExtendedDesktopManager extends DefaultDesktopManager {
      * @param newY      int
      * @param newWidth  int
      * @param newHeight int
+     * @throws *
+     * @see
      */
     public void resizeFrame(JComponent f, int newX, int newY, int newWidth, int newHeight) {
         setBoundsForFrame(ghostPanel, newX, newY, newWidth, newHeight);
@@ -143,6 +153,8 @@ public class ExtendedDesktopManager extends DefaultDesktopManager {
      * endResizingFrame() -
      *
      * @param f JComponent
+     * @throws *
+     * @see
      */
     public void endResizingFrame(JComponent f) {
         Rectangle r = ghostPanel.getBounds();

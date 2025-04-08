@@ -44,7 +44,6 @@ import org.trade.core.validator.DateValidator;
 import org.trade.core.validator.IExceptionMessageListener;
 import org.trade.core.validator.IValidator;
 
-import java.io.Serial;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -59,7 +58,6 @@ public class Date extends ValueType implements Comparator<Date>, Comparable<Date
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = -5122615819171831028L;
 
     public final static String DATE_TIME_FORMAT = "yyyy-MM-dd'T'HHmmss'Z'";
@@ -85,7 +83,7 @@ public class Date extends ValueType implements Comparator<Date>, Comparable<Date
 
     private String m_format = null;
 
-    protected static Boolean m_ascending = true;
+    protected static Boolean m_ascending = new Boolean(true);
 
     /**
      * Default Constructor
@@ -128,7 +126,7 @@ public class Date extends ValueType implements Comparator<Date>, Comparable<Date
      * @param dateFormat String
      */
     public Date(String date, String dateFormat) {
-        if ((date == null) || (date.isEmpty())) {
+        if ((date == null) || (date.length() == 0)) {
             return;
         }
 
@@ -162,10 +160,10 @@ public class Date extends ValueType implements Comparator<Date>, Comparable<Date
      * @return The Date this Date is representing
      */
     public java.util.Date getDate() {
-        Instant instant;
+        Instant instant = null;
         if (null != getZonedDateTime()) {
             instant = getZonedDateTime().toInstant();
-            return java.util.Date.from(instant);
+            return (java.util.Date) java.util.Date.from(instant);
         }
         return null;
     }
@@ -189,7 +187,7 @@ public class Date extends ValueType implements Comparator<Date>, Comparable<Date
         boolean rVal = false;
 
         // Do not compare on nulls
-        if (m_date != null) {
+        if ((objectToCompare != null) && (m_date != null)) {
             java.time.ZonedDateTime cmpTo = null;
 
             if (objectToCompare instanceof org.trade.core.valuetype.Date) {
@@ -252,7 +250,11 @@ public class Date extends ValueType implements Comparator<Date>, Comparable<Date
         // month and day can be one digit : 2000-1-1T235959Z
         int minLength = maxLength - 2; // "yyyy-M-d'T'HHmmss'Z'";
 
-        return (length <= maxLength) && (length >= minLength);
+        if ((length <= maxLength) && (length >= minLength)) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -261,7 +263,10 @@ public class Date extends ValueType implements Comparator<Date>, Comparable<Date
      * @return boolean
      */
     public boolean isEmpty() {
-        return null == m_date;
+        if (null == m_date) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -290,6 +295,8 @@ public class Date extends ValueType implements Comparator<Date>, Comparable<Date
 
     /**
      * @param value Object
+     * @throws ValueTypeException
+     * @see com.cbsinc.esc.devtools.valuetype.ValueType
      */
     public void setValue(Object value) throws ValueTypeException {
         if (value instanceof org.trade.core.valuetype.Date) {
@@ -371,6 +378,7 @@ public class Date extends ValueType implements Comparator<Date>, Comparable<Date
      * Method clone.
      *
      * @return Object
+     * @throws java.lang.CloneNotSupportedException
      */
     public Object clone() throws java.lang.CloneNotSupportedException {
         return (super.clone());

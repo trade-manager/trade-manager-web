@@ -39,7 +39,6 @@ import org.trade.core.valuetype.Date;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
-import java.io.Serial;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
@@ -48,9 +47,8 @@ import java.util.Locale;
  */
 public class DateRenderer extends DefaultTableCellRenderer {
 
-    @Serial
     private static final long serialVersionUID = -7703222115247216081L;
-    private final SimpleDateFormat dateFormat;
+    private SimpleDateFormat dateFormat = null;
 
     /**
      * Constructor for DateRenderer.

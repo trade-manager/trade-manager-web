@@ -203,7 +203,7 @@ public class MessageContextFactory implements IMessageContextFactory {
 
     // ---------- Do not modify beyond this point ----------//
 
-    private final ExceptionContext m_exceptionContext;
+    private ExceptionContext m_exceptionContext;
 
     /**
      * Constructor for MessageContextFactory.

@@ -40,20 +40,19 @@ import org.trade.ui.base.Table;
 import org.trade.ui.base.TableModel;
 
 import javax.swing.*;
-import java.io.Serial;
 
 /**
  *
  */
 public class TradelogSummaryTable extends Table {
 
-    @Serial
     private static final long serialVersionUID = 1132297931453070904L;
 
     /**
      * Constructor for TradelogSummaryTable.
      *
      * @param model TableModel
+     * @throws ValueTypeException
      */
     public TradelogSummaryTable(TableModel model) throws ValueTypeException {
         super(model);

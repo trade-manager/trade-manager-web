@@ -41,7 +41,7 @@ import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
-import java.io.Serial;
+import java.io.IOException;
 import java.io.Serializable;
 import java.io.StringReader;
 
@@ -53,7 +53,6 @@ public class StringData implements Transferable, ClipboardOwner, Serializable {
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = 553277135583406304L;
 
     private static final int STRING = 0;
@@ -66,7 +65,7 @@ public class StringData implements Transferable, ClipboardOwner, Serializable {
             TREEPATH_FLAVOR // deprecated
     };
 
-    private final String m_data;
+    private String m_data = null;
 
     private TreePath m_path = null;
 
@@ -141,7 +140,7 @@ public class StringData implements Transferable, ClipboardOwner, Serializable {
      * <code>DataFlavor.plainTextFlavor</code>. * @throws IOException
      * @see java.io.Reader
      */
-    public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException {
+    public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
         if (flavor.equals(flavors[STRING])) {
             return new StringData(m_data);
         } else if (flavor.equals(flavors[PLAIN_TEXT])) {

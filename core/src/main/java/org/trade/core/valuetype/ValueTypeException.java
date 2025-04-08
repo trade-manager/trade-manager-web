@@ -38,8 +38,6 @@ package org.trade.core.valuetype;
 
 import org.trade.core.exception.ModelException;
 
-import java.io.Serial;
-
 /**
  * @author Simon Allen
  */
@@ -48,7 +46,6 @@ public class ValueTypeException extends ModelException {
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = -7816030721289530099L;
 
     public ValueTypeException() {

@@ -36,6 +36,7 @@
 package org.trade.ui.tables;
 
 import org.trade.core.util.TradingCalendar;
+import org.trade.core.valuetype.Decode;
 import org.trade.core.valuetype.ValueTypeException;
 import org.trade.dictionary.valuetype.MarketBar;
 import org.trade.ui.base.Table;
@@ -48,17 +49,16 @@ import org.trade.ui.widget.DecodeTableEditor;
 import javax.swing.*;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
-import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Vector;
 
 /**
  *
  */
 public class TradingdayTable extends Table {
 
-    @Serial
     private static final long serialVersionUID = 1132297931453070904L;
 
     private static final String DATETIMEFORMAT = "MM/dd/yyyy HH:mm";
@@ -67,11 +67,12 @@ public class TradingdayTable extends Table {
      * Constructor for TradingdayTable.
      *
      * @param model TableModel
+     * @throws ValueTypeException
      */
     public TradingdayTable(TableModel model) throws ValueTypeException {
         super(model);
         DecodeTableEditor marketBarEditor = new DecodeTableEditor(
-                new JComboBox<>((new MarketBar()).getCodesDecodes()));
+                new JComboBox<Decode>((Vector<Decode>) (new MarketBar()).getCodesDecodes()));
         this.setDefaultEditor(MarketBar.class, marketBarEditor);
         DateRenderer rDate = new DateRenderer(DATETIMEFORMAT);
         DateEditor eDate = new DateEditor(new DateField(DATETIMEFORMAT),
@@ -83,9 +84,9 @@ public class TradingdayTable extends Table {
         this.setPreferredScrollableViewportSize(new Dimension(250, 40));
         this.setFillsViewportHeight(true);
         this.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        TableRowSorter<TableModel> sorter = new TableRowSorter<>(model);
+        TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(model);
         this.setRowSorter(sorter);
-        List<RowSorter.SortKey> sortKeys = new ArrayList<>();
+        List<RowSorter.SortKey> sortKeys = new ArrayList<RowSorter.SortKey>();
         sortKeys.add(new RowSorter.SortKey(0, SortOrder.DESCENDING));
         sorter.setSortKeys(sortKeys);
     }

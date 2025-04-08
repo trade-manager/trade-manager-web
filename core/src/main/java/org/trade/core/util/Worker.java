@@ -104,7 +104,7 @@ public abstract class Worker {
         }
     }
 
-    private final ThreadVar threadVar;
+    private ThreadVar threadVar;
 
     /**
      * Get the value produced by the worker thread, or null if it hasn't been
@@ -180,7 +180,10 @@ public abstract class Worker {
         if (t.getState().compareTo(Thread.State.NEW) == 0)
             return false;
 
-        return t.getState().compareTo(Thread.State.TERMINATED) != 0;
+        if (t.getState().compareTo(Thread.State.TERMINATED) == 0)
+            return false;
+
+        return true;
     }
 
     /**
@@ -211,8 +214,9 @@ public abstract class Worker {
     public boolean isWaiting() {
         Thread t = threadVar.get();
         if (t != null) {
-            return t.getState().compareTo(Thread.State.WAITING) == 0
-                    || t.getState().compareTo(Thread.State.TIMED_WAITING) == 0;
+            if (t.getState().compareTo(Thread.State.WAITING) == 0
+                    || t.getState().compareTo(Thread.State.TIMED_WAITING) == 0)
+                return true;
         }
         return false;
     }
@@ -275,9 +279,11 @@ public abstract class Worker {
      * then exit.
      */
     public Worker() {
-        final Runnable doFinished = () -> {
-            isDone = true;
-            done();
+        final Runnable doFinished = new Runnable() {
+            public void run() {
+                isDone = true;
+                done();
+            }
         };
 
         Runnable doConstruct = new Runnable() {
@@ -303,6 +309,8 @@ public abstract class Worker {
             isDone = false;
             isCancelled = false;
             t.start();
+        } else {
+
         }
     }
 }

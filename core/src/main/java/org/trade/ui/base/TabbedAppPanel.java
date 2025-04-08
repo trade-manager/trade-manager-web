@@ -43,7 +43,6 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.io.Serial;
 import java.util.Vector;
 
 /**
@@ -53,15 +52,14 @@ public abstract class TabbedAppPanel extends BasePanel implements ChangeListener
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = 8405644422808736326L;
 
     private final static Logger _log = LoggerFactory.getLogger(TabbedAppPanel.class);
     private final JTabbedPane m_tabbedPane = new JTabbedPane();
 
     public String m_title = null;
-    private final JPanel m_menuPanel = new JPanel();
-    private final PrintController m_printJob = new PrintController();
+    private JPanel m_menuPanel = new JPanel();
+    private PrintController m_printJob = new PrintController();
     private int currentTab = 0;
     private BasePanel currBasePanel = null;
 
@@ -152,7 +150,7 @@ public abstract class TabbedAppPanel extends BasePanel implements ChangeListener
             UIManager.setLookAndFeel(new javax.swing.plaf.metal.MetalLookAndFeel());
             SwingUtilities.updateComponentTreeUI(getFrame());
         } catch (Exception eMetal) {
-            _log.error("Could not load LookAndFeel: {}", String.valueOf(eMetal));
+            _log.error("Could not load LookAndFeel: " + eMetal);
         }
     }
 
@@ -163,7 +161,7 @@ public abstract class TabbedAppPanel extends BasePanel implements ChangeListener
             // com.sun.java.swing.plaf.windows.WindowsLookAndFeel());
             SwingUtilities.updateComponentTreeUI(getFrame());
         } catch (Exception eMetal) {
-            _log.error("Could not load LookAndFeel: {}", String.valueOf(eMetal));
+            _log.error("Could not load LookAndFeel: " + eMetal);
         }
     }
 
@@ -175,7 +173,7 @@ public abstract class TabbedAppPanel extends BasePanel implements ChangeListener
             UIManager.put("swing.boldMetal", Boolean.FALSE);
             SwingUtilities.updateComponentTreeUI(getFrame());
         } catch (Exception eMetal) {
-            _log.error("Could not load LookAndFeel: {}", String.valueOf(eMetal));
+            _log.error("Could not load LookAndFeel: " + eMetal);
         }
     }
 
@@ -212,7 +210,11 @@ public abstract class TabbedAppPanel extends BasePanel implements ChangeListener
      */
     protected void addTab(String title, final BasePanel panel) {
         m_tabbedPane.add(title, panel);
-        SwingUtilities.invokeLater(panel::doWindowOpen);
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                panel.doWindowOpen();
+            }
+        });
 
     }
 
@@ -268,8 +270,9 @@ public abstract class TabbedAppPanel extends BasePanel implements ChangeListener
      */
     public void stateChanged(ChangeEvent evt) {
 
-        if (evt.getSource() instanceof JTabbedPane selectedTab) {
-            BasePanel prevBasePanel;
+        if (evt.getSource() instanceof JTabbedPane) {
+            JTabbedPane selectedTab = (JTabbedPane) evt.getSource();
+            BasePanel prevBasePanel = null;
             if (null == currBasePanel) {
                 currBasePanel = (BasePanel) selectedTab.getSelectedComponent();
                 currBasePanel.setSelected(true);

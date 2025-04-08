@@ -46,7 +46,6 @@ import org.trade.strategy.data.base.RegularTimePeriod;
 import org.trade.strategy.data.candle.CandleItem;
 import org.trade.strategy.data.rsi.RelativeStrengthIndexItem;
 
-import java.io.Serial;
 import java.math.BigDecimal;
 
 /**
@@ -80,7 +79,6 @@ import java.math.BigDecimal;
 @DiscriminatorValue("RelativeStrengthIndexSeries")
 public class RelativeStrengthIndexSeries extends IndicatorSeries {
 
-    @Serial
     private static final long serialVersionUID = 20183087035446657L;
 
     public static final String LENGTH = "Length";
@@ -145,9 +143,11 @@ public class RelativeStrengthIndexSeries extends IndicatorSeries {
      * Method clone.
      *
      * @return Object
+     * @throws CloneNotSupportedException
      */
     public Object clone() throws CloneNotSupportedException {
-        return super.clone();
+        RelativeStrengthIndexSeries clone = (RelativeStrengthIndexSeries) super.clone();
+        return clone;
     }
 
     /**
@@ -298,7 +298,7 @@ public class RelativeStrengthIndexSeries extends IndicatorSeries {
             // get the current data item...
             CandleItem candleItem = (CandleItem) source.getDataItem(skip);
 
-            double diffCloseValue;
+            double diffCloseValue = 0;
             if (source.getItemCount() > 1) {
                 CandleItem prevCandleItem = (CandleItem) source.getDataItem(skip - 1);
                 diffCloseValue = candleItem.getClose() - prevCandleItem.getClose();
@@ -347,6 +347,7 @@ public class RelativeStrengthIndexSeries extends IndicatorSeries {
                 if (currentRSI == Double.MAX_VALUE) {
                     avgGainRSI = posSumCloseDiff / getLength();
                     avgLossRSI = negSumCloseDiff / getLength();
+                    currentRSI = 100 - (100 / (1 + (avgGainRSI / (avgLossRSI == 0 ? 1 : avgLossRSI))));
                 } else {
                     if (preDiffCloseValue > 0) {
                         avgGainRSI = (((prevAvgGainRSI * (getLength() - 1)) + Math.abs(preDiffCloseValue)))
@@ -358,8 +359,8 @@ public class RelativeStrengthIndexSeries extends IndicatorSeries {
                         avgLossRSI = (((prevAvgLossRSI * (getLength() - 1)) + Math.abs(preDiffCloseValue)))
                                 / getLength();
                     }
+                    currentRSI = 100 - (100 / (1 + (avgGainRSI / (avgLossRSI == 0 ? 1 : avgLossRSI))));
                 }
-                currentRSI = 100 - (100 / (1 + (avgGainRSI / (avgLossRSI == 0 ? 1 : avgLossRSI))));
 
                 if (newBar) {
                     RelativeStrengthIndexItem dataItem = new RelativeStrengthIndexItem(candleItem.getPeriod(),
@@ -380,7 +381,8 @@ public class RelativeStrengthIndexSeries extends IndicatorSeries {
     public void printSeries() {
         for (int i = 0; i < this.getItemCount(); i++) {
             RelativeStrengthIndexItem dataItem = (RelativeStrengthIndexItem) this.getDataItem(i);
-            _log.debug("Type: {} Time: {} Value: {}", this.getType(), dataItem.getPeriod().getStart(), dataItem.getRelativeStrengthIndex());
+            _log.debug("Type: " + this.getType() + " Time: " + dataItem.getPeriod().getStart() + " Value: "
+                    + dataItem.getRelativeStrengthIndex());
         }
     }
 }

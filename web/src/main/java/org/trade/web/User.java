@@ -10,29 +10,23 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-@Getter
 @Entity
 @Table(name = "user")
 public class User {
 
     public static final PasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
 
-    @Setter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    @Setter
     @Column(name = "name")
     private String name;
 
-    @Setter
     @Column(name = "first_name")
     private String firstName;
 
@@ -40,13 +34,11 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @Setter
     @Column(name = "roles")
     private String[] roles;
 
-    @Setter
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "domain_id", nullable = false)
+    @JoinColumn(name = "domain_id", insertable = true, updatable = true, nullable = false)
     private Domain domain;
 
     protected User() {
@@ -61,8 +53,52 @@ public class User {
     }
 
 
+    public Long getId() {
+        return this.id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getFirstName() {
+        return this.firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String[] getRoles() {
+        return this.roles;
+    }
+
+    public void setRoles(String[] roles) {
+        this.roles = roles;
+    }
+
+    public String getPassword() {
+        return this.password;
+    }
+
     public void setPassword(String password) {
         this.password = PASSWORD_ENCODER.encode(password);
+    }
+
+    public Domain getDomain() {
+        return this.domain;
+    }
+
+    public void setDomain(Domain domain) {
+        this.domain = domain;
     }
 
 }

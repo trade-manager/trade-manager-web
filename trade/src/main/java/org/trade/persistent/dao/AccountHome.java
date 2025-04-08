@@ -97,8 +97,8 @@ public class AccountHome {
                 account.getPortfolioAccounts().size();
             }
             entityManager.getTransaction().commit();
-            if (!items.isEmpty()) {
-                return items.getFirst();
+            if (items.size() > 0) {
+                return items.get(0);
             }
             return null;
 

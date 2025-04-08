@@ -47,7 +47,6 @@ import org.trade.persistent.dao.Account;
 import org.trade.persistent.dao.Portfolio;
 import org.trade.persistent.dao.PortfolioAccount;
 
-import java.io.Serial;
 import java.util.Vector;
 
 /**
@@ -57,7 +56,6 @@ public class PortfolioTableModel extends AspectTableModel {
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = 3087514589731145479L;
 
     private static final String NAME = "Name*";
@@ -102,7 +100,7 @@ public class PortfolioTableModel extends AspectTableModel {
         this.clearAll();
         if (!getData().getAspect().isEmpty()) {
             for (final Aspect element : getData().getAspect()) {
-                final Vector<Object> newRow = new Vector<>();
+                final Vector<Object> newRow = new Vector<Object>();
                 getNewRow(newRow, (Portfolio) element);
                 rows.add(newRow);
             }
@@ -142,10 +140,8 @@ public class PortfolioTableModel extends AspectTableModel {
                 Account account = (Account) ((DAOAccount) value).getObject();
                 boolean exists = false;
                 for (PortfolioAccount item : element.getPortfolioAccounts()) {
-                    if (account.getAccountNumber().equals(item.getAccount().getAccountNumber())) {
+                    if (account.getAccountNumber().equals(item.getAccount().getAccountNumber()))
                         exists = true;
-                        break;
-                    }
                 }
                 if (!exists) {
                     PortfolioAccount portfolioAccount = new PortfolioAccount(element, account);
@@ -161,7 +157,7 @@ public class PortfolioTableModel extends AspectTableModel {
                         portfolio.setDirty(true);
                     }
                 }
-                element.setIsDefault(Boolean.valueOf(((YesNo) value).getCode()));
+                element.setIsDefault(new Boolean(((YesNo) value).getCode()));
                 break;
             }
             default: {
@@ -196,7 +192,7 @@ public class PortfolioTableModel extends AspectTableModel {
         final Portfolio element = new Portfolio();
         getData().getAspect().add(element);
 
-        final Vector<Object> newRow = new Vector<>();
+        final Vector<Object> newRow = new Vector<Object>();
         getNewRow(newRow, element);
         rows.add(newRow);
         // Tell the listeners a new table has arrived.

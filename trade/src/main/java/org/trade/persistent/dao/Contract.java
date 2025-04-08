@@ -52,7 +52,6 @@ import jakarta.persistence.Version;
 import jakarta.validation.constraints.NotNull;
 import org.trade.core.dao.Aspect;
 
-import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
@@ -77,7 +76,6 @@ public class Contract extends Aspect implements Serializable, Cloneable {
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = 5691902477608387034L;
 
     /*
@@ -132,9 +130,9 @@ public class Contract extends Aspect implements Serializable, Cloneable {
     private BigDecimal lastPrice = new BigDecimal(0);
 
     private TradePosition tradePosition;
-    private List<Tradestrategy> tradestrategies = Collections.synchronizedList(new ArrayList<>(0));
-    private List<TradePosition> tradePositions = new ArrayList<>(0);
-    private List<Candle> candles = new ArrayList<>(0);
+    private List<Tradestrategy> tradestrategies = Collections.synchronizedList(new ArrayList<Tradestrategy>(0));
+    private List<TradePosition> tradePositions = new ArrayList<TradePosition>(0);
+    private List<Candle> candles = new ArrayList<Candle>(0);
 
     public Contract() {
     }
@@ -168,6 +166,15 @@ public class Contract extends Aspect implements Serializable, Cloneable {
     @Column(name = "id", unique = true, nullable = false)
     public Integer getId() {
         return this.id;
+    }
+
+    /**
+     * Method setId.
+     *
+     * @param id Integer
+     */
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     /**
@@ -847,6 +854,15 @@ public class Contract extends Aspect implements Serializable, Cloneable {
     }
 
     /**
+     * Method setVersion.
+     *
+     * @param version Integer
+     */
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
+
+    /**
      * Method addTradestrategy.
      *
      * @param tradestrategy Tradestrategy
@@ -901,7 +917,7 @@ public class Contract extends Aspect implements Serializable, Cloneable {
      * @return TradePosition
      */
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_trade_position", insertable = false)
+    @JoinColumn(name = "id_trade_position", insertable = false, updatable = true, nullable = true)
     public TradePosition getTradePosition() {
         return this.tradePosition;
     }
@@ -983,11 +999,14 @@ public class Contract extends Aspect implements Serializable, Cloneable {
         if (super.equals(objectToCompare))
             return true;
 
-        if (objectToCompare instanceof Contract contract) {
+        if (objectToCompare instanceof Contract) {
+            Contract contract = (Contract) objectToCompare;
             if (this.getSymbol().equals(contract.getSymbol())) {
                 if (this.getSecType().equals(contract.getSecType())) {
                     if (this.getExchange().equals(contract.getExchange())) {
-                        return this.getCurrency().equals(contract.getCurrency());
+                        if (this.getCurrency().equals(contract.getCurrency())) {
+                            return true;
+                        }
                     }
                 }
             }
@@ -999,13 +1018,14 @@ public class Contract extends Aspect implements Serializable, Cloneable {
      * Method clone.
      *
      * @return Object
+     * @throws CloneNotSupportedException
      */
     public Object clone() throws CloneNotSupportedException {
 
         Contract contract = (Contract) super.clone();
-        List<Tradestrategy> tradestrategies = new ArrayList<>(0);
+        List<Tradestrategy> tradestrategies = new ArrayList<Tradestrategy>(0);
         contract.setTradestrategies(tradestrategies);
-        List<TradePosition> tradePositions = new ArrayList<>(0);
+        List<TradePosition> tradePositions = new ArrayList<TradePosition>(0);
         contract.setTradePositions(tradePositions);
         return contract;
     }

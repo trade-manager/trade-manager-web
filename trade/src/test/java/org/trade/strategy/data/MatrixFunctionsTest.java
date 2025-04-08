@@ -35,12 +35,7 @@
  */
 package org.trade.strategy.data;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.TestName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,6 +47,7 @@ import org.trade.strategy.data.candle.CandlePeriod;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -71,6 +67,8 @@ public class MatrixFunctionsTest {
 
     /**
      * Method setUpBeforeClass.
+     *
+     * @throws java.lang.Exception
      */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
@@ -78,6 +76,8 @@ public class MatrixFunctionsTest {
 
     /**
      * Method setUp.
+     *
+     * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
@@ -86,6 +86,8 @@ public class MatrixFunctionsTest {
 
     /**
      * Method tearDown.
+     *
+     * @throws java.lang.Exception
      */
     @After
     public void tearDown() throws Exception {
@@ -93,6 +95,8 @@ public class MatrixFunctionsTest {
 
     /**
      * Method tearDownAfterClass.
+     *
+     * @throws java.lang.Exception
      */
     @AfterClass
     public static void tearDownAfterClass() throws Exception {
@@ -101,15 +105,15 @@ public class MatrixFunctionsTest {
     @Test
     public void testAngle() {
         try {
-            List<Pair> pairs = new ArrayList<>();
+            List<Pair> pairs = new ArrayList<Pair>();
             int polyOrder = 2;
             double vwap = 30.94;
             int longShort = 1;
 
             CandlePeriod period = new CandlePeriod(
                     TradingCalendar.getTradingDayStart(TradingCalendar.getDateTimeNowMarketTimeZone()), 300);
-            long startPeriod = TradingCalendar.geMillisFromZonedDateTime(period.getStart());
-            long endPeriod;
+            Long startPeriod = TradingCalendar.geMillisFromZonedDateTime(period.getStart());
+            Long endPeriod = null;
             pairs.add(new Pair(0, vwap));
 
             for (int i = 0; i < 3; i++) {
@@ -119,9 +123,9 @@ public class MatrixFunctionsTest {
                 pairs.add(new Pair(((double) (endPeriod - startPeriod) / (1000 * 60 * 60)), vwap));
             }
 
-            pairs.sort(Pair.X_VALUE_ASC);
+            Collections.sort(pairs, Pair.X_VALUE_ASC);
             for (Pair pair : pairs) {
-                _log.info("x: {} y: {}", pair.x, pair.y);
+                _log.info("x: " + pair.x + " y: " + pair.y);
             }
             Pair[] pairsArray = pairs.toArray(new Pair[]{});
             double[] terms = MatrixFunctions.solve(pairsArray, polyOrder);
@@ -129,19 +133,19 @@ public class MatrixFunctionsTest {
             double standardError = MatrixFunctions.getStandardError(pairsArray, terms);
             String output = MatrixFunctions.toPrint(polyOrder, correlationCoeff, standardError, terms,
                     pairsArray.length);
-            _log.info("Pivot Calc: {}", output);
+            _log.info("Pivot Calc: " + output);
 
             for (Pair pair : pairs) {
                 double y = MatrixFunctions.fx(pair.x, terms);
                 pair.y = y;
-                _log.info("x: {} y: {}", pair.x, pair.y);
+                _log.info("x: " + pair.x + " y: " + pair.y);
             }
-            Pair startXY = pairs.getFirst();
-            Pair endXY = pairs.getLast();
+            Pair startXY = pairs.get(0);
+            Pair endXY = pairs.get(pairs.size() - 1);
             double atan = Math.atan((endXY.y - startXY.y) / ((endXY.x - startXY.x)));
             double angle = (atan * 180) / Math.PI;
-            _log.info("angle: {}", angle);
-            assertEquals("1", new BigDecimal("67.38").setScale(2, RoundingMode.HALF_UP),
+            _log.info("angle: " + angle);
+            assertEquals("1", new BigDecimal(67.38).setScale(2, RoundingMode.HALF_UP),
                     new BigDecimal(angle).setScale(2, RoundingMode.HALF_UP));
         } catch (Exception | AssertionError ex) {
             String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();

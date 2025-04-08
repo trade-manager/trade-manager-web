@@ -35,8 +35,6 @@
  */
 package org.trade.strategy;
 
-import java.io.Serial;
-
 /**
  * A change event that encapsulates information about a change to a
  * strategyRule.
@@ -49,12 +47,11 @@ public class StrategyChangeEvent extends java.util.EventObject {
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = -6068031665553697870L;
     /**
      * The strategyRule that generated the change event.
      */
-    private final IStrategyRule strategyRule;
+    private IStrategyRule strategyRule;
 
     /**
      * Constructs a new event. The source is either the strategyRule or the

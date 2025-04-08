@@ -51,7 +51,6 @@ import org.trade.persistent.dao.TradelogReport;
 import org.trade.ui.base.TableModel;
 
 import javax.swing.event.TableModelEvent;
-import java.io.Serial;
 import java.util.Vector;
 
 /**
@@ -61,7 +60,6 @@ public class TradelogDetailTableModel extends TableModel {
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = 3087514589731145479L;
 
     public static final String DATE = "   Date    ";
@@ -86,6 +84,9 @@ public class TradelogDetailTableModel extends TableModel {
 
     /**
      * OrderModel() -
+     *
+     * @throws *
+     * @see
      */
     public TradelogDetailTableModel() {
 
@@ -141,7 +142,7 @@ public class TradelogDetailTableModel extends TableModel {
         this.clearAll();
         if (!getData().getTradelogDetail().isEmpty()) {
             for (final TradelogDetail element : getData().getTradelogDetail()) {
-                final Vector<Object> newRow = new Vector<>();
+                final Vector<Object> newRow = new Vector<Object>();
                 getNewRow(newRow, element);
                 rows.add(newRow);
             }
@@ -155,6 +156,8 @@ public class TradelogDetailTableModel extends TableModel {
      * @param value  Object
      * @param row    int
      * @param column int
+     * @throws *
+     * @see
      */
     public void populateDAO(Object value, int row, int column) {
         final TradelogDetail element = getData().getTradelogDetail().get(row);
@@ -238,6 +241,8 @@ public class TradelogDetailTableModel extends TableModel {
      * deleteRow() -
      *
      * @param selectedRow int
+     * @throws *
+     * @see
      */
     public void deleteRow(int selectedRow) {
 
@@ -262,7 +267,7 @@ public class TradelogDetailTableModel extends TableModel {
     public void addRow(TradelogDetail element) {
 
         getData().getTradelogDetail().add(element);
-        final Vector<Object> newRow = new Vector<>();
+        final Vector<Object> newRow = new Vector<Object>();
 
         getNewRow(newRow, element);
         rows.add(newRow);
@@ -275,7 +280,7 @@ public class TradelogDetailTableModel extends TableModel {
 
         final TradelogDetail element = new TradelogDetail();
         getData().getTradelogDetail().add(element);
-        final Vector<Object> newRow = new Vector<>();
+        final Vector<Object> newRow = new Vector<Object>();
 
         getNewRow(newRow, element);
         rows.add(newRow);

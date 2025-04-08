@@ -35,7 +35,6 @@
  */
 package org.trade.core.valuetype;
 
-import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -45,7 +44,6 @@ public abstract class ValueType implements Cloneable, Serializable {
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = -8054819773979644420L;
 
     // All well-behaved ValueTypes must implement this
@@ -76,9 +74,5 @@ public abstract class ValueType implements Cloneable, Serializable {
      */
     public Class<?> getSQLObjectType() {
         return String.class;
-    }
-
-    public Object clone() throws java.lang.CloneNotSupportedException {
-        return (super.clone());
     }
 }

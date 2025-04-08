@@ -38,13 +38,10 @@ package org.trade.core.xml;
 import org.trade.core.exception.ExceptionMessage;
 import org.trade.core.exception.NestingException;
 
-import java.io.Serial;
-
 public class XMLModelException extends NestingException {
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = 3222050041414383567L;
 
     public XMLModelException() {

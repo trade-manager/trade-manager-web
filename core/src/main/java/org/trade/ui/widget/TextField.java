@@ -44,7 +44,6 @@ import javax.swing.text.PlainDocument;
 import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.io.Serial;
 import java.util.Hashtable;
 
 /**
@@ -54,10 +53,9 @@ public class TextField extends JTextField implements FocusListener {
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = 339471596367850297L;
 
-    private static final Hashtable<Integer, Character> editMask = new Hashtable<>();
+    private static Hashtable<Integer, Character> editMask = new Hashtable<Integer, Character>();
 
     private static Color originalColor = null;
 
@@ -77,7 +75,7 @@ public class TextField extends JTextField implements FocusListener {
         char[] maskChars = mask.toCharArray();
 
         for (int i = 0; i < maskChars.length; i++) {
-            editMask.put(i, maskChars[i]);
+            editMask.put(new Integer(i), new Character(maskChars[i]));
         }
     }
 
@@ -87,6 +85,7 @@ public class TextField extends JTextField implements FocusListener {
      * @return Document
      */
     protected Document createDefaultModel() {
+        TextDocument doc = new TextDocument();
 
         /*
          *
@@ -98,7 +97,7 @@ public class TextField extends JTextField implements FocusListener {
          * doc.addDocumentListener(d);
          */
 
-        return new TextDocument();
+        return doc;
     }
 
     /**
@@ -144,15 +143,21 @@ public class TextField extends JTextField implements FocusListener {
      * @return boolean
      */
     public boolean isValid() {
+        boolean isValid = false;
 
-        if (!this.getText().trim().isEmpty()) {
+        if (this.getText().trim().length() > 0) {
             this.setBackground(Color.red);
+
+            isValid = true;
+
             this.setBackground(originalColor);
+        } else {
+            isValid = true;
         }
 
         this.repaint();
 
-        return true;
+        return isValid;
     }
 
     /**
@@ -163,7 +168,6 @@ public class TextField extends JTextField implements FocusListener {
         /**
          *
          */
-        @Serial
         private static final long serialVersionUID = -2258034828743548985L;
 
         /**
@@ -172,18 +176,19 @@ public class TextField extends JTextField implements FocusListener {
          * @param offs int
          * @param str  String
          * @param a    AttributeSet
+         * @throws BadLocationException
          * @see javax.swing.text.Document#insertString(int, String,
          * AttributeSet)
          */
         public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
             if (str != null) {
                 if (!(editMask.isEmpty())) {
-                    Character selected = editMask.get(offs);
+                    Character selected = editMask.get(new Integer(offs));
 
                     if (selected != null) {
-                        if (!Character.isLetter(selected)) {
-
-                            str = selected + str;
+                        if (Character.isLetter(selected.charValue())) {
+                        } else {
+                            str = selected.charValue() + str;
                         }
                     } else {
                         return;
@@ -198,10 +203,10 @@ public class TextField extends JTextField implements FocusListener {
             for (int i = 0; i < upper.length; i++) {
                 upper[i] = Character.toUpperCase(upper[i]);
 
-                Character selected = editMask.get(offs + i);
+                Character selected = editMask.get(new Integer(offs + i));
 
                 if (selected != null) {
-                    if (Character.isLetter(selected)) {
+                    if (Character.isLetter(selected.charValue())) {
                         if (!(Character.isDigit(upper[i]))) {
                             return;
                         }

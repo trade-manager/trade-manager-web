@@ -38,7 +38,6 @@ package org.trade.strategy.data.candle;
 import org.trade.core.util.TradingCalendar;
 import org.trade.strategy.data.base.RegularTimePeriod;
 
-import java.io.Serial;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 
@@ -54,10 +53,9 @@ public class CandlePeriod extends RegularTimePeriod implements Serializable {
     /**
      * For serialization.
      */
-    @Serial
     private static final long serialVersionUID = 2144572840034842871L;
 
-    private final int secondsLength;
+    private int secondsLength = 0;
 
     /**
      * Constructs a new seconds Period, based on the system date/time. with
@@ -86,7 +84,7 @@ public class CandlePeriod extends RegularTimePeriod implements Serializable {
         // this.endOfPeriod = this.startOfPeriod
         // .plusSeconds((this.secondsLength - 1));
 
-        this.endOfPeriod = this.startOfPeriod.plusNanos((this.secondsLength * 1000000000L) - 1000000L);
+        this.endOfPeriod = this.startOfPeriod.plusNanos((this.secondsLength * 1000000000l) - 1000000l);
     }
 
     /**
@@ -161,6 +159,8 @@ public class CandlePeriod extends RegularTimePeriod implements Serializable {
      * Returns a hash code for this object instance. The approach described by
      * Joshua Bloch in "Effective Java" has been used here:
      * <p>
+     * <code>http://developer.java.sun.com/developer/Books/effectivejava
+     * /Chapter3.pdf</code>
      *
      * @return A hash code.
      */

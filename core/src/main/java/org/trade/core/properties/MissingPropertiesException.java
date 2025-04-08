@@ -35,7 +35,6 @@
  */
 package org.trade.core.properties;
 
-import java.io.Serial;
 import java.util.Enumeration;
 import java.util.Vector;
 
@@ -48,7 +47,6 @@ public class MissingPropertiesException extends java.lang.Exception {
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = -5377864368236421685L;
     private Vector<String> m_missingProperties = null;
 
@@ -63,7 +61,7 @@ public class MissingPropertiesException extends java.lang.Exception {
      */
     public void addProperty(String p) {
         if (m_missingProperties == null) {
-            m_missingProperties = new Vector<>();
+            m_missingProperties = new Vector<String>();
         }
 
         m_missingProperties.addElement(p);
@@ -75,7 +73,7 @@ public class MissingPropertiesException extends java.lang.Exception {
      * @return String
      */
     public String getMessage() {
-        StringBuilder message = new StringBuilder("The following properties are missing: ");
+        StringBuffer message = new StringBuffer("The following properties are missing: ");
         Enumeration<String> missingProperties = getMissingProperties();
 
         if (null == missingProperties) {
@@ -104,7 +102,7 @@ public class MissingPropertiesException extends java.lang.Exception {
      */
     public Enumeration<String> getMissingProperties() {
         if (m_missingProperties == null) {
-            m_missingProperties = new Vector<>();
+            m_missingProperties = new Vector<String>();
         }
 
         return m_missingProperties.elements();
@@ -120,7 +118,7 @@ public class MissingPropertiesException extends java.lang.Exception {
             return "No properties missing";
         }
 
-        StringBuilder sb = new StringBuilder("The following [");
+        StringBuffer sb = new StringBuffer("The following [");
 
         sb.append(m_missingProperties.size());
         sb.append("] properties are missing: ");

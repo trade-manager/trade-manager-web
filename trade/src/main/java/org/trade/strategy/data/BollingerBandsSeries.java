@@ -46,7 +46,6 @@ import org.trade.strategy.data.base.RegularTimePeriod;
 import org.trade.strategy.data.bollingerbands.BollingerBandsItem;
 import org.trade.strategy.data.candle.CandleItem;
 
-import java.io.Serial;
 import java.math.BigDecimal;
 import java.util.LinkedList;
 
@@ -76,7 +75,6 @@ import java.util.LinkedList;
 @DiscriminatorValue("BollingerBandsSeries")
 public class BollingerBandsSeries extends IndicatorSeries {
 
-    @Serial
     private static final long serialVersionUID = 20183087035446657L;
 
     public static final String LENGTH = "Length";
@@ -90,7 +88,7 @@ public class BollingerBandsSeries extends IndicatorSeries {
      * cleared.
      */
     private double sum = 0.0;
-    private LinkedList<Double> yyValues = new LinkedList<>();
+    private LinkedList<Double> yyValues = new LinkedList<Double>();
 
     /**
      * Creates a new empty series. By default, items added to the series will be
@@ -138,10 +136,11 @@ public class BollingerBandsSeries extends IndicatorSeries {
      * Method clone.
      *
      * @return Object
+     * @throws CloneNotSupportedException
      */
     public Object clone() throws CloneNotSupportedException {
         BollingerBandsSeries clone = (BollingerBandsSeries) super.clone();
-        clone.yyValues = new LinkedList<>();
+        clone.yyValues = new LinkedList<Double>();
         return clone;
     }
 
@@ -243,7 +242,7 @@ public class BollingerBandsSeries extends IndicatorSeries {
     /**
      * Method setNumberOfSTD.
      *
-     * @param numberOfSTD BigDecimal
+     * @param MAType String
      */
     public void setNumberOfSTD(BigDecimal numberOfSTD) {
         this.numberOfSTD = numberOfSTD;
@@ -313,46 +312,48 @@ public class BollingerBandsSeries extends IndicatorSeries {
             // work out the average for the earlier values...
             Number yy = candleItem.getY();
 
-            if (this.yyValues.size() == getLength()) {
-                /*
-                 * If the item does not exist in the series then this is a
-                 * new time period and so we need to remove the last in the
-                 * set and add the new periods values. Otherwise we just
-                 * update the last value in the set. Sum is just used for
-                 * performance save having to sum the last set of values
-                 * each time.
-                 */
-                if (newBar) {
-                    sum = sum - this.yyValues.getLast() + yy.doubleValue();
-                    this.yyValues.removeLast();
-                    this.yyValues.addFirst(yy.doubleValue());
+            if (null != yy) {
+                if (this.yyValues.size() == getLength()) {
+                    /*
+                     * If the item does not exist in the series then this is a
+                     * new time period and so we need to remove the last in the
+                     * set and add the new periods values. Otherwise we just
+                     * update the last value in the set. Sum is just used for
+                     * performance save having to sum the last set of values
+                     * each time.
+                     */
+                    if (newBar) {
+                        sum = sum - this.yyValues.getLast() + yy.doubleValue();
+                        this.yyValues.removeLast();
+                        this.yyValues.addFirst(yy.doubleValue());
 
+                    } else {
+                        sum = sum - this.yyValues.getFirst() + yy.doubleValue();
+                        this.yyValues.removeFirst();
+                        this.yyValues.addFirst(yy.doubleValue());
+                    }
                 } else {
-                    sum = sum - this.yyValues.getFirst() + yy.doubleValue();
-                    this.yyValues.removeFirst();
-                    this.yyValues.addFirst(yy.doubleValue());
+                    if (newBar) {
+                        sum = sum + yy.doubleValue();
+                        this.yyValues.addFirst(yy.doubleValue());
+                    } else {
+                        sum = sum + yy.doubleValue() - this.yyValues.getFirst();
+                        this.yyValues.removeFirst();
+                        this.yyValues.addFirst(yy.doubleValue());
+                    }
                 }
-            } else {
-                if (newBar) {
-                    sum = sum + yy.doubleValue();
-                    this.yyValues.addFirst(yy.doubleValue());
-                } else {
-                    sum = sum + yy.doubleValue() - this.yyValues.getFirst();
-                    this.yyValues.removeFirst();
-                    this.yyValues.addFirst(yy.doubleValue());
-                }
-            }
 
-            if (this.yyValues.size() == getLength()) {
-                double ma = calculateBBands(this.getNumberOfSTD(), this.yyValues, sum);
-                if (newBar) {
-                    BollingerBandsItem dataItem = new BollingerBandsItem(candleItem.getPeriod(),
-                            new BigDecimal(ma));
-                    this.add(dataItem, false);
+                if (this.yyValues.size() == getLength()) {
+                    double ma = calculateBBands(this.getNumberOfSTD(), this.yyValues, sum);
+                    if (newBar) {
+                        BollingerBandsItem dataItem = new BollingerBandsItem(candleItem.getPeriod(),
+                                new BigDecimal(ma));
+                        this.add(dataItem, false);
 
-                } else {
-                    BollingerBandsItem dataItem = (BollingerBandsItem) this.getDataItem(this.getItemCount() - 1);
-                    dataItem.setBollingerBands(ma);
+                    } else {
+                        BollingerBandsItem dataItem = (BollingerBandsItem) this.getDataItem(this.getItemCount() - 1);
+                        dataItem.setBollingerBands(ma);
+                    }
                 }
             }
         }
@@ -363,6 +364,7 @@ public class BollingerBandsSeries extends IndicatorSeries {
      *
      * @param numberOfSTD BigDecimal
      * @param yyValues    LinkedList<Double>
+     * @param volValues   LinkedList<Long>
      * @param sum         Double
      * @return double
      */
@@ -392,7 +394,8 @@ public class BollingerBandsSeries extends IndicatorSeries {
     public void printSeries() {
         for (int i = 0; i < this.getItemCount(); i++) {
             BollingerBandsItem dataItem = (BollingerBandsItem) this.getDataItem(i);
-            _log.debug("Type: {} Time: {} Value: {}", this.getType(), dataItem.getPeriod().getStart(), dataItem.getBollingerBands());
+            _log.debug("Type: " + this.getType() + " Time: " + dataItem.getPeriod().getStart() + " Value: "
+                    + dataItem.getBollingerBands());
         }
     }
 }

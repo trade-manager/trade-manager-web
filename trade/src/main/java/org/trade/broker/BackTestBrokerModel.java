@@ -57,10 +57,12 @@ import org.trade.persistent.dao.TradeOrderfill;
 import org.trade.persistent.dao.Tradestrategy;
 import org.trade.strategy.data.CandleSeries;
 
-import java.io.Serial;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.ParseException;
 import java.time.ZonedDateTime;
+import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -72,28 +74,27 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = 3191422640254347940L;
 
     private final static Logger _log = LoggerFactory.getLogger(BackTestBrokerModel.class);
 
     // Use getId as key
-    private static final ConcurrentHashMap<Integer, Tradestrategy> m_historyDataRequests = new ConcurrentHashMap<>();
-    private static final ConcurrentHashMap<Integer, Contract> m_realTimeBarsRequests = new ConcurrentHashMap<>();
-    private static final ConcurrentHashMap<Integer, Contract> m_contractRequests = new ConcurrentHashMap<>();
-    private final IPersistentModel m_tradePersistentModel;
+    private static final ConcurrentHashMap<Integer, Tradestrategy> m_historyDataRequests = new ConcurrentHashMap<Integer, Tradestrategy>();
+    private static final ConcurrentHashMap<Integer, Contract> m_realTimeBarsRequests = new ConcurrentHashMap<Integer, Contract>();
+    private static final ConcurrentHashMap<Integer, Contract> m_contractRequests = new ConcurrentHashMap<Integer, Contract>();
+    private IPersistentModel m_tradePersistentModel = null;
 
-    private final ClientSocket m_client;
+    private ClientSocket m_client = null;
 
     private static final int SCALE = 5;
     private static final int minOrderId = 100000;
 
-    private AtomicInteger orderKey;
+    private AtomicInteger orderKey = null;
 
-    private static final Integer backfillDateFormat = 2;
-    private static final String backfillWhatToShow;
-    private static final Integer backfillOffsetDays = 0;
-    private static final Integer backfillUseRTH;
+    private static Integer backfillDateFormat = 2;
+    private static String backfillWhatToShow;
+    private static Integer backfillOffsetDays = 0;
+    private static Integer backfillUseRTH = 1;
 
     static {
         try {
@@ -147,6 +148,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
      * @param host     String
      * @param port     Integer
      * @param clientId Integer
+     * @throws BrokerModelException
      * @see IBrokerModel#onConnect(String, Integer, Integer)
      */
     public void onConnect(String host, Integer port, Integer clientId) {
@@ -155,6 +157,8 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
 
     /**
      * Method connectionClosed.
+     *
+     * @see com.ib.client.AnyWrapper#connectionClosed()
      */
     public void connectionClosed() {
 
@@ -165,6 +169,9 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
 
     /**
      * Method disconnect.
+     *
+     * @throws BrokerModelException
+     * @see IBrokerModel#disconnect()
      */
     public void onDisconnect() {
         if (isConnected()) {
@@ -190,7 +197,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
      * @see IBrokerModel#getNextRequestId()
      */
     public Integer getNextRequestId() {
-        return orderKey.incrementAndGet();
+        return new Integer(orderKey.incrementAndGet());
     }
 
     /**
@@ -220,10 +227,13 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
     /**
      * Method onSubscribeAccountUpdates.
      *
-     * @param subscribe     boolean
-     * @param accountNumber Account
+     * @param subscribe boolean
+     * @param account   Account
+     * @throws BrokerModelException
+     * @see IBrokerModel#onSubscribeAccountUpdates(boolean,
+     * account)
      */
-    public void onSubscribeAccountUpdates(boolean subscribe, String accountNumber) {
+    public void onSubscribeAccountUpdates(boolean subscribe, String accountNumber) throws BrokerModelException {
     }
 
     /**
@@ -237,6 +247,8 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
 
     /**
      * Method onReqFinancialAccount.
+     *
+     * @see org.trade.broker.onReqFinancialAccount()
      */
     public void onReqFinancialAccount() {
     }
@@ -246,16 +258,18 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
      *
      * @param xml        String
      * @param faDataType int
+     * @see org.trade.broker.onReqReplaceFinancialAccount()
      */
-    public void onReqReplaceFinancialAccount(int faDataType, String xml) {
+    public void onReqReplaceFinancialAccount(int faDataType, String xml) throws BrokerModelException {
     }
 
     /**
      * Method onReqManagedAccount.
      *
+     * @throws BrokerModelException
      * @see IBrokerModel#onReqManagedAccount()
      */
-    public void onReqManagedAccount() {
+    public void onReqManagedAccount() throws BrokerModelException {
     }
 
     /**
@@ -283,8 +297,10 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
      *
      * @param tradestrategy Tradestrategy
      * @param addOrders     boolean
+     * @throws BrokerModelException
+     * @see IBrokerModel#onReqExecutions(Tradestrategy)
      */
-    public void onReqExecutions(Tradestrategy tradestrategy, boolean addOrders) {
+    public void onReqExecutions(Tradestrategy tradestrategy, boolean addOrders) throws BrokerModelException {
 
     }
 
@@ -292,8 +308,10 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
      * Method onReqAllExecutions.
      *
      * @param mktOpenDate ZonedDateTime
+     * @throws BrokerModelException
+     * @see IBrokerModel#onReqAllExecutions(Date)
      */
-    public void onReqAllExecutions(ZonedDateTime mktOpenDate) {
+    public void onReqAllExecutions(ZonedDateTime mktOpenDate) throws BrokerModelException {
     }
 
     /**
@@ -301,8 +319,9 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
      *
      * @param contract Contract
      * @param mktData  boolean
+     * @throws BrokerModelException
      */
-    public void onReqRealTimeBars(Contract contract, boolean mktData) {
+    public void onReqRealTimeBars(Contract contract, boolean mktData) throws BrokerModelException {
     }
 
     /**
@@ -311,8 +330,10 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
      * @param contract        Contract
      * @param genericTicklist String
      * @param snapshot        boolean
+     * @throws BrokerModelException
      */
-    public void onReqMarketData(Contract contract, String genericTicklist, boolean snapshot) {
+    public void onReqMarketData(Contract contract, String genericTicklist, boolean snapshot)
+            throws BrokerModelException {
 
     }
 
@@ -320,7 +341,13 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
      * Method onBrokerData.
      *
      * @param tradestrategy Tradestrategy
-     * @param endDate       endDate
+     * @param ZonedDateTime startDate
+     * @param ZonedDateTime endDate
+     * @param Integer       barSize
+     * @param Integer       chartDays
+     * @throws BrokerModelException
+     * @see IBrokerModel#onBrokerData(Contract, String, String
+     *)
      */
     public void onBrokerData(final Tradestrategy tradestrategy, final ZonedDateTime endDate)
             throws BrokerModelException {
@@ -341,7 +368,11 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
 
                 m_contractRequests.put(tradestrategy.getContract().getId(), tradestrategy.getContract());
 
-                _log.debug("onBrokerData ReqId: {} Symbol: {} end Time: {} Period length: {} Bar size: {} WhatToShow: {} Regular Trading Hrs: {} Date format: " + backfillDateFormat, tradestrategy.getId(), tradestrategy.getContract().getSymbol(), endDateTime, tradestrategy.getChartDays(), tradestrategy.getBarSize(), backfillWhatToShow, backfillUseRTH);
+                _log.debug("onBrokerData ReqId: " + tradestrategy.getId() + " Symbol: "
+                        + tradestrategy.getContract().getSymbol() + " end Time: " + endDateTime + " Period length: "
+                        + tradestrategy.getChartDays() + " Bar size: " + tradestrategy.getBarSize() + " WhatToShow: "
+                        + backfillWhatToShow + " Regular Trading Hrs: " + backfillUseRTH + " Date format: "
+                        + backfillDateFormat);
 
                 m_client.reqHistoricalData(tradestrategy.getId(), tradestrategy, endDateTime,
                         ChartDays.newInstance(tradestrategy.getChartDays()).getDisplayName(),
@@ -383,7 +414,10 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
      * @return boolean
      */
     public boolean isHistoricalDataRunning(Tradestrategy tradestrategy) {
-        return m_historyDataRequests.containsKey(tradestrategy.getId());
+        if (m_historyDataRequests.containsKey(tradestrategy.getId())) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -394,7 +428,10 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
      * @see IBrokerModel#isRealtimeBarsRunning(Contract)
      */
     public boolean isRealtimeBarsRunning(Contract contract) {
-        return m_realTimeBarsRequests.containsKey(contract.getId());
+        if (m_realTimeBarsRequests.containsKey(contract.getId())) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -461,9 +498,10 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
      * Method onContractDetails.
      *
      * @param contract Contract
+     * @throws BrokerModelException
      * @see IBrokerModel#onContractDetails(Contract)
      */
-    public void onContractDetails(final Contract contract) {
+    public void onContractDetails(final Contract contract) throws BrokerModelException {
         /*
          * This will use the Yahoo API to get the data.
          */
@@ -572,6 +610,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
      * @param contract   Contract
      * @param tradeOrder TradeOrder
      * @return TradeOrder
+     * @throws BrokerModelException
      * @see IBrokerModel#onPlaceOrder(Contract, TradeOrder)
      */
     public TradeOrder onPlaceOrder(final Contract contract, final TradeOrder tradeOrder) throws BrokerModelException {
@@ -586,7 +625,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
                 }
                 TradeOrder transientInstance = m_tradePersistentModel.persistTradeOrder(tradeOrder);
                 // Debug logging
-                _log.debug("Order Placed Key: {}", transientInstance.getOrderKey());
+                _log.debug("Order Placed Key: " + transientInstance.getOrderKey());
                 TWSBrokerModel.logContract(TWSBrokerModel.getIBContract(contract));
                 TWSBrokerModel.logTradeOrder(TWSBrokerModel.getIBOrder(transientInstance));
                 return transientInstance;
@@ -602,6 +641,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
      * Method onCancelOrder.
      *
      * @param tradeOrder TradeOrder
+     * @throws BrokerModelException
      * @see IBrokerModel#onCancelOrder(TradeOrder)
      */
     public void onCancelOrder(TradeOrder tradeOrder) throws BrokerModelException {
@@ -627,6 +667,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
      * @param reqId      int
      * @param contractIB com.ib.client.Contract
      * @param execution  Execution
+     * @see http://www.interactivebrokers.com/php/apiUsersGuide/apiguide.htm
      */
     public void execDetails(int reqId, Contract contractIB, TradeOrderfill execution) {
         try {
@@ -682,9 +723,10 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
      * This method is called to feed in open orders.
      *
      * @param orderId    int
-     * @param contract   com.ib.client.Contract
-     * @param tradeOrder com.ib.client.Order
+     * @param contractIB com.ib.client.Contract
+     * @param order      com.ib.client.Order
      * @param orderState OrderState
+     * @see http://www.interactivebrokers.com/php/apiUsersGuide/apiguide.htm
      */
     public void openOrder(int orderId, final Contract contract, final TradeOrder tradeOrder,
                           final OrderState orderState) {
@@ -707,7 +749,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
 
                 if (OrderStatus.FILLED.equals(transientInstance.getStatus())) {
 
-                    _log.debug("Order Key: {} filled.", transientInstance.getOrderKey());
+                    _log.debug("Order Key: " + transientInstance.getOrderKey() + " filled.");
                     BackTestBrokerModel.logOrderState(orderState);
                     BackTestBrokerModel.logTradeOrder(tradeOrder);
 
@@ -718,7 +760,8 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
                         this.firePositionClosed(updatedOrder.getTradePosition());
                     }
                 } else {
-                    _log.debug("Order key: {} state changed. Status:{}", transientInstance.getOrderKey(), orderState.m_status);
+                    _log.debug("Order key: " + transientInstance.getOrderKey() + " state changed. Status:"
+                            + orderState.m_status);
                     BackTestBrokerModel.logOrderState(orderState);
                     BackTestBrokerModel.logTradeOrder(tradeOrder);
                     TradeOrder updatedOrder = m_tradePersistentModel.persistTradeOrder(transientInstance);
@@ -752,11 +795,12 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
      * @param lastFillPrice double
      * @param clientId      int
      * @param whyHeld       String
+     * @see http://www.interactivebrokers.com/php/apiUsersGuide/apiguide.htm
      */
     public void orderStatus(int orderId, String status, int filled, int remaining, double avgFillPrice, int permId,
                             int parentId, double lastFillPrice, int clientId, String whyHeld) {
         try {
-            TradeOrder transientInstance = m_tradePersistentModel.findTradeOrderByKey(orderId);
+            TradeOrder transientInstance = m_tradePersistentModel.findTradeOrderByKey(new Integer(orderId));
             if (null == transientInstance) {
                 error(orderId, 3170, "Warning Order not found for Order Key: " + orderId + " make sure Client ID: " + 0
                         + " is not the master in TWS. On orderStatus update.");
@@ -779,7 +823,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
              * If filled qty is greater than current filled qty set the new
              * value.
              */
-            if (CoreUtils.nullSafeComparator(filled, transientInstance.getFilledQuantity()) == 1) {
+            if (CoreUtils.nullSafeComparator(new Integer(filled), transientInstance.getFilledQuantity()) == 1) {
                 if (filled > 0) {
                     transientInstance.setAverageFilledPrice(new BigDecimal(avgFillPrice));
                     transientInstance.setFilledQuantity(filled);
@@ -791,7 +835,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
                 transientInstance.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
                 transientInstance.setStatus(status.toUpperCase());
                 transientInstance.setWhyHeld(whyHeld);
-                _log.debug("Order Status changed. Status: {}", status);
+                _log.debug("Order Status changed. Status: " + status);
                 TWSBrokerModel.logOrderStatus(orderId, status, filled, remaining, avgFillPrice, permId, parentId,
                         lastFillPrice, clientId, whyHeld);
 
@@ -817,10 +861,10 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
     /**
      * Method error.
      *
-     * @param ex Exception
+     * @param e Exception
      */
     public void error(Exception ex) {
-        _log.error("IBrokerModel error msg: {}", ex.getMessage());
+        _log.error("IBrokerModel error msg: " + ex.getMessage());
         // this.fireBrokerError(new BrokerManagerModelException(e));
     }
 
@@ -830,7 +874,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
      * @param msg String
      */
     public void error(String msg) {
-        _log.error("IBrokerModel error str: {}", msg);
+        _log.error("IBrokerModel error str: " + msg);
         // this.fireBrokerError(new BrokerManagerModelException(msg));
     }
 
@@ -846,7 +890,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
      */
     public void error(int id, int code, String msg) {
         String symbol = "N/A";
-        BrokerModelException brokerModelException;
+        BrokerModelException brokerModelException = null;
         if (m_contractRequests.containsKey(id)) {
             symbol = m_contractRequests.get(id).getSymbol();
             synchronized (m_contractRequests) {
@@ -984,7 +1028,11 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
                     CandleSeries candleSeries = tradestrategy.getStrategyData().getBaseCandleSeries();
                     m_tradePersistentModel.persistCandleSeries(candleSeries);
 
-                    _log.debug("HistoricalData complete Req Id: {} Symbol: {} Tradingday: {} candles to saved: {} Contract Tradestrategies size:: {}", reqId, tradestrategy.getContract().getSymbol(), tradestrategy.getTradingday().getOpen(), candleSeries.getItemCount(), tradestrategy.getContract().getTradestrategies().size());
+                    _log.debug("HistoricalData complete Req Id: " + reqId + " Symbol: "
+                            + tradestrategy.getContract().getSymbol() + " Tradingday: "
+                            + tradestrategy.getTradingday().getOpen() + " candles to saved: "
+                            + candleSeries.getItemCount() + " Contract Tradestrategies size:: "
+                            + tradestrategy.getContract().getTradestrategies().size());
 
                     /*
                      * Check to see if the trading day is today and this
@@ -1001,7 +1049,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
                     }
                 } else {
 
-                    ZonedDateTime date;
+                    ZonedDateTime date = null;
                     /*
                      * There is a bug in the TWS interface format for dates
                      * should always be milli sec but when 1 day is selected as
@@ -1033,7 +1081,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
                     }
                 }
             } else {
-                _log.error("HistoricalData request not found for Req Id: {} Date: {}", reqId, dateString);
+                _log.error("HistoricalData request not found for Req Id: " + reqId + " Date: " + dateString);
             }
         } catch (Exception ex) {
             error(reqId, 3260, ex.getMessage());
@@ -1062,6 +1110,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
      *
      * @param tradestrategy Tradestrategy
      * @return boolean
+     * @throws BrokerModelException
      */
 
     public boolean validateBrokerData(Tradestrategy tradestrategy) throws BrokerModelException {
@@ -1107,18 +1156,23 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
      * @param orderState OrderState
      */
     public static void logOrderState(OrderState orderState) {
-        _log.debug("Status: {} Comms Amt: {} Comms Currency: {} Warning txt: {} Init Margin: {} Maint Margin: {} Min Comms: {} Max Comms: {}", orderState.m_status, orderState.m_commission, orderState.m_commissionCurrency, orderState.m_warningText, orderState.m_initMargin, orderState.m_maintMargin, orderState.m_minCommission, orderState.m_maxCommission);
+        _log.debug("Status: " + orderState.m_status + " Comms Amt: " + orderState.m_commission + " Comms Currency: "
+                + orderState.m_commissionCurrency + " Warning txt: " + orderState.m_warningText + " Init Margin: "
+                + orderState.m_initMargin + " Maint Margin: " + orderState.m_maintMargin + " Min Comms: "
+                + orderState.m_minCommission + " Max Comms: " + orderState.m_maxCommission);
     }
 
     /**
      * Method updateTradeOrder.
      *
-     * @param clientOrder      com.ib.client.Order
-     * @param clientOrderState OrderState
-     * @param order            TradeOrder
+     * @param ibOrder      com.ib.client.Order
+     * @param ibOrderState OrderState
+     * @param order        TradeOrder
      * @return boolean
+     * @throws ParseException
      */
-    public static boolean updateTradeOrder(TradeOrder clientOrder, OrderState clientOrderState, TradeOrder order) {
+    public static boolean updateTradeOrder(TradeOrder clientOrder, OrderState clientOrderState, TradeOrder order)
+            throws ParseException {
 
         boolean changed = false;
 
@@ -1239,8 +1293,9 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
      *
      * @param contractDetails   com.ib.client.ContractDetails
      * @param transientContract Contract
+     * @throws ParseException
      */
-    public static boolean populateContract(Contract contractDetails, Contract transientContract) {
+    public static boolean populateContract(Contract contractDetails, Contract transientContract) throws ParseException {
 
         boolean changed = false;
         if (CoreUtils.nullSafeComparator(transientContract.getSymbol(), contractDetails.getSymbol()) == 0) {
@@ -1329,8 +1384,11 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
      *
      * @param execution      com.ib.client.Execution
      * @param tradeOrderfill TradeOrderfill
+     * @throws ParseException
+     * @throws IOException
      */
-    public static void populateTradeOrderfill(TradeOrderfill execution, TradeOrderfill tradeOrderfill) {
+    public static void populateTradeOrderfill(TradeOrderfill execution, TradeOrderfill tradeOrderfill)
+            throws ParseException, IOException {
 
         tradeOrderfill.setTime(execution.getTime());
         tradeOrderfill.setExchange(execution.getExchange());
@@ -1360,7 +1418,9 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
     public static void logOrderStatus(int orderId, String status, int filled, int remaining, double avgFillPrice,
                                       int permId, int parentId, double lastFillPrice, int clientId, String whyHeld) {
 
-        _log.debug("orderId: {} status: {} filled: {} remaining: {} avgFillPrice: {} permId: {} parentId: {} lastFillPrice: {} clientId: {} whyHeld: {}", orderId, status, filled, remaining, avgFillPrice, permId, parentId, lastFillPrice, clientId, whyHeld);
+        _log.debug("orderId: " + orderId + " status: " + status + " filled: " + filled + " remaining: " + remaining
+                + " avgFillPrice: " + avgFillPrice + " permId: " + permId + " parentId: " + parentId
+                + " lastFillPrice: " + lastFillPrice + " clientId: " + clientId + " whyHeld: " + whyHeld);
     }
 
     /**
@@ -1370,16 +1430,31 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
      */
     public static void logTradeOrder(TradeOrder order) {
 
-        _log.debug("OrderKey: {} ClientId: {} PermId: {} Action: {} TotalQuantity: {} OrderType: {} LmtPrice: {} AuxPrice: {} Tif: {} OcaGroup: {} OcaType: {} OrderRef: {} Transmit: {} DisplaySize: {} TriggerMethod: {} Hidden: {} ParentId: {} GoodAfterTime: {} GoodTillDate: {} OverridePercentageConstraints: {} AllOrNone: {}", order.getOrderKey(), order.getClientId(), order.getPermId(), order.getAction(), order.getQuantity(), order.getOrderType(), order.getLimitPrice(), order.getAuxPrice(), order.getTimeInForce(), order.getOcaGroupName(), order.getOcaType(), order.getOrderReference(), order.getTransmit(), order.getDisplayQuantity(), order.getTriggerMethod(), order.getHidden(), order.getParentId(), order.getGoodAfterTime(), order.getGoodTillTime(), order.getOverrideConstraints(), order.getAllOrNothing());
+        _log.debug("OrderKey: " + +order.getOrderKey() + " ClientId: " + order.getClientId() + " PermId: "
+                + order.getPermId() + " Action: " + order.getAction() + " TotalQuantity: " + order.getQuantity()
+                + " OrderType: " + order.getOrderType() + " LmtPrice: " + order.getLimitPrice() + " AuxPrice: "
+                + order.getAuxPrice() + " Tif: " + order.getTimeInForce() + " OcaGroup: " + order.getOcaGroupName()
+                + " OcaType: " + order.getOcaType() + " OrderRef: " + order.getOrderReference() + " Transmit: "
+                + order.getTransmit() + " DisplaySize: " + order.getDisplayQuantity() + " TriggerMethod: "
+                + order.getTriggerMethod() + " Hidden: " + order.getHidden() + " ParentId: " + order.getParentId()
+                + " GoodAfterTime: " + order.getGoodAfterTime() + " GoodTillDate: " + order.getGoodTillTime()
+                + " OverridePercentageConstraints: " + order.getOverrideConstraints() + " AllOrNone: "
+                + order.getAllOrNothing());
     }
 
     /**
      * Method logContract.
      *
-     * @param contract com.ib.client.Contract
+     * @param contect com.ib.client.Contract
      */
     public static void logContract(Contract contract) {
-        _log.debug("Symbol: {} Sec Type: {} Exchange: {} Con Id: {} Currency: {} SecIdType: {} Primary Exch: {} Local Symbol: {} Multiplier: {} Expiry: {} Category: {} Industry: {} LongName: {}", contract.getSymbol(), contract.getSecType(), contract.getExchange(), contract.getIdContractIB(), contract.getCurrency(), contract.getSecIdType(), contract.getPrimaryExchange(), contract.getLocalSymbol(), contract.getPriceMultiplier(), contract.getExpiry(), contract.getCategory(), contract.getIndustry(), contract.getLongName());
+        _log.debug("Symbol: " + contract.getSymbol() + " Sec Type: " + contract.getSecType() + " Exchange: "
+                + contract.getExchange() + " Con Id: " + contract.getIdContractIB() + " Currency: "
+                + contract.getCurrency() + " SecIdType: " + contract.getSecIdType() + " Primary Exch: "
+                + contract.getPrimaryExchange() + " Local Symbol: " + contract.getLocalSymbol() + " Multiplier: "
+                + contract.getPriceMultiplier() + " Expiry: " + contract.getExpiry() + " Category: "
+                + contract.getCategory() + " Industry: " + contract.getIndustry() + " LongName: "
+                + contract.getLongName());
     }
 
     /**
@@ -1388,6 +1463,10 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
      * @param execution com.ib.client.Execution
      */
     public static void logExecution(TradeOrderfill execution) {
-        _log.debug("execDetails OrderId: {} Exchange: {} Side: {} ExecId: {} Time: {} Qty: {} AveragePrice: {} Price: {} CumulativeQuantity: {}", execution.getTradeOrder().getId(), execution.getExchange(), execution.getSide(), execution.getExecId(), execution.getTime(), execution.getQuantity(), execution.getAveragePrice(), execution.getPrice(), execution.getCumulativeQuantity());
+        _log.debug("execDetails OrderId: " + execution.getTradeOrder().getId() + " Exchange: "
+                + execution.getExchange() + " Side: " + execution.getSide() + " ExecId: " + execution.getExecId()
+                + " Time: " + execution.getTime() + " Qty: " + execution.getQuantity() + " AveragePrice: "
+                + execution.getAveragePrice() + " Price: " + execution.getPrice() + " CumulativeQuantity: "
+                + execution.getCumulativeQuantity());
     }
 }

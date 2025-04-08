@@ -35,12 +35,8 @@
  */
 package org.trade.persistent.dao;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.*;
 import org.junit.Rule;
-import org.junit.Test;
 import org.junit.rules.TestName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,9 +45,7 @@ import org.trade.core.util.TradingCalendar;
 import org.trade.dictionary.valuetype.Side;
 import org.trade.ui.TradeAppLoadConfig;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 /**
  *
@@ -62,12 +56,15 @@ public class TradePositionTest {
     @Rule
     public TestName name = new TestName();
 
+    private String symbol = "TEST";
     private TradePositionHome tradePositionHome = null;
     private AspectHome aspectHome = null;
     private Tradestrategy tradestrategy = null;
 
     /**
      * Method setUpBeforeClass.
+     *
+     * @throws java.lang.Exception
      */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
@@ -75,19 +72,22 @@ public class TradePositionTest {
 
     /**
      * Method setUp.
+     *
+     * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
         TradeAppLoadConfig.loadAppProperties();
         tradePositionHome = new TradePositionHome();
         aspectHome = new AspectHome();
-        String symbol = "TEST";
         this.tradestrategy = TradestrategyTest.getTestTradestrategy(symbol);
         assertNotNull(this.tradestrategy);
     }
 
     /**
      * Method tearDown.
+     *
+     * @throws java.lang.Exception
      */
     @After
     public void tearDown() throws Exception {
@@ -96,6 +96,8 @@ public class TradePositionTest {
 
     /**
      * Method tearDownAfterClass.
+     *
+     * @throws java.lang.Exception
      */
     @AfterClass
     public static void tearDownAfterClass() throws Exception {
@@ -111,10 +113,11 @@ public class TradePositionTest {
             TradePosition tradePosition = aspectHome.persist(instance);
 
             assertNotNull("1", tradePosition.getId());
-            _log.info("testAddTradePosition IdTradeStrategy: {}IdTradePosition: {}", this.tradestrategy.getId(), tradePosition.getId());
+            _log.info("testAddTradePosition IdTradeStrategy: " + this.tradestrategy.getId()
+                    + "IdTradePosition: " + tradePosition.getId());
 
             tradePositionHome.remove(tradePosition);
-            _log.info("testDeleteTradePosition IdTradeStrategy: {}", tradestrategy.getId());
+            _log.info("testDeleteTradePosition IdTradeStrategy: " + tradestrategy.getId());
             tradePosition = tradePositionHome.findById(tradePosition.getId());
             assertNull("2", tradePosition);
         } catch (Exception | AssertionError ex) {

@@ -98,9 +98,10 @@ public class OrderState {
         if (objectToCompare == null) {
             return false;
         }
-        if (!(objectToCompare instanceof OrderState state)) {
+        if (!(objectToCompare instanceof OrderState)) {
             return false;
         }
+        OrderState state = (OrderState) objectToCompare;
 
         if (CoreUtils.nullSafeComparator(new Money(m_commission), new Money(state.m_commission)) != 0
                 || (CoreUtils.nullSafeComparator(new Money(m_minCommission), new Money(state.m_minCommission)) != 0)
@@ -108,10 +109,13 @@ public class OrderState {
             return false;
         }
 
-        return (CoreUtils.nullSafeComparator(m_status, state.m_status) == 0)
-                && (CoreUtils.nullSafeComparator(m_initMargin, state.m_initMargin) == 0)
-                && (CoreUtils.nullSafeComparator(m_maintMargin, state.m_maintMargin) == 0)
-                && (CoreUtils.nullSafeComparator(m_equityWithLoan, state.m_equityWithLoan) == 0)
-                && (CoreUtils.nullSafeComparator(m_commissionCurrency, state.m_commissionCurrency) == 0);
+        if ((CoreUtils.nullSafeComparator(m_status, state.m_status) != 0)
+                || (CoreUtils.nullSafeComparator(m_initMargin, state.m_initMargin) != 0)
+                || (CoreUtils.nullSafeComparator(m_maintMargin, state.m_maintMargin) != 0)
+                || (CoreUtils.nullSafeComparator(m_equityWithLoan, state.m_equityWithLoan) != 0)
+                || (CoreUtils.nullSafeComparator(m_commissionCurrency, state.m_commissionCurrency) != 0)) {
+            return false;
+        }
+        return true;
     }
 }

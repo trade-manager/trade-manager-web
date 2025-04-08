@@ -41,6 +41,7 @@ import jakarta.persistence.Transient;
 import org.jfree.data.time.ohlc.OHLCSeriesCollection;
 import org.trade.core.util.Pair;
 import org.trade.core.valuetype.Money;
+import org.trade.core.valuetype.ValueTypeException;
 import org.trade.dictionary.valuetype.DAOEntryLimit;
 import org.trade.dictionary.valuetype.Side;
 import org.trade.persistent.dao.CodeValue;
@@ -52,7 +53,6 @@ import org.trade.strategy.data.candle.CandlePeriod;
 import org.trade.strategy.data.pivot.PivotCalculator;
 import org.trade.strategy.data.pivot.PivotItem;
 
-import java.io.Serial;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -70,13 +70,12 @@ import java.util.Hashtable;
 @DiscriminatorValue("PivotSeries")
 public class PivotSeries extends IndicatorSeries {
 
-    @Serial
     private static final long serialVersionUID = 20183087035446657L;
     private Integer bars;
     private Boolean side;
     private Boolean quadratic;
 
-    private final PivotCalculator calcPivot = new PivotCalculator(2, 0.6);
+    private PivotCalculator calcPivot = new PivotCalculator(2, 0.6);
 
     public static final String BARS = "Bars";
     public static final String QUADRATIC = "Quadratic";
@@ -274,6 +273,7 @@ public class PivotSeries extends IndicatorSeries {
      * @param source CandleSeries
      * @param skip   int
      * @param newBar boolean
+     * @throws ValueTypeException
      */
 
     public void updateSeries(CandleSeries source, int skip, boolean newBar) {
@@ -286,7 +286,7 @@ public class PivotSeries extends IndicatorSeries {
             return;
 
         PivotItem dataItem = null;
-        Hashtable<Long, Pair> userDataVector = new Hashtable<>();
+        Hashtable<Long, Pair> userDataVector = new Hashtable<Long, Pair>();
         DAOEntryLimit entryLimits = new DAOEntryLimit();
 
         boolean pivot = false;
@@ -321,7 +321,7 @@ public class PivotSeries extends IndicatorSeries {
              * Calculate the new y points with the curve.
              */
             if (this.getQuadratic()) {
-                calcPivot.calculatePivot(new ArrayList<>(userDataVector.values()));
+                calcPivot.calculatePivot(new ArrayList<Pair>(userDataVector.values()));
             }
 
             CandleItem prevCandle = null;
@@ -454,7 +454,7 @@ public class PivotSeries extends IndicatorSeries {
                         dataItem = new PivotItem(pivotCandle.getPeriod(), pivotPrice.getBigDecimalValue(), pivotSide);
                     }
                 } catch (Exception ex) {
-                    _log.error("Error find Pivot Range Msg: {}", ex.getMessage(), ex);
+                    _log.error("Error find Pivot Range Msg: " + ex.getMessage(), ex);
                 }
             }
         }
@@ -475,7 +475,8 @@ public class PivotSeries extends IndicatorSeries {
     public void printSeries() {
         for (int i = 0; i < this.getItemCount(); i++) {
             PivotItem dataItem = (PivotItem) this.getDataItem(i);
-            _log.debug("Type: {} Time: {} Pivot: {} Side: {}", this.getType(), dataItem.getPeriod().getStart(), dataItem.getPivotPrice(), dataItem.getPivotSide());
+            _log.debug("Type: " + this.getType() + " Time: " + dataItem.getPeriod().getStart() + " Pivot: "
+                    + dataItem.getPivotPrice() + " Side: " + dataItem.getPivotSide());
         }
     }
 
@@ -483,8 +484,10 @@ public class PivotSeries extends IndicatorSeries {
      * Method clone.
      *
      * @return Object
+     * @throws CloneNotSupportedException
      */
     public Object clone() throws CloneNotSupportedException {
-        return super.clone();
+        PivotSeries clone = (PivotSeries) super.clone();
+        return clone;
     }
 }

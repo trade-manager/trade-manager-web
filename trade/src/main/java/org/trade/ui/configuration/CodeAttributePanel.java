@@ -11,11 +11,9 @@ import org.trade.ui.widget.DecodeComboBoxRenderer;
 import javax.swing.*;
 import javax.swing.JFormattedTextField.AbstractFormatter;
 import java.awt.*;
-import java.io.Serial;
 import java.text.ParseException;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.Objects;
 import java.util.Vector;
 
 public class CodeAttributePanel extends JPanel {
@@ -23,17 +21,17 @@ public class CodeAttributePanel extends JPanel {
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = 5972331201407363985L;
-    private final Hashtable<String, JComponent> fields = new Hashtable<>();
-    private final CodeType codeType;
-    private final List<CodeValue> currentCodeValues;
+    private Hashtable<String, JComponent> fields = new Hashtable<String, JComponent>();
+    private CodeType codeType = null;
+    private List<CodeValue> currentCodeValues = null;
 
     /**
      * Constructor for CodeAttributesPanel.
      *
-     * @param codeType          CodeType
-     * @param currentCodeValues List<CodeValue>
+     * @param aspects Aspects
+     * @param series  IndicatorSeries
+     * @throws Exception
      */
     public CodeAttributePanel(CodeType codeType, List<CodeValue> currentCodeValues) throws Exception {
 
@@ -49,7 +47,7 @@ public class CodeAttributePanel extends JPanel {
             jLabel.setToolTipText(codeAttribute.getDescription());
             jLabel.setHorizontalTextPosition(SwingConstants.RIGHT);
             jLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-            JComponent field;
+            JComponent field = null;
             if (null == codeAttribute.getEditorClassName()) {
                 field = new JFormattedTextField();
                 field.setInputVerifier(new FormattedTextFieldVerifier());
@@ -62,13 +60,13 @@ public class CodeAttributePanel extends JPanel {
                 }
 
                 if (null == ((JFormattedTextField) field).getValue()) {
-                    Vector<Object> parm = new Vector<>();
+                    Vector<Object> parm = new Vector<Object>();
                     parm.add(codeAttribute.getDefaultValue());
                     Object codeValue = ClassFactory.getCreateClass(codeAttribute.getClassName(), parm, this);
                     ((JFormattedTextField) field).setValue(codeValue);
                 }
             } else {
-                Vector<Object> parm = new Vector<>();
+                Vector<Object> parm = new Vector<Object>();
                 Object decode = ClassFactory.getCreateClass(codeAttribute.getEditorClassName(), parm, this);
                 boolean valueSet = false;
                 if (decode instanceof Decode) {
@@ -81,14 +79,14 @@ public class CodeAttributePanel extends JPanel {
 
                             ((Decode) decode)
                                     .setValue(CodeValue.getValueCode(codeAttribute.getName(), this.currentCodeValues));
-                            ((DecodeComboBoxEditor) field).setItem(decode);
+                            ((DecodeComboBoxEditor) field).setItem((Decode) decode);
                             valueSet = true;
                             break;
                         }
                     }
                     if (!valueSet) {
                         ((Decode) decode).setValue(codeAttribute.getDefaultValue());
-                        ((DecodeComboBoxEditor) field).setItem(decode);
+                        ((DecodeComboBoxEditor) field).setItem((Decode) decode);
                     }
                 } else {
                     continue;
@@ -115,8 +113,8 @@ public class CodeAttributePanel extends JPanel {
                 if (field instanceof JFormattedTextField) {
                     newValue = (((JFormattedTextField) this.fields.get(codeAttribute.getName())).getText());
                 } else if (field instanceof DecodeComboBoxEditor) {
-                    newValue = ((Decode) Objects.requireNonNull(((DecodeComboBoxEditor) this.fields.get(codeAttribute.getName()))
-                            .getSelectedItem())).getCode();
+                    newValue = ((Decode) ((DecodeComboBoxEditor) this.fields.get(codeAttribute.getName()))
+                            .getSelectedItem()).getCode();
                 }
                 /*
                  * Add code values or updated the current ones. Note there
@@ -136,7 +134,7 @@ public class CodeAttributePanel extends JPanel {
         return this.currentCodeValues;
     }
 
-    static class FormattedTextFieldVerifier extends InputVerifier {
+    class FormattedTextFieldVerifier extends InputVerifier {
 
         private boolean valid = true;
 
@@ -147,7 +145,8 @@ public class CodeAttributePanel extends JPanel {
          * @return boolean
          */
         public boolean verify(JComponent input) {
-            if (input instanceof JFormattedTextField ftf) {
+            if (input instanceof JFormattedTextField) {
+                JFormattedTextField ftf = (JFormattedTextField) input;
                 AbstractFormatter formatter = ftf.getFormatter();
                 if (formatter != null) {
                     String text = ftf.getText();

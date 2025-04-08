@@ -41,7 +41,6 @@ import org.trade.persistent.dao.Candle;
 import org.trade.persistent.dao.Contract;
 import org.trade.strategy.data.base.RegularTimePeriod;
 
-import java.io.Serial;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 
@@ -57,7 +56,6 @@ public class HeikinAshiItem extends ComparableObjectItem {
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = -3888996139640449109L;
 
     /**
@@ -233,7 +231,7 @@ public class HeikinAshiItem extends ComparableObjectItem {
             return getSide();
 
         } else {
-            return (!getSide());
+            return (getSide() ? false : true);
         }
     }
 

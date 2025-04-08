@@ -41,7 +41,6 @@ import org.trade.core.util.CoreUtils;
 import org.trade.persistent.dao.CodeType;
 import org.trade.persistent.dao.IndicatorParameters;
 
-import java.io.Serial;
 import java.util.Vector;
 
 /**
@@ -51,7 +50,6 @@ public class IndicatorParametersTableModel extends AspectTableModel {
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = 3087514589731145479L;
     private static final String NAME = "Indicator Name*";
     private static final String DESCRIPTION = "Description";
@@ -86,7 +84,7 @@ public class IndicatorParametersTableModel extends AspectTableModel {
         this.clearAll();
         if (!getData().getAspect().isEmpty()) {
             for (final Aspect element : getData().getAspect()) {
-                final Vector<Object> newRow = new Vector<>();
+                final Vector<Object> newRow = new Vector<Object>();
                 getNewRow(newRow, (CodeType) element);
                 rows.add(newRow);
             }
@@ -145,7 +143,7 @@ public class IndicatorParametersTableModel extends AspectTableModel {
         final IndicatorParameters element = new IndicatorParameters("", CodeType.IndicatorParameters, "");
         getData().add(element);
         getData().setDirty(true);
-        final Vector<Object> newRow = new Vector<>();
+        final Vector<Object> newRow = new Vector<Object>();
         getNewRow(newRow, element);
         rows.add(newRow);
         // Tell the listeners a new table has arrived.

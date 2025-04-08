@@ -35,8 +35,6 @@
  */
 package org.trade.core.valuetype;
 
-import java.io.Serial;
-
 /**
  *
  */
@@ -44,7 +42,6 @@ public class YesNo extends BaseDecode {
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = -1288975993214301679L;
 
     public static final String NO = "false";
@@ -59,6 +56,8 @@ public class YesNo extends BaseDecode {
      * isYes
      *
      * @return boolean
+     * @throws *
+     * @see
      */
 
     public boolean isYes() {
@@ -69,6 +68,8 @@ public class YesNo extends BaseDecode {
      * isNo
      *
      * @return boolean
+     * @throws *
+     * @see
      */
 
     public boolean isNo() {
@@ -80,6 +81,8 @@ public class YesNo extends BaseDecode {
      *
      * @param code String
      * @return YesNo
+     * @throws *
+     * @see
      */
 
     public static YesNo newInstance(String code) {

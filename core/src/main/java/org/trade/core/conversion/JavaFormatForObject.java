@@ -45,9 +45,9 @@ public class JavaFormatForObject {
     //
     // Private Attributes
     //
-    private final String m_format;
+    private String m_format = "";
 
-    private final Object m_forObject;
+    private Object m_forObject = null;
 
     //
     // Public Methods

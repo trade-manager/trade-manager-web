@@ -40,7 +40,6 @@ import org.trade.core.valuetype.Date;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
-import java.io.Serial;
 import java.util.EventObject;
 
 /**
@@ -50,7 +49,6 @@ public class DateEditor extends DefaultCellEditor {
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = -8851345801047150318L;
 
     private final JSpinner spinner = new JSpinner();

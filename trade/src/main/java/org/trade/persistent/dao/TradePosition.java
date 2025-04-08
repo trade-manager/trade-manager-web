@@ -54,7 +54,6 @@ import org.trade.core.dao.Aspect;
 import org.trade.core.valuetype.Money;
 import org.trade.dictionary.valuetype.Side;
 
-import java.io.Serial;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -86,7 +85,6 @@ public class TradePosition extends Aspect implements java.io.Serializable {
      * the P/L for the position.
      */
 
-    @Serial
     private static final long serialVersionUID = 715993951200025530L;
 
     @NotNull
@@ -103,7 +101,7 @@ public class TradePosition extends Aspect implements java.io.Serializable {
     private BigDecimal totalSellValue;
     private BigDecimal totalNetValue;
     private ZonedDateTime lastUpdateDate;
-    private List<TradeOrder> tradeOrders = new ArrayList<>(0);
+    private List<TradeOrder> tradeOrders = new ArrayList<TradeOrder>(0);
 
     public TradePosition() {
     }
@@ -183,12 +181,21 @@ public class TradePosition extends Aspect implements java.io.Serializable {
     }
 
     /**
+     * Method setId.
+     *
+     * @param id Integer
+     */
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    /**
      * Method getContract.
      *
      * @return ContractLite
      */
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_contract", nullable = false)
+    @JoinColumn(name = "id_contract", insertable = true, updatable = true, nullable = false)
     public ContractLite getContract() {
         return this.contract;
     }
@@ -227,7 +234,7 @@ public class TradePosition extends Aspect implements java.io.Serializable {
      *
      * @return ZonedDateTime
      */
-    @Column(name = "position_close_date")
+    @Column(name = "position_close_date", nullable = true)
     public ZonedDateTime getPositionCloseDate() {
         return this.positionCloseDate;
     }
@@ -424,6 +431,15 @@ public class TradePosition extends Aspect implements java.io.Serializable {
     }
 
     /**
+     * Method setVersion.
+     *
+     * @param version Integer
+     */
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
+
+    /**
      * Method getTradeOrders.
      *
      * @return List<TradeOrder>
@@ -459,7 +475,10 @@ public class TradePosition extends Aspect implements java.io.Serializable {
      */
     @Transient
     public boolean isOpen() {
-        return this.equals(this.getContract().getTradePosition());
+        if (this.equals(this.getContract().getTradePosition())) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -493,7 +512,7 @@ public class TradePosition extends Aspect implements java.io.Serializable {
         for (TradeOrder order : getTradeOrders()) {
             if (order.getIsFilled()) {
                 if (null == prevIdTradePosition
-                        || !prevIdTradePosition.equals(order.getTradePosition().getId())) {
+                        || prevIdTradePosition != order.getTradePosition().getId()) {
 
                     prevIdTradePosition = order.getTradePosition().getId();
                     if (order.getTradePosition().equals(order.getTradePosition().getContract().getTradePosition())) {
@@ -521,7 +540,7 @@ public class TradePosition extends Aspect implements java.io.Serializable {
 
             if (order.getIsFilled()) {
                 if (null == prevIdTradePosition
-                        || !prevIdTradePosition.equals(order.getTradePosition().getId())) {
+                        || prevIdTradePosition != order.getTradePosition().getId()) {
 
                     prevIdTradePosition = order.getTradePosition().getId();
 

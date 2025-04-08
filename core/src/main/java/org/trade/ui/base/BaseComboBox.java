@@ -38,7 +38,7 @@ package org.trade.ui.base;
 import org.trade.core.valuetype.Decode;
 
 import javax.swing.*;
-import java.io.Serial;
+import java.awt.event.ActionEvent;
 import java.util.Vector;
 
 /**
@@ -49,7 +49,6 @@ public class BaseComboBox extends JComboBox<Decode> {
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = -6866452735597474525L;
 
     private String m_method = null;
@@ -62,6 +61,8 @@ public class BaseComboBox extends JComboBox<Decode> {
      * @param p      BasePanel
      * @param UICode String
      * @param items  Vector<Object>
+     * @throws *
+     * @see
      */
 
     public BaseComboBox(BasePanel p, String UICode, Vector<Decode> items) {
@@ -75,6 +76,8 @@ public class BaseComboBox extends JComboBox<Decode> {
      *
      * @param p      BasePanel
      * @param UICode String
+     * @throws *
+     * @see
      */
     public BaseComboBox(BasePanel p, String UICode) {
         jbInit(p, UICode);
@@ -97,13 +100,19 @@ public class BaseComboBox extends JComboBox<Decode> {
         this.setName(basePropertyCodes.getDisplayName());
         this.setEnabled(basePropertyCodes.isEnabled());
         this.setToolTipText(basePropertyCodes.getToolTip());
-        this.addActionListener(_ -> itemChanged());
+        this.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                itemChanged();
+            }
+        });
     }
 
     /**
      * addMessageListener() -
      *
      * @param listener IMessageListener
+     * @throws *
+     * @see
      */
     public void addMessageListener(IMessageListener listener) {
         m_notifier.add(listener);
@@ -113,6 +122,8 @@ public class BaseComboBox extends JComboBox<Decode> {
      * removeMessageListener() -
      *
      * @param listener IMessageListener
+     * @throws *
+     * @see
      */
     public void removeMessageListener(IMessageListener listener) {
         m_notifier.remove(listener);
@@ -122,13 +133,18 @@ public class BaseComboBox extends JComboBox<Decode> {
      * messageEvent() -
      *
      * @param selection String
+     * @throws *
+     * @see
      */
     protected void messageEvent(String selection) {
-        m_notifier.notifyEvent(new MessageEvent(selection), new Vector<>());
+        m_notifier.notifyEvent(new MessageEvent(selection), new Vector<Object>());
     }
 
     /**
      * actionPerformed() - combo box action performed
+     *
+     * @throws *
+     * @see
      */
     private void itemChanged() {
         if (getMethod() != null) {
@@ -140,6 +156,8 @@ public class BaseComboBox extends JComboBox<Decode> {
      * setMethod() - button action performed
      *
      * @param method String
+     * @throws *
+     * @see
      */
     private void setMethod(String method) {
         m_method = method;
@@ -149,6 +167,8 @@ public class BaseComboBox extends JComboBox<Decode> {
      * getMethod() - button action performed
      *
      * @return String
+     * @throws *
+     * @see
      */
     private String getMethod() {
         return m_method;

@@ -35,7 +35,6 @@
  */
 package org.trade.ui.base;
 
-import java.io.Serial;
 import java.util.EventObject;
 
 /**
@@ -47,13 +46,14 @@ public class MessageEvent extends EventObject {
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = -6303732297647598634L;
 
     /**
      * MessageEvent() -
      *
      * @param source Object
+     * @throws *
+     * @see
      */
     public MessageEvent(Object source) {
         super(source);

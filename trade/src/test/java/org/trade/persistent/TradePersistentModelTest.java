@@ -50,33 +50,8 @@ import org.trade.core.factory.ClassFactory;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.TradingCalendar;
 import org.trade.core.valuetype.Money;
-import org.trade.dictionary.valuetype.Action;
-import org.trade.dictionary.valuetype.BarSize;
-import org.trade.dictionary.valuetype.ChartDays;
-import org.trade.dictionary.valuetype.Currency;
-import org.trade.dictionary.valuetype.DAOPortfolio;
-import org.trade.dictionary.valuetype.DAOStrategy;
-import org.trade.dictionary.valuetype.Exchange;
-import org.trade.dictionary.valuetype.OrderStatus;
-import org.trade.dictionary.valuetype.OrderType;
-import org.trade.dictionary.valuetype.SECType;
-import org.trade.dictionary.valuetype.Side;
-import org.trade.persistent.dao.Account;
-import org.trade.persistent.dao.Candle;
-import org.trade.persistent.dao.CodeType;
-import org.trade.persistent.dao.Contract;
-import org.trade.persistent.dao.Portfolio;
-import org.trade.persistent.dao.Rule;
-import org.trade.persistent.dao.Strategy;
-import org.trade.persistent.dao.TradeOrder;
-import org.trade.persistent.dao.TradeOrderfill;
-import org.trade.persistent.dao.TradePosition;
-import org.trade.persistent.dao.TradelogReport;
-import org.trade.persistent.dao.Tradestrategy;
-import org.trade.persistent.dao.TradestrategyOrders;
-import org.trade.persistent.dao.TradestrategyTest;
-import org.trade.persistent.dao.Tradingday;
-import org.trade.persistent.dao.Tradingdays;
+import org.trade.dictionary.valuetype.*;
+import org.trade.persistent.dao.*;
 import org.trade.strategy.data.CandleSeries;
 import org.trade.strategy.data.IIndicatorDataset;
 import org.trade.strategy.data.IndicatorSeries;
@@ -90,17 +65,11 @@ import org.trade.ui.tables.TradingdayTable;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.Objects;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 /**
- * Some tests for the  DataUtilities class.
+ * Some tests for the {@link DataUtilities} class.
  *
  * @author Simon Allen
  * @version $Revision: 1.0 $
@@ -111,12 +80,15 @@ public class TradePersistentModelTest {
     @org.junit.Rule
     public TestName name = new TestName();
 
+    private String symbol = "TEST";
     private IPersistentModel tradePersistentModel = null;
     private Tradestrategy tradestrategy = null;
     private Integer clientId = null;
 
     /**
      * Method setUp.
+     *
+     * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
@@ -124,13 +96,14 @@ public class TradePersistentModelTest {
         clientId = ConfigProperties.getPropAsInt("trade.tws.clientId");
         this.tradePersistentModel = (IPersistentModel) ClassFactory
                 .getServiceForInterface(IPersistentModel._persistentModel, this);
-        String symbol = "TEST";
         this.tradestrategy = TradestrategyTest.getTestTradestrategy(symbol);
         assertNotNull("1", this.tradestrategy);
     }
 
     /**
      * Method tearDown.
+     *
+     * @throws java.lang.Exception
      */
     @After
     public void tearDown() throws Exception {
@@ -139,6 +112,8 @@ public class TradePersistentModelTest {
 
     /**
      * Method tearDownAfterClass.
+     *
+     * @throws java.lang.Exception
      */
     @AfterClass
     public static void tearDownAfterClass() throws Exception {
@@ -150,7 +125,7 @@ public class TradePersistentModelTest {
         try {
 
             Strategy strategy = (Strategy) DAOStrategy.newInstance().getObject();
-            Portfolio portfolio = (Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
+            Portfolio portfolio = (Portfolio) DAOPortfolio.newInstance().getObject();
 
             String symbol = "TEST1";
             Contract contract = new Contract(SECType.STOCK, symbol, Exchange.SMART, Currency.USD, null, null);
@@ -168,15 +143,15 @@ public class TradePersistentModelTest {
             Tradestrategy tradestrategy = new Tradestrategy(contract, tradingday, strategy, portfolio,
                     new BigDecimal(100), "BUY", "0", true, ChartDays.TWO_DAYS, BarSize.FIVE_MIN);
             if (tradingday.existTradestrategy(tradestrategy)) {
-                _log.info("Tradestrategy Sysmbol: {} already exists.", tradestrategy.getContract().getSymbol());
+                _log.info("Tradestrategy Sysmbol: " + tradestrategy.getContract().getSymbol() + " already exists.");
             } else {
                 tradingday.addTradestrategy(tradestrategy);
                 this.tradePersistentModel.persistTradingday(tradingday);
-                _log.info("testTradingdaysSave IdTradeStrategy:{}", tradestrategy.getId());
+                _log.info("testTradingdaysSave IdTradeStrategy:" + tradestrategy.getId());
             }
             tradingday.getTradestrategies().remove(tradestrategy);
             this.tradePersistentModel.persistTradingday(tradingday);
-            _log.info("testTradingdaysRemoce IdTradeStrategy:{}", tradestrategy.getId());
+            _log.info("testTradingdaysRemoce IdTradeStrategy:" + tradestrategy.getId());
             assertNotNull("1", tradingday.getId());
         } catch (Exception | AssertionError ex) {
             String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
@@ -234,7 +209,7 @@ public class TradePersistentModelTest {
             TradeOrder tradeOrder = new TradeOrder(this.tradestrategy, Action.BUY, OrderType.STPLMT, quantity, price,
                     price.add(new BigDecimal(4)), createDate);
             tradeOrder.setStatus(OrderStatus.UNSUBMIT);
-            tradeOrder.setOrderKey((BigDecimal.valueOf(Math.random() * 1000000)).intValue());
+            tradeOrder.setOrderKey((new BigDecimal((Math.random() * 1000000))).intValue());
             /*
              * Save the trade order i.e. doPlaceOrder()
              */
@@ -272,7 +247,7 @@ public class TradePersistentModelTest {
             tradeOrderFilled.setFilledQuantity(tradeOrderfill.getCumulativeQuantity());
             tradeOrderFilled.setFilledDate(tradeOrderfill.getTime());
             tradeOrderFilled = this.tradePersistentModel.persistTradeOrder(tradeOrderFilled);
-            assertNotNull("3", tradeOrderFilled.getTradeOrderfills().getFirst().getId());
+            assertNotNull("3", tradeOrderFilled.getTradeOrderfills().get(0).getId());
 
             /*
              * Update the status to filled. Check to see if anything has changed
@@ -309,7 +284,7 @@ public class TradePersistentModelTest {
                     price.add(new BigDecimal((stop * 3) * buySellMultiplier)), createDate);
 
             tradeOrderTgt1.setClientId(clientId);
-            tradeOrderTgt1.setOrderKey((BigDecimal.valueOf(Math.random() * 1000000)).intValue());
+            tradeOrderTgt1.setOrderKey((new BigDecimal((Math.random() * 1000000))).intValue());
             tradeOrderTgt1.setOcaType(2);
             tradeOrderTgt1.setOcaGroupName(this.tradestrategy.getId() + "q1w2e3");
             tradeOrderTgt1.setTransmit(true);
@@ -320,7 +295,7 @@ public class TradePersistentModelTest {
             TradeOrder tradeOrderTgt2 = new TradeOrder(this.tradestrategy, action, OrderType.LMT, quantity / 2, null,
                     price.add(new BigDecimal((stop * 4) * buySellMultiplier)), createDate);
             tradeOrderTgt2.setClientId(clientId);
-            tradeOrderTgt2.setOrderKey((BigDecimal.valueOf(Math.random() * 1000000)).intValue());
+            tradeOrderTgt2.setOrderKey((new BigDecimal((Math.random() * 1000000))).intValue());
             tradeOrderTgt2.setOcaType(2);
             tradeOrderTgt2.setOcaGroupName(this.tradestrategy.getId() + "w2e3r4");
             tradeOrderTgt2.setTransmit(true);
@@ -332,7 +307,7 @@ public class TradePersistentModelTest {
                     price.add(new BigDecimal(stop * buySellMultiplier * -1)), null, createDate);
 
             tradeOrderStp1.setClientId(clientId);
-            tradeOrderStp1.setOrderKey((BigDecimal.valueOf(Math.random() * 1000000)).intValue());
+            tradeOrderStp1.setOrderKey((new BigDecimal((Math.random() * 1000000))).intValue());
             tradeOrderStp1.setOcaType(2);
             tradeOrderStp1.setOcaGroupName(this.tradestrategy.getId() + "q1w2e3");
             tradeOrderStp1.setTransmit(true);
@@ -344,7 +319,7 @@ public class TradePersistentModelTest {
                     price.add(new BigDecimal(stop * buySellMultiplier * -1)), null, createDate);
 
             tradeOrderStp2.setClientId(clientId);
-            tradeOrderStp2.setOrderKey((BigDecimal.valueOf(Math.random() * 1000000)).intValue());
+            tradeOrderStp2.setOrderKey((new BigDecimal((Math.random() * 1000000))).intValue());
             tradeOrderStp2.setOcaType(2);
             tradeOrderStp2.setOcaGroupName(this.tradestrategy.getId() + "w2e3r4");
             tradeOrderStp2.setTransmit(true);
@@ -419,7 +394,7 @@ public class TradePersistentModelTest {
 
                         tradeOrderOcaSubmit.setStatus(OrderStatus.FILLED);
                         tradeOrderOcaSubmit
-                                .setCommission(BigDecimal.valueOf(tradeOrderOcaSubmit.getFilledQuantity() * 0.005d));
+                                .setCommission(new BigDecimal(tradeOrderOcaSubmit.getFilledQuantity() * 0.005d));
                         tradeOrderOcaSubmit.setIsFilled(true);
                     } else {
                         tradeOrderOcaSubmit.setStatus(OrderStatus.CANCELLED);
@@ -497,7 +472,7 @@ public class TradePersistentModelTest {
         try {
             TradeOrder tradeOrder = new TradeOrder(this.tradestrategy, Action.BUY, OrderType.MKT, 1000, null, null,
                     TradingCalendar.getDateTimeNowMarketTimeZone());
-            tradeOrder.setOrderKey((BigDecimal.valueOf(Math.random() * 1000000)).intValue());
+            tradeOrder.setOrderKey((new BigDecimal((Math.random() * 1000000))).intValue());
             tradeOrder.validate();
             TradeOrder result = this.tradePersistentModel.persistTradeOrder(tradeOrder);
             assertNotNull("1", result.getId());
@@ -513,10 +488,10 @@ public class TradePersistentModelTest {
 
         try {
 
-            BigDecimal price = new BigDecimal("100.00");
+            BigDecimal price = new BigDecimal(100.00);
             TradeOrder tradeOrderBuy = new TradeOrder(this.tradestrategy, Action.BUY, OrderType.STPLMT, 1000, price,
                     price.add(new BigDecimal(2)), TradingCalendar.getDateTimeNowMarketTimeZone());
-            tradeOrderBuy.setOrderKey((BigDecimal.valueOf(Math.random() * 1000000)).intValue());
+            tradeOrderBuy.setOrderKey((new BigDecimal((Math.random() * 1000000))).intValue());
             tradeOrderBuy.validate();
             tradeOrderBuy = this.tradePersistentModel.persistTradeOrder(tradeOrderBuy);
             tradeOrderBuy.setStatus(OrderStatus.SUBMITTED);
@@ -534,14 +509,14 @@ public class TradePersistentModelTest {
                     tradeOrderBuy.getQuantity() / 2, this.tradestrategy.getSide(),
                     TradingCalendar.getDateTimeNowMarketTimeZone());
             tradeOrderBuy.addTradeOrderfill(orderfill1);
-            tradeOrderBuy.setCommission(new BigDecimal("5.0"));
+            tradeOrderBuy.setCommission(new BigDecimal(5.0));
 
             tradeOrderBuy = this.tradePersistentModel.persistTradeOrderfill(tradeOrderBuy);
 
             TradeOrder tradeOrderSell = new TradeOrder(this.tradestrategy, Action.SELL, OrderType.LMT,
-                    tradeOrderBuy.getQuantity(), null, new BigDecimal("105.00"),
+                    tradeOrderBuy.getQuantity(), null, new BigDecimal(105.00),
                     TradingCalendar.getDateTimeNowMarketTimeZone());
-            tradeOrderSell.setOrderKey((BigDecimal.valueOf(Math.random() * 1000000)).intValue());
+            tradeOrderSell.setOrderKey((new BigDecimal((Math.random() * 1000000))).intValue());
             tradeOrderSell = this.tradePersistentModel.persistTradeOrder(tradeOrderSell);
             tradeOrderSell.setStatus(OrderStatus.SUBMITTED);
             tradeOrderSell.validate();
@@ -559,7 +534,7 @@ public class TradePersistentModelTest {
                     tradeOrderSell.getQuantity() / 2, this.tradestrategy.getSide(),
                     TradingCalendar.getDateTimeNowMarketTimeZone());
             tradeOrderSell.addTradeOrderfill(orderfill3);
-            tradeOrderSell.setCommission(new BigDecimal("5.0"));
+            tradeOrderSell.setCommission(new BigDecimal(5.0));
 
             TradeOrder result = this.tradePersistentModel.persistTradeOrderfill(tradeOrderSell);
             assertFalse("1", result.getTradePosition().isOpen());
@@ -571,9 +546,9 @@ public class TradePersistentModelTest {
                     - (result.getTradePosition().getTotalBuyValue().doubleValue()
                     / result.getTradePosition().getTotalBuyQuantity().doubleValue());
             assertEquals("3", (new Money(4.00)).getBigDecimalValue(), (new Money(totalPriceMade)).getBigDecimalValue());
-            assertEquals("4", Integer.valueOf(1000), result.getTradePosition().getTotalBuyQuantity());
-            assertEquals("5", Integer.valueOf(1000), result.getTradePosition().getTotalSellQuantity());
-            assertEquals("6", Integer.valueOf(0), result.getTradePosition().getOpenQuantity());
+            assertEquals("4", new Integer(1000), result.getTradePosition().getTotalBuyQuantity());
+            assertEquals("5", new Integer(1000), result.getTradePosition().getTotalSellQuantity());
+            assertEquals("6", new Integer(0), result.getTradePosition().getOpenQuantity());
 
         } catch (Exception | AssertionError ex) {
             String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
@@ -586,10 +561,10 @@ public class TradePersistentModelTest {
     public void testPersistTradeOrderFilledShort() {
 
         try {
-            BigDecimal price = new BigDecimal("100.00");
+            BigDecimal price = new BigDecimal(100.00);
             TradeOrder tradeOrderBuy = new TradeOrder(this.tradestrategy, Action.SELL, OrderType.STPLMT, 1000, price,
                     price.subtract(new BigDecimal(2)), TradingCalendar.getDateTimeNowMarketTimeZone());
-            tradeOrderBuy.setOrderKey((BigDecimal.valueOf(Math.random() * 1000000)).intValue());
+            tradeOrderBuy.setOrderKey((new BigDecimal((Math.random() * 1000000))).intValue());
             tradeOrderBuy = this.tradePersistentModel.persistTradeOrder(tradeOrderBuy);
             tradeOrderBuy.setStatus(OrderStatus.SUBMITTED);
             tradeOrderBuy.validate();
@@ -607,14 +582,14 @@ public class TradePersistentModelTest {
                     tradeOrderBuy.getQuantity() / 2, this.tradestrategy.getSide(),
                     TradingCalendar.getDateTimeNowMarketTimeZone());
             tradeOrderBuy.addTradeOrderfill(orderfill1);
-            tradeOrderBuy.setCommission(new BigDecimal("5.0"));
+            tradeOrderBuy.setCommission(new BigDecimal(5.0));
 
             tradeOrderBuy = this.tradePersistentModel.persistTradeOrderfill(tradeOrderBuy);
 
             TradeOrder tradeOrderSell = new TradeOrder(this.tradestrategy, Action.BUY, OrderType.LMT,
-                    tradeOrderBuy.getQuantity(), null, new BigDecimal("95.00"),
+                    tradeOrderBuy.getQuantity(), null, new BigDecimal(95.00),
                     TradingCalendar.getDateTimeNowMarketTimeZone());
-            tradeOrderSell.setOrderKey((BigDecimal.valueOf(Math.random() * 1000000)).intValue());
+            tradeOrderSell.setOrderKey((new BigDecimal((Math.random() * 1000000))).intValue());
             tradeOrderSell = this.tradePersistentModel.persistTradeOrder(tradeOrderSell);
             tradeOrderSell.setStatus(OrderStatus.SUBMITTED);
             tradeOrderSell = this.tradePersistentModel.persistTradeOrder(tradeOrderSell);
@@ -631,7 +606,7 @@ public class TradePersistentModelTest {
                     tradeOrderSell.getQuantity() / 2, this.tradestrategy.getSide(),
                     TradingCalendar.getDateTimeNowMarketTimeZone());
             tradeOrderSell.addTradeOrderfill(orderfill3);
-            tradeOrderSell.setCommission(new BigDecimal("5.0"));
+            tradeOrderSell.setCommission(new BigDecimal(5.0));
 
             TradeOrder result = this.tradePersistentModel.persistTradeOrderfill(tradeOrderSell);
             assertFalse("1", result.getTradePosition().isOpen());
@@ -643,9 +618,9 @@ public class TradePersistentModelTest {
                     - (result.getTradePosition().getTotalBuyValue().doubleValue()
                     / result.getTradePosition().getTotalBuyQuantity().doubleValue());
             assertEquals("3", (new Money(4.00)).getBigDecimalValue(), (new Money(totalPriceMade)).getBigDecimalValue());
-            assertEquals("4", Integer.valueOf(1000), result.getTradePosition().getTotalBuyQuantity());
-            assertEquals("5", Integer.valueOf(1000), result.getTradePosition().getTotalSellQuantity());
-            assertEquals("6", Integer.valueOf(0), result.getTradePosition().getOpenQuantity());
+            assertEquals("4", new Integer(1000), result.getTradePosition().getTotalBuyQuantity());
+            assertEquals("5", new Integer(1000), result.getTradePosition().getTotalSellQuantity());
+            assertEquals("6", new Integer(0), result.getTradePosition().getOpenQuantity());
 
         } catch (Exception | AssertionError ex) {
             String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
@@ -679,7 +654,7 @@ public class TradePersistentModelTest {
             StrategyData.doDummyData(candleSeries, this.tradestrategy.getTradingday(), 5, BarSize.FIVE_MIN, true, 0);
             long timeStart = System.currentTimeMillis();
             this.tradePersistentModel.persistCandleSeries(candleSeries);
-            _log.info("Total time: {}", (System.currentTimeMillis() - timeStart) / 1000);
+            _log.info("Total time: " + (System.currentTimeMillis() - timeStart) / 1000);
             assertFalse("1", candleSeries.isEmpty());
             assertNotNull("2", ((CandleItem) candleSeries.getDataItem(0)).getCandle().getId());
         } catch (Exception | AssertionError ex) {
@@ -871,14 +846,17 @@ public class TradePersistentModelTest {
             TradestrategyOrders positionOrders = this.tradePersistentModel
                     .findPositionOrdersByTradestrategyId(this.tradestrategy.getId());
 
-            _log.info("testFindVersionById IdTradeStrategy:{} version: {}", positionOrders.getId(), positionOrders.getVersion());
+            _log.info("testFindVersionById IdTradeStrategy:" + positionOrders.getId() + " version: "
+                    + positionOrders.getVersion());
 
             positionOrders.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
             TradestrategyOrders result = this.tradePersistentModel.persistAspect(positionOrders);
 
-            _log.info("testFindVersionById IdTradeStrategy:{} version: {}", result.getId(), result.getVersion());
+            _log.info("testFindVersionById IdTradeStrategy:" + result.getId() + " version: "
+                    + result.getVersion());
             result = this.tradePersistentModel.refreshPositionOrdersByTradestrategyId(positionOrders);
-            _log.info("testFindVersionById IdTradeStrategy:{} prev version: {} current version: {}", result.getId(), positionOrders.getVersion(), result.getVersion());
+            _log.info("testFindVersionById IdTradeStrategy:" + result.getId() + " prev version: "
+                    + positionOrders.getVersion() + " current version: " + result.getVersion());
 
             assertNotNull("1", result);
         } catch (Exception | AssertionError ex) {
@@ -928,10 +906,10 @@ public class TradePersistentModelTest {
     public void testFindTradeOrderById() {
 
         try {
-            BigDecimal price = new BigDecimal("100.00");
+            BigDecimal price = new BigDecimal(100.00);
             TradeOrder tradeOrder = new TradeOrder(this.tradestrategy, Action.BUY, OrderType.STPLMT, 1000, price,
                     price.add(new BigDecimal(4)), TradingCalendar.getDateTimeNowMarketTimeZone());
-            tradeOrder.setOrderKey((BigDecimal.valueOf(Math.random() * 1000000)).intValue());
+            tradeOrder.setOrderKey((new BigDecimal((Math.random() * 1000000))).intValue());
             TradeOrder resultTradeOrder = this.tradePersistentModel.persistTradeOrder(tradeOrder);
             TradeOrder result = this.tradePersistentModel.findTradeOrderById(resultTradeOrder.getId());
             assertNotNull("1", result);
@@ -946,10 +924,10 @@ public class TradePersistentModelTest {
     public void testFindTradeOrderByKey() {
 
         try {
-            BigDecimal price = new BigDecimal("100.00");
+            BigDecimal price = new BigDecimal(100.00);
             TradeOrder tradeOrder = new TradeOrder(this.tradestrategy, Action.BUY, OrderType.STPLMT, 1000, price,
                     price.add(new BigDecimal(4)), TradingCalendar.getDateTimeNowMarketTimeZone());
-            tradeOrder.setOrderKey((BigDecimal.valueOf(Math.random() * 1000000)).intValue());
+            tradeOrder.setOrderKey((new BigDecimal((Math.random() * 1000000))).intValue());
             TradeOrder resultTradeOrder = this.tradePersistentModel.persistTradeOrder(tradeOrder);
             TradeOrder result = this.tradePersistentModel.findTradeOrderByKey(resultTradeOrder.getOrderKey());
             assertNotNull("1", result);
@@ -964,17 +942,17 @@ public class TradePersistentModelTest {
     public void testFindTradeOrderfillByExecId() {
 
         try {
-            BigDecimal price = new BigDecimal("100.00");
+            BigDecimal price = new BigDecimal(100.00);
             TradeOrder tradeOrder = new TradeOrder(this.tradestrategy, Action.BUY, OrderType.STPLMT, 1000, price,
                     price.add(new BigDecimal(4)), TradingCalendar.getDateTimeNowMarketTimeZone());
-            tradeOrder.setOrderKey((BigDecimal.valueOf(Math.random() * 1000000)).intValue());
-            TradeOrderfill tradeOrderfill = new TradeOrderfill(tradeOrder, "Paper", new BigDecimal("100.23"),
-                    1000, Exchange.SMART, "123efgr567", new BigDecimal("100.23"), 1000,
+            tradeOrder.setOrderKey((new BigDecimal((Math.random() * 1000000))).intValue());
+            TradeOrderfill tradeOrderfill = new TradeOrderfill(tradeOrder, "Paper", new BigDecimal(100.23),
+                    new Integer(1000), Exchange.SMART, "123efgr567", new BigDecimal(100.23), new Integer(1000),
                     Side.BOT, TradingCalendar.getDateTimeNowMarketTimeZone());
             tradeOrder.addTradeOrderfill(tradeOrderfill);
             TradeOrder resultTradeOrder = this.tradePersistentModel.persistTradeOrder(tradeOrder);
             TradeOrderfill result = this.tradePersistentModel
-                    .findTradeOrderfillByExecId(resultTradeOrder.getTradeOrderfills().getFirst().getExecId());
+                    .findTradeOrderfillByExecId(resultTradeOrder.getTradeOrderfills().get(0).getExecId());
             assertNotNull("1", result);
         } catch (Exception | AssertionError ex) {
             String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
@@ -1307,13 +1285,15 @@ public class TradePersistentModelTest {
             Strategy toStrategy = (Strategy) DAOStrategy.newInstance().getObject();
             toStrategy = this.tradePersistentModel.findStrategyById(toStrategy.getId());
             this.tradePersistentModel.reassignStrategy(this.tradestrategy.getStrategy(), toStrategy, tradingday);
-            assertEquals("2", toStrategy, tradingday.getTradestrategies().getFirst().getStrategy());
+            assertEquals("2", toStrategy, tradingday.getTradestrategies().get(0).getStrategy());
         } catch (Exception | AssertionError ex) {
             String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
             _log.error(msg);
             fail(msg);
         }
     }
+
+    ;
 
     @Test
     public void testReplaceTradingday() {
@@ -1350,7 +1330,7 @@ public class TradePersistentModelTest {
             assertNotNull("2", transferObject);
 
             assertNotNull("3", tradingdays.getTradingday(instance1.getOpen(), instance1.getClose()));
-            String industry = transferObject.getTradestrategies().getFirst().getContract().getIndustry();
+            String industry = transferObject.getTradestrategies().get(0).getContract().getIndustry();
             assertNotNull("4", industry);
 
         } catch (Exception | AssertionError ex) {

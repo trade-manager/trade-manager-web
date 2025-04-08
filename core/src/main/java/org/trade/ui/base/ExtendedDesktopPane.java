@@ -37,7 +37,6 @@ package org.trade.ui.base;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.Serial;
 
 /**
  * @author Simon Allen
@@ -47,7 +46,6 @@ public class ExtendedDesktopPane extends JDesktopPane {
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = -4349765706181132905L;
 
     /**

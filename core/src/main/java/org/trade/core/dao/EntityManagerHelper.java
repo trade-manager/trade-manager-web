@@ -78,7 +78,7 @@ public class EntityManagerHelper {
 
     static {
         factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT);
-        threadLocal = new ThreadLocal<>();
+        threadLocal = new ThreadLocal<EntityManager>();
     }
 
     /**
@@ -115,7 +115,8 @@ public class EntityManagerHelper {
      * be method managed. i.e. begin, commit, close transaction.
      */
     public static EntityManager getLocalEntityManager() {
-        return factory.createEntityManager();
+        EntityManager manager = factory.createEntityManager();
+        return manager;
     }
 
     /**

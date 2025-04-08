@@ -49,7 +49,6 @@ import org.trade.strategy.data.candle.OHLCVwapDataset;
 import org.trade.ui.chart.renderer.CandleRenderer;
 
 import java.awt.*;
-import java.io.Serial;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -63,7 +62,6 @@ public class CandleDataset extends AbstractXYDataset implements OHLCVwapDataset,
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = 3931818830267435673L;
 
     /**
@@ -77,7 +75,7 @@ public class CandleDataset extends AbstractXYDataset implements OHLCVwapDataset,
      * Creates a new instance of <code>OHLCSeriesCollection</code>.
      */
     public CandleDataset() {
-        this.data = new ArrayList<>();
+        this.data = new ArrayList<IndicatorSeries>();
     }
 
     /**
@@ -261,7 +259,7 @@ public class CandleDataset extends AbstractXYDataset implements OHLCVwapDataset,
      * @return The x-value. * @see org.jfree.data.xy.XYDataset#getX(int, int)
      */
     public Number getX(int series, int item) {
-        return getXValue(series, item);
+        return new Double(getXValue(series, item));
     }
 
     /**
@@ -274,7 +272,7 @@ public class CandleDataset extends AbstractXYDataset implements OHLCVwapDataset,
     public Number getY(int series, int item) {
         CandleSeries s = (CandleSeries) this.data.get(series);
         CandleItem di = (CandleItem) s.getDataItem(item);
-        return di.getY();
+        return new Double(di.getY());
     }
 
     /**
@@ -300,7 +298,7 @@ public class CandleDataset extends AbstractXYDataset implements OHLCVwapDataset,
      * int)
      */
     public Number getOpen(int series, int item) {
-        return getOpenValue(series, item);
+        return new Double(getOpenValue(series, item));
     }
 
     /**
@@ -326,7 +324,7 @@ public class CandleDataset extends AbstractXYDataset implements OHLCVwapDataset,
      * org.jfree.data.xy.OHLCDataset#getClose(int, int)
      */
     public Number getClose(int series, int item) {
-        return getCloseValue(series, item);
+        return new Double(getCloseValue(series, item));
     }
 
     /**
@@ -352,7 +350,7 @@ public class CandleDataset extends AbstractXYDataset implements OHLCVwapDataset,
      * int)
      */
     public Number getHigh(int series, int item) {
-        return getHighValue(series, item);
+        return new Double(getHighValue(series, item));
     }
 
     /**
@@ -378,7 +376,7 @@ public class CandleDataset extends AbstractXYDataset implements OHLCVwapDataset,
      * int)
      */
     public Number getLow(int series, int item) {
-        return getLowValue(series, item);
+        return new Double(getLowValue(series, item));
     }
 
     /**
@@ -391,7 +389,7 @@ public class CandleDataset extends AbstractXYDataset implements OHLCVwapDataset,
      * org.jfree.data.xy.OHLCDataset#getVolume(int, int)
      */
     public Number getVolume(int series, int item) {
-        return getVolumeValue(series, item);
+        return new Double(getVolumeValue(series, item));
     }
 
     /**
@@ -433,7 +431,7 @@ public class CandleDataset extends AbstractXYDataset implements OHLCVwapDataset,
      * org.trade.strategy.data.candle.OHLCVwapDataset#getVwap(int, int)
      */
     public Number getVwap(int series, int item) {
-        return getVwapValue(series, item);
+        return new Double(getVwapValue(series, item));
     }
 
     /**
@@ -446,13 +444,14 @@ public class CandleDataset extends AbstractXYDataset implements OHLCVwapDataset,
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof CandleDataset that)) {
+        if (!(obj instanceof CandleDataset)) {
             return false;
         }
+        CandleDataset that = (CandleDataset) obj;
         if (!this.xPosition.equals(that.xPosition)) {
             return false;
         }
-        return this.data.equals(that.data);
+        return ObjectUtils.equal(this.data, that.data);
     }
 
     /**
@@ -528,6 +527,8 @@ public class CandleDataset extends AbstractXYDataset implements OHLCVwapDataset,
      * @param source      CandleDataset
      * @param seriesIndex int
      * @param newBar      boolean
+     * @see IIndicatorDataset#updateDataset(CandleDataset,
+     * int)
      */
     public void updateDataset(CandleDataset source, int seriesIndex, boolean newBar) {
         if (source == null) {

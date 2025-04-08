@@ -41,7 +41,6 @@ import org.trade.core.valuetype.Money;
 import org.trade.core.valuetype.ValueTypeException;
 import org.trade.persistent.dao.Entrylimit;
 
-import java.io.Serial;
 import java.util.Enumeration;
 import java.util.Vector;
 
@@ -50,7 +49,6 @@ import java.util.Vector;
  */
 public class DAOEntryLimit extends DAODecode {
 
-    @Serial
     private static final long serialVersionUID = -5381026427696898592L;
     public static final String DECODE = "ENTRY_LIMIT";
     public static final String _TABLE = "_TABLE";

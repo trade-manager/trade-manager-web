@@ -58,10 +58,10 @@ public abstract class SaxMapper extends DefaultHandler {
     public abstract TagTracker createTagTrackerNetwork() throws ParseException;
 
     // A stack for the tag trackers to coordinate on.
-    private final Stack<TagTracker> tagStack = new Stack<>();
+    private final Stack<TagTracker> tagStack = new Stack<TagTracker>();
 
     // The SAX 2 parser...
-    private final XMLReader xr;
+    private XMLReader xr;
 
     // Buffer for collecting data from the "characters" SAX event.
     private final CharArrayWriter contents = new CharArrayWriter();
@@ -148,7 +148,7 @@ public abstract class SaxMapper extends DefaultHandler {
      * java.lang.String, java.lang.String, org.xml.sax.Attributes)
      */
 
-    public void startElement(String namespaceURI, String localName, String qName, Attributes attr) {
+    public void startElement(String namespaceURI, String localName, String qName, Attributes attr) throws SAXException {
         /*
          * Resetting contents buffer. Assuming that tags either tag content or
          * children, not both. This is usually the case with XML that is
@@ -160,14 +160,14 @@ public abstract class SaxMapper extends DefaultHandler {
         contents.reset();
 
         // delegate the event handling to the tag tracker network.
-        final TagTracker activeTracker = tagStack.peek();
+        final TagTracker activeTracker = (TagTracker) tagStack.peek();
         activeTracker.startElement(namespaceURI, localName, qName, attr, tagStack);
     }
 
     public void endElement(String namespaceURI, String localName, String qName) throws SAXException {
 
         // delegate the event handling to the tag tracker network.
-        final TagTracker activeTracker = tagStack.peek();
+        final TagTracker activeTracker = (TagTracker) tagStack.peek();
         try {
             activeTracker.endElement(namespaceURI, localName, qName, contents, tagStack);
         } catch (ParseException e) {
