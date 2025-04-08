@@ -37,7 +37,6 @@ package org.trade.strategy.data.cci;
 
 // Generated Feb 21, 2011 12:43:33 PM by Hibernate Tools 3.4.0.CR1
 
-import java.io.Serial;
 import java.math.BigDecimal;
 
 /**
@@ -52,7 +51,6 @@ public class CommodityChannelIndex implements java.io.Serializable {
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = 7644763985378994305L;
 
     private BigDecimal cciAverage;
@@ -63,7 +61,7 @@ public class CommodityChannelIndex implements java.io.Serializable {
     /**
      * Constructor for MovingAverage.
      *
-     * @param cciAverage BigDecimal
+     * @param movingAverage BigDecimal
      */
     public CommodityChannelIndex(BigDecimal cciAverage) {
         this.cciAverage = cciAverage;
@@ -81,7 +79,7 @@ public class CommodityChannelIndex implements java.io.Serializable {
     /**
      * Method setMovingAverage.
      *
-     * @param cciAverage BigDecimal
+     * @param movingAverage BigDecimal
      */
     public void setCommodityChannelIndex(BigDecimal cciAverage) {
         this.cciAverage = cciAverage;

@@ -64,9 +64,8 @@ public class CoreUtils {
      * @param replaceWith String
      * @return String
      */
-    public static String replace(String replaceIn, String toReplace, String replaceWith) {
-
-        StringBuilder buf = new StringBuilder(replaceIn);
+    public static final String replace(String replaceIn, String toReplace, String replaceWith) {
+        StringBuffer buf = new StringBuffer(replaceIn);
         int replaceLength = toReplace.length();
         int replaceWithLength = replaceWith.length();
         int netLength = replaceWithLength - replaceLength;
@@ -91,7 +90,7 @@ public class CoreUtils {
      * @param unescaped String
      * @return String
      */
-    public static String escapeJava(String unescaped) {
+    public static final String escapeJava(String unescaped) {
         String escaped = replace(unescaped, "\\", "\\\\");
 
         escaped = replace(escaped, "\"", "\\\"");
@@ -106,40 +105,44 @@ public class CoreUtils {
      * @param aspect           Aspect
      * @param decodeConvertion boolean
      * @return Hashtable. * @throws InvocationTargetException
+     * @throws IllegalAccessException
      * @since ICAP Version Exchange
      */
 
     public static Hashtable<String, Object> getAllAttribueValues(Aspect aspect, boolean decodeConvertion)
             throws InvocationTargetException, IllegalAccessException {
 
-        final Hashtable<String, Object> attributeList = new Hashtable<>();
-        final Method[] method = aspect.getClass().getDeclaredMethods();
+        final Hashtable<String, Object> attributeList = new Hashtable<String, Object>();
+        final Method method[] = aspect.getClass().getDeclaredMethods();
 
-        for (final Method element : method) {
-            final String methodName = element.getName();
+        if (method.length > 0) {
 
-            if ("GET".equalsIgnoreCase(methodName.substring(0, 3))) {
+            for (final Method element : method) {
+                final String methodName = element.getName();
 
-                element.getReturnType();
-                final Class<?>[] parms = element.getParameterTypes();
-                final Object[] o = new Object[parms.length];
+                if ("GET".equals(methodName.substring(0, 3).toUpperCase())) {
 
-                for (int j = 0; j < parms.length; j++) {
-                    final Object obj = parms[j];
-                    o[j] = obj;
+                    element.getReturnType();
+                    final Class<?> parms[] = element.getParameterTypes();
+                    final Object[] o = new Object[parms.length];
+
+                    for (int j = 0; j < parms.length; j++) {
+                        final Object obj = parms[j];
+                        o[j] = obj;
+                    }
+                    Object returnValue = element.invoke(aspect, o);
+
+                    if (null == returnValue) {
+                        returnValue = "null";
+                    }
+                    if (decodeConvertion
+                            && returnValue.getClass().getSuperclass().getName().equals(Decode.class.getName())) {
+                        returnValue = ((Decode) returnValue).getCode();
+                    }
+                    attributeList.put(methodName.substring(3, methodName.length()), returnValue);
                 }
-                Object returnValue = element.invoke(aspect, o);
 
-                if (null == returnValue) {
-                    returnValue = "null";
-                }
-                if (decodeConvertion
-                        && returnValue.getClass().getSuperclass().getName().equals(Decode.class.getName())) {
-                    returnValue = ((Decode) returnValue).getCode();
-                }
-                attributeList.put(methodName.substring(3), returnValue);
             }
-
         }
 
         return attributeList;
@@ -151,17 +154,18 @@ public class CoreUtils {
      *
      * @param aspect Aspect
      * @return String. * @throws InvocationTargetException
+     * @throws IllegalAccessException
      * @since ICAP Version Exchange
      */
 
     public static String toFormattedXMLString(Aspect aspect) throws InvocationTargetException, IllegalAccessException {
-        Hashtable<String, Object> attributeList;
-        StringBuilder returnStringBuf;
+        Hashtable<String, Object> attributeList = null;
+        StringBuffer returnStringBuf = null;
         String returnString = null;
-        String attributeName;
+        String attributeName = null;
 
         if (null != (attributeList = getAllAttribueValues(aspect, true))) {
-            returnStringBuf = new StringBuilder();
+            returnStringBuf = new StringBuffer();
 
             String className = aspect.getClass().getName();
             final StringTokenizer spaceTokens = new StringTokenizer(className, ".");
@@ -169,9 +173,9 @@ public class CoreUtils {
                 className = spaceTokens.nextToken();
             }
 
-            returnStringBuf.append("<").append(className).append("> \n");
+            returnStringBuf.append("<" + className + "> \n");
 
-            final String[] index = new String[attributeList.size()];
+            final String index[] = new String[attributeList.size()];
             final Enumeration<String> enumAttr = attributeList.keys();
             int i = 0;
 
@@ -195,10 +199,11 @@ public class CoreUtils {
                     final Aspect aspect1 = (Aspect) attributeList.get(attributeName);
                     returnStringBuf.append(toFormattedXMLString(aspect1));
                 } else {
-                    returnStringBuf.append("    <").append(attributeName).append(">").append(attributeList.get(attributeName)).append("</").append(attributeName).append("> \n");
+                    returnStringBuf.append("    <" + attributeName + ">" + attributeList.get(attributeName) + "</"
+                            + attributeName + "> \n");
                 }
             }
-            returnStringBuf.append("</").append(className).append("> \n");
+            returnStringBuf.append("</" + className + "> \n");
             returnString = returnStringBuf.toString();
 
         }
@@ -212,19 +217,20 @@ public class CoreUtils {
      *
      * @param aspect Aspect
      * @return String. * @throws InvocationTargetException
+     * @throws IllegalAccessException
      * @since ICAP Version Exchange
      */
 
     public static String toFormattedString(Aspect aspect) throws InvocationTargetException, IllegalAccessException {
-        Hashtable<String, Object> attributeList;
-        StringBuilder returnStringBuf;
+        Hashtable<String, Object> attributeList = null;
+        StringBuffer returnStringBuf = null;
         String returnString = null;
-        String attributeName;
+        String attributeName = null;
 
         if (null != (attributeList = getAllAttribueValues(aspect, true))) {
-            returnStringBuf = new StringBuilder();
+            returnStringBuf = new StringBuffer();
 
-            final String[] index = new String[attributeList.size()];
+            final String index[] = new String[attributeList.size()];
             final Enumeration<String> enumAttr = attributeList.keys();
             int i = 0;
 
@@ -248,7 +254,7 @@ public class CoreUtils {
                     final Aspect aspect1 = (Aspect) attributeList.get(attributeName);
                     returnStringBuf.append(toFormattedXMLString(aspect1));
                 } else {
-                    returnStringBuf.append(attributeName).append("='").append(attributeList.get(attributeName)).append("'\n");
+                    returnStringBuf.append(attributeName + "=\'" + attributeList.get(attributeName) + "\'\n");
                 }
             }
 
@@ -268,6 +274,7 @@ public class CoreUtils {
      * @param attributeName   String
      * @param toAppend        Object
      * @param columnNamesOnly boolean
+     * @see com.inpurchase.icap.aspect.Aspect
      * @since ICAP Version Exchange
      */
 
@@ -288,24 +295,24 @@ public class CoreUtils {
         }
 
         if (columnNamesOnly) {
-            if (strBuf.isEmpty()) {
+            if (0 == strBuf.length()) {
                 strBuf.append(attributeName);
             } else {
-                strBuf.append(",").append(attributeName);
+                strBuf.append("," + attributeName);
             }
 
         } else {
 
             if (null == toAppend) {
-                if (!strBuf.isEmpty()) {
+                if (0 != strBuf.length()) {
                     strBuf.append("||");
                 }
             } else {
 
-                if (strBuf.isEmpty()) {
-                    strBuf.append("\"").append(toAppend).append("\"");
+                if (0 == strBuf.length()) {
+                    strBuf.append("\"" + toAppend + "\"");
                 } else {
-                    strBuf.append("||" + "\"").append(toAppend).append("\"");
+                    strBuf.append("||" + "\"" + toAppend + "\"");
                 }
             }
         }
@@ -315,8 +322,10 @@ public class CoreUtils {
      * Method setDocumentText.
      *
      * @param content String
+     * @param append  boolean
      * @param newLine boolean
      * @param attrSet SimpleAttributeSet
+     * @throws BadLocationException
      */
     public static void setDocumentText(Document doc, String content, boolean newLine, SimpleAttributeSet attrSet)
             throws BadLocationException {
@@ -362,7 +371,7 @@ public class CoreUtils {
             return (one == null) ? -1 : 1;
         }
 
-        if (one == null) {
+        if (one == null && two == null) {
             return 0;
         }
         return one.compareTo(two);
@@ -386,7 +395,7 @@ public class CoreUtils {
     /**
      * Method isNumeric.
      *
-     * @param number String to check
+     * @param str String to check
      * @return boolean
      */
     public static boolean isNumeric(String number) {

@@ -54,8 +54,6 @@ import org.trade.persistent.dao.Tradestrategy;
 import org.trade.ui.base.TableModel;
 
 import javax.swing.event.TableModelEvent;
-import java.io.Serial;
-import java.util.Objects;
 import java.util.Vector;
 
 /**
@@ -63,7 +61,6 @@ import java.util.Vector;
  */
 public class TradeOrderTableModel extends TableModel {
 
-    @Serial
     private static final long serialVersionUID = 3087514589731145479L;
 
     private static final String SYMBOL = "Symbol*";
@@ -125,9 +122,12 @@ public class TradeOrderTableModel extends TableModel {
                 return false;
             }
         }
-        return (!Objects.equals(columnNames[column], SYMBOL)) && (!Objects.equals(columnNames[column], ORDER_KEY)) && (!Objects.equals(columnNames[column], STATUS))
-                && (!Objects.equals(columnNames[column], AVG_PRICE)) && (!Objects.equals(columnNames[column], FILLED_DATE))
-                && (!Objects.equals(columnNames[column], FILLED_QTY)) && (!Objects.equals(columnNames[column], STOP_PRICE));
+        if ((columnNames[column] == SYMBOL) || (columnNames[column] == ORDER_KEY) || (columnNames[column] == STATUS)
+                || (columnNames[column] == AVG_PRICE) || (columnNames[column] == FILLED_DATE)
+                || (columnNames[column] == FILLED_QTY) || (columnNames[column] == STOP_PRICE)) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -140,7 +140,7 @@ public class TradeOrderTableModel extends TableModel {
 
     public Object getValueAt(int row, int column) {
 
-        if (Objects.equals(columnNames[column], LMT_PRICE) && null != super.getValueAt(row, column)) {
+        if (columnNames[column] == LMT_PRICE && null != super.getValueAt(row, column)) {
             if (((OrderType) super.getValueAt(row, 3)).isValid()) {
                 if (((OrderType) super.getValueAt(row, 3)).getCode().equals(OrderType.MKT)
                         || ((OrderType) super.getValueAt(row, 3)).getCode().equals(OrderType.STP)
@@ -163,7 +163,7 @@ public class TradeOrderTableModel extends TableModel {
                 }
             }
         }
-        if (Objects.equals(columnNames[column], AUX_PRICE) && null != super.getValueAt(row, column)) {
+        if (columnNames[column] == AUX_PRICE && null != super.getValueAt(row, column)) {
             if (((OrderType) super.getValueAt(row, 3)).isValid()) {
                 if (((OrderType) super.getValueAt(row, 3)).getCode().equals(OrderType.MKT)
                         || ((OrderType) super.getValueAt(row, 3)).getCode().equals(OrderType.LMT)) {
@@ -223,7 +223,7 @@ public class TradeOrderTableModel extends TableModel {
         this.clearAll();
         if (!getData().getTradeOrders().isEmpty()) {
             for (final TradeOrder tradeOrder : getData().getTradeOrders()) {
-                final Vector<Object> newRow = new Vector<>();
+                final Vector<Object> newRow = new Vector<Object>();
                 getNewRow(newRow, tradeOrder);
                 rows.add(newRow);
             }
@@ -252,69 +252,69 @@ public class TradeOrderTableModel extends TableModel {
         }
         switch (column) {
             case 0: {
-                Objects.requireNonNull(element).getTradestrategy().getContract().setSymbol((String) value);
+                element.getTradestrategy().getContract().setSymbol((String) value);
                 break;
             }
             case 1: {
-                Objects.requireNonNull(element).setOrderKey(((Quantity) value).getIntegerValue());
+                element.setOrderKey(((Quantity) value).getIntegerValue());
                 break;
             }
             case 2: {
-                Objects.requireNonNull(element).setAction(((Action) value).getCode());
+                element.setAction(((Action) value).getCode());
                 break;
             }
             case 3: {
-                Objects.requireNonNull(element).setOrderType(((OrderType) value).getCode());
+                element.setOrderType(((OrderType) value).getCode());
                 break;
             }
             case 4: {
-                Objects.requireNonNull(element).setQuantity(((Quantity) value).getIntegerValue());
+                element.setQuantity(((Quantity) value).getIntegerValue());
                 break;
             }
             case 5: {
-                Objects.requireNonNull(element).setLimitPrice(((Money) value).getBigDecimalValue());
+                element.setLimitPrice(((Money) value).getBigDecimalValue());
                 break;
             }
             case 6: {
-                Objects.requireNonNull(element).setAuxPrice(((Money) value).getBigDecimalValue());
+                element.setAuxPrice(((Money) value).getBigDecimalValue());
                 break;
             }
             case 7: {
-                Objects.requireNonNull(element).setTransmit(Boolean.valueOf(((YesNo) value).getCode()));
+                element.setTransmit(new Boolean(((YesNo) value).getCode()));
                 break;
             }
             case 8: {
-                Objects.requireNonNull(element).setStatus(((OrderStatus) value).getCode());
+                element.setStatus(((OrderStatus) value).getCode());
                 break;
             }
             case 9: {
-                Objects.requireNonNull(element).setOcaGroupName((String) value);
+                element.setOcaGroupName((String) value);
                 break;
             }
             case 10: {
-                Objects.requireNonNull(element).setAverageFilledPrice(((Decimal) value).getBigDecimalValue());
+                element.setAverageFilledPrice(((Decimal) value).getBigDecimalValue());
                 break;
             }
             case 11: {
-                Objects.requireNonNull(element).setFilledDate(((Date) value).getZonedDateTime());
+                element.setFilledDate(((Date) value).getZonedDateTime());
                 break;
             }
             case 12: {
-                Objects.requireNonNull(element).setFilledQuantity(((Quantity) value).getIntegerValue());
+                element.setFilledQuantity(((Quantity) value).getIntegerValue());
                 break;
             }
             case 13: {
-                Objects.requireNonNull(element).setStopPrice(((Money) value).getBigDecimalValue());
+                element.setStopPrice(((Money) value).getBigDecimalValue());
                 break;
             }
             case 14: {
                 if (value instanceof TradeOrder) {
-                    Objects.requireNonNull(element).setFAProfile(((TradeOrder) value).getFAProfile());
+                    element.setFAProfile(((TradeOrder) value).getFAProfile());
                     element.setFAGroup(((TradeOrder) value).getFAGroup());
                     element.setFAMethod(((TradeOrder) value).getFAMethod());
                     element.setFAPercent(((TradeOrder) value).getFAPercent());
                 } else {
-                    Objects.requireNonNull(element).setFAProfile(null);
+                    element.setFAProfile(null);
                     element.setFAGroup(null);
                     element.setFAMethod(null);
                     element.setFAPercent(null);
@@ -352,7 +352,7 @@ public class TradeOrderTableModel extends TableModel {
      */
     public void addRow(TradeOrder element) {
         getData().addTradeOrder(element);
-        final Vector<Object> newRow = new Vector<>();
+        final Vector<Object> newRow = new Vector<Object>();
         getNewRow(newRow, element);
         rows.add(newRow);
         this.fireTableRowsInserted(rows.size() - 1, rows.size() - 1);
@@ -406,7 +406,7 @@ public class TradeOrderTableModel extends TableModel {
         tradeOrder.setStatus(OrderStatus.UNSUBMIT);
         tradestrategy.addTradeOrder(tradeOrder);
 
-        final Vector<Object> newRow = new Vector<>();
+        final Vector<Object> newRow = new Vector<Object>();
         getNewRow(newRow, tradeOrder);
         rows.add(newRow);
 

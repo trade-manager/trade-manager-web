@@ -69,9 +69,9 @@ import javax.swing.*;
 import javax.swing.text.MaskFormatter;
 import java.awt.*;
 import java.awt.event.MouseEvent;
-import java.io.Serial;
 import java.text.ParseException;
 import java.util.Calendar;
+import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -79,7 +79,6 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class TradestrategyTable extends Table {
 
-    @Serial
     private static final long serialVersionUID = 1132297931453070904L;
     private static final String MASK = "********************";
     private static final String VALID_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz123456789. ";
@@ -91,6 +90,8 @@ public class TradestrategyTable extends Table {
      *
      * @param model           TableModel
      * @param strategyWorkers ConcurrentHashMap<String,IStrategyRule>
+     * @throws ValueTypeException
+     * @throws ParseException
      */
 
     public TradestrategyTable(TableModel model, ConcurrentHashMap<String, IStrategyRule> strategyWorkers)
@@ -104,33 +105,33 @@ public class TradestrategyTable extends Table {
         this.getColumn("Expiry").setCellEditor(eDate);
         this.getColumn("Expiry").setCellRenderer(rDate);
         DecodeTableEditor currencyEditor = new DecodeTableEditor(
-                new JComboBox<>((new Currency()).getCodesDecodes()));
+                new JComboBox<Decode>((Vector<Decode>) (new Currency()).getCodesDecodes()));
         DecodeTableEditor exchangeEditor = new DecodeTableEditor(
-                new JComboBox<>((new Exchange()).getCodesDecodes()));
+                new JComboBox<Decode>((Vector<Decode>) (new Exchange()).getCodesDecodes()));
         DecodeTableEditor sECIdTypeEditor = new DecodeTableEditor(
-                new JComboBox<>((new SECIdType()).getCodesDecodes()));
+                new JComboBox<Decode>((Vector<Decode>) (new SECIdType()).getCodesDecodes()));
         DecodeTableEditor sECTypeEditor = new DecodeTableEditor(
-                new JComboBox<>((new SECType()).getCodesDecodes()));
+                new JComboBox<Decode>((Vector<Decode>) (new SECType()).getCodesDecodes()));
         DecodeTableEditor sideEditor = new DecodeTableEditor(
-                new JComboBox<>((new Side()).getCodesDecodes()));
+                new JComboBox<Decode>((Vector<Decode>) (new Side()).getCodesDecodes()));
         DecodeTableEditor tradestrategyStatusEditor = new DecodeTableEditor(
-                new JComboBox<>((new TradestrategyStatus()).getCodesDecodes()));
+                new JComboBox<Decode>((Vector<Decode>) (new TradestrategyStatus()).getCodesDecodes()));
         DecodeTableEditor tierEditor = new DecodeTableEditor(
-                new JComboBox<>((new Tier()).getCodesDecodes()));
+                new JComboBox<Decode>((Vector<Decode>) (new Tier()).getCodesDecodes()));
 
         DAOStrategyRenderer dAOStrategyRenderer = new DAOStrategyRenderer(strategyWorkers);
         DAOStrategyManagerRenderer dAOStrategyManagerRenderer = new DAOStrategyManagerRenderer(strategyWorkers);
         DecodeTableEditor strategyEditor = new DecodeTableEditor(
-                new JComboBox<>((new DAOStrategy()).getCodesDecodes()));
-        JComboBox<Decode> strategyManagerComboBox = new JComboBox<>(
-                (new DAOStrategyManager()).getCodesDecodes());
+                new JComboBox<Decode>((Vector<Decode>) (new DAOStrategy()).getCodesDecodes()));
+        JComboBox<Decode> strategyManagerComboBox = new JComboBox<Decode>(
+                (Vector<Decode>) (new DAOStrategyManager()).getCodesDecodes());
         DecodeTableEditor strategyManagerEditor = new DecodeTableEditor(strategyManagerComboBox);
         DecodeTableEditor portfolioEditor = new DecodeTableEditor(
-                new JComboBox<>((new DAOPortfolio()).getCodesDecodes()));
+                new JComboBox<Decode>((Vector<Decode>) (new DAOPortfolio()).getCodesDecodes()));
         DecodeTableEditor chartDaysEditor = new DecodeTableEditor(
-                new JComboBox<>((new ChartDays()).getCodesDecodes()));
+                new JComboBox<Decode>((Vector<Decode>) (new ChartDays()).getCodesDecodes()));
         DecodeTableEditor barSizeEditor = new DecodeTableEditor(
-                new JComboBox<>((new BarSize()).getCodesDecodes()));
+                new JComboBox<Decode>((Vector<Decode>) (new BarSize()).getCodesDecodes()));
 
         StringEditor eString = new StringEditor(new StringField(new MaskFormatter(MASK), VALID_CHARS, PLACE_HOLDER));
         this.setDefaultEditor(String.class, eString);
@@ -163,8 +164,8 @@ public class TradestrategyTable extends Table {
      * @return String
      */
     public String getToolTipText(MouseEvent e) {
-        StringBuilder result;
-        Point p = e.getPoint();
+        StringBuilder result = null;
+        java.awt.Point p = e.getPoint();
         int rowIndex = rowAtPoint(p);
         int colIndex = columnAtPoint(p);
         if (rowIndex > -1) {

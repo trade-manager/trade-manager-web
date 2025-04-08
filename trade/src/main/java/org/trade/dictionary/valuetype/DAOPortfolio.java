@@ -40,14 +40,13 @@ import org.trade.core.valuetype.Decode;
 import org.trade.core.valuetype.ValueTypeException;
 import org.trade.persistent.dao.Portfolio;
 
-import java.io.Serial;
+import java.util.Iterator;
 
 /**
  *
  */
 public class DAOPortfolio extends DAODecode {
 
-    @Serial
     private static final long serialVersionUID = -5381026427696898592L;
     public static final String DECODE = "PORTFOLIO";
     public static final String _TABLE = "_TABLE";
@@ -61,7 +60,7 @@ public class DAOPortfolio extends DAODecode {
     /**
      * Method newInstance.
      *
-     * @param displayName String
+     * @param value String
      * @return DAOPortfolio
      */
     public static DAOPortfolio newInstance(String displayName) {
@@ -80,8 +79,8 @@ public class DAOPortfolio extends DAODecode {
         try {
             final DAOPortfolio returnInstance = new DAOPortfolio();
             DAOPortfolio code = null;
-            for (Decode decode : returnInstance.getCodesDecodes()) {
-                code = (DAOPortfolio) decode;
+            for (Iterator<Decode> iterCodes = returnInstance.getCodesDecodes().iterator(); iterCodes.hasNext(); ) {
+                code = (DAOPortfolio) iterCodes.next();
                 Portfolio portfolio = (Portfolio) code.getObject();
                 if (portfolio.getIsDefault())
                     return code;

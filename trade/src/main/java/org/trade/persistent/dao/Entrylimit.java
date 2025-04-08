@@ -43,7 +43,6 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Version;
 import org.trade.core.dao.Aspect;
 
-import java.io.Serial;
 import java.math.BigDecimal;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
@@ -58,7 +57,6 @@ public class Entrylimit extends Aspect implements java.io.Serializable {
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = -8612117968275040016L;
 
 
@@ -90,13 +88,13 @@ public class Entrylimit extends Aspect implements java.io.Serializable {
     /**
      * Constructor for Entrylimit.
      *
-     * @param startPrice     BigDecimal
-     * @param endPrice       BigDecimal
-     * @param limitAmount    BigDecimal
-     * @param percentOfPrice BigDecimal
-     * @param priceRound     BigDecimal
-     * @param shareRound     Integer
-     * @param pivotRange     BigDecimal
+     * @param startPrice  BigDecimal
+     * @param endPrice    BigDecimal
+     * @param limitAmount BigDecimal
+     * @param percent     BigDecimal
+     * @param priceRound  BigDecimal
+     * @param shareRound  Integer
+     * @param pivotRange  BigDecimal
      */
     public Entrylimit(BigDecimal startPrice, BigDecimal endPrice, BigDecimal limitAmount, BigDecimal percentOfPrice,
                       BigDecimal priceRound, BigDecimal percentOfMargin, Integer shareRound, BigDecimal pivotRange) {
@@ -119,6 +117,15 @@ public class Entrylimit extends Aspect implements java.io.Serializable {
     @Column(name = "id", unique = true, nullable = false)
     public Integer getId() {
         return this.id;
+    }
+
+    /**
+     * Method setId.
+     *
+     * @param id Integer
+     */
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     /**
@@ -284,4 +291,12 @@ public class Entrylimit extends Aspect implements java.io.Serializable {
         return this.version;
     }
 
+    /**
+     * Method setVersion.
+     *
+     * @param version Integer
+     */
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
 }

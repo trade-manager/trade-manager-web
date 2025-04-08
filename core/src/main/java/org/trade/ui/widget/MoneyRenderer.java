@@ -39,7 +39,6 @@ import org.trade.core.valuetype.Money;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
-import java.io.Serial;
 import java.text.NumberFormat;
 
 /**
@@ -50,9 +49,8 @@ public class MoneyRenderer extends DefaultTableCellRenderer {
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = 6325763792561257469L;
-    private final NumberFormat m_formater;
+    private NumberFormat m_formater = null;
 
     public MoneyRenderer() {
         super();

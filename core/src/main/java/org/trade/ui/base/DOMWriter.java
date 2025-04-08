@@ -43,6 +43,7 @@ import org.w3c.dom.NodeList;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 /**
  * A sample DOM writer. This sample program illustrates how to traverse a DOM
@@ -52,7 +53,24 @@ import java.io.IOException;
  * @version $Id: DOMWriter.java,v 1.1 2002/01/03 18:20:45 simon Exp $
  */
 public class DOMWriter {
+    //
+    // Constants
+    //
+    /** Default parser name. */
+    // private static final String DEFAULT_PARSER_NAME =
+    // "org.apache.xerces.parsers.DOMParser";
 
+    // private static boolean setValidation = false; // defaults
+
+    // private static boolean setNameSpaces = true;
+
+    // private static boolean setSchemaSupport = true;
+
+    // private static boolean setDeferredDOM = true;
+
+    //
+    // Data
+    //
     /**
      * Default Encoding
      */
@@ -116,9 +134,11 @@ public class DOMWriter {
      * @param canonical boolean
      * @param fileName  String
      * @param doc       Node
+     * @throws UnsupportedEncodingException
+     * @throws IOException
      */
     public void printDocument(String encoding, boolean canonical, String fileName, Node doc)
-            throws IOException {
+            throws UnsupportedEncodingException, IOException {
         m_out = new FileWriter(fileName);
         m_canonical = canonical;
 
@@ -162,6 +182,8 @@ public class DOMWriter {
 
     /**
      * Prints the specified node, recursively. * @param node Node
+     *
+     * @throws IOException
      */
     private void print(Node node) throws IOException {
         // is there anything to do?
@@ -197,7 +219,7 @@ public class DOMWriter {
                 m_out.write('<');
                 m_out.write(node.getNodeName());
 
-                Attr[] attrs = sortAttributes(node.getAttributes());
+                Attr attrs[] = sortAttributes(node.getAttributes());
 
                 for (Attr attr : attrs) {
                     m_out.write(' ');
@@ -211,10 +233,12 @@ public class DOMWriter {
 
                 NodeList children = node.getChildNodes();
 
-                int len = children.getLength();
+                if (children != null) {
+                    int len = children.getLength();
 
-                for (int i = 0; i < len; i++) {
-                    print(children.item(i));
+                    for (int i = 0; i < len; i++) {
+                        print(children.item(i));
+                    }
                 }
 
                 break;
@@ -224,10 +248,12 @@ public class DOMWriter {
                 if (m_canonical) {
                     NodeList children = node.getChildNodes();
 
-                    int len = children.getLength();
+                    if (children != null) {
+                        int len = children.getLength();
 
-                    for (int i = 0; i < len; i++) {
-                        print(children.item(i));
+                        for (int i = 0; i < len; i++) {
+                            print(children.item(i));
+                        }
                     }
                 } else {
                     m_out.write('&');
@@ -262,7 +288,7 @@ public class DOMWriter {
 
                 String data = node.getNodeValue();
 
-                if ((data != null) && (!data.isEmpty())) {
+                if ((data != null) && (data.length() > 0)) {
                     m_out.write(' ');
                     m_out.write(data);
                 }
@@ -289,7 +315,7 @@ public class DOMWriter {
      */
     protected Attr[] sortAttributes(NamedNodeMap attrs) {
         int len = (attrs != null) ? attrs.getLength() : 0;
-        Attr[] array = new Attr[len];
+        Attr array[] = new Attr[len];
 
         for (int i = 0; i < len; i++) {
             array[i] = (Attr) attrs.item(i);
@@ -319,7 +345,10 @@ public class DOMWriter {
         return (array);
     } // sortAttributes(NamedNodeMap):Attr[]
 
-    /*
+    //
+    // Main
+    //
+    /**
      * Main program entry point. * @param s String
      *
      * @return String
@@ -365,7 +394,7 @@ public class DOMWriter {
      * Normalizes the given string.
      */
     protected String normalize(String s) {
-        StringBuilder str = new StringBuilder();
+        StringBuffer str = new StringBuffer();
         int len = (s != null) ? s.length() : 0;
 
         for (int i = 0; i < len; i++) {

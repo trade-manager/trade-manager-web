@@ -42,9 +42,9 @@ import org.trade.persistent.dao.Strategy;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
-import java.io.Serial;
 import java.io.Serializable;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -52,18 +52,18 @@ import java.util.List;
  */
 public class StrategyTreeModel extends DefaultTreeModel implements Serializable {
 
-    @Serial
     private static final long serialVersionUID = -5543286790183657148L;
 
     static DefaultMutableTreeNode m_root = new DefaultMutableTreeNode("Strategies");
-    private final Hashtable<MutableTreeNode, Object> m_nodeMap = new Hashtable<>();
+    private final Hashtable<MutableTreeNode, Object> m_nodeMap = new Hashtable<MutableTreeNode, Object>();
 
     /**
      * Constructor for StrategyTreeModel.
      *
      * @param items List<Strategy>
+     * @throws ValueTypeException
      */
-    public StrategyTreeModel(List<Strategy> items) {
+    public StrategyTreeModel(List<Strategy> items) throws ValueTypeException {
 
         super(m_root);
         buildTree(items);
@@ -73,6 +73,7 @@ public class StrategyTreeModel extends DefaultTreeModel implements Serializable 
      * Method setData.
      *
      * @param strategies List<Strategy>
+     * @throws ValueTypeException
      */
     public void setData(List<Strategy> strategies) throws ValueTypeException {
         ((DefaultMutableTreeNode) getRoot()).removeAllChildren();
@@ -85,11 +86,13 @@ public class StrategyTreeModel extends DefaultTreeModel implements Serializable 
      * Method buildTree.
      *
      * @param items List<Strategy>
+     * @throws ValueTypeException
      */
-    private void buildTree(List<Strategy> items) {
+    private void buildTree(List<Strategy> items) throws ValueTypeException {
 
         m_nodeMap.put(m_root, m_root.getRoot());
-        for (Strategy strategy : items) {
+        for (Iterator<Strategy> iter = items.iterator(); iter.hasNext(); ) {
+            Strategy strategy = iter.next();
             addItem(strategy);
         }
     }
@@ -98,8 +101,9 @@ public class StrategyTreeModel extends DefaultTreeModel implements Serializable 
      * Method addItem.
      *
      * @param item Strategy
+     * @throws ValueTypeException
      */
-    private void addItem(Strategy item) {
+    private void addItem(Strategy item) throws ValueTypeException {
 
         DefaultMutableTreeNode node = new DefaultMutableTreeNode(item);
         m_root.add(node);

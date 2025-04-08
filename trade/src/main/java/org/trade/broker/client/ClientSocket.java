@@ -43,8 +43,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class ClientSocket {
 
-    private static final ConcurrentHashMap<Integer, Broker> m_backTestBroker = new ConcurrentHashMap<>();
-    private final IClientWrapper m_client;
+    private static final ConcurrentHashMap<Integer, Broker> m_backTestBroker = new ConcurrentHashMap<Integer, Broker>();
+    private IClientWrapper m_client = null;
 
     public ClientSocket(IClientWrapper client) {
         m_client = client;
@@ -54,13 +54,14 @@ public class ClientSocket {
      * Method reqHistoricalData.
      *
      * @param reqId             int
-     * @param tradestrategy     com.ib.client.Contract
+     * @param ibContract        com.ib.client.Contract
      * @param endDateTime       String
      * @param durationStr       String
      * @param barSizeSetting    String
      * @param whatToShow        String
      * @param useRTH            int
      * @param formatDateInteger int
+     * @throws BrokerModelException
      */
     public void reqHistoricalData(int reqId, Tradestrategy tradestrategy, String endDateTime, String durationStr,
                                   String barSizeSetting, String whatToShow, int useRTH, int formatDateInteger) throws BrokerModelException {

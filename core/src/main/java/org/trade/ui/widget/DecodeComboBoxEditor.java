@@ -46,7 +46,6 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.io.Serial;
 import java.util.Vector;
 
 /**
@@ -58,7 +57,6 @@ public class DecodeComboBoxEditor extends JComboBox<Decode> implements ComboBoxE
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = -1626795772462262674L;
 
     protected transient Decode originalValue;
@@ -74,7 +72,7 @@ public class DecodeComboBoxEditor extends JComboBox<Decode> implements ComboBoxE
         super(model);
         this.addItemListener(this);
         this.addFocusListener(this);
-        listeners = new Vector<>();
+        listeners = new Vector<ActionListener>();
     }
 
     /**
@@ -96,7 +94,7 @@ public class DecodeComboBoxEditor extends JComboBox<Decode> implements ComboBoxE
      */
     public void setItem(Object anObject) {
         for (int i = 0; i < this.getItemCount(); i++) {
-            Decode d = this.getItemAt(i);
+            Decode d = (Decode) this.getItemAt(i);
             if (d.getCode().equals(((Decode) anObject).getCode())) {
                 setSelectedItem(d);
                 break;
@@ -142,7 +140,7 @@ public class DecodeComboBoxEditor extends JComboBox<Decode> implements ComboBoxE
 
     protected void fireEditingCanceled() {
         for (int i = 0; i < this.getItemCount(); i++) {
-            Decode d = this.getItemAt(i);
+            Decode d = (Decode) this.getItemAt(i);
             if (d.equals(originalValue)) {
                 setSelectedItem(originalValue);
                 break;

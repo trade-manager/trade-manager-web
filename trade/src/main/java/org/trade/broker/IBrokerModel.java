@@ -49,9 +49,9 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public interface IBrokerModel {
 
-    String _brokerTest = "BrokerTest";
+    public final static String _brokerTest = "BrokerTest";
 
-    String _broker = "Broker";
+    public final static String _broker = "Broker";
 
     /**
      * Method addMessageListener.
@@ -90,6 +90,7 @@ public interface IBrokerModel {
      * @param host     String
      * @param port     Integer
      * @param clientId Integer
+     * @throws BrokerModelException
      */
     void onConnect(String host, Integer port, Integer clientId);
 
@@ -102,6 +103,8 @@ public interface IBrokerModel {
 
     /**
      * Method disconnect.
+     *
+     * @throws BrokerModelException
      */
     void onDisconnect();
 
@@ -125,6 +128,7 @@ public interface IBrokerModel {
      *
      * @param subscribe     boolean
      * @param accountNumber String
+     * @throws BrokerModelException
      */
     void onSubscribeAccountUpdates(boolean subscribe, String accountNumber) throws BrokerModelException;
 
@@ -137,6 +141,8 @@ public interface IBrokerModel {
 
     /**
      * Method onReqFinancialAccount.
+     *
+     * @throws BrokerModelException
      */
     void onReqFinancialAccount();
 
@@ -145,21 +151,28 @@ public interface IBrokerModel {
      *
      * @param xml        String
      * @param faDataType int
+     * @throws BrokerModelException
      */
     void onReqReplaceFinancialAccount(int faDataType, String xml) throws BrokerModelException;
 
     /**
      * Method onReqManagedAccount.
+     *
+     * @throws BrokerModelException
      */
     void onReqManagedAccount() throws BrokerModelException;
 
     /**
      * Method onReqAllOpenOrders.
+     *
+     * @throws BrokerModelException
      */
     void onReqAllOpenOrders() throws BrokerModelException;
 
     /**
      * Method onReqOpenOrders.
+     *
+     * @throws BrokerModelException
      */
     void onReqOpenOrders() throws BrokerModelException;
 
@@ -168,14 +181,16 @@ public interface IBrokerModel {
      *
      * @param tradestrategy Tradestrategy
      * @param endDate       ZonedDateTime
+     * @throws BrokerModelException
      */
-    void onBrokerData(Tradestrategy tradestrategy, ZonedDateTime endDate) throws BrokerModelException;
+    public void onBrokerData(Tradestrategy tradestrategy, ZonedDateTime endDate) throws BrokerModelException;
 
     /**
      * Method onReqRealTimeBars.
      *
      * @param contract Contract
      * @param mktData  boolean
+     * @throws BrokerModelException
      */
     void onReqRealTimeBars(Contract contract, boolean mktData) throws BrokerModelException;
 
@@ -185,6 +200,7 @@ public interface IBrokerModel {
      * @param contract        Contract
      * @param genericTicklist String
      * @param snapshot        boolean
+     * @throws BrokerModelException
      */
     void onReqMarketData(Contract contract, String genericTicklist, boolean snapshot) throws BrokerModelException;
 
@@ -192,6 +208,7 @@ public interface IBrokerModel {
      * Method onReqAllExecutions.
      *
      * @param mktOpenDate ZonedDateTime
+     * @throws BrokerModelException
      */
     void onReqAllExecutions(ZonedDateTime mktOpenDate) throws BrokerModelException;
 
@@ -200,6 +217,8 @@ public interface IBrokerModel {
      *
      * @param tradestrategy Tradestrategy
      * @param addOrders     boolean
+     * @throws BrokerModelException
+     * @see IBrokerModel#onReqExecutions(Tradestrategy)
      */
     void onReqExecutions(Tradestrategy tradestrategy, boolean addOrders) throws BrokerModelException;
 
@@ -314,6 +333,7 @@ public interface IBrokerModel {
      * Method onContractDetails.
      *
      * @param contract Contract
+     * @throws BrokerModelException
      */
     void onContractDetails(Contract contract) throws BrokerModelException;
 
@@ -330,6 +350,7 @@ public interface IBrokerModel {
      * @param contract   Contract
      * @param tradeOrder TradeOrder
      * @return TradeOrder
+     * @throws BrokerModelException
      */
     TradeOrder onPlaceOrder(Contract contract, TradeOrder tradeOrder) throws BrokerModelException;
 
@@ -337,6 +358,7 @@ public interface IBrokerModel {
      * Method onCancelOrder.
      *
      * @param tradeOrder TradeOrder
+     * @throws BrokerModelException
      */
     void onCancelOrder(TradeOrder tradeOrder) throws BrokerModelException;
 
@@ -359,6 +381,7 @@ public interface IBrokerModel {
      *
      * @param tradestrategy Tradestrategy
      * @return boolean
+     * @throws BrokerModelException
      */
 
     boolean validateBrokerData(Tradestrategy tradestrategy) throws BrokerModelException;

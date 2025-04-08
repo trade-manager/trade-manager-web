@@ -35,6 +35,8 @@
  */
 package org.trade.core.conversion;
 
+import java.sql.Date;
+
 /**
  * This class converts instances of java.sql.Date to instances of
  * java.lang.String. Conversion is done using the toString() method of the
@@ -72,7 +74,7 @@ public class SQLDateToStringConverter implements IJavaTypeConverter {
      */
     public Object convert(Object valueToConvert) throws IllegalArgumentException {
         if (valueToConvert instanceof java.sql.Date) {
-            return valueToConvert.toString();
+            return ((Date) valueToConvert).toString();
         }
 
         throw new IllegalArgumentException("The source object must be of type: " + getSourceType().getName());

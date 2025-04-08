@@ -48,10 +48,10 @@ public class TagTracker {
      * that this TagTracker has been configured to follow. This is a
      * single-level parent-child relation.
      */
-    private final Hashtable<String, TagTracker> trackers = new Hashtable<>();
+    private final Hashtable<String, TagTracker> trackers = new Hashtable<String, TagTracker>();
 
     // Useful for skipping tag names that are not being tracked.
-    private static final SkippingTagTracker skip = new SkippingTagTracker();
+    private static SkippingTagTracker skip = new SkippingTagTracker();
 
     // default constructor
     public TagTracker() {
@@ -77,7 +77,7 @@ public class TagTracker {
             // if it is not a simple tag name recursively add the tag.
             final String topTagName = tagName.substring(0, slashOffset);
             final String remainderOfTagName = tagName.substring(slashOffset + 1);
-            TagTracker child = trackers.get(topTagName);
+            TagTracker child = (TagTracker) trackers.get(topTagName);
             if (child == null) {
                 // Not currently tracking this tag. Add new tracker.
                 child = new TagTracker();
@@ -96,7 +96,7 @@ public class TagTracker {
     public void startElement(String namespaceURI, String localName, String qName, Attributes attr,
                              Stack<TagTracker> tagStack) {
 
-        if ((null == localName) || (localName.trim().isEmpty())) {
+        if ((null == localName) || (localName.trim().length() == 0)) {
             localName = qName;
         }
         /*
@@ -105,7 +105,7 @@ public class TagTracker {
          * with SAX2. We are simply using the localName as a key to find a
          * possible tracker.
          */
-        final TagTracker tracker = trackers.get(localName);
+        final TagTracker tracker = (TagTracker) trackers.get(localName);
         // Are we tracking this tag name?
 
         if (tracker == null) {
@@ -136,7 +136,7 @@ public class TagTracker {
     public void endElement(String namespaceURI, String localName, String qName, CharArrayWriter contents,
                            Stack<TagTracker> tagStack) throws ParseException {
 
-        if ((null == localName) || (localName.trim().isEmpty())) {
+        if ((null == localName) || (localName.trim().length() == 0)) {
             localName = qName;
         }
         // Send the end event.
@@ -146,7 +146,7 @@ public class TagTracker {
         tagStack.pop();
 
         // Send the reactivate event.
-        final TagTracker activeTracker = tagStack.peek();
+        final TagTracker activeTracker = (TagTracker) tagStack.peek();
         if (activeTracker != null) {
             activeTracker.onReactivate();
         }
@@ -197,7 +197,7 @@ class SkippingTagTracker extends TagTracker {
     public void startElement(String namespaceURI, String localName, String qName, Attributes attr,
                              Stack<TagTracker> tagStack) {
 
-        if ((null == localName) || (localName.trim().isEmpty())) {
+        if ((null == localName) || (localName.trim().length() == 0)) {
             localName = qName;
         }
 
@@ -216,7 +216,7 @@ class SkippingTagTracker extends TagTracker {
 
     public void endElement(String namespaceURI, String localName, String qName, CharArrayWriter contents,
                            Stack<TagTracker> tagStack) {
-        if ((null == localName) || (localName.trim().isEmpty())) {
+        if ((null == localName) || (localName.trim().length() == 0)) {
             localName = qName;
         }
         // Clean up the stack...

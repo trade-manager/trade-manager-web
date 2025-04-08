@@ -37,8 +37,6 @@ package org.trade.core.xml;
 
 import org.trade.core.util.XMLDOMParserWrapper;
 
-import java.nio.charset.Charset;
-
 /**
  * The DOMParserSaveEncoding class extends DOMParser. It also provides the Java
  * Encoding of the XML document by overriding the startDocument method and
@@ -65,11 +63,8 @@ public class DOMParserSaveEncoding extends XMLDOMParserWrapper {
         final String mimeEncoding = getMimeEncoding();
 
         if (mimeEncoding != null) {
-
             if (mimeEncoding.equals("DEFAULT")) {
-
-                //javaEncoding = System.getProperty("file.encoding");
-                javaEncoding = Charset.defaultCharset().displayName();
+                javaEncoding = System.getProperty("file.encoding");
             }
         }
 

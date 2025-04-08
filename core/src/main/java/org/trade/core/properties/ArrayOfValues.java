@@ -41,7 +41,7 @@ package org.trade.core.properties;
  * @author Simon Allen
  */
 public class ArrayOfValues {
-    private final Object[] array;
+    private Object[] array = null;
 
     /**
      * Constructor for ArrayOfValues.

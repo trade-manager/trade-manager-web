@@ -37,7 +37,6 @@ package org.trade.core.exception;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
-import java.io.Serial;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Vector;
@@ -62,21 +61,20 @@ public class NestingException extends Exception {
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = 1692132595046896286L;
 
     // ----- Member variables -----//
-    public String m_exception;
+    public String m_exception = null;
 
-    public String m_seedClassName;
+    public String m_seedClassName = null;
 
-    private NestingException m_nestedException;
+    private NestingException m_nestedException = null;
 
-    private final Vector<ExceptionMessage> m_exceptionMessages = new Vector<>();
+    private Vector<ExceptionMessage> m_exceptionMessages = new Vector<ExceptionMessage>();
 
-    private Vector<ExceptionContext> m_exceptionContexts = new Vector<>();
+    private Vector<ExceptionContext> m_exceptionContexts = new Vector<ExceptionContext>();
 
-    private final Date m_timeStamp = new Date();
+    private Date m_timeStamp = new Date();
 
     private String m_stackTrace = null;
 
@@ -230,7 +228,7 @@ public class NestingException extends Exception {
     }
 
     private void clearContexts() {
-        m_exceptionContexts = new Vector<>(1);
+        m_exceptionContexts = new Vector<ExceptionContext>(1);
     }
 
     /**
@@ -367,7 +365,7 @@ public class NestingException extends Exception {
      * @param code ExceptionCode
      */
     public void removeExceptionMessages(ExceptionCode code) {
-        Vector<ExceptionMessage> remove = new Vector<>();
+        Vector<ExceptionMessage> remove = new Vector<ExceptionMessage>();
         int i;
         int nbrMessages = m_exceptionMessages.size();
         for (i = 0; i < nbrMessages; i++) {
@@ -484,7 +482,7 @@ public class NestingException extends Exception {
      * @return String
      */
     private String captureStackTrace() {
-        String stackTrace;
+        String stackTrace = null;
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         PrintWriter writer = new PrintWriter(out);
 

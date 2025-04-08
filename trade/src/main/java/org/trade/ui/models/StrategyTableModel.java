@@ -43,7 +43,6 @@ import org.trade.core.valuetype.YesNo;
 import org.trade.dictionary.valuetype.DAOStrategyManager;
 import org.trade.persistent.dao.Strategy;
 
-import java.io.Serial;
 import java.util.Vector;
 
 /**
@@ -53,7 +52,6 @@ public class StrategyTableModel extends AspectTableModel {
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = 3087514589731145479L;
 
     private static final String NAME = "Name*";
@@ -103,7 +101,7 @@ public class StrategyTableModel extends AspectTableModel {
         this.clearAll();
         if (!getData().getAspect().isEmpty()) {
             for (final Aspect element : getData().getAspect()) {
-                final Vector<Object> newRow = new Vector<>();
+                final Vector<Object> newRow = new Vector<Object>();
                 getNewRow(newRow, (Strategy) element);
                 rows.add(newRow);
             }
@@ -146,7 +144,7 @@ public class StrategyTableModel extends AspectTableModel {
                 break;
             }
             case 4: {
-                element.setMarketData(Boolean.valueOf(((YesNo) value).getCode()));
+                element.setMarketData(new Boolean(((YesNo) value).getCode()));
                 break;
             }
             default: {
@@ -180,7 +178,7 @@ public class StrategyTableModel extends AspectTableModel {
         final Strategy element = new Strategy();
         getData().getAspect().add(element);
         getData().setDirty(true);
-        final Vector<Object> newRow = new Vector<>();
+        final Vector<Object> newRow = new Vector<Object>();
         getNewRow(newRow, element);
         rows.add(newRow);
         // Tell the listeners a new table has arrived.

@@ -47,7 +47,6 @@ import org.trade.strategy.data.mfi.IMoneyFlowIndexDataset;
 import org.trade.strategy.data.mfi.MoneyFlowIndexItem;
 
 import java.awt.*;
-import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +60,6 @@ public class MoneyFlowIndexDataset extends AbstractXYDataset
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = 3931818830267435673L;
 
     /**
@@ -75,7 +73,7 @@ public class MoneyFlowIndexDataset extends AbstractXYDataset
      * Creates a new instance of <code>OHLCSeriesCollection</code>.
      */
     public MoneyFlowIndexDataset() {
-        this.data = new ArrayList<>();
+        this.data = new ArrayList<IndicatorSeries>();
     }
 
     /**
@@ -211,7 +209,7 @@ public class MoneyFlowIndexDataset extends AbstractXYDataset
      * @return The item count.
      * @throws IllegalArgumentException if <code>series</code> is not in the range <code>0</code> to
      *                                  <code>getSeriesCount() - 1</code>.
-     * @see XYDataset#getItemCount(int)
+     * @see org.jfree.data.xy.XYDataset#getItemCount(int)
      */
     public int getItemCount(int series) {
         // defer argument checking
@@ -242,7 +240,7 @@ public class MoneyFlowIndexDataset extends AbstractXYDataset
      * @param series the series index.
      * @param item   the item index.
      * @return The x-value.
-     * @see XYDataset#getXValue(int, int)
+     * @see org.jfree.data.xy.XYDataset#getXValue(int, int)
      */
     public double getXValue(int series, int item) {
         MoneyFlowIndexSeries s = (MoneyFlowIndexSeries) this.data.get(series);
@@ -257,10 +255,10 @@ public class MoneyFlowIndexDataset extends AbstractXYDataset
      * @param series the series index.
      * @param item   the item index.
      * @return The x-value.
-     * @see XYDataset#getX(int, int)
+     * @see org.jfree.data.xy.XYDataset#getX(int, int)
      */
     public Number getX(int series, int item) {
-        return getXValue(series, item);
+        return new Double(getXValue(series, item));
     }
 
     /**
@@ -269,12 +267,12 @@ public class MoneyFlowIndexDataset extends AbstractXYDataset
      * @param series the series index.
      * @param item   the item index.
      * @return The y-value.
-     * @see XYDataset#getY(int, int)
+     * @see org.jfree.data.xy.XYDataset#getY(int, int)
      */
     public Number getY(int series, int item) {
         MoneyFlowIndexSeries s = (MoneyFlowIndexSeries) this.data.get(series);
         MoneyFlowIndexItem di = (MoneyFlowIndexItem) s.getDataItem(item);
-        return di.getY();
+        return new Double(di.getY());
     }
 
     /**
@@ -283,7 +281,7 @@ public class MoneyFlowIndexDataset extends AbstractXYDataset
      * @param series the series index.
      * @param item   the item index.
      * @return The Money Flow Index.
-     * @see IMoneyFlowIndexDataset
+     * @see org.trade.strategy.data.mfi.IMoneyFlowIndexDataset
      * #getMoneyFlowIndexValue(int, int)
      */
     public double getMoneyFlowIndexValue(int series, int item) {
@@ -298,11 +296,11 @@ public class MoneyFlowIndexDataset extends AbstractXYDataset
      * @param series the series index.
      * @param item   the item index.
      * @return The Pivot.
-     * @see IMoneyFlowIndexDataset
+     * @see org.trade.strategy.data.mfi.IMoneyFlowIndexDataset
      * #getMoneyFlowIndex(int, int)
      */
     public Number getMoneyFlowIndex(int series, int item) {
-        return getMoneyFlowIndexValue(series, item);
+        return new Double(getMoneyFlowIndexValue(series, item));
     }
 
     /**
@@ -315,13 +313,14 @@ public class MoneyFlowIndexDataset extends AbstractXYDataset
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof MoneyFlowIndexDataset that)) {
+        if (!(obj instanceof MoneyFlowIndexDataset)) {
             return false;
         }
+        MoneyFlowIndexDataset that = (MoneyFlowIndexDataset) obj;
         if (!this.xPosition.equals(that.xPosition)) {
             return false;
         }
-        return this.data.equals(that.data);
+        return ObjectUtils.equal(this.data, that.data);
     }
 
     /**
@@ -343,6 +342,8 @@ public class MoneyFlowIndexDataset extends AbstractXYDataset
      * @param source      CandleDataset
      * @param seriesIndex int
      * @param newBar      boolean
+     * @see IIndicatorDataset#updateDataset(CandleDataset,
+     * int)
      */
     public void updateDataset(CandleDataset source, int seriesIndex, boolean newBar) {
         if (source == null) {

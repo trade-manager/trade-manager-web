@@ -47,7 +47,6 @@ import org.trade.strategy.data.heikinashi.IHeikinAshiDataset;
 import org.trade.ui.chart.renderer.HeikinAshiRenderer;
 
 import java.awt.*;
-import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +59,6 @@ public class HeikinAshiDataset extends AbstractXYDataset implements IIndicatorDa
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = 3931818830267435673L;
 
     /**
@@ -74,7 +72,7 @@ public class HeikinAshiDataset extends AbstractXYDataset implements IIndicatorDa
      * Creates a new instance of <code>OHLCSeriesCollection</code>.
      */
     public HeikinAshiDataset() {
-        this.data = new ArrayList<>();
+        this.data = new ArrayList<IndicatorSeries>();
     }
 
     /**
@@ -258,7 +256,7 @@ public class HeikinAshiDataset extends AbstractXYDataset implements IIndicatorDa
      * @return The x-value. * @see org.jfree.data.xy.XYDataset#getX(int, int)
      */
     public Number getX(int series, int item) {
-        return getXValue(series, item);
+        return new Double(getXValue(series, item));
     }
 
     /**
@@ -271,7 +269,7 @@ public class HeikinAshiDataset extends AbstractXYDataset implements IIndicatorDa
     public Number getY(int series, int item) {
         HeikinAshiSeries s = (HeikinAshiSeries) this.data.get(series);
         HeikinAshiItem di = (HeikinAshiItem) s.getDataItem(item);
-        return di.getY();
+        return new Double(di.getY());
     }
 
     /**
@@ -299,7 +297,7 @@ public class HeikinAshiDataset extends AbstractXYDataset implements IIndicatorDa
      * #getOpen(int, int)
      */
     public Number getOpen(int series, int item) {
-        return getOpenValue(series, item);
+        return new Double(getOpenValue(series, item));
     }
 
     /**
@@ -327,7 +325,7 @@ public class HeikinAshiDataset extends AbstractXYDataset implements IIndicatorDa
      * #getClose(int, int)
      */
     public Number getClose(int series, int item) {
-        return getCloseValue(series, item);
+        return new Double(getCloseValue(series, item));
     }
 
     /**
@@ -355,7 +353,7 @@ public class HeikinAshiDataset extends AbstractXYDataset implements IIndicatorDa
      * #getHigh(int, int)
      */
     public Number getHigh(int series, int item) {
-        return getHighValue(series, item);
+        return new Double(getHighValue(series, item));
     }
 
     /**
@@ -383,7 +381,7 @@ public class HeikinAshiDataset extends AbstractXYDataset implements IIndicatorDa
      * int)
      */
     public Number getLow(int series, int item) {
-        return getLowValue(series, item);
+        return new Double(getLowValue(series, item));
     }
 
     /**
@@ -396,13 +394,14 @@ public class HeikinAshiDataset extends AbstractXYDataset implements IIndicatorDa
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof HeikinAshiDataset that)) {
+        if (!(obj instanceof HeikinAshiDataset)) {
             return false;
         }
+        HeikinAshiDataset that = (HeikinAshiDataset) obj;
         if (!this.xPosition.equals(that.xPosition)) {
             return false;
         }
-        return this.data.equals(that.data);
+        return ObjectUtils.equal(this.data, that.data);
     }
 
     /**
@@ -424,6 +423,8 @@ public class HeikinAshiDataset extends AbstractXYDataset implements IIndicatorDa
      * @param source      CandleDataset
      * @param seriesIndex int
      * @param newBar      boolean
+     * @see IIndicatorDataset#updateDataset(CandleDataset,
+     * int)
      */
     public void updateDataset(CandleDataset source, int seriesIndex, boolean newBar) {
         if (source == null) {

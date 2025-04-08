@@ -47,7 +47,6 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.io.Serial;
 import java.util.Vector;
 
 /**
@@ -59,7 +58,6 @@ public class DAODecodeComboBoxEditor extends JComboBox<Decode> implements ComboB
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = -1626795772462262674L;
 
     protected transient DAODecode originalValue;
@@ -74,7 +72,7 @@ public class DAODecodeComboBoxEditor extends JComboBox<Decode> implements ComboB
         super(model);
         this.addItemListener(this);
         this.addFocusListener(this);
-        listeners = new Vector<>();
+        listeners = new Vector<ActionListener>();
     }
 
     /**

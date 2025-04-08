@@ -36,6 +36,7 @@
 package org.trade.ui.tables;
 
 import org.trade.core.util.TradingCalendar;
+import org.trade.core.valuetype.Decode;
 import org.trade.core.valuetype.ValueTypeException;
 import org.trade.dictionary.valuetype.Action;
 import org.trade.dictionary.valuetype.OCAType;
@@ -56,43 +57,45 @@ import org.trade.ui.widget.StringRenderer;
 
 import javax.swing.*;
 import javax.swing.text.MaskFormatter;
-import java.io.Serial;
 import java.text.ParseException;
 import java.util.Calendar;
+import java.util.Vector;
 
 /**
  *
  */
 public class TradeOrderTable extends Table {
 
-    @Serial
     private static final long serialVersionUID = 1132297931453070904L;
+    private final String DATETIMEFORMAT = "HH:mm:ss";
+    private String OCA_MASK = "AAAAAA";
+    private String OCA_VALIDCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
     /**
      * Constructor for TradeOrderTable.
      *
      * @param model TableModel
+     * @throws ValueTypeException
+     * @throws ParseException
      */
     public TradeOrderTable(TableModel model) throws ValueTypeException, ParseException {
         super(model);
 
         DecodeTableEditor actionEditor = new DecodeTableEditor(
-                new JComboBox<>((new Action()).getCodesDecodes()));
+                new JComboBox<Decode>((Vector<Decode>) (new Action()).getCodesDecodes()));
         DecodeTableEditor oCATypeEditor = new DecodeTableEditor(
-                new JComboBox<>((new OCAType()).getCodesDecodes()));
+                new JComboBox<Decode>((Vector<Decode>) (new OCAType()).getCodesDecodes()));
         DecodeTableEditor orderTypeEditor = new DecodeTableEditor(
-                new JComboBox<>((new OrderType()).getCodesDecodes()));
+                new JComboBox<Decode>((Vector<Decode>) (new OrderType()).getCodesDecodes()));
         DecodeTableEditor overrideConstraintsEditor = new DecodeTableEditor(
-                new JComboBox<>((new OverrideConstraints()).getCodesDecodes()));
+                new JComboBox<Decode>((Vector<Decode>) (new OverrideConstraints()).getCodesDecodes()));
         DecodeTableEditor timeInForceEditor = new DecodeTableEditor(
-                new JComboBox<>((new TimeInForce()).getCodesDecodes()));
+                new JComboBox<Decode>((Vector<Decode>) (new TimeInForce()).getCodesDecodes()));
         DecodeTableEditor triggerMethodEditor = new DecodeTableEditor(
-                new JComboBox<>((new TriggerMethod()).getCodesDecodes()));
+                new JComboBox<Decode>((Vector<Decode>) (new TriggerMethod()).getCodesDecodes()));
         DecodeTableEditor orderStatusEditor = new DecodeTableEditor(
-                new JComboBox<>((new OrderStatus()).getCodesDecodes()));
+                new JComboBox<Decode>((Vector<Decode>) (new OrderStatus()).getCodesDecodes()));
 
-        String OCA_MASK = "AAAAAA";
-        String OCA_VALIDCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         StringEditor eString = new StringEditor(new StringField(new MaskFormatter(OCA_MASK), OCA_VALIDCHARS, null));
         StringRenderer rString = new StringRenderer();
         this.setDefaultRenderer(String.class, rString);
@@ -104,7 +107,6 @@ public class TradeOrderTable extends Table {
         this.setDefaultEditor(TimeInForce.class, timeInForceEditor);
         this.setDefaultEditor(TriggerMethod.class, triggerMethodEditor);
         this.setDefaultEditor(OrderStatus.class, orderStatusEditor);
-        String DATETIMEFORMAT = "HH:mm:ss";
         DateRenderer rDate = new DateRenderer(DATETIMEFORMAT);
         DateEditor eDate = new DateEditor(new DateField(DATETIMEFORMAT),
                 new org.trade.core.valuetype.Date(TradingCalendar.getDateTimeNowMarketTimeZone()), DATETIMEFORMAT,

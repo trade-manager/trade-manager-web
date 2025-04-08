@@ -38,7 +38,6 @@ package org.trade.strategy.data.cci;
 import org.jfree.data.ComparableObjectItem;
 import org.trade.strategy.data.base.RegularTimePeriod;
 
-import java.io.Serial;
 import java.math.BigDecimal;
 
 /**
@@ -53,14 +52,13 @@ public class CommodityChannelIndexItem extends ComparableObjectItem {
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = -3888996139640449109L;
 
     /**
      * Creates a new instance of <code>CandleItem</code>.
      *
-     * @param period     the time period.
-     * @param cciAverage BigDecimal
+     * @param period        the time period.
+     * @param movingAverage BigDecimal
      */
     public CommodityChannelIndexItem(RegularTimePeriod period, BigDecimal cciAverage) {
         super(period, new CommodityChannelIndex(cciAverage));
@@ -87,7 +85,7 @@ public class CommodityChannelIndexItem extends ComparableObjectItem {
     /**
      * Set the moving Average value.
      *
-     * @param cciAverage double
+     * @param movingAverage double
      */
     public void setCommodityChannelIndex(double cciAverage) {
         CommodityChannelIndex dataItem = (CommodityChannelIndex) getObject();

@@ -44,7 +44,7 @@ public class LookupService {
     //
     // Private Attributes
     //
-    private static final Vector<ILookupServiceProvider> _providers = new Vector<>();
+    private static Vector<ILookupServiceProvider> _providers = new Vector<ILookupServiceProvider>();
 
     static {
         addLookupServiceProvider(new PropertyFileLookupServiceProvider());
@@ -58,6 +58,7 @@ public class LookupService {
      * @param qualifier  LookupQualifier
      * @param optional   boolean
      * @return ILookup
+     * @throws LookupException
      */
     public static ILookup getLookup(String lookupName, LookupQualifier qualifier, boolean optional)
             throws LookupException {

@@ -36,7 +36,6 @@
 package org.trade.ui.widget;
 
 import javax.swing.*;
-import java.io.Serial;
 
 /**
  *
@@ -45,7 +44,6 @@ public class StringEditor extends DefaultCellEditor {
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = -2681004614247446255L;
 
     /**
@@ -61,7 +59,6 @@ public class StringEditor extends DefaultCellEditor {
             /**
              *
              */
-            @Serial
             private static final long serialVersionUID = 2354896381826003264L;
 
             public void setValue(Object value) {

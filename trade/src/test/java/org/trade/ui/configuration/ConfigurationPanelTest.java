@@ -35,12 +35,7 @@
  */
 package org.trade.ui.configuration;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.TestName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,7 +55,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 /**
- * Some tests for the  DataUtilities class.
+ * Some tests for the {@link DataUtilities} class.
  *
  * @author Simon Allen
  * @version $Revision: 1.0 $
@@ -73,6 +68,8 @@ public class ConfigurationPanelTest {
 
     /**
      * Method setUpBeforeClass.
+     *
+     * @throws java.lang.Exception
      */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
@@ -80,6 +77,8 @@ public class ConfigurationPanelTest {
 
     /**
      * Method setUp.
+     *
+     * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
@@ -88,6 +87,8 @@ public class ConfigurationPanelTest {
 
     /**
      * Method tearDown.
+     *
+     * @throws java.lang.Exception
      */
     @After
     public void tearDown() throws Exception {
@@ -95,6 +96,8 @@ public class ConfigurationPanelTest {
 
     /**
      * Method tearDownAfterClass.
+     *
+     * @throws java.lang.Exception
      */
     @AfterClass
     public static void tearDownAfterClass() throws Exception {
@@ -108,12 +111,12 @@ public class ConfigurationPanelTest {
                     "java.lang.Integer", null);
             CodeValue codeValue = new CodeValue(codeAttribute, "20");
 
-            Vector<Object> parm = new Vector<>();
+            Vector<Object> parm = new Vector<Object>();
             parm.add(codeValue.getCodeValue());
 
             Integer value = (Integer) ClassFactory.getCreateClass(codeValue.getCodeAttribute().getClassName(), parm,
                     this);
-            _log.info("Value is: {}", value);
+            _log.info("Value is: " + value);
             assertEquals("1", 20, value, 0);
         } catch (Exception | AssertionError ex) {
             String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
@@ -130,13 +133,13 @@ public class ConfigurationPanelTest {
                     "java.lang.Boolean", null);
             CodeValue codeValue = new CodeValue(codeAttribute, "true");
 
-            Vector<Object> parm = new Vector<>();
+            Vector<Object> parm = new Vector<Object>();
             parm.add(codeValue.getCodeValue());
 
             Boolean value = (Boolean) ClassFactory.getCreateClass(codeValue.getCodeAttribute().getClassName(), parm,
                     this);
-            _log.info("Value is: {}", value);
-            assertEquals("1", true, value);
+            _log.info("Value is: " + value);
+            assertEquals("1", new Boolean(true), value);
         } catch (Exception | AssertionError ex) {
             String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
             _log.error(msg);
@@ -152,13 +155,13 @@ public class ConfigurationPanelTest {
                     "java.lang.String", null);
             CodeValue codeValue = new CodeValue(codeAttribute, "Simple");
 
-            Vector<Object> parm = new Vector<>();
+            Vector<Object> parm = new Vector<Object>();
             parm.add(codeValue.getCodeValue());
 
             String value = (String) ClassFactory.getCreateClass(codeValue.getCodeAttribute().getClassName(), parm,
                     this);
             assertEquals("1", "Simple", value);
-            _log.info("Value is: {}", value);
+            _log.info("Value is: " + value);
         } catch (Exception | AssertionError ex) {
             String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
             _log.error(msg);
@@ -174,14 +177,14 @@ public class ConfigurationPanelTest {
                     "org.trade.dictionary.valuetype.CalculationType", null);
             CodeValue codeValue = new CodeValue(codeAttribute, CalculationType.LINEAR);
 
-            Vector<Object> parm = new Vector<>();
+            Vector<Object> parm = new Vector<Object>();
             // parm.add(codeValue.getCodeValue());
 
             CalculationType value = (CalculationType) ClassFactory
                     .getCreateClass(codeValue.getCodeAttribute().getClassName(), parm, this);
             value.setValue(CalculationType.LINEAR);
             assertEquals("1", CalculationType.LINEAR, value.getCode());
-            _log.info("Value is: {}", value);
+            _log.info("Value is: " + value);
         } catch (Exception | AssertionError ex) {
             String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
             _log.error(msg);
@@ -195,20 +198,20 @@ public class ConfigurationPanelTest {
 
             final String packageName = "org.trade.strategy.data.";
             Strategy strategy = (Strategy) DAOStrategy.newInstance().getObject();
-            Vector<Object> parm = new Vector<>();
+            Vector<Object> parm = new Vector<Object>();
             parm.add(strategy);
             parm.add("20-SMA");
             parm.add(IndicatorSeries.MovingAverageSeries);
             parm.add("20 Simple Moving Average");
-            parm.add(false);
-            parm.add(0);
-            parm.add(false);
+            parm.add(new Boolean(false));
+            parm.add(new Integer(0));
+            parm.add(new Boolean(false));
             String className = packageName + IndicatorSeries.MovingAverageSeries;
 
             IndicatorSeries value = (IndicatorSeries) ClassFactory.getCreateClass(className, parm, this);
 
-            assertEquals("1", className, value.getClass().getName());
-            _log.info("Value is: {}", value);
+            assertEquals("1", value.getClass().getName(), className);
+            _log.info("Value is: " + value);
         } catch (Exception | AssertionError ex) {
             String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
             _log.error(msg);

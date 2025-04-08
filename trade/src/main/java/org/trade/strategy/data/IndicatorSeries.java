@@ -60,7 +60,6 @@ import org.trade.persistent.dao.CodeValue;
 import org.trade.persistent.dao.Strategy;
 
 import java.awt.*;
-import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -78,10 +77,9 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @DiscriminatorValue("IndicatorSeries")
 public abstract class IndicatorSeries extends ComparableObjectSeries implements Cloneable, Serializable {
 
-    @Serial
     private static final long serialVersionUID = -4985280367851073683L;
 
-    protected final static Logger _log = LoggerFactory.getLogger(IndicatorSeries.class);
+    protected final static Logger _log = LoggerFactory.getLogger(CandleSeries.class);
 
     /*
      * These names must match the names of the classes for that series.
@@ -126,7 +124,7 @@ public abstract class IndicatorSeries extends ComparableObjectSeries implements 
     public IndicatorSeries(String type) {
         super(type, true, false);
         this.type = type;
-        this.version = 0;
+        this.version = new Integer(0);
     }
 
     /**
@@ -143,7 +141,7 @@ public abstract class IndicatorSeries extends ComparableObjectSeries implements 
         this.displaySeries = displaySeries;
         this.seriesRGBColor = seriesRGBColor;
         this.subChart = subChart;
-        this.version = 0;
+        this.version = new Integer(0);
     }
 
     /**
@@ -161,7 +159,7 @@ public abstract class IndicatorSeries extends ComparableObjectSeries implements 
         this.displaySeries = displaySeries;
         this.seriesRGBColor = seriesRGBColor;
         this.subChart = subChart;
-        this.version = 0;
+        this.version = new Integer(0);
     }
 
     /**
@@ -185,7 +183,7 @@ public abstract class IndicatorSeries extends ComparableObjectSeries implements 
         this.displaySeries = displaySeries;
         this.seriesRGBColor = seriesRGBColor;
         this.subChart = subChart;
-        this.version = 0;
+        this.version = new Integer(0);
     }
 
     /**
@@ -382,7 +380,7 @@ public abstract class IndicatorSeries extends ComparableObjectSeries implements 
      * @return Strategy
      */
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_strategy", nullable = false)
+    @JoinColumn(name = "id_strategy", insertable = true, updatable = true, nullable = false)
     public Strategy getStrategy() {
         return this.strategy;
     }
@@ -420,11 +418,12 @@ public abstract class IndicatorSeries extends ComparableObjectSeries implements 
      * Method clone.
      *
      * @return Object
+     * @throws CloneNotSupportedException
      */
     public Object clone() throws CloneNotSupportedException {
 
         IndicatorSeries clone = (IndicatorSeries) super.clone();
-        clone.data = new ArrayList<>();
+        clone.data = new ArrayList<Object>();
         return clone;
     }
 

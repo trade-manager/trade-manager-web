@@ -1,11 +1,6 @@
 package org.trade.strategy.data;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.TestName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,9 +8,7 @@ import org.trade.persistent.dao.Tradestrategy;
 import org.trade.persistent.dao.TradestrategyTest;
 import org.trade.ui.TradeAppLoadConfig;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 public class CandleSeriesTest {
 
@@ -23,10 +16,13 @@ public class CandleSeriesTest {
     @Rule
     public TestName name = new TestName();
 
+    private String symbol = "TEST";
     private Tradestrategy tradestrategy = null;
 
     /**
      * Method setUpBeforeClass.
+     *
+     * @throws java.lang.Exception
      */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
@@ -34,12 +30,13 @@ public class CandleSeriesTest {
 
     /**
      * Method setUp.
+     *
+     * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
         try {
             TradeAppLoadConfig.loadAppProperties();
-            String symbol = "TEST";
             this.tradestrategy = TradestrategyTest.getTestTradestrategy(symbol);
             assertNotNull("1", this.tradestrategy);
         } catch (Exception | AssertionError ex) {
@@ -51,6 +48,8 @@ public class CandleSeriesTest {
 
     /**
      * Method tearDown.
+     *
+     * @throws java.lang.Exception
      */
     @After
     public void tearDown() throws Exception {
@@ -59,6 +58,8 @@ public class CandleSeriesTest {
 
     /**
      * Method tearDownAfterClass.
+     *
+     * @throws java.lang.Exception
      */
     @AfterClass
     public static void tearDownAfterClass() throws Exception {
@@ -71,7 +72,7 @@ public class CandleSeriesTest {
             CandleSeries candleSeries = this.tradestrategy.getStrategyData().getBaseCandleSeries();
             CandleSeries series = (CandleSeries) this.tradestrategy.getStrategyData().getBaseCandleSeries().clone();
             if (candleSeries.equals(series)) {
-                _log.info("CandleSeries: {}", series);
+                _log.info("CandleSeries: " + series.toString());
             }
             assertEquals("1", series, candleSeries);
         } catch (Exception | AssertionError ex) {

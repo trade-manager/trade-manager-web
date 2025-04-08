@@ -35,12 +35,8 @@
  */
 package org.trade.persistent.dao;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.*;
 import org.junit.Rule;
-import org.junit.Test;
 import org.junit.rules.TestName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,8 +47,6 @@ import org.trade.dictionary.valuetype.AccountType;
 import org.trade.dictionary.valuetype.Currency;
 import org.trade.dictionary.valuetype.DAOPortfolio;
 import org.trade.ui.TradeAppLoadConfig;
-
-import java.util.Objects;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
@@ -66,10 +60,12 @@ public class PortfolioTest {
     @Rule
     public TestName name = new TestName();
 
-    private final AspectHome aspectHome = new AspectHome();
+    private AspectHome aspectHome = new AspectHome();
 
     /**
      * Method setUpBeforeClass.
+     *
+     * @throws java.lang.Exception
      */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
@@ -77,6 +73,8 @@ public class PortfolioTest {
 
     /**
      * Method setUp.
+     *
+     * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
@@ -85,6 +83,8 @@ public class PortfolioTest {
 
     /**
      * Method tearDown.
+     *
+     * @throws java.lang.Exception
      */
     @After
     public void tearDown() throws Exception {
@@ -96,6 +96,8 @@ public class PortfolioTest {
 
     /**
      * Method tearDownAfterClass.
+     *
+     * @throws java.lang.Exception
      */
     @AfterClass
     public static void tearDownAfterClass() throws Exception {
@@ -106,7 +108,7 @@ public class PortfolioTest {
 
         try {
             PortfolioHome portfolioHome = new PortfolioHome();
-            Portfolio portfolio = (Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
+            Portfolio portfolio = (Portfolio) DAOPortfolio.newInstance().getObject();
             portfolio = portfolioHome.findByName(portfolio.getName());
             Account account = new Account("Test", "T123456", Currency.USD, AccountType.INDIVIDUAL);
             PortfolioAccount portfolioAccount = new PortfolioAccount(portfolio, account);

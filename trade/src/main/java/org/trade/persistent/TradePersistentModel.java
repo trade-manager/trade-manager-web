@@ -88,20 +88,20 @@ import java.util.List;
  */
 public class TradePersistentModel implements IPersistentModel {
 
-    private final CodeTypeHome m_codeTypeHome;
-    private final ContractHome m_contractHome;
-    private final StrategyHome m_strategyHome;
-    private final TradingdayHome m_tradingdayHome;
-    private final TradeOrderHome m_tradeOrderHome;
-    private final TradeOrderfillHome m_tradeOrderfillHome;
-    private final TradePositionHome m_tradePositionHome;
-    private final TradelogHome m_tradelogHome;
-    private final AccountHome m_accountHome;
-    private final PortfolioHome m_portfolioHome;
-    private final TradestrategyHome m_tradestrategyHome;
-    private final CandleHome m_candleHome;
-    private final AspectHome m_aspectHome;
-    private final RuleHome m_ruleHome;
+    private CodeTypeHome m_codeTypeHome = null;
+    private ContractHome m_contractHome = null;
+    private StrategyHome m_strategyHome = null;
+    private TradingdayHome m_tradingdayHome = null;
+    private TradeOrderHome m_tradeOrderHome = null;
+    private TradeOrderfillHome m_tradeOrderfillHome = null;
+    private TradePositionHome m_tradePositionHome = null;
+    private TradelogHome m_tradelogHome = null;
+    private AccountHome m_accountHome = null;
+    private PortfolioHome m_portfolioHome = null;
+    private TradestrategyHome m_tradestrategyHome = null;
+    private CandleHome m_candleHome = null;
+    private AspectHome m_aspectHome = null;
+    private RuleHome m_ruleHome = null;
 
     private static final int SCALE_5 = 5;
     private static final int SCALE_2 = 2;
@@ -149,7 +149,8 @@ public class TradePersistentModel implements IPersistentModel {
         return instance;
     }
 
-    public Tradingday findTradingdayByOpenCloseDate(final ZonedDateTime openDate, final ZonedDateTime closeDate) {
+    public Tradingday findTradingdayByOpenCloseDate(final ZonedDateTime openDate, final ZonedDateTime closeDate)
+            throws PersistentModelException {
         return m_tradingdayHome.findByOpenCloseDate(openDate, closeDate);
     }
 
@@ -168,7 +169,7 @@ public class TradePersistentModel implements IPersistentModel {
     }
 
     public Contract findContractByUniqueKey(String SECType, String symbol, String exchange, String currency,
-                                            ZonedDateTime expiry) {
+                                            ZonedDateTime expiry) throws PersistentModelException {
         return m_contractHome.findByUniqueKey(SECType, symbol, exchange, currency, expiry);
     }
 
@@ -220,7 +221,9 @@ public class TradePersistentModel implements IPersistentModel {
 
     public boolean existTradestrategyById(final Integer id) {
         Tradestrategy instance = m_tradestrategyHome.findById(id);
-        return null != instance;
+        if (null == instance)
+            return false;
+        return true;
     }
 
     public TradestrategyLite findTradestrategyLiteById(final Integer id) throws PersistentModelException {
@@ -309,7 +312,7 @@ public class TradePersistentModel implements IPersistentModel {
             transientInstance.setStatus(null);
             m_aspectHome.persist(transientInstance);
 
-            Hashtable<Integer, TradePosition> tradePositions = new Hashtable<>();
+            Hashtable<Integer, TradePosition> tradePositions = new Hashtable<Integer, TradePosition>();
             for (TradeOrder tradeOrder : transientInstance.getTradeOrders()) {
                 if (tradeOrder.hasTradePosition())
                     tradePositions.put(tradeOrder.getTradePosition().getId(),
@@ -347,7 +350,7 @@ public class TradePersistentModel implements IPersistentModel {
         return m_tradeOrderHome.findTradeOrderByKey(orderKey);
     }
 
-    public TradeOrderfill findTradeOrderfillByExecId(String execId) {
+    public TradeOrderfill findTradeOrderfillByExecId(String execId) throws PersistentModelException {
         return m_tradeOrderfillHome.findOrderFillByExecId(execId);
     }
 
@@ -410,11 +413,8 @@ public class TradePersistentModel implements IPersistentModel {
     }
 
     public Candle persistCandle(final Candle candle) throws PersistentModelException {
-
         try {
-
             synchronized (candle) {
-
                 if (null == candle.getTradingday().getId()) {
 
                     Tradingday tradingday = this.findTradingdayByOpenCloseDate(candle.getTradingday().getOpen(),
@@ -491,7 +491,7 @@ public class TradePersistentModel implements IPersistentModel {
                 tradeOrder.setStatus(OrderStatus.FILLED);
             }
 
-            Integer tradestrategyId;
+            Integer tradestrategyId = null;
             if (null == tradeOrder.getTradestrategyId()) {
                 tradestrategyId = tradeOrder.getTradestrategy().getId();
                 tradeOrder.setTradestrategyId(this.findTradestrategyLiteById(tradestrategyId));
@@ -503,7 +503,7 @@ public class TradePersistentModel implements IPersistentModel {
              * If the filled qty is > 0 and we have no TradePosition then create
              * one.
              */
-            TradePosition tradePosition;
+            TradePosition tradePosition = null;
             TradestrategyOrders tradestrategyOrders = null;
 
             if (!tradeOrder.hasTradePosition()) {
@@ -655,7 +655,7 @@ public class TradePersistentModel implements IPersistentModel {
                 }
 
                 tradePosition.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
-                this.persistAspect(tradePosition);
+                tradePosition = this.persistAspect(tradePosition);
 
             } else {
                 if (allOrdersCancelled) {
@@ -678,7 +678,7 @@ public class TradePersistentModel implements IPersistentModel {
                 if (CoreUtils.nullSafeComparator(comms.getBigDecimalValue(), tradePosition.getTotalCommission()) == 1) {
                     tradePosition.setTotalCommission(comms.getBigDecimalValue());
                     tradePosition.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
-                    this.persistAspect(tradePosition);
+                    tradePosition = this.persistAspect(tradePosition);
                 }
             }
 
@@ -786,8 +786,8 @@ public class TradePersistentModel implements IPersistentModel {
                  */
                 List<Strategy> items = m_strategyHome.findAll();
                 Aspects aspects = new Aspects();
-                for (Aspect item : items) {
-                    aspects.add(item);
+                for (Object item : items) {
+                    aspects.add((Aspect) item);
                 }
                 aspects.setDirty(false);
                 return aspects;
@@ -798,8 +798,8 @@ public class TradePersistentModel implements IPersistentModel {
                  */
                 List<Portfolio> items = m_portfolioHome.findAll();
                 Aspects aspects = new Aspects();
-                for (Aspect item : items) {
-                    aspects.add(item);
+                for (Object item : items) {
+                    aspects.add((Aspect) item);
                 }
                 aspects.setDirty(false);
                 return aspects;

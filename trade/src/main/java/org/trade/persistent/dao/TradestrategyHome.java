@@ -132,8 +132,8 @@ public class TradestrategyHome {
             List<TradestrategyLite> items = typedQuery.getResultList();
 
             entityManager.getTransaction().commit();
-            if (!items.isEmpty()) {
-                return items.getFirst().getVersion();
+            if (items.size() > 0) {
+                return items.get(0).getVersion();
             }
             return null;
 
@@ -178,7 +178,7 @@ public class TradestrategyHome {
     /**
      * Method findByTradeId.
      *
-     * @param idTradeOrder Integer
+     * @param idTrade Integer
      * @return Tradestrategy
      */
     public synchronized Tradestrategy findByTradeOrderId(Integer idTradeOrder) {
@@ -254,7 +254,7 @@ public class TradestrategyHome {
             CriteriaQuery<Tradestrategy> query = builder.createQuery(Tradestrategy.class);
             Root<Tradestrategy> from = query.from(Tradestrategy.class);
             query.select(from);
-            List<Predicate> predicates = new ArrayList<>();
+            List<Predicate> predicates = new ArrayList<Predicate>();
             if (null != strategyName) {
                 Join<Tradestrategy, Strategy> strategies = from.join("strategy");
                 Predicate predicate = builder.equal(strategies.get("name"), strategyName);
@@ -279,8 +279,8 @@ public class TradestrategyHome {
             TypedQuery<Tradestrategy> typedQuery = entityManager.createQuery(query);
             List<Tradestrategy> items = typedQuery.getResultList();
             entityManager.getTransaction().commit();
-            if (!items.isEmpty()) {
-                return items.getFirst();
+            if (items.size() > 0) {
+                return items.get(0);
             }
             return null;
 
@@ -308,7 +308,7 @@ public class TradestrategyHome {
             CriteriaQuery<Tradestrategy> query = builder.createQuery(Tradestrategy.class);
             Root<Tradestrategy> from = query.from(Tradestrategy.class);
             query.select(from);
-            List<Predicate> predicates = new ArrayList<>();
+            List<Predicate> predicates = new ArrayList<Predicate>();
 
             if (null != fromOpen) {
                 Join<Tradestrategy, Tradingday> tradingday = from.join("tradingday");
@@ -357,7 +357,7 @@ public class TradestrategyHome {
             query.select(from);
             query.orderBy(builder.asc(from.join("contract").get("symbol")));
 
-            List<Predicate> predicates = new ArrayList<>();
+            List<Predicate> predicates = new ArrayList<Predicate>();
 
             if (null != fromOpen) {
                 Join<Tradestrategy, Tradingday> tradingday = from.join("tradingday");

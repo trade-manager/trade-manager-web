@@ -49,7 +49,6 @@ import jakarta.persistence.Transient;
 import jakarta.persistence.Version;
 import org.trade.core.dao.Aspect;
 
-import java.io.Serial;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -67,13 +66,12 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @Table(name = "tradestrategy")
 public class TradestrategyOrders extends Aspect implements Serializable {
 
-    @Serial
     private static final long serialVersionUID = -2181676329258092177L;
 
     private ContractLite contract;
     private String status;
     private ZonedDateTime lastUpdateDate;
-    private List<TradeOrder> tradeOrders = new ArrayList<>(0);
+    private List<TradeOrder> tradeOrders = new ArrayList<TradeOrder>(0);
 
     public TradestrategyOrders() {
     }
@@ -88,6 +86,15 @@ public class TradestrategyOrders extends Aspect implements Serializable {
     @Column(name = "id", unique = true, nullable = false)
     public Integer getId() {
         return this.id;
+    }
+
+    /**
+     * Method setId.
+     *
+     * @param id Integer
+     */
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     /**
@@ -192,7 +199,10 @@ public class TradestrategyOrders extends Aspect implements Serializable {
      * @return boolean
      */
     public boolean hasOpenTradePosition() {
-        return null != getOpenTradePosition();
+        if (null == getOpenTradePosition()) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -206,4 +216,12 @@ public class TradestrategyOrders extends Aspect implements Serializable {
         return this.version;
     }
 
+    /**
+     * Method setVersion.
+     *
+     * @param version Integer
+     */
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
 }

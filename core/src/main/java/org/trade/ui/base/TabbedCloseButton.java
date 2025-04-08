@@ -41,10 +41,10 @@ import org.slf4j.LoggerFactory;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.Serial;
 import java.util.Vector;
 
 /**
@@ -55,13 +55,12 @@ public class TabbedCloseButton extends JPanel {
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = 8543984162821384818L;
     private final static Logger _log = LoggerFactory.getLogger(TabbedCloseButton.class);
     protected MessageNotifier m_notifier = new MessageNotifier();
     private String m_method = null;
     private Object transferObject = null;
-    private final JTabbedPane pane;
+    private JTabbedPane pane = null;
 
     /**
      * Constructor
@@ -85,7 +84,6 @@ public class TabbedCloseButton extends JPanel {
             /**
              *
              */
-            @Serial
             private static final long serialVersionUID = 1L;
 
             public String getText() {
@@ -118,7 +116,6 @@ public class TabbedCloseButton extends JPanel {
         /**
          *
          */
-        @Serial
         private static final long serialVersionUID = -7095664809922973665L;
 
         /**
@@ -133,7 +130,7 @@ public class TabbedCloseButton extends JPanel {
 
                 BaseUIPropertyCodes basePropertyCodes = BaseUIPropertyCodes.newInstance(UICode);
 
-                if (!basePropertyCodes.getImage().isEmpty()) {
+                if (basePropertyCodes.getImage().length() > 0) {
                     setIcon(ImageBuilder.getImageIcon(basePropertyCodes.getImage()));
                 } else {
                     setText(basePropertyCodes.getDisplayName());
@@ -145,7 +142,11 @@ public class TabbedCloseButton extends JPanel {
                 setToolTipText(basePropertyCodes.getToolTip());
                 setEnabled(basePropertyCodes.isEnabled());
                 setMethod(basePropertyCodes.getMethod());
-                this.addActionListener(_ -> buttonPressed());
+                this.addActionListener(new java.awt.event.ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        buttonPressed();
+                    }
+                });
 
                 int size = 17;
                 setPreferredSize(new Dimension(size, size));
@@ -200,14 +201,16 @@ public class TabbedCloseButton extends JPanel {
     private final static MouseListener buttonMouseListener = new MouseAdapter() {
         public void mouseEntered(MouseEvent e) {
             Component component = e.getComponent();
-            if (component instanceof AbstractButton button) {
+            if (component instanceof AbstractButton) {
+                AbstractButton button = (AbstractButton) component;
                 button.setBorderPainted(true);
             }
         }
 
         public void mouseExited(MouseEvent e) {
             Component component = e.getComponent();
-            if (component instanceof AbstractButton button) {
+            if (component instanceof AbstractButton) {
+                AbstractButton button = (AbstractButton) component;
                 button.setBorderPainted(false);
             }
         }
@@ -216,7 +219,7 @@ public class TabbedCloseButton extends JPanel {
     protected void buttonPressed() {
         int i = this.pane.indexOfTabComponent(TabbedCloseButton.this);
         if (i != -1) {
-            this.setTransferObject(i);
+            this.setTransferObject(new Integer(i));
             if (getMethod() != null) {
                 this.messageEvent(getMethod());
             }
@@ -265,7 +268,7 @@ public class TabbedCloseButton extends JPanel {
      * @param selection String
      */
     protected void messageEvent(String selection) {
-        Vector<Object> transferObjects = new Vector<>();
+        Vector<Object> transferObjects = new Vector<Object>();
         if (null != this.transferObject) {
             transferObjects.add(this.transferObject);
         }

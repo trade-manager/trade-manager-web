@@ -43,7 +43,6 @@ import org.trade.core.valuetype.Percent;
 import org.trade.core.valuetype.Quantity;
 import org.trade.persistent.dao.Entrylimit;
 
-import java.io.Serial;
 import java.util.Vector;
 
 /**
@@ -53,7 +52,6 @@ public class EntrylimitTableModel extends AspectTableModel {
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = 3087514589731145479L;
 
     private static final String START_PRICE = "Price From*";
@@ -98,6 +96,7 @@ public class EntrylimitTableModel extends AspectTableModel {
      * Method setData.
      *
      * @param data Aspects
+     * @throws Exception
      */
     public void setData(Aspects data) throws Exception {
 
@@ -106,7 +105,7 @@ public class EntrylimitTableModel extends AspectTableModel {
         if (!getData().getAspect().isEmpty()) {
 
             for (final Aspect element : getData().getAspect()) {
-                final Vector<Object> newRow = new Vector<>();
+                final Vector<Object> newRow = new Vector<Object>();
                 getNewRow(newRow, (Entrylimit) element);
                 rows.add(newRow);
             }
@@ -191,7 +190,7 @@ public class EntrylimitTableModel extends AspectTableModel {
         final Entrylimit element = new Entrylimit();
         getData().getAspect().add(element);
         getData().setDirty(true);
-        final Vector<Object> newRow = new Vector<>();
+        final Vector<Object> newRow = new Vector<Object>();
         getNewRow(newRow, element);
         rows.add(newRow);
         // Tell the listeners a new table has arrived.

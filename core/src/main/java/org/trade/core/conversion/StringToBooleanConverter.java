@@ -83,17 +83,17 @@ public class StringToBooleanConverter extends StringToObjectConverter {
      * in the correct format
      */
     protected Object getConvertedString(String aString) throws IllegalArgumentException {
-        if (aString.equalsIgnoreCase("true")) {
+        if (aString.toLowerCase().equals("true")) {
             return Boolean.TRUE;
-        } else if (aString.equalsIgnoreCase("false")) {
+        } else if (aString.toLowerCase().equals("false")) {
             return Boolean.FALSE;
         }
 
         // Suuport integer representation of a boolean
         try {
-            int iVal = Integer.parseInt(aString);
+            Integer iVal = new Integer(aString);
 
-            if (iVal == 0) {
+            if (iVal.intValue() == 0) {
                 return Boolean.FALSE;
             } else {
                 return Boolean.TRUE;

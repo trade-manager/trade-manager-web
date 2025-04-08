@@ -44,7 +44,6 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.PlainDocument;
 import java.awt.*;
-import java.io.Serial;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Hashtable;
@@ -58,13 +57,12 @@ public class DateField extends JTextField {
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = -6932225666197539617L;
 
-    private static final Hashtable<Integer, Character> editMask = new Hashtable<>();
+    private static Hashtable<Integer, Character> editMask = new Hashtable<Integer, Character>();
 
-    private final SimpleDateFormat dateFormat;
-    private final Color originalColor;
+    private SimpleDateFormat dateFormat = null;
+    private Color originalColor = null;
 
     /**
      * Constructor for DateField.
@@ -86,7 +84,8 @@ public class DateField extends JTextField {
      * @return Document
      */
     protected Document createDefaultModel() {
-        return new DateDocument();
+        DateDocument doc = new DateDocument();
+        return doc;
     }
 
     /**
@@ -139,7 +138,7 @@ public class DateField extends JTextField {
         if (isValid) {
             String dateText = this.getText().trim();
 
-            if (!dateText.isEmpty()) {
+            if (dateText.length() > 0) {
                 try {
                     dateFormat.parse(dateText);
                     this.setBackground(originalColor);
@@ -148,6 +147,8 @@ public class DateField extends JTextField {
 
                     isValid = false;
                 }
+            } else {
+                isValid = true;
             }
         }
 
@@ -157,11 +158,10 @@ public class DateField extends JTextField {
     /**
      *
      */
-    static class DateDocument extends PlainDocument {
+    class DateDocument extends PlainDocument {
         /**
          *
          */
-        @Serial
         private static final long serialVersionUID = -498598784381540618L;
 
         /**
@@ -170,6 +170,7 @@ public class DateField extends JTextField {
          * @param offs int
          * @param str  String
          * @param a    AttributeSet
+         * @throws BadLocationException
          * @see javax.swing.text.Document#insertString(int, String,
          * AttributeSet)
          */
@@ -179,7 +180,7 @@ public class DateField extends JTextField {
                 char[] maskChars = str.toCharArray();
 
                 for (int i = 0; i < maskChars.length; i++) {
-                    editMask.put(i, maskChars[i]);
+                    editMask.put(new Integer(i), new Character(maskChars[i]));
                 }
             }
             String mask2 = null;
@@ -196,11 +197,12 @@ public class DateField extends JTextField {
             if (str != null) {
                 if (!(editMask.isEmpty())) {
 
-                    Character selected = editMask.get(offs);
+                    Character selected = editMask.get(new Integer(offs));
 
                     if (selected != null) {
-                        if (!Character.isLetter(selected)) {
-                            str = selected + str;
+                        if (Character.isLetter(selected.charValue())) {
+                        } else {
+                            str = selected.charValue() + str;
                         }
                     } else {
                         return;
@@ -215,10 +217,10 @@ public class DateField extends JTextField {
             for (int i = 0; i < upper.length; i++) {
                 upper[i] = Character.toUpperCase(upper[i]);
 
-                Character selected = editMask.get(offs + i);
+                Character selected = editMask.get(new Integer(offs + i));
 
                 if (selected != null) {
-                    if (Character.isLetter(selected)) {
+                    if (Character.isLetter(selected.charValue())) {
                         if (!(Character.isDigit(upper[i]))) {
                             return;
                         }

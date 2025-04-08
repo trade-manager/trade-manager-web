@@ -257,7 +257,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
 
     @Override
     public Integer getNextRequestId() {
-        return reqId.incrementAndGet();
+        return new Integer(reqId.incrementAndGet());
     }
 
     @Override
@@ -764,7 +764,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
 
                     _log.debug("Order Placed Key: " + tradeOrder.getOrderKey());
                     com.ib.client.Contract IBContract = TWSBrokerModel.getIBContract(contract);
-                    Order IBOrder = TWSBrokerModel.getIBOrder(tradeOrder);
+                    com.ib.client.Order IBOrder = TWSBrokerModel.getIBOrder(tradeOrder);
 
                     // Log to debug comment out for performance.
                     logContract(IBContract);
@@ -1494,7 +1494,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
 
                 synchronized (value) {
 
-                    if (!m_marketDataRequests.containsKey(getReqId()))
+                    if (!m_marketDataRequests.containsKey(new Integer(getReqId())))
                         return;
 
                     switch (tickType) {
@@ -1894,7 +1894,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
 
     }
 
-    private static boolean updateTradeOrder(Order ibOrder, OrderState ibOrderState,
+    private static boolean updateTradeOrder(com.ib.client.Order ibOrder, com.ib.client.OrderState ibOrderState,
                                             TradeOrder order) {
 
         boolean changed = false;
@@ -2036,7 +2036,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
                     changed = true;
                 }
             }
-            Integer overridePercentageConstraints = (ibOrder.overridePercentageConstraints() ? 1 : 0);
+            Integer overridePercentageConstraints = new Integer((ibOrder.overridePercentageConstraints() ? 1 : 0));
             if (CoreUtils.nullSafeComparator(order.getOverrideConstraints(), overridePercentageConstraints) != 0) {
                 order.setOverrideConstraints(overridePercentageConstraints);
                 changed = true;
@@ -2214,8 +2214,8 @@ public class TWSBrokerService extends AbstractBrokerModel {
                 changed = true;
             }
             if (CoreUtils.nullSafeComparator(transientContract.getUnderConId(),
-                    contractDetails.underConid()) != 0) {
-                transientContract.setUnderConId(contractDetails.underConid());
+                    new Integer(contractDetails.underConid())) != 0) {
+                transientContract.setUnderConId(new Integer(contractDetails.underConid()));
                 changed = true;
             }
             if (CoreUtils.nullSafeComparator(transientContract.getValidExchanges(),
@@ -2233,7 +2233,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
         return changed;
     }
 
-    private static void populateTradeOrderfill(Execution execution, TradeOrderfill tradeOrderfill)
+    private static void populateTradeOrderfill(com.ib.client.Execution execution, TradeOrderfill tradeOrderfill)
             throws ParseException, IOException {
 
         ZonedDateTime date = TradingCalendar.getZonedDateTimeFromDateTimeString(execution.time().replaceAll("\\s", ""),
@@ -2277,7 +2277,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
                 + " lastFillPrice: " + lastFillPrice + " clientId: " + clientId + " whyHeld: " + whyHeld);
     }
 
-    private static void logTradeOrder(Order order) {
+    private static void logTradeOrder(com.ib.client.Order order) {
 
         _log.debug("OrderKey: " + +order.orderId() + " ClientId: " + order.clientId() + " PermId: " + order.permId()
                 + " Action: " + order.action() + " TotalQuantity: " + order.totalQuantity() + " OrderType: "
@@ -2315,20 +2315,20 @@ public class TWSBrokerService extends AbstractBrokerModel {
                 + " PriceMagnifier: " + contractDetails.priceMagnifier());
     }
 
-    private static void logOrderState(OrderState orderState) {
+    private static void logOrderState(com.ib.client.OrderState orderState) {
         _log.debug("Status: " + orderState.status() + " Comms Amt: " + orderState.commission() + " Comms Currency: "
                 + orderState.commissionCurrency() + " Warning txt: " + orderState.warningText() + " Init Margin: "
                 + orderState.initMargin() + " Maint Margin: " + orderState.maintMargin() + " Min Comms: "
                 + orderState.minCommission() + " Max Comms: " + orderState.maxCommission());
     }
 
-    private static void logExecution(Execution execution) {
+    private static void logExecution(com.ib.client.Execution execution) {
         _log.debug("execDetails OrderId: " + execution.orderId() + " ClientId: " + execution.clientId() + " PermId: "
                 + execution.permId() + " ExecId: " + execution.execId() + " Time: " + execution.time() + " CumQty: "
                 + execution.cumQty());
     }
 
-    private static void logCommissionReport(CommissionReport commissionReport) {
+    private static void logCommissionReport(com.ib.client.CommissionReport commissionReport) {
         _log.debug("execDetails ExecId: " + commissionReport.m_execId + " Commission: " + commissionReport.m_commission
                 + " Currency: " + commissionReport.m_currency + " RealizedPNL: " + commissionReport.m_realizedPNL
                 + " yieldRedemptionDate: " + commissionReport.m_yieldRedemptionDate + " Yield: "

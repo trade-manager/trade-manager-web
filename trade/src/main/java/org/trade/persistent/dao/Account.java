@@ -53,7 +53,6 @@ import org.trade.core.util.TradingCalendar;
 import org.trade.dictionary.valuetype.AccountType;
 import org.trade.dictionary.valuetype.Currency;
 
-import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
@@ -77,7 +76,6 @@ public class Account extends Aspect implements Serializable, Cloneable {
      *
      */
 
-    @Serial
     private static final long serialVersionUID = 5891080561163346464L;
 
     @NotNull
@@ -96,7 +94,7 @@ public class Account extends Aspect implements Serializable, Cloneable {
     private BigDecimal realizedPnL = new BigDecimal(0);
     private BigDecimal unrealizedPnL = new BigDecimal(0);
     private ZonedDateTime lastUpdateDate;
-    private List<PortfolioAccount> portfolioAccounts = new ArrayList<>(0);
+    private List<PortfolioAccount> portfolioAccounts = new ArrayList<PortfolioAccount>(0);
 
     public Account() {
         this.accountType = AccountType.INDIVIDUAL;
@@ -111,6 +109,7 @@ public class Account extends Aspect implements Serializable, Cloneable {
      * @param accountNumber String
      * @param currency      String
      * @param accountType   String
+     * @param isDefault     Boolean
      */
     public Account(String name, String accountNumber, String currency, String accountType) {
         this.accountNumber = accountNumber;
@@ -132,6 +131,8 @@ public class Account extends Aspect implements Serializable, Cloneable {
      * @param grossPositionValue BigDecimal
      * @param realizedPnL        BigDecimal
      * @param unrealizedPnL      BigDecimal
+     * @param isDefault          Boolean
+     * @param tradestrategies    List<Tradestrategy>
      */
     public Account(String accountNumber, String name, String accountType, BigDecimal availableFunds,
                    BigDecimal buyingPower, BigDecimal cashBalance, String currency, BigDecimal grossPositionValue,
@@ -159,6 +160,15 @@ public class Account extends Aspect implements Serializable, Cloneable {
     @Column(name = "id", unique = true, nullable = false)
     public Integer getId() {
         return this.id;
+    }
+
+    /**
+     * Method setId.
+     *
+     * @param idAccount Integer
+     */
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     /**
@@ -223,7 +233,7 @@ public class Account extends Aspect implements Serializable, Cloneable {
      *
      * @return String
      */
-    @Column(name = "alias", unique = true, length = 45)
+    @Column(name = "alias", unique = true, nullable = true, length = 45)
     public String getAlias() {
         return this.alias;
     }
@@ -416,6 +426,15 @@ public class Account extends Aspect implements Serializable, Cloneable {
     }
 
     /**
+     * Method setVersion.
+     *
+     * @param version Integer
+     */
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
+
+    /**
      * Method getPortfolioAccounts.
      *
      * @return List<PortfolioAccounts>
@@ -428,7 +447,7 @@ public class Account extends Aspect implements Serializable, Cloneable {
     /**
      * Method setPortfolioAccounts.
      *
-     * @param portfolioAccounts List<CodeAttribute>
+     * @param codeAttributes List<CodeAttribute>
      */
     public void setPortfolioAccounts(List<PortfolioAccount> portfolioAccounts) {
         this.portfolioAccounts = portfolioAccounts;
@@ -452,10 +471,12 @@ public class Account extends Aspect implements Serializable, Cloneable {
      * Method clone.
      *
      * @return Object
+     * @throws CloneNotSupportedException
      */
     public Object clone() throws CloneNotSupportedException {
 
-        return super.clone();
+        Account account = (Account) super.clone();
+        return account;
     }
 
     /**

@@ -37,8 +37,9 @@ package org.trade.ui.base;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ContainerEvent;
-import java.io.Serial;
 import java.util.Vector;
 
 /**
@@ -49,7 +50,6 @@ public class BasePanelMenu extends JPanel {
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = -9043085427010337514L;
 
     private static JFrame frame = null;
@@ -83,10 +83,10 @@ public class BasePanelMenu extends JPanel {
     protected JMenuItem menuItemContents = new JMenuItem();
     protected JMenuItem menuItemAboutHelp = new JMenuItem();
 
-    protected BaseButton saveButton;
-    protected BaseButton openFileButton;
-    protected BaseButton helpButton;
-    protected BaseButton printButton;
+    protected BaseButton saveButton = null;
+    protected BaseButton openFileButton = null;
+    protected BaseButton helpButton = null;
+    protected BaseButton printButton = null;
 
     protected MessageNotifier m_notifier = new MessageNotifier();
 
@@ -142,17 +142,33 @@ public class BasePanelMenu extends JPanel {
         viewMenu.setMnemonic('A');
 
         openFileButton = new BaseButton(null, BaseUIPropertyCodes.OPEN_FILE);
-        openFileButton.addActionListener(_ -> messageEvent(openFileButton.getMethod()));
+        openFileButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                messageEvent(openFileButton.getMethod());
+            }
+        });
         buttonPanel.add(openFileButton, null);
         saveButton = new BaseButton(null, BaseUIPropertyCodes.SAVE);
-        saveButton.addActionListener(_ -> messageEvent(saveButton.getMethod()));
+        saveButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                messageEvent(saveButton.getMethod());
+            }
+        });
         buttonPanel.add(saveButton, null);
 
         helpButton = new BaseButton(null, BaseUIPropertyCodes.HELP);
-        helpButton.addActionListener(_ -> messageEvent(helpButton.getMethod()));
+        helpButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                messageEvent(helpButton.getMethod());
+            }
+        });
         buttonPanel.add(helpButton, null);
         printButton = new BaseButton(null, BaseUIPropertyCodes.PRINT);
-        printButton.addActionListener(_ -> messageEvent(printButton.getMethod()));
+        printButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                messageEvent(printButton.getMethod());
+            }
+        });
         buttonPanel.add(printButton, null);
 
         menuBar.add(fileMenu);
@@ -161,40 +177,108 @@ public class BasePanelMenu extends JPanel {
         menuBar.add(windowMenu);
         menuBar.add(helpMenu);
         final BaseMenuItem menuItemNew = new BaseMenuItem(null, BaseUIPropertyCodes.NEW);
-        menuItemNew.addActionListener(_ -> messageEvent(menuItemNew.getMethod()));
+        menuItemNew.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                messageEvent(menuItemNew.getMethod());
+            }
+        });
         final BaseMenuItem menuItemOpen = new BaseMenuItem(null, BaseUIPropertyCodes.OPEN_FILE);
-        menuItemOpen.addActionListener(_ -> messageEvent(menuItemOpen.getMethod()));
+        menuItemOpen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                messageEvent(menuItemOpen.getMethod());
+            }
+        });
         final BaseMenuItem menuItemSave = new BaseMenuItem(null, BaseUIPropertyCodes.SAVE);
-        menuItemSave.addActionListener(_ -> messageEvent(menuItemSave.getMethod()));
+        menuItemSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                messageEvent(menuItemSave.getMethod());
+            }
+        });
         final BaseMenuItem menuItemSaveAs = new BaseMenuItem(null, BaseUIPropertyCodes.SAVE_AS);
-        menuItemSaveAs.addActionListener(_ -> messageEvent(menuItemSaveAs.getMethod()));
+        menuItemSaveAs.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                messageEvent(menuItemSaveAs.getMethod());
+            }
+        });
         final BaseMenuItem menuItemPrint = new BaseMenuItem(null, BaseUIPropertyCodes.PRINT);
-        menuItemPrint.addActionListener(_ -> messageEvent(menuItemPrint.getMethod()));
+        menuItemPrint.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                messageEvent(menuItemPrint.getMethod());
+            }
+        });
         final BaseMenuItem menuItemPrintPreview = new BaseMenuItem(null, BaseUIPropertyCodes.PRINT_PREVIEW);
-        menuItemPrintPreview.addActionListener(_ -> messageEvent(menuItemPrintPreview.getMethod()));
+        menuItemPrintPreview.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                messageEvent(menuItemPrintPreview.getMethod());
+            }
+        });
         final BaseMenuItem menuItemPrintSetUp = new BaseMenuItem(null, BaseUIPropertyCodes.PRINT_OPTIONS);
-        menuItemPrintSetUp.addActionListener(_ -> messageEvent(menuItemPrintSetUp.getMethod()));
+        menuItemPrintSetUp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                messageEvent(menuItemPrintSetUp.getMethod());
+            }
+        });
         final BaseMenuItem menuItemExit = new BaseMenuItem(null, BaseUIPropertyCodes.EXIT);
-        menuItemExit.addActionListener(_ -> messageEvent(menuItemExit.getMethod()));
+        menuItemExit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                messageEvent(menuItemExit.getMethod());
+            }
+        });
         final BaseMenuItem menuItemUndo = new BaseMenuItem(null, BaseUIPropertyCodes.UNDO);
-        menuItemUndo.addActionListener(_ -> messageEvent(menuItemUndo.getMethod()));
+        menuItemUndo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                messageEvent(menuItemUndo.getMethod());
+            }
+        });
         final BaseMenuItem menuItemRedo = new BaseMenuItem(null, BaseUIPropertyCodes.REDO);
-        menuItemRedo.addActionListener(_ -> messageEvent(menuItemRedo.getMethod()));
+        menuItemRedo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                messageEvent(menuItemRedo.getMethod());
+            }
+        });
         final BaseMenuItem menuItemCut = new BaseMenuItem(null, BaseUIPropertyCodes.CUT);
-        menuItemCut.addActionListener(_ -> messageEvent(menuItemCut.getMethod()));
+        menuItemCut.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                messageEvent(menuItemCut.getMethod());
+            }
+        });
         final BaseMenuItem menuItemCopy = new BaseMenuItem(null, BaseUIPropertyCodes.COPY);
-        menuItemCopy.addActionListener(_ -> messageEvent(menuItemCopy.getMethod()));
+        menuItemCopy.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                messageEvent(menuItemCopy.getMethod());
+            }
+        });
         final BaseMenuItem menuItemPaste = new BaseMenuItem(null, BaseUIPropertyCodes.PASTE);
-        menuItemPaste.addActionListener(_ -> messageEvent(menuItemPaste.getMethod()));
+        menuItemPaste.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                messageEvent(menuItemPaste.getMethod());
+            }
+        });
         final BaseMenuItem menuItemFind = new BaseMenuItem(null, BaseUIPropertyCodes.FIND);
-        menuItemFind.addActionListener(_ -> messageEvent(menuItemFind.getMethod()));
+        menuItemFind.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                messageEvent(menuItemFind.getMethod());
+            }
+        });
 
         final BaseMenuItem menuItemReplace = new BaseMenuItem(null, BaseUIPropertyCodes.REPLACE);
-        menuItemReplace.addActionListener(_ -> messageEvent(menuItemReplace.getMethod()));
+        menuItemReplace.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                messageEvent(menuItemReplace.getMethod());
+            }
+        });
         final BaseMenuItem menuItemContents = new BaseMenuItem(null, BaseUIPropertyCodes.CONTENTS);
-        menuItemContents.addActionListener(_ -> messageEvent(menuItemContents.getMethod()));
+        menuItemContents.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                messageEvent(menuItemContents.getMethod());
+            }
+        });
         final BaseMenuItem menuItemAboutHelp = new BaseMenuItem(null, BaseUIPropertyCodes.ABOUT);
-        menuItemAboutHelp.addActionListener(_ -> messageEvent(menuItemAboutHelp.getMethod()));
+        menuItemAboutHelp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                messageEvent(menuItemAboutHelp.getMethod());
+            }
+        });
         menuItemUtils.setText("Utils");
         menuItemUtils.setEnabled(false);
         fileMenu.add(menuItemNew);
@@ -251,6 +335,8 @@ public class BasePanelMenu extends JPanel {
      * addMessageListener (IMessageListener listener)
      *
      * @param listener IMessageListener
+     * @throws *
+     * @see
      */
     public void addMessageListener(IMessageListener listener) {
         m_notifier.add(listener);
@@ -260,6 +346,8 @@ public class BasePanelMenu extends JPanel {
      * removeMessageListener (IMessageListener listener)
      *
      * @param listener IMessageListener
+     * @throws *
+     * @see
      */
     public void removeMessageListener(IMessageListener listener) {
         m_notifier.remove(listener);
@@ -285,6 +373,9 @@ public class BasePanelMenu extends JPanel {
 
     /**
      * jPanelToolPanel_componentChanged(ContainerEvent e)
+     *
+     * @throws *
+     * @see
      */
     private void jPanelToolPanel_componentChanged() {
         if (getFrame() != null) {
@@ -296,15 +387,19 @@ public class BasePanelMenu extends JPanel {
      * messageEvent(String selection)
      *
      * @param selection String
+     * @throws *
+     * @see
      */
     public void messageEvent(String selection) {
-        m_notifier.notifyEvent(new MessageEvent(selection), new Vector<>());
+        m_notifier.notifyEvent(new MessageEvent(selection), new Vector<Object>());
     }
 
     /**
      * messageEvent(String selection)
      *
      * @param enable boolean
+     * @throws *
+     * @see
      */
     public void enableSave(boolean enable) {
         menuItemSave.setEnabled(enable);

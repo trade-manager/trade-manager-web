@@ -35,12 +35,8 @@
  */
 package org.trade.persistent.dao;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.*;
 import org.junit.Rule;
-import org.junit.Test;
 import org.junit.rules.TestName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,6 +55,8 @@ public class CodeTypeTest {
 
     /**
      * Method setUpBeforeClass.
+     *
+     * @throws java.lang.Exception
      */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
@@ -66,6 +64,8 @@ public class CodeTypeTest {
 
     /**
      * Method setUp.
+     *
+     * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
@@ -73,6 +73,8 @@ public class CodeTypeTest {
 
     /**
      * Method tearDown.
+     *
+     * @throws java.lang.Exception
      */
     @After
     public void tearDown() throws Exception {
@@ -80,6 +82,8 @@ public class CodeTypeTest {
 
     /**
      * Method tearDownAfterClass.
+     *
+     * @throws java.lang.Exception
      */
     @AfterClass
     public static void tearDownAfterClass() throws Exception {
@@ -92,10 +96,10 @@ public class CodeTypeTest {
             CodeTypeHome codeTypeHome = new CodeTypeHome();
             CodeType codeType = codeTypeHome.findByName("MovingAverage");
             assertNotNull("1", codeType);
-            _log.info("CodeType id: {}", codeType.getId());
+            _log.info("CodeType id: " + codeType.getId());
             CodeValue codeValue = codeTypeHome.findByAttributeName(codeType.getName(), "Length");
             assertNotNull("2", codeValue);
-            _log.info("CodeValue id: {}", codeValue.getId());
+            _log.info("CodeValue id: " + codeValue.getId());
         } catch (Exception | AssertionError ex) {
             String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
             _log.error(msg);

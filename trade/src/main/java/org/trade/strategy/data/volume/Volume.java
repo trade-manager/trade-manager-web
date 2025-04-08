@@ -35,8 +35,6 @@
  */
 package org.trade.strategy.data.volume;
 
-import java.io.Serial;
-
 /**
  *
  */
@@ -45,7 +43,6 @@ public class Volume implements java.io.Serializable {
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = 7644763985378994305L;
 
     private Long volume;

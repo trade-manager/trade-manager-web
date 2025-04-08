@@ -46,7 +46,6 @@ import org.trade.strategy.data.base.RegularTimePeriod;
 import org.trade.strategy.data.candle.CandleItem;
 import org.trade.strategy.data.stochasticoscillator.StochasticOscillatorItem;
 
-import java.io.Serial;
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -121,7 +120,6 @@ import java.util.LinkedList;
 @DiscriminatorValue("StochasticOscillatorSeries")
 public class StochasticOscillatorSeries extends IndicatorSeries {
 
-    @Serial
     private static final long serialVersionUID = 20183087035446657L;
 
     public static final String LENGTH = "Length";
@@ -139,9 +137,9 @@ public class StochasticOscillatorSeries extends IndicatorSeries {
      */
     private double sumFullKRValues = 0.0;
     private double sumFullDValues = 0.0;
-    private LinkedList<Double> yyValues = new LinkedList<>();
-    private LinkedList<Double> fullKRValues = new LinkedList<>();
-    private LinkedList<Double> fullDValues = new LinkedList<>();
+    private LinkedList<Double> yyValues = new LinkedList<Double>();
+    private LinkedList<Double> fullKRValues = new LinkedList<Double>();
+    private LinkedList<Double> fullDValues = new LinkedList<Double>();
 
     /**
      * Creates a new empty series. By default, items added to the series will be
@@ -172,7 +170,7 @@ public class StochasticOscillatorSeries extends IndicatorSeries {
      * @param chartRGBColor  Integer
      * @param subChart       Boolean
      * @param length         Integer
-     * @param kSmoothing     Integer
+     * @param smoothing      Integer
      * @param percentD       Integer
      */
     public StochasticOscillatorSeries(Strategy strategy, String name, String type, String description,
@@ -192,12 +190,13 @@ public class StochasticOscillatorSeries extends IndicatorSeries {
      * Method clone.
      *
      * @return Object
+     * @throws CloneNotSupportedException
      */
     public Object clone() throws CloneNotSupportedException {
         StochasticOscillatorSeries clone = (StochasticOscillatorSeries) super.clone();
-        clone.yyValues = new LinkedList<>();
-        clone.fullKRValues = new LinkedList<>();
-        clone.fullDValues = new LinkedList<>();
+        clone.yyValues = new LinkedList<Double>();
+        clone.fullKRValues = new LinkedList<Double>();
+        clone.fullDValues = new LinkedList<Double>();
         return clone;
     }
 
@@ -544,7 +543,8 @@ public class StochasticOscillatorSeries extends IndicatorSeries {
     public void printSeries() {
         for (int i = 0; i < this.getItemCount(); i++) {
             StochasticOscillatorItem dataItem = (StochasticOscillatorItem) this.getDataItem(i);
-            _log.debug("Type: {} Time: {} Value: {}", this.getType(), dataItem.getPeriod().getStart(), dataItem.getStochasticOscillator());
+            _log.debug("Type: " + this.getType() + " Time: " + dataItem.getPeriod().getStart() + " Value: "
+                    + dataItem.getStochasticOscillator());
         }
     }
 }

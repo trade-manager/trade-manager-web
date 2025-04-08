@@ -61,6 +61,9 @@ public class CArrowImage extends BufferedImage {
 
     public static final int ARROW_RIGHT = 3;
 
+    // Member variables...
+    private GeneralPath _pathArrow = new GeneralPath();
+
     // Constructor...
 
     /**
@@ -83,7 +86,7 @@ public class CArrowImage extends BufferedImage {
         super(nWidth, nHeight, TYPE_INT_ARGB_PRE); // Set the width, height and
         // image type
 
-        Map<Key, Object> map = new HashMap<>();
+        Map<Key, Object> map = new HashMap<Key, Object>();
 
         map.put(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         map.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
@@ -103,8 +106,6 @@ public class CArrowImage extends BufferedImage {
         float h12 = h / 2;
         float h23 = (h * 2) / 3;
 
-        // Member variables...
-        GeneralPath _pathArrow = new GeneralPath();
         switch (nArrowDirection) {
 
             case ARROW_UP:

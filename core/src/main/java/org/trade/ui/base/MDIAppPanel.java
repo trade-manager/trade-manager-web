@@ -47,7 +47,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyVetoException;
 import java.beans.VetoableChangeListener;
-import java.io.Serial;
 
 /**
  * @author Simon Allen
@@ -58,7 +57,6 @@ public abstract class MDIAppPanel extends BasePanel
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = 8405644422808736326L;
 
     private final static Logger _log = LoggerFactory.getLogger(MDIAppPanel.class);
@@ -66,13 +64,13 @@ public abstract class MDIAppPanel extends BasePanel
     private final ExtendedDesktopPane m_desktopPane = new ExtendedDesktopPane();
 
     protected JInternalFrame m_internalFrame = null;
-    private final JPanel m_menuPanel = new JPanel();
+    private JPanel m_menuPanel = new JPanel();
 
     public String m_title = null;
     private static final int layer = 1;
     private static int frameCount = 0;
     protected JInternalFrame currentIFrame = null;
-    private final PrintController m_printJob = new PrintController();
+    private PrintController m_printJob = new PrintController();
 
     /**
      * Constructor for MDIAppPanel.
@@ -148,7 +146,7 @@ public abstract class MDIAppPanel extends BasePanel
         try {
             currentIFrame.setFrameIcon(ImageBuilder.getImageIcon("trade.gif"));
         } catch (Exception ex) {
-            _log.error("Could not get Image trade.gif Msg: {}", ex.getMessage(), ex);
+            _log.error("Could not get Image trade.gif Msg: " + ex.getMessage(), ex);
         }
         frameCount++;
         // Increment the tile in case the same frame is open more than once
@@ -161,7 +159,7 @@ public abstract class MDIAppPanel extends BasePanel
         // currentIFrame.getPreferredSize().width,
         // currentIFrame.getPreferredSize().height);
         currentIFrame.setContentPane(new MyPanel(layer, frameCount, innerPanel));
-        m_desktopPane.add(currentIFrame, layer);
+        m_desktopPane.add(currentIFrame, new Integer(layer));
 
         try {
             currentIFrame.setSelected(true);
@@ -174,7 +172,11 @@ public abstract class MDIAppPanel extends BasePanel
         setComponentSize(currentIFrame);
         currentIFrame.addPropertyChangeListener(this);
         currentIFrame.addVetoableChangeListener(this);
-        SwingUtilities.invokeLater(innerPanel::doWindowOpen);
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                innerPanel.doWindowOpen();
+            }
+        });
     }
 
     public void doWindowOpen() {
@@ -193,7 +195,7 @@ public abstract class MDIAppPanel extends BasePanel
             UIManager.setLookAndFeel(new javax.swing.plaf.metal.MetalLookAndFeel());
             SwingUtilities.updateComponentTreeUI(getFrame());
         } catch (Exception eMetal) {
-            _log.error("Could not load LookAndFeel: {}", String.valueOf(eMetal));
+            _log.error("Could not load LookAndFeel: " + eMetal);
         }
     }
 
@@ -204,7 +206,7 @@ public abstract class MDIAppPanel extends BasePanel
             // javax.swing.plaf.windows.WindowsLookAndFeel());
             SwingUtilities.updateComponentTreeUI(getFrame());
         } catch (Exception eMetal) {
-            _log.error("Could not load LookAndFeel: {}", String.valueOf(eMetal));
+            _log.error("Could not load LookAndFeel: " + eMetal);
         }
     }
 
@@ -216,7 +218,7 @@ public abstract class MDIAppPanel extends BasePanel
             UIManager.put("swing.boldMetal", Boolean.FALSE);
             SwingUtilities.updateComponentTreeUI(getFrame());
         } catch (Exception eMetal) {
-            _log.error("Could not load LookAndFeel: {}", String.valueOf(eMetal));
+            _log.error("Could not load LookAndFeel: " + eMetal);
         }
     }
 
@@ -317,7 +319,7 @@ public abstract class MDIAppPanel extends BasePanel
             String name = epc.getPropertyName();
             Object value = epc.getNewValue();
 
-            if (name.equals(JInternalFrame.IS_CLOSED_PROPERTY) && (value == Boolean.TRUE)) {
+            if (name.equals(JInternalFrame.IS_CLOSED_PROPERTY) && ((Boolean) value == Boolean.TRUE)) {
 
                 currentIFrame = (JInternalFrame) epc.getSource();
                 ((BasePanel) currentIFrame.getContentPane()).doWindowClose();
@@ -325,7 +327,7 @@ public abstract class MDIAppPanel extends BasePanel
                 currentIFrame.removePropertyChangeListener(this);
                 currentIFrame.removeVetoableChangeListener(this);
 
-            } else if (name.equals(JInternalFrame.IS_SELECTED_PROPERTY) && (value == Boolean.TRUE)) {
+            } else if (name.equals(JInternalFrame.IS_SELECTED_PROPERTY) && ((Boolean) value == Boolean.TRUE)) {
                 // switch current frame
                 ((BasePanel) currentIFrame.getContentPane()).setSelected(false);
                 currentIFrame = (JInternalFrame) epc.getSource();
@@ -340,14 +342,18 @@ public abstract class MDIAppPanel extends BasePanel
      * Method vetoableChange.
      *
      * @param evc PropertyChangeEvent
+     * @throws PropertyVetoException
      * @see java.beans.VetoableChangeListener#vetoableChange(PropertyChangeEvent)
      */
-    public void vetoableChange(PropertyChangeEvent evc) {
+    public void vetoableChange(PropertyChangeEvent evc) throws PropertyVetoException {
         if (evc.getSource() instanceof JInternalFrame) {
             currentIFrame = (JInternalFrame) evc.getSource();
 
             String name = evc.getPropertyName();
             Object value = evc.getNewValue();
+            if (name.equals(JInternalFrame.IS_CLOSED_PROPERTY) && ((Boolean) value == Boolean.TRUE)) {
+
+            }
         }
     }
 
@@ -371,11 +377,10 @@ public abstract class MDIAppPanel extends BasePanel
     /**
      *
      */
-    static class MyPanel extends BasePanel {
+    class MyPanel extends BasePanel {
         /**
          *
          */
-        @Serial
         private static final long serialVersionUID = 1746964092801489754L;
         BasePanel pane = null;
 

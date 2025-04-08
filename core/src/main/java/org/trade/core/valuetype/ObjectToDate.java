@@ -52,10 +52,13 @@ public class ObjectToDate implements IJavaDynamicTypeConverter {
      *
      * @param targetType     Class<?>
      * @param valueToConvert Object
-     * @return Object)
+     * @return Object
+     * @throws JavaTypeTranslatorException
+     * @see IJavaDynamicTypeConverter#convert(Class<?>,
+     * Object)
      */
     public Object convert(Class<?> targetType, Object valueToConvert) throws JavaTypeTranslatorException {
-        Date rVal;
+        Date rVal = null;
 
         if (!Date.class.equals(targetType)) {
             throw new JavaTypeTranslatorException("The target type must be an Date");
@@ -68,12 +71,13 @@ public class ObjectToDate implements IJavaDynamicTypeConverter {
         String dateFormat = null;
 
         if (valueToConvert instanceof JavaFormatForObject) {
-
             valueToConvert = ((JavaFormatForObject) valueToConvert).getForObject();
             dateFormat = ((JavaFormatForObject) valueToConvert).getFormat();
+
         }
 
-        if (valueToConvert instanceof String val) {
+        if (valueToConvert instanceof String) {
+            String val = (String) valueToConvert;
 
             rVal = new Date(val, dateFormat); // dateFormat may be null, but
             // that is okay
@@ -91,9 +95,15 @@ public class ObjectToDate implements IJavaDynamicTypeConverter {
      * @param targetType     Class<?>
      * @param valueToConvert Object
      * @return boolean
+     * @see IJavaDynamicTypeConverter#
+     * supportsConversion (Class<?>, Object)
      */
     public boolean supportsConversion(Class<?> targetType, Object valueToConvert) {
+        boolean rVal = false;
+        if (Date.class.equals(targetType)) {
+            rVal = true;
+        }
 
-        return (Date.class.equals(targetType));
+        return (rVal);
     }
 }

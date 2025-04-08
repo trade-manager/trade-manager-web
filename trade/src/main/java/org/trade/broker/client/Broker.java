@@ -22,6 +22,7 @@ public abstract class Broker extends SwingWorker<Void, Void> implements IStrateg
      *
      * @param strategyClassName String
      * @param tradestrategy     Tradestrategy
+     * @see IStrategyChangeListener#strategyComplete(Tradestrategy)
      */
     public synchronized void strategyComplete(String strategyClassName, Tradestrategy tradestrategy) {
         synchronized (lockBackTestWorker) {
@@ -35,6 +36,7 @@ public abstract class Broker extends SwingWorker<Void, Void> implements IStrateg
      *
      * @param strategyClassName String
      * @param tradestrategy     Tradestrategy
+     * @see IStrategyChangeListener#strategyStarted(Tradestrategy)
      */
     public synchronized void strategyStarted(String strategyClassName, Tradestrategy tradestrategy) {
         synchronized (lockBackTestWorker) {

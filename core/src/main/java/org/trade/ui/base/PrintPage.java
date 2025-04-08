@@ -56,6 +56,8 @@ import java.awt.print.PrinterGraphics;
 public class PrintPage implements Pageable {
     private int m_NumPagesX;
 
+    private int m_NumPagesY;
+
     private int m_NumPages;
 
     private Printable m_Painter = null;
@@ -111,7 +113,7 @@ public class PrintPage implements Pageable {
      */
     protected void setSize(float width, float height) {
         m_NumPagesX = (int) (((width + m_Format.getImageableWidth()) - 1) / m_Format.getImageableWidth());
-        int m_NumPagesY = (int) (((height + m_Format.getImageableHeight()) - 1) / m_Format.getImageableHeight());
+        m_NumPagesY = (int) (((height + m_Format.getImageableHeight()) - 1) / m_Format.getImageableHeight());
         m_NumPages = m_NumPagesX * m_NumPagesY;
     }
 
@@ -194,14 +196,14 @@ public class PrintPage implements Pageable {
         /**
          * The object that will draw the canvas.
          */
-        private final Printable m_Painter;
+        private Printable m_Painter;
 
         /**
          * The upper-left corner of the part of the canvas that will be
          * displayed on this page. This corner is lined up with the upper-left
          * of the imageable area of the page.
          */
-        private final Point2D m_Origin;
+        private Point2D m_Origin;
 
         /**
          * Create a new Printable that will translate the drawing done by

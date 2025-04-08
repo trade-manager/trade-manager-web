@@ -52,7 +52,7 @@ public interface IMACDDataset extends XYDataset {
      * @param item   the item index.
      * @return The MACD.
      */
-    double getMACDValue(int series, int item);
+    public double getMACDValue(int series, int item);
 
     /**
      * Returns the MACD for an item within a series.
@@ -61,6 +61,6 @@ public interface IMACDDataset extends XYDataset {
      * @param item   the item index.
      * @return The MACD.
      */
-    Number getMACD(int series, int item);
+    public Number getMACD(int series, int item);
 
 }

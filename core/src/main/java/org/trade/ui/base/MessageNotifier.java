@@ -43,10 +43,13 @@ import java.util.Vector;
  * @version $Id: MessageNotifier.java,v 1.1 2001/10/18 01:32:15 simon Exp $
  */
 public class MessageNotifier {
-    private final EventListenerList listeners;
+    private EventListenerList listeners;
 
     /**
      * MessageNotifier() - constructor
+     *
+     * @throws *
+     * @see
      */
     public MessageNotifier() {
         this.listeners = new EventListenerList();
@@ -56,6 +59,8 @@ public class MessageNotifier {
      * addMessageListener() -
      *
      * @param listener IMessageListener
+     * @throws *
+     * @see
      */
     public void add(IMessageListener listener) {
         this.listeners.add(IMessageListener.class, listener);
@@ -65,6 +70,8 @@ public class MessageNotifier {
      * removeMessageListener() -
      *
      * @param listener IMessageListener
+     * @throws *
+     * @see
      */
     public void remove(IMessageListener listener) {
         this.listeners.remove(IMessageListener.class, listener);
@@ -73,6 +80,9 @@ public class MessageNotifier {
 
     /**
      * removeMessageListener() -
+     *
+     * @throws *
+     * @see
      */
     public void removeAll() {
         Object[] listenerList = this.listeners.getListenerList();
@@ -88,6 +98,8 @@ public class MessageNotifier {
      *
      * @param e    MessageEvent
      * @param parm Vector<Object>
+     * @throws *
+     * @see
      */
     public void notifyEvent(MessageEvent e, Vector<Object> parm) {
         Object[] listenerList = this.listeners.getListenerList();

@@ -5,7 +5,6 @@ import org.trade.ui.base.BaseButton;
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
-import java.io.Serial;
 
 /**
  *
@@ -14,7 +13,6 @@ public class ButtonRenderer extends BaseButton implements TableCellRenderer {
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = -651515202481955194L;
 
     /**

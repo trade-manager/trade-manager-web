@@ -80,6 +80,6 @@ public class NumberToShortConverter extends NumberToNumberConverter {
      * @return Short the Number converted to a Short
      */
     protected Number getConvertedNumber(Number aNumber) {
-        return aNumber.shortValue();
+        return new Short(aNumber.shortValue());
     }
 }

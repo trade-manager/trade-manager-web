@@ -39,7 +39,6 @@ import org.trade.ui.base.BasePanel;
 import org.trade.ui.base.BasePanelMenu;
 
 import javax.swing.*;
-import java.io.Serial;
 
 /**
  *
@@ -48,7 +47,6 @@ public class MainPanelMenu extends BasePanelMenu {
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = -2716722655140661891L;
 
     /**

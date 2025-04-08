@@ -65,13 +65,13 @@ public class StringValidator implements IValidator {
 
     private int m_minLength;
 
-    private final int m_maxLength;
+    private int m_maxLength;
 
-    private final int m_permittedCharacterSet;
+    private int m_permittedCharacterSet;
 
-    private final boolean m_isMandatory;
+    private boolean m_isMandatory;
 
-    private final String m_additionalPermittedCharacters;
+    private String m_additionalPermittedCharacters;
 
     /**
      * Constructor for StringValidator.
@@ -183,7 +183,7 @@ public class StringValidator implements IValidator {
             value = "";
         }
 
-        if (((String) value).isEmpty()) // Optional/mandatory check
+        if (0 == ((String) value).length()) // Optional/mandatory check
         {
             if (m_isMandatory) {
                 valid = false;
@@ -194,12 +194,12 @@ public class StringValidator implements IValidator {
         {
             valid = false;
             receiver.addExceptionMessage(getMessageFactory().create(MessageContextFactory.MAX_LENGTH_EXCEEDED
-                    .create(MessageContextFactory.MAX_LENGTH.create(m_maxLength))));
+                    .create(MessageContextFactory.MAX_LENGTH.create(new Integer(m_maxLength)))));
         } else if (((String) value).length() < m_minLength) // Min length check
         {
             valid = false;
             receiver.addExceptionMessage(getMessageFactory().create(MessageContextFactory.MIN_LENGTH_FAILED
-                    .create(MessageContextFactory.MIN_LENGTH.create(m_minLength))));
+                    .create(MessageContextFactory.MIN_LENGTH.create(new Integer(m_minLength)))));
         } else
         // 0 < length < max length so check valid characters
         {
@@ -228,25 +228,25 @@ public class StringValidator implements IValidator {
      * are permitted.
      */
     public static String checkForInvalidCharacters(String toStrip, int whatToKeep, String whatElseToKeep) {
-        if ((null == toStrip) || (toStrip.isEmpty())) {
+        if ((null == toStrip) || (toStrip.length() == 0)) {
             return null;
         }
 
-        StringBuilder invalidChars = new StringBuilder();
+        String invalidChars = "";
 
         int toStripLength = toStrip.length();
         for (int i = 0; i < toStripLength; i++) {
             if ((!isValidChar(toStrip.charAt(i), whatToKeep)) && (!isValidChar(toStrip.charAt(i), whatElseToKeep))) {
-                if (invalidChars.toString().indexOf(toStrip.charAt(i)) == -1) {
-                    invalidChars.append(toStrip.charAt(i));
+                if (invalidChars.indexOf(toStrip.charAt(i)) == -1) {
+                    invalidChars = invalidChars + toStrip.substring(i, i + 1);
                 }
             }
         }
 
-        if (invalidChars.toString().isEmpty()) {
+        if ("".equals(invalidChars)) {
             return null;
         } else {
-            return invalidChars.toString();
+            return invalidChars;
         }
     }
 
@@ -279,7 +279,7 @@ public class StringValidator implements IValidator {
 
         boolean punctuation = ((whatToKeep & PUNCTUATION) > 0);
         if (punctuation) {
-            return isValidChar(toCheck, "`~!@#$%^&*()-_=+\\|]}[{;:,<.>/?\"'");
+            return isValidChar(toCheck, "`~!@#$%^&*()-_=+\\|]}[{;:,<.>/?\"\'");
         } else {
             return false;
         }
@@ -313,11 +313,11 @@ public class StringValidator implements IValidator {
      * @return String
      */
     public static String stripSpecificChars(String toStrip, String whatToStrip) {
-        if ((null == toStrip) || (toStrip.isEmpty())) {
+        if ((null == toStrip) || (toStrip.length() == 0)) {
             return toStrip;
         }
 
-        StringBuilder bufferedResult = new StringBuilder();
+        StringBuffer bufferedResult = new StringBuffer("");
 
         int toStripLength = toStrip.length();
         for (int i = 0; i < toStripLength; i++) {
@@ -325,7 +325,7 @@ public class StringValidator implements IValidator {
             // toStrip,
             // then the character is of of the chars the need to be stripped
             if (!isValidChar(toStrip.charAt(i), whatToStrip)) {
-                bufferedResult.append(toStrip.charAt(i));
+                bufferedResult.append(toStrip.substring(i, i + 1));
             }
         }
 

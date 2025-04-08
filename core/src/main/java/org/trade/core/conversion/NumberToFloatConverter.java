@@ -80,6 +80,6 @@ public class NumberToFloatConverter extends NumberToNumberConverter {
      * @return Float the Number converted to a Float
      */
     protected Number getConvertedNumber(Number aNumber) {
-        return aNumber.floatValue();
+        return new Float(aNumber.floatValue());
     }
 }

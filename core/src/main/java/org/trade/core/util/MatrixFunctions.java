@@ -43,7 +43,7 @@ import java.util.Hashtable;
  */
 public final class MatrixFunctions {
 
-    private static final int listingForm = 0;
+    private static int listingForm = 0;
 
     public MatrixFunctions() {
 
@@ -52,8 +52,8 @@ public final class MatrixFunctions {
     /**
      * Method solve.
      *
-     * @param pairs     Hashtable<Long,Pair>
-     * @param polyOrder Integer
+     * @param userDataVector Hashtable<Long,Pair>
+     * @param polyOrder      Integer
      * @return double[]
      */
     public static synchronized double[] solve(Pair[] pairs, Integer polyOrder) {
@@ -75,7 +75,8 @@ public final class MatrixFunctions {
         boolean updated = false;
         for (Enumeration<Pair> enumPairs = userDataVector.elements(); enumPairs.hasMoreElements(); ) {
             Pair pair = enumPairs.nextElement();
-            pair.y = fx(pair.x, terms);
+            double y = fx(pair.x, terms);
+            pair.y = y;
             updated = true;
         }
         return updated;
@@ -243,7 +244,7 @@ public final class MatrixFunctions {
         int i = 0;
         int j = 0;
         int k;
-        double[] temp;
+        double temp[];
         while ((i < n) && (j < m)) {
             // look for non-zero entries in col j at or below row i
             k = i;
@@ -273,51 +274,52 @@ public final class MatrixFunctions {
     /**
      * Method toPrint.
      *
-     * @param polyOrder         int
-     * @param correlationCoeff  double
-     * @param standardDeviation double
-     * @param terms             double[]
-     * @param dataPoints        int
+     * @param polyOrder  int
+     * @param result_cc  double
+     * @param result_se  double
+     * @param terms      double[]
+     * @param dataPoints int
      * @return String
      */
     public static synchronized String toPrint(int polyOrder, double correlationCoeff, double standardDeviation,
                                               double[] terms, int dataPoints) {
 
-        String[] styleTag = {"", "pow", "Math.pow"};
-        StringBuilder text = new StringBuilder("Degree " + polyOrder + ", " + dataPoints + " x,y pairs. ");
-        text.append("Corr. coeff. (r^2) = ").append(formatNum(correlationCoeff, false)).append(". ");
-        text.append("SE = ").append(formatNum(standardDeviation, false)).append("\n\n");
-        text.append("f(x) =");
+        String styleTag[] = {"", "pow", "Math.pow"};
+        int n = dataPoints;
+        String text = "Degree " + polyOrder + ", " + n + " x,y pairs. ";
+        text += "Corr. coeff. (r^2) = " + formatNum(correlationCoeff, false) + ". ";
+        text += "SE = " + formatNum(standardDeviation, false) + "\n\n";
+        text += (listingForm > 0) ? "double f(double x) {\n    return" : "f(x) =";
         for (int i = 0; i <= polyOrder; i++) {
             double a = terms[i];
             if (i > 0) {
                 if (listingForm > 0) {
-                    text.append("    ");
+                    text += "    ";
                 }
-                text.append("     +");
+                text += "     +";
             }
-            text.append(formatNum(a, true));
+            text += formatNum(a, true);
             if (i == 1) {
-                text.append(" * x");
+                text += " * x";
             }
             if (i > 1) {
                 if (listingForm > 0) {
-                    text.append(" * ").append(styleTag[listingForm]).append("(x,").append(i).append(")");
+                    text += (" * " + styleTag[listingForm] + "(x," + i + ")");
                 } else {
-                    text.append(" * x^").append(i);
+                    text += (" * x^" + i);
                 }
             }
             if (i < polyOrder) {
-                text.append("\n");
+                text += "\n";
             }
         }
         if (listingForm > 0) {
-            text.append(";\n}");
+            text += ";\n}";
         }
-        if (polyOrder > (dataPoints - 1)) {
-            text.append("\n\nWarning: Polynomial degree exceeds data size - 1.");
+        if (polyOrder > (n - 1)) {
+            text += "\n\nWarning: Polynomial degree exceeds data size - 1.";
         }
-        return text.toString();
+        return text;
     }
 
     /**

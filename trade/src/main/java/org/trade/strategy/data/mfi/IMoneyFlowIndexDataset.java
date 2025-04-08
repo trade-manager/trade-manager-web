@@ -53,7 +53,7 @@ public interface IMoneyFlowIndexDataset extends XYDataset {
      * @param item   the item index.
      * @return The Money Flow Index.
      */
-    double getMoneyFlowIndexValue(int series, int item);
+    public double getMoneyFlowIndexValue(int series, int item);
 
     /**
      * Returns the Money Flow Index for an item within a series.
@@ -62,6 +62,6 @@ public interface IMoneyFlowIndexDataset extends XYDataset {
      * @param item   the item index.
      * @return The Money Flow Index.
      */
-    Number getMoneyFlowIndex(int series, int item);
+    public Number getMoneyFlowIndex(int series, int item);
 
 }

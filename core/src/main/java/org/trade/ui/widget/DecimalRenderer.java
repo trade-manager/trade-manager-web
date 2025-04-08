@@ -39,7 +39,6 @@ import org.trade.core.valuetype.Decimal;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
-import java.io.Serial;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 
@@ -51,10 +50,9 @@ public class DecimalRenderer extends DefaultTableCellRenderer {
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = 2923032656753601362L;
 
-    private final NumberFormat m_formater;
+    private NumberFormat m_formater = null;
 
     public DecimalRenderer() {
         super();

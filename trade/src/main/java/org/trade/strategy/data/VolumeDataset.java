@@ -48,7 +48,6 @@ import org.trade.strategy.data.volume.VolumeItem;
 import org.trade.ui.chart.renderer.VolumeBarRenderer;
 
 import java.awt.*;
-import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +60,6 @@ public class VolumeDataset extends AbstractIntervalXYDataset implements IVolumeD
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = 3931818830267435673L;
 
     /**
@@ -72,7 +70,7 @@ public class VolumeDataset extends AbstractIntervalXYDataset implements IVolumeD
     private TimePeriodAnchor xPosition = TimePeriodAnchor.START;
 
     public VolumeDataset() {
-        this.data = new ArrayList<>();
+        this.data = new ArrayList<IndicatorSeries>();
     }
 
     /**
@@ -248,7 +246,7 @@ public class VolumeDataset extends AbstractIntervalXYDataset implements IVolumeD
      * @see org.jfree.data.xy.IntervalXYDataset#getStartY(int, int)
      */
     public Number getStartY(int series, int item) {
-        return 0d;
+        return new Double(0.0);
     }
 
     /**
@@ -304,7 +302,7 @@ public class VolumeDataset extends AbstractIntervalXYDataset implements IVolumeD
      * @return The x-value. * @see org.jfree.data.xy.XYDataset#getX(int, int)
      */
     public Number getX(int series, int item) {
-        return getXValue(series, item);
+        return new Double(getXValue(series, item));
     }
 
     /**
@@ -317,7 +315,7 @@ public class VolumeDataset extends AbstractIntervalXYDataset implements IVolumeD
     public Number getY(int series, int item) {
         VolumeSeries s = (VolumeSeries) this.data.get(series);
         VolumeItem di = (VolumeItem) s.getDataItem(item);
-        return di.getY();
+        return new Double(di.getY());
     }
 
     /**
@@ -345,7 +343,7 @@ public class VolumeDataset extends AbstractIntervalXYDataset implements IVolumeD
      * org.trade.strategy.data.volume.IVolumeDataset#getVolume(int, int)
      */
     public Number getVolume(int series, int item) {
-        return getVolumeValue(series, item);
+        return new Double(getVolumeValue(series, item));
     }
 
     /**
@@ -358,13 +356,14 @@ public class VolumeDataset extends AbstractIntervalXYDataset implements IVolumeD
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof VolumeDataset that)) {
+        if (!(obj instanceof VolumeDataset)) {
             return false;
         }
+        VolumeDataset that = (VolumeDataset) obj;
         if (!this.xPosition.equals(that.xPosition)) {
             return false;
         }
-        return this.data.equals(that.data);
+        return ObjectUtils.equal(this.data, that.data);
     }
 
     /**
@@ -386,6 +385,8 @@ public class VolumeDataset extends AbstractIntervalXYDataset implements IVolumeD
      * @param source      CandleDataset
      * @param seriesIndex int
      * @param newBar      boolean
+     * @see IIndicatorDataset#updateDataset(CandleDataset,
+     * int)
      */
     public void updateDataset(CandleDataset source, int seriesIndex, boolean newBar) {
 

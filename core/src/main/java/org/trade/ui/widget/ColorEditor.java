@@ -5,7 +5,6 @@ import javax.swing.table.TableCellEditor;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.Serial;
 
 /**
  *
@@ -14,12 +13,11 @@ public class ColorEditor extends AbstractCellEditor implements TableCellEditor, 
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = -6974362652025540325L;
     private Color currentColor;
-    private final JButton button;
-    private final JColorChooser colorChooser;
-    private final JDialog dialog;
+    private JButton button;
+    private JColorChooser colorChooser;
+    private JDialog dialog;
     protected static final String EDIT = "edit";
 
     public ColorEditor() {

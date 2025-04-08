@@ -76,6 +76,10 @@ public class AppMain {
      * @param args String[]
      */
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(AppMain::new);
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                new AppMain();
+            }
+        });
     }
 }

@@ -42,18 +42,15 @@ import org.trade.core.validator.DecimalValidator;
 import org.trade.core.validator.IExceptionMessageListener;
 import org.trade.core.validator.IValidator;
 
-import java.io.Serial;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.Comparator;
-import java.util.Objects;
 
 /**
  *
  */
 public class Money extends ValueType implements Comparator<Money>, Comparable<Money> {
-    @Serial
     private static final long serialVersionUID = 4937298768811778585L;
 
     public final static String MONEY_POSITIVE_7_2 = "($)#(,)###(,)###(.##)";
@@ -63,7 +60,7 @@ public class Money extends ValueType implements Comparator<Money>, Comparable<Mo
 
     public final static Money ZERO = new Money(0L, 0);
 
-    protected static Boolean m_ascending = true;
+    protected static Boolean m_ascending = new Boolean(true);
 
     static {
         // Register the appropriate converters
@@ -99,7 +96,7 @@ public class Money extends ValueType implements Comparator<Money>, Comparable<Mo
      * @param moneyString String
      */
     public Money(String moneyString) {
-        if ((null != moneyString) && (!moneyString.isEmpty())) {
+        if ((null != moneyString) && (moneyString.length() != 0)) {
             // This is necessary because Java will parse strings with multiple
             // dashes
             if (moneyString.indexOf("-") != moneyString.lastIndexOf("-")) {
@@ -129,7 +126,7 @@ public class Money extends ValueType implements Comparator<Money>, Comparable<Mo
      * @param d Double
      */
     public Money(Double d) {
-        setBigDecimal(BigDecimal.valueOf(d));
+        setBigDecimal(new BigDecimal(d.doubleValue()));
     }
 
     /**
@@ -190,13 +187,17 @@ public class Money extends ValueType implements Comparator<Money>, Comparable<Mo
      * @return int
      */
     public int getMaxLength() {
+        int maxLength = 14;
 
-        return switch (getFormat()) {
-            case MONEY_NONNEGATIVE_8_2 -> 11;
-            case MONEY_POSITIVE_10_2 -> 13;
-            case MONEY_POSITIVE_7_2 -> 10;
-            default -> 14;
-        };
+        if (getFormat().equals(MONEY_NONNEGATIVE_8_2)) {
+            maxLength = 11;
+        } else if (getFormat().equals(MONEY_POSITIVE_10_2)) {
+            maxLength = 13;
+        } else if (getFormat().equals(MONEY_POSITIVE_7_2)) {
+            maxLength = 10;
+        }
+
+        return maxLength;
     }
 
     /**
@@ -224,10 +225,11 @@ public class Money extends ValueType implements Comparator<Money>, Comparable<Mo
      * @return boolean
      */
     public boolean canBeNegative() {
+        boolean negative = false;
 
         // Currently all formats prohibit negative numbers.
 
-        return false;
+        return negative;
     }
 
     /**
@@ -238,7 +240,13 @@ public class Money extends ValueType implements Comparator<Money>, Comparable<Mo
     public boolean isNegative() {
         assertDefined();
 
-        return m_value.compareTo(new BigDecimal(0)) < 0;
+        boolean negative = false;
+
+        if (m_value.compareTo(new BigDecimal(0)) < 0) {
+            negative = true;
+        }
+
+        return negative;
     }
 
     /**
@@ -247,8 +255,13 @@ public class Money extends ValueType implements Comparator<Money>, Comparable<Mo
      * @return boolean
      */
     public boolean isEmpty() {
+        boolean empty = false;
 
-        return (null == m_value) || (null != m_invalidValue);
+        if ((null == m_value) || (null != m_invalidValue)) {
+            empty = true;
+        }
+
+        return empty;
     }
 
     /**
@@ -317,20 +330,25 @@ public class Money extends ValueType implements Comparator<Money>, Comparable<Mo
     public String toString() {
         if (null != m_value) {
             return (m_value.toString());
-        } else return Objects.requireNonNullElse(m_invalidValue, "");
+        } else if (null != m_invalidValue) {
+            return m_invalidValue;
+        } else {
+            return "";
+        }
     }
 
     /**
      * Method setValue.
      *
      * @param value Object
+     * @throws ValueTypeException
      */
     public void setValue(Object value) throws ValueTypeException {
         if (value instanceof Money) {
             setBigDecimal(((Money) value).m_value);
         } else {
             try {
-                setBigDecimal(((Money) Objects.requireNonNull(JavaTypeTranslator.convert(Money.class, value))).getBigDecimalValue());
+                setBigDecimal(((Money) JavaTypeTranslator.convert(Money.class, value)).getBigDecimalValue());
             } catch (Exception ex) {
                 throw new ValueTypeException(ex);
             }
@@ -474,11 +492,14 @@ public class Money extends ValueType implements Comparator<Money>, Comparable<Mo
      * Overrides Cloneable
      *
      * @return Object
+     * @throws *
+     * @see
      */
 
     public Object clone() {
         try {
-            return super.clone();
+            Money other = (Money) super.clone();
+            return other;
         } catch (CloneNotSupportedException e) {
             // will never happen
             return null;
@@ -523,8 +544,9 @@ public class Money extends ValueType implements Comparator<Money>, Comparable<Mo
             return true;
 
         if (objectToCompare instanceof Money) {
-            return CoreUtils.nullSafeComparator(((Money) objectToCompare).getBigDecimalValue(),
-                    this.getBigDecimalValue()) == 0;
+            if (CoreUtils.nullSafeComparator(((Money) objectToCompare).getBigDecimalValue(),
+                    this.getBigDecimalValue()) == 0)
+                return true;
         }
         return false;
     }
@@ -540,7 +562,7 @@ public class Money extends ValueType implements Comparator<Money>, Comparable<Mo
      */
     private void setBigDecimal(BigDecimal value) {
         if (value == null) {
-            m_value = new BigDecimal("0.0");
+            m_value = new BigDecimal(0.0);
         } else {
             // m_value = value;
             m_value = value.setScale(SCALE, RoundingMode.HALF_EVEN);
@@ -558,7 +580,7 @@ public class Money extends ValueType implements Comparator<Money>, Comparable<Mo
      */
     private BigDecimal notNull(Money value) {
         if (null == value) {
-            return (new BigDecimal("0.0"));
+            return (new BigDecimal(0.0D));
         } else {
             return (value.getBigDecimalValue());
         }

@@ -17,7 +17,7 @@ public class ZonedDateConverter implements AttributeConverter<LocalDate, Date> {
             return null;
         }
         final Instant instant = date.atStartOfDay().atZone(TradingCalendar.MKT_TIMEZONE).toInstant();
-        return Date.from(instant);
+        return (Date) Date.from(instant);
     }
 
     public LocalDate convertToEntityAttribute(Date value) {

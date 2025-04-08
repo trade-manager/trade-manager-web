@@ -35,7 +35,6 @@
  */
 package org.trade.core.valuetype;
 
-import java.io.Serial;
 import java.util.Vector;
 
 /**
@@ -51,7 +50,6 @@ import java.util.Vector;
  */
 public class DAODecode extends Decode {
 
-    @Serial
     private static final long serialVersionUID = -5356057478795774210L;
 
     private static final String DAO_DECODE_IDENTIFIER = "DAO_DECODE";

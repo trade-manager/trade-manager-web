@@ -90,7 +90,7 @@ public class StringToDateConverter extends StringToObjectConverter {
      * in the correct format
      */
     protected Object getConvertedString(String aString) throws IllegalArgumentException {
-        if ((aString == null) || (aString.trim().isEmpty())) {
+        if ((aString == null) || ((aString.trim().length()) == 0)) {
             return null; // Return A null Date
         } else {
             try {
@@ -102,5 +102,5 @@ public class StringToDateConverter extends StringToObjectConverter {
     }
 
     // Private
-    DateFormat m_dateFormatter;
+    DateFormat m_dateFormatter = null;
 }
