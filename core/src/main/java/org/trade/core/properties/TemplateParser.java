@@ -61,28 +61,27 @@ public class TemplateParser {
 
     private boolean m_insertMissingTags = false;
 
-    private String BEGIN_FOR_EACH = "BEGIN_FOR_EACH";
+    private final String BEGIN_FOR_EACH = "BEGIN_FOR_EACH";
 
-    private String END_FOR_EACH = "END_FOR_EACH";
+    private final String END_FOR_EACH = "END_FOR_EACH";
 
-    private String m_template = "";
+    private final String m_template;
 
-    private Dictionary<?, ?> m_tags;
+    private final Dictionary<?, ?> m_tags;
 
     private int m_lastParsedCharPosition = 0;
 
-    private int m_lastCharPosition = 0;
+    private final int m_lastCharPosition;
 
     private int m_iterationNumber = -1;
 
-    private StringBuffer m_errorMessages = new StringBuffer();
+    private final StringBuffer m_errorMessages = new StringBuffer();
 
-    private Vector<String> m_missingKeys = new Vector<String>();
+    private final Vector<String> m_missingKeys = new Vector<>();
 
     /**
      * @param template - the template.
      * @param tags     - the tags and values.
-     * @throws <code>InvalidParameterException</code> when tag in the template is not found in the tags Hashtable.
      */
     public TemplateParser(String template, Dictionary<?, ?> tags) {
         if ((template == null) || (tags == null)) {
@@ -142,7 +141,7 @@ public class TemplateParser {
      * @return String
      */
     public String parseTemplate() {
-        StringBuffer parsedTemplate = new StringBuffer();
+        StringBuilder parsedTemplate = new StringBuilder();
 
         m_errorMessages.setLength(0);
         m_missingKeys.removeAllElements();
@@ -153,7 +152,7 @@ public class TemplateParser {
             if (!result.finishedParsing()) {
                 if (result.foundToken()) {
                     parsedTemplate.append(
-                            m_template.substring(result.getLastParsedPosition(), result.getPositionBeforeKey() + 1));
+                            m_template, result.getLastParsedPosition(), result.getPositionBeforeKey() + 1);
 
                     if (result.getMissingTag() == null) {
                         if (!result.getKey().endsWith("[]")) {
@@ -196,12 +195,12 @@ public class TemplateParser {
                     // This will happen when we find a pair of # characters
                     // which don't enclose a key #(key)#
                     parsedTemplate
-                            .append(m_template.substring(result.getLastParsedPosition(), result.getParsedPosition()));
+                            .append(m_template, result.getLastParsedPosition(), result.getParsedPosition());
                 }
             } else
             // If finished parsing append the rest of the template
             {
-                parsedTemplate.append(m_template.substring(result.getLastParsedPosition(), result.getParsedPosition()));
+                parsedTemplate.append(m_template, result.getLastParsedPosition(), result.getParsedPosition());
 
                 break;
             }
@@ -243,10 +242,9 @@ public class TemplateParser {
      * tags Hashtable.
      *
      * @return NextToken
-     * @throws <code>InvalidParameterException</code> when tag in the template is not found in the tags Hashtable.
      */
     public NextToken getNextToken() {
-        int delimiterPosition = -1;
+        int delimiterPosition;
         int nextDelimiterPosition = -1;
         NextToken result = new NextToken();
 
@@ -271,30 +269,24 @@ public class TemplateParser {
                     && (m_template.charAt(leftBracketPosition) == m_leftBracket)
                     && (m_template.charAt(rightBracketPosition) == m_rightBracket)) {
                 // We have correct syntax element : #(key)#
-                if ((rightBracketPosition - leftBracketPosition) > 0) {
-                    String key = m_template.substring(leftBracketPosition + 1, rightBracketPosition);
+                String key = m_template.substring(leftBracketPosition + 1, rightBracketPosition);
 
-                    result.setKey(key);
+                result.setKey(key);
 
-                    Object value = m_tags.get(key);
+                Object value = m_tags.get(key);
 
-                    if (value != null) {
-                        result.setValue(value);
-                    } // If key not found #(key)# is ignored and nothing is
-                    // inserted in it's place in the output
-                    else {
-                        StringBuffer missingTag = new StringBuffer();
+                if (value != null) {
+                    result.setValue(value);
+                } // If key not found #(key)# is ignored and nothing is
+                // inserted in it's place in the output
+                else {
 
-                        missingTag.append(m_delimiter);
-                        missingTag.append(m_leftBracket);
-                        missingTag.append(key);
-                        missingTag.append(m_rightBracket);
-                        missingTag.append(m_delimiter);
-                        result.setMissingTag(missingTag.toString());
-                    }
-                } else {
-                    result.setKey("");
-                    result.setValue("");
+                    String missingTag = String.valueOf(m_delimiter) +
+                            m_leftBracket +
+                            key +
+                            m_rightBracket +
+                            m_delimiter;
+                    result.setMissingTag(missingTag);
                 }
 
                 result.setPositionAfterKey(nextDelimiterPosition + 1);
@@ -327,7 +319,7 @@ public class TemplateParser {
      */
     private String processForEachSubtemplate(NextToken beginToken) {
         NextToken endToken;
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
         int numberOfIterations = 0;
 
         do {
@@ -340,7 +332,7 @@ public class TemplateParser {
                     if ((array != null) && (array.length > numberOfIterations)) {
                         numberOfIterations = array.length;
                     }
-                } catch (Exception e) // A class cast exception can happen
+                } catch (Exception _) // A class cast exception can happen
                 // here
                 {
                 }
@@ -400,7 +392,7 @@ public class TemplateParser {
      * @author Simon Allen
      * @version $Revision: 1.0 $
      */
-    public class NextToken {
+    public static class NextToken {
         private String m_key = null;
 
         private Object m_value = null;
@@ -580,8 +572,7 @@ public class TemplateParser {
          * @param value Object
          */
         public void setValue(Object value) {
-            if (value instanceof Vector) {
-                Vector<?> v = (Vector<?>) value;
+            if (value instanceof Vector<?> v) {
 
                 m_arrayOfValues = v.toArray();
             } else if (value instanceof ArrayOfValues) {

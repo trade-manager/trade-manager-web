@@ -48,6 +48,7 @@ import java.text.MessageFormat;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.MissingResourceException;
+import java.util.Objects;
 import java.util.PropertyResourceBundle;
 import java.util.StringTokenizer;
 import java.util.Vector;
@@ -77,18 +78,18 @@ public class MessageTranslator {
     // public final static String PARAMETER_SUFFIX = "_PARAMETER_NAME";
     public final static String FIELD_REFERENCE_SUFFIX = "_FIELD_REFERENCE";
 
-    private static Hashtable<String, MessageFormat> messageFormats = new Hashtable<String, MessageFormat>();
+    private static final Hashtable<String, MessageFormat> messageFormats = new Hashtable<>();
 
-    private static Hashtable<String, String[]> indexesTable = new Hashtable<String, String[]>();
+    private static final Hashtable<String, String[]> indexesTable = new Hashtable<>();
 
-    private static Hashtable<String, String> fieldReferences = new Hashtable<String, String>();
+    private static final Hashtable<String, String> fieldReferences = new Hashtable<>();
 
-    private static Hashtable<String, String> codes = new Hashtable<String, String>();
+    private static final Hashtable<String, String> codes = new Hashtable<>();
 
     // Constants that map to the keys in the property file
     private PropertyResourceBundle m_props = null;
 
-    private static MessageTranslator m_theConfig = new MessageTranslator();
+    private static final MessageTranslator m_theConfig = new MessageTranslator();
 
     // _________________ these methods are taken from the ConfigProperties class
     // ________
@@ -98,10 +99,9 @@ public class MessageTranslator {
      *
      * @param key String
      * @return String
-     * @throws IOException
      */
     public static String getPropAsString(String key) throws IOException {
-        String strRet = null;
+        String strRet;
 
         strRet = m_theConfig._getProperty(key);
 
@@ -115,10 +115,9 @@ public class MessageTranslator {
      *
      * @param key String
      * @return String
-     * @throws IOException
      */
     private String _getProperty(String key) throws IOException {
-        String ret = null;
+        String ret;
 
         if (null == m_props) {
             InputStream unbuffered;
@@ -212,11 +211,7 @@ public class MessageTranslator {
             if (null != params) {
                 param = params.get(indexNames[i]);
             }
-            if (null == param) {
-                formatParams[i] = "";
-            } else {
-                formatParams[i] = param;
-            }
+            formatParams[i] = Objects.requireNonNullElse(param, "");
         }
 
         // then create the message
@@ -237,7 +232,6 @@ public class MessageTranslator {
      *
      * @param index String
      * @return ExceptionMessage
-     * @throws MessageTranslatorException
      */
     public static ExceptionMessage retrieveExceptionMessage(String index) throws MessageTranslatorException {
         String code;
@@ -307,7 +301,6 @@ public class MessageTranslator {
      *
      * @param code String
      * @return ExceptionMessage
-     * @throws MessageTranslatorException
      */
     public static ExceptionMessage translateExceptionMessage(String code) throws MessageTranslatorException {
         return translateExceptionMessage(code, null);
@@ -318,7 +311,6 @@ public class MessageTranslator {
      *
      * @param code ExceptionCode
      * @return ExceptionMessage
-     * @throws MessageTranslatorException
      */
     public static ExceptionMessage translateExceptionMessage(ExceptionCode code) throws MessageTranslatorException {
         return translateExceptionMessage(code.getCode(), null);
@@ -330,7 +322,6 @@ public class MessageTranslator {
      * @param code   String
      * @param params Dictionary<?,?>
      * @return String
-     * @throws MessageTranslatorException
      */
     public static String translateMessage(String code, Dictionary<?, ?> params) throws MessageTranslatorException {
         MessageFormat mf = lookupMessageFormat(code); // this can throw an
@@ -345,11 +336,7 @@ public class MessageTranslator {
             if (null != params) {
                 param = params.get(indexNames[i]);
             }
-            if (null == param) {
-                formatParams[i] = "";
-            } else {
-                formatParams[i] = param;
-            }
+            formatParams[i] = Objects.requireNonNullElse(param, "");
         }
 
         // then return the message
@@ -362,7 +349,6 @@ public class MessageTranslator {
      *
      * @param code String
      * @return String
-     * @throws MessageTranslatorException
      */
     public static String translateMessage(String code) throws MessageTranslatorException {
         return translateMessage(code, null);
@@ -378,7 +364,6 @@ public class MessageTranslator {
      *
      * @param code String
      * @return MessageFormat
-     * @throws MessageTranslatorException
      */
     private static MessageFormat lookupMessageFormat(String code) throws MessageTranslatorException {
         MessageFormat mf = messageFormats.get(code);
@@ -396,7 +381,6 @@ public class MessageTranslator {
      * Method loadMessageFormat.
      *
      * @param code String
-     * @throws MessageTranslatorException
      */
     private static void loadMessageFormat(String code) throws MessageTranslatorException {
 
@@ -445,7 +429,6 @@ public class MessageTranslator {
      * Method loadExceptionCode.
      *
      * @param code String
-     * @throws MessageTranslatorException
      */
     public static void loadExceptionCode(String code) throws MessageTranslatorException {
         try {
@@ -515,7 +498,6 @@ public class MessageTranslator {
      *
      * @param code String
      * @return String
-     * @throws MessageTranslatorException
      */
     private static String lookupCodeName(String code) throws MessageTranslatorException {
         String newCode = codes.get(code);
@@ -547,8 +529,8 @@ public class MessageTranslator {
 
         int nbrTokens = tokenizer.countTokens();
         int counter = 0;
-        Vector<String> returnVector = new Vector<String>();
-        StringBuffer buf = new StringBuffer();
+        Vector<String> returnVector = new Vector<>();
+        StringBuilder buf = new StringBuilder();
 
         for (int i = 0; i < nbrTokens; i++)
         // while (nbrTokens-- > 0)
@@ -569,12 +551,12 @@ public class MessageTranslator {
                 // Remove the parameter markup and replace it with a number
                 // inside curly
                 // braces for the MessageFormat to replace with paramaters
-                buf.append("{" + counter + "}");
+                buf.append("{").append(counter).append("}");
                 counter++;
             }
         }
         mf.applyPattern(buf.toString());
-        if (returnVector.size() >= 1) {
+        if (!returnVector.isEmpty()) {
             String[] namedIndexes = new String[returnVector.size()];
             returnVector.copyInto(namedIndexes);
             return namedIndexes;

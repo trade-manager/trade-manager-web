@@ -47,6 +47,7 @@ import org.trade.strategy.data.macd.MACDItem;
 import org.trade.ui.chart.renderer.MACDItemRenderer;
 
 import java.awt.*;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +60,7 @@ public class MACDDataset extends AbstractXYDataset implements IIndicatorDataset,
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = 3931818830267435673L;
 
     /**
@@ -72,7 +74,7 @@ public class MACDDataset extends AbstractXYDataset implements IIndicatorDataset,
      * Creates a new instance of <code>OHLCSeriesCollection</code>.
      */
     public MACDDataset() {
-        this.data = new ArrayList<IndicatorSeries>();
+        this.data = new ArrayList<>();
     }
 
     /**
@@ -107,7 +109,6 @@ public class MACDDataset extends AbstractXYDataset implements IIndicatorDataset,
      * all registered listeners.
      *
      * @param series the series (<code>null</code> not permitted).
-     * @throws CloneNotSupportedException
      * @see IIndicatorDataset#addSeries(IndicatorSeries)
      */
     public void addSeries(IndicatorSeries series) {
@@ -258,7 +259,7 @@ public class MACDDataset extends AbstractXYDataset implements IIndicatorDataset,
      * @return The x-value. * @see org.jfree.data.xy.XYDataset#getX(int, int)
      */
     public Number getX(int series, int item) {
-        return new Double(getXValue(series, item));
+        return getXValue(series, item);
     }
 
     /**
@@ -271,7 +272,7 @@ public class MACDDataset extends AbstractXYDataset implements IIndicatorDataset,
     public Number getY(int series, int item) {
         MACDSeries s = (MACDSeries) this.data.get(series);
         MACDItem di = (MACDItem) s.getDataItem(item);
-        return new Double(di.getY());
+        return di.getY();
     }
 
     /**
@@ -297,7 +298,7 @@ public class MACDDataset extends AbstractXYDataset implements IIndicatorDataset,
      * #getMACD(int, int)
      */
     public Number getMACD(int series, int item) {
-        return new Double(getMACDValue(series, item));
+        return getMACDValue(series, item);
     }
 
     /**
@@ -310,14 +311,13 @@ public class MACDDataset extends AbstractXYDataset implements IIndicatorDataset,
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof MACDDataset)) {
+        if (!(obj instanceof MACDDataset that)) {
             return false;
         }
-        MACDDataset that = (MACDDataset) obj;
         if (!this.xPosition.equals(that.xPosition)) {
             return false;
         }
-        return ObjectUtils.equal(this.data, that.data);
+        return this.data.equals(that.data);
     }
 
     /**
@@ -339,8 +339,6 @@ public class MACDDataset extends AbstractXYDataset implements IIndicatorDataset,
      * @param source      CandleDataset
      * @param seriesIndex int
      * @param newBar      boolean
-     * @see IIndicatorDataset#updateDataset(CandleDataset,
-     * int)
      */
     public void updateDataset(CandleDataset source, int seriesIndex, boolean newBar) {
         if (source == null) {

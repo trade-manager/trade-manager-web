@@ -38,6 +38,7 @@ package org.trade.ui.widget;
 import org.trade.core.valuetype.Money;
 
 import javax.swing.*;
+import java.io.Serial;
 
 /**
  *
@@ -46,6 +47,7 @@ public class MoneyEditor extends DefaultCellEditor {
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = 5190255283548436894L;
 
     /**
@@ -61,6 +63,7 @@ public class MoneyEditor extends DefaultCellEditor {
             /**
              *
              */
+            @Serial
             private static final long serialVersionUID = 2424965279339363773L;
 
             public void setValue(Object value) {

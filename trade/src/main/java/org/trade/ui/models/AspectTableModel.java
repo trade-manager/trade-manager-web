@@ -38,6 +38,8 @@ package org.trade.ui.models;
 import org.trade.core.dao.Aspects;
 import org.trade.ui.base.TableModel;
 
+import java.io.Serial;
+
 /**
  *
  */
@@ -45,6 +47,7 @@ public abstract class AspectTableModel extends TableModel {
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = 3087514589731145479L;
 
     public AspectTableModel() {
@@ -65,7 +68,6 @@ public abstract class AspectTableModel extends TableModel {
      * Method setData.
      *
      * @param data Aspects
-     * @throws Exception
      */
     public abstract void setData(Aspects data) throws Exception;
 

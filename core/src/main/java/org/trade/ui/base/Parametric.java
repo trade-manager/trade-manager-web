@@ -176,5 +176,5 @@ public class Parametric {
         return theReturn;
     }
 
-    private Class<?> m_class = null;
+    private final Class<?> m_class;
 }

@@ -52,12 +52,9 @@ public class ObjectToPercent implements IJavaDynamicTypeConverter {
      * @param targetType     Class<?>
      * @param valueToConvert Object
      * @return Object
-     * @throws JavaTypeTranslatorException
-     * @see IJavaDynamicTypeConverter#convert(Class<?>,
-     * Object)
      */
     public Object convert(Class<?> targetType, Object valueToConvert) throws JavaTypeTranslatorException {
-        Percent rVal = null;
+        Percent rVal;
 
         if (valueToConvert == null) {
             throw new JavaTypeTranslatorException("Null passed toObjectToPercent.convert()");
@@ -65,8 +62,7 @@ public class ObjectToPercent implements IJavaDynamicTypeConverter {
 
         // If we get a string we will convert it using the default Percent
         // format Percent_NONNEGATIVE_11_2.
-        if (valueToConvert instanceof String) {
-            String stringValue = (String) valueToConvert;
+        if (valueToConvert instanceof String stringValue) {
             rVal = new Percent(stringValue);
         } else {
             throw new JavaTypeTranslatorException("internal error parsing value");
@@ -81,16 +77,10 @@ public class ObjectToPercent implements IJavaDynamicTypeConverter {
      * @param targetType     Class<?>
      * @param valueToConvert Object
      * @return boolean
-     * @see IJavaDynamicTypeConverter#
-     * supportsConversion (Class<?>, Object)
      */
     public boolean supportsConversion(Class<?> targetType, Object valueToConvert) {
-        boolean rVal = false;
         // TODO: This is not strictly correct.
-        if (Percent.class.equals(targetType)) {
-            rVal = true;
-        }
 
-        return (rVal);
+        return (Percent.class.equals(targetType));
     }
 }

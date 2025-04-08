@@ -82,6 +82,6 @@ public class StringToShortConverter extends StringToObjectConverter {
      * in the correct format
      */
     protected Object getConvertedString(String aString) throws IllegalArgumentException {
-        return new Short(aString);
+        return Short.valueOf(aString);
     }
 }

@@ -40,7 +40,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
+import java.io.Serial;
 import java.util.Vector;
 
 /**
@@ -50,6 +50,7 @@ public class BaseButton extends JButton {
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = -47827936580637959L;
     private final static Logger _log = LoggerFactory.getLogger(BaseButton.class);
     protected MessageNotifier m_notifier = new MessageNotifier();
@@ -79,7 +80,7 @@ public class BaseButton extends JButton {
                 this.addMessageListener(basePanel);
             }
 
-            if (basePropertyCodes.getImage().length() > 0) {
+            if (!basePropertyCodes.getImage().isEmpty()) {
                 setIcon(ImageBuilder.getImageIcon(basePropertyCodes.getImage()));
             } else {
                 setText(basePropertyCodes.getDisplayName());
@@ -91,11 +92,7 @@ public class BaseButton extends JButton {
             setToolTipText(basePropertyCodes.getToolTip());
             setEnabled(basePropertyCodes.isEnabled());
             setMethod(basePropertyCodes.getMethod());
-            this.addActionListener(new java.awt.event.ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    buttonPressed();
-                }
-            });
+            this.addActionListener(_ -> buttonPressed());
         } catch (Exception ex) {
             _log.error(" Error instanciating Base Button ", ex);
         }
@@ -116,7 +113,7 @@ public class BaseButton extends JButton {
 
             BaseUIPropertyCodes basePropertyCodes = BaseUIPropertyCodes.newInstance(UICode);
 
-            if (basePropertyCodes.getImage().length() > 0) {
+            if (!basePropertyCodes.getImage().isEmpty()) {
                 setIcon(ImageBuilder.getImageIcon(basePropertyCodes.getImage()));
             } else {
                 setText(basePropertyCodes.getDisplayName());
@@ -128,11 +125,7 @@ public class BaseButton extends JButton {
             setToolTipText(basePropertyCodes.getToolTip());
             setEnabled(basePropertyCodes.isEnabled());
             setMethod(basePropertyCodes.getMethod());
-            this.addActionListener(new java.awt.event.ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    buttonPressed();
-                }
-            });
+            this.addActionListener(_ -> buttonPressed());
         } catch (Exception ex) {
             _log.error(" Error instanciating Base Button ", ex);
         }
@@ -196,7 +189,7 @@ public class BaseButton extends JButton {
      * @param selection String
      */
     protected void messageEvent(String selection) {
-        Vector<Object> transferObjects = new Vector<Object>();
+        Vector<Object> transferObjects = new Vector<>();
         if (null != this.transferObject) {
             transferObjects.add(this.transferObject);
         }

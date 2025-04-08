@@ -38,6 +38,7 @@ package org.trade.ui.widget;
 import org.trade.core.valuetype.YesNo;
 
 import javax.swing.*;
+import java.io.Serial;
 
 /**
  *
@@ -47,6 +48,7 @@ public class YesNoTableEditor extends DefaultCellEditor {
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = 2148534921779125768L;
 
     public YesNoTableEditor() {
@@ -68,13 +70,14 @@ public class YesNoTableEditor extends DefaultCellEditor {
             /**
              *
              */
+            @Serial
             private static final long serialVersionUID = 6696276657185790230L;
 
             public void setValue(Object value) {
                 boolean selected = false;
 
                 if (value instanceof Boolean) {
-                    selected = ((Boolean) value).booleanValue();
+                    selected = (Boolean) value;
                 } else if (value instanceof YesNo) {
                     if (((YesNo) value).isYes()) {
                         selected = true;
@@ -87,7 +90,7 @@ public class YesNoTableEditor extends DefaultCellEditor {
             }
 
             public Object getCellEditorValue() {
-                YesNo yesNo = null;
+                YesNo yesNo;
                 if (checkBox.isSelected()) {
                     yesNo = YesNo.newInstance(YesNo.YES);
                 } else {

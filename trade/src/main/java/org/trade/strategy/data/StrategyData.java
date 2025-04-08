@@ -59,9 +59,9 @@ public class StrategyData extends Worker {
 
     private final static Logger _log = LoggerFactory.getLogger(StrategyData.class);
 
-    private CandleDataset baseCandleDataset = null;
-    private CandleDataset candleDataset = null;
-    private final List<IIndicatorDataset> indicators = new ArrayList<IIndicatorDataset>();
+    private final CandleDataset baseCandleDataset;
+    private final CandleDataset candleDataset;
+    private final List<IIndicatorDataset> indicators = new ArrayList<>();
 
     private boolean seriesChanged = true;
     private final Object lockStrategyWorker = new Object();
@@ -101,7 +101,7 @@ public class StrategyData extends Worker {
                      * holder for series and is required by the Chart API.
                      */
                     String datasetName = indicator.getType().replaceAll("Series", "Dataset");
-                    Vector<Object> parm = new Vector<Object>();
+                    Vector<Object> parm = new Vector<>();
                     indicatorDataset = (IIndicatorDataset) ClassFactory
                             .getCreateClass(IIndicatorDataset.PACKAGE + datasetName, parm, this);
                     this.indicators.add(indicatorDataset);
@@ -174,13 +174,7 @@ public class StrategyData extends Worker {
         } catch (InterruptedException interExp) {
             // Do nothing.
         } catch (Exception ex1) {
-            _log.error("Error processing candle symbol: " + this.getBaseCandleSeries().getSymbol()
-                    + " Base series size: " + this.getBaseCandleSeries().getItemCount() + " BarSize: "
-                    + this.getBaseCandleSeries().getBarSize() + " currentBaseCandleCount: "
-                    + this.currentBaseCandleCount + " Candle series size: "
-                    + this.getCandleDataset().getSeries(0).getItemCount() + " lastBaseCandleProcessed: "
-                    + this.lastBaseCandleProcessed + " BarSize: " + this.getCandleDataset().getSeries(0).getBarSize()
-                    + " Message: " + ex1.getMessage(), ex1);
+            _log.error("Error processing candle symbol: {} Base series size: {} BarSize: {} currentBaseCandleCount: {} Candle series size: {} lastBaseCandleProcessed: {} BarSize: {} Message: {}", this.getBaseCandleSeries().getSymbol(), this.getBaseCandleSeries().getItemCount(), this.getBaseCandleSeries().getBarSize(), this.currentBaseCandleCount, this.getCandleDataset().getSeries(0).getItemCount(), this.lastBaseCandleProcessed, this.getCandleDataset().getSeries(0).getBarSize(), ex1.getMessage(), ex1);
 
         } finally {
             /*
@@ -315,7 +309,6 @@ public class StrategyData extends Worker {
      * strategy workers of this even.
      *
      * @param source CandleDataset
-     * @param newBar boolean
      */
     public void createIndicators(CandleDataset source) {
 
@@ -367,8 +360,7 @@ public class StrategyData extends Worker {
      * @return IIndicatorDataset
      */
     public IIndicatorDataset getIndicatorByType(String type) {
-        for (int index = 0; index < indicators.size(); index++) {
-            IIndicatorDataset series = indicators.get(index);
+        for (IIndicatorDataset series : indicators) {
             if (series.getType(0).equals(type)) {
                 return series;
             }
@@ -474,7 +466,7 @@ public class StrategyData extends Worker {
                     Thread.sleep(milliSecondsDeplay);
 
             } catch (InterruptedException e) {
-                _log.error(" Thread interupt: " + e.getMessage());
+                _log.error(" Thread interupt: {}", e.getMessage());
             }
         }
     }

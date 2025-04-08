@@ -44,11 +44,11 @@ import java.util.Collection;
  *
  */
 public class CodeValidator implements IValidator {
-    private IMessageFactory m_messageFactory;
+    private final IMessageFactory m_messageFactory;
 
-    private Collection<?> m_acceptableValues;
+    private final Collection<?> m_acceptableValues;
 
-    private boolean m_isMandatory;
+    private final boolean m_isMandatory;
 
     /**
      * Constructor for CodeValidator.
@@ -91,7 +91,7 @@ public class CodeValidator implements IValidator {
             value = "";
         }
 
-        if (0 == ((String) value).length()) // Optional/mandatory check
+        if (((String) value).isEmpty()) // Optional/mandatory check
         {
             if (m_isMandatory) {
                 valid = false;

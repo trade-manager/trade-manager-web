@@ -46,7 +46,7 @@ import java.net.URL;
  * @author TODO: Add your name here
  * @version $Id: ImageBuilder.java,v 1.1 2001/10/18 01:32:16 simon Exp $
  */
-public class ImageBuilder extends Object {
+public class ImageBuilder {
     /**
      * getIcon( String name)
      *

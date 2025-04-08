@@ -56,18 +56,16 @@ public class DateToObject implements IJavaDynamicTypeConverter {
      * @param targetType     Class<?>
      * @param valueToConvert Object
      * @return Object
-     * @throws JavaTypeTranslatorException
-     * @see IJavaDynamicTypeConverter#convert(Class<?>,
      * Object)
      */
     public Object convert(Class<?> targetType, Object valueToConvert) throws JavaTypeTranslatorException {
-        Object rVal = null;
+        Object rVal;
 
         if (valueToConvert instanceof Date) {
             // If converting to a String want to send it back as a preformatted
             // string in GMT
             if (String.class.equals(targetType)) {
-                rVal = ((Date) valueToConvert).toString();
+                rVal = valueToConvert.toString();
             } else {
                 rVal = JavaTypeTranslator.convert(targetType, ((Date) valueToConvert).getDate());
             }
@@ -105,16 +103,10 @@ public class DateToObject implements IJavaDynamicTypeConverter {
      * @param targetType     Class<?>
      * @param valueToConvert Object
      * @return boolean
-     * @see IJavaDynamicTypeConverter#
-     * supportsConversion (Class<?>, Object)
      */
     public boolean supportsConversion(Class<?> targetType, Object valueToConvert) {
-        boolean rVal = false;
-        if ((valueToConvert instanceof Date) || ((valueToConvert instanceof JavaFormatForObject)
-                && (((JavaFormatForObject) valueToConvert).getForObject() instanceof Date))) {
-            rVal = true;
-        }
 
-        return (rVal);
+        return ((valueToConvert instanceof Date) || ((valueToConvert instanceof JavaFormatForObject)
+                && (((JavaFormatForObject) valueToConvert).getForObject() instanceof Date)));
     }
 }

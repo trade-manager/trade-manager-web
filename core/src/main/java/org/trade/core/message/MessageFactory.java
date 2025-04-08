@@ -167,7 +167,7 @@ public class MessageFactory implements IMessageFactory {
      *
      * @return ExceptionMessage
      */
-    private static final ExceptionMessage createDefaultMessage() {
+    private static ExceptionMessage createDefaultMessage() {
         return new ExceptionMessage(new ExceptionCode("SYS0001"), "Unable to process request due to a system error");
     }
 }

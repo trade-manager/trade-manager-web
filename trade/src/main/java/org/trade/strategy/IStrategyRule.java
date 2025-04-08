@@ -43,14 +43,13 @@ import org.trade.strategy.data.CandleSeries;
  */
 public interface IStrategyRule {
 
-    public final String PACKAGE = "org.trade.strategy.";
+    String PACKAGE = "org.trade.strategy.";
 
     /**
      * Method runStrategy.
      *
      * @param candleSeries CandleSeries
      * @param newBar       boolean
-     * @throws StrategyRuleException
      */
     void runStrategy(CandleSeries candleSeries, boolean newBar) throws StrategyRuleException;
 

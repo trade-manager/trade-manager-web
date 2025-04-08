@@ -80,6 +80,6 @@ public class NumberToDoubleConverter extends NumberToNumberConverter {
      * @return Double the Number converted to a Double
      */
     protected Number getConvertedNumber(Number aNumber) {
-        return new Double(aNumber.doubleValue());
+        return aNumber.doubleValue();
     }
 }

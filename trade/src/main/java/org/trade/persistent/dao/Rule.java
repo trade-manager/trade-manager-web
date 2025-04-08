@@ -52,6 +52,7 @@ import org.trade.core.dao.Aspect;
 import org.trade.core.util.CoreUtils;
 import org.trade.core.util.TradingCalendar;
 
+import java.io.Serial;
 import java.time.ZonedDateTime;
 import java.util.Comparator;
 
@@ -71,6 +72,7 @@ public class Rule extends Aspect implements java.io.Serializable {
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = 2273276207080568947L;
     private Strategy strategy;
     private String comment;
@@ -88,11 +90,11 @@ public class Rule extends Aspect implements java.io.Serializable {
     /**
      * Constructor for Rule.
      *
-     * @param strategy   Strategy
-     * @param version    Integer
-     * @param comment    String
-     * @param createDate Date
-     * @param updateDate Date
+     * @param strategy       Strategy
+     * @param version        Integer
+     * @param comment        String
+     * @param createDate     Date
+     * @param lastUpdateDate Date
      */
     public Rule(Strategy strategy, Integer version, String comment, ZonedDateTime createDate,
                 ZonedDateTime lastUpdateDate) {
@@ -106,12 +108,12 @@ public class Rule extends Aspect implements java.io.Serializable {
     /**
      * Constructor for Rule.
      *
-     * @param strategy   Strategy
-     * @param version    Integer
-     * @param comment    String
-     * @param createDate Date
-     * @param rule       byte[]
-     * @param updateDate Date
+     * @param strategy       Strategy
+     * @param version        Integer
+     * @param comment        String
+     * @param createDate     Date
+     * @param rule           byte[]
+     * @param lastUpdateDate Date
      */
     public Rule(Strategy strategy, Integer version, String comment, ZonedDateTime createDate, byte[] rule,
                 ZonedDateTime lastUpdateDate) {
@@ -133,15 +135,6 @@ public class Rule extends Aspect implements java.io.Serializable {
     @Column(name = "id", unique = true, nullable = false)
     public Integer getId() {
         return this.id;
-    }
-
-    /**
-     * Method setId.
-     *
-     * @param id Integer
-     */
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     /**
@@ -253,15 +246,6 @@ public class Rule extends Aspect implements java.io.Serializable {
     }
 
     /**
-     * Method setVersion.
-     *
-     * @param version Integer
-     */
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
-
-    /**
      * Method isDirty.
      *
      * @return boolean
@@ -289,11 +273,7 @@ public class Rule extends Aspect implements java.io.Serializable {
         return "Version-" + this.getVersion();
     }
 
-    public static final Comparator<Rule> VERSION_ORDER = new Comparator<Rule>() {
-        public int compare(Rule o1, Rule o2) {
-            return CoreUtils.nullSafeComparator(o1.getVersion(), o2.getVersion());
-        }
-    };
+    public static final Comparator<Rule> VERSION_ORDER = (o1, o2) -> CoreUtils.nullSafeComparator(o1.getVersion(), o2.getVersion());
 
     /**
      * Method equals.
@@ -311,10 +291,8 @@ public class Rule extends Aspect implements java.io.Serializable {
                 return false;
             }
 
-            if (this.getStrategy().getId().equals(((Rule) objectToCompare).getStrategy().getId())
-                    && this.getVersion().equals(((Rule) objectToCompare).getVersion())) {
-                return true;
-            }
+            return this.getStrategy().getId().equals(((Rule) objectToCompare).getStrategy().getId())
+                    && this.getVersion().equals(((Rule) objectToCompare).getVersion());
 
         }
         return false;

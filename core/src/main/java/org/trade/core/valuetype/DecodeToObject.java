@@ -59,12 +59,9 @@ public class DecodeToObject implements IJavaDynamicTypeConverter {
      * @param targetType     Class<?>
      * @param valueToConvert Object
      * @return Object
-     * @throws JavaTypeTranslatorException
-     * @see IJavaDynamicTypeConverter#convert(Class<?>,
-     * Object)
      */
     public Object convert(Class<?> targetType, Object valueToConvert) throws JavaTypeTranslatorException {
-        Object rVal = null;
+        Object rVal;
 
         if (valueToConvert instanceof Decode) {
             rVal = ((Decode) valueToConvert).getCode();
@@ -83,16 +80,9 @@ public class DecodeToObject implements IJavaDynamicTypeConverter {
      * @param targetType     Class<?>
      * @param valueToConvert Object
      * @return boolean
-     * @see IJavaDynamicTypeConverter#
-     * supportsConversion (Class<?>, Object)
      */
     public boolean supportsConversion(Class<?> targetType, Object valueToConvert) {
-        boolean rVal = false;
 
-        if (valueToConvert instanceof Decode) {
-            rVal = true;
-        }
-
-        return (rVal);
+        return (valueToConvert instanceof Decode);
     }
 }

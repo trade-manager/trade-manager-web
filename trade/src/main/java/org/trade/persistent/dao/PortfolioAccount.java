@@ -47,6 +47,8 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Version;
 import org.trade.core.dao.Aspect;
 
+import java.io.Serial;
+
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 /**
@@ -56,6 +58,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @Table(name = "portfolioaccount")
 public class PortfolioAccount extends Aspect implements java.io.Serializable {
 
+    @Serial
     private static final long serialVersionUID = 2273276207080568947L;
 
     private Portfolio portfolio;
@@ -79,15 +82,6 @@ public class PortfolioAccount extends Aspect implements java.io.Serializable {
     @Column(name = "id", unique = true, nullable = false)
     public Integer getId() {
         return this.id;
-    }
-
-    /**
-     * Method setId.
-     *
-     * @param id Integer
-     */
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     /**
@@ -142,15 +136,6 @@ public class PortfolioAccount extends Aspect implements java.io.Serializable {
     }
 
     /**
-     * Method setVersion.
-     *
-     * @param version Integer
-     */
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
-
-    /**
      * Method equals.
      *
      * @param objectToCompare Object
@@ -161,18 +146,13 @@ public class PortfolioAccount extends Aspect implements java.io.Serializable {
         if (super.equals(objectToCompare))
             return true;
 
-        if (!(objectToCompare instanceof PortfolioAccount))
+        if (!(objectToCompare instanceof PortfolioAccount theOtherOrder))
             return false;
-
-        PortfolioAccount theOtherOrder = (PortfolioAccount) objectToCompare;
 
         if (!theOtherOrder.getAccount().getAccountNumber().equals((this.getAccount().getAccountNumber()))) {
             return false;
         }
 
-        if (!theOtherOrder.getPortfolio().getName().equals((this.getPortfolio().getName()))) {
-            return false;
-        }
-        return true;
+        return theOtherOrder.getPortfolio().getName().equals((this.getPortfolio().getName()));
     }
 }

@@ -103,8 +103,8 @@ public class StrategyHome {
                 strategy.getRules().size();
             }
             entityManager.getTransaction().commit();
-            if (items.size() > 0) {
-                return items.get(0);
+            if (!items.isEmpty()) {
+                return items.getFirst();
             }
             return null;
 

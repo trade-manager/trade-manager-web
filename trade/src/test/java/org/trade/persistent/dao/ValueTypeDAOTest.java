@@ -35,8 +35,12 @@
  */
 package org.trade.persistent.dao;
 
-import org.junit.*;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.TestName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,7 +60,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 
 /**
- * Some tests for the {@link DataUtilities} class.
+ * Some tests for the  DataUtilities class.
  *
  * @author Simon Allen
  * @version $Revision: 1.0 $
@@ -69,8 +73,6 @@ public class ValueTypeDAOTest {
 
     /**
      * Method setUpBeforeClass.
-     *
-     * @throws java.lang.Exception
      */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
@@ -78,8 +80,6 @@ public class ValueTypeDAOTest {
 
     /**
      * Method setUp.
-     *
-     * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
@@ -88,8 +88,6 @@ public class ValueTypeDAOTest {
 
     /**
      * Method tearDown.
-     *
-     * @throws java.lang.Exception
      */
     @After
     public void tearDown() throws Exception {
@@ -97,8 +95,6 @@ public class ValueTypeDAOTest {
 
     /**
      * Method tearDownAfterClass.
-     *
-     * @throws java.lang.Exception
      */
     @AfterClass
     public static void tearDownAfterClass() throws Exception {
@@ -113,10 +109,9 @@ public class ValueTypeDAOTest {
             assertFalse(decodes.isEmpty());
             while (eDecodes.hasMoreElements()) {
                 Decode decode = eDecodes.nextElement();
-                _log.info("TYPE:" + decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._TYPE));
-                _log.info("CODE:" + decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._CODE));
-                _log.info(
-                        "DISPLAY_NAME:" + decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._DISPLAY_NAME));
+                _log.info("TYPE:{}", decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._TYPE));
+                _log.info("CODE:{}", decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._CODE));
+                _log.info("DISPLAY_NAME:{}", decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._DISPLAY_NAME));
 
             }
 
@@ -126,10 +121,9 @@ public class ValueTypeDAOTest {
             eDecodes = decodes.elements();
             while (eDecodes.hasMoreElements()) {
                 Decode decode = eDecodes.nextElement();
-                _log.info("TYPE:" + decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._TYPE));
-                _log.info("CODE:" + decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._CODE));
-                _log.info(
-                        "DISPLAY_NAME:" + decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._DISPLAY_NAME));
+                _log.info("TYPE:{}", decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._TYPE));
+                _log.info("CODE:{}", decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._CODE));
+                _log.info("DISPLAY_NAME:{}", decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._DISPLAY_NAME));
 
             }
         } catch (Exception | AssertionError ex) {
@@ -148,16 +142,14 @@ public class ValueTypeDAOTest {
             Enumeration<Decode> eDecodes = decodes.elements();
             while (eDecodes.hasMoreElements()) {
                 Decode decode = eDecodes.nextElement();
-                _log.info("TYPE:" + decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._TYPE));
-                _log.info("CODE:" + decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._CODE));
-                _log.info(
-                        "DISPLAY_NAME:" + decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._DISPLAY_NAME));
+                _log.info("TYPE:{}", decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._TYPE));
+                _log.info("CODE:{}", decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._CODE));
+                _log.info("DISPLAY_NAME:{}", decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._DISPLAY_NAME));
 
             }
             Money price = new Money(20.22);
             Entrylimit entrylimit = entryLimits.getValue(price);
-            _log.info("Price:" + price + " Percent:" + entrylimit.getPercentOfPrice() + " LimitAmount:"
-                    + entrylimit.getLimitAmount());
+            _log.info("Price:{} Percent:{} LimitAmount:{}", price, entrylimit.getPercentOfPrice(), entrylimit.getLimitAmount());
         } catch (Exception | AssertionError ex) {
             String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
             _log.error(msg);
@@ -174,10 +166,9 @@ public class ValueTypeDAOTest {
             Enumeration<Decode> eDecodes = decodes.elements();
             while (eDecodes.hasMoreElements()) {
                 Decode decode = eDecodes.nextElement();
-                _log.info("TYPE:" + decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._TYPE));
-                _log.info("CODE:" + decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._CODE));
-                _log.info(
-                        "DISPLAY_NAME:" + decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._DISPLAY_NAME));
+                _log.info("TYPE:{}", decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._TYPE));
+                _log.info("CODE:{}", decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._CODE));
+                _log.info("DISPLAY_NAME:{}", decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._DISPLAY_NAME));
             }
         } catch (Exception | AssertionError ex) {
             String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();

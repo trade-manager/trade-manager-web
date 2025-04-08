@@ -37,6 +37,7 @@ package org.trade.ui.widget;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
+import java.io.Serial;
 
 /**
  *
@@ -45,6 +46,7 @@ public class StringRenderer extends DefaultTableCellRenderer {
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = 8447756819964236715L;
 
     public StringRenderer() {

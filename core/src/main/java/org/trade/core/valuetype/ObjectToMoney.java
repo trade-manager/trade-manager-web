@@ -54,12 +54,9 @@ public class ObjectToMoney implements IJavaDynamicTypeConverter {
      * @param targetType     Class<?>
      * @param valueToConvert Object
      * @return Object
-     * @throws JavaTypeTranslatorException
-     * @see IJavaDynamicTypeConverter#convert(Class<?>,
-     * Object)
      */
     public Object convert(Class<?> targetType, Object valueToConvert) throws JavaTypeTranslatorException {
-        Money rVal = null;
+        Money rVal;
 
         if (valueToConvert == null) {
             throw new JavaTypeTranslatorException("Null passed toObjectToMoney.convert()");
@@ -67,8 +64,7 @@ public class ObjectToMoney implements IJavaDynamicTypeConverter {
 
         // If we get a string we will convert it using the default money format
         // MONEY_NONNEGATIVE_11_2.
-        if (valueToConvert instanceof String) {
-            String stringValue = (String) valueToConvert;
+        if (valueToConvert instanceof String stringValue) {
             rVal = new Money(stringValue);
         } else {
             throw new JavaTypeTranslatorException("internal error parsing value");
@@ -83,16 +79,10 @@ public class ObjectToMoney implements IJavaDynamicTypeConverter {
      * @param targetType     Class<?>
      * @param valueToConvert Object
      * @return boolean
-     * @see IJavaDynamicTypeConverter#
-     * supportsConversion (Class<?>, Object)
      */
     public boolean supportsConversion(Class<?> targetType, Object valueToConvert) {
-        boolean rVal = false;
         // TODO: This is not strictly correct.
-        if (Money.class.equals(targetType)) {
-            rVal = true;
-        }
 
-        return (rVal);
+        return (Money.class.equals(targetType));
     }
 }

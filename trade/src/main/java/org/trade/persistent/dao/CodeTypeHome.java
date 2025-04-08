@@ -67,6 +67,7 @@ public class CodeTypeHome {
     public CodeType findById(Integer idCodeType) {
 
         try {
+
             EntityManager entityManager = EntityManagerHelper.getEntityManager();
             entityManager.getTransaction().begin();
             CodeType instance = entityManager.find(CodeType.class, idCodeType);
@@ -74,6 +75,7 @@ public class CodeTypeHome {
             return instance;
 
         } catch (Exception re) {
+
             EntityManagerHelper.rollback();
             throw re;
         } finally {
@@ -90,6 +92,7 @@ public class CodeTypeHome {
     public CodeType findByName(String name) {
 
         try {
+
             EntityManager entityManager = EntityManagerHelper.getEntityManager();
             entityManager.getTransaction().begin();
             CriteriaBuilder builder = entityManager.getCriteriaBuilder();
@@ -99,8 +102,10 @@ public class CodeTypeHome {
             query.where(builder.equal(from.get("name"), name));
             List<CodeType> items = entityManager.createQuery(query).getResultList();
             entityManager.getTransaction().commit();
-            if (items.size() > 0) {
-                return items.get(0);
+
+            if (!items.isEmpty()) {
+
+                return items.getFirst();
             }
             return null;
 
@@ -122,29 +127,37 @@ public class CodeTypeHome {
     public CodeType findByNameAndType(String codeName, String codeType) {
 
         try {
+
             EntityManager entityManager = EntityManagerHelper.getEntityManager();
             entityManager.getTransaction().begin();
             CriteriaBuilder builder = entityManager.getCriteriaBuilder();
             CriteriaQuery<CodeType> query = builder.createQuery(CodeType.class);
             Root<CodeType> from = query.from(CodeType.class);
             query.select(from);
-            List<Predicate> predicates = new ArrayList<Predicate>();
+            List<Predicate> predicates = new ArrayList<>();
 
             if (null != codeName) {
+
                 Predicate predicate = builder.equal(from.get("name"), codeName);
                 predicates.add(predicate);
             }
+
             if (null != codeType) {
+
                 Predicate predicate = builder.equal(from.get("type"), codeType);
                 predicates.add(predicate);
             }
+
             query.where(predicates.toArray(new Predicate[]{}));
             TypedQuery<CodeType> typedQuery = entityManager.createQuery(query);
             List<CodeType> items = typedQuery.getResultList();
             entityManager.getTransaction().commit();
-            if (items.size() > 0) {
-                return items.get(0);
+
+            if (!items.isEmpty()) {
+
+                return items.getFirst();
             }
+
             return null;
 
         } catch (Exception re) {
@@ -172,8 +185,10 @@ public class CodeTypeHome {
             CriteriaQuery<CodeValue> query = builder.createQuery(CodeValue.class);
             Root<CodeValue> from = query.from(CodeValue.class);
             query.select(from);
-            List<Predicate> predicates = new ArrayList<Predicate>();
+            List<Predicate> predicates = new ArrayList<>();
+
             if (null != codeAttributeName) {
+
                 Join<CodeValue, CodeAttribute> codeAttribute = from.join("codeAttribute");
                 Predicate predicate = builder.equal(codeAttribute.get("name"), codeAttributeName);
                 predicates.add(predicate);
@@ -186,8 +201,10 @@ public class CodeTypeHome {
             TypedQuery<CodeValue> typedQuery = entityManager.createQuery(query);
             List<CodeValue> items = typedQuery.getResultList();
             entityManager.getTransaction().commit();
-            if (items.size() > 0) {
-                return items.get(0);
+
+            if (!items.isEmpty()) {
+
+                return items.getFirst();
             }
             return null;
 
@@ -214,7 +231,9 @@ public class CodeTypeHome {
             Root<CodeType> from = query.from(CodeType.class);
             query.select(from);
             List<CodeType> items = entityManager.createQuery(query).getResultList();
+
             for (CodeType codeType : items) {
+
                 codeType.getCodeAttribute().size();
             }
             entityManager.getTransaction().commit();

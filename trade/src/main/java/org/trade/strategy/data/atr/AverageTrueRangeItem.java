@@ -38,6 +38,7 @@ package org.trade.strategy.data.atr;
 import org.jfree.data.ComparableObjectItem;
 import org.trade.strategy.data.base.RegularTimePeriod;
 
+import java.io.Serial;
 import java.math.BigDecimal;
 
 /**
@@ -52,6 +53,7 @@ public class AverageTrueRangeItem extends ComparableObjectItem {
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = -3888996139640449109L;
 
     /**

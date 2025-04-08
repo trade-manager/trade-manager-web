@@ -35,6 +35,7 @@
  */
 package org.trade.core.valuetype;
 
+import java.io.Serial;
 import java.util.Vector;
 
 /**
@@ -52,6 +53,7 @@ public class BaseDecode extends Decode {
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = -5356057478795774210L;
 
     private static final String BASE_DECODE_IDENTIFIER = "BASE_DECODE";
@@ -86,7 +88,7 @@ public class BaseDecode extends Decode {
      * Default Constructor
      *
      * @param codeDecodeType String
-     * @param none           boolean
+     * @param optional       boolean
      */
     public BaseDecode(String codeDecodeType, boolean optional) {
         super(codeDecodeType, BASE_DECODE_IDENTIFIER, optional);

@@ -47,6 +47,7 @@ import org.trade.strategy.data.pivot.PivotItem;
 import org.trade.ui.chart.renderer.PivotRenderer;
 
 import java.awt.*;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +60,7 @@ public class PivotDataset extends AbstractXYDataset implements IIndicatorDataset
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = 3931818830267435673L;
 
     /**
@@ -72,7 +74,7 @@ public class PivotDataset extends AbstractXYDataset implements IIndicatorDataset
      * Creates a new instance of <code>OHLCSeriesCollection</code>.
      */
     public PivotDataset() {
-        this.data = new ArrayList<IndicatorSeries>();
+        this.data = new ArrayList<>();
     }
 
     /**
@@ -256,7 +258,7 @@ public class PivotDataset extends AbstractXYDataset implements IIndicatorDataset
      * @return The x-value. * @see org.jfree.data.xy.XYDataset#getX(int, int)
      */
     public Number getX(int series, int item) {
-        return new Double(getXValue(series, item));
+        return getXValue(series, item);
     }
 
     /**
@@ -269,7 +271,7 @@ public class PivotDataset extends AbstractXYDataset implements IIndicatorDataset
     public Number getY(int series, int item) {
         PivotSeries s = (PivotSeries) this.data.get(series);
         PivotItem di = (PivotItem) s.getDataItem(item);
-        return new Double(di.getY());
+        return di.getY();
     }
 
     /**
@@ -296,7 +298,7 @@ public class PivotDataset extends AbstractXYDataset implements IIndicatorDataset
      * org.trade.strategy.data.pivot.IPivotDataset#getPivot(int, int)
      */
     public Number getPivot(int series, int item) {
-        return new Double(getPivotValue(series, item));
+        return getPivotValue(series, item);
     }
 
     /**
@@ -324,14 +326,13 @@ public class PivotDataset extends AbstractXYDataset implements IIndicatorDataset
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof PivotDataset)) {
+        if (!(obj instanceof PivotDataset that)) {
             return false;
         }
-        PivotDataset that = (PivotDataset) obj;
         if (!this.xPosition.equals(that.xPosition)) {
             return false;
         }
-        return ObjectUtils.equal(this.data, that.data);
+        return this.data.equals(that.data);
     }
 
     /**
@@ -353,8 +354,6 @@ public class PivotDataset extends AbstractXYDataset implements IIndicatorDataset
      * @param source      CandleDataset
      * @param seriesIndex int
      * @param newBar      boolean
-     * @see IIndicatorDataset#updateDataset(CandleDataset,
-     * int)
      */
     public void updateDataset(CandleDataset source, int seriesIndex, boolean newBar) {
         if (source == null) {

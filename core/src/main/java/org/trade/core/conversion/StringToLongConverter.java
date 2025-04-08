@@ -82,6 +82,6 @@ public class StringToLongConverter extends StringToObjectConverter {
      * in the correct format
      */
     protected Object getConvertedString(String aString) throws IllegalArgumentException {
-        return new Long(aString);
+        return Long.valueOf(aString);
     }
 }

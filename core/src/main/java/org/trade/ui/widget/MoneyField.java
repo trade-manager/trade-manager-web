@@ -40,6 +40,7 @@ import org.trade.core.valuetype.Money;
 import javax.swing.*;
 import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.NumberFormatter;
+import java.io.Serial;
 import java.text.NumberFormat;
 
 /**
@@ -50,6 +51,7 @@ public class MoneyField extends JFormattedTextField {
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = -4264304378113205235L;
 
     public MoneyField() {
@@ -60,7 +62,7 @@ public class MoneyField extends JFormattedTextField {
         this.setFormatterFactory(new DefaultFormatterFactory(new NumberFormatter(displayFormat),
                 new NumberFormatter(displayFormat), new NumberFormatter(editFormat)));
         this.setHorizontalAlignment(SwingConstants.RIGHT);
-        this.setValue(new Double(0));
+        this.setValue(0);
         this.setColumns(10);
     }
 
@@ -71,7 +73,7 @@ public class MoneyField extends JFormattedTextField {
      */
     public Money getMoney() {
         try {
-            this.setValue(new Double(this.getText()));
+            this.setValue(Double.valueOf(this.getText()));
         } catch (Exception ex) {
             // Do nothing will return the current value.
         }

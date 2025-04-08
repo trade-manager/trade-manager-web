@@ -35,20 +35,37 @@
  */
 package org.trade.core.util;
 
-import org.junit.*;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Ignore;
+import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.TestName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trade.core.valuetype.Money;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * Some tests for the {@link TradingCalendar} class.
@@ -67,8 +84,6 @@ public class CoreUtilsTest {
 
     /**
      * Method setUpBeforeClass.
-     *
-     * @throws java.lang.Exception
      */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
@@ -76,8 +91,6 @@ public class CoreUtilsTest {
 
     /**
      * Method setUp.
-     *
-     * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
@@ -85,8 +98,6 @@ public class CoreUtilsTest {
 
     /**
      * Method tearDown.
-     *
-     * @throws java.lang.Exception
      */
     @After
     public void tearDown() throws Exception {
@@ -94,8 +105,6 @@ public class CoreUtilsTest {
 
     /**
      * Method tearDownAfterClass.
-     *
-     * @throws java.lang.Exception
      */
     @AfterClass
     public static void tearDownAfterClass() throws Exception {
@@ -105,11 +114,11 @@ public class CoreUtilsTest {
     public void testIsBetween() {
         try {
 
-            assertTrue("1", CoreUtils.isBetween(new BigDecimal(12.20), new BigDecimal(12.24), new BigDecimal(12.23)));
+            assertTrue("1", CoreUtils.isBetween(BigDecimal.valueOf(12.20), BigDecimal.valueOf(12.24), BigDecimal.valueOf(12.23)));
 
-            assertTrue("2", CoreUtils.isBetween(new Integer(12), new Integer(18), new Integer(15)));
+            assertTrue("2", CoreUtils.isBetween(12, 18, 15));
 
-            assertFalse("3", CoreUtils.isBetween(new Integer(12), new Integer(18), new Integer(6)));
+            assertFalse("3", CoreUtils.isBetween(12, 18, 6));
 
             assertTrue("4", CoreUtils.isBetween(12.20d, 12.24d, 12.23d));
 
@@ -140,34 +149,34 @@ public class CoreUtilsTest {
     public void testNullSafe() {
         try {
 
-            int returnVal = CoreUtils.nullSafeComparator(null, new BigDecimal(1.23));
+            int returnVal = CoreUtils.nullSafeComparator(null, BigDecimal.valueOf(1.23));
             assertEquals("1", -1, returnVal);
 
-            returnVal = CoreUtils.nullSafeComparator(new BigDecimal(1.23), null);
+            returnVal = CoreUtils.nullSafeComparator(BigDecimal.valueOf(1.23), null);
             assertEquals("2", 1, returnVal);
 
-            returnVal = CoreUtils.nullSafeComparator(new BigDecimal(-1.23), new BigDecimal(-1.24));
+            returnVal = CoreUtils.nullSafeComparator(BigDecimal.valueOf(-1.23), BigDecimal.valueOf(-1.24));
             assertEquals("3", 1, returnVal);
 
             returnVal = CoreUtils.nullSafeComparator(null, null);
             assertEquals("4", 0, returnVal);
 
-            returnVal = CoreUtils.nullSafeComparator(new BigDecimal(1.23), new BigDecimal(1.24));
+            returnVal = CoreUtils.nullSafeComparator(BigDecimal.valueOf(1.23), BigDecimal.valueOf(1.24));
             assertEquals("5", -1, returnVal);
 
-            returnVal = CoreUtils.nullSafeComparator(new BigDecimal(1.25), new BigDecimal(1.24));
+            returnVal = CoreUtils.nullSafeComparator(BigDecimal.valueOf(1.25), BigDecimal.valueOf(1.24));
             assertEquals("6", 1, returnVal);
 
             returnVal = CoreUtils.nullSafeComparator(null, 1);
             assertEquals("7", -1, returnVal);
 
-            returnVal = CoreUtils.nullSafeComparator(null, new Integer(0));
+            returnVal = CoreUtils.nullSafeComparator(null, 0);
             assertEquals("8", -1, returnVal);
 
-            returnVal = CoreUtils.nullSafeComparator(new Integer(0), new Integer(0));
+            returnVal = CoreUtils.nullSafeComparator(0, 0);
             assertEquals("9", 0, returnVal);
 
-            returnVal = CoreUtils.nullSafeComparator(new Integer(1), new Integer(0));
+            returnVal = CoreUtils.nullSafeComparator(1, 0);
             assertEquals("10", 1, returnVal);
 
             Money avgFilledPrice = new Money(186.75);
@@ -186,7 +195,7 @@ public class CoreUtilsTest {
                 if ((CoreUtils.nullSafeComparator(lastPrice.getBigDecimalValue(),
                         avgFilledPrice.getBigDecimalValue()
                                 .add(initialStopTriggerAmount.getBigDecimalValue()
-                                        .multiply(new BigDecimal(buySellMultiplier)))) == 1 * buySellMultiplier)
+                                        .multiply(new BigDecimal(buySellMultiplier)))) == buySellMultiplier)
                         || (CoreUtils.nullSafeComparator(lastPrice.getBigDecimalValue(),
                         avgFilledPrice.getBigDecimalValue().add(initialStopTriggerAmount.getBigDecimalValue()
                                 .multiply(new BigDecimal(buySellMultiplier)))) == 0)) {
@@ -204,11 +213,11 @@ public class CoreUtilsTest {
             lastPrice = new Money(lastPrice.getBigDecimalValue()
                     .add(stopTriggerAmount.getBigDecimalValue().multiply(new BigDecimal(buySellMultiplier))));
 
-            if (CoreUtils.nullSafeComparator(auxPrice, avgFilledPrice) == 1 * buySellMultiplier) {
+            if (CoreUtils.nullSafeComparator(auxPrice, avgFilledPrice) == buySellMultiplier) {
                 if ((CoreUtils.nullSafeComparator(lastPrice.getBigDecimalValue(),
                         auxPrice.getBigDecimalValue()
                                 .add(stopTriggerAmount.getBigDecimalValue()
-                                        .multiply(new BigDecimal(buySellMultiplier)))) == 1 * buySellMultiplier)
+                                        .multiply(new BigDecimal(buySellMultiplier)))) == buySellMultiplier)
                         || (CoreUtils.nullSafeComparator(lastPrice.getBigDecimalValue(),
                         auxPrice.getBigDecimalValue().add(stopTriggerAmount.getBigDecimalValue()
                                 .multiply(new BigDecimal(buySellMultiplier)))) == 0)) {
@@ -237,11 +246,11 @@ public class CoreUtilsTest {
         avgFillPrice = new BigDecimal("35.34567344").setScale(SCALE, RoundingMode.HALF_EVEN);
         assertEquals("2", new BigDecimal("35.34567"), avgFillPrice);
 
-        assertEquals("3", 0, BigDecimal.ZERO.compareTo(new BigDecimal(0.00)));
+        assertEquals("3", 0, BigDecimal.ZERO.compareTo(BigDecimal.valueOf(0.00)));
 
-        assertEquals("4", -1, BigDecimal.ZERO.compareTo(new BigDecimal(0.01)));
+        assertEquals("4", -1, BigDecimal.ZERO.compareTo(BigDecimal.valueOf(0.01)));
 
-        assertEquals("5", 1, BigDecimal.ZERO.compareTo(new BigDecimal(-0.01)));
+        assertEquals("5", 1, BigDecimal.ZERO.compareTo(BigDecimal.valueOf(-0.01)));
     }
 
     private AtomicInteger timerRunning = null;
@@ -252,12 +261,10 @@ public class CoreUtilsTest {
 
         try {
 
-            Timer timer = new Timer(250, new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    synchronized (lockCoreUtilsTest) {
-                        timerRunning.addAndGet(250);
-                        lockCoreUtilsTest.notifyAll();
-                    }
+            Timer timer = new Timer(250, _ -> {
+                synchronized (lockCoreUtilsTest) {
+                    timerRunning.addAndGet(250);
+                    lockCoreUtilsTest.notifyAll();
                 }
             });
 
@@ -288,7 +295,7 @@ public class CoreUtilsTest {
             for (int element : barSizes) {
                 if (element <= barSize) {
                     if ((Math.floor(barSize / (double) element) == (barSize / (double) element))) {
-                        _log.info("BarSize integer devisable : " + element);
+                        _log.info("BarSize integer devisable : {}", element);
                     }
                 }
             }
@@ -370,5 +377,6 @@ public class CoreUtilsTest {
             System.err.println("Error processing file: " + ex.getMessage());
         }
     }
+
 
 }

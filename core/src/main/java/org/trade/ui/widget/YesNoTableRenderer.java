@@ -42,6 +42,7 @@ import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -51,6 +52,7 @@ public class YesNoTableRenderer extends JCheckBox implements TableCellRenderer, 
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = -8331082128500817101L;
 
     protected static Border noFocusBorder = new EmptyBorder(1, 1, 1, 1);
@@ -242,7 +244,7 @@ public class YesNoTableRenderer extends JCheckBox implements TableCellRenderer, 
         boolean selected = false;
 
         if (value instanceof Boolean) {
-            selected = ((Boolean) value).booleanValue();
+            selected = (Boolean) value;
         } else if (value instanceof YesNo) {
             if (((YesNo) value).isYes()) {
                 selected = true;

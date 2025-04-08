@@ -48,6 +48,7 @@ import jakarta.persistence.Version;
 import jakarta.validation.constraints.NotNull;
 import org.trade.core.dao.Aspect;
 
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,6 +62,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @Table(name = "codeattribute")
 public class CodeAttribute extends Aspect implements java.io.Serializable {
 
+    @Serial
     private static final long serialVersionUID = 2273276207080568947L;
 
     @NotNull
@@ -109,15 +111,6 @@ public class CodeAttribute extends Aspect implements java.io.Serializable {
     }
 
     /**
-     * Method setId.
-     *
-     * @param id Integer
-     */
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    /**
      * Method getName.
      *
      * @return String
@@ -141,7 +134,7 @@ public class CodeAttribute extends Aspect implements java.io.Serializable {
      *
      * @return String
      */
-    @Column(name = "description", nullable = true, length = 100)
+    @Column(name = "description", length = 100)
     public String getDescription() {
         return this.description;
     }
@@ -160,7 +153,7 @@ public class CodeAttribute extends Aspect implements java.io.Serializable {
      *
      * @return String
      */
-    @Column(name = "default_value", nullable = true, length = 45)
+    @Column(name = "default_value", length = 45)
     public String getDefaultValue() {
         return this.defaultValue;
     }
@@ -198,7 +191,7 @@ public class CodeAttribute extends Aspect implements java.io.Serializable {
      *
      * @return String
      */
-    @Column(name = "class_editor_name", nullable = true, length = 100)
+    @Column(name = "class_editor_name", length = 100)
     public String getEditorClassName() {
         return this.classEditorName;
     }
@@ -262,12 +255,4 @@ public class CodeAttribute extends Aspect implements java.io.Serializable {
         return this.version;
     }
 
-    /**
-     * Method setVersion.
-     *
-     * @param version Integer
-     */
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
 }

@@ -53,7 +53,7 @@ public interface IHeikinAshiDataset extends XYDataset {
      * @param item   the item (zero-based index).
      * @return The value.
      */
-    public Number getHigh(int series, int item);
+    Number getHigh(int series, int item);
 
     /**
      * Returns the high-value (as a double primitive) for an item within a
@@ -63,7 +63,7 @@ public interface IHeikinAshiDataset extends XYDataset {
      * @param item   the item (zero-based index).
      * @return The high-value.
      */
-    public double getHighValue(int series, int item);
+    double getHighValue(int series, int item);
 
     /**
      * Returns the low-value for the specified series and item.
@@ -72,7 +72,7 @@ public interface IHeikinAshiDataset extends XYDataset {
      * @param item   the item (zero-based index).
      * @return The value.
      */
-    public Number getLow(int series, int item);
+    Number getLow(int series, int item);
 
     /**
      * Returns the low-value (as a double primitive) for an item within a
@@ -82,7 +82,7 @@ public interface IHeikinAshiDataset extends XYDataset {
      * @param item   the item (zero-based index).
      * @return The low-value.
      */
-    public double getLowValue(int series, int item);
+    double getLowValue(int series, int item);
 
     /**
      * Returns the open-value for the specified series and item.
@@ -91,7 +91,7 @@ public interface IHeikinAshiDataset extends XYDataset {
      * @param item   the item (zero-based index).
      * @return The value.
      */
-    public Number getOpen(int series, int item);
+    Number getOpen(int series, int item);
 
     /**
      * Returns the open-value (as a double primitive) for an item within a
@@ -101,7 +101,7 @@ public interface IHeikinAshiDataset extends XYDataset {
      * @param item   the item (zero-based index).
      * @return The open-value.
      */
-    public double getOpenValue(int series, int item);
+    double getOpenValue(int series, int item);
 
     /**
      * Returns the y-value for the specified series and item.
@@ -110,7 +110,7 @@ public interface IHeikinAshiDataset extends XYDataset {
      * @param item   the item (zero-based index).
      * @return The value.
      */
-    public Number getClose(int series, int item);
+    Number getClose(int series, int item);
 
     /**
      * Returns the close-value (as a double primitive) for an item within a
@@ -120,6 +120,6 @@ public interface IHeikinAshiDataset extends XYDataset {
      * @param item   the item (zero-based index).
      * @return The close-value.
      */
-    public double getCloseValue(int series, int item);
+    double getCloseValue(int series, int item);
 
 }

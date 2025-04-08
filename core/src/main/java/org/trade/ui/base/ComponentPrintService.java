@@ -165,7 +165,6 @@ public class ComponentPrintService extends PrintPage implements Printable {
      * @param pageFormat PageFormat
      * @param pageIndex  int
      * @return int
-     * @throws PrinterException
      * @see java.awt.print.Printable#print(Graphics, PageFormat, int)
      */
     public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
@@ -192,7 +191,6 @@ public class ComponentPrintService extends PrintPage implements Printable {
      * Method print.
      *
      * @return boolean
-     * @throws Exception
      */
     public boolean print() throws Exception {
         boolean showDialogs = !GraphicsEnvironment.isHeadless();
@@ -211,7 +209,6 @@ public class ComponentPrintService extends PrintPage implements Printable {
      * @param interactive     boolean
      * @param service         PrintService
      * @return boolean
-     * @throws Exception
      */
     public boolean print(PrintMode printMode, MessageFormat headerFormat, MessageFormat footerFormat,
                          boolean showPrintDialog, PrintRequestAttributeSet attr, boolean interactive, PrintService service)
@@ -286,16 +283,14 @@ public class ComponentPrintService extends PrintPage implements Printable {
 
         // this runnable will be used to do the printing
         // (and save any throwables) on another thread
-        Runnable runnable = new Runnable() {
-            public void run() {
-                try {
-                    // do the printing
-                    job.print(copyAttr);
-                } catch (Throwable t) {
-                    // save any Throwable to be rethrown
-                    synchronized (lock) {
-                        printError = t;
-                    }
+        Runnable runnable = () -> {
+            try {
+                // do the printing
+                job.print(copyAttr);
+            } catch (Throwable t) {
+                // save any Throwable to be rethrown
+                synchronized (lock) {
+                    printError = t;
                 }
             }
         };
@@ -315,18 +310,15 @@ public class ComponentPrintService extends PrintPage implements Printable {
         if (pe != null) {
             // a subclass of PrinterException meaning the job was aborted,
             // in this case, by the user
-            if (pe instanceof PrinterAbortException) {
-                return false;
-            } else if (pe instanceof PrinterException) {
-                throw (PrinterException) pe;
-            } else if (pe instanceof Exception) {
-                throw (Exception) pe;
-            } else if (pe instanceof Error) {
-                throw (Error) pe;
-            }
+            return switch (pe) {
+                case PrinterAbortException printerAbortException -> false;
+                case PrinterException printerException -> throw printerException;
+                case Exception exception -> throw exception;
+                case Error error -> throw error;
+                default -> throw new AssertionError(pe);
+            };
 
             // can not happen
-            throw new AssertionError(pe);
         }
 
         return true;
@@ -340,9 +332,8 @@ public class ComponentPrintService extends PrintPage implements Printable {
      * @return boolean
      */
     private boolean disableDoubleBuffering(Component c) {
-        if (!(c instanceof JComponent))
+        if (!(c instanceof JComponent jc))
             return false;
-        JComponent jc = (JComponent) c;
         boolean wasBuffered = jc.isDoubleBuffered();
         jc.setDoubleBuffered(false);
         return wasBuffered;
@@ -362,12 +353,12 @@ public class ComponentPrintService extends PrintPage implements Printable {
     /**
      *
      */
-    private class ThreadSafePrintable implements Printable {
+    private static class ThreadSafePrintable implements Printable {
 
         /**
          * The delegate <code>Printable</code>.
          */
-        private Printable printDelegate;
+        private final Printable printDelegate;
 
         /**
          * To communicate any return value when delegating.
@@ -443,12 +434,12 @@ public class ComponentPrintService extends PrintPage implements Printable {
 
                 // if the delegate threw a throwable, rethrow it here
                 if (retThrowable != null) {
-                    if (retThrowable instanceof PrinterException) {
-                        throw (PrinterException) retThrowable;
-                    } else if (retThrowable instanceof Exception) {
-                        throw (RuntimeException) retThrowable;
-                    } else if (retThrowable instanceof Error) {
-                        throw (Error) retThrowable;
+                    switch (retThrowable) {
+                        case PrinterException printerException -> throw printerException;
+                        case Exception exception -> throw (RuntimeException) retThrowable;
+                        case Error error -> throw error;
+                        default -> {
+                        }
                     }
 
                     // can not happen

@@ -40,6 +40,7 @@ import org.trade.core.valuetype.Decode;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Objects;
 import java.util.Vector;
 
 /**
@@ -54,7 +55,7 @@ public class PropertyFileLookupServiceProvider implements ILookupServiceProvider
      * is the lookup name and the second key is the LookupQualifier.
      */
 
-    private static Hashtable<String, Hashtable<String, ILookup>> _lookups = new Hashtable<String, Hashtable<String, ILookup>>();
+    private static final Hashtable<String, Hashtable<String, ILookup>> _lookups = new Hashtable<>();
 
     /**
      * Default Constructor
@@ -69,17 +70,14 @@ public class PropertyFileLookupServiceProvider implements ILookupServiceProvider
      * @param qualifier  LookupQualifier
      * @param optional   boolean
      * @return ILookup
-     * @throws LookupException
-     * @see ILookupServiceProvider#getLookup(String,
-     * LookupQualifier)
      */
-    public ILookup getLookup(String lookupName, LookupQualifier qualifier, boolean optional) throws LookupException {
+    public ILookup getLookup(String lookupName, LookupQualifier qualifier, boolean optional) {
         ILookup lookup = getCachedLookup(lookupName, qualifier);
 
         if (null == lookup) {
             try {
 
-                Vector<String> colNames = new Vector<String>();
+                Vector<String> colNames = new Vector<>();
                 Enumeration<?> en = ConfigProperties.getPropAsEnumeration(lookupName + "_PropertyFile");
 
                 while (en.hasMoreElements()) {
@@ -88,7 +86,7 @@ public class PropertyFileLookupServiceProvider implements ILookupServiceProvider
 
                 // Have all of the columns - want to get a vector for each
                 // column value
-                Vector<Enumeration<?>> colRows = new Vector<Enumeration<?>>();
+                Vector<Enumeration<?>> colRows = new Vector<>();
                 int i;
                 int colNamesSize = colNames.size();
 
@@ -102,21 +100,17 @@ public class PropertyFileLookupServiceProvider implements ILookupServiceProvider
                 /*
                  * Add the None selected row.
                  */
-                Vector<Vector<Object>> rows = new Vector<Vector<Object>>();
+                Vector<Vector<Object>> rows = new Vector<>();
                 if (optional) {
-                    Vector<Object> newRowNone = new Vector<Object>();
+                    Vector<Object> newRowNone = new Vector<>();
                     for (i = 0; i < colRows.size(); i++) {
-                        Object qualVal = qualifier.getValue("" + colNames.elementAt(i));
-                        if (null != qualVal) {
-                            newRowNone.add(qualVal);
-                        } else {
-                            newRowNone.add(Decode.NONE);
-                        }
+                        Object qualVal = qualifier.getValue(colNames.elementAt(i));
+                        newRowNone.add(Objects.requireNonNullElse(qualVal, Decode.NONE));
                     }
                     rows.add(newRowNone);
                 }
                 do {
-                    Vector<Object> row = new Vector<Object>();
+                    Vector<Object> row = new Vector<>();
                     boolean foundOne = false;
                     boolean addIt = true;
                     int colRowsSize = colRows.size();
@@ -137,7 +131,7 @@ public class PropertyFileLookupServiceProvider implements ILookupServiceProvider
                         // Check to see if the returned lookup is to be
                         // constrained
                         if (foundOne && (qualifier != null)) {
-                            Object qualVal = qualifier.getValue("" + colNames.elementAt(i));
+                            Object qualVal = qualifier.getValue(colNames.elementAt(i));
 
                             if (null != qualVal) {
                                 if (!qualVal.equals(value)) {
@@ -157,7 +151,7 @@ public class PropertyFileLookupServiceProvider implements ILookupServiceProvider
                 } while (!exit);
 
                 // If rows where found then I managed to provide the lookup
-                if (rows.size() > 0) {
+                if (!rows.isEmpty()) {
                     lookup = new PropertiesLookup(colNames, rows);
                 }
             } catch (Throwable t) {
@@ -166,6 +160,7 @@ public class PropertyFileLookupServiceProvider implements ILookupServiceProvider
             }
 
             if (null != lookup) {
+                assert qualifier != null;
                 addLookupToCache(lookupName, qualifier, lookup);
             }
         }
@@ -205,12 +200,7 @@ public class PropertyFileLookupServiceProvider implements ILookupServiceProvider
      * @param lookup     ILookup
      */
     private synchronized void addLookupToCache(String lookupName, LookupQualifier qualifier, ILookup lookup) {
-        Hashtable<String, ILookup> lookupsByQualifier = _lookups.get(lookupName);
-
-        if (null == lookupsByQualifier) {
-            lookupsByQualifier = new Hashtable<String, ILookup>();
-            _lookups.put(lookupName, lookupsByQualifier);
-        }
+        Hashtable<String, ILookup> lookupsByQualifier = _lookups.computeIfAbsent(lookupName, k -> new Hashtable<>());
 
         lookupsByQualifier.put(qualifier.toString(), lookup);
     }

@@ -35,6 +35,7 @@
  */
 package org.trade.core.exception;
 
+import java.io.Serial;
 import java.util.StringTokenizer;
 
 /**
@@ -44,6 +45,7 @@ public class ExceptionMessage implements java.io.Serializable {
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = -1095613543601005491L;
 
     // constants
@@ -55,7 +57,7 @@ public class ExceptionMessage implements java.io.Serializable {
     private final static String lengthStartString = "length is not to exceed ";
 
     // member variables
-    private ExceptionCode m_code;
+    private final ExceptionCode m_code;
 
     private String m_message;
 
@@ -115,7 +117,7 @@ public class ExceptionMessage implements java.io.Serializable {
         if (null != m_message) {
             StringTokenizer tokenizer = new StringTokenizer(m_message, "#");
 
-            StringBuffer buf = new StringBuffer();
+            StringBuilder buf = new StringBuilder();
 
             for (int i = 0; tokenizer.hasMoreTokens(); i++) {
                 String token = tokenizer.nextToken();
@@ -148,7 +150,7 @@ public class ExceptionMessage implements java.io.Serializable {
      * @return The message that describes the exception.
      */
     public String getMessage() {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
 
         // If there are any remaining parameters not substituted we will
         // remove them. Note we do not change the real message, so parameters
@@ -164,8 +166,6 @@ public class ExceptionMessage implements java.io.Serializable {
                     // Append the token as is, because the token is part of the
                     // message.
                     buf.append(token);
-                } else {
-                    // This is a parameter so we ignore it.
                 }
             }
         }
@@ -181,8 +181,8 @@ public class ExceptionMessage implements java.io.Serializable {
      * this currently only implements message - same as getMessage() description
      * - everything in the message after the first colon
      *
-     * @param lookup the string to use for the look up
-     * @return Object the result of the look up, or null if nothing is found
+     * @param lookup the string to use for the look-up
+     * @return Object the result of the look-up, or null if nothing is found
      * (most likely a string)
      */
     // TODO: get rid of this
@@ -294,15 +294,13 @@ public class ExceptionMessage implements java.io.Serializable {
         if (objectToCompare == null) {
             return false;
         }
-        if (!(objectToCompare instanceof ExceptionMessage)) {
+        if (!(objectToCompare instanceof ExceptionMessage otherExceptionMessage)) {
             return false;
         }
         boolean equal = false;
 
-        ExceptionMessage otherExceptionMessage = (ExceptionMessage) objectToCompare;
-
-        boolean codeMatches = false;
-        boolean messageMatches = false;
+        boolean codeMatches;
+        boolean messageMatches;
 
         if (null == m_code) {
             codeMatches = (null == otherExceptionMessage.m_code);

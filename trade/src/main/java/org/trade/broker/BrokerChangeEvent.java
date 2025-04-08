@@ -35,6 +35,8 @@
  */
 package org.trade.broker;
 
+import java.io.Serial;
+
 /**
  * A change event that encapsulates information about a change to a dataset.
  *
@@ -46,11 +48,12 @@ public class BrokerChangeEvent extends java.util.EventObject {
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = -6068031665553697870L;
     /**
      * The brokerManagerModel that generated the change event.
      */
-    private IBrokerModel brokerManagerModel;
+    private final IBrokerModel brokerManagerModel;
 
     /**
      * Constructs a new event. The source is either the brokerManagerModel or

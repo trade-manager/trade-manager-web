@@ -44,8 +44,8 @@ import org.trade.persistent.dao.Tradingdays;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
+import java.io.Serial;
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.Hashtable;
 
 /**
@@ -53,18 +53,18 @@ import java.util.Hashtable;
  */
 public class TradingdayTreeModel extends DefaultTreeModel implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = -5543286790183657148L;
 
     static DefaultMutableTreeNode m_root = new DefaultMutableTreeNode("Tradingdays");
-    private final Hashtable<MutableTreeNode, Object> m_nodeMap = new Hashtable<MutableTreeNode, Object>();
+    private final Hashtable<MutableTreeNode, Object> m_nodeMap = new Hashtable<>();
 
     /**
      * Constructor for TradingdayTreeModel.
      *
      * @param tradingdays Tradingdays
-     * @throws ValueTypeException
      */
-    public TradingdayTreeModel(Tradingdays tradingdays) throws ValueTypeException {
+    public TradingdayTreeModel(Tradingdays tradingdays) {
 
         super(m_root);
         buildTree(tradingdays);
@@ -74,7 +74,6 @@ public class TradingdayTreeModel extends DefaultTreeModel implements Serializabl
      * Method setData.
      *
      * @param tradingdays Tradingdays
-     * @throws ValueTypeException
      */
     public void setData(Tradingdays tradingdays) throws ValueTypeException {
         ((DefaultMutableTreeNode) getRoot()).removeAllChildren();
@@ -87,15 +86,14 @@ public class TradingdayTreeModel extends DefaultTreeModel implements Serializabl
      * Method buildTree.
      *
      * @param tradingdays Tradingdays
-     * @throws ValueTypeException
      */
-    private void buildTree(Tradingdays tradingdays) throws ValueTypeException {
+    private void buildTree(Tradingdays tradingdays) {
 
         m_nodeMap.put(m_root, m_root.getRoot());
 
-        Collections.sort(tradingdays.getTradingdays(), Tradingday.DATE_ORDER_DESC);
+        tradingdays.getTradingdays().sort(Tradingday.DATE_ORDER_DESC);
         for (Tradingday tradingday : tradingdays.getTradingdays()) {
-            Collections.sort(tradingday.getTradestrategies(), Tradestrategy.DATE_ORDER_ASC);
+            tradingday.getTradestrategies().sort(Tradestrategy.DATE_ORDER_ASC);
             addTradingday(tradingday);
         }
     }
@@ -104,9 +102,8 @@ public class TradingdayTreeModel extends DefaultTreeModel implements Serializabl
      * Method addTradingday.
      *
      * @param tradingday Tradingday
-     * @throws ValueTypeException
      */
-    private void addTradingday(Tradingday tradingday) throws ValueTypeException {
+    private void addTradingday(Tradingday tradingday) {
 
         MutableTreeNode tradingdayNode = new DefaultMutableTreeNode(tradingday);
         m_root.add(tradingdayNode);

@@ -45,7 +45,6 @@ import java.util.Vector;
  * common interface: IJavaTypeConverter.
  * <p>
  * To make a conversion, execute something along the lines of the following:
- *
  * <code>
  * <p>NewClass newValue = (NewClass) JavaTypeTranslator(NewClass.class, oldValue);
  * </code>
@@ -53,7 +52,6 @@ import java.util.Vector;
  * New converters can be registered with the JavaTypeTranslator to either change
  * existing conversion behaviour or to enable previously unsupported
  * conversions. To register a new converter simply execute the following:
- *
  * <code>
  * <p>JavaTypeTranslator.registerConverter(new MyConverter());
  * </code>
@@ -67,11 +65,11 @@ public class JavaTypeTranslator {
      * hashtables whose keys represent source types. The inner hashtables'
      * values are the actual converter instances used by the JavaTypeTranslator.
      */
-    private static Hashtable<Class<?>, Hashtable<Class<?>, IJavaTypeConverter>> m_converters = new Hashtable<Class<?>, Hashtable<Class<?>, IJavaTypeConverter>>();
+    private static final Hashtable<Class<?>, Hashtable<Class<?>, IJavaTypeConverter>> m_converters = new Hashtable<>();
 
-    private static Hashtable<?, ?> m_noBaseConverters = new Hashtable<Object, Object>();
+    private static final Hashtable<?, ?> m_noBaseConverters = new Hashtable<>();
 
-    private static Vector<Object> m_dynConverters = new Vector<Object>();
+    private static final Vector<Object> m_dynConverters = new Vector<>();
 
     /**
      * Flag indicating whether supertype conversions are supported by the
@@ -135,11 +133,11 @@ public class JavaTypeTranslator {
                 return convert(targetType, "");
             } catch (JavaTypeTranslatorException x) {
                 try {
-                    return targetType.newInstance();
+                    return targetType.getDeclaredConstructor().newInstance();
                 } catch (Exception illegalX) // ille
                 {
                     throw new JavaTypeTranslatorException(illegalX,
-                            "permission is denied to create an instance of " + targetType.toString());
+                            "permission is denied to create an instance of " + targetType);
                 }
             }
         }
@@ -238,7 +236,7 @@ public class JavaTypeTranslator {
             // there is no list of existing converters for
             // this converter's targetType, create one and
             // add the converter to it
-            innerTable = new Hashtable<Class<?>, IJavaTypeConverter>(10);
+            innerTable = new Hashtable<>(10);
 
             innerTable.put(sourceType, theConverter);
             m_converters.put(targetType, innerTable);

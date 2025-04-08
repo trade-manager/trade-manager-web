@@ -54,6 +54,7 @@ import org.trade.core.util.TradingCalendar;
 import org.trade.dictionary.valuetype.TradestrategyStatus;
 import org.trade.strategy.data.StrategyData;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Duration;
@@ -75,6 +76,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @Table(name = "tradestrategy")
 public class Tradestrategy extends Aspect implements Serializable, Cloneable {
 
+    @Serial
     private static final long serialVersionUID = -2181676329258092177L;
     private Integer chartDays;
     private Integer barSize;
@@ -90,8 +92,8 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
     private ZonedDateTime lastUpdateDate;
 
     private StrategyData strategyData = null;
-    private TradestrategyStatus tradestrategyStatus = new TradestrategyStatus();
-    private List<TradeOrder> tradeOrders = new ArrayList<TradeOrder>(0);
+    private final TradestrategyStatus tradestrategyStatus = new TradestrategyStatus();
+    private List<TradeOrder> tradeOrders = new ArrayList<>(0);
     private List<CodeValue> codeValues = new ArrayList<>(0);
 
     public Tradestrategy() {
@@ -103,7 +105,7 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
      *
      * @param chartDays Integer
      * @param barSize   Integer
-     * @param name      String
+     * @param strategy  Strategy
      */
     public Tradestrategy(Integer barSize, Integer chartDays, Strategy strategy) {
         this.setBarSize(barSize);
@@ -128,7 +130,7 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
      * @param contract   Contract
      * @param tradingday Tradingday
      * @param strategy   Strategy
-     * @param account    Account
+     * @param portfolio  Portfolio
      * @param riskAmount BigDecimal
      * @param side       String
      * @param tier       String
@@ -162,15 +164,6 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
     @Column(name = "id", unique = true, nullable = false)
     public Integer getId() {
         return this.id;
-    }
-
-    /**
-     * Method setId.
-     *
-     * @param id Integer
-     */
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     /**
@@ -311,7 +304,7 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
      * @return Contract
      */
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    @JoinColumn(name = "id_contract", insertable = true, updatable = true, nullable = false)
+    @JoinColumn(name = "id_contract", nullable = false)
     public Contract getContract() {
         return this.contract;
     }
@@ -331,7 +324,7 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
      * @return Tradingday
      */
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    @JoinColumn(name = "id_trading_day", insertable = true, updatable = true, nullable = false)
+    @JoinColumn(name = "id_trading_day", nullable = false)
     public Tradingday getTradingday() {
         return this.tradingday;
     }
@@ -351,7 +344,7 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
      * @return Strategy
      */
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_strategy", insertable = true, updatable = true, nullable = false)
+    @JoinColumn(name = "id_strategy", nullable = false)
     public Strategy getStrategy() {
         return this.strategy;
     }
@@ -371,7 +364,7 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
      * @return Portfolio
      */
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_portfolio", insertable = true, updatable = true, nullable = false)
+    @JoinColumn(name = "id_portfolio", nullable = false)
     public Portfolio getPortfolio() {
         return this.portfolio;
     }
@@ -436,15 +429,6 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
     }
 
     /**
-     * Method setVersion.
-     *
-     * @param version Integer
-     */
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
-
-    /**
      * Method getTradeOrders.
      *
      * @return List<Trade>
@@ -491,7 +475,6 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
      *
      * @param name the name of the attribute.
      * @return The value of the attribute.
-     * @throws Exception
      */
 
     @Transient
@@ -499,7 +482,7 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
         Object codeValue = null;
         for (CodeValue value : this.getCodeValues()) {
             if (name.equals(value.getCodeAttribute().getName())) {
-                Vector<Object> parm = new Vector<Object>();
+                Vector<Object> parm = new Vector<>();
                 parm.add(value.getCodeValue());
                 codeValue = ClassFactory.getCreateClass(value.getCodeAttribute().getClassName(), parm, this);
                 return codeValue;
@@ -556,60 +539,57 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
      */
     public void setDirty(boolean dirty) {
         super.setDirty(dirty);
-        if (dirty)
+        if (dirty) {
             this.getTradingday().setDirty(dirty);
+        }
     }
 
-    public static final Comparator<Tradestrategy> DATE_ORDER_ASC = new Comparator<Tradestrategy>() {
-        public int compare(Tradestrategy o1, Tradestrategy o2) {
-            m_ascending = true;
-            int returnVal = 0;
+    public static final Comparator<Tradestrategy> DATE_ORDER_ASC = (o1, o2) -> {
+        m_ascending = true;
+        int returnVal;
 
-            if (CoreUtils.nullSafeComparator(o1.getTradingday().getOpen(), o2.getTradingday().getOpen()) == 0) {
-                if (CoreUtils.nullSafeComparator(o1.getSide(), o2.getSide()) == 0) {
-                    returnVal = CoreUtils.nullSafeComparator(o1.getTier(), o2.getTier());
-                } else {
-                    returnVal = CoreUtils.nullSafeComparator(o1.getSide(), o2.getSide());
-                }
-
+        if (CoreUtils.nullSafeComparator(o1.getTradingday().getOpen(), o2.getTradingday().getOpen()) == 0) {
+            if (CoreUtils.nullSafeComparator(o1.getSide(), o2.getSide()) == 0) {
+                returnVal = CoreUtils.nullSafeComparator(o1.getTier(), o2.getTier());
             } else {
-                returnVal = CoreUtils.nullSafeComparator(o1.getTradingday().getOpen(), o2.getTradingday().getOpen());
-
+                returnVal = CoreUtils.nullSafeComparator(o1.getSide(), o2.getSide());
             }
 
-            if (m_ascending.equals(Boolean.FALSE)) {
-                returnVal = returnVal * -1;
-            }
-            return returnVal;
+        } else {
+            returnVal = CoreUtils.nullSafeComparator(o1.getTradingday().getOpen(), o2.getTradingday().getOpen());
+
         }
+
+        if (m_ascending.equals(Boolean.FALSE)) {
+            returnVal = returnVal * -1;
+        }
+        return returnVal;
     };
 
-    public static final Comparator<Tradestrategy> TRADINGDAY_CONTRACT = new Comparator<Tradestrategy>() {
-        public int compare(Tradestrategy o1, Tradestrategy o2) {
-            m_ascending = true;
-            int returnVal = 0;
+    public static final Comparator<Tradestrategy> TRADINGDAY_CONTRACT = (o1, o2) -> {
+        m_ascending = true;
+        int returnVal;
 
-            if (CoreUtils.nullSafeComparator(o1.getTradingday().getOpen(), o2.getTradingday().getOpen()) == 0) {
-                if (o1.getContract().equals(o2.getContract())) {
-                    if (CoreUtils.nullSafeComparator(o1.getBarSize(), o2.getBarSize()) == 0) {
-                        returnVal = CoreUtils.nullSafeComparator(o1.getChartDays(), o2.getChartDays());
-                    } else {
-                        returnVal = CoreUtils.nullSafeComparator(o1.getBarSize(), o2.getBarSize());
-                    }
+        if (CoreUtils.nullSafeComparator(o1.getTradingday().getOpen(), o2.getTradingday().getOpen()) == 0) {
+            if (o1.getContract().equals(o2.getContract())) {
+                if (CoreUtils.nullSafeComparator(o1.getBarSize(), o2.getBarSize()) == 0) {
+                    returnVal = CoreUtils.nullSafeComparator(o1.getChartDays(), o2.getChartDays());
                 } else {
-                    returnVal = o1.getContract().getSymbol().compareTo(o2.getContract().getSymbol());
+                    returnVal = CoreUtils.nullSafeComparator(o1.getBarSize(), o2.getBarSize());
                 }
-
             } else {
-                returnVal = CoreUtils.nullSafeComparator(o1.getTradingday().getOpen(), o2.getTradingday().getOpen());
-
+                returnVal = o1.getContract().getSymbol().compareTo(o2.getContract().getSymbol());
             }
 
-            if (m_ascending.equals(Boolean.FALSE)) {
-                returnVal = returnVal * -1;
-            }
-            return returnVal;
+        } else {
+            returnVal = CoreUtils.nullSafeComparator(o1.getTradingday().getOpen(), o2.getTradingday().getOpen());
+
         }
+
+        if (m_ascending.equals(Boolean.FALSE)) {
+            returnVal = returnVal * -1;
+        }
+        return returnVal;
     };
 
     /**
@@ -671,15 +651,12 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
         if (super.equals(objectToCompare))
             return true;
 
-        if (objectToCompare instanceof Tradestrategy) {
-            Tradestrategy tradestrategy = (Tradestrategy) objectToCompare;
+        if (objectToCompare instanceof Tradestrategy tradestrategy) {
             if (this.getContract().equals(tradestrategy.getContract())) {
                 if (this.getTradingday().getOpen().compareTo(tradestrategy.getTradingday().getOpen()) == 0) {
                     if (this.getStrategy().getName().equals(tradestrategy.getStrategy().getName())) {
                         if (this.getPortfolio().getName().equals(tradestrategy.getPortfolio().getName())) {
-                            if (this.getBarSize().equals(tradestrategy.getBarSize())) {
-                                return true;
-                            }
+                            return this.getBarSize().equals(tradestrategy.getBarSize());
                         }
                     }
                 }
@@ -708,7 +685,6 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
      * Method clone.
      *
      * @return Object
-     * @throws CloneNotSupportedException
      */
     public Object clone() throws CloneNotSupportedException {
 
@@ -721,7 +697,7 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
         tradestrategy.setPortfolio(portfolio);
         Strategy strategy = (Strategy) this.getStrategy().clone();
         tradestrategy.setStrategy(strategy);
-        List<TradeOrder> tradeOrders = new ArrayList<TradeOrder>(0);
+        List<TradeOrder> tradeOrders = new ArrayList<>(0);
         tradestrategy.setTradeOrders(tradeOrders);
         return tradestrategy;
     }

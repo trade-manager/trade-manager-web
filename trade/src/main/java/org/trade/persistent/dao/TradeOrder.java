@@ -62,6 +62,7 @@ import org.trade.dictionary.valuetype.OverrideConstraints;
 import org.trade.dictionary.valuetype.TimeInForce;
 import org.trade.dictionary.valuetype.TriggerMethod;
 
+import java.io.Serial;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -81,6 +82,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @Table(name = "tradeorder")
 public class TradeOrder extends Aspect implements java.io.Serializable, Cloneable {
 
+    @Serial
     private static final long serialVersionUID = -832064631322873796L;
 
     private TradePosition tradePosition;
@@ -130,7 +132,7 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
     private String warningMessage;
     private String whyHeld;
     private ZonedDateTime lastUpdateDate;
-    private List<TradeOrderfill> tradeOrderfills = new ArrayList<TradeOrderfill>(0);
+    private List<TradeOrderfill> tradeOrderfills = new ArrayList<>(0);
 
     public TradeOrder() {
     }
@@ -237,7 +239,7 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
     /**
      * Constructor for TradeOrder.
      *
-     * @param trade               Trade
+     * @param tradePosition       Trade
      * @param action              String
      * @param averageFilledPrice  BigDecimal
      * @param allOrNothing        Boolean
@@ -272,7 +274,7 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
      * @param triggerMethod       Integer
      * @param warningMessage      String
      * @param whyHeld             String
-     * @param updateDate          ZonedDateTime
+     * @param lastUpdateDate      ZonedDateTime
      * @param tradeOrderfills     List<TradeOrderfill>
      */
     public TradeOrder(TradePosition tradePosition, String action, BigDecimal averageFilledPrice, Boolean allOrNothing,
@@ -336,21 +338,12 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
     }
 
     /**
-     * Method setId.
-     *
-     * @param id Integer
-     */
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    /**
      * Method getTradePosition.
      *
      * @return TradePosition
      */
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH})
-    @JoinColumn(name = "id_trade_position", insertable = true, updatable = true, nullable = true)
+    @JoinColumn(name = "id_trade_position")
     public TradePosition getTradePosition() {
         return this.tradePosition;
     }
@@ -370,9 +363,7 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
      * @return boolean
      */
     public boolean hasTradePosition() {
-        if (null == getTradePosition())
-            return false;
-        return true;
+        return null != getTradePosition();
     }
 
     /**
@@ -381,7 +372,7 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
      * @return Tradestrategy
      */
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH})
-    @JoinColumn(name = "id_tradestrategy", insertable = true, updatable = true, nullable = false)
+    @JoinColumn(name = "id_tradestrategy", nullable = false)
     public Tradestrategy getTradestrategy() {
         return this.tradestrategy;
     }
@@ -1055,10 +1046,8 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
     @Transient
     public boolean isActive() {
 
-        if (!this.getIsFilled() && !OrderStatus.CANCELLED.equals(this.getStatus())
-                && !OrderStatus.INACTIVE.equals(this.getStatus()))
-            return true;
-        return false;
+        return !this.getIsFilled() && !OrderStatus.CANCELLED.equals(this.getStatus())
+                && !OrderStatus.INACTIVE.equals(this.getStatus());
     }
 
     /**
@@ -1196,15 +1185,6 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
     }
 
     /**
-     * Method setVersion.
-     *
-     * @param version Integer
-     */
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
-
-    /**
      * Method getWarningMessage.
      *
      * @return String
@@ -1332,10 +1312,10 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
                             this.getTradestrategy().getPortfolio().getIndividualAccount().getAccountNumber());
                 }
             } else {
-                if (null == this.getFAMethod())
-                    throw new Exception("FAGroup is set FAMethod cannot be null.");
-                if (null == this.getFAMethod() || null == this.getFAPercent())
+
+                if (null == this.getFAMethod() || null == this.getFAPercent()) {
                     throw new Exception("FAGroup is set FAPercent cannot be null.");
+                }
             }
         } else {
             this.setFAGroup(null);
@@ -1367,7 +1347,7 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
     public TradeOrder clone() {
         try {
             TradeOrder order = (TradeOrder) super.clone();
-            List<TradeOrderfill> tradeOrderfills = new ArrayList<TradeOrderfill>(0);
+            List<TradeOrderfill> tradeOrderfills = new ArrayList<>(0);
             order.setTradeOrderfills(tradeOrderfills);
             return order;
         } catch (CloneNotSupportedException e) {
@@ -1387,10 +1367,8 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
         if (super.equals(objectToCompare))
             return true;
 
-        if (!(objectToCompare instanceof TradeOrder))
+        if (!(objectToCompare instanceof TradeOrder theOtherOrder))
             return false;
-
-        TradeOrder theOtherOrder = (TradeOrder) objectToCompare;
 
         if (!theOtherOrder.getAction().equals((this.getAction()))) {
             return false;
@@ -1485,58 +1463,49 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
         if (!theOtherOrder.getWarningMessage().equals(this.getWarningMessage())) {
             return false;
         }
-        if (!theOtherOrder.getWhyHeld().equals(this.getWhyHeld())) {
-            return false;
-        }
-        return true;
+        return theOtherOrder.getWhyHeld().equals(this.getWhyHeld());
     }
 
-    public static final Comparator<TradeOrder> FILLDATE_ORDER = new Comparator<TradeOrder>() {
-        public int compare(TradeOrder o1, TradeOrder o2) {
-            m_ascending = true;
-            int returnVal = 0;
-            if (CoreUtils.nullSafeComparator(o1.getFilledDate(), o2.getFilledDate()) == 0) {
-                returnVal = CoreUtils.nullSafeComparator(o1.getAction(), o2.getAction());
-            } else {
-                returnVal = CoreUtils.nullSafeComparator(o1.getFilledDate(), o2.getFilledDate());
-            }
-
-            if (m_ascending.equals(Boolean.FALSE)) {
-                returnVal = returnVal * -1;
-            }
-            return returnVal;
+    public static final Comparator<TradeOrder> FILLDATE_ORDER = (o1, o2) -> {
+        m_ascending = true;
+        int returnVal;
+        if (CoreUtils.nullSafeComparator(o1.getFilledDate(), o2.getFilledDate()) == 0) {
+            returnVal = CoreUtils.nullSafeComparator(o1.getAction(), o2.getAction());
+        } else {
+            returnVal = CoreUtils.nullSafeComparator(o1.getFilledDate(), o2.getFilledDate());
         }
+
+        if (m_ascending.equals(Boolean.FALSE)) {
+            returnVal = returnVal * -1;
+        }
+        return returnVal;
     };
 
-    public static final Comparator<TradeOrder> CREATE_ORDER = new Comparator<TradeOrder>() {
-        public int compare(TradeOrder o1, TradeOrder o2) {
-            m_ascending = true;
-            int returnVal = 0;
-            if (CoreUtils.nullSafeComparator(o1.getCreateDate(), o2.getCreateDate()) == 0) {
-                returnVal = CoreUtils.nullSafeComparator(o1.getAction(), o2.getAction());
-            } else {
-                returnVal = CoreUtils.nullSafeComparator(o1.getCreateDate(), o2.getCreateDate());
-            }
-
-            if (m_ascending.equals(Boolean.FALSE)) {
-                returnVal = returnVal * -1;
-            }
-            return returnVal;
+    public static final Comparator<TradeOrder> CREATE_ORDER = (o1, o2) -> {
+        m_ascending = true;
+        int returnVal;
+        if (CoreUtils.nullSafeComparator(o1.getCreateDate(), o2.getCreateDate()) == 0) {
+            returnVal = CoreUtils.nullSafeComparator(o1.getAction(), o2.getAction());
+        } else {
+            returnVal = CoreUtils.nullSafeComparator(o1.getCreateDate(), o2.getCreateDate());
         }
+
+        if (m_ascending.equals(Boolean.FALSE)) {
+            returnVal = returnVal * -1;
+        }
+        return returnVal;
     };
 
-    public static final Comparator<TradeOrder> ORDER_KEY = new Comparator<TradeOrder>() {
-        public int compare(TradeOrder o1, TradeOrder o2) {
-            m_ascending = true;
-            int returnVal = 0;
+    public static final Comparator<TradeOrder> ORDER_KEY = (o1, o2) -> {
+        m_ascending = true;
+        int returnVal;
 
-            returnVal = CoreUtils.nullSafeComparator(o1.getOrderKey(), o2.getOrderKey());
+        returnVal = CoreUtils.nullSafeComparator(o1.getOrderKey(), o2.getOrderKey());
 
-            if (m_ascending.equals(Boolean.FALSE)) {
-                returnVal = returnVal * -1;
-            }
-            return returnVal;
+        if (m_ascending.equals(Boolean.FALSE)) {
+            returnVal = returnVal * -1;
         }
+        return returnVal;
     };
 
     /**

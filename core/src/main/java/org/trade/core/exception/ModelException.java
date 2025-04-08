@@ -35,6 +35,8 @@
  */
 package org.trade.core.exception;
 
+import java.io.Serial;
+
 /**
  *
  */
@@ -43,10 +45,11 @@ public class ModelException extends NestingException {
      *
      */
 
-    private Integer id = new Integer(0);
+    private Integer id = 0;
 
-    private Integer code = new Integer(0);
+    private Integer code = 0;
 
+    @Serial
     private static final long serialVersionUID = -4931142657824969686L;
 
     public ModelException() {

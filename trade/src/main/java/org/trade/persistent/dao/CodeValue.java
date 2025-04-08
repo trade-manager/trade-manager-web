@@ -51,6 +51,7 @@ import org.trade.core.factory.ClassFactory;
 import org.trade.strategy.data.IndicatorSeries;
 import org.trade.ui.configuration.CodeAttributePanel;
 
+import java.io.Serial;
 import java.util.List;
 import java.util.Vector;
 
@@ -64,6 +65,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @Table(name = "codevalue")
 public class CodeValue extends Aspect implements java.io.Serializable {
 
+    @Serial
     private static final long serialVersionUID = 2273276207080568947L;
 
     private String codeValue;
@@ -125,15 +127,6 @@ public class CodeValue extends Aspect implements java.io.Serializable {
     }
 
     /**
-     * Method setId.
-     *
-     * @param id Integer
-     */
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    /**
      * Method getCodeValue.
      *
      * @return String
@@ -178,7 +171,7 @@ public class CodeValue extends Aspect implements java.io.Serializable {
      * @return IndicatorSeries
      */
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_indicator_series", nullable = true)
+    @JoinColumn(name = "id_indicator_series")
     public IndicatorSeries getIndicatorSeries() {
         return this.indicatorSeries;
     }
@@ -198,7 +191,7 @@ public class CodeValue extends Aspect implements java.io.Serializable {
      * @return Tradestrategy
      */
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_tradestrategy", nullable = true)
+    @JoinColumn(name = "id_tradestrategy")
     public Tradestrategy getTradestrategy() {
         return this.tradestrategy;
     }
@@ -224,15 +217,6 @@ public class CodeValue extends Aspect implements java.io.Serializable {
     }
 
     /**
-     * Method setVersion.
-     *
-     * @param version Integer
-     */
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
-
-    /**
      * Returns the value associated with for the this name attribute name. For
      * String data types you should define an classEditorName in the
      * CodeAttribute table, this should be a
@@ -242,14 +226,13 @@ public class CodeValue extends Aspect implements java.io.Serializable {
      * @param name       the name of the attribute.
      * @param codeValues List<CodeValue>.
      * @return The value of the attribute.
-     * @throws Exception
      */
     @Transient
     public static Object getValueCode(final String name, final List<CodeValue> codeValues) throws Exception {
         Object codeValue = null;
         for (CodeValue value : codeValues) {
             if (name.equals(value.getCodeAttribute().getName())) {
-                Vector<Object> parm = new Vector<Object>();
+                Vector<Object> parm = new Vector<>();
                 parm.add(value.getCodeValue());
                 codeValue = ClassFactory.getCreateClass(value.getCodeAttribute().getClassName(), parm,
                         CodeAttributePanel.class);

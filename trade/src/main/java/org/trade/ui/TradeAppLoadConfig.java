@@ -51,8 +51,6 @@ public class TradeAppLoadConfig {
 
     /**
      * Method loadAppProperties.
-     *
-     * @throws IOException
      */
     public static void loadAppProperties() throws IOException {
         ConfigProperties.loadDeploymentProperties(m_AppConfigLoad, PROPERTIES_PROPERTY_FILE);

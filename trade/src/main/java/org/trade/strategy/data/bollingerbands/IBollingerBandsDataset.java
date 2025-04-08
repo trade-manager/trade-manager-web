@@ -53,7 +53,7 @@ public interface IBollingerBandsDataset extends XYDataset {
      * @param item   the item index.
      * @return The BollingerBands.
      */
-    public double getBollingerBandsValue(int series, int item);
+    double getBollingerBandsValue(int series, int item);
 
     /**
      * Returns the BollingerBands for an item within a series.
@@ -62,6 +62,6 @@ public interface IBollingerBandsDataset extends XYDataset {
      * @param item   the item index.
      * @return The BollingerBands.
      */
-    public Number getBollingerBands(int series, int item);
+    Number getBollingerBands(int series, int item);
 
 }

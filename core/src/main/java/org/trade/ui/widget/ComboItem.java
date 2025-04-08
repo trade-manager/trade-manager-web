@@ -37,8 +37,8 @@
 package org.trade.ui.widget;
 
 public class ComboItem {
-    private Object value;
-    private String label;
+    private final Object value;
+    private final String label;
 
     public ComboItem(Object value, String label) {
         this.value = value;

@@ -44,6 +44,7 @@ import org.trade.ui.models.TradestrategyTableModel;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
+import java.io.Serial;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -51,8 +52,9 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class DAOStrategyRenderer extends DefaultTableCellRenderer {
 
+    @Serial
     private static final long serialVersionUID = -6600633898553131547L;
-    private ConcurrentHashMap<String, IStrategyRule> strategyWorkers = null;
+    private final ConcurrentHashMap<String, IStrategyRule> strategyWorkers;
 
     /**
      * Constructor for DAOStrategyRenderer.

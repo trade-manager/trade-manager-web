@@ -1,7 +1,11 @@
 package org.trade.ui.strategy;
 
 import de.sciss.syntaxpane.DefaultSyntaxKit;
-import org.junit.*;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 import org.junit.rules.TestName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,8 +16,11 @@ import org.trade.core.util.DynamicCode;
 import org.trade.core.util.TradingCalendar;
 import org.trade.dictionary.valuetype.BarSize;
 import org.trade.persistent.IPersistentModel;
-import org.trade.persistent.dao.*;
 import org.trade.persistent.dao.Rule;
+import org.trade.persistent.dao.Strategy;
+import org.trade.persistent.dao.Tradestrategy;
+import org.trade.persistent.dao.TradestrategyTest;
+import org.trade.persistent.dao.Tradingday;
 import org.trade.strategy.IStrategyRule;
 import org.trade.strategy.data.StrategyData;
 import org.trade.ui.TradeAppLoadConfig;
@@ -21,12 +28,21 @@ import org.trade.ui.base.StreamEditorPane;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.*;
-import java.util.Collections;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.util.List;
 import java.util.Vector;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 /**
  *
@@ -37,17 +53,14 @@ public class StrategyPanelTest {
     @org.junit.Rule
     public TestName name = new TestName();
 
-    private String symbol = "TEST";
     private IPersistentModel tradePersistentModel = null;
     private Tradestrategy tradestrategy = null;
     private String m_templateName = null;
     private String m_strategyDir = null;
-    private String m_tmpDir = "temp";
+    private final String m_tmpDir = "temp";
 
     /**
      * Method setUpBeforeClass.
-     *
-     * @throws java.lang.Exception
      */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
@@ -55,8 +68,6 @@ public class StrategyPanelTest {
 
     /**
      * Method setUp.
-     *
-     * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
@@ -68,6 +79,7 @@ public class StrategyPanelTest {
             assertNotNull("setUp: Strategy dir should be not null", m_strategyDir);
             this.tradePersistentModel = (IPersistentModel) ClassFactory
                     .getServiceForInterface(IPersistentModel._persistentModel, this);
+            String symbol = "TEST";
             this.tradestrategy = TradestrategyTest.getTestTradestrategy(symbol);
             assertNotNull("setUp: tradestrategy should be not null", this.tradestrategy);
             List<Strategy> strategies = this.tradePersistentModel.findStrategies();
@@ -93,8 +105,6 @@ public class StrategyPanelTest {
 
     /**
      * Method tearDown.
-     *
-     * @throws java.lang.Exception
      */
     @After
     public void tearDown() throws Exception {
@@ -105,8 +115,6 @@ public class StrategyPanelTest {
 
     /**
      * Method tearDownAfterClass.
-     *
-     * @throws java.lang.Exception
      */
     @AfterClass
     public static void tearDownAfterClass() throws Exception {
@@ -151,27 +159,24 @@ public class StrategyPanelTest {
      *
      * @param fileName String
      * @return String
-     * @throws IOException
      */
     private String readFile(String fileName) throws IOException {
-        FileReader inputStreamReader = null;
-        BufferedReader bufferedReader = null;
+        FileReader inputStreamReader;
+        BufferedReader bufferedReader;
         inputStreamReader = new FileReader(fileName);
         bufferedReader = null;
         bufferedReader = new BufferedReader(inputStreamReader);
         String newLine = "\n";
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         String line;
 
         while ((line = bufferedReader.readLine()) != null) {
-            sb.append(line + newLine);
+            sb.append(line).append(newLine);
         }
 
-        if (null != bufferedReader)
-            bufferedReader.close();
+        bufferedReader.close();
 
-        if (null != inputStreamReader)
-            inputStreamReader.close();
+        inputStreamReader.close();
         return sb.toString();
     }
 
@@ -180,7 +185,6 @@ public class StrategyPanelTest {
      *
      * @param fileName String
      * @param content  String
-     * @throws IOException
      */
     private void writeFile(String fileName, String content) throws IOException {
 
@@ -196,7 +200,7 @@ public class StrategyPanelTest {
             IBrokerModel m_brokerManagerModel = (IBrokerModel) ClassFactory
                     .getServiceForInterface(IBrokerModel._brokerTest, this);
 
-            Vector<Object> parm = new Vector<Object>(0);
+            Vector<Object> parm = new Vector<>(0);
             parm.add(m_brokerManagerModel);
             parm.add(this.tradestrategy.getStrategyData());
             parm.add(this.tradestrategy.getId());
@@ -205,7 +209,7 @@ public class StrategyPanelTest {
             dynacode.addSourceDir(new File(m_strategyDir));
             IStrategyRule strategyProxy = (IStrategyRule) dynacode.newProxyInstance(IStrategyRule.class,
                     IStrategyRule.PACKAGE + m_templateName, parm);
-            _log.info("Created Strategy" + strategyProxy);
+            _log.info("Created Strategy{}", strategyProxy);
             strategyProxy.execute();
 
             while (!strategyProxy.isWaiting()) {
@@ -228,12 +232,12 @@ public class StrategyPanelTest {
 
     @Test
     public void testDoCompileRule() {
-        File srcDirFile = null;
+        File srcDirFile;
         try {
             IBrokerModel m_brokerManagerModel = (IBrokerModel) ClassFactory
                     .getServiceForInterface(IBrokerModel._brokerTest, this);
 
-            Vector<Object> parm = new Vector<Object>(0);
+            Vector<Object> parm = new Vector<>(0);
             parm.add(m_brokerManagerModel);
             parm.add(this.tradestrategy.getStrategyData());
             parm.add(this.tradestrategy.getId());
@@ -278,13 +282,13 @@ public class StrategyPanelTest {
             StrategyPanel strategyPanel = new StrategyPanel(this.tradePersistentModel);
             List<Strategy> strategies = this.tradePersistentModel.findStrategies();
             assertNotNull("No strategies", strategies);
-            assertEquals(false, strategies.isEmpty());
+            assertFalse(strategies.isEmpty());
 
-            Strategy strategy = strategies.get(0);
+            Strategy strategy = strategies.getFirst();
             assertNotNull("testDoCompile: Strategy should be not null", strategy);
             Rule myrule = null;
 
-            Collections.sort(strategy.getRules(), Rule.VERSION_ORDER);
+            strategy.getRules().sort(Rule.VERSION_ORDER);
 
             for (Rule rule : strategy.getRules()) {
                 myrule = rule;
@@ -314,13 +318,13 @@ public class StrategyPanelTest {
             StrategyPanel strategyPanel = new StrategyPanel(this.tradePersistentModel);
             List<Strategy> strategies = this.tradePersistentModel.findStrategies();
             assertNotNull("testDoSave: Strategies should be not null", strategies);
-            assertEquals("testDoSave: Strategies should be not empty", false, strategies.isEmpty());
+            assertFalse("testDoSave: Strategies should be not empty", strategies.isEmpty());
 
-            Strategy strategy = strategies.get(0);
+            Strategy strategy = strategies.getFirst();
             assertNotNull("testDoSave: Strategy should be not null", strategy);
             Rule myrule = null;
 
-            Collections.sort(strategy.getRules(), Rule.VERSION_ORDER);
+            strategy.getRules().sort(Rule.VERSION_ORDER);
 
             for (Rule rule : strategy.getRules()) {
                 myrule = rule;
@@ -350,7 +354,7 @@ public class StrategyPanelTest {
             assertNotNull("testDoSave: Rule saved should be not null", ruleSaved.getId());
             String javaCode = new String(ruleSaved.getRule());
             assertEquals("testDoSave: Java rule test should be equals", javaCode, textArea.getText());
-            _log.info("Java file to Saved: " + javaCode);
+            _log.info("Java file to Saved: {}", javaCode);
         } catch (Exception | AssertionError ex) {
             String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
             _log.error(msg);

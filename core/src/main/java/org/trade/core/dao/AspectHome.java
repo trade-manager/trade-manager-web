@@ -59,7 +59,6 @@ public class AspectHome {
      *
      * @param transientInstance Aspect
      * @return Aspect
-     * @throws Exception
      */
     public synchronized <T extends Aspect> T persist(T transientInstance) throws Exception {
         return persist(transientInstance, false);
@@ -71,7 +70,6 @@ public class AspectHome {
      * @param transientInstance Aspect
      * @param overrideVersion   boolean
      * @return Aspect
-     * @throws Exception
      */
 
     public synchronized <T extends Aspect> T persist(T transientInstance, boolean overrideVersion) throws Exception {
@@ -136,7 +134,6 @@ public class AspectHome {
      *
      * @param className String
      * @return Aspects
-     * @throws ClassNotFoundException
      */
     public Aspects findByClassName(String className) throws ClassNotFoundException {
 
@@ -171,7 +168,6 @@ public class AspectHome {
      * @param fieldname String
      * @param value     String
      * @return Aspects
-     * @throws ClassNotFoundException
      */
     public Aspects findByClassNameFieldName(String className, String fieldname, String value)
             throws ClassNotFoundException {
@@ -214,9 +210,9 @@ public class AspectHome {
         try {
             EntityManager entityManager = EntityManagerHelper.getEntityManager();
             entityManager.getTransaction().begin();
-            Object aspect = entityManager.find(transientInstance.getClass(), transientInstance.getId());
+            Aspect aspect = entityManager.find(transientInstance.getClass(), transientInstance.getId());
             entityManager.getTransaction().commit();
-            return (Aspect) aspect;
+            return aspect;
         } catch (Exception re) {
             EntityManagerHelper.rollback();
             throw re;

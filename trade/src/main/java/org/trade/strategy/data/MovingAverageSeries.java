@@ -47,6 +47,7 @@ import org.trade.strategy.data.base.RegularTimePeriod;
 import org.trade.strategy.data.candle.CandleItem;
 import org.trade.strategy.data.movingaverage.MovingAverageItem;
 
+import java.io.Serial;
 import java.math.BigDecimal;
 import java.util.LinkedList;
 
@@ -63,6 +64,7 @@ import java.util.LinkedList;
 @DiscriminatorValue("MovingAverageSeries")
 public class MovingAverageSeries extends IndicatorSeries {
 
+    @Serial
     private static final long serialVersionUID = 20183087035446657L;
 
     public static final String LENGTH = "Length";
@@ -78,8 +80,8 @@ public class MovingAverageSeries extends IndicatorSeries {
      */
     private double sum = 0.0;
     private double multiplyer = 0;
-    private LinkedList<Double> yyValues = new LinkedList<Double>();
-    private LinkedList<Long> volValues = new LinkedList<Long>();
+    private LinkedList<Double> yyValues = new LinkedList<>();
+    private LinkedList<Long> volValues = new LinkedList<>();
 
     /**
      * Creates a new empty series. By default, items added to the series will be
@@ -127,12 +129,11 @@ public class MovingAverageSeries extends IndicatorSeries {
      * Method clone.
      *
      * @return Object
-     * @throws CloneNotSupportedException
      */
     public Object clone() throws CloneNotSupportedException {
         MovingAverageSeries clone = (MovingAverageSeries) super.clone();
-        clone.yyValues = new LinkedList<Double>();
-        clone.volValues = new LinkedList<Long>();
+        clone.yyValues = new LinkedList<>();
+        clone.volValues = new LinkedList<>();
         return clone;
     }
 
@@ -360,8 +361,7 @@ public class MovingAverageSeries extends IndicatorSeries {
     public void printSeries() {
         for (int i = 0; i < this.getItemCount(); i++) {
             MovingAverageItem dataItem = (MovingAverageItem) this.getDataItem(i);
-            _log.debug("Type: " + this.getType() + " Time: " + dataItem.getPeriod().getStart() + " Value: "
-                    + dataItem.getMovingAverage());
+            _log.debug("Type: {} Time: {} Value: {}", this.getType(), dataItem.getPeriod().getStart(), dataItem.getMovingAverage());
         }
     }
 
@@ -452,31 +452,14 @@ public class MovingAverageSeries extends IndicatorSeries {
      */
     private double getPrice(CandleItem candle) {
 
-        switch (this.getPriceSource()) {
-            case 1: {
-                return candle.getClose();
-            }
-            case 2: {
-                return candle.getOpen();
-            }
-            case 3: {
-                return candle.getHigh();
-            }
-            case 4: {
-                return candle.getLow();
-            }
-            case 5: {
-                return (candle.getHigh() + candle.getLow()) / 2.0d;
-            }
-            case 6: {
-                return (candle.getHigh() + candle.getLow() + candle.getClose()) / 3.0d;
-            }
-            case 7: {
-                return (candle.getOpen() + candle.getHigh() + candle.getLow() + candle.getClose()) / 4.0d;
-            }
-            default: {
-                return candle.getClose();
-            }
-        }
+        return switch (this.getPriceSource()) {
+            case 2 -> candle.getOpen();
+            case 3 -> candle.getHigh();
+            case 4 -> candle.getLow();
+            case 5 -> (candle.getHigh() + candle.getLow()) / 2.0d;
+            case 6 -> (candle.getHigh() + candle.getLow() + candle.getClose()) / 3.0d;
+            case 7 -> (candle.getOpen() + candle.getHigh() + candle.getLow() + candle.getClose()) / 4.0d;
+            default -> candle.getClose();
+        };
     }
 }

@@ -42,8 +42,9 @@ import org.trade.persistent.dao.Tradingday;
 import org.trade.persistent.dao.Tradingdays;
 import org.trade.ui.base.TableModel;
 
+import java.io.Serial;
 import java.time.ZonedDateTime;
-import java.util.Collections;
+import java.util.Objects;
 import java.util.Vector;
 
 /**
@@ -53,6 +54,7 @@ public class TradingdayTableModel extends TableModel {
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = 3087514589731145479L;
 
     private static final String OPEN = "       Open*       ";
@@ -117,9 +119,7 @@ public class TradingdayTableModel extends TableModel {
         Date closeDate = (Date) this.getValueAt(row, 1);
         Tradingday tradingday = getData().getTradingday(openDate.getZonedDateTime(), closeDate.getZonedDateTime());
         if (null != tradingday && Tradingdays.hasTradeOrders(tradingday)) {
-            if ((columnNames[column] == OPEN) || (columnNames[column] == CLOSE)) {
-                return false;
-            }
+            return (!Objects.equals(columnNames[column], OPEN)) && (!Objects.equals(columnNames[column], CLOSE));
         }
         return true;
     }
@@ -130,12 +130,12 @@ public class TradingdayTableModel extends TableModel {
      * @param data Tradingdays
      */
     public void setData(Tradingdays data) {
-        Collections.sort(data.getTradingdays(), Tradingday.DATE_ORDER_DESC);
+        data.getTradingdays().sort(Tradingday.DATE_ORDER_DESC);
         this.m_data = data;
         this.clearAll();
         if (!getData().getTradingdays().isEmpty()) {
             for (Tradingday element : getData().getTradingdays()) {
-                Vector<Object> newRow = new Vector<Object>();
+                Vector<Object> newRow = new Vector<>();
                 getNewRow(newRow, element);
                 rows.add(newRow);
             }
@@ -152,7 +152,7 @@ public class TradingdayTableModel extends TableModel {
      */
 
     public Object getValueAt(int row, int column) {
-        if (columnNames[column] == CLOSE) {
+        if (Objects.equals(columnNames[column], CLOSE)) {
             Date closeDate = ((Date) super.getValueAt(row, column));
             Date openDate = ((Date) super.getValueAt(row, 0));
             if (null != closeDate && null != openDate) {
@@ -264,7 +264,7 @@ public class TradingdayTableModel extends TableModel {
                     TradingCalendar.getTradingDayEnd(date));
         }
         getData().add(tradingday);
-        Vector<Object> newRow = new Vector<Object>();
+        Vector<Object> newRow = new Vector<>();
         getNewRow(newRow, tradingday);
         rows.add(newRow);
         this.fireTableRowsInserted(rows.size() - 1, rows.size() - 1);

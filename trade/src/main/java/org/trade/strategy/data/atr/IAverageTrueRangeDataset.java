@@ -53,7 +53,7 @@ public interface IAverageTrueRangeDataset extends XYDataset {
      * @param item   the item index.
      * @return The AverageTrueRange.
      */
-    public double getAverageTrueRangeValue(int series, int item);
+    double getAverageTrueRangeValue(int series, int item);
 
     /**
      * Returns the AverageTrueRange for an item within a series.
@@ -62,6 +62,6 @@ public interface IAverageTrueRangeDataset extends XYDataset {
      * @param item   the item index.
      * @return The AverageTrueRange.
      */
-    public Number getAverageTrueRange(int series, int item);
+    Number getAverageTrueRange(int series, int item);
 
 }

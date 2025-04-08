@@ -86,12 +86,12 @@ public class ClassName {
      * @return String
      */
     private String _extractClassName(String className) {
-        String name = null;
+        String name;
 
         int index = className.lastIndexOf('.');
 
         if (index != -1) {
-            name = className.substring(index + 1, className.length());
+            name = className.substring(index + 1);
         } else {
             name = className;
         }

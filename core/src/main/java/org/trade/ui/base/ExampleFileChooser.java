@@ -45,13 +45,13 @@ import java.util.Hashtable;
  * @version $Id: ExampleFileChooser.java,v 1.1 2001/10/18 01:32:16 simon Exp $
  */
 public class ExampleFileChooser extends FileView {
-    private Hashtable<String, Icon> icons = new Hashtable<String, Icon>(5);
+    private final Hashtable<String, Icon> icons = new Hashtable<>(5);
 
-    private Hashtable<File, String> fileNames = new Hashtable<File, String>(5);
+    private final Hashtable<File, String> fileNames = new Hashtable<>(5);
 
-    private Hashtable<File, String> fileDescriptions = new Hashtable<File, String>(5);
+    private final Hashtable<File, String> fileDescriptions = new Hashtable<>(5);
 
-    private Hashtable<String, String> typeDescriptions = new Hashtable<String, String>(5);
+    private final Hashtable<String, String> typeDescriptions = new Hashtable<>(5);
 
     /**
      * The name of the file.
@@ -96,8 +96,6 @@ public class ExampleFileChooser extends FileView {
         return fileDescriptions.get(f);
     }
 
-    ;
-
     /**
      * Adds a human readable type description for files. Based on "dot"
      * extension strings, e.g: ".gif". Case is ignored.
@@ -141,17 +139,14 @@ public class ExampleFileChooser extends FileView {
     public String getExtension(File f) {
         String name = f.getName();
 
-        if (name != null) {
-            int extensionIndex = name.lastIndexOf('.');
+        int extensionIndex = name.lastIndexOf('.');
 
-            if (extensionIndex < 0) {
-                return null;
-            }
-
-            return name.substring(extensionIndex + 1).toLowerCase();
+        if (extensionIndex < 0) {
+            return null;
         }
 
-        return null;
+        return name.substring(extensionIndex + 1).toLowerCase();
+
     }
 
     /**
@@ -190,19 +185,16 @@ public class ExampleFileChooser extends FileView {
      *
      * @param f File
      * @return Boolean
-     * @see FileView#isHidden
      */
     public Boolean isHidden(File f) {
         String name = f.getName();
 
-        if ((name != null) && !name.equals("") && (name.charAt(0) == '.')) {
+        if (!name.isEmpty() && name.charAt(0) == '.') {
             return Boolean.TRUE;
         } else {
             return Boolean.FALSE;
         }
     }
-
-    ;
 
     /**
      * Whether the directory is traversable or not. Generic implementation
@@ -226,5 +218,4 @@ public class ExampleFileChooser extends FileView {
         }
     }
 
-    ;
 }

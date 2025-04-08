@@ -74,9 +74,9 @@ public class XMLDOMParserWrapper {
     // note: even though this is capitalized it is not static final
     // change this to a method variable so the whole class will be
     // thread-safe
-    private static String PRINTWRITER_ENCODING = "UTF-8";
+    private static final String PRINTWRITER_ENCODING = "UTF-8";
 
-    private static boolean canonical = false; // this means that the <? xml
+    private static final boolean canonical = false; // this means that the <? xml
 
     // version 1.0 ?> is added, +
     // cdata is used when possible
@@ -94,11 +94,6 @@ public class XMLDOMParserWrapper {
      * Indent level
      */
     private int m_indent = 0;
-
-    /**
-     * Indentation will be in multiples of basicIndent
-     */
-    private final String m_basicIndent = "  ";
 
     public static final int DEFAULT = 0;
 
@@ -127,17 +122,15 @@ public class XMLDOMParserWrapper {
 
             // The opposite of creating entity ref nodes is expanding them
             // inline
-            dbf.setExpandEntityReferences(!true);
+            dbf.setExpandEntityReferences(false);
 
             // Step 2: create a DocumentBuilder
             setDocumentBuilder(dbf.newDocumentBuilder());
             setErrorHandler(new XMLDOMParserErrorHandler(
                     new PrintWriter(new OutputStreamWriter(System.err, PRINTWRITER_ENCODING), true)));
             getDocumentBuilder().setErrorHandler(getErrorHandler());
-        } catch (ParserConfigurationException e) {
+        } catch (ParserConfigurationException | UnsupportedEncodingException e) {
             e.printStackTrace();
-        } catch (UnsupportedEncodingException ex) {
-            ex.printStackTrace();
         }
     }
 
@@ -191,7 +184,7 @@ public class XMLDOMParserWrapper {
             throw new SAXException("empyt file string is sometimes represented as null");
         }
 
-        Document doc = null;
+        Document doc;
 
         // Step 3: parse the input file to get a Document object
         doc = getDocumentBuilder().parse(file);
@@ -213,7 +206,7 @@ public class XMLDOMParserWrapper {
             throw new SAXException("empyt xml string is sometimes represented as null");
         }
 
-        Document doc = null;
+        Document doc;
 
         // Step 3: parse the input file to get a Document object
         doc = getDocumentBuilder().parse(new InputSource(new ByteArrayInputStream(xml.getBytes())));
@@ -256,7 +249,7 @@ public class XMLDOMParserWrapper {
             return null;
         }
 
-        StringBuffer xml = new StringBuffer();
+        StringBuilder xml = new StringBuilder();
         int type = node.getNodeType();
         String nodeName = null;
 
@@ -264,27 +257,9 @@ public class XMLDOMParserWrapper {
 
             // print document
             case Node.DOCUMENT_NODE: {
-                String Encoding = PRINTWRITER_ENCODING;
 
-                if ((null != Encoding) && (!"".equals(Encoding))) {
-                    if (true) // ! canonical )
-                    {
-                        if (Encoding.equalsIgnoreCase("DEFAULT")) {
-                            Encoding = "UTF-8";
-                        } else {
-                            if (Encoding.equalsIgnoreCase("Unicode")) {
-                                Encoding = "UTF-16";
-                            }
-                        }
-                    }
-
-                    // only add this if the encoding is not null or empty string
-                    xml.append("<?xml version=\"1.0\" encoding=\"" + Encoding + "\"?>");
-                } else {
-
-                    // if no endoding is speified then still add xml version 1.0
-                    xml.append("<?xml version=\"1.0\"?>");
-                }
+                // only add this if the encoding is not null or empty string
+                xml.append("<?xml version=\"1.0\" encoding=\"").append(PRINTWRITER_ENCODING).append("\"?>");
                 Element element = ((Document) node).getDocumentElement();
                 xml.append(print(element, function));
 
@@ -309,12 +284,10 @@ public class XMLDOMParserWrapper {
                     } else {
                         NodeList children = node.getChildNodes();
 
-                        if (children != null) {
-                            int len = children.getLength();
+                        int len = children.getLength();
 
-                            for (int i = 0; i < len; i++) {
-                                xml.append(print(children.item(i), function));
-                            }
+                        for (int i = 0; i < len; i++) {
+                            xml.append(print(children.item(i), function));
                         }
 
                         break;
@@ -326,12 +299,10 @@ public class XMLDOMParserWrapper {
                     } else {
                         NodeList children = node.getChildNodes();
 
-                        if (children != null) {
-                            int len = children.getLength();
+                        int len = children.getLength();
 
-                            for (int i = 0; i < len; i++) {
-                                xml.append(print(children.item(i), function));
-                            }
+                        for (int i = 0; i < len; i++) {
+                            xml.append(print(children.item(i), function));
                         }
 
                         break;
@@ -375,12 +346,10 @@ public class XMLDOMParserWrapper {
 
                 NodeList children = node.getChildNodes();
 
-                if (children != null) {
-                    int len = children.getLength();
+                int len = children.getLength();
 
-                    for (int i = 0; i < len; i++) {
-                        xml.append(print(children.item(i), function));
-                    }
+                for (int i = 0; i < len; i++) {
+                    xml.append(print(children.item(i), function));
                 }
 
                 break;
@@ -391,12 +360,10 @@ public class XMLDOMParserWrapper {
                 if (canonical) {
                     NodeList children = node.getChildNodes();
 
-                    if (children != null) {
-                        int len = children.getLength();
+                    int len = children.getLength();
 
-                        for (int i = 0; i < len; i++) {
-                            xml.append(print(children.item(i), function));
-                        }
+                    for (int i = 0; i < len; i++) {
+                        xml.append(print(children.item(i), function));
                     }
                 } else {
                     xml.append('&');
@@ -425,8 +392,8 @@ public class XMLDOMParserWrapper {
             // print text
             case Node.TEXT_NODE: {
                 if ((function == CREATE_STYPE_SHEET) && (null != node.getNodeValue())
-                        && (node.getNodeValue().trim().length() > 0)) {
-                    xml.append("<xsl:value-of select=\"" + node.getParentNode().getNodeName() + "\"/>");
+                        && (!node.getNodeValue().trim().isEmpty())) {
+                    xml.append("<xsl:value-of select=\"").append(node.getParentNode().getNodeName()).append("\"/>");
                 } else {
                     if (function != CREATE_RULE) {
                         xml.append(normalize(node.getNodeValue()));
@@ -444,7 +411,7 @@ public class XMLDOMParserWrapper {
 
                 String data = node.getNodeValue();
 
-                if ((data != null) && (data.length() > 0)) {
+                if ((data != null) && (!data.isEmpty())) {
                     xml.append(' ');
                     xml.append(data);
                 }
@@ -509,7 +476,7 @@ public class XMLDOMParserWrapper {
      * @return String
      */
     private static String normalize(String s) {
-        StringBuffer str = new StringBuffer();
+        StringBuilder str = new StringBuilder();
         int len = (s != null) ? s.length() : 0;
 
         for (int i = 0; i < len; i++) {
@@ -518,7 +485,7 @@ public class XMLDOMParserWrapper {
             // weed out characters between 0 - 31 that are not
             // LF, CR, TAB all others are not allowed in XML
             // elements
-            int charInt = Integer.valueOf(Integer.toString(ch)).intValue();
+            int charInt = Integer.parseInt(Integer.toString(ch));
 
             if (charInt < 32) {
                 if ((charInt == 10 /* line feed */)
@@ -580,7 +547,11 @@ public class XMLDOMParserWrapper {
      */
     private void outputIndentation() {
         for (int i = 0; i < m_indent; i++) {
-            m_out.print(m_basicIndent);
+            /**
+             * Indentation will be in multiples of basicIndent
+             */
+            String basicIndent = "  ";
+            m_out.print(basicIndent);
         }
     }
 
@@ -593,7 +564,7 @@ public class XMLDOMParserWrapper {
     private void printlnCommon(Node n) {
         m_out.print(" nodeName=\"" + n.getNodeName() + "\"");
 
-        String val = null;
+        String val;
 
         val = n.getNamespaceURI();
 
@@ -618,7 +589,7 @@ public class XMLDOMParserWrapper {
         if (val != null) {
             m_out.print(" nodeValue=");
 
-            if (val.trim().equals("")) {
+            if (val.trim().isEmpty()) {
 
                 // Whitespace
                 m_out.print("[WS]");
@@ -759,11 +730,11 @@ public class XMLDOMParserWrapper {
     private static String formatDisplayName(String nodeName) {
         char[] val = nodeName.toCharArray();
         int position = 0;
-        StringBuffer newNodeName = new StringBuffer(nodeName);
+        StringBuilder newNodeName = new StringBuilder(nodeName);
 
         for (int i = 0; i < val.length; i++) {
             if (!Character.isLetterOrDigit(val[i]) || (i == 0)) {
-                String replace = null;
+                String replace;
 
                 if (i == 0) {
                     replace = "" + Character.toUpperCase(val[i]);
@@ -791,11 +762,11 @@ public class XMLDOMParserWrapper {
     private static String formatElementName(String nodeName) {
         char[] val = nodeName.toCharArray();
         int position = 0;
-        StringBuffer newNodeName = new StringBuffer(nodeName);
+        StringBuilder newNodeName = new StringBuilder(nodeName);
 
         for (int i = 0; i < val.length; i++) {
             if (Character.isUpperCase(val[i])) {
-                String replace = null;
+                String replace;
 
                 if (i == 0) {
                     replace = "" + Character.toLowerCase(val[i]);
@@ -823,7 +794,7 @@ public class XMLDOMParserWrapper {
         /**
          * Error handler output goes here
          */
-        private PrintWriter out;
+        private final PrintWriter out;
 
         /**
          * Constructor for XMLDOMParserErrorHandler.
@@ -847,9 +818,7 @@ public class XMLDOMParserWrapper {
                 systemId = "null";
             }
 
-            String info = "URI=" + systemId + " Line=" + spe.getLineNumber() + ": " + spe.getMessage();
-
-            return info;
+            return "URI=" + systemId + " Line=" + spe.getLineNumber() + ": " + spe.getMessage();
         }
 
         // The following methods are standard SAX ErrorHandler methods.
@@ -859,10 +828,9 @@ public class XMLDOMParserWrapper {
          * Method warning.
          *
          * @param spe SAXParseException
-         * @throws SAXException
          * @see org.xml.sax.ErrorHandler#warning(SAXParseException)
          */
-        public void warning(SAXParseException spe) throws SAXException {
+        public void warning(SAXParseException spe) {
             out.println("Warning: " + getParseExceptionInfo(spe));
         }
 
@@ -870,7 +838,6 @@ public class XMLDOMParserWrapper {
          * Method error.
          *
          * @param spe SAXParseException
-         * @throws SAXException
          * @see org.xml.sax.ErrorHandler#error(SAXParseException)
          */
         public void error(SAXParseException spe) throws SAXException {
@@ -883,7 +850,6 @@ public class XMLDOMParserWrapper {
          * Method fatalError.
          *
          * @param spe SAXParseException
-         * @throws SAXException
          * @see org.xml.sax.ErrorHandler#fatalError(SAXParseException)
          */
         public void fatalError(SAXParseException spe) throws SAXException {

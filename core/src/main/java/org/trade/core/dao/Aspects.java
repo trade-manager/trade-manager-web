@@ -35,6 +35,7 @@
  */
 package org.trade.core.dao;
 
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,10 +47,11 @@ public class Aspects implements java.io.Serializable {
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = 3388042483785305102L;
     private Integer idAspects;
     private boolean dirty = false;
-    private List<Aspect> aspect = new ArrayList<Aspect>(0);
+    private List<Aspect> aspect = new ArrayList<>(0);
 
     public Aspects() {
     }

@@ -36,6 +36,7 @@
 package org.trade.ui.base;
 
 import javax.swing.table.AbstractTableModel;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Vector;
 
@@ -44,11 +45,12 @@ import java.util.Vector;
  */
 public abstract class TableModel extends AbstractTableModel {
 
+    @Serial
     private static final long serialVersionUID = 7428125408630828769L;
     protected String[] columnNames = {};
     protected String[] columnHeaderToolTip = {};
     protected Class<?>[] columnTypes = {};
-    protected ArrayList<Vector<Object>> rows = new ArrayList<Vector<Object>>(0);
+    protected ArrayList<Vector<Object>> rows = new ArrayList<>(0);
 
     public TableModel() {
     }
@@ -78,9 +80,7 @@ public abstract class TableModel extends AbstractTableModel {
     public void clearAll() {
         int rowSize = rows.size() - 1;
         if (rowSize > -1) {
-            rows.stream().forEach((item) -> {
-                item.clear();
-            });
+            rows.forEach(Vector::clear);
             rows.clear();
             this.fireTableRowsDeleted(0, rowSize);
         }
@@ -168,8 +168,8 @@ public abstract class TableModel extends AbstractTableModel {
     /**
      * Method getValueAt.
      *
-     * @param aRow    int
-     * @param aColumn int
+     * @param row    int
+     * @param column int
      * @return Object
      * @see javax.swing.table.TableModel#getValueAt(int, int)
      */

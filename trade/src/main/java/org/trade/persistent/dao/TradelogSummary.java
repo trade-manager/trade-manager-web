@@ -45,6 +45,7 @@ import org.trade.core.dao.Aspect;
 import org.trade.core.properties.ConfigProperties;
 
 import java.io.IOException;
+import java.io.Serial;
 import java.math.BigDecimal;
 
 /**
@@ -58,6 +59,7 @@ public class TradelogSummary extends Aspect implements java.io.Serializable {
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = -832064631322873796L;
     private String period;
     private BigDecimal battingAverage;

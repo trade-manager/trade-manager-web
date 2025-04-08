@@ -84,9 +84,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.Serial;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.List;
+import java.util.Objects;
 import java.util.Vector;
 
 /**
@@ -94,6 +96,7 @@ import java.util.Vector;
  */
 public class StrategyPanel extends BasePanel implements TreeSelectionListener {
 
+    @Serial
     private static final long serialVersionUID = 4053737356695023777L;
 
     private static final String TEMP_DIR = "temp";
@@ -222,8 +225,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
                 newButton.setTransferObject(node.getUserObject());
                 messageText.setText(null);
             }
-            if (node.getUserObject() instanceof Rule) {
-                Rule rule = (Rule) node.getUserObject();
+            if (node.getUserObject() instanceof Rule rule) {
                 if (null != currentRule) {
                     if (currentRule.getRule().length > 0) {
                         if (!(new String(currentRule.getRule())).equals(getContent())) {
@@ -288,7 +290,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
             fileName = fileName + rule.getStrategy().getClassName() + ".java";
             doSaveFile(fileName, this.getContent());
 
-            Vector<Object> parm = new Vector<Object>(0);
+            Vector<Object> parm = new Vector<>(0);
             IBrokerModel brokerManagerModel = (IBrokerModel) ClassFactory.getServiceForInterface(IBrokerModel._brokerTest,
                     this);
             CandleDataset candleDataset = new CandleDataset();
@@ -331,17 +333,12 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 String fileName = fileView.getSelectedFile().getPath();
 
-                if (null == fileName) {
-                    this.setStatusBarMessage("No file selected ", BasePanel.INFORMATION);
-                    return;
-                } else {
-                    DefaultMutableTreeNode node = (DefaultMutableTreeNode) m_tree.getSelectionPath()
-                            .getLastPathComponent();
-                    setContent(readFile(fileName));
-                    commentText.setText(null);
-                    if (node.getUserObject() instanceof Strategy) {
-                        createRule((Strategy) node.getUserObject());
-                    }
+                DefaultMutableTreeNode node = (DefaultMutableTreeNode) Objects.requireNonNull(m_tree.getSelectionPath())
+                        .getLastPathComponent();
+                setContent(readFile(fileName));
+                commentText.setText(null);
+                if (node.getUserObject() instanceof Strategy) {
+                    createRule((Strategy) node.getUserObject());
                 }
             }
         } catch (Exception ex) {
@@ -398,7 +395,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
                 this.setContent(new String(this.currentRule.getRule()));
                 commentText.setText(this.currentRule.getComment());
             } else {
-                if (getComments().length() > 0)
+                if (!getComments().isEmpty())
                     this.currentRule.setComment(getComments());
                 this.currentRule.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
                 this.currentRule.setRule(getContent().getBytes());
@@ -448,7 +445,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
                     }
                 }
                 Integer version = this.tradePersistentModel.findRuleByMaxVersion(this.currentRule.getStrategy());
-                if (version == this.currentRule.getVersion() && version > 1) {
+                if (Objects.equals(version, this.currentRule.getVersion()) && version > 1) {
                     setMessageText("File system is out of sync with DB please re deploy the latest version.", false,
                             true, colorRedAttr);
                 }
@@ -473,7 +470,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
         FileReader fileReader = null;
         try {
 
-            if ((fileName == null) || fileName.equals("")) {
+            if ((fileName == null) || fileName.isEmpty()) {
                 return null;
             }
             fileReader = new FileReader(fileName);
@@ -486,14 +483,9 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
     }
 
     public synchronized String readResource(String fileName) throws IOException {
-        InputStream inputStream = null;
-        try {
-            inputStream = this.getClass().getResourceAsStream(fileName);
-            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+        try (InputStream inputStream = this.getClass().getResourceAsStream(fileName)) {
+            InputStreamReader inputStreamReader = new InputStreamReader(Objects.requireNonNull(inputStream));
             return readInputStream(inputStreamReader);
-        } finally {
-            if (null != inputStream)
-                inputStream.close();
         }
     }
 
@@ -532,8 +524,8 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
                                     if (!ruleDB.equals(content)) {
                                         setMessageText(
                                                 "DB strategy not in sync with file system strategy: " + fileNameCode
-                                                        + " file length: " + content.length() + " Strategy "
-                                                        + rule.getStrategy().getName() + " length: " + +ruleDB.length(),
+                                                        + " file length: " + Objects.requireNonNull(content).length() + " Strategy "
+                                                        + rule.getStrategy().getName() + " length: " + ruleDB.length(),
                                                 true, true, colorRedAttr);
                                     }
                                 }
@@ -541,11 +533,11 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
                                     rule.setComment(comments);
                                     this.tradePersistentModel.persistAspect(rule);
                                 } else {
-                                    String commentsDB = new String(rule.getComment());
+                                    String commentsDB = rule.getComment();
                                     if (!commentsDB.equals(comments)) {
                                         setMessageText("DB strategy not in sync with file system strategy: "
-                                                        + fileNameComments + " file length: " + comments.length() + " Strategy "
-                                                        + rule.getStrategy().getName() + " length: " + +commentsDB.length(),
+                                                        + fileNameComments + " file length: " + Objects.requireNonNull(comments).length() + " Strategy "
+                                                        + rule.getStrategy().getName() + " length: " + commentsDB.length(),
                                                 true, true, colorRedAttr);
                                     }
                                 }
@@ -556,7 +548,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
                     // Do nothing.
                 }
             }
-            if (getMessageText().length() > 0) {
+            if (!getMessageText().isEmpty()) {
                 setMessageText("Re deploy rule to fix this problem.", true, true, colorRedAttr);
             }
 
@@ -572,30 +564,28 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
             StyleConstants.setBold(bold, true);
             setMessageText(title, true, true, bold);
 
-            Method method[] = theClass.getDeclaredMethods();
-            if (method.length > 0) {
-                for (Method element : method) {
-                    if (element.getModifiers() == Modifier.PUBLIC) {
-                        Class<?> returnType = element.getReturnType();
-                        String methodName = element.getName();
-                        String methodAttribute = returnType.getName();
-                        setMessageText(methodAttribute + " ", true, false, null);
-                        setMessageText(methodName, true, false, bold);
-                        setMessageText(" (", true, false, null);
-                        Class<?> parms[] = element.getParameterTypes();
-                        Object[] o = new Object[parms.length];
-                        methodAttribute = "";
-                        for (int j = 0; j < parms.length; j++) {
+            Method[] method = theClass.getDeclaredMethods();
+            for (Method element : method) {
+                if (element.getModifiers() == Modifier.PUBLIC) {
+                    Class<?> returnType = element.getReturnType();
+                    String methodName = element.getName();
+                    String methodAttribute = returnType.getName();
+                    setMessageText(methodAttribute + " ", true, false, null);
+                    setMessageText(methodName, true, false, bold);
+                    setMessageText(" (", true, false, null);
+                    Class<?>[] parms = element.getParameterTypes();
+                    Object[] o = new Object[parms.length];
+                    methodAttribute = "";
+                    for (int j = 0; j < parms.length; j++) {
 
-                            Object obj = parms[j];
-                            o[j] = obj;
-                            methodAttribute = methodAttribute + o[j].toString();
-                            if (j < parms.length - 1) {
-                                methodAttribute = methodAttribute + ", ";
-                            }
+                        Object obj = parms[j];
+                        o[j] = obj;
+                        methodAttribute = methodAttribute + o[j].toString();
+                        if (j < parms.length - 1) {
+                            methodAttribute = methodAttribute + ", ";
                         }
-                        setMessageText(methodAttribute + ")", true, true, null);
                     }
+                    setMessageText(methodAttribute + ")", true, true, null);
                 }
             }
             setMessageText("", true, true, null);
@@ -612,11 +602,11 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
         try (BufferedReader bufferedReader = new BufferedReader(inputStreamReader)) {
 
             String newLine = "\n";
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             String line;
 
             while ((line = bufferedReader.readLine()) != null) {
-                sb.append(line + newLine);
+                sb.append(line).append(newLine);
             }
             return sb.toString();
         } finally {
@@ -628,10 +618,8 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
     private void doSaveFile(String fileName, String content) {
 
         try (OutputStream out = new FileOutputStream(fileName)) {
-            if (null != fileName) {
-                out.write(content.getBytes());
-                out.flush();
-            }
+            out.write(content.getBytes());
+            out.flush();
         } catch (final Exception ex) {
             this.setErrorMessage("Error saving rule.", ex.getMessage(), ex);
         }
@@ -693,8 +681,8 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
     protected static boolean deleteDir(File dir) {
         if (dir.isDirectory()) {
             String[] children = dir.list();
-            for (int i = 0; i < children.length; i++) {
-                boolean success = deleteDir(new File(dir, children[i]));
+            for (String child : Objects.requireNonNull(children)) {
+                boolean success = deleteDir(new File(dir, child));
                 if (!success) {
                     return false;
                 }
@@ -720,7 +708,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
         }
     }
 
-    public class JavaFilter extends FileFilter {
+    public static class JavaFilter extends FileFilter {
 
         public final static String java = "java";
 
