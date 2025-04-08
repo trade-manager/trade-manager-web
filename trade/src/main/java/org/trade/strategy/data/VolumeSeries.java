@@ -44,8 +44,6 @@ import org.trade.strategy.data.base.RegularTimePeriod;
 import org.trade.strategy.data.candle.CandleItem;
 import org.trade.strategy.data.volume.VolumeItem;
 
-import java.io.Serial;
-
 /**
  * A list of (RegularTimePeriod, open, high, low, close) data items.
  *
@@ -58,7 +56,6 @@ import java.io.Serial;
 @DiscriminatorValue("VolumeSeries")
 public class VolumeSeries extends IndicatorSeries {
 
-    @Serial
     private static final long serialVersionUID = 20183087035446657L;
 
     private long barWidthInMilliseconds;
@@ -151,8 +148,8 @@ public class VolumeSeries extends IndicatorSeries {
     /**
      * Method createSeries.
      *
-     * @param source      CandleDataset
-     * @param seriesIndex int
+     * @param candleDataset CandleDataset
+     * @param seriesIndex   int
      */
     public void createSeries(CandleDataset source, int seriesIndex) {
 
@@ -191,7 +188,7 @@ public class VolumeSeries extends IndicatorSeries {
              * the set.
              */
             if (newBar) {
-                VolumeItem dataItem = new VolumeItem(candleItem.getPeriod(), candleItem.getVolume(),
+                VolumeItem dataItem = new VolumeItem(candleItem.getPeriod(), new Long(candleItem.getVolume()),
                         candleItem.getSide());
                 this.add(dataItem, true);
             } else {
@@ -209,7 +206,8 @@ public class VolumeSeries extends IndicatorSeries {
     public void printSeries() {
         for (int i = 0; i < this.getItemCount(); i++) {
             VolumeItem dataItem = (VolumeItem) this.getDataItem(i);
-            _log.debug("Type: {} Time: {} Volume: {}", this.getType(), dataItem.getPeriod().getStart(), dataItem.getVolume());
+            _log.debug("Type: " + this.getType() + " Time: " + dataItem.getPeriod().getStart() + " Volume: "
+                    + dataItem.getVolume());
         }
     }
 
@@ -236,8 +234,10 @@ public class VolumeSeries extends IndicatorSeries {
      * Method clone.
      *
      * @return Object
+     * @throws CloneNotSupportedException
      */
     public Object clone() throws CloneNotSupportedException {
-        return super.clone();
+        VolumeSeries clone = (VolumeSeries) super.clone();
+        return clone;
     }
 }

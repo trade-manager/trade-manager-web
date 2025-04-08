@@ -53,7 +53,7 @@ public interface ICommodityChannelIndexDataset extends XYDataset {
      * @param item   the item index.
      * @return The Moving Average.
      */
-    double getCommodityChannelIndexValue(int series, int item);
+    public double getCommodityChannelIndexValue(int series, int item);
 
     /**
      * Returns the Moving Average for an item within a series.
@@ -62,6 +62,6 @@ public interface ICommodityChannelIndexDataset extends XYDataset {
      * @param item   the item index.
      * @return The Moving Average.
      */
-    Number getCommodityChannelIndex(int series, int item);
+    public Number getCommodityChannelIndex(int series, int item);
 
 }

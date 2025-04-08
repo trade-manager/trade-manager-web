@@ -48,7 +48,7 @@ public class LookupQualifier {
     //
     // Private Attributes
     //
-    private final Hashtable<String, Object> m_values = new Hashtable<>();
+    private Hashtable<String, Object> m_values = new Hashtable<String, Object>();
 
     //
     // Public Methods
@@ -125,9 +125,11 @@ public class LookupQualifier {
         if (objectToCompare == null) {
             return false;
         }
-        if (!(objectToCompare instanceof LookupQualifier other)) {
+        if (!(objectToCompare instanceof LookupQualifier)) {
             return false;
         }
+
+        LookupQualifier other = (LookupQualifier) objectToCompare;
 
         if (toString().equals(other.toString())) {
             return true;

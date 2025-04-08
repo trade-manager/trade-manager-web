@@ -10,12 +10,13 @@ import org.trade.persistent.dao.PortfolioAccount;
 import org.xml.sax.Attributes;
 
 import java.io.CharArrayWriter;
+import java.text.ParseException;
 import java.util.Stack;
 
 public class TWSGroupRequest extends SaxMapper {
 
     private Aspects m_target = null;
-    private final Stack<Object> m_stack = new Stack<>();
+    private final Stack<Object> m_stack = new Stack<Object>();
 
     public TWSGroupRequest() throws XMLModelException {
         super();
@@ -25,7 +26,7 @@ public class TWSGroupRequest extends SaxMapper {
         return m_target;
     }
 
-    public TagTracker createTagTrackerNetwork() {
+    public TagTracker createTagTrackerNetwork() throws ParseException {
         // -- create root: /
         final TagTracker rootTagTracker = new TagTracker() {
 
@@ -59,9 +60,11 @@ public class TWSGroupRequest extends SaxMapper {
         groupsTracker.track("Group", groupsTracker);
 
         final TagTracker nameTracker = new TagTracker() {
+            public void onStart(String namespaceURI, String localName, String qName, Attributes attr) {
+            }
 
             public void onEnd(String namespaceURI, String localName, String qName, CharArrayWriter contents) {
-                final String value = contents.toString();
+                final String value = new String(contents.toString());
                 final Portfolio temp = (Portfolio) m_stack.peek();
                 temp.setName(value);
             }
@@ -71,9 +74,11 @@ public class TWSGroupRequest extends SaxMapper {
         nameTracker.track("name", nameTracker);
 
         final TagTracker methodTracker = new TagTracker() {
+            public void onStart(String namespaceURI, String localName, String qName, Attributes attr) {
+            }
 
             public void onEnd(String namespaceURI, String localName, String qName, CharArrayWriter contents) {
-                final String value = contents.toString();
+                final String value = new String(contents.toString());
                 final Portfolio temp = (Portfolio) m_stack.peek();
                 temp.setAllocationMethod(value);
             }
@@ -98,9 +103,11 @@ public class TWSGroupRequest extends SaxMapper {
         listOfAcctsTracker.track("ListOfAccts", listOfAcctsTracker);
 
         final TagTracker accountTracker = new TagTracker() {
+            public void onStart(String namespaceURI, String localName, String qName, Attributes attr) {
+            }
 
             public void onEnd(String namespaceURI, String localName, String qName, CharArrayWriter contents) {
-                final String value = contents.toString();
+                final String value = new String(contents.toString());
                 final Portfolio portfolio = (Portfolio) m_stack.peek();
                 PortfolioAccount temp = new PortfolioAccount(portfolio, new Account());
                 portfolio.getPortfolioAccounts().add(temp);

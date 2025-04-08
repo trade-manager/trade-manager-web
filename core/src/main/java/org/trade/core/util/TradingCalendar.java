@@ -40,6 +40,7 @@ import org.slf4j.LoggerFactory;
 import org.trade.core.properties.ConfigProperties;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -68,14 +69,14 @@ public class TradingCalendar {
     public static ZoneId LOCAL_TIMEZONE = null;
     public static ZoneId MKT_TIMEZONE = null;
 
-    private static final HashMap<Integer, int[]> HOLIDAYS = new HashMap<>();
+    private static final HashMap<Integer, int[]> HOLIDAYS = new HashMap<Integer, int[]>();
     private static int[] NONTRADINGDAYS = new int[]{};
 
-    private static Integer openHour = 9;
-    private static Integer openMinute = 30;
-    private static Integer closeHour = 16;
-    private static Integer closeMinute = 0;
-    private static Integer closeDayOffset = 0;
+    private static Integer openHour = new Integer(9);
+    private static Integer openMinute = new Integer(30);
+    private static Integer closeHour = new Integer(16);
+    private static Integer closeMinute = new Integer(0);
+    private static Integer closeDayOffset = new Integer(0);
 
     private static Integer currentYear = null;
     private static Integer currentMonth = null;
@@ -87,13 +88,16 @@ public class TradingCalendar {
      */
     static {
         try {
-            String localTimeZone = ConfigProperties.getPropAsString("trade.tws.timezone");
-            LOCAL_TIMEZONE = ZoneId.of(localTimeZone);
-            MKT_TIMEZONE = TimeZone.getDefault().toZoneId();
-            ZonedDateTime currentDateTime = ZonedDateTime.now(LOCAL_TIMEZONE);
-            currentYear = currentDateTime.getYear();
-            currentMonth = currentDateTime.getMonthValue();
-            currentDay = currentDateTime.getDayOfMonth();
+            if (null == LOCAL_TIMEZONE) {
+                String localTimeZone = ConfigProperties.getPropAsString("trade.tws.timezone");
+                LOCAL_TIMEZONE = ZoneId.of(localTimeZone);
+                MKT_TIMEZONE = TimeZone.getDefault().toZoneId();
+                ZonedDateTime currentDateTime = ZonedDateTime.now(LOCAL_TIMEZONE);
+                currentYear = new Integer(currentDateTime.getYear());
+                currentMonth = new Integer(currentDateTime.getMonthValue());
+                currentDay = new Integer(currentDateTime.getDayOfMonth());
+
+            }
 
         } catch (Exception ex) {
             _log.warn("Property trade.tws.market.timezone not set in config.properties will use default");
@@ -103,15 +107,15 @@ public class TradingCalendar {
             if (null == openHour) {
                 String open = ConfigProperties.getPropAsString("trade.market.open");
                 String close = ConfigProperties.getPropAsString("trade.market.close");
-                openHour = Integer.valueOf(open.substring(0, open.indexOf(":")));
-                openMinute = Integer.valueOf(open.substring(open.indexOf(":") + 1));
-                closeHour = Integer.valueOf(close.substring(0, close.indexOf(":")));
-                closeMinute = Integer.valueOf(close.substring(close.indexOf(":") + 1));
+                openHour = new Integer(open.substring(0, open.indexOf(":")));
+                openMinute = new Integer(open.substring(open.indexOf(":") + 1, open.length()));
+                closeHour = new Integer(close.substring(0, close.indexOf(":")));
+                closeMinute = new Integer(close.substring(close.indexOf(":") + 1, close.length()));
                 /*
                  * If the close time if before or equal to the open time assume
                  * its the next day.
                  */
-                if (closeHour < openHour || (closeHour.equals(openHour) && closeMinute <= openMinute)) {
+                if (closeHour < openHour || (closeHour == openHour && closeMinute <= openMinute)) {
                     closeDayOffset++;
                 }
             }
@@ -124,11 +128,12 @@ public class TradingCalendar {
             if (HOLIDAYS.isEmpty()) {
                 int year = TradingCalendar.getDateTimeNowMarketTimeZone().getYear();
                 String holidaysString = ConfigProperties.getPropAsString("trade.holidays." + year);
-                parseHolidayIntegerCSVString(year, holidaysString);
+                parseHolidayIntegerCSVString(HOLIDAYS, year, holidaysString);
             }
 
         } catch (IOException ex) {
-            _log.warn("Property trade.holidays.{} not set in org/trade/core/util/config.properties", TradingCalendar.getDateTimeNowMarketTimeZone().getYear());
+            _log.warn("Property trade.holidays." + TradingCalendar.getDateTimeNowMarketTimeZone().getYear()
+                    + " not set in org/trade/core/util/config.properties");
         }
         try {
             String nontradingdays = ConfigProperties.getPropAsString("trade.market.nontradingdays");
@@ -162,6 +167,7 @@ public class TradingCalendar {
                         noDays++;
                     }
                 }
+                return date;
             } else {
                 for (int i = 0; i > noDays; i--) {
                     date = date.minusDays(1);
@@ -169,10 +175,12 @@ public class TradingCalendar {
                         noDays--;
                     }
                 }
+                return date;
 
             }
+        } else {
+            return date;
         }
-        return date;
     }
 
     /**
@@ -208,7 +216,7 @@ public class TradingCalendar {
     /**
      * Method adjustDateTimeToMarketTimeZone
      *
-     * @param dateTime ZonedDateTime Return the date time in the market time zone.
+     * @param date ZonedDateTime Return the date time in the market time zone.
      * @return ZonedDateTime
      */
     public static ZonedDateTime adjustDateTimeToMarketTimeZone(ZonedDateTime dateTime) {
@@ -221,6 +229,8 @@ public class TradingCalendar {
      * @param date   LocalDate
      * @param format String
      * @return String
+     * @throws *
+     * @see
      */
     public static String getFormattedDate(LocalDate date, String format) {
         return date.format(DateTimeFormatter.ofPattern(format));
@@ -232,6 +242,8 @@ public class TradingCalendar {
      * @param date   LocalDateTime
      * @param format String
      * @return String
+     * @throws *
+     * @see
      */
     public static String getFormattedDate(LocalDateTime date, String format) {
         return date.format(DateTimeFormatter.ofPattern(format));
@@ -243,6 +255,8 @@ public class TradingCalendar {
      * @param date   ZonedDateTime
      * @param format String
      * @return String
+     * @throws *
+     * @see
      */
     public static String getFormattedDate(ZonedDateTime date, String format) {
         return date.format(DateTimeFormatter.ofPattern(format));
@@ -255,6 +269,7 @@ public class TradingCalendar {
      * @param format String
      * @param zoneId ZoneId
      * @return ZonedDateTime
+     * @throws ParseException
      */
     public static ZonedDateTime getZonedDateTimeFromDateString(String date, String format, ZoneId zoneId) {
         LocalDate localDate = LocalDate.parse(date, DateTimeFormatter.ofPattern(format));
@@ -268,6 +283,7 @@ public class TradingCalendar {
      * @param format   String
      * @param zoneId   ZoneId
      * @return ZonedDateTime
+     * @throws ParseException
      */
     public static ZonedDateTime getZonedDateTimeFromDateTimeString(String dateTime, String format, ZoneId zoneId) {
         LocalDateTime localDateTime = LocalDateTime.parse(dateTime, DateTimeFormatter.ofPattern(format));
@@ -280,6 +296,7 @@ public class TradingCalendar {
      * @param dateTime String
      * @param format   String
      * @return ZonedDateTime
+     * @throws ParseException
      */
     public static ZonedDateTime getZonedDateTimeFromDateTimeString(String dateTime, String format) {
         LocalDateTime localDateTime = LocalDateTime.parse(dateTime, DateTimeFormatter.ofPattern(format));
@@ -292,6 +309,7 @@ public class TradingCalendar {
      * @param date   String
      * @param format String
      * @return LocalDate
+     * @throws ParseException
      */
     public static LocalDate getLocalDateFromDateString(String date, String format) {
         return LocalDate.parse(date, DateTimeFormatter.ofPattern(format));
@@ -303,6 +321,7 @@ public class TradingCalendar {
      * @param dateTime String
      * @param format   String
      * @return ZonedDateTime
+     * @throws ParseException
      */
     public static LocalDateTime getLocalDateTimeFromDateTimeString(String dateTime, String format) {
         return LocalDateTime.parse(dateTime, DateTimeFormatter.ofPattern(format));
@@ -408,7 +427,10 @@ public class TradingCalendar {
      * @return boolean
      */
     public static boolean isMarketHours(ZonedDateTime date) {
-        return !isAfterHours(date) && !isPreMarket(date);
+        if (!isAfterHours(date) && !isPreMarket(date)) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -423,8 +445,10 @@ public class TradingCalendar {
 
         if (isTradingDay(date)) {
             int diffDays = (int) (TradingCalendar.getDurationInDays(openDate, closeDate));
-            return TradingCalendar.between(date, TradingCalendar.getDateAtTime(date, openDate),
-                    TradingCalendar.addTradingDays(TradingCalendar.getDateAtTime(date, closeDate), diffDays));
+            if (TradingCalendar.between(date, TradingCalendar.getDateAtTime(date, openDate),
+                    TradingCalendar.addTradingDays(TradingCalendar.getDateAtTime(date, closeDate), diffDays))) {
+                return true;
+            }
         }
         return false;
     }
@@ -436,7 +460,10 @@ public class TradingCalendar {
      * @return boolean
      */
     public static boolean isPreMarket(ZonedDateTime date) {
-        return getTradingDayStart(date).isAfter(date);
+        if (getTradingDayStart(date).isAfter(date)) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -446,7 +473,10 @@ public class TradingCalendar {
      * @return boolean
      */
     public static boolean isAfterHours(ZonedDateTime date) {
-        return getTradingDayEnd(date).isBefore(date) || (getTradingDayEnd(date).compareTo(date) == 0);
+        if (getTradingDayEnd(date).isBefore(date) || (getTradingDayEnd(date).compareTo(date) == 0)) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -457,8 +487,10 @@ public class TradingCalendar {
      * @return boolean
      */
     public static boolean sameDay(ZonedDateTime date1, ZonedDateTime date2) {
-        return date1.getYear() == date2.getYear() && date1.getMonthValue() == date2.getMonthValue()
-                && date1.getDayOfMonth() == date2.getDayOfMonth();
+        if (date1.getYear() == date2.getYear() && date1.getMonthValue() == date2.getMonthValue()
+                && date1.getDayOfMonth() == date2.getDayOfMonth())
+            return true;
+        return false;
     }
 
     /**
@@ -483,9 +515,10 @@ public class TradingCalendar {
      */
     public static ZonedDateTime getPrevTradingDay(ZonedDateTime input) {
         ZonedDateTime prevTradingDay = TradingCalendar.getTradingDayStart(input);
-        do {
+        prevTradingDay = prevTradingDay.minusDays(1);
+        while (!TradingCalendar.isTradingDay(prevTradingDay)) {
             prevTradingDay = prevTradingDay.minusDays(1);
-        } while (!TradingCalendar.isTradingDay(prevTradingDay));
+        }
         return prevTradingDay;
     }
 
@@ -497,10 +530,11 @@ public class TradingCalendar {
      */
     public static ZonedDateTime getNextTradingDay(ZonedDateTime input) {
         ZonedDateTime nextTradingday = TradingCalendar.getTradingDayStart(input);
+        nextTradingday = nextTradingday.plusDays(1);
 
-        do {
+        while (!TradingCalendar.isTradingDay(nextTradingday)) {
             nextTradingday = nextTradingday.plusDays(1);
-        } while (!TradingCalendar.isTradingDay(nextTradingday));
+        }
         return nextTradingday;
     }
 
@@ -533,7 +567,9 @@ public class TradingCalendar {
      * @return boolean
      */
     public static boolean between(ZonedDateTime date, ZonedDateTime openDate, ZonedDateTime closeDate) {
-        return (date.isAfter(openDate) || date.equals(openDate)) && (date.isBefore(closeDate));
+        if ((date.isAfter(openDate) || date.equals(openDate)) && (date.isBefore(closeDate)))
+            return true;
+        return false;
     }
 
     /**
@@ -601,8 +637,9 @@ public class TradingCalendar {
      * Method parseHolidayIntegerCSVString.
      *
      * @param csvString String
+     * @param HOLIDAYS  HashMap<Integer, int[]>
      */
-    private static void parseHolidayIntegerCSVString(Integer year, String csvString) {
+    private static void parseHolidayIntegerCSVString(HashMap<Integer, int[]> HOLIDAYS, Integer year, String csvString) {
         StringTokenizer st = new StringTokenizer(csvString, ",");
         if (st.countTokens() > 0) {
             int[] dates = new int[(st.countTokens())];
@@ -611,7 +648,7 @@ public class TradingCalendar {
                 dates[(i)] = Integer.parseInt(st.nextToken());
                 i++;
             }
-            TradingCalendar.HOLIDAYS.put(year, dates);
+            HOLIDAYS.put(year, dates);
         }
     }
 }

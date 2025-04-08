@@ -42,7 +42,6 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -72,13 +71,14 @@ public final class Javac {
     /**
      * Compile the given source files.
      *
+     * @param srcFiles
      * @return null if success; or compilation errors
      */
-    public String compile(String[] srcFiles) {
+    public String compile(String srcFiles[]) {
         StringWriter err = new StringWriter();
         PrintWriter errPrinter = new PrintWriter(err);
 
-        String[] args = buildJavacArgs(srcFiles);
+        String args[] = buildJavacArgs(srcFiles);
         int resultCode = Main.compile(args, errPrinter);
         errPrinter.close();
         return (resultCode == 0) ? null : err.toString();
@@ -90,8 +90,8 @@ public final class Javac {
      * @param srcFiles File[]
      * @return String
      */
-    public String compile(File[] srcFiles) {
-        String[] paths = new String[srcFiles.length];
+    public String compile(File srcFiles[]) {
+        String paths[] = new String[srcFiles.length];
         for (int i = 0; i < paths.length; i++) {
             paths[i] = srcFiles[i].getAbsolutePath();
         }
@@ -104,8 +104,8 @@ public final class Javac {
      * @param srcFiles String[]
      * @return String[]
      */
-    private String[] buildJavacArgs(String[] srcFiles) {
-        List<String> args = new ArrayList<>();
+    private String[] buildJavacArgs(String srcFiles[]) {
+        List<String> args = new ArrayList<String>();
 
         if (classpath != null) {
             args.add("-classpath");
@@ -136,9 +136,11 @@ public final class Javac {
             args.add(target);
         }
 
-        Collections.addAll(args, srcFiles);
+        for (int i = 0; i < srcFiles.length; i++) {
+            args.add(srcFiles[i]);
+        }
 
-        return args.toArray(new String[0]);
+        return args.toArray(new String[args.size()]);
     }
 
     /**

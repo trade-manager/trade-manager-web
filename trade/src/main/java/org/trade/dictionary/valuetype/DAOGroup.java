@@ -40,7 +40,6 @@ import org.trade.core.valuetype.Decode;
 import org.trade.core.valuetype.ValueTypeException;
 import org.trade.persistent.dao.Portfolio;
 
-import java.io.Serial;
 import java.util.Vector;
 
 /**
@@ -48,7 +47,6 @@ import java.util.Vector;
  */
 public class DAOGroup extends DAODecode {
 
-    @Serial
     private static final long serialVersionUID = -5381026427696898592L;
     public static final String DECODE = "GROUP_DATA";
     public static final String _TABLE = "_TABLE";
@@ -63,10 +61,11 @@ public class DAOGroup extends DAODecode {
      * Method getCodesDecodes.
      *
      * @return Vector<Decode>
+     * @throws ValueTypeException
      */
 
     public Vector<Decode> getCodesDecodes() throws ValueTypeException {
-        final Vector<Decode> decodes = new Vector<>();
+        final Vector<Decode> decodes = new Vector<Decode>();
         final Vector<Decode> decodesAll = super.getCodesDecodes();
         for (final Decode decode : decodesAll) {
             final Portfolio portfolio = (Portfolio) decode.getObject();
@@ -92,7 +91,7 @@ public class DAOGroup extends DAODecode {
     /**
      * Method newInstance.
      *
-     * @param displayName String
+     * @param value String
      * @return DAOTradeAccount
      */
     public static DAOGroup newInstance(String displayName) {

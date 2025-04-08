@@ -53,6 +53,7 @@ public class IdentityService {
      * Method create.
      *
      * @return String
+     * @throws IdentityServiceException
      */
     public static String create() throws IdentityServiceException {
         // Obtain a current timestamp.
@@ -81,7 +82,7 @@ public class IdentityService {
         // Construct the identity and return it.
         String identity;
 
-        identity = "AT-" + date + "-" + hostName + "-" + hostUniqueId;
+        identity = "AT-" + date.toString() + "-" + hostName + "-" + hostUniqueId.toString();
 
         return (identity);
     }

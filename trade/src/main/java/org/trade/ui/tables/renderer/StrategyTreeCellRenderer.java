@@ -42,16 +42,14 @@ import org.trade.ui.models.StrategyTreeModel;
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import java.awt.*;
-import java.io.Serial;
 
 /**
  *
  */
 public class StrategyTreeCellRenderer extends DefaultTreeCellRenderer {
 
-    @Serial
     private static final long serialVersionUID = 7664391812385841364L;
-    private final Color backgroundSelectionColor;
+    private Color backgroundSelectionColor = null;
 
     public StrategyTreeCellRenderer() {
         super();

@@ -35,8 +35,6 @@
  */
 package org.trade.core.exception;
 
-import java.io.Serial;
-
 /**
  * ExceptionCode is used as the key for retrieving an exception message.
  * <p>
@@ -54,14 +52,13 @@ public class ExceptionCode implements java.io.Serializable {
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = 1429333155399564179L;
 
     private static final String FIELD_SEQUENCE_SEPARATOR = "_";
 
     // ----- Private attributes -----//
 
-    private final String m_code;
+    private String m_code = null;
 
     private String m_fieldRef = null;
 
@@ -139,13 +136,15 @@ public class ExceptionCode implements java.io.Serializable {
         if (objectToCompare == null) {
             return false;
         }
-        if (!(objectToCompare instanceof ExceptionCode otherExceptionCode)) {
+        if (!(objectToCompare instanceof ExceptionCode)) {
             return false;
         }
         boolean equal = false;
 
-        boolean codeMatches;
-        boolean fieldMatches;
+        ExceptionCode otherExceptionCode = (ExceptionCode) objectToCompare;
+
+        boolean codeMatches = false;
+        boolean fieldMatches = false;
 
         if (null == m_code) {
             codeMatches = (null == otherExceptionCode.m_code);

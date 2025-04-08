@@ -69,9 +69,9 @@ public class WaitCursorEventQueue extends EventQueue {
         }
     }
 
-    private final int delay;
+    private int delay;
 
-    private final WaitCursorTimer waitTimer;
+    private WaitCursorTimer waitTimer;
 
     /**
      *
@@ -124,7 +124,7 @@ public class WaitCursorEventQueue extends EventQueue {
                     if ((parent != null) && parent.isShowing()) {
                         parent.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
                     }
-                } catch (InterruptedException _) {
+                } catch (InterruptedException ie) {
                 }
             }
         }

@@ -35,8 +35,6 @@
  */
 package org.trade.core.exception;
 
-import java.io.Serial;
-
 /**
  * Describes the context in which an exception occurred. Contains the
  * information for constructing the message about a specific exception.
@@ -47,14 +45,13 @@ public class ExceptionContext implements java.io.Serializable {
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = 4837522639316151345L;
 
     // constants
     private final static String NULL_VALUE = "";
 
     // member variables
-    private final String m_parameterName;
+    private String m_parameterName;
 
     private String m_value;
 

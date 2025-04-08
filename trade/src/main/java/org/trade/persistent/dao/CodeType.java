@@ -53,7 +53,6 @@ import jakarta.persistence.Version;
 import jakarta.validation.constraints.NotNull;
 import org.trade.core.dao.Aspect;
 
-import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,7 +69,6 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @DiscriminatorValue("CodeType")
 public class CodeType extends Aspect implements java.io.Serializable {
 
-    @Serial
     private static final long serialVersionUID = 2273276207080568947L;
 
     @NotNull
@@ -78,7 +76,7 @@ public class CodeType extends Aspect implements java.io.Serializable {
     @NotNull
     private String type;
     private String description;
-    private List<CodeAttribute> codeAttributes = new ArrayList<>(0);
+    private List<CodeAttribute> codeAttributes = new ArrayList<CodeAttribute>(0);
 
     public static final String IndicatorParameters = "IndicatorParameters";
     public static final String StrategyParameters = "StrategyParameters";
@@ -121,6 +119,15 @@ public class CodeType extends Aspect implements java.io.Serializable {
     @Column(name = "id", unique = true, nullable = false)
     public Integer getId() {
         return this.id;
+    }
+
+    /**
+     * Method setId.
+     *
+     * @param id Integer
+     */
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     /**
@@ -189,6 +196,15 @@ public class CodeType extends Aspect implements java.io.Serializable {
     @Column(name = "version")
     public Integer getVersion() {
         return this.version;
+    }
+
+    /**
+     * Method setVersion.
+     *
+     * @param version Integer
+     */
+    public void setVersion(Integer version) {
+        this.version = version;
     }
 
     /**

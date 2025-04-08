@@ -39,7 +39,6 @@ import org.trade.core.valuetype.Quantity;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
-import java.io.Serial;
 import java.text.NumberFormat;
 
 /**
@@ -49,9 +48,8 @@ public class QuantityRenderer extends DefaultTableCellRenderer {
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = 3568483163690718815L;
-    private final NumberFormat m_formater;
+    private NumberFormat m_formater = null;
 
     public QuantityRenderer() {
         super();

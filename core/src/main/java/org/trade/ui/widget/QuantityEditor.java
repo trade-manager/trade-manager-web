@@ -38,7 +38,6 @@ package org.trade.ui.widget;
 import org.trade.core.valuetype.Quantity;
 
 import javax.swing.*;
-import java.io.Serial;
 
 /**
  *
@@ -47,7 +46,6 @@ public class QuantityEditor extends DefaultCellEditor {
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = -3660193231547303276L;
 
     /**
@@ -64,7 +62,6 @@ public class QuantityEditor extends DefaultCellEditor {
             /**
              *
              */
-            @Serial
             private static final long serialVersionUID = -658101805319581454L;
 
             public void setValue(Object value) {

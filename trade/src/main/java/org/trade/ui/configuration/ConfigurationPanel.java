@@ -68,9 +68,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ItemEvent;
-import java.io.Serial;
+import java.awt.event.ItemListener;
 import java.util.ListIterator;
-import java.util.Objects;
 import java.util.Vector;
 
 /**
@@ -78,11 +77,10 @@ import java.util.Vector;
  */
 public class ConfigurationPanel extends BasePanel {
 
-    @Serial
     private static final long serialVersionUID = 8543984162821384818L;
 
     private JScrollPane m_jScrollPane = null;
-    private final JScrollPane m_jScrollPane1 = new JScrollPane();
+    private JScrollPane m_jScrollPane1 = new JScrollPane();
     private IPersistentModel m_tradePersistentModel = null;
     private ConfigurationTable m_table = null;
     private AspectTableModel m_tableModel = null;
@@ -118,12 +116,14 @@ public class ConfigurationPanel extends BasePanel {
             refTableEditorComboBox = new DecodeComboBoxEditor(ReferenceTable.newInstance().getCodesDecodes());
             DecodeComboBoxRenderer refTableRenderer = new DecodeComboBoxRenderer();
             refTableEditorComboBox.setRenderer(refTableRenderer);
-            refTableEditorComboBox.addItemListener(e -> {
-                if (e.getStateChange() == ItemEvent.SELECTED) {
-                    if (null != m_tableChild) {
-                        m_jScrollPane1.getViewport().remove(m_tableChild);
+            refTableEditorComboBox.addItemListener(new ItemListener() {
+                public void itemStateChanged(ItemEvent e) {
+                    if (e.getStateChange() == ItemEvent.SELECTED) {
+                        if (null != m_tableChild) {
+                            m_jScrollPane1.getViewport().remove(m_tableChild);
+                        }
+                        addReferenceTablePanel(((ReferenceTable) e.getItem()).getCode());
                     }
-                    addReferenceTablePanel(((ReferenceTable) e.getItem()).getCode());
                 }
             });
 
@@ -198,7 +198,7 @@ public class ConfigurationPanel extends BasePanel {
             this.setStatusBarMessage("Save in progress ...", BasePanel.INFORMATION);
             int selectedRow = m_table.getSelectedRow();
             String className = "org.trade.persistent.dao."
-                    + ((ReferenceTable) Objects.requireNonNull(refTableEditorComboBox.getSelectedItem())).getCode();
+                    + ((ReferenceTable) refTableEditorComboBox.getSelectedItem()).getCode();
 
             for (ListIterator<Aspect> itemIter = m_aspects.getAspect().listIterator(); itemIter.hasNext(); ) {
                 Aspect item = itemIter.next();
@@ -249,7 +249,7 @@ public class ConfigurationPanel extends BasePanel {
      */
     public void doRefresh() {
         try {
-            this.addReferenceTablePanel(((ReferenceTable) Objects.requireNonNull(refTableEditorComboBox.getSelectedItem())).getCode());
+            this.addReferenceTablePanel(((ReferenceTable) refTableEditorComboBox.getSelectedItem()).getCode());
         } catch (Exception ex) {
             this.setErrorMessage("Error finding item.", ex.getMessage(), ex);
         } finally {
@@ -281,18 +281,20 @@ public class ConfigurationPanel extends BasePanel {
             } else {
 
                 CodeAttributePanel codeAttributePanel = new CodeAttributePanel(codeType, series.getCodeValues());
-                TextDialog dialog = new TextDialog(this.getFrame(), "Indicator Properties", true,
-                        codeAttributePanel);
-                dialog.setLocationRelativeTo(this);
-                dialog.setVisible(true);
-                if (!dialog.getCancel()) {
-                    /*
-                     * Populate the code values from the fields.
-                     */
-                    for (CodeValue value : codeAttributePanel.getCodeValues()) {
-                        series.setDirty(true);
-                        if (null == value.getIndicatorSeries())
-                            value.setIndicatorSeries(series);
+                if (null != codeAttributePanel) {
+                    TextDialog dialog = new TextDialog(this.getFrame(), "Indicator Properties", true,
+                            codeAttributePanel);
+                    dialog.setLocationRelativeTo(this);
+                    dialog.setVisible(true);
+                    if (!dialog.getCancel()) {
+                        /*
+                         * Populate the code values from the fields.
+                         */
+                        for (CodeValue value : codeAttributePanel.getCodeValues()) {
+                            series.setDirty(true);
+                            if (null == value.getIndicatorSeries())
+                                value.setIndicatorSeries(series);
+                        }
                     }
                 }
             }
@@ -312,7 +314,7 @@ public class ConfigurationPanel extends BasePanel {
          * Method valueChanged.
          *
          * @param event ListSelectionEvent
-         * @see ListSelectionListener#valueChanged(ListSelectionEvent)
+         * @see javax.swing.event.ListSelectionListener#valueChanged(ListSelectionEvent)
          */
 
         public void valueChanged(ListSelectionEvent event) {
@@ -339,7 +341,7 @@ public class ConfigurationPanel extends BasePanel {
 
         try {
             m_aspects = m_tradePersistentModel.findAspectsByClassName("org.trade.persistent.dao." + refTableClass);
-            Vector<Object> parm = new Vector<>();
+            Vector<Object> parm = new Vector<Object>();
             m_tableModel = (AspectTableModel) ClassFactory
                     .getCreateClass("org.trade.ui.models." + refTableClass + "TableModel", parm, this);
 
@@ -353,7 +355,7 @@ public class ConfigurationPanel extends BasePanel {
             m_jScrollPane.getViewport().add(m_table, BorderLayout.CENTER);
             m_jScrollPane.setBorder(new BevelBorder(BevelBorder.LOWERED));
             m_jScrollPane.addMouseListener(m_table);
-            if (!m_aspects.getAspect().isEmpty()) {
+            if (m_aspects.getAspect().size() > 0) {
                 m_table.setRowSelectionInterval(0, 0);
             }
 
@@ -370,7 +372,7 @@ public class ConfigurationPanel extends BasePanel {
          * Method valueChanged.
          *
          * @param event ListSelectionEvent
-         * @see ListSelectionListener#valueChanged(ListSelectionEvent)
+         * @see javax.swing.event.ListSelectionListener#valueChanged(ListSelectionEvent)
          */
         public void valueChanged(ListSelectionEvent event) {
             if (!event.getValueIsAdjusting()) {
@@ -395,27 +397,24 @@ public class ConfigurationPanel extends BasePanel {
      */
     private void setChildPanel(final Aspect aspect) {
         try {
-            switch (aspect) {
-                case Strategy strategy -> {
-                    m_tableModelChild = new IndicatorSeriesTableModel();
-                    ((IndicatorSeriesTableModel) m_tableModelChild).setData(strategy);
-                    m_tableChild = new ConfigurationTable(m_tableModelChild);
+            if (aspect instanceof Strategy) {
+                m_tableModelChild = new IndicatorSeriesTableModel();
+                ((IndicatorSeriesTableModel) m_tableModelChild).setData((Strategy) aspect);
+                m_tableChild = new ConfigurationTable(m_tableModelChild);
 
-                    m_tableChild.getSelectionModel().addListSelectionListener(new IndicatorSeriesTableRowListener());
-                    m_tableChild.setDefaultRenderer(Aspects.class, new ButtonRenderer(BaseUIPropertyCodes.PROPERTIES));
-                    m_tableChild.setDefaultEditor(Aspects.class, new ButtonEditor(propertiesButton));
-                }
-                case CodeType codeType -> {
-                    m_tableModelChild = new CodeAttributeTableModel();
-                    ((CodeAttributeTableModel) m_tableModelChild).setData(codeType);
-                    m_tableChild = new ConfigurationTable(m_tableModelChild);
-                }
-                case Portfolio portfolio -> {
-                    m_tableModelChild = new AccountTableModel();
-                    ((AccountTableModel) m_tableModelChild).setData(portfolio);
-                    m_tableChild = new ConfigurationTable(m_tableModelChild);
-                }
-                case null, default -> m_tableChild = new ConfigurationTable(null);
+                m_tableChild.getSelectionModel().addListSelectionListener(new IndicatorSeriesTableRowListener());
+                m_tableChild.setDefaultRenderer(Aspects.class, new ButtonRenderer(BaseUIPropertyCodes.PROPERTIES));
+                m_tableChild.setDefaultEditor(Aspects.class, new ButtonEditor(propertiesButton));
+            } else if (aspect instanceof CodeType) {
+                m_tableModelChild = new CodeAttributeTableModel();
+                ((CodeAttributeTableModel) m_tableModelChild).setData((CodeType) aspect);
+                m_tableChild = new ConfigurationTable(m_tableModelChild);
+            } else if (aspect instanceof Portfolio) {
+                m_tableModelChild = new AccountTableModel();
+                ((AccountTableModel) m_tableModelChild).setData((Portfolio) aspect);
+                m_tableChild = new ConfigurationTable(m_tableModelChild);
+            } else {
+                m_tableChild = new ConfigurationTable(null);
             }
             m_tableChild.setFont(new Font("Monospaced", Font.PLAIN, 12));
             m_tableChild.setPreferredScrollableViewportSize(new Dimension(300, 200));

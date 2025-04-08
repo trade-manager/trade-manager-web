@@ -48,7 +48,7 @@ import java.awt.*;
  */
 public interface IIndicatorDataset {
 
-    String PACKAGE = "org.trade.strategy.data.";
+    public static final String PACKAGE = "org.trade.strategy.data.";
 
     /**
      * Method updateDataset.

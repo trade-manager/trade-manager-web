@@ -56,13 +56,16 @@ public class ObjectToDecode implements IJavaDynamicTypeConverter {
      * @param targetType     Class<?>
      * @param valueToConvert Object
      * @return Object
+     * @throws JavaTypeTranslatorException
+     * @see IJavaDynamicTypeConverter#convert(Class<?>,
+     * Object)
      */
     public Object convert(Class<?> targetType, Object valueToConvert) throws JavaTypeTranslatorException {
-        Object rVal;
+        Object rVal = null;
 
         if (Decode.class.isAssignableFrom(targetType)) {
             try {
-                Decode vt = (Decode) targetType.getDeclaredConstructor().newInstance();
+                Decode vt = (Decode) targetType.newInstance();
 
                 // Assign the value for the valuetype
                 vt.setValue(valueToConvert);
@@ -84,9 +87,16 @@ public class ObjectToDecode implements IJavaDynamicTypeConverter {
      * @param targetType     Class<?>
      * @param valueToConvert Object
      * @return boolean
+     * @see IJavaDynamicTypeConverter#
+     * supportsConversion (Class<?>, Object)
      */
     public boolean supportsConversion(Class<?> targetType, Object valueToConvert) {
+        boolean rVal = false;
 
-        return (Decode.class.isAssignableFrom(targetType));
+        if (Decode.class.isAssignableFrom(targetType)) {
+            rVal = true;
+        }
+
+        return (rVal);
     }
 }

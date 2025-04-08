@@ -55,7 +55,7 @@ public interface ITimePeriod extends Comparable<ITimePeriod> {
      *
      * @return The start date/time (never <code>null</code>).
      */
-    ZonedDateTime getStart();
+    public ZonedDateTime getStart();
 
     /**
      * Returns the end date/time. This will always be on or after the start
@@ -63,6 +63,6 @@ public interface ITimePeriod extends Comparable<ITimePeriod> {
      *
      * @return The end date/time (never <code>null</code>).
      */
-    ZonedDateTime getEnd();
+    public ZonedDateTime getEnd();
 
 }

@@ -43,7 +43,6 @@ import org.trade.core.lookup.LookupService;
 import org.trade.core.lookup.PropertiesLookup;
 import org.trade.core.util.CoreUtils;
 
-import java.io.Serial;
 import java.util.Comparator;
 import java.util.Vector;
 
@@ -63,7 +62,6 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = -5356057478795774210L;
 
     /**
@@ -84,7 +82,6 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
     public static final String _TYPE = "_TYPE";
     public static final String _CODE = "_CODE";
     public static final String _DISPLAY_NAME = "_DISPLAY_NAME";
-    public static final String _VALUE = "_VALUE";
 
     private String m_codeDecodeType = "";
     private String m_codeDecodeIdentifier = "";
@@ -92,7 +89,7 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
     private ILookup m_lookup = null;
     private Object m_badValue = null;
 
-    protected static Boolean m_ascending = true;
+    protected static Boolean m_ascending = new Boolean(true);
 
     /**
      * Default Constructor
@@ -188,7 +185,11 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
      * will give the error message and isValid will be false
      */
     public boolean isEmpty() {
-        return (getCode().isEmpty()) && ((null == m_badValue) || (m_badValue.equals("")));
+        if ((getCode().equals("")) && ((null == m_badValue) || (m_badValue.equals("")))) {
+            return (true);
+        }
+
+        return (false);
     }
 
     /**
@@ -199,7 +200,11 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
             return true;
         }
 
-        return !getCode().isEmpty();
+        if (getCode().equals("")) {
+            return (false);
+        }
+
+        return (true);
     }
 
     /**
@@ -243,25 +248,6 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
 
         try {
             final Object val = m_lookup.getValueAt(m_codeDecodeIdentifier + _CODE);
-
-            if (val != null) {
-                rVal += val;
-            }
-        } catch (final Exception ex) {
-            // ignore
-        }
-
-        return (rVal);
-    }
-
-    /**
-     * @return
-     */
-    public String getValue() {
-        String rVal = "";
-
-        try {
-            final Object val = m_lookup.getValueAt(m_codeDecodeIdentifier + _VALUE);
 
             if (val != null) {
                 rVal += val;
@@ -330,8 +316,13 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
      * @return boolean
      */
     public boolean equalsCode(String code) {
+        boolean equals = false;
 
-        return getCode().equalsIgnoreCase(code);
+        if (getCode().equalsIgnoreCase(code)) {
+            equals = true;
+        }
+
+        return equals;
     }
 
     /**
@@ -354,7 +345,9 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
         if (objectToCompare instanceof Decode) {
             if (null == this.getCode())
                 return false;
-            return this.getCode().equals(((Decode) objectToCompare).getCode());
+            if (this.getCode().equals(((Decode) objectToCompare).getCode())) {
+                return true;
+            }
         }
         return false;
     }
@@ -375,6 +368,7 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
      * Method clone.
      *
      * @return Object
+     * @throws java.lang.CloneNotSupportedException
      */
     public Object clone() throws java.lang.CloneNotSupportedException {
         return (super.clone());
@@ -406,15 +400,16 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
      * Method getCodesDecodes.
      *
      * @return Vector<Decode>
+     * @throws ValueTypeException
      */
     public Vector<Decode> getCodesDecodes() throws ValueTypeException {
-        Vector<Decode> decodes = new Vector<>();
+        Vector<Decode> decodes = new Vector<Decode>();
 
         try {
             final int columns = getLookup().getColumnCount();
             final int rows = getLookup().getRowCount();
-            String columnName;
-            Decode newDecode;
+            String columnName = null;
+            Decode newDecode = null;
 
             for (int i = 0; i < columns; i++) {
                 columnName = getLookup().getColumnName(i);
@@ -424,7 +419,7 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
                         final Class<?> c = Class.forName(this.getClass().getName());
 
                         // construct a new business object
-                        newDecode = (Decode) c.getDeclaredConstructor().newInstance();
+                        newDecode = (Decode) c.newInstance();
                         newDecode.m_lookup = (ILookup) getLookup().clone();
 
                         newDecode.setValue(getLookup().getValueAt(y, i));
@@ -454,7 +449,7 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
 
             try {
                 setCode((String) JavaTypeTranslator.convert(String.class, value));
-            } catch (final Exception _) {
+            } catch (final Exception ex) {
 
             }
         }
@@ -479,7 +474,7 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
      */
     private void setCode(String code) {
         try {
-            String codeToLookup;
+            String codeToLookup = null;
 
             if (convertToUppercase()) {
                 codeToLookup = code.toUpperCase();
@@ -530,7 +525,7 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
      */
     public void setDisplayName(String displayName) {
         try {
-            String displayNameToLookup;
+            String displayNameToLookup = null;
 
             if (convertToUppercase()) {
                 displayNameToLookup = displayName.toUpperCase();

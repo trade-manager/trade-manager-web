@@ -63,7 +63,7 @@ public class DBTableLookupServiceProvider implements ILookupServiceProvider {
      * This will be a hashtable of hashtables of ILookup objects. The first key
      * is the lookup name and the second key is the LookupQualifier.
      */
-    private static final Hashtable<String, Hashtable<String, ILookup>> _lookups = new Hashtable<>();
+    private static Hashtable<String, Hashtable<String, ILookup>> _lookups = new Hashtable<String, Hashtable<String, ILookup>>();
 
     /**
      * Default Constructor
@@ -82,14 +82,18 @@ public class DBTableLookupServiceProvider implements ILookupServiceProvider {
      * @param qualifier  LookupQualifier
      * @param optional   boolean
      * @return ILookup
+     * @throws LookupException
+     * @see ILookupServiceProvider#getLookup(String,
+     * LookupQualifier)
      */
-    public synchronized ILookup getLookup(String lookupName, LookupQualifier qualifier, boolean optional) {
+    public synchronized ILookup getLookup(String lookupName, LookupQualifier qualifier, boolean optional)
+            throws LookupException {
         ILookup lookup = getCachedLookup(lookupName, qualifier);
 
         if (null == lookup) {
             try {
-                Vector<Vector<Object>> rows = new Vector<>();
-                Vector<String> colNames = new Vector<>();
+                Vector<Vector<Object>> rows = new Vector<Vector<Object>>();
+                Vector<String> colNames = new Vector<String>();
                 Enumeration<?> en = ConfigProperties.getPropAsEnumeration(lookupName + "_DBTable");
 
                 while (en.hasMoreElements()) {
@@ -98,7 +102,7 @@ public class DBTableLookupServiceProvider implements ILookupServiceProvider {
 
                 // Have all of the columns - want to get a vector for each
                 // column value
-                Vector<Enumeration<?>> colRows = new Vector<>();
+                Vector<Enumeration<?>> colRows = new Vector<Enumeration<?>>();
                 int i;
                 int colNamesSize = colNames.size();
 
@@ -111,7 +115,7 @@ public class DBTableLookupServiceProvider implements ILookupServiceProvider {
                 boolean exit = false;
 
                 do {
-                    Vector<Object> row = new Vector<>();
+                    Vector<Object> row = new Vector<Object>();
                     boolean foundOne = false;
                     boolean addIt = true;
                     int colRowsSize = colRows.size();
@@ -134,7 +138,7 @@ public class DBTableLookupServiceProvider implements ILookupServiceProvider {
                         // Check to see if the returned lookup is to be
                         // constrained
                         if (foundOne && (qualifier != null)) {
-                            Object qualVal = qualifier.getValue(colNames.elementAt(i));
+                            Object qualVal = qualifier.getValue("" + colNames.elementAt(i));
 
                             if (null != qualVal) {
                                 if (!qualVal.equals(value)) {
@@ -181,9 +185,9 @@ public class DBTableLookupServiceProvider implements ILookupServiceProvider {
                      * Add the None selected row.
                      */
                     if (optional) {
-                        Vector<Object> newRowNone = new Vector<>();
+                        Vector<Object> newRowNone = new Vector<Object>();
                         Class<?> clazz = Class.forName(dao);
-                        Object daoObjectNone = clazz.getDeclaredConstructor().newInstance();
+                        Object daoObjectNone = clazz.newInstance();
                         newRowNone.add(type);
                         newRowNone.add(daoObjectNone);
                         newRowNone.add(Decode.NONE);
@@ -198,7 +202,7 @@ public class DBTableLookupServiceProvider implements ILookupServiceProvider {
                             Object[] o = new Object[0];
                             Object displayNameValue = method.invoke(daoObject, o);
                             if (null != displayNameValue) {
-                                Vector<Object> newRow = new Vector<>();
+                                Vector<Object> newRow = new Vector<Object>();
                                 newRow.add(type);
                                 newRow.add(daoObject);
                                 newRow.add(displayNameValue);
@@ -209,7 +213,7 @@ public class DBTableLookupServiceProvider implements ILookupServiceProvider {
                 }
 
                 // If rows where found then I managed to provide the lookup
-                if (!rows.isEmpty()) {
+                if (rows.size() > 0) {
                     lookup = new PropertiesLookup(colNames, rows);
                 }
             } catch (Throwable t) {
@@ -217,7 +221,6 @@ public class DBTableLookupServiceProvider implements ILookupServiceProvider {
                 // the lookup ignore the exception.
             }
             if (null != lookup) {
-                assert qualifier != null;
                 addLookupToCache(lookupName, qualifier, lookup);
             }
         }
@@ -259,7 +262,12 @@ public class DBTableLookupServiceProvider implements ILookupServiceProvider {
      * @param lookup     ILookup
      */
     private synchronized void addLookupToCache(String lookupName, LookupQualifier qualifier, ILookup lookup) {
-        Hashtable<String, ILookup> lookupsByQualifier = _lookups.computeIfAbsent(lookupName, k -> new Hashtable<>());
+        Hashtable<String, ILookup> lookupsByQualifier = _lookups.get(lookupName);
+
+        if (null == lookupsByQualifier) {
+            lookupsByQualifier = new Hashtable<String, ILookup>();
+            _lookups.put(lookupName, lookupsByQualifier);
+        }
 
         lookupsByQualifier.put(qualifier.toString(), lookup);
     }
@@ -269,6 +277,7 @@ public class DBTableLookupServiceProvider implements ILookupServiceProvider {
      *
      * @param className String
      * @return List<?>
+     * @throws ClassNotFoundException
      */
     private synchronized List<?> getCodes(String className) throws ClassNotFoundException {
 
@@ -283,7 +292,7 @@ public class DBTableLookupServiceProvider implements ILookupServiceProvider {
             TypedQuery<Object> typedQuery = entityManager.createQuery(select);
             List<Object> items = typedQuery.getResultList();
             entityManager.getTransaction().commit();
-            if (!items.isEmpty()) {
+            if (items.size() > 0) {
                 return items;
             }
 
@@ -293,6 +302,6 @@ public class DBTableLookupServiceProvider implements ILookupServiceProvider {
         } finally {
             EntityManagerHelper.close();
         }
-        return new ArrayList<>(0);
+        return new ArrayList<Object>(0);
     }
 }

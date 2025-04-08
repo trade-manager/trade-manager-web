@@ -37,8 +37,6 @@ package org.trade.core.lookup;
 
 import org.trade.core.exception.NestingException;
 
-import java.io.Serial;
-
 /**
  * @author Simon Allen
  */
@@ -46,7 +44,6 @@ public class LookupException extends NestingException {
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = -6136398466762813824L;
 
     public LookupException() {

@@ -37,7 +37,6 @@ package org.trade.core.exception;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Serial;
 import java.io.Serializable;
 import java.util.PropertyResourceBundle;
 
@@ -51,7 +50,6 @@ public class ExceptionResourceBundle extends PropertyResourceBundle implements S
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = 3004803155454107541L;
 
     /**
@@ -59,6 +57,7 @@ public class ExceptionResourceBundle extends PropertyResourceBundle implements S
      * are stored
      *
      * @param resourceStream the input stream to the resource
+     * @throws IOException
      * @throws java.io.IOException : thrown when the input stream doesn't find the resource
      */
     public ExceptionResourceBundle(InputStream resourceStream) throws IOException {
@@ -72,8 +71,14 @@ public class ExceptionResourceBundle extends PropertyResourceBundle implements S
      * @return the exception message
      */
     public String getMessage(ExceptionCode code) {
+        String message = getString(code.getCode());
 
-        return getString(code.getCode());
+        // return the package default message if no class message is available
+        if (message == null) {
+            message = getMessage();
+        }
+
+        return message;
     }
 
     /**

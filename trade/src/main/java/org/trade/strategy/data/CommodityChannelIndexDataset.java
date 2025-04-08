@@ -47,7 +47,6 @@ import org.trade.strategy.data.cci.CommodityChannelIndexItem;
 import org.trade.strategy.data.cci.ICommodityChannelIndexDataset;
 
 import java.awt.*;
-import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +60,6 @@ public class CommodityChannelIndexDataset extends AbstractXYDataset
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = 3931818830267435673L;
 
     /**
@@ -75,7 +73,7 @@ public class CommodityChannelIndexDataset extends AbstractXYDataset
      * Creates a new instance of <code>OHLCSeriesCollection</code>.
      */
     public CommodityChannelIndexDataset() {
-        this.data = new ArrayList<>();
+        this.data = new ArrayList<IndicatorSeries>();
     }
 
     /**
@@ -259,7 +257,7 @@ public class CommodityChannelIndexDataset extends AbstractXYDataset
      * @return The x-value. * @see org.jfree.data.xy.XYDataset#getX(int, int)
      */
     public Number getX(int series, int item) {
-        return getXValue(series, item);
+        return new Double(getXValue(series, item));
     }
 
     /**
@@ -272,7 +270,7 @@ public class CommodityChannelIndexDataset extends AbstractXYDataset
     public Number getY(int series, int item) {
         CommodityChannelIndexSeries s = (CommodityChannelIndexSeries) this.data.get(series);
         CommodityChannelIndexItem di = (CommodityChannelIndexItem) s.getDataItem(item);
-        return di.getY();
+        return new Double(di.getY());
     }
 
     /**
@@ -300,7 +298,7 @@ public class CommodityChannelIndexDataset extends AbstractXYDataset
      * #getMovingAverage(int, int)
      */
     public Number getCommodityChannelIndex(int series, int item) {
-        return getCommodityChannelIndexValue(series, item);
+        return new Double(getCommodityChannelIndexValue(series, item));
     }
 
     /**
@@ -313,13 +311,14 @@ public class CommodityChannelIndexDataset extends AbstractXYDataset
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof CommodityChannelIndexDataset that)) {
+        if (!(obj instanceof CommodityChannelIndexDataset)) {
             return false;
         }
+        CommodityChannelIndexDataset that = (CommodityChannelIndexDataset) obj;
         if (!this.xPosition.equals(that.xPosition)) {
             return false;
         }
-        return this.data.equals(that.data);
+        return ObjectUtils.equal(this.data, that.data);
     }
 
     /**
@@ -341,6 +340,8 @@ public class CommodityChannelIndexDataset extends AbstractXYDataset
      * @param source      CandleDataset
      * @param seriesIndex int
      * @param newBar      boolean
+     * @see IIndicatorDataset#updateDataset(CandleDataset,
+     * int)
      */
     public void updateDataset(CandleDataset source, int seriesIndex, boolean newBar) {
         if (source == null) {

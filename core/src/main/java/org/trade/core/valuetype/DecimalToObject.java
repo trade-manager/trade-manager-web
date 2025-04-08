@@ -53,9 +53,12 @@ public class DecimalToObject implements IJavaDynamicTypeConverter {
      * @param targetType     Class<?>
      * @param valueToConvert Object
      * @return Object
+     * @throws JavaTypeTranslatorException
+     * @see IJavaDynamicTypeConverter#convert(Class<?>,
+     * Object)
      */
     public Object convert(Class<?> targetType, Object valueToConvert) throws JavaTypeTranslatorException {
-        Object rVal;
+        Object rVal = null;
 
         if (valueToConvert instanceof Decimal) {
             rVal = JavaTypeTranslator.convert(targetType, valueToConvert.toString());
@@ -72,9 +75,15 @@ public class DecimalToObject implements IJavaDynamicTypeConverter {
      * @param targetType     Class<?>
      * @param valueToConvert Object
      * @return boolean
+     * @see IJavaDynamicTypeConverter#
+     * supportsConversion (Class<?>, Object)
      */
     public boolean supportsConversion(Class<?> targetType, Object valueToConvert) {
+        boolean rVal = false;
+        if (valueToConvert instanceof Decimal) {
+            rVal = true;
+        }
 
-        return (valueToConvert instanceof Decimal);
+        return (rVal);
     }
 }

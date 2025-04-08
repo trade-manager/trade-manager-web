@@ -8,7 +8,6 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 import java.awt.*;
-import java.io.Serial;
 
 /**
  *
@@ -18,7 +17,6 @@ public class Tree extends JTree {
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = 7628661248589428064L;
 
     /**

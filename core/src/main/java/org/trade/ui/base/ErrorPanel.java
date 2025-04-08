@@ -45,9 +45,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.Serial;
 import java.io.Writer;
-import java.util.Objects;
 
 /**
  * @author Simon Allen
@@ -57,7 +55,6 @@ public class ErrorPanel extends BasePanel {
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = -2624890325384057649L;
 
     JPanel jPanel1 = new JPanel();
@@ -176,8 +173,10 @@ public class ErrorPanel extends BasePanel {
 
     /**
      * Method jbInit.
+     *
+     * @throws Exception
      */
-    void jbInit() {
+    void jbInit() throws Exception {
         this.setLayout(borderLayout1);
         jPanel1.setLayout(borderLayout6);
         jPanel4.setLayout(gridLayout1);
@@ -193,7 +192,7 @@ public class ErrorPanel extends BasePanel {
         flowLayout5.setVgap(0);
         jPanel7.setLayout(flowLayout5);
         flowLayout4.setHgap(2);
-        flowLayout4.setAlignment(FlowLayout.LEFT);
+        flowLayout4.setAlignment(0);
         flowLayout4.setVgap(0);
         jPanel8.setLayout(flowLayout4);
         jPanel9.setLayout(gridLayout9);
@@ -201,7 +200,7 @@ public class ErrorPanel extends BasePanel {
         jPanel.setLayout(gridLayout8);
         flowLayout1.setVgap(2);
         flowLayout1.setHgap(2);
-        flowLayout5.setAlignment(FlowLayout.LEFT);
+        flowLayout5.setAlignment(0);
         flowLayout5.setHgap(1);
         jPanel15.setLayout(borderLayout7);
         gridLayout1.setHgap(2);
@@ -240,6 +239,9 @@ public class ErrorPanel extends BasePanel {
 
     /**
      * doNew() -
+     *
+     * @throws *
+     * @see
      */
     public void doNew() {
         // Handle the File|New menu item.
@@ -257,6 +259,9 @@ public class ErrorPanel extends BasePanel {
 
     /**
      * doOpen() -
+     *
+     * @throws *
+     * @see
      */
     public void doOpen() {
         if (!okToAbandon()) {
@@ -299,13 +304,15 @@ public class ErrorPanel extends BasePanel {
      * openFile() -
      *
      * @param fileName the name of the text file on disk
+     * @throws *
+     * @see
      */
     public void openFile(String fileName) {
         Cursor oldCursor = getFrame().getCursor();
 
         getFrame().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
-        try (InputStream is = new BufferedInputStream(new FileInputStream(currFileName))) {
+        try (InputStream is = new BufferedInputStream(new FileInputStream(currFileName));) {
 
             // Load the data from the stream
             jTextArea1.setInputStream(is);
@@ -333,6 +340,9 @@ public class ErrorPanel extends BasePanel {
 
     /**
      * doSave() -
+     *
+     * @throws *
+     * @see
      */
     public void doSave() {
         doSaveFile();
@@ -362,6 +372,9 @@ public class ErrorPanel extends BasePanel {
 
     /**
      * doSaveAs() -
+     *
+     * @throws *
+     * @see
      */
     public void doSaveAs() {
         saveAs();
@@ -423,12 +436,19 @@ public class ErrorPanel extends BasePanel {
 
     /**
      * updateCaption() -
+     *
+     * @throws *
+     * @see
      */
     private void updateCaption() {
         String caption;
 
-        // synthesize the "Untitled" name if no name yet.
-        caption = Objects.requireNonNullElse(currFileName, "Untitled");
+        if (currFileName == null) {
+            // synthesize the "Untitled" name if no name yet.
+            caption = "Untitled";
+        } else {
+            caption = currFileName;
+        }
 
         // add a "*" in the caption if the file is dirty.
         if (dirty) {
@@ -440,6 +460,9 @@ public class ErrorPanel extends BasePanel {
 
     /**
      * doColor() -
+     *
+     * @throws *
+     * @see
      */
     public void doColor() {
         // Handle the "Foreground Color" menu item
@@ -471,7 +494,7 @@ public class ErrorPanel extends BasePanel {
         }
     }
 
-    /*
+    /**
      * doDataChanged() -
      *
      *
@@ -490,6 +513,10 @@ public class ErrorPanel extends BasePanel {
 
     /**
      * doPrint()() -
+     *
+     * @param <B> </B>
+     * @return
+     * @throws @see
      */
     public void doPrint() {
         PrintController printer = new PrintController();
@@ -501,9 +528,11 @@ public class ErrorPanel extends BasePanel {
      * saveFileWriter() -
      *
      * @return boolean
+     * @throws *
+     * @see
      */
     public boolean saveFileWriter() {
-        boolean result;
+        boolean result = false;
 
         try {
             Writer w = new FileWriter(currFileName);
@@ -527,9 +556,11 @@ public class ErrorPanel extends BasePanel {
      * saveFileWriter() -
      *
      * @return boolean
+     * @throws *
+     * @see
      */
     public boolean saveFileStream() {
-        boolean result;
+        boolean result = false;
 
         try {
             OutputStream o = new FileOutputStream(currFileName);
@@ -551,6 +582,9 @@ public class ErrorPanel extends BasePanel {
 
     /**
      * doWindowActivated() -
+     *
+     * @throws *
+     * @see
      */
     public void doWindowActivated() {
     }
@@ -566,6 +600,9 @@ public class ErrorPanel extends BasePanel {
 
     /**
      * doWindowClose() -
+     *
+     * @throws *
+     * @see
      */
     public void doWindowClose() {
         okToAbandon();
@@ -578,6 +615,8 @@ public class ErrorPanel extends BasePanel {
      * doWindowOpen() -
      *
      * @param parm Object
+     * @throws *
+     * @see
      */
     public void doWindowOpen(Object parm) {
         if (parm instanceof String) {
@@ -587,6 +626,9 @@ public class ErrorPanel extends BasePanel {
 
     /**
      * doCopy() -
+     *
+     * @throws *
+     * @see
      */
     public void doCopy() {
         jTextArea1.copy();
@@ -594,6 +636,9 @@ public class ErrorPanel extends BasePanel {
 
     /**
      * doCut() -
+     *
+     * @throws *
+     * @see
      */
     public void doCut() {
         jTextArea1.cut();
@@ -601,6 +646,9 @@ public class ErrorPanel extends BasePanel {
 
     /**
      * doPaste() -
+     *
+     * @throws *
+     * @see
      */
     public void doPaste() {
         jTextArea1.paste();
@@ -608,6 +656,9 @@ public class ErrorPanel extends BasePanel {
 
     /**
      * doDelete() -
+     *
+     * @throws *
+     * @see
      */
     public void doDelete() {
         jTextArea1.setText("");

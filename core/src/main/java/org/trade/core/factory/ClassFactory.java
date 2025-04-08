@@ -64,6 +64,12 @@ public class ClassFactory {
      * @param theInterface String
      * @param context      Object
      * @return Object
+     * @throws IOException
+     * @throws ClassNotFoundException
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     * @throws NoSuchMethodException
+     * @throws InvocationTargetException
      */
     public static Object getServiceForInterface(String theInterface, Object context)
             throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException,
@@ -79,61 +85,71 @@ public class ClassFactory {
         Class<?>[] args = new Class[1];
         args[0] = Object.class;
 
-        Vector<Object> param = new Vector<>();
-        return getCreateClass(className, param, context);
+        Vector<Object> parm = new Vector<Object>();
+        return getCreateClass(className, parm, context);
     }
 
     /**
      * Method getCreateClass.
      *
      * @param className String
-     * @param param     Vector<Object>
+     * @param parm      Vector<Object>
      * @param context   Object
      * @return Object
+     * @throws IOException
+     * @throws ClassNotFoundException
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     * @throws NoSuchMethodException
+     * @throws InvocationTargetException
      */
-    public static Object getCreateClass(String className, Vector<Object> param, Object context)
-            throws ClassNotFoundException, InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+    public static Object getCreateClass(String className, Vector<Object> parm, Object context)
+            throws ClassNotFoundException, InstantiationException, IllegalAccessException {
 
-        int vectorSize;
-        vectorSize = param.size();
+        int vectorSize = 0;
+        vectorSize = parm.size();
         Object instance = null;
 
-        Class<?>[] params = new Class[vectorSize];
+        Class<?>[] parms = new Class[vectorSize];
         Object[] object = new Object[vectorSize];
-        StringBuilder classes = new StringBuilder();
+        StringBuffer classes = new StringBuffer();
         int i = 0;
-        for (Object obj : param) {
-            if (classes.isEmpty()) {
+        for (Object obj : parm) {
+            if (classes.length() == 0) {
                 classes.append(obj.getClass().getName());
             } else {
-                classes.append(",").append(obj.getClass().getName());
+                classes.append("," + obj.getClass().getName());
             }
-            params[i] = obj.getClass();
+            parms[i] = obj.getClass();
             object[i] = obj;
             i++;
         }
 
-        Constructor<?> constructor;
+        Constructor<?> constructor = null;
         Class<?> c = Class.forName(className);
 
         try {
-            constructor = c.getDeclaredConstructor(params);
+            constructor = c.getDeclaredConstructor(parms);
             instance = constructor.newInstance(object);
         } catch (Exception e) {
-            _log.debug("Could not find constructor for default params[{}] will test all constructors.", classes);
+
+            _log.debug("Could not find constructor for default parms[" + classes + "] will test all constructors.");
             Constructor<?>[] constructors = c.getConstructors();
             for (Constructor<?> constructor2 : constructors) {
                 try {
                     instance = constructor2.newInstance(object);
-                    _log.info("Found constructor: {} for params[{}]", constructor2.toGenericString(), classes);
-                    break;
+                    if (null != instance) {
+                        _log.info(
+                                "Found constructor: " + constructor2.toGenericString() + " for parms[" + classes + "]");
+                        break;
+                    }
                 } catch (Exception ex) {
-                    _log.error("Constructor: {} failed!!", constructor2.toGenericString());
+                    _log.error("Constructor: " + constructor2.toGenericString() + " failed!!");
                 }
             }
         }
         if (null == instance) {
-            instance = c.getDeclaredConstructor().newInstance();
+            instance = c.newInstance();
         }
 
         return instance;

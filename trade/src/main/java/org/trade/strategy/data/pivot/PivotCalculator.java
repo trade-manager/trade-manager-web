@@ -40,6 +40,7 @@ import org.slf4j.LoggerFactory;
 import org.trade.core.util.MatrixFunctions;
 import org.trade.core.util.Pair;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -61,14 +62,14 @@ public class PivotCalculator {
     /**
      * Method calculatePivot.
      *
-     * @param pairs Hashtable<Long,Pair>
+     * @param userDataVector Hashtable<Long,Pair>
      * @return boolean
      */
     public boolean calculatePivot(List<Pair> pairs) {
 
         boolean isPivot = false;
 
-        pairs.sort(Pair.X_VALUE_ASC);
+        Collections.sort(pairs, Pair.X_VALUE_ASC);
 
         int size = pairs.size();
         if (size > 1) {
@@ -80,7 +81,7 @@ public class PivotCalculator {
                 isPivot = true;
                 String output = MatrixFunctions.toPrint(_polyOrder, correlationCoeff, standardError, terms,
                         userData.length);
-                _log.debug("Pivot Calc: {}", output);
+                _log.debug("Pivot Calc: " + output);
                 for (Pair pair : pairs) {
                     double y = MatrixFunctions.fx(pair.x, terms);
                     pair.y = y;

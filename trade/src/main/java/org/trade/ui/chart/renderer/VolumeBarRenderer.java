@@ -55,7 +55,6 @@ import org.trade.strategy.data.volume.VolumeItem;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
-import java.io.Serial;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
@@ -67,7 +66,6 @@ public class VolumeBarRenderer extends XYBarRenderer {
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = -6586658399843459145L;
     /**
      * The colors.
@@ -83,15 +81,18 @@ public class VolumeBarRenderer extends XYBarRenderer {
     }
 
     private void configureToolTips() {
-        setDefaultToolTipGenerator((dataset, series, item) -> {
-            StringBuilder result = new StringBuilder("<html>");
-            if (dataset instanceof VolumeDataset d) {
-                Number time = d.getX(series, item);
-                Number volume = d.getVolume(series, item);
-                result.append("<b>Volume:</b> ").append(new Quantity(volume.intValue())).append("<br/>");
-                result.append("<b>Date:</b> ").append(TOOLTIP_DATE_FORMAT.format(time)).append("<br/>");
+        setDefaultToolTipGenerator(new XYToolTipGenerator() {
+            public String generateToolTip(XYDataset dataset, int series, int item) {
+                StringBuilder result = new StringBuilder("<html>");
+                if (dataset instanceof VolumeDataset) {
+                    VolumeDataset d = (VolumeDataset) dataset;
+                    Number time = d.getX(series, item);
+                    Number volume = d.getVolume(series, item);
+                    result.append("<b>Volume:</b> ").append(new Quantity(volume.intValue())).append("<br/>");
+                    result.append("<b>Date:</b> ").append(TOOLTIP_DATE_FORMAT.format(time)).append("<br/>");
+                }
+                return result.toString();
             }
-            return result.toString();
         });
     }
 
@@ -174,7 +175,13 @@ public class VolumeBarRenderer extends XYBarRenderer {
         double top = Math.max(translatedValue0, translatedValue1);
 
         double startX = volumeItem.getPeriod().getFirstMillisecond();
+        if (Double.isNaN(startX)) {
+            return;
+        }
         double endX = volumeItem.getPeriod().getLastMillisecond();
+        if (Double.isNaN(endX)) {
+            return;
+        }
 
         if (startX <= endX) {
             if (!domainAxis.getRange().intersects(startX, endX)) {

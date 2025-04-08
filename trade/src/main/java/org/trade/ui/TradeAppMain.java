@@ -77,6 +77,10 @@ public class TradeAppMain {
      * @param args String[]
      */
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(TradeAppMain::new);
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                new TradeAppMain();
+            }
+        });
     }
 }

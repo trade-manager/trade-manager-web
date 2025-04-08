@@ -47,7 +47,6 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import org.trade.core.dao.Aspect;
 
-import java.io.Serial;
 import java.io.Serializable;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
@@ -66,7 +65,6 @@ public class ContractLite extends Aspect implements Serializable, Cloneable {
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = 5691902477608387034L;
 
     private TradePosition tradePosition;
@@ -91,12 +89,21 @@ public class ContractLite extends Aspect implements Serializable, Cloneable {
     }
 
     /**
+     * Method setId.
+     *
+     * @param id Integer
+     */
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    /**
      * Method getTradePosition.
      *
      * @return TradePosition
      */
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_trade_position", insertable = false)
+    @JoinColumn(name = "id_trade_position", insertable = false, updatable = true, nullable = true)
     public TradePosition getTradePosition() {
         return this.tradePosition;
     }
@@ -110,13 +117,4 @@ public class ContractLite extends Aspect implements Serializable, Cloneable {
         this.tradePosition = tradePosition;
     }
 
-    @Override
-    public ContractLite clone() {
-        try {
-            // TODO: copy mutable state here, so the clone can't change the internals of the original
-            return (ContractLite) super.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new AssertionError();
-        }
-    }
 }

@@ -52,7 +52,7 @@ public class DateValidator implements IValidator {
 
     private IMessageFactory m_messageFactory;
 
-    private final boolean m_isMandatory;
+    private boolean m_isMandatory;
 
     /**
      * Constructor for DateValidator.
@@ -143,10 +143,17 @@ public class DateValidator implements IValidator {
         month = cal.get(Calendar.MONTH) + 1;
         year = cal.get(Calendar.YEAR);
 
-        /*
+        /**
          * None of this checks will ever fail. Leaving it here just to be
          * absolutely sure.
          */
+        if ((day < 1) || (day > 31)) {
+            return "day field of date is < 1 or > 31";
+        }
+
+        if ((month < 1) || (month > 12)) {
+            return "month field of date is < 1 or > 12";
+        }
 
         if ((day > 30) && ((month == 9) || (month == 4) || (month == 6) || (month == 11))) {
             return "day field of date is invalid - 31st of a day with 30 days";

@@ -82,6 +82,6 @@ public class StringToDoubleConverter extends StringToObjectConverter {
      * in the correct format
      */
     protected Object getConvertedString(String aString) throws IllegalArgumentException {
-        return Double.valueOf(aString);
+        return new Double(aString);
     }
 }

@@ -41,7 +41,6 @@ import javax.swing.text.MaskFormatter;
 import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.io.Serial;
 
 /**
  * @author Simon Allen
@@ -51,7 +50,6 @@ public class StringField extends JFormattedTextField implements FocusListener {
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = -3791332898190722115L;
 
     /**
@@ -112,8 +110,13 @@ public class StringField extends JFormattedTextField implements FocusListener {
      * @param c Component
      */
     protected void selectItLater(Component c) {
-        if (c instanceof JFormattedTextField ftf) {
-            SwingUtilities.invokeLater(ftf::selectAll);
+        if (c instanceof JFormattedTextField) {
+            final JFormattedTextField ftf = (JFormattedTextField) c;
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    ftf.selectAll();
+                }
+            });
         }
     }
 

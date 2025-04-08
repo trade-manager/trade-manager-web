@@ -130,7 +130,6 @@ import org.trade.strategy.data.macd.MACDItem;
 import java.awt.*;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Rectangle2D;
-import java.io.Serial;
 
 import static org.jfree.chart.util.ShapeUtils.isPointInRect;
 
@@ -139,20 +138,24 @@ import static org.jfree.chart.util.ShapeUtils.isPointInRect;
  * at each point, or (b) lines between points, or (c) both shapes and lines.
  * <p>
  * This renderer has been retained for historical reasons and, in general, you
- * should use the class instead.
+ * should use the {@link XYLineAndShapeRenderer} class instead.
  */
 public class MACDItemRenderer extends StandardXYItemRenderer {
 
     /**
      * For serialization.
      */
-    @Serial
     private static final long serialVersionUID = -3271351259436865995L;
 
     /**
      * Specifies how the gap threshold value is interpreted.
      */
-    private final UnitType gapThresholdType = UnitType.RELATIVE;
+    private UnitType gapThresholdType = UnitType.RELATIVE;
+
+    /**
+     * Threshold for deciding when to discontinue a line.
+     */
+    private double gapThreshold = 1.0;
 
     /**
      * A flag that controls whether or not each series is drawn as a single
@@ -346,11 +349,7 @@ public class MACDItemRenderer extends StandardXYItemRenderer {
                         // only draw a line if the gap between the current and
                         // previous data point is within the threshold
                         if (this.gapThresholdType == UnitType.ABSOLUTE) {
-                            /*
-                             * Threshold for deciding when to discontinue a line.
-                             */
-                            double gapThreshold = 1.0;
-                            drawLine = Math.abs(x1 - x0) <= gapThreshold;
+                            drawLine = Math.abs(x1 - x0) <= this.gapThreshold;
                         } else {
                             drawLine = Math.abs(x1 - x0) <= ((maxX - minX) / numX * getGapThreshold());
                         }
@@ -436,11 +435,6 @@ public class MACDItemRenderer extends StandardXYItemRenderer {
         if (entities != null && isPointInRect(dataArea, xx, yy)) {
             addEntity(entities, entityArea, dataset, series, item, xx, yy);
         }
-    }
-
-    @Override
-    public void setDrawSeriesLineAsPath(boolean drawSeriesLineAsPath) {
-        this.drawSeriesLineAsPath = drawSeriesLineAsPath;
     }
 
     /**

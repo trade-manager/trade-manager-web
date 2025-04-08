@@ -53,7 +53,7 @@ public interface OHLCVwapDataset extends OHLCDataset {
      * @param item   the item index.
      * @return The Vwap.
      */
-    double getVwapValue(int series, int item);
+    public double getVwapValue(int series, int item);
 
     /**
      * Returns the Vwap for an item within a series.
@@ -62,6 +62,6 @@ public interface OHLCVwapDataset extends OHLCDataset {
      * @param item   the item index.
      * @return The Vwap.
      */
-    Number getVwap(int series, int item);
+    public Number getVwap(int series, int item);
 
 }

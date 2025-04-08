@@ -41,14 +41,12 @@ import org.trade.ui.base.TabbedAppPanel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.Serial;
 
 /**
  *
  */
 public class MainControllerPanel extends TabbedAppPanel {
 
-    @Serial
     private static final long serialVersionUID = -7717664255656430982L;
 
     public final static String PROPERTIES_PROPERTY_FILE = "core.properties";

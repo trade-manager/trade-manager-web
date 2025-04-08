@@ -48,15 +48,15 @@ import java.math.BigDecimal;
 public class DecimalValidator implements IValidator {
     private IMessageFactory m_messageFactory;
 
-    private final boolean m_isMandatory;
+    private boolean m_isMandatory;
 
-    private final boolean m_allowNegative;
+    private boolean m_allowNegative;
 
-    private final boolean m_allowZero;
+    private boolean m_allowZero;
 
-    private final int m_maxNonDecimalLength;
+    private int m_maxNonDecimalLength;
 
-    private final int m_maxDecimalLength;
+    private int m_maxDecimalLength;
 
     /**
      * Constructor for DecimalValidator.
@@ -131,12 +131,12 @@ public class DecimalValidator implements IValidator {
             String decimalString = "";
             String nonDecimalString = stringValue;
             if (-1 != indexOfDot) {
-                decimalString = stringValue.substring(indexOfDot + 1);
+                decimalString = stringValue.substring(indexOfDot + 1, stringValue.length());
                 nonDecimalString = stringValue.substring(0, indexOfDot);
             }
 
-            if (!nonDecimalString.isEmpty() && nonDecimalString.charAt(0) == '-') {
-                nonDecimalString = nonDecimalString.substring(1);
+            if (nonDecimalString.length() > 0 && nonDecimalString.charAt(0) == '-') {
+                nonDecimalString = nonDecimalString.substring(1, nonDecimalString.length());
             }
 
             long nonDecimalLength = nonDecimalString.length();
@@ -153,7 +153,7 @@ public class DecimalValidator implements IValidator {
             }
 
             // Enforce length of portion to left of decimal point
-            if (valid && nonDecimalLength > m_maxNonDecimalLength) {
+            if (nonDecimalLength > m_maxNonDecimalLength) {
                 valid = false;
                 receiver.addExceptionMessage(
                         getMessageFactory().create(MessageContextFactory.MONEY_LEFT_OF_DECIMAL_TOO_LONG
@@ -161,14 +161,14 @@ public class DecimalValidator implements IValidator {
             }
 
             // Disallow zero for certain formats
-            if (valid && !m_allowZero && (0 == ((BigDecimal) value).compareTo(new BigDecimal(0)))) {
+            if (!m_allowZero && (0 == ((BigDecimal) value).compareTo(new BigDecimal(0)))) {
                 valid = false;
                 receiver.addExceptionMessage(
                         getMessageFactory().create(MessageContextFactory.MONEY_ZERO_NOT_ALLOWED.create()));
             }
 
             // Disallow negative numbers
-            if (valid && !m_allowNegative && (((BigDecimal) value).compareTo(new BigDecimal(0)) < 0)) {
+            if (!m_allowNegative && (((BigDecimal) value).compareTo(new BigDecimal(0)) < 0)) {
                 valid = false;
                 receiver.addExceptionMessage(
                         getMessageFactory().create(MessageContextFactory.MONEY_NEGATIVE_NOT_ALLOWED.create()));
@@ -192,28 +192,29 @@ public class DecimalValidator implements IValidator {
                         getMessageFactory().create(MessageContextFactory.MONEY_DOT_WITH_NO_NUMBERS.create()));
             }
 
-            if (valid && invalidValue.indexOf(".") != invalidValue.lastIndexOf(".")) {
+            if (invalidValue.indexOf(".") != invalidValue.lastIndexOf(".")) {
                 valid = false;
                 receiver.addExceptionMessage(
                         getMessageFactory().create(MessageContextFactory.MONEY_MULTIPLE_DOTS.create()));
             }
 
-            if (valid && m_allowNegative && (invalidValue.indexOf("-") != invalidValue.lastIndexOf("-"))) {
+            if (m_allowNegative && (invalidValue.indexOf("-") != invalidValue.lastIndexOf("-"))) {
                 valid = false;
                 receiver.addExceptionMessage(
                         getMessageFactory().create(MessageContextFactory.MONEY_MULTIPLE_DASHES.create()));
             }
 
-            if (valid && m_allowNegative && (invalidValue.contains("-")) && (invalidValue.indexOf("-") != 0)) {
+            if (m_allowNegative && (invalidValue.indexOf("-") != -1) && (invalidValue.indexOf("-") != 0)) {
                 valid = false;
                 receiver.addExceptionMessage(
                         getMessageFactory().create(MessageContextFactory.MONEY_DASH_NOT_FIRST_CHARACTER.create()));
             }
 
+            valid = validator.isValid(invalidValue, invalidValue, expectedFormat, receiver);
             if (valid) {
-                valid = validator.isValid(invalidValue, invalidValue, expectedFormat, receiver);
+                valid = false;
+                // TODO: Log this
             }
-
         }
 
         return valid;

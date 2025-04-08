@@ -82,6 +82,6 @@ public class StringToFloatConverter extends StringToObjectConverter {
      * in the correct format
      */
     protected Object getConvertedString(String aString) throws IllegalArgumentException {
-        return Float.valueOf(aString);
+        return new Float(aString);
     }
 }

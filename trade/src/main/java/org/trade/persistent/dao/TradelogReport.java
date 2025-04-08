@@ -37,7 +37,6 @@ package org.trade.persistent.dao;
 
 import org.trade.core.dao.Aspect;
 
-import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,11 +48,10 @@ public class TradelogReport extends Aspect implements java.io.Serializable {
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = 3388042483785305102L;
 
-    private List<TradelogDetail> tradelogDetail = new ArrayList<>(0);
-    private List<TradelogSummary> tradelogSummary = new ArrayList<>(0);
+    private List<TradelogDetail> tradelogDetail = new ArrayList<TradelogDetail>(0);
+    private List<TradelogSummary> tradelogSummary = new ArrayList<TradelogSummary>(0);
 
     public TradelogReport() {
     }

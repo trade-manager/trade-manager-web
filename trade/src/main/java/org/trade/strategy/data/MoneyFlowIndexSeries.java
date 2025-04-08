@@ -46,7 +46,6 @@ import org.trade.strategy.data.base.RegularTimePeriod;
 import org.trade.strategy.data.candle.CandleItem;
 import org.trade.strategy.data.mfi.MoneyFlowIndexItem;
 
-import java.io.Serial;
 import java.math.BigDecimal;
 import java.util.LinkedList;
 
@@ -85,7 +84,6 @@ import java.util.LinkedList;
 @DiscriminatorValue("MoneyFlowIndexSeries")
 public class MoneyFlowIndexSeries extends IndicatorSeries {
 
-    @Serial
     private static final long serialVersionUID = 20183087035446657L;
 
     public static final String LENGTH = "Length";
@@ -97,8 +95,8 @@ public class MoneyFlowIndexSeries extends IndicatorSeries {
     private double positiveSum = 0.0;
     private double negativeSum = 0.0;
 
-    private LinkedList<Double> yyValues = new LinkedList<>();
-    private LinkedList<Long> volValues = new LinkedList<>();
+    private LinkedList<Double> yyValues = new LinkedList<Double>();
+    private LinkedList<Long> volValues = new LinkedList<Long>();
 
     /**
      * Creates a new empty series. By default, items added to the series will be
@@ -144,11 +142,12 @@ public class MoneyFlowIndexSeries extends IndicatorSeries {
      * Method clone.
      *
      * @return Object
+     * @throws CloneNotSupportedException
      */
     public Object clone() throws CloneNotSupportedException {
         MoneyFlowIndexSeries clone = (MoneyFlowIndexSeries) super.clone();
-        clone.yyValues = new LinkedList<>();
-        clone.volValues = new LinkedList<>();
+        clone.yyValues = new LinkedList<Double>();
+        clone.volValues = new LinkedList<Long>();
         return clone;
     }
 
@@ -399,7 +398,8 @@ public class MoneyFlowIndexSeries extends IndicatorSeries {
     public void printSeries() {
         for (int i = 0; i < this.getItemCount(); i++) {
             MoneyFlowIndexItem dataItem = (MoneyFlowIndexItem) this.getDataItem(i);
-            _log.debug("Type: {} Time: {} Value: {}", this.getType(), dataItem.getPeriod().getStart(), dataItem.getMoneyFlowIndex());
+            _log.debug("Type: " + this.getType() + " Time: " + dataItem.getPeriod().getStart() + " Value: "
+                    + dataItem.getMoneyFlowIndex());
         }
     }
 

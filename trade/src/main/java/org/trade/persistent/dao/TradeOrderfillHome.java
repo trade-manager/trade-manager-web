@@ -94,8 +94,8 @@ public class TradeOrderfillHome {
             query.where(builder.equal(from.get("execId"), execId));
             List<TradeOrderfill> items = entityManager.createQuery(query).getResultList();
             entityManager.getTransaction().commit();
-            if (!items.isEmpty()) {
-                return items.getFirst();
+            if (items.size() > 0) {
+                return items.get(0);
             }
             return null;
 

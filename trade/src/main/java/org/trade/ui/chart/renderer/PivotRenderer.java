@@ -63,7 +63,6 @@ import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serial;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
@@ -83,7 +82,6 @@ public class PivotRenderer extends AbstractXYItemRenderer implements XYItemRende
     /**
      * For serialization.
      */
-    @Serial
     private static final long serialVersionUID = -2764344339073566425L;
 
     final DateFormat TOOLTIP_DATE_FORMAT = new SimpleDateFormat("H:mma MM/dd/yy");
@@ -260,7 +258,7 @@ public class PivotRenderer extends AbstractXYItemRenderer implements XYItemRende
      * @param crosshairState crosshair information for the plot (<code>null</code>
      *                       permitted).
      * @param pass           the pass index.
-     * @see XYItemRenderer#drawItem(Graphics2D,
+     * @see org.jfree.chart.renderer.xy.XYItemRenderer#drawItem(Graphics2D,
      * XYItemRendererState, Rectangle2D, PlotRenderingInfo, XYPlot,
      * ValueAxis, ValueAxis, XYDataset, int, int, CrosshairState, int)
      */
@@ -477,9 +475,10 @@ public class PivotRenderer extends AbstractXYItemRenderer implements XYItemRende
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof PivotRenderer that)) {
+        if (!(obj instanceof PivotRenderer)) {
             return false;
         }
+        PivotRenderer that = (PivotRenderer) obj;
         if (this.dotWidth != that.dotWidth) {
             return false;
         }
@@ -509,7 +508,6 @@ public class PivotRenderer extends AbstractXYItemRenderer implements XYItemRende
      * @throws IOException if there is an I/O error. * @throws ClassNotFoundException if
      *                     there is a classpath problem.
      */
-    @Serial
     private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
         stream.defaultReadObject();
         this.legendShape = SerialUtils.readShape(stream);
@@ -521,7 +519,6 @@ public class PivotRenderer extends AbstractXYItemRenderer implements XYItemRende
      * @param stream the output stream.
      * @throws IOException if there is an I/O error.
      */
-    @Serial
     private void writeObject(ObjectOutputStream stream) throws IOException {
         stream.defaultWriteObject();
         SerialUtils.writeShape(this.legendShape, stream);

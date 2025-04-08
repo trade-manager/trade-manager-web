@@ -139,8 +139,8 @@ public class TradeOrderHome {
                 tradeOrder.getTradeOrderfills().size();
             }
             entityManager.getTransaction().commit();
-            if (!items.isEmpty()) {
-                return items.getFirst();
+            if (items.size() > 0) {
+                return items.get(0);
             }
             return null;
 
@@ -173,7 +173,7 @@ public class TradeOrderHome {
             Object item = typedQuery.getSingleResult();
             entityManager.getTransaction().commit();
             if (null == item)
-                item = 0;
+                item = new Integer(0);
 
             return (Integer) item;
 

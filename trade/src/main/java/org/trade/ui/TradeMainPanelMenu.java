@@ -42,7 +42,8 @@ import org.trade.ui.base.BasePanelMenu;
 import org.trade.ui.base.BaseUIPropertyCodes;
 
 import javax.swing.*;
-import java.io.Serial;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  *
@@ -51,7 +52,6 @@ public class TradeMainPanelMenu extends BasePanelMenu {
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = -2716722655140661891L;
 
     private final BaseMenuItem searchMenu = new BaseMenuItem(null, BaseUIPropertyCodes.SEARCH);
@@ -84,52 +84,152 @@ public class TradeMainPanelMenu extends BasePanelMenu {
         super(basePanel);
 
         cancelButton.setToolTipText("Cancel Strategies & Data");
-        cancelButton.addActionListener(_ -> messageEvent(cancelButton.getMethod()));
-        cancelMenu.addActionListener(_ -> messageEvent(cancelMenu.getMethod()));
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                messageEvent(cancelButton.getMethod());
+            }
+        });
+        cancelMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                messageEvent(cancelMenu.getMethod());
+            }
+        });
         closeAllButton.setToolTipText("Cancel Orders & Close Positions");
-        closeAllButton.addActionListener(_ -> messageEvent(closeAllButton.getMethod()));
-        closeAllMenu.addActionListener(_ -> messageEvent(closeAllMenu.getMethod()));
+        closeAllButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                messageEvent(closeAllButton.getMethod());
+            }
+        });
+        closeAllMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                messageEvent(closeAllMenu.getMethod());
+            }
+        });
         runStrategyButton.setToolTipText("Run Strategy");
-        runStrategyButton.addActionListener(_ -> messageEvent(runStrategyButton.getMethod()));
+        runStrategyButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                messageEvent(runStrategyButton.getMethod());
+            }
+        });
         runStrategyMenu.setText("Run Strategy");
-        runStrategyMenu.addActionListener(_ -> messageEvent(runStrategyMenu.getMethod()));
+        runStrategyMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                messageEvent(runStrategyMenu.getMethod());
+            }
+        });
         testStrategyButton.setToolTipText("Test Strategy");
-        testStrategyButton.addActionListener(_ -> messageEvent(testStrategyButton.getMethod()));
+        testStrategyButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                messageEvent(testStrategyButton.getMethod());
+            }
+        });
         testStrategyMenu.setText("Test Strategy");
-        testStrategyMenu.addActionListener(_ -> messageEvent(testStrategyMenu.getMethod()));
+        testStrategyMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                messageEvent(testStrategyMenu.getMethod());
+            }
+        });
         brokerDataButton.setToolTipText("Get Chart Data");
-        brokerDataButton.addActionListener(_ -> messageEvent(brokerDataButton.getMethod()));
+        brokerDataButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                messageEvent(brokerDataButton.getMethod());
+            }
+        });
         brokerDataMenu.setText("Get Chart Data");
-        brokerDataMenu.addActionListener(_ -> messageEvent(brokerDataMenu.getMethod()));
-        searchMenu.addActionListener(_ -> messageEvent(searchMenu.getMethod()));
-        searchButton.addActionListener(_ -> messageEvent(searchButton.getMethod()));
+        brokerDataMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                messageEvent(brokerDataMenu.getMethod());
+            }
+        });
+        searchMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                messageEvent(searchMenu.getMethod());
+            }
+        });
+        searchButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                messageEvent(searchButton.getMethod());
+            }
+        });
 
-        refreshMenu.addActionListener(_ -> messageEvent(refreshMenu.getMethod()));
-        refreshButton.addActionListener(_ -> messageEvent(refreshButton.getMethod()));
+        refreshMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                messageEvent(refreshMenu.getMethod());
+            }
+        });
+        refreshButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                messageEvent(refreshButton.getMethod());
+            }
+        });
         deleteMenu.setText("Delete all Orders");
-        deleteMenu.addActionListener(_ -> messageEvent(deleteMenu.getMethod()));
+        deleteMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                messageEvent(deleteMenu.getMethod());
+            }
+        });
         deleteButton.setToolTipText("Delete all Orders");
-        deleteButton.addActionListener(_ -> messageEvent(deleteButton.getMethod()));
+        deleteButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                messageEvent(deleteButton.getMethod());
+            }
+        });
         propertiesMenu.setText("Contract Details");
-        propertiesMenu.addActionListener(_ -> messageEvent(propertiesMenu.getMethod()));
-        connect.addActionListener(_ -> messageEvent(connect.getMethod()));
-        disconnect.addActionListener(_ -> messageEvent(disconnect.getMethod()));
-        disclaimer.addActionListener(_ -> messageEvent(disclaimer.getMethod()));
+        propertiesMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                messageEvent(propertiesMenu.getMethod());
+            }
+        });
+        connect.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                messageEvent(connect.getMethod());
+            }
+        });
+        disconnect.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                messageEvent(disconnect.getMethod());
+            }
+        });
+        disclaimer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                messageEvent(disclaimer.getMethod());
+            }
+        });
 
         final BaseMenuItem close = new BaseMenuItem(null, BaseUIPropertyCodes.CLOSE);
-        close.addActionListener(_ -> messageEvent(close.getMethod()));
+        close.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                messageEvent(close.getMethod());
+            }
+        });
 
         final BaseMenuItem closeAll = new BaseMenuItem(null, BaseUIPropertyCodes.CLOSE_ALL);
-        closeAll.addActionListener(_ -> messageEvent(closeAll.getMethod()));
+        closeAll.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                messageEvent(closeAll.getMethod());
+            }
+        });
 
         final BaseMenuItem cascade = new BaseMenuItem(null, BaseUIPropertyCodes.CASCADE);
-        cascade.addActionListener(_ -> messageEvent(cascade.getMethod()));
+        cascade.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                messageEvent(cascade.getMethod());
+            }
+        });
 
         final BaseMenuItem cascadeAll = new BaseMenuItem(null, BaseUIPropertyCodes.CASCADE_ALL);
-        cascadeAll.addActionListener(_ -> messageEvent(cascadeAll.getMethod()));
+        cascadeAll.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                messageEvent(cascadeAll.getMethod());
+            }
+        });
 
         final BaseMenuItem tileAll = new BaseMenuItem(null, BaseUIPropertyCodes.TILE_ALL);
-        tileAll.addActionListener(_ -> messageEvent(tileAll.getMethod()));
+        tileAll.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                messageEvent(tileAll.getMethod());
+            }
+        });
         JMenu actionMenu = new JMenu("Action");
         menuBar.add(actionMenu, 2);
         this.editMenu.setVisible(false);

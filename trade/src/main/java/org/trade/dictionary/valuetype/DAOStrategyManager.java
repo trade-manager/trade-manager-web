@@ -40,7 +40,6 @@ import org.trade.core.valuetype.Decode;
 import org.trade.core.valuetype.ValueTypeException;
 import org.trade.persistent.dao.Strategy;
 
-import java.io.Serial;
 import java.util.Vector;
 
 /**
@@ -48,7 +47,6 @@ import java.util.Vector;
  */
 public class DAOStrategyManager extends DAODecode {
 
-    @Serial
     private static final long serialVersionUID = -5381026427696898592L;
     public static final String DECODE = "STRATEGY_MANAGER";
     public static final String _TABLE = "_TABLE";
@@ -63,10 +61,11 @@ public class DAOStrategyManager extends DAODecode {
      * Method getCodesDecodes.
      *
      * @return Vector<Decode>
+     * @throws ValueTypeException
      */
     @Override
     public Vector<Decode> getCodesDecodes() throws ValueTypeException {
-        final Vector<Decode> decodes = new Vector<>();
+        final Vector<Decode> decodes = new Vector<Decode>();
         final Vector<Decode> decodesAll = super.getCodesDecodes();
         for (final Decode decode : decodesAll) {
             final Strategy strategy = (Strategy) decode.getObject();

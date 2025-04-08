@@ -41,8 +41,6 @@ import org.trade.core.message.MessageFactory;
 import org.trade.core.validator.IExceptionMessageListener;
 import org.trade.core.validator.IValidator;
 
-import java.io.Serial;
-
 /**
  *
  */
@@ -50,7 +48,6 @@ public abstract class StringWrapper extends ValueType {
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = 8867039181191953504L;
 
     static {
@@ -132,7 +129,7 @@ public abstract class StringWrapper extends ValueType {
      * @return boolean
      */
     public boolean isEmpty() {
-        return (m_value.isEmpty());
+        return (m_value.length() == 0);
     }
 
     /**

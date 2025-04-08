@@ -35,12 +35,8 @@
  */
 package org.trade.persistent.dao;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.*;
 import org.junit.Rule;
-import org.junit.Test;
 import org.junit.rules.TestName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,12 +52,10 @@ import org.trade.ui.TradeAppLoadConfig;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 /**
- * Some tests for the DataUtilities class.
+ * Some tests for the {@link DataUtilities} class.
  *
  * @author Simon Allen
  * @version $Revision: 1.0 $
@@ -72,10 +66,13 @@ public class CandleTest {
     @Rule
     public TestName name = new TestName();
 
+    private String symbol = "TEST";
     private Tradestrategy tradestrategy = null;
 
     /**
      * Method setUpBeforeClass.
+     *
+     * @throws java.lang.Exception
      */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
@@ -83,18 +80,21 @@ public class CandleTest {
 
     /**
      * Method setUp.
+     *
+     * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
 
         TradeAppLoadConfig.loadAppProperties();
-        String symbol = "TEST";
         this.tradestrategy = TradestrategyTest.getTestTradestrategy(symbol);
         assertNotNull("1", this.tradestrategy);
     }
 
     /**
      * Method tearDown.
+     *
+     * @throws java.lang.Exception
      */
     @After
     public void tearDown() throws Exception {
@@ -103,6 +103,8 @@ public class CandleTest {
 
     /**
      * Method tearDownAfterClass.
+     *
+     * @throws java.lang.Exception
      */
     @AfterClass
     public static void tearDownAfterClass() throws Exception {
@@ -120,17 +122,17 @@ public class CandleTest {
 
             Candle transientInstance = new Candle(this.tradestrategy.getContract(), this.tradestrategy.getTradingday(),
                     period, period.getStart());
-            transientInstance.setHigh(new BigDecimal("20.33"));
-            transientInstance.setLow(new BigDecimal("20.11"));
-            transientInstance.setOpen(new BigDecimal("20.23"));
-            transientInstance.setClose(new BigDecimal("20.28"));
+            transientInstance.setHigh(new BigDecimal(20.33));
+            transientInstance.setLow(new BigDecimal(20.11));
+            transientInstance.setOpen(new BigDecimal(20.23));
+            transientInstance.setClose(new BigDecimal(20.28));
             transientInstance.setVolume(1500L);
-            transientInstance.setVwap(new BigDecimal("20.1"));
+            transientInstance.setVwap(new BigDecimal(20.1));
             transientInstance.setTradeCount(10);
 
             transientInstance = aspectHome.persist(transientInstance);
             assertNotNull("1", transientInstance.getId());
-            _log.info("testAddCandle IdCandle: {}", transientInstance.getId());
+            _log.info("testAddCandle IdCandle: " + transientInstance.getId());
 
         } catch (Exception | AssertionError ex) {
             String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
@@ -156,7 +158,7 @@ public class CandleTest {
                 assertFalse("1", tradestrategy.getStrategyData().getBaseCandleSeries().isEmpty());
                 candleHome.persistCandleSeries(tradestrategy.getStrategyData().getBaseCandleSeries());
 
-                _log.info("testAddCandle IdTradeStrategy: {}", tradestrategy.getId());
+                _log.info("testAddCandle IdTradeStrategy: " + tradestrategy.getId());
                 assertNotNull("2", ((CandleItem) tradestrategy.getStrategyData().getBaseCandleSeries().getDataItem(0))
                         .getCandle().getId());
 

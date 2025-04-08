@@ -52,7 +52,6 @@ import org.trade.core.dao.Aspect;
 import org.trade.core.util.TradingCalendar;
 import org.trade.strategy.data.base.RegularTimePeriod;
 
-import java.io.Serial;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.ZonedDateTime;
@@ -73,7 +72,6 @@ public class Candle extends Aspect implements java.io.Serializable {
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = 7644763985378994305L;
 
     @NotNull
@@ -197,6 +195,15 @@ public class Candle extends Aspect implements java.io.Serializable {
     @Column(name = "id", unique = true, nullable = false)
     public Integer getId() {
         return this.id;
+    }
+
+    /**
+     * Method setId.
+     *
+     * @param id Integer
+     */
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     /**
@@ -485,6 +492,15 @@ public class Candle extends Aspect implements java.io.Serializable {
     }
 
     /**
+     * Method setVersion.
+     *
+     * @param version Integer
+     */
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
+
+    /**
      * Set the bars side true is green false is red.
      *
      * @return boolean The side of the bar true is green false is red.
@@ -505,23 +521,18 @@ public class Candle extends Aspect implements java.io.Serializable {
         if (super.equals(objectToCompare))
             return true;
 
-        if (objectToCompare instanceof Candle candle) {
-
+        if (objectToCompare instanceof Candle) {
+            Candle candle = (Candle) objectToCompare;
             if (this.getTradingday().equals(candle.getTradingday())) {
-
                 if (this.getContract().equals(candle.getContract())) {
-
                     if (this.getStartPeriod().equals(candle.getStartPeriod())) {
-
                         if (this.getEndPeriod().equals(candle.getEndPeriod())) {
-
                             if (this.getHigh().equals(candle.getHigh())) {
-
                                 if (this.getLow().equals(candle.getLow())) {
-
                                     if (this.getOpen().equals(candle.getOpen())) {
-
-                                        return this.getClose().equals(candle.getClose());
+                                        if (this.getClose().equals(candle.getClose())) {
+                                            return true;
+                                        }
                                     }
                                 }
                             }

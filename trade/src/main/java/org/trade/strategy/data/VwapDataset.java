@@ -47,7 +47,6 @@ import org.trade.strategy.data.vwap.IVwapDataset;
 import org.trade.strategy.data.vwap.VwapItem;
 
 import java.awt.*;
-import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +59,6 @@ public class VwapDataset extends AbstractXYDataset implements IVwapDataset, IInd
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = 3931818830267435673L;
 
     /**
@@ -74,7 +72,7 @@ public class VwapDataset extends AbstractXYDataset implements IVwapDataset, IInd
      * Creates a new instance of <code>OHLCSeriesCollection</code>.
      */
     public VwapDataset() {
-        this.data = new ArrayList<>();
+        this.data = new ArrayList<IndicatorSeries>();
     }
 
     /**
@@ -258,7 +256,7 @@ public class VwapDataset extends AbstractXYDataset implements IVwapDataset, IInd
      * @return The x-value. * @see org.jfree.data.xy.XYDataset#getX(int, int)
      */
     public Number getX(int series, int item) {
-        return getXValue(series, item);
+        return new Double(getXValue(series, item));
     }
 
     /**
@@ -271,7 +269,7 @@ public class VwapDataset extends AbstractXYDataset implements IVwapDataset, IInd
     public Number getY(int series, int item) {
         VwapSeries s = (VwapSeries) this.data.get(series);
         VwapItem di = (VwapItem) s.getDataItem(item);
-        return di.getY();
+        return new Double(di.getY());
     }
 
     /**
@@ -297,7 +295,7 @@ public class VwapDataset extends AbstractXYDataset implements IVwapDataset, IInd
      * org.trade.strategy.data.vwap.IVwapDataset#getVwap(int, int)
      */
     public Number getVwap(int series, int item) {
-        return getVwapValue(series, item);
+        return new Double(getVwapValue(series, item));
     }
 
     /**
@@ -310,13 +308,14 @@ public class VwapDataset extends AbstractXYDataset implements IVwapDataset, IInd
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof VwapDataset that)) {
+        if (!(obj instanceof VwapDataset)) {
             return false;
         }
+        VwapDataset that = (VwapDataset) obj;
         if (!this.xPosition.equals(that.xPosition)) {
             return false;
         }
-        return this.data.equals(that.data);
+        return ObjectUtils.equal(this.data, that.data);
     }
 
     /**
@@ -338,6 +337,8 @@ public class VwapDataset extends AbstractXYDataset implements IVwapDataset, IInd
      * @param source      CandleDataset
      * @param seriesIndex int
      * @param newBar      boolean
+     * @see IIndicatorDataset#updateDataset(CandleDataset,
+     * int)
      */
     public void updateDataset(CandleDataset source, int seriesIndex, boolean newBar) {
 

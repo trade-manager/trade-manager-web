@@ -41,7 +41,6 @@ import org.trade.core.util.Reflector;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.Serial;
 import java.lang.reflect.Method;
 import java.util.Vector;
 
@@ -53,7 +52,6 @@ public abstract class BasePanel extends JPanel implements IMessageListener {
     /**
      *
      */
-    @Serial
     private static final long serialVersionUID = 7015215807608484202L;
 
     private final static Logger _log = LoggerFactory.getLogger(BasePanel.class);
@@ -198,7 +196,8 @@ public abstract class BasePanel extends JPanel implements IMessageListener {
      */
     public void handleEvent(MessageEvent e, Vector<Object> parm) {
 
-        if ((e.getSource() instanceof String method) && m_isSelected) {
+        if ((e.getSource() instanceof String) && m_isSelected) {
+            String method = (String) e.getSource();
             // _log.info("Fire Method: " + method + " in Class: "
             // + this.getClass().getName());
             doFireMethod(method, parm);
@@ -226,17 +225,18 @@ public abstract class BasePanel extends JPanel implements IMessageListener {
      */
     protected synchronized void doFireMethod(String methodName, Vector<Object> parm) {
 
-        int vectorSize;
+        int vectorSize = 0;
         vectorSize = parm.size();
 
         Class<?>[] parms = new Class[vectorSize];
         Object[] objects = new Object[vectorSize];
-        StringBuilder classes = new StringBuilder();
+        StringBuffer classes = new StringBuffer();
 
         for (Object object : parm) {
-            classes.append(object.getClass().getName()).append("\n");
-            parms[parm.indexOf(object)] = object.getClass();
-            objects[parm.indexOf(object)] = object;
+            Object obj = object;
+            classes.append(obj.getClass().getName() + "\n");
+            parms[parm.indexOf(obj)] = obj.getClass();
+            objects[parm.indexOf(obj)] = obj;
         }
 
         try {
@@ -248,7 +248,9 @@ public abstract class BasePanel extends JPanel implements IMessageListener {
             }
         } catch (Exception e) {
             // Do nothing this panel is not actively listening for this event
-            _log.error("Exception in reflection BasePanel method: {} Parms #: {} Method {} Parms class: {} not found in class: {} Error Msg: {}", methodName, vectorSize, methodName, classes, this.getClass().getName(), e.getMessage());
+            _log.error("Exception in reflection BasePanel method: " + methodName + " Parms #: " + vectorSize
+                    + " Method " + methodName + " Parms class: " + classes + " not found in class: "
+                    + this.getClass().getName() + " Error Msg: " + e.getMessage());
             setStatusBarMessage(e.getMessage(), ERROR);
         }
     }
@@ -279,7 +281,7 @@ public abstract class BasePanel extends JPanel implements IMessageListener {
      * @param ex      Exception
      */
     public void setErrorMessage(String title, String message, Exception ex) {
-        _log.error("Title: {} Msg: {}", title, message, ex);
+        _log.error("Title: " + title + " Msg: " + message, ex);
         this.setStatusBarMessage(message, ERROR);
         JOptionPane.showMessageDialog(getFrame(), message + " See log for details.", title, JOptionPane.ERROR_MESSAGE);
         this.clearStatusBarMessage();
