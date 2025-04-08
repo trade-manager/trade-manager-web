@@ -53,7 +53,7 @@ public interface IPivotDataset extends XYDataset {
      * @param item   the item index.
      * @return The Vwap.
      */
-    public double getPivotValue(int series, int item);
+    double getPivotValue(int series, int item);
 
     /**
      * Returns the Pivot for an item within a series.
@@ -62,7 +62,7 @@ public interface IPivotDataset extends XYDataset {
      * @param item   the item index.
      * @return The Pivot.
      */
-    public Number getPivot(int series, int item);
+    Number getPivot(int series, int item);
 
     /**
      * Returns the Pivot for an item within a series.
@@ -71,6 +71,6 @@ public interface IPivotDataset extends XYDataset {
      * @param item   the item index.
      * @return The Pivot.
      */
-    public String getPivotSide(int series, int item);
+    String getPivotSide(int series, int item);
 
 }

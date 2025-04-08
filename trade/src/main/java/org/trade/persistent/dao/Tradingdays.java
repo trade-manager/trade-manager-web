@@ -52,14 +52,15 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.Serial;
 import java.math.BigDecimal;
-import java.text.ParseException;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Objects;
 import java.util.Scanner;
 
 /**
@@ -70,11 +71,12 @@ public class Tradingdays extends Aspect implements java.io.Serializable {
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = 3388042483785305102L;
     // private ConcurrentHashMap<Date, Tradingday> tradingdays = new
     // ConcurrentHashMap<Date, Tradingday>(
     // 0);
-    private List<Tradingday> tradingdays = Collections.synchronizedList(new ArrayList<Tradingday>(0));
+    private List<Tradingday> tradingdays = Collections.synchronizedList(new ArrayList<>(0));
 
     public Tradingdays() {
     }
@@ -96,9 +98,7 @@ public class Tradingdays extends Aspect implements java.io.Serializable {
      */
     public Tradingdays(Integer idTradingdays, List<Tradingday> tradingdays) {
         this.id = idTradingdays;
-        for (Tradingday instance : tradingdays) {
-            this.tradingdays.add(instance);
-        }
+        this.tradingdays.addAll(tradingdays);
     }
 
     /**
@@ -201,8 +201,7 @@ public class Tradingdays extends Aspect implements java.io.Serializable {
     /**
      * Method containsTradingday.
      *
-     * @param open  Date
-     * @param close Date
+     * @param tradingday Tradingday
      * @return boolean
      */
     public boolean containsTradingday(Tradingday tradingday) {
@@ -359,7 +358,6 @@ public class Tradingdays extends Aspect implements java.io.Serializable {
      * Method populateDataFromFile.
      *
      * @param fileName String
-     * @throws Exception
      */
     public synchronized void populateDataFromFile(String fileName, Tradingday tradingday) throws Exception {
 
@@ -379,13 +377,13 @@ public class Tradingdays extends Aspect implements java.io.Serializable {
         try (FileReader fileReader = new FileReader(fileName);
              BufferedReader bufferedReader = new BufferedReader(fileReader)) {
 
-            if ((fileName == null) || fileName.equals("")) {
+            if (fileName.isEmpty()) {
                 return;
             }
 
             Integer chartDays = ConfigProperties.getPropAsInt("trade.backfill.duration");
             if (!ChartDays.newInstance(chartDays).isValid())
-                chartDays = new Integer(2);
+                chartDays = 2;
 
             String tierDefault = ConfigProperties.getPropAsString("trade.tier.default");
             if (!Tier.newInstance(tierDefault).isValid())
@@ -393,17 +391,17 @@ public class Tradingdays extends Aspect implements java.io.Serializable {
 
             Integer barSize = ConfigProperties.getPropAsInt("trade.backfill.barsize");
             if (!BarSize.newInstance(barSize).isValid())
-                barSize = new Integer(300);
+                barSize = 300;
 
-            Integer riskAmount = ConfigProperties.getPropAsInt("trade.risk");
+            int riskAmount = ConfigProperties.getPropAsInt("trade.risk");
             String strategyName = ConfigProperties.getPropAsString("trade.strategy.default");
             if (!DAOStrategy.newInstance(strategyName).isValid())
                 strategyName = DAOStrategy.newInstance().getCode();
 
             Strategy strategy = (Strategy) DAOStrategy.newInstance(strategyName).getObject();
 
-            Portfolio portfolio = (Portfolio) DAOPortfolio.newInstance().getObject();
-            String strLine = "";
+            Portfolio portfolio = (Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
+            String strLine;
 
             // read comma separated file line by line
 
@@ -462,7 +460,7 @@ public class Tradingdays extends Aspect implements java.io.Serializable {
                     if (!this.containsTradingday(tradestrategy.getTradingday())) {
                         this.add(tradestrategy.getTradingday());
                     }
-                    Collections.sort(tradestrategy.getTradingday().getTradestrategies(), Tradestrategy.DATE_ORDER_ASC);
+                    tradestrategy.getTradingday().getTradestrategies().sort(Tradestrategy.DATE_ORDER_ASC);
                 }
             }
 
@@ -476,10 +474,8 @@ public class Tradingdays extends Aspect implements java.io.Serializable {
      *
      * @param csvLine String
      * @return Tradestrategy
-     * @throws PersistentModelException
-     * @throws ParseException
      */
-    public static Tradestrategy parseContractLine(String csvLine) throws PersistentModelException, ParseException {
+    public static Tradestrategy parseContractLine(String csvLine) throws PersistentModelException {
         Tradestrategy tradestrategy = null;
         Contract contract = null;
         Tradingday tradingday = null;
@@ -493,12 +489,12 @@ public class Tradingdays extends Aspect implements java.io.Serializable {
             // display csv values
             tokenNumber++;
             String token = scanLine.next().trim();
-            if (token.length() == 0)
+            if (token.isEmpty())
                 continue;
 
             switch (tokenNumber) {
                 case 1: {
-                    if ("DES".equals(token.toUpperCase())) {
+                    if ("DES".equalsIgnoreCase(token)) {
                         tradestrategy = new Tradestrategy();
                         contract = new Contract();
                         contract.setCurrency(Currency.USD);
@@ -510,30 +506,30 @@ public class Tradingdays extends Aspect implements java.io.Serializable {
                     break;
                 }
                 case 2: {
-                    contract.setSymbol(token.toUpperCase());
+                    Objects.requireNonNull(contract).setSymbol(token.toUpperCase());
                     break;
                 }
                 case 3: {
-                    contract.setSecType(token.toUpperCase());
+                    Objects.requireNonNull(contract).setSecType(token.toUpperCase());
                     break;
                 }
                 case 4: {
                     if (token.contains("/")) {
                         String[] exchanges = token.split("/");
-                        contract.setExchange(exchanges[0].toUpperCase());
+                        Objects.requireNonNull(contract).setExchange(exchanges[0].toUpperCase());
                         contract.setPrimaryExchange(exchanges[1].toUpperCase());
 
                     } else {
-                        contract.setExchange(token.toUpperCase());
+                        Objects.requireNonNull(contract).setExchange(token.toUpperCase());
                     }
                     break;
                 }
                 case 5: {
                     if (token.length() == 6) {
-                        contract.setExpiry(TradingCalendar.getZonedDateTimeFromDateString(token, "yyyyMM",
+                        Objects.requireNonNull(contract).setExpiry(TradingCalendar.getZonedDateTimeFromDateString(token, "yyyyMM",
                                 TradingCalendar.MKT_TIMEZONE));
                     } else if (token.length() == 8) {
-                        contract.setExpiry(TradingCalendar.getZonedDateTimeFromDateString(token, "yyyyMMdd",
+                        Objects.requireNonNull(contract).setExpiry(TradingCalendar.getZonedDateTimeFromDateString(token, "yyyyMMdd",
                                 TradingCalendar.MKT_TIMEZONE));
                     }
                     break;
@@ -548,14 +544,12 @@ public class Tradingdays extends Aspect implements java.io.Serializable {
                 }
                 case 8: {
                     // Multiplier
-                    if (token.length() > 0)
-                        contract.setPriceMultiplier(new BigDecimal(token));
+                    Objects.requireNonNull(contract).setPriceMultiplier(new BigDecimal(token));
                     break;
                 }
                 case 9: {
                     // Currency
-                    if (token.length() > 0)
-                        contract.setCurrency(token);
+                    Objects.requireNonNull(contract).setCurrency(token);
                     break;
                 }
                 case 10: {
@@ -566,36 +560,35 @@ public class Tradingdays extends Aspect implements java.io.Serializable {
                         // display csv values
                         custTokenNumber++;
                         String custToken = custScan.next().trim();
-                        if (custToken.length() == 0)
+                        if (custToken.isEmpty())
                             continue;
 
                         switch (custTokenNumber) {
                             case 1: {
-                                tradestrategy.setSide(custToken.toUpperCase());
+                                Objects.requireNonNull(tradestrategy).setSide(custToken.toUpperCase());
                                 break;
                             }
                             case 2: {
-                                ;
                                 ZonedDateTime todayOpen = TradingCalendar.getTradingDayStart(TradingCalendar
                                         .getZonedDateTimeFromDateString(custToken, "MM/dd/yyyy", TradingCalendar.MKT_TIMEZONE));
                                 tradingday = Tradingday.newInstance(todayOpen);
-                                tradestrategy.setTradingday(tradingday);
+                                Objects.requireNonNull(tradestrategy).setTradingday(tradingday);
                                 break;
                             }
                             case 3: {
-                                tradestrategy.setTier(custToken.toUpperCase());
+                                Objects.requireNonNull(tradestrategy).setTier(custToken.toUpperCase());
                                 break;
                             }
                             case 4: {
-                                tradingday.setMarketGap(custToken.toUpperCase());
+                                Objects.requireNonNull(tradingday).setMarketGap(custToken.toUpperCase());
                                 break;
                             }
                             case 5: {
-                                tradingday.setMarketBias(custToken.toUpperCase());
+                                Objects.requireNonNull(tradingday).setMarketBias(custToken.toUpperCase());
                                 break;
                             }
                             case 6: {
-                                tradingday.setMarketBar(custToken.toUpperCase());
+                                Objects.requireNonNull(tradingday).setMarketBar(custToken.toUpperCase());
                                 break;
                             }
                             default: {
@@ -648,15 +641,15 @@ public class Tradingdays extends Aspect implements java.io.Serializable {
 
         try {
 
-            if ((inputFileDef == null) || inputFileDef.equals("")) {
+            if ((inputFileDef == null) || inputFileDef.isEmpty()) {
                 return;
             }
             fileReader = new FileReader(inputFileDef);
             bufferedReader = new BufferedReader(fileReader);
 
-            String csvLine = "";
+            String csvLine;
             // read comma separated file line by line
-            LinkedList<String> contracts = new LinkedList<String>();
+            LinkedList<String> contracts = new LinkedList<>();
             ZonedDateTime startDate = null;
             ZonedDateTime endDate = null;
             String des = null;
@@ -673,7 +666,7 @@ public class Tradingdays extends Aspect implements java.io.Serializable {
                     // display csv values
                     tokenNumber++;
                     String token = scanLine.next().trim();
-                    if (token.length() == 0)
+                    if (token.isEmpty())
                         continue;
 
                     switch (tokenNumber) {
@@ -714,13 +707,12 @@ public class Tradingdays extends Aspect implements java.io.Serializable {
                 }
                 scanLine.close();
             }
-            StringBuffer outPutFile = new StringBuffer();
-            while (startDate.isBefore(TradingCalendar.addTradingDays(endDate, 1))) {
+            StringBuilder outPutFile = new StringBuilder();
+            while (Objects.requireNonNull(startDate).isBefore(TradingCalendar.addTradingDays(endDate, 1))) {
 
                 if (TradingCalendar.isTradingDay(startDate)) {
                     for (String symbol : contracts) {
-                        outPutFile.append(des + "," + symbol + "," + secType + "," + exchange + ",,,,,,||"
-                                + TradingCalendar.getFormattedDate(startDate, "MM/dd/yyyy") + "|\n");
+                        outPutFile.append(des).append(",").append(symbol).append(",").append(secType).append(",").append(exchange).append(",,,,,,||").append(TradingCalendar.getFormattedDate(startDate, "MM/dd/yyyy")).append("|\n");
                     }
                 }
 

@@ -54,17 +54,14 @@ public class ObjectToStringWrapper implements IJavaDynamicTypeConverter {
      * @param targetType     Class<?>
      * @param valueToConvert Object
      * @return Object
-     * @throws JavaTypeTranslatorException
-     * @see IJavaDynamicTypeConverter#convert(Class<?>,
-     * Object)
      */
     public Object convert(Class<?> targetType, Object valueToConvert) throws JavaTypeTranslatorException {
-        Object rVal = null;
+        Object rVal;
 
         if (StringWrapper.class.isAssignableFrom(targetType)) {
             try {
 
-                StringWrapper vt = (StringWrapper) targetType.newInstance();
+                StringWrapper vt = (StringWrapper) targetType.getDeclaredConstructor().newInstance();
 
                 if (valueToConvert instanceof String) {
                     vt.setValue((String) valueToConvert);
@@ -90,14 +87,8 @@ public class ObjectToStringWrapper implements IJavaDynamicTypeConverter {
      * @param targetType     Class<?>
      * @param valueToConvert Object
      * @return boolean
-     * @see IJavaDynamicTypeConverter#
-     * supportsConversion (Class<?>, Object)
      */
     public boolean supportsConversion(Class<?> targetType, Object valueToConvert) {
-        boolean rVal = false;
-        if (StringWrapper.class.isAssignableFrom(targetType)) {
-            rVal = true;
-        }
-        return (rVal);
+        return (StringWrapper.class.isAssignableFrom(targetType));
     }
 }

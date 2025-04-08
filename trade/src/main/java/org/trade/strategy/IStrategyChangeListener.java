@@ -55,7 +55,7 @@ public interface IStrategyChangeListener extends EventListener {
      * @param tradestrategy     Tradestrategy
      */
 
-    public void strategyComplete(String strategyClassName, Tradestrategy tradestrategy);
+    void strategyComplete(String strategyClassName, Tradestrategy tradestrategy);
 
     /**
      * Method strategyStarted.
@@ -63,20 +63,20 @@ public interface IStrategyChangeListener extends EventListener {
      * @param strategyClassName String
      * @param tradestrategy     Tradestrategy
      */
-    public void strategyStarted(String strategyClassName, Tradestrategy tradestrategy);
+    void strategyStarted(String strategyClassName, Tradestrategy tradestrategy);
 
     /**
      * Method ruleComplete.
      *
      * @param tradestrategy Tradestrategy
      */
-    public void ruleComplete(Tradestrategy tradestrategy);
+    void ruleComplete(Tradestrategy tradestrategy);
 
     /**
      * Method strategyError.
      *
      * @param strategyError StrategyRuleException
      */
-    public void strategyError(StrategyRuleException strategyError);
+    void strategyError(StrategyRuleException strategyError);
 
 }

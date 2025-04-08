@@ -55,8 +55,6 @@ public class PrintController {
      * @param frame        Frame
      * @param comp         Component
      * @param printJobName String
-     * @throws *
-     * @see
      */
     public void printComponent(Frame frame, Component comp, String printJobName) {
         if (printJobName == null) {

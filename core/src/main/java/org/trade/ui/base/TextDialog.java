@@ -37,9 +37,9 @@ package org.trade.ui.base;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
+import java.io.Serial;
+import java.util.Objects;
 
 /**
  * @author Simon Allen
@@ -49,13 +49,12 @@ public class TextDialog extends JDialog {
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = -3288606526317779365L;
 
     private String m_text = null;
     private boolean m_cancel = true;
-    private JComponent m_component = null;
-    private JButton okButton = new JButton("OK");
-    private JButton cancelButton = new JButton("Cancel");
+    private final JComponent m_component;
 
     /**
      * Constructor for TextDialog.
@@ -70,8 +69,10 @@ public class TextDialog extends JDialog {
     public TextDialog(Frame frame, String title, boolean modal, JComponent component, String oKButtonText,
                       String cancelButtonText) {
         super(frame, title, modal);
+        JButton okButton = new JButton("OK");
         if (null != oKButtonText)
             okButton.setText(oKButtonText);
+        JButton cancelButton = new JButton("Cancel");
         if (null != cancelButtonText)
             cancelButton.setText(cancelButtonText);
 
@@ -80,26 +81,18 @@ public class TextDialog extends JDialog {
         } else {
             okButton.setPreferredSize(cancelButton.getPreferredSize());
         }
-        if (component == null) {
-            m_component = new JTextArea();
-        } else {
-            m_component = component;
-        }
+        m_component = Objects.requireNonNullElseGet(component, JTextArea::new);
         JScrollPane detailArea = new JScrollPane();
-        okButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                if (m_component instanceof JTextArea) {
-                    setText(((JTextArea) m_component).getText().trim());
-                }
-                setCancel(false);
-                dispose();
+        okButton.addActionListener(_ -> {
+            if (m_component instanceof JTextArea) {
+                setText(((JTextArea) m_component).getText().trim());
             }
+            setCancel(false);
+            dispose();
         });
-        cancelButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                setCancel(true);
-                dispose();
-            }
+        cancelButton.addActionListener(_ -> {
+            setCancel(true);
+            dispose();
         });
         JPanel jPanel = new JPanel(new BorderLayout());
         JPanel jPanel1 = new JPanel();

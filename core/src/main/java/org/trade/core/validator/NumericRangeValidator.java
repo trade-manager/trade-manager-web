@@ -42,9 +42,9 @@ import org.trade.core.message.MessageContextFactory;
  *
  */
 public class NumericRangeValidator extends StringValidator {
-    private long m_minValue;
+    private final long m_minValue;
 
-    private long m_maxValue;
+    private final long m_maxValue;
 
     /**
      * Constructor for NumericRangeValidator.
@@ -76,29 +76,29 @@ public class NumericRangeValidator extends StringValidator {
      */
     public boolean isValid(Object value, String invalidValue, String expectedFormat,
                            IExceptionMessageListener receiver) {
-        boolean valid = true;
+
 
         if (null == value) {
             value = "";
         }
 
         // This will check length, etc.
-        valid = super.isValid(value, invalidValue, expectedFormat, receiver);
+        boolean valid = super.isValid(value, invalidValue, expectedFormat, receiver);
 
         // Now we perform the email specific checks
-        if (valid && (((String) value).length() != 0)) {
+        if (valid && (!((String) value).isEmpty())) {
             try {
                 long i = Long.parseLong(((String) value));
                 if (i < m_minValue) {
                     valid = false;
                     receiver.addExceptionMessage(getMessageFactory().create(MessageContextFactory.BELOW_MIN_VALUE
-                            .create(MessageContextFactory.MIN_VALUE.create(new Long(m_minValue)))));
+                            .create(MessageContextFactory.MIN_VALUE.create(m_minValue))));
                 }
 
                 if (i > m_maxValue) {
                     valid = false;
                     receiver.addExceptionMessage(getMessageFactory().create(MessageContextFactory.EXCEEDS_MAX_VALUE
-                            .create(MessageContextFactory.MAX_VALUE.create(new Long(m_maxValue)))));
+                            .create(MessageContextFactory.MAX_VALUE.create(m_maxValue))));
                 }
             } catch (Exception ex) {
                 // Should not happen as I already have checked it for

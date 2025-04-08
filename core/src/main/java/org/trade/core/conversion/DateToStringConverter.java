@@ -79,9 +79,7 @@ public class DateToStringConverter implements IJavaTypeConverter {
      */
     public Object convert(Object valueToConvert) throws IllegalArgumentException {
         if (valueToConvert instanceof Date) {
-            if (null != valueToConvert) {
-                return m_dateFormatter.format(valueToConvert);
-            }
+            return m_dateFormatter.format(valueToConvert);
         }
 
         throw new IllegalArgumentException("The source object must be of type:java.util.Date");
@@ -111,5 +109,5 @@ public class DateToStringConverter implements IJavaTypeConverter {
     }
 
     // Private
-    DateFormat m_dateFormatter = null;
+    DateFormat m_dateFormatter;
 }

@@ -82,10 +82,10 @@ public class StringToIntegerConverter extends StringToObjectConverter {
      * in the correct format
      */
     protected Object getConvertedString(String aString) throws IllegalArgumentException {
-        if ((aString == null) || ((aString.trim().length()) == 0)) {
+        if ((aString == null) || (aString.trim().isEmpty())) {
             return null;
         } else {
-            return new Integer(aString);
+            return Integer.valueOf(aString);
         }
     }
 }

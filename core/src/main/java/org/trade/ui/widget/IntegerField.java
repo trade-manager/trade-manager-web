@@ -38,6 +38,7 @@ package org.trade.ui.widget;
 import javax.swing.*;
 import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.NumberFormatter;
+import java.io.Serial;
 import java.text.NumberFormat;
 
 /**
@@ -48,6 +49,7 @@ public class IntegerField extends JFormattedTextField {
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = 3445299380677561974L;
 
     public IntegerField() {
@@ -59,7 +61,7 @@ public class IntegerField extends JFormattedTextField {
         this.setFormatterFactory(new DefaultFormatterFactory(new NumberFormatter(displayFormat),
                 new NumberFormatter(displayFormat), new NumberFormatter(editFormat)));
         this.setHorizontalAlignment(SwingConstants.RIGHT);
-        this.setValue(new Integer(0));
+        this.setValue(0);
         this.setColumns(10);
     }
 
@@ -70,11 +72,11 @@ public class IntegerField extends JFormattedTextField {
      */
     public Integer getInteger() {
         try {
-            this.setValue(new Integer(this.getText()));
+            this.setValue(Integer.valueOf(this.getText()));
         } catch (Exception ex) {
             // Do nothing will return the current value.
         }
-        return new Integer(((Number) this.getValue()).intValue());
+        return ((Number) this.getValue()).intValue();
     }
 
     /**

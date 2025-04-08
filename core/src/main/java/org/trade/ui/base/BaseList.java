@@ -36,8 +36,7 @@
 package org.trade.ui.base;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+import java.io.Serial;
 import java.util.Vector;
 
 /**
@@ -49,6 +48,7 @@ public class BaseList extends JList<Object> {
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = -3629905211019895353L;
 
     private String m_method = null;
@@ -61,8 +61,6 @@ public class BaseList extends JList<Object> {
      * @param p      BasePanel
      * @param UICode String
      * @param items  Vector<Object>
-     * @throws *
-     * @see
      */
     public BaseList(BasePanel p, String UICode, Vector<Object> items) {
         super(items);
@@ -75,8 +73,6 @@ public class BaseList extends JList<Object> {
      *
      * @param p      BasePanel
      * @param UICode String
-     * @throws *
-     * @see
      */
     public BaseList(BasePanel p, String UICode) {
         jbInit(p, UICode);
@@ -99,19 +95,13 @@ public class BaseList extends JList<Object> {
         this.setName(basePropertyCodes.getDisplayName());
         this.setEnabled(basePropertyCodes.isEnabled());
         this.setToolTipText(basePropertyCodes.getToolTip());
-        this.addListSelectionListener(new ListSelectionListener() {
-            public void valueChanged(ListSelectionEvent e) {
-                doValueChanged();
-            }
-        });
+        this.addListSelectionListener(_ -> doValueChanged());
     }
 
     /**
      * addMessageListener() -
      *
      * @param listener IMessageListener
-     * @throws *
-     * @see
      */
     public void addMessageListener(IMessageListener listener) {
         m_notifier.add(listener);
@@ -121,8 +111,6 @@ public class BaseList extends JList<Object> {
      * removeMessageListener() -
      *
      * @param listener IMessageListener
-     * @throws *
-     * @see
      */
     public void removeMessageListener(IMessageListener listener) {
         m_notifier.remove(listener);
@@ -132,18 +120,13 @@ public class BaseList extends JList<Object> {
      * messageEvent() -
      *
      * @param selection String
-     * @throws *
-     * @see
      */
     protected void messageEvent(String selection) {
-        m_notifier.notifyEvent(new MessageEvent(selection), new Vector<Object>());
+        m_notifier.notifyEvent(new MessageEvent(selection), new Vector<>());
     }
 
     /**
      * actionPerformed() - combo box action performed
-     *
-     * @throws *
-     * @see
      */
     private void doValueChanged() {
         if (getMethod() != null) {
@@ -155,8 +138,6 @@ public class BaseList extends JList<Object> {
      * setMethod() - button action performed
      *
      * @param method String
-     * @throws *
-     * @see
      */
     private void setMethod(String method) {
         m_method = method;
@@ -166,8 +147,6 @@ public class BaseList extends JList<Object> {
      * getMethod() - button action performed
      *
      * @return String
-     * @throws *
-     * @see
      */
     private String getMethod() {
         return m_method;

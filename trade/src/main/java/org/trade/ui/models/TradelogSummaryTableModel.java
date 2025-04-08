@@ -44,6 +44,7 @@ import org.trade.persistent.dao.TradelogSummary;
 import org.trade.ui.base.TableModel;
 
 import javax.swing.event.TableModelEvent;
+import java.io.Serial;
 import java.util.Vector;
 
 /**
@@ -53,6 +54,7 @@ public class TradelogSummaryTableModel extends TableModel {
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = 3087514589731145479L;
 
     public static final String PERIOD = "Period";
@@ -77,9 +79,6 @@ public class TradelogSummaryTableModel extends TableModel {
 
     /**
      * OrderModel() -
-     *
-     * @throws *
-     * @see
      */
     public TradelogSummaryTableModel() {
         super(columnHeaderToolTip);
@@ -125,8 +124,6 @@ public class TradelogSummaryTableModel extends TableModel {
      * setData() -
      *
      * @param data TradelogReport
-     * @throws *
-     * @see
      */
 
     public void setData(TradelogReport data) {
@@ -135,7 +132,7 @@ public class TradelogSummaryTableModel extends TableModel {
         this.clearAll();
         if (!getData().getTradelogSummary().isEmpty()) {
             for (final TradelogSummary element : getData().getTradelogSummary()) {
-                final Vector<Object> newRow = new Vector<Object>();
+                final Vector<Object> newRow = new Vector<>();
                 getNewRow(newRow, element);
                 rows.add(newRow);
             }
@@ -149,8 +146,6 @@ public class TradelogSummaryTableModel extends TableModel {
      * @param value  Object
      * @param row    int
      * @param column int
-     * @throws *
-     * @see
      */
 
     public void populateDAO(Object value, int row, int column) {
@@ -219,8 +214,6 @@ public class TradelogSummaryTableModel extends TableModel {
      * deleteRow() -
      *
      * @param selectedRow int
-     * @throws *
-     * @see
      */
     public void deleteRow(int selectedRow) {
 
@@ -245,7 +238,7 @@ public class TradelogSummaryTableModel extends TableModel {
     public void addRow(TradelogSummary element) {
 
         getData().getTradelogSummary().add(element);
-        final Vector<Object> newRow = new Vector<Object>();
+        final Vector<Object> newRow = new Vector<>();
 
         getNewRow(newRow, element);
         rows.add(newRow);
@@ -257,7 +250,7 @@ public class TradelogSummaryTableModel extends TableModel {
     public void addRow() {
         final TradelogSummary element = new TradelogSummary();
         getData().getTradelogSummary().add(element);
-        final Vector<Object> newRow = new Vector<Object>();
+        final Vector<Object> newRow = new Vector<>();
         getNewRow(newRow, element);
         rows.add(newRow);
 

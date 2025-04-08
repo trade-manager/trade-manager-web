@@ -42,6 +42,7 @@
 package org.trade.strategy.data.base;
 
 import java.io.ObjectStreamException;
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -53,6 +54,7 @@ public final class TimePeriodAnchor implements Serializable {
     /**
      * For serialization.
      */
+    @Serial
     private static final long serialVersionUID = 2011955697457548862L;
 
     /**
@@ -73,7 +75,7 @@ public final class TimePeriodAnchor implements Serializable {
     /**
      * The name.
      */
-    private String name;
+    private final String name;
 
     /**
      * Private constructor.
@@ -107,16 +109,11 @@ public final class TimePeriodAnchor implements Serializable {
         if (this == obj) {
             return true;
         }
-        if (!(obj instanceof TimePeriodAnchor)) {
+        if (!(obj instanceof TimePeriodAnchor position)) {
             return false;
         }
 
-        TimePeriodAnchor position = (TimePeriodAnchor) obj;
-        if (!this.name.equals(position.name)) {
-            return false;
-        }
-
-        return true;
+        return this.name.equals(position.name);
     }
 
     /**
@@ -135,6 +132,7 @@ public final class TimePeriodAnchor implements Serializable {
      * @return The object.
      * @throws ObjectStreamException if there is a problem.
      */
+    @Serial
     private Object readResolve() throws ObjectStreamException {
         if (this.equals(TimePeriodAnchor.START)) {
             return TimePeriodAnchor.START;

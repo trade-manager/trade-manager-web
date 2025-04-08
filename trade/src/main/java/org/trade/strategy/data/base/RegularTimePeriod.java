@@ -124,7 +124,7 @@ public abstract class RegularTimePeriod implements ITimePeriod, Comparable<ITime
      * Returns the first millisecond of the time period. This will be determined
      * relative to the time zone specified in the constructor, or in the
      * calendar instance passed in the most recent call to the
-     * {@link #peg(Calendar)} method.
+     * method.
      *
      * @return The first millisecond of the time period.
      * @see #getLastMillisecond()
@@ -135,7 +135,7 @@ public abstract class RegularTimePeriod implements ITimePeriod, Comparable<ITime
      * Returns the last millisecond of the time period. This will be determined
      * relative to the time zone specified in the constructor, or in the
      * calendar instance passed in the most recent call to the
-     * {@link #peg(Calendar)} method.
+     * method.
      *
      * @return The last millisecond of the time period.
      * @see #getFirstMillisecond()
@@ -158,8 +158,7 @@ public abstract class RegularTimePeriod implements ITimePeriod, Comparable<ITime
      * specified <code>anchor</code> using the supplied <code>calendar</code>
      * (which incorporates a time zone).
      *
-     * @param anchor   the anchor (<code>null</code> not permitted).
-     * @param calendar the calendar (<code>null</code> not permitted).
+     * @param anchor the anchor (<code>null</code> not permitted).
      * @return Milliseconds since the epoch.
      * @since 1.0.18
      */
@@ -184,9 +183,7 @@ public abstract class RegularTimePeriod implements ITimePeriod, Comparable<ITime
         if (obj == this) {
             return true;
         }
-        if (this.getStart().equals(obj.getStart()) && this.getEnd().equals(obj.getEnd()))
-            return true;
-        return false;
+        return this.getStart().equals(obj.getStart()) && this.getEnd().equals(obj.getEnd());
     }
 
     /**

@@ -50,8 +50,6 @@ public class DAOTestSuite {
      */
     public static Test suite() {
 
-        TestSuite suite = new TestSuite();
-
         // suite.addTestSuite(ContractTest.class);
         // suite.addTestSuite(ValueTypeDAOTest.class);
         // suite.addTestSuite(StrategyTest.class);
@@ -62,7 +60,7 @@ public class DAOTestSuite {
         // suite.addTestSuite(TradeOrderTest.class);
         // suite.addTestSuite(TradelogReportTest.class);
 
-        return suite;
+        return new TestSuite();
     }
 
     /**

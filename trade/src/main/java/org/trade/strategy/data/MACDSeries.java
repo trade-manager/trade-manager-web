@@ -46,6 +46,7 @@ import org.trade.strategy.data.base.RegularTimePeriod;
 import org.trade.strategy.data.candle.CandleItem;
 import org.trade.strategy.data.macd.MACDItem;
 
+import java.io.Serial;
 import java.math.BigDecimal;
 import java.util.LinkedList;
 
@@ -78,6 +79,7 @@ import java.util.LinkedList;
 @DiscriminatorValue("MACDSeries")
 public class MACDSeries extends IndicatorSeries {
 
+    @Serial
     private static final long serialVersionUID = 20183087035446657L;
 
     public static final String FAST_LENGTH = "Fast Length";
@@ -93,17 +95,17 @@ public class MACDSeries extends IndicatorSeries {
     private double fastSum = 0.0;
     private double prevFastEMA = 0;
     private double fastMultiplyer = Double.MAX_VALUE;
-    private LinkedList<Double> fastYYValues = new LinkedList<Double>();
+    private LinkedList<Double> fastYYValues = new LinkedList<>();
 
     private double slowSum = 0.0;
     private double prevSlowEMA = 0;
     private double slowMultiplyer = Double.MAX_VALUE;
-    private LinkedList<Double> slowYYValues = new LinkedList<Double>();
+    private final LinkedList<Double> slowYYValues = new LinkedList<>();
 
     private double signalSmoothingSum = 0.0;
     private double prevSignalSmoothingEMA = 0;
     private double signalSmoothingMultiplyer = Double.MAX_VALUE;
-    private LinkedList<Double> signalSmoothingYYValues = new LinkedList<Double>();
+    private final LinkedList<Double> signalSmoothingYYValues = new LinkedList<>();
 
     /**
      * Creates a new empty series. By default, items added to the series will be
@@ -126,15 +128,15 @@ public class MACDSeries extends IndicatorSeries {
     /**
      * Constructor for MACDSeries.
      *
-     * @param strategy       Strategy
-     * @param name           String
-     * @param type           String
-     * @param description    String
-     * @param displayOnChart Boolean
-     * @param chartRGBColor  Integer
-     * @param subChart       Boolean
-     * @param numberOfSTD    BigDecimal
-     * @param length         Integer
+     * @param strategy        Strategy
+     * @param name            String
+     * @param type            String
+     * @param description     String
+     * @param displayOnChart  Boolean
+     * @param chartRGBColor   Integer
+     * @param subChart        Boolean
+     * @param slowLength      Integer
+     * @param signalSmoothing Integer
      */
     public MACDSeries(Strategy strategy, String name, String type, String description, Boolean displayOnChart,
                       Integer chartRGBColor, Boolean subChart, Integer fastLength, Integer slowLength, Integer signalSmoothing) {
@@ -152,11 +154,10 @@ public class MACDSeries extends IndicatorSeries {
      * Method clone.
      *
      * @return Object
-     * @throws CloneNotSupportedException
      */
     public Object clone() throws CloneNotSupportedException {
         MACDSeries clone = (MACDSeries) super.clone();
-        clone.fastYYValues = new LinkedList<Double>();
+        clone.fastYYValues = new LinkedList<>();
         return clone;
     }
 
@@ -377,136 +378,134 @@ public class MACDSeries extends IndicatorSeries {
             // work out the average for the earlier values...
             Number yy = candleItem.getY();
 
-            if (null != yy) {
-                if (this.fastYYValues.size() == getFastLength()) {
+            if (this.fastYYValues.size() == getFastLength()) {
+                /*
+                 * If the item does not exist in the series then this is a
+                 * new time period and so we need to remove the last in the
+                 * set and add the new periods values. Otherwise we just
+                 * update the last value in the set. Sum is just used for
+                 * performance save having to sum the last set of values
+                 * each time.
+                 */
+                if (newBar) {
+                    fastSum = fastSum - this.fastYYValues.getLast() + yy.doubleValue();
+                    this.fastYYValues.removeLast();
+                    this.fastYYValues.addFirst(yy.doubleValue());
+
+                } else {
+                    fastSum = fastSum - this.fastYYValues.getFirst() + yy.doubleValue();
+                    this.fastYYValues.removeFirst();
+                    this.fastYYValues.addFirst(yy.doubleValue());
+                }
+            } else {
+                if (newBar) {
+                    fastSum = fastSum + yy.doubleValue();
+                    this.fastYYValues.addFirst(yy.doubleValue());
+                } else {
+                    fastSum = fastSum + yy.doubleValue() - this.fastYYValues.getFirst();
+                    this.fastYYValues.removeFirst();
+                    this.fastYYValues.addFirst(yy.doubleValue());
+                }
+            }
+            if (this.slowYYValues.size() == getSlowLength()) {
+                /*
+                 * If the item does not exist in the series then this is a
+                 * new time period and so we need to remove the last in the
+                 * set and add the new periods values. Otherwise we just
+                 * update the last value in the set. Sum is just used for
+                 * performance save having to sum the last set of values
+                 * each time.
+                 */
+                if (newBar) {
+                    slowSum = slowSum - this.slowYYValues.getLast() + yy.doubleValue();
+                    this.slowYYValues.removeLast();
+                    this.slowYYValues.addFirst(yy.doubleValue());
+
+                } else {
+                    slowSum = slowSum - this.slowYYValues.getFirst() + yy.doubleValue();
+                    this.slowYYValues.removeFirst();
+                    this.slowYYValues.addFirst(yy.doubleValue());
+                }
+            } else {
+                if (newBar) {
+                    slowSum = slowSum + yy.doubleValue();
+                    this.slowYYValues.addFirst(yy.doubleValue());
+                } else {
+                    slowSum = slowSum + yy.doubleValue() - this.slowYYValues.getFirst();
+                    this.slowYYValues.removeFirst();
+                    this.slowYYValues.addFirst(yy.doubleValue());
+                }
+            }
+
+            if (this.slowYYValues.size() == getSlowLength()) {
+
+                double fastEMA;
+                if (fastMultiplyer == Double.MAX_VALUE) {
+                    fastEMA = fastSum / this.getFastLength();
+                    fastMultiplyer = 2 / (this.getFastLength() + 1.0d);
+                } else {
+                    fastEMA = ((this.fastYYValues.getFirst() - prevFastEMA) * fastMultiplyer) + prevFastEMA;
+                }
+                prevFastEMA = fastEMA;
+                double slowEMA;
+                if (slowMultiplyer == Double.MAX_VALUE) {
+                    slowEMA = slowSum / this.getSlowLength();
+                    slowMultiplyer = 2 / (this.getSlowLength() + 1.0d);
+                } else {
+                    slowEMA = ((this.slowYYValues.getFirst() - prevSlowEMA) * slowMultiplyer) + prevSlowEMA;
+                }
+                prevSlowEMA = slowEMA;
+                double MACD = fastEMA - slowEMA;
+                if (this.signalSmoothingYYValues.size() == this.getSignalSmoothing()) {
                     /*
-                     * If the item does not exist in the series then this is a
-                     * new time period and so we need to remove the last in the
-                     * set and add the new periods values. Otherwise we just
-                     * update the last value in the set. Sum is just used for
-                     * performance save having to sum the last set of values
-                     * each time.
+                     * If the item does not exist in the series then this is
+                     * a new time period and so we need to remove the last
+                     * in the set and add the new periods values. Otherwise
+                     * we just update the last value in the set. Sum is just
+                     * used for performance save having to sum the last set
+                     * of values each time.
                      */
+
                     if (newBar) {
-                        fastSum = fastSum - this.fastYYValues.getLast() + yy.doubleValue();
-                        this.fastYYValues.removeLast();
-                        this.fastYYValues.addFirst(yy.doubleValue());
+                        signalSmoothingSum = signalSmoothingSum - this.signalSmoothingYYValues.getLast() + MACD;
+                        this.signalSmoothingYYValues.removeLast();
+                        this.signalSmoothingYYValues.addFirst(MACD);
 
                     } else {
-                        fastSum = fastSum - this.fastYYValues.getFirst() + yy.doubleValue();
-                        this.fastYYValues.removeFirst();
-                        this.fastYYValues.addFirst(yy.doubleValue());
+                        signalSmoothingSum = signalSmoothingSum - this.signalSmoothingYYValues.getFirst() + MACD;
+                        this.signalSmoothingYYValues.removeFirst();
+                        this.signalSmoothingYYValues.addFirst(MACD);
                     }
+
                 } else {
                     if (newBar) {
-                        fastSum = fastSum + yy.doubleValue();
-                        this.fastYYValues.addFirst(yy.doubleValue());
+                        signalSmoothingSum = signalSmoothingSum + MACD;
+                        this.signalSmoothingYYValues.addFirst(MACD);
                     } else {
-                        fastSum = fastSum + yy.doubleValue() - this.fastYYValues.getFirst();
-                        this.fastYYValues.removeFirst();
-                        this.fastYYValues.addFirst(yy.doubleValue());
+                        signalSmoothingSum = signalSmoothingSum + MACD - this.signalSmoothingYYValues.getFirst();
+                        this.signalSmoothingYYValues.removeFirst();
+                        this.signalSmoothingYYValues.addFirst(MACD);
                     }
                 }
-                if (this.slowYYValues.size() == getSlowLength()) {
-                    /*
-                     * If the item does not exist in the series then this is a
-                     * new time period and so we need to remove the last in the
-                     * set and add the new periods values. Otherwise we just
-                     * update the last value in the set. Sum is just used for
-                     * performance save having to sum the last set of values
-                     * each time.
-                     */
-                    if (newBar) {
-                        slowSum = slowSum - this.slowYYValues.getLast() + yy.doubleValue();
-                        this.slowYYValues.removeLast();
-                        this.slowYYValues.addFirst(yy.doubleValue());
+                double signalLine = Double.MAX_VALUE;
+                if (this.signalSmoothingYYValues.size() == getSignalSmoothing()) {
 
-                    } else {
-                        slowSum = slowSum - this.slowYYValues.getFirst() + yy.doubleValue();
-                        this.slowYYValues.removeFirst();
-                        this.slowYYValues.addFirst(yy.doubleValue());
-                    }
+                    signalLine = calculateSmoothingMA(this.signalSmoothingYYValues.getFirst(),
+                            this.prevSignalSmoothingEMA, this.signalSmoothingSum);
+                    this.prevSignalSmoothingEMA = signalLine;
+                }
+                if (newBar) {
+                    MACDItem dataItem = new MACDItem(candleItem.getPeriod(), new BigDecimal(MACD),
+                            (signalLine == Double.MAX_VALUE ? null : new BigDecimal(signalLine)),
+                            (signalLine == Double.MAX_VALUE ? null : new BigDecimal(MACD - signalLine)));
+                    this.add(dataItem, false);
+
                 } else {
-                    if (newBar) {
-                        slowSum = slowSum + yy.doubleValue();
-                        this.slowYYValues.addFirst(yy.doubleValue());
-                    } else {
-                        slowSum = slowSum + yy.doubleValue() - this.slowYYValues.getFirst();
-                        this.slowYYValues.removeFirst();
-                        this.slowYYValues.addFirst(yy.doubleValue());
-                    }
-                }
-
-                if (this.slowYYValues.size() == getSlowLength()) {
-
-                    double fastEMA = 0;
-                    if (fastMultiplyer == Double.MAX_VALUE) {
-                        fastEMA = fastSum / this.getFastLength();
-                        fastMultiplyer = 2 / (this.getFastLength() + 1.0d);
-                    } else {
-                        fastEMA = ((this.fastYYValues.getFirst() - prevFastEMA) * fastMultiplyer) + prevFastEMA;
-                    }
-                    prevFastEMA = fastEMA;
-                    double slowEMA = 0;
-                    if (slowMultiplyer == Double.MAX_VALUE) {
-                        slowEMA = slowSum / this.getSlowLength();
-                        slowMultiplyer = 2 / (this.getSlowLength() + 1.0d);
-                    } else {
-                        slowEMA = ((this.slowYYValues.getFirst() - prevSlowEMA) * slowMultiplyer) + prevSlowEMA;
-                    }
-                    prevSlowEMA = slowEMA;
-                    double MACD = fastEMA - slowEMA;
-                    if (this.signalSmoothingYYValues.size() == this.getSignalSmoothing()) {
-                        /*
-                         * If the item does not exist in the series then this is
-                         * a new time period and so we need to remove the last
-                         * in the set and add the new periods values. Otherwise
-                         * we just update the last value in the set. Sum is just
-                         * used for performance save having to sum the last set
-                         * of values each time.
-                         */
-
-                        if (newBar) {
-                            signalSmoothingSum = signalSmoothingSum - this.signalSmoothingYYValues.getLast() + MACD;
-                            this.signalSmoothingYYValues.removeLast();
-                            this.signalSmoothingYYValues.addFirst(MACD);
-
-                        } else {
-                            signalSmoothingSum = signalSmoothingSum - this.signalSmoothingYYValues.getFirst() + MACD;
-                            this.signalSmoothingYYValues.removeFirst();
-                            this.signalSmoothingYYValues.addFirst(MACD);
-                        }
-
-                    } else {
-                        if (newBar) {
-                            signalSmoothingSum = signalSmoothingSum + MACD;
-                            this.signalSmoothingYYValues.addFirst(MACD);
-                        } else {
-                            signalSmoothingSum = signalSmoothingSum + MACD - this.signalSmoothingYYValues.getFirst();
-                            this.signalSmoothingYYValues.removeFirst();
-                            this.signalSmoothingYYValues.addFirst(MACD);
-                        }
-                    }
-                    double signalLine = Double.MAX_VALUE;
-                    if (this.signalSmoothingYYValues.size() == getSignalSmoothing()) {
-
-                        signalLine = calculateSmoothingMA(this.signalSmoothingYYValues.getFirst(),
-                                this.prevSignalSmoothingEMA, this.signalSmoothingSum);
-                        this.prevSignalSmoothingEMA = signalLine;
-                    }
-                    if (newBar) {
-                        MACDItem dataItem = new MACDItem(candleItem.getPeriod(), new BigDecimal(MACD),
-                                (signalLine == Double.MAX_VALUE ? null : new BigDecimal(signalLine)),
-                                (signalLine == Double.MAX_VALUE ? null : new BigDecimal(MACD - signalLine)));
-                        this.add(dataItem, false);
-
-                    } else {
-                        MACDItem dataItem = (MACDItem) this.getDataItem(this.getItemCount() - 1);
-                        dataItem.setMACD(MACD);
-                        if (signalLine == Double.MAX_VALUE) {
-                            dataItem.setSignalLine(signalLine);
-                            dataItem.setMACDHistogram(MACD - signalLine);
-                        }
+                    MACDItem dataItem = (MACDItem) this.getDataItem(this.getItemCount() - 1);
+                    dataItem.setMACD(MACD);
+                    if (signalLine == Double.MAX_VALUE) {
+                        dataItem.setSignalLine(signalLine);
+                        dataItem.setMACDHistogram(MACD - signalLine);
                     }
                 }
             }
@@ -516,15 +515,14 @@ public class MACDSeries extends IndicatorSeries {
     /**
      * Method calculateMA.
      *
-     * @param calcType  String
-     * @param yyValues  LinkedList<Double>
-     * @param volValues LinkedList<Long>
-     * @param sum       Double
+     * @param close                  double
+     * @param prevSignalSmoothingEMA double
+     * @param sum                    Double
      * @return double
      */
     private double calculateSmoothingMA(double close, double prevSignalSmoothingEMA, Double sum) {
 
-        double ma = 0;
+        double ma;
         if (this.getSimpleMAType()) {
             ma = sum / getSignalSmoothing();
         } else {
@@ -550,8 +548,7 @@ public class MACDSeries extends IndicatorSeries {
     public void printSeries() {
         for (int i = 0; i < this.getItemCount(); i++) {
             MACDItem dataItem = (MACDItem) this.getDataItem(i);
-            _log.debug("Type: " + this.getType() + " Time: " + dataItem.getPeriod().getStart() + " Value: "
-                    + dataItem.getMACD());
+            _log.debug("Type: {} Time: {} Value: {}", this.getType(), dataItem.getPeriod().getStart(), dataItem.getMACD());
         }
     }
 }

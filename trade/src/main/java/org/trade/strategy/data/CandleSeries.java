@@ -53,6 +53,7 @@ import org.trade.strategy.data.base.RegularTimePeriod;
 import org.trade.strategy.data.candle.CandleItem;
 import org.trade.strategy.data.candle.CandlePeriod;
 
+import java.io.Serial;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.Collections;
@@ -70,6 +71,7 @@ import java.util.LinkedList;
 @DiscriminatorValue("CandleSeries")
 public class CandleSeries extends IndicatorSeries {
 
+    @Serial
     private static final long serialVersionUID = 20183087035446657L;
 
     public static final String SYMBOL = "Symbol";
@@ -87,24 +89,24 @@ public class CandleSeries extends IndicatorSeries {
     private int barSize = 0;
 
     private Candle candleBar = null;
-    private Percent percentChangeFromClose = new Percent(0);
-    private Percent percentChangeFromOpen = new Percent(0);
+    private final Percent percentChangeFromClose = new Percent(0);
+    private final Percent percentChangeFromOpen = new Percent(0);
 
     // Parms used for the rolling candle bar.
     private RollingCandle rollingCandle = new RollingCandle();
     private RollingCandle prevRollingCandle = null;
 
-    private Double sumVwapVolume = new Double(0);
-    private Long sumVolume = new Long(0);
-    private Integer sumTradeCount = new Integer(0);
+    private Double sumVwapVolume = 0d;
+    private Long sumVolume = 0L;
+    private Integer sumTradeCount = 0;
 
-    private LinkedList<RollingCandle> rollingCandleValues = new LinkedList<RollingCandle>();
-    private LinkedList<Double> openValues = new LinkedList<Double>();
-    private LinkedList<Double> highValues = new LinkedList<Double>();
-    private LinkedList<Double> lowValues = new LinkedList<Double>();
-    private LinkedList<Long> volumeValues = new LinkedList<Long>();
-    private LinkedList<Integer> tradeCountValues = new LinkedList<Integer>();
-    private LinkedList<Double> vwapVolumeValues = new LinkedList<Double>();
+    private final LinkedList<RollingCandle> rollingCandleValues = new LinkedList<>();
+    private final LinkedList<Double> openValues = new LinkedList<>();
+    private final LinkedList<Double> highValues = new LinkedList<>();
+    private final LinkedList<Double> lowValues = new LinkedList<>();
+    private final LinkedList<Long> volumeValues = new LinkedList<>();
+    private final LinkedList<Integer> tradeCountValues = new LinkedList<>();
+    private final LinkedList<Double> vwapVolumeValues = new LinkedList<>();
 
     public CandleSeries() {
         super(IndicatorSeries.CandleSeries, true, 0, false);
@@ -115,8 +117,8 @@ public class CandleSeries extends IndicatorSeries {
      * sorted into ascending order by period, and duplicate periods will not be
      * allowed.
      *
-     * @param contract the Contract for this candle series.
-     * @param barSize  the length in minutes for each bar ie. 5, 15, 30, 60
+     * @param series  the Contract for this candle series.
+     * @param barSize the length in minutes for each bar ie. 5, 15, 30, 60
      */
     public CandleSeries(CandleSeries series, int barSize, ZonedDateTime startTime, ZonedDateTime endTime) {
         super(series.getContract().getSymbol(), IndicatorSeries.CandleSeries, series.getDisplaySeries(), 0,
@@ -454,7 +456,7 @@ public class CandleSeries extends IndicatorSeries {
         // + " vwap: " + vwap + " tradeCount: " + tradeCount
         // + " rollupInterval: " + rollupInterval);
 
-        CandleItem candleItem = null;
+        CandleItem candleItem;
         boolean newCandle = false;
         if (index > -1) {
 
@@ -524,7 +526,6 @@ public class CandleSeries extends IndicatorSeries {
      * Method clone.
      *
      * @return Object
-     * @throws CloneNotSupportedException
      */
     public Object clone() throws CloneNotSupportedException {
         CandleSeries clone = (CandleSeries) super.clone();
@@ -663,7 +664,7 @@ public class CandleSeries extends IndicatorSeries {
         double sunClosePriceXVolume = 0;
         double sunClosePriceXVolumeVwap = 0;
         double numberOfCandles = 0;
-        CandleItem candle = null;
+        CandleItem candle;
         for (int i = itemCount; i > -1; i--) {
             candle = (CandleItem) this.getDataItem(i);
             if ((candle.getPeriod().getStart().equals(startDate) || candle.getPeriod().getStart().isAfter(startDate))
@@ -687,10 +688,10 @@ public class CandleSeries extends IndicatorSeries {
             CandlePeriod period = new CandlePeriod(startDate, endDate);
             Candle avgCandle = new Candle(getContract(), period, 0, 0, 0, Double.MAX_VALUE,
                     TradingCalendar.getDateTimeNowMarketTimeZone());
-            avgCandle.setHigh(new BigDecimal((sunHighPriceXVolume / (wieghted ? sumVolume : numberOfCandles))));
-            avgCandle.setLow(new BigDecimal((sunLowPriceXVolume / (wieghted ? sumVolume : numberOfCandles))));
-            avgCandle.setOpen(new BigDecimal((sunOpenPriceXVolume / (wieghted ? sumVolume : numberOfCandles))));
-            avgCandle.setClose(new BigDecimal((sunClosePriceXVolume / (wieghted ? sumVolume : numberOfCandles))));
+            avgCandle.setHigh(BigDecimal.valueOf(sunHighPriceXVolume / (wieghted ? sumVolume : numberOfCandles)));
+            avgCandle.setLow(BigDecimal.valueOf(sunLowPriceXVolume / (wieghted ? sumVolume : numberOfCandles)));
+            avgCandle.setOpen(BigDecimal.valueOf(sunOpenPriceXVolume / (wieghted ? sumVolume : numberOfCandles)));
+            avgCandle.setClose(BigDecimal.valueOf(sunClosePriceXVolume / (wieghted ? sumVolume : numberOfCandles)));
             avgCandle.setVwap(new BigDecimal(sunClosePriceXVolumeVwap / sumVolume));
             avgCandle.setVolume(sumVolume);
             avgCandle.setTradeCount(sunTradeCount);
@@ -732,13 +733,13 @@ public class CandleSeries extends IndicatorSeries {
                 }
 
                 if (this.candleBar.getClose().doubleValue() == 0)
-                    this.candleBar.setClose(new BigDecimal(candle.getClose()));
+                    this.candleBar.setClose(BigDecimal.valueOf(candle.getClose()));
 
                 if (this.candleBar.getHigh().doubleValue() < candle.getHigh())
-                    this.candleBar.setHigh(new BigDecimal(candle.getHigh()));
+                    this.candleBar.setHigh(BigDecimal.valueOf(candle.getHigh()));
 
                 if (this.candleBar.getLow().doubleValue() > candle.getLow())
-                    this.candleBar.setLow(new BigDecimal(candle.getLow()));
+                    this.candleBar.setLow(BigDecimal.valueOf(candle.getLow()));
 
                 sunClosePriceXVolumeVwap = sunClosePriceXVolumeVwap + (candle.getVolume() * candle.getClose());
                 sumVolume = sumVolume + candle.getVolume();
@@ -747,7 +748,7 @@ public class CandleSeries extends IndicatorSeries {
         }
         if (null != candle) {
             this.candleBar.setStartPeriod(candle.getPeriod().getStart());
-            this.candleBar.setOpen(new BigDecimal(candle.getOpen()));
+            this.candleBar.setOpen(BigDecimal.valueOf(candle.getOpen()));
             this.candleBar.setTradeCount(sumTradeCount);
             if (sumVolume > 0) {
                 this.candleBar.setVwap(new BigDecimal(sunClosePriceXVolumeVwap / sumVolume));
@@ -800,7 +801,7 @@ public class CandleSeries extends IndicatorSeries {
                 percentChangeFromOpen.setValue(
                         new Percent((candleItem.getClose() - openCandleItem.getOpen()) / openCandleItem.getOpen()));
             } catch (ValueTypeException ex) {
-                _log.error("Could not set ValueType Msg: " + ex.getMessage(), ex);
+                _log.error("Could not set ValueType Msg: {}", ex.getMessage(), ex);
             }
             if (candleItem.getPeriod().getStart().isAfter(prevDayEnd)) {
                 if (this.indexOf(prevDayStart) > -1 && this.indexOf(prevDayEnd) > -1) {
@@ -817,7 +818,7 @@ public class CandleSeries extends IndicatorSeries {
                                 .setValue(new Percent((candleItem.getClose() - prevDayCandle.getClose().doubleValue())
                                         / prevDayCandle.getClose().doubleValue()));
                     } catch (ValueTypeException ex) {
-                        _log.error("Could not set ValueType Msg: " + ex.getMessage(), ex);
+                        _log.error("Could not set ValueType Msg: {}", ex.getMessage(), ex);
                     }
                 }
             }
@@ -830,23 +831,18 @@ public class CandleSeries extends IndicatorSeries {
     public void printSeries() {
         for (int i = 0; i < this.getItemCount(); i++) {
             CandleItem dataItem = (CandleItem) this.getDataItem(i);
-            _log.debug("Type: " + this.getType() + " Time: " + dataItem.getPeriod().getStart() + " Open: "
-                    + dataItem.getOpen() + " Close: " + dataItem.getClose() + " High: " + dataItem.getHigh() + " Low: "
-                    + dataItem.getLow() + " Volume: " + dataItem.getVolume());
+            _log.debug("Type: {} Time: {} Open: {} Close: {} High: {} Low: {} Volume: {}", this.getType(), dataItem.getPeriod().getStart(), dataItem.getOpen(), dataItem.getClose(), dataItem.getHigh(), dataItem.getLow(), dataItem.getVolume());
         }
     }
 
     /**
      * Method printCandleItem.
      *
-     * @param candleItem CandleItem
+     * @param dataItem CandleItem
      */
     public void printCandleItem(CandleItem dataItem) {
 
-        _log.debug("Symbol: " + this.getSymbol() + " Start Time: " + dataItem.getPeriod().getStart() + " Open: "
-                + dataItem.getOpen() + " High: " + dataItem.getHigh() + " Low: " + dataItem.getLow() + " Close: "
-                + dataItem.getClose() + " Vwap: " + dataItem.getVwap() + " Volume: " + dataItem.getVolume() + " Count: "
-                + dataItem.getCount() + " LastUpdateDate: " + dataItem.getLastUpdateDate());
+        _log.debug("Symbol: {} Start Time: {} Open: {} High: {} Low: {} Close: {} Vwap: {} Volume: {} Count: {} LastUpdateDate: {}", this.getSymbol(), dataItem.getPeriod().getStart(), dataItem.getOpen(), dataItem.getHigh(), dataItem.getLow(), dataItem.getClose(), dataItem.getVwap(), dataItem.getVolume(), dataItem.getCount(), dataItem.getLastUpdateDate());
     }
 
     /**
@@ -885,13 +881,13 @@ public class CandleSeries extends IndicatorSeries {
                             candleItem.getHigh(), candleItem.getLow(), candleItem.getClose(), candleItem.getVolume(),
                             candleItem.getCount(), candleItem.getVwap(), lastUpdateDate);
 
-                    this.sumVwapVolume = new Double(candleItem.getVwap() * candleItem.getVolume());
+                    this.sumVwapVolume = candleItem.getVwap() * candleItem.getVolume();
                     this.sumVolume = candleItem.getVolume();
                     this.sumTradeCount = candleItem.getCount();
                 } else {
-                    this.sumVwapVolume = new Double(0);
-                    this.sumVolume = new Long(0);
-                    this.sumTradeCount = new Integer(0);
+                    this.sumVwapVolume = 0d;
+                    this.sumVolume = 0L;
+                    this.sumTradeCount = 0;
                     this.rollingCandle.rollupInterval = rollupInterval;
                 }
                 if (this.getItemCount() > 1) {
@@ -904,9 +900,9 @@ public class CandleSeries extends IndicatorSeries {
             } else {
                 this.rollingCandle.rollupInterval = rollupInterval;
                 this.rollingCandle.open = open;
-                this.sumVwapVolume = new Double(0);
-                this.sumVolume = new Long(0);
-                this.sumTradeCount = new Integer(0);
+                this.sumVwapVolume = 0d;
+                this.sumVolume = 0L;
+                this.sumTradeCount = 0;
             }
 
             this.openValues.clear();
@@ -1007,11 +1003,11 @@ public class CandleSeries extends IndicatorSeries {
             this.rollingCandleValues.addFirst((RollingCandle) this.rollingCandle.clone());
         } catch (CloneNotSupportedException e) {
             // TODO Auto-generated catch block
-            _log.error("Error updateRollingCandle cannot clone candle Msg: " + e.getMessage());
+            _log.error("Error updateRollingCandle cannot clone candle Msg: {}", e.getMessage());
         }
     }
 
-    public class RollingCandle implements Cloneable {
+    public static class RollingCandle implements Cloneable {
 
         private int rollupInterval = 0;
         private RegularTimePeriod period = null;
@@ -1139,10 +1135,9 @@ public class CandleSeries extends IndicatorSeries {
          * Method clone.
          *
          * @return Object
-         * @throws CloneNotSupportedException
          */
         public Object clone() throws CloneNotSupportedException {
-            return (RollingCandle) super.clone();
+            return super.clone();
         }
     }
 }

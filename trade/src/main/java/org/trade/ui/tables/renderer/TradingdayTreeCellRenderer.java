@@ -43,14 +43,16 @@ import org.trade.ui.models.TradingdayTreeModel;
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import java.awt.*;
+import java.io.Serial;
 
 /**
  *
  */
 public class TradingdayTreeCellRenderer extends DefaultTreeCellRenderer {
 
+    @Serial
     private static final long serialVersionUID = 7664391812385841364L;
-    private Color backgroundSelectionColor = null;
+    private final Color backgroundSelectionColor;
 
     public TradingdayTreeCellRenderer() {
         super();
@@ -81,10 +83,9 @@ public class TradingdayTreeCellRenderer extends DefaultTreeCellRenderer {
             this.setBackgroundSelectionColor(backgroundSelectionColor);
         }
         if (node != null) {
-            if ((node instanceof Tradestrategy) /* leaf */) {
-                Tradestrategy tradestrategy = (Tradestrategy) node;
+            if ((node instanceof Tradestrategy tradestrategy) /* leaf */) {
                 if (!tradestrategy.getTradeOrders().isEmpty()) {
-                    TradeOrder tradeOrder = tradestrategy.getTradeOrders().get(0);
+                    TradeOrder tradeOrder = tradestrategy.getTradeOrders().getFirst();
                     if (tradeOrder.hasTradePosition()) {
                         if (Side.BOT.equals(tradeOrder.getTradePosition().getSide())) {
                             comp.setForeground(Color.GREEN);

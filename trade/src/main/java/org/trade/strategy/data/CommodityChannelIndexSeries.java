@@ -46,6 +46,7 @@ import org.trade.strategy.data.base.RegularTimePeriod;
 import org.trade.strategy.data.candle.CandleItem;
 import org.trade.strategy.data.cci.CommodityChannelIndexItem;
 
+import java.io.Serial;
 import java.math.BigDecimal;
 import java.util.LinkedList;
 
@@ -82,6 +83,7 @@ import java.util.LinkedList;
 @DiscriminatorValue("CommodityChannelIndexSeries")
 public class CommodityChannelIndexSeries extends IndicatorSeries {
 
+    @Serial
     private static final long serialVersionUID = 20183087035446657L;
 
     public static final String LENGTH = "Length";
@@ -94,7 +96,7 @@ public class CommodityChannelIndexSeries extends IndicatorSeries {
      * when the series is cleared.
      */
     private double sumTypicalPrice = 0;
-    private LinkedList<Double> typicalPriceValues = new LinkedList<Double>();
+    private LinkedList<Double> typicalPriceValues = new LinkedList<>();
 
     /**
      * Creates a new empty series. By default, items added to the series will be
@@ -140,11 +142,10 @@ public class CommodityChannelIndexSeries extends IndicatorSeries {
      * Method clone.
      *
      * @return Object
-     * @throws CloneNotSupportedException
      */
     public Object clone() throws CloneNotSupportedException {
         CommodityChannelIndexSeries clone = (CommodityChannelIndexSeries) super.clone();
-        clone.typicalPriceValues = new LinkedList<Double>();
+        clone.typicalPriceValues = new LinkedList<>();
         return clone;
     }
 
@@ -173,8 +174,8 @@ public class CommodityChannelIndexSeries extends IndicatorSeries {
     /**
      * Adds a data item to the series.
      *
-     * @param period        the period.
-     * @param movingAverage the movingAverage.
+     * @param period     the period.
+     * @param cciAverage the movingAverage.
      */
     public void add(RegularTimePeriod period, BigDecimal cciAverage) {
         if (!this.isEmpty()) {
@@ -275,8 +276,7 @@ public class CommodityChannelIndexSeries extends IndicatorSeries {
     public void printSeries() {
         for (int i = 0; i < this.getItemCount(); i++) {
             CommodityChannelIndexItem dataItem = (CommodityChannelIndexItem) this.getDataItem(i);
-            _log.debug("Type: " + this.getType() + " Time: " + dataItem.getPeriod().getStart() + " Value: "
-                    + dataItem.getCommodityChannelIndex());
+            _log.debug("Type: {} Time: {} Value: {}", this.getType(), dataItem.getPeriod().getStart(), dataItem.getCommodityChannelIndex());
         }
     }
 
@@ -362,10 +362,8 @@ public class CommodityChannelIndexSeries extends IndicatorSeries {
     /**
      * Method calculateMA.
      *
-     * @param calcType  String
-     * @param yyValues  LinkedList<Double>
-     * @param volValues LinkedList<Long>
-     * @param sum       Double
+     * @param sumTypicalPrice    String
+     * @param typicalPriceValues LinkedList<Double>
      * @return double
      */
     private double calculateCCI(Double sumTypicalPrice, LinkedList<Double> typicalPriceValues) {

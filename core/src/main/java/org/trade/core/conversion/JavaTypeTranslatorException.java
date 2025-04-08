@@ -37,6 +37,8 @@ package org.trade.core.conversion;
 
 import org.trade.core.exception.NestingException;
 
+import java.io.Serial;
+
 /**
  * This class is just a wrapper (via inheritance) around a BSFException in order
  * to provide a clean interface around the Exception handling in this package.
@@ -47,6 +49,7 @@ public class JavaTypeTranslatorException extends NestingException {
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = -1403791193190441733L;
 
     public JavaTypeTranslatorException() {

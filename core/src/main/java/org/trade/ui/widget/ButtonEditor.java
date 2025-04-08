@@ -5,6 +5,7 @@ import org.trade.ui.base.BaseButton;
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
 import java.awt.*;
+import java.io.Serial;
 
 /**
  *
@@ -13,8 +14,9 @@ public class ButtonEditor extends AbstractCellEditor implements TableCellEditor 
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = -6974362652025540325L;
-    private BaseButton button = null;
+    private BaseButton button;
 
     protected static final String EDIT = "edit";
 

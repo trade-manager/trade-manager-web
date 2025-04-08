@@ -39,6 +39,7 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
+import java.io.Serial;
 
 /**
  * @author Simon Allen
@@ -48,6 +49,7 @@ public class TableMap extends AbstractTableModel implements TableModelListener {
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = 5933237472572427135L;
     protected TableModel model;
 

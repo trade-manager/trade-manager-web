@@ -4,14 +4,14 @@ import org.trade.core.xml.DOMParserSaveEncoding;
 import org.w3c.dom.Document;
 
 import javax.swing.*;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreeSelectionModel;
 import java.awt.*;
+import java.io.Serial;
 import java.util.Vector;
 
 public class SimpleXMLTreeViewPanel extends BasePanel {
 
+    @Serial
     private static final long serialVersionUID = -6919104650081619931L;
 
     /**
@@ -41,11 +41,11 @@ public class SimpleXMLTreeViewPanel extends BasePanel {
     Vector<String> textLine = null;
 
     // DOMParserSaveEncoding parser = null;
-    Image openFolder = null;
+    Image openFolder;
 
-    Image closedFolder = null;
+    Image closedFolder;
 
-    Image leafImage = null;
+    Image leafImage;
 
     BorderLayout borderLayout1 = new BorderLayout();
 
@@ -78,11 +78,9 @@ public class SimpleXMLTreeViewPanel extends BasePanel {
         m_tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 
         // Listen for when the selection changes, call nodeSelected(node)
-        m_tree.addTreeSelectionListener(new TreeSelectionListener() {
-            public void valueChanged(TreeSelectionEvent e) {
+        m_tree.addTreeSelectionListener(_ -> {
 
-                // nodeSelected(node, m_tree);
-            }
+            // nodeSelected(node, m_tree);
         });
         m_tree.setRowHeight(18);
         m_tree.setFont(new Font("dialog", Font.PLAIN, 12));
@@ -91,6 +89,7 @@ public class SimpleXMLTreeViewPanel extends BasePanel {
             /**
              *
              */
+            @Serial
             private static final long serialVersionUID = -8726326914798956438L;
 
             @Override
@@ -123,7 +122,7 @@ public class SimpleXMLTreeViewPanel extends BasePanel {
      */
     void refreshUI(String xml, DOMTree m_tree) {
 
-        if ((xml == null) || xml.equals("")) {
+        if ((xml == null) || xml.isEmpty()) {
             setErrorMessage("Error", "No input XML  specified \n");
             return;
         }
@@ -142,7 +141,7 @@ public class SimpleXMLTreeViewPanel extends BasePanel {
      */
     public Document getRoot(String xml) {
 
-        if ((xml == null) || xml.equals("")) {
+        if ((xml == null) || xml.isEmpty()) {
             setErrorMessage("Error:", " Invalid XML document could not get ROOT");
             return null;
         }
@@ -152,9 +151,8 @@ public class SimpleXMLTreeViewPanel extends BasePanel {
             // Reset the Error Storage and handling
             //
             final DOMParserSaveEncoding parser = new DOMParserSaveEncoding();
-            final Document document = parser.parse(xml);
-            /***/
-            return document;
+
+            return parser.parse(xml);
         } catch (final Exception e) {
             setErrorMessage("Error: Invalid XML document could not get ROOT", e);
         }

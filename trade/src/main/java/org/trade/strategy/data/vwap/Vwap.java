@@ -37,6 +37,7 @@ package org.trade.strategy.data.vwap;
 
 // Generated Feb 21, 2011 12:43:33 PM by Hibernate Tools 3.4.0.CR1
 
+import java.io.Serial;
 import java.math.BigDecimal;
 
 /**
@@ -51,6 +52,7 @@ public class Vwap implements java.io.Serializable {
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = 7644763985378994305L;
 
     private BigDecimal vwapPrice;

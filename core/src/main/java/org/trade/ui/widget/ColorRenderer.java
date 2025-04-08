@@ -4,6 +4,7 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
+import java.io.Serial;
 
 /**
  *
@@ -12,10 +13,11 @@ public class ColorRenderer extends JLabel implements TableCellRenderer {
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = -651515202481955194L;
     private Border unselectedBorder = null;
     private Border selectedBorder = null;
-    private boolean isBordered = true;
+    private final boolean isBordered;
 
     /**
      * Constructor for ColorRenderer.

@@ -37,11 +37,14 @@ package org.trade.dictionary.valuetype;
 
 import org.trade.core.valuetype.Decode;
 
+import java.io.Serial;
+
 /**
  *
  */
 public class ChartDays extends Decode {
 
+    @Serial
     private static final long serialVersionUID = -5381026427696898592L;
     public static final String DECODE = "CHART_DAYS";
     public static final int TWO_DAYS = 2;

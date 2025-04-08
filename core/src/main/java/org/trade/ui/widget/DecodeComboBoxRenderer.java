@@ -38,12 +38,14 @@ package org.trade.ui.widget;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.io.Serial;
 
 /**
  *
  */
 public class DecodeComboBoxRenderer extends DefaultListCellRenderer {
 
+    @Serial
     private static final long serialVersionUID = 6927205466904515527L;
 
     public DecodeComboBoxRenderer() {

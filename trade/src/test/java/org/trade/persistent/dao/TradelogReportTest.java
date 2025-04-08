@@ -35,8 +35,12 @@
  */
 package org.trade.persistent.dao;
 
-import org.junit.*;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.TestName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,12 +49,13 @@ import org.trade.dictionary.valuetype.DAOPortfolio;
 import org.trade.ui.TradeAppLoadConfig;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 /**
- * Some tests for the {@link DataUtilities} class.
+ * Some tests for the DataUtilities class.
  *
  * @author Simon Allen
  * @version $Revision: 1.0 $
@@ -63,8 +68,6 @@ public class TradelogReportTest {
 
     /**
      * Method setUpBeforeClass.
-     *
-     * @throws java.lang.Exception
      */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
@@ -72,8 +75,6 @@ public class TradelogReportTest {
 
     /**
      * Method setUp.
-     *
-     * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
@@ -82,8 +83,6 @@ public class TradelogReportTest {
 
     /**
      * Method tearDown.
-     *
-     * @throws java.lang.Exception
      */
     @After
     public void tearDown() throws Exception {
@@ -91,8 +90,6 @@ public class TradelogReportTest {
 
     /**
      * Method tearDownAfterClass.
-     *
-     * @throws java.lang.Exception
      */
     @AfterClass
     public static void tearDownAfterClass() throws Exception {
@@ -103,17 +100,12 @@ public class TradelogReportTest {
 
         try {
             TradelogHome tradelogHome = new TradelogHome();
-            Portfolio portfolio = (Portfolio) DAOPortfolio.newInstance().getObject();
+            Portfolio portfolio = (Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
             TradelogReport tradelogReport = tradelogHome.findByTradelogDetail(portfolio, TradingCalendar.getYearStart(),
                     TradingCalendar.getTradingDayEnd(TradingCalendar.getDateTimeNowMarketTimeZone()), false, null);
-            assertFalse("1", !tradelogReport.getTradelogDetail().isEmpty());
+            assertTrue("1", tradelogReport.getTradelogDetail().isEmpty());
             for (TradelogDetail tradelogDetail : tradelogReport.getTradelogDetail()) {
-                _log.info("testTradelogDetails tradelogDetail: " + " getOpen:" + tradelogDetail.getOpen()
-                        + " getAction:" + tradelogDetail.getAction() + " getMarketBias:"
-                        + tradelogDetail.getMarketBias() + " getName:" + tradelogDetail.getName() + " getSymbol:"
-                        + tradelogDetail.getSymbol() + " getQuantity:" + tradelogDetail.getQuantity() + " getLongShort:"
-                        + tradelogDetail.getLongShort() + " getAverageFilledPrice:"
-                        + tradelogDetail.getAverageFilledPrice() + " getFilledDate:" + tradelogDetail.getFilledDate());
+                _log.info("testTradelogDetails tradelogDetail:  getOpen:{} getAction:{} getMarketBias:{} getName:{} getSymbol:{} getQuantity:{} getLongShort:{} getAverageFilledPrice:{} getFilledDate:{}", tradelogDetail.getOpen(), tradelogDetail.getAction(), tradelogDetail.getMarketBias(), tradelogDetail.getName(), tradelogDetail.getSymbol(), tradelogDetail.getQuantity(), tradelogDetail.getLongShort(), tradelogDetail.getAverageFilledPrice(), tradelogDetail.getFilledDate());
             }
 
         } catch (Exception | AssertionError ex) {
@@ -128,18 +120,14 @@ public class TradelogReportTest {
 
         try {
             TradelogHome tradelogHome = new TradelogHome();
-            Portfolio portfolio = (Portfolio) DAOPortfolio.newInstance().getObject();
+            Portfolio portfolio = (Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
             TradelogReport tradelogReport = tradelogHome.findByTradelogSummary(portfolio,
                     TradingCalendar.getYearStart(),
                     TradingCalendar.getTradingDayEnd(TradingCalendar.getDateTimeNowMarketTimeZone()), null,
                     new BigDecimal(0));
-            assertFalse("1", !tradelogReport.getTradelogSummary().isEmpty());
+            assertTrue("1", tradelogReport.getTradelogSummary().isEmpty());
             for (TradelogSummary tradelogSummary : tradelogReport.getTradelogSummary()) {
-                _log.info("testTradelogSummary tradelogDetail: " + "getPeriod:" + tradelogSummary.getPeriod()
-                        + "getBattingAverage:" + tradelogSummary.getBattingAverage() + "getSimpleSharpeRatio:"
-                        + tradelogSummary.getSimpleSharpeRatio() + "getQuantity:" + tradelogSummary.getQuantity()
-                        + "getGrossProfitLoss:" + tradelogSummary.getGrossProfitLoss() + "getQuantity:"
-                        + tradelogSummary.getQuantity() + "getNetProfitLoss:" + tradelogSummary.getNetProfitLoss());
+                _log.info("testTradelogSummary tradelogDetail: getPeriod:{}getBattingAverage:{}getSimpleSharpeRatio:{}getQuantity:{}getGrossProfitLoss:{}getQuantity:{}getNetProfitLoss:{}", tradelogSummary.getPeriod(), tradelogSummary.getBattingAverage(), tradelogSummary.getSimpleSharpeRatio(), tradelogSummary.getQuantity(), tradelogSummary.getGrossProfitLoss(), tradelogSummary.getQuantity(), tradelogSummary.getNetProfitLoss());
             }
 
         } catch (Exception | AssertionError ex) {

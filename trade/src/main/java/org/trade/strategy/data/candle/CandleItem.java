@@ -42,6 +42,7 @@ import org.trade.persistent.dao.Contract;
 import org.trade.persistent.dao.Tradingday;
 import org.trade.strategy.data.base.RegularTimePeriod;
 
+import java.io.Serial;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 
@@ -57,6 +58,7 @@ public class CandleItem extends ComparableObjectItem {
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = -3888996139640449109L;
 
     /**
@@ -159,7 +161,7 @@ public class CandleItem extends ComparableObjectItem {
      */
     public long getVolume() {
         if (null != getCandle())
-            return getCandle().getVolume().longValue();
+            return getCandle().getVolume();
         return 0;
     }
 
@@ -170,7 +172,7 @@ public class CandleItem extends ComparableObjectItem {
      */
     public int getCount() {
         if (null != getCandle())
-            return getCandle().getTradeCount().intValue();
+            return getCandle().getTradeCount();
         return 0;
     }
 
@@ -232,7 +234,7 @@ public class CandleItem extends ComparableObjectItem {
      */
     public void setCount(int count) {
         if (null != getCandle())
-            getCandle().setTradeCount(new Integer(count));
+            getCandle().setTradeCount(count);
     }
 
     /**
@@ -252,7 +254,7 @@ public class CandleItem extends ComparableObjectItem {
      */
     public void setVolume(long volume) {
         if (null != getCandle())
-            getCandle().setVolume(new Long(volume));
+            getCandle().setVolume(volume);
     }
 
     /**
@@ -273,7 +275,7 @@ public class CandleItem extends ComparableObjectItem {
     public boolean isSide(String side) {
         if (Side.BOT.equals(side))
             return getSide();
-        return (getSide() ? false : true);
+        return (!getSide());
     }
 
     /**

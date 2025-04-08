@@ -45,6 +45,7 @@ import org.trade.persistent.dao.Portfolio;
 import org.trade.persistent.dao.PortfolioAccount;
 import org.trade.ui.base.TableModel;
 
+import java.io.Serial;
 import java.util.Vector;
 
 /**
@@ -54,6 +55,7 @@ public class AccountTableModel extends TableModel {
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = 3087514589731145479L;
 
     private static final String NAME = "Name*";
@@ -112,7 +114,7 @@ public class AccountTableModel extends TableModel {
         if (!getData().getPortfolioAccounts().isEmpty()) {
 
             for (final PortfolioAccount element : getData().getPortfolioAccounts()) {
-                final Vector<Object> newRow = new Vector<Object>();
+                final Vector<Object> newRow = new Vector<>();
                 getNewRow(newRow, element);
                 rows.add(newRow);
             }
@@ -129,7 +131,7 @@ public class AccountTableModel extends TableModel {
      */
     public void populateDAO(Object value, int row, int column) {
 
-        final PortfolioAccount element = (PortfolioAccount) getData().getPortfolioAccounts().get(row);
+        final PortfolioAccount element = getData().getPortfolioAccounts().get(row);
 
         switch (column) {
             case 0: {
@@ -210,7 +212,7 @@ public class AccountTableModel extends TableModel {
         final Account account = new Account();
         final PortfolioAccount element = new PortfolioAccount(getData(), account);
         getData().getPortfolioAccounts().add(element);
-        final Vector<Object> newRow = new Vector<Object>();
+        final Vector<Object> newRow = new Vector<>();
         getNewRow(newRow, element);
         rows.add(newRow);
         // Tell the listeners a new table has arrived.

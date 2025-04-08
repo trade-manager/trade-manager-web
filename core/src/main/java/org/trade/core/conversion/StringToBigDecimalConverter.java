@@ -85,7 +85,7 @@ public class StringToBigDecimalConverter extends StringToObjectConverter {
      */
     protected Object getConvertedString(String aString) throws NumberFormatException {
         try {
-            if ((aString == null) || ((aString.trim().length()) == 0)) {
+            if ((aString == null) || (aString.trim().isEmpty())) {
                 return null;
             } else {
                 return new BigDecimal(aString);

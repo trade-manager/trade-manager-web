@@ -37,11 +37,14 @@ package org.trade.dictionary.valuetype;
 
 import org.trade.core.valuetype.DAODecode;
 
+import java.io.Serial;
+
 /**
  *
  */
 public class DAOAccount extends DAODecode {
 
+    @Serial
     private static final long serialVersionUID = -5381026427696898592L;
     public static final String DECODE = "ACCOUNT";
     public static final String _TABLE = "_TABLE";
@@ -55,7 +58,7 @@ public class DAOAccount extends DAODecode {
     /**
      * Method newInstance.
      *
-     * @param value String
+     * @param displayName String
      * @return DAOAccount
      */
     public static DAOAccount newInstance(String displayName) {

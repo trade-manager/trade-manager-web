@@ -35,8 +35,6 @@
  */
 package org.trade.core.conversion;
 
-import java.sql.Timestamp;
-
 /**
  * This class converts instances of java.sql.Timestamp to instances of
  * java.lang.String. Conversion is done using the toString() method of the
@@ -74,7 +72,7 @@ public class SQLTimestampToStringConverter implements IJavaTypeConverter {
      */
     public Object convert(Object valueToConvert) throws IllegalArgumentException {
         if (valueToConvert instanceof java.sql.Timestamp) {
-            return ((Timestamp) valueToConvert).toString();
+            return valueToConvert.toString();
         }
 
         throw new IllegalArgumentException("The source object must be of type: " + getSourceType().getName());

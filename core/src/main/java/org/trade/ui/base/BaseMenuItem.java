@@ -40,7 +40,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
+import java.io.Serial;
 import java.util.Vector;
 
 /**
@@ -51,6 +51,7 @@ public class BaseMenuItem extends JMenuItem {
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = 5816221538464868893L;
 
     private final static Logger _log = LoggerFactory.getLogger(BaseMenuItem.class);
@@ -64,8 +65,6 @@ public class BaseMenuItem extends JMenuItem {
      *
      * @param p                 BasePanel
      * @param basePropertyCodes BaseUIPropertyCodes
-     * @throws *
-     * @see
      */
     public BaseMenuItem(BasePanel p, BaseUIPropertyCodes basePropertyCodes) {
         try {
@@ -73,7 +72,7 @@ public class BaseMenuItem extends JMenuItem {
                 this.addMessageListener(p);
             }
 
-            if (basePropertyCodes.getDisplayName().length() == 0) {
+            if (basePropertyCodes.getDisplayName().isEmpty()) {
                 setIcon(ImageBuilder.getImageIcon(basePropertyCodes.getImage()));
             } else {
                 setText(basePropertyCodes.getDisplayName());
@@ -85,11 +84,7 @@ public class BaseMenuItem extends JMenuItem {
             setToolTipText(basePropertyCodes.getToolTip());
             setEnabled(basePropertyCodes.isEnabled());
             setMethod(basePropertyCodes.getMethod());
-            this.addActionListener(new java.awt.event.ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    buttonPressed();
-                }
-            });
+            this.addActionListener(_ -> buttonPressed());
         } catch (Exception ex) {
             _log.error(" Error instanciating Base Menu Item ", ex);
         }
@@ -100,8 +95,6 @@ public class BaseMenuItem extends JMenuItem {
      *
      * @param p      BasePanel
      * @param UICode String
-     * @throws *
-     * @see
      */
     public BaseMenuItem(BasePanel p, String UICode) {
         try {
@@ -111,7 +104,7 @@ public class BaseMenuItem extends JMenuItem {
 
             BaseUIPropertyCodes basePropertyCodes = BaseUIPropertyCodes.newInstance(UICode);
 
-            if (basePropertyCodes.getDisplayName().length() == 0) {
+            if (basePropertyCodes.getDisplayName().isEmpty()) {
                 setIcon(ImageBuilder.getImageIcon(basePropertyCodes.getImage()));
             } else {
                 setText(basePropertyCodes.getDisplayName());
@@ -123,11 +116,7 @@ public class BaseMenuItem extends JMenuItem {
             setToolTipText(basePropertyCodes.getToolTip());
             setEnabled(basePropertyCodes.isEnabled());
             setMethod(basePropertyCodes.getMethod());
-            this.addActionListener(new java.awt.event.ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    buttonPressed();
-                }
-            });
+            this.addActionListener(_ -> buttonPressed());
         } catch (Exception ex) {
             _log.error(" Error instanciating Base Menu Item ", ex);
         }
@@ -135,9 +124,6 @@ public class BaseMenuItem extends JMenuItem {
 
     /**
      * actionPerformed() - button action performed
-     *
-     * @throws *
-     * @see
      */
     private void buttonPressed() {
         if (getMethod() != null) {
@@ -149,8 +135,6 @@ public class BaseMenuItem extends JMenuItem {
      * addMessageListener() -
      *
      * @param listener IMessageListener
-     * @throws *
-     * @see
      */
     public void addMessageListener(IMessageListener listener) {
         m_notifier.add(listener);
@@ -160,8 +144,6 @@ public class BaseMenuItem extends JMenuItem {
      * removeMessageListener() -
      *
      * @param listener IMessageListener
-     * @throws *
-     * @see
      */
     public void removeMessageListener(IMessageListener listener) {
         m_notifier.remove(listener);
@@ -171,19 +153,15 @@ public class BaseMenuItem extends JMenuItem {
      * messageEvent() -
      *
      * @param selection String
-     * @throws *
-     * @see
      */
     protected void messageEvent(String selection) {
-        m_notifier.notifyEvent(new MessageEvent(selection), new Vector<Object>());
+        m_notifier.notifyEvent(new MessageEvent(selection), new Vector<>());
     }
 
     /**
      * setMethod() - button action performed
      *
      * @param method String
-     * @throws *
-     * @see
      */
     private void setMethod(String method) {
         m_method = method;
@@ -193,8 +171,6 @@ public class BaseMenuItem extends JMenuItem {
      * getMethod() - button action performed
      *
      * @return String
-     * @throws *
-     * @see
      */
     public String getMethod() {
         return m_method;

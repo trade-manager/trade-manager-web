@@ -47,6 +47,7 @@ import org.trade.strategy.data.rsi.IRelativeStrengthIndexDataset;
 import org.trade.strategy.data.rsi.RelativeStrengthIndexItem;
 
 import java.awt.*;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,6 +61,7 @@ public class RelativeStrengthIndexDataset extends AbstractXYDataset
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = 3931818830267435673L;
 
     /**
@@ -73,7 +75,7 @@ public class RelativeStrengthIndexDataset extends AbstractXYDataset
      * Creates a new instance of <code>OHLCSeriesCollection</code>.
      */
     public RelativeStrengthIndexDataset() {
-        this.data = new ArrayList<IndicatorSeries>();
+        this.data = new ArrayList<>();
     }
 
     /**
@@ -257,7 +259,7 @@ public class RelativeStrengthIndexDataset extends AbstractXYDataset
      * @return The x-value. * @see org.jfree.data.xy.XYDataset#getX(int, int)
      */
     public Number getX(int series, int item) {
-        return new Double(getXValue(series, item));
+        return getXValue(series, item);
     }
 
     /**
@@ -270,7 +272,7 @@ public class RelativeStrengthIndexDataset extends AbstractXYDataset
     public Number getY(int series, int item) {
         RelativeStrengthIndexSeries s = (RelativeStrengthIndexSeries) this.data.get(series);
         RelativeStrengthIndexItem di = (RelativeStrengthIndexItem) s.getDataItem(item);
-        return new Double(di.getY());
+        return di.getY();
     }
 
     /**
@@ -298,7 +300,7 @@ public class RelativeStrengthIndexDataset extends AbstractXYDataset
      * #getRelativeStrengthIndex(int, int)
      */
     public Number getRelativeStrengthIndex(int series, int item) {
-        return new Double(getRelativeStrengthIndexValue(series, item));
+        return getRelativeStrengthIndexValue(series, item);
     }
 
     /**
@@ -311,14 +313,13 @@ public class RelativeStrengthIndexDataset extends AbstractXYDataset
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof RelativeStrengthIndexDataset)) {
+        if (!(obj instanceof RelativeStrengthIndexDataset that)) {
             return false;
         }
-        RelativeStrengthIndexDataset that = (RelativeStrengthIndexDataset) obj;
         if (!this.xPosition.equals(that.xPosition)) {
             return false;
         }
-        return ObjectUtils.equal(this.data, that.data);
+        return this.data.equals(that.data);
     }
 
     /**
@@ -340,8 +341,6 @@ public class RelativeStrengthIndexDataset extends AbstractXYDataset
      * @param source      CandleDataset
      * @param seriesIndex int
      * @param newBar      boolean
-     * @see IIndicatorDataset#updateDataset(CandleDataset,
-     * int)
      */
     public void updateDataset(CandleDataset source, int seriesIndex, boolean newBar) {
         if (source == null) {

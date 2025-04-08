@@ -47,7 +47,7 @@ public class EventHandler {
     /**
      * Take an {@link Employee} and get the URI using Spring Data REST's {@link EntityLinks}.
      *
-     * @param employee
+     * @param employee Employee
      */
     private String getPath(Employee employee) {
         return this.entityLinks.linkForItemResource(employee.getClass(),

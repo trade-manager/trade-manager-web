@@ -37,6 +37,8 @@ package org.trade.dictionary.valuetype;
 
 import org.trade.ui.base.BaseUIPropertyCodes;
 
+import java.io.Serial;
+
 /**
  * Example implementation of how to subclass the CodeDecodeValueType Object this
  * object represents the State codes and Descriptions in the US.
@@ -48,6 +50,7 @@ public class UIPropertyCodes extends BaseUIPropertyCodes {
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = -2178313262496336078L;
 
     public final static String UI_WIDGET_PROP = "UI_WIDGET_PROP";
@@ -75,13 +78,8 @@ public class UIPropertyCodes extends BaseUIPropertyCodes {
      * @return boolean
      */
     public boolean isEnabled() {
-        boolean enabled = false;
 
-        if (getValue(UI_WIDGET_ENABLED).equalsIgnoreCase("true")) {
-            enabled = true;
-        }
-
-        return enabled;
+        return getValue(UI_WIDGET_ENABLED).equalsIgnoreCase("true");
     }
 
     /**
@@ -119,7 +117,7 @@ public class UIPropertyCodes extends BaseUIPropertyCodes {
     public int getMnemonic() {
         int returnValue = 0;
 
-        if ((null != getValue(UI_WIDGET_MNEMONIC)) && (getValue(UI_WIDGET_MNEMONIC).length() > 0)) {
+        if ((null != getValue(UI_WIDGET_MNEMONIC)) && (!getValue(UI_WIDGET_MNEMONIC).isEmpty())) {
             returnValue = getValue(UI_WIDGET_MNEMONIC).charAt(0);
         }
 
@@ -131,11 +129,9 @@ public class UIPropertyCodes extends BaseUIPropertyCodes {
      *
      * @param code String
      * @return UIPropertyCodes
-     * @throws *
-     * @see
      */
     public static UIPropertyCodes newInstance(String code) {
-        UIPropertyCodes returnInstance = null;
+        UIPropertyCodes returnInstance;
         returnInstance = new UIPropertyCodes();
         returnInstance.setValue(code);
         return returnInstance;

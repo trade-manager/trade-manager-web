@@ -61,7 +61,6 @@ public class CollectionUtilities {
      *
      * @param filepath String
      * @return Properties
-     * @throws FileNotFoundException
      */
     public static Properties read(String filepath) throws FileNotFoundException {
         Properties rval;
@@ -76,12 +75,12 @@ public class CollectionUtilities {
             rval.load(bis);
 
             return rval;
-        } catch (IOException e) {
+        } catch (IOException _) {
         } finally {
             if (bis != null) {
                 try {
                     bis.close();
-                } catch (IOException e) {
+                } catch (IOException _) {
                 }
 
                 bis = null;
@@ -98,15 +97,14 @@ public class CollectionUtilities {
             rval.load(bis);
 
             return rval;
-        } catch (IOException e) {
+        } catch (IOException _) {
         } finally {
             if (bis != null) {
                 try {
                     bis.close();
-                } catch (IOException e) {
+                } catch (IOException _) {
                 }
 
-                bis = null;
             }
         }
 
@@ -118,7 +116,6 @@ public class CollectionUtilities {
      *
      * @param filepath      String
      * @param theProperties Properties
-     * @throws IOException
      */
     public static void write(String filepath, Properties theProperties) throws IOException { // put
         // filepath
@@ -134,7 +131,6 @@ public class CollectionUtilities {
      * @param filepath      String
      * @param theProperties Properties
      * @param propComments  String
-     * @throws IOException
      */
     public static void write(String filepath, Properties theProperties, String propComments) throws IOException {
         BufferedOutputStream bos = null;
@@ -149,7 +145,6 @@ public class CollectionUtilities {
             if (bos != null) {
                 bos.close();
 
-                bos = null;
             }
         }
     }
@@ -159,7 +154,6 @@ public class CollectionUtilities {
      *
      * @param myKeys String[]
      * @param p      Properties
-     * @throws MissingPropertiesException
      */
     public static void checkProperties(String[] myKeys, Properties p) throws MissingPropertiesException {
         if ((myKeys == null) || (p == null)) {
@@ -168,13 +162,13 @@ public class CollectionUtilities {
 
         MissingPropertiesException mpe = null;
 
-        for (int ii = 0; ii < myKeys.length; ii++) {
-            if (!p.containsKey(myKeys[ii])) {
+        for (String myKey : myKeys) {
+            if (!p.containsKey(myKey)) {
                 if (mpe == null) {
                     mpe = new MissingPropertiesException();
                 }
 
-                mpe.addProperty(myKeys[ii]);
+                mpe.addProperty(myKey);
             }
         }
 
@@ -182,7 +176,6 @@ public class CollectionUtilities {
             throw mpe;
         }
 
-        return;
     }
 
     /**
@@ -252,7 +245,7 @@ public class CollectionUtilities {
     public static String dictionaryToString(Dictionary<Object, Object> dict) {
         Enumeration<Object> keys = dict.keys();
         Object key, value;
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
 
         while (keys.hasMoreElements()) {
             key = keys.nextElement();
@@ -277,7 +270,7 @@ public class CollectionUtilities {
             Properties p = CollectionUtilities.read(args[0]);
 
             System.out.println(p);
-        } catch (Exception ex) {
+        } catch (Exception _) {
         }
     }
 
@@ -321,7 +314,7 @@ public class CollectionUtilities {
      */
     private static int compare(String row1, String row2, boolean asc) {
         int result = row1.compareTo(row2);
-        int returnVal = 0;
+        int returnVal;
 
         if (result < 0) {
             returnVal = -1;

@@ -35,20 +35,23 @@
  */
 package org.trade.core.dao;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
  *
  */
-public abstract class Aspect extends Object implements Serializable {
+public abstract class Aspect implements Serializable {
 
     /**
      *
      */
-    protected static Boolean m_ascending = new Boolean(true);
+    @Serial
+    private static final long serialVersionUID = -2295788967071036093L;
+
+    protected static Boolean m_ascending = true;
     protected Integer id;
     protected Integer version;
-    private static final long serialVersionUID = -2295788967071036093L;
     private Object m_context;
     private boolean dirty = false;
 
@@ -147,9 +150,7 @@ public abstract class Aspect extends Object implements Serializable {
         if (null == this.getId())
             return false;
         if (this.getClass().equals(objectToCompare.getClass())) {
-            if (this.getId().equals(((Aspect) objectToCompare).getId())) {
-                return true;
-            }
+            return this.getId().equals(((Aspect) objectToCompare).getId());
         }
         return false;
     }

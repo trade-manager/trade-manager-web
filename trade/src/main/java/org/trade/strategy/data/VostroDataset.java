@@ -47,6 +47,7 @@ import org.trade.strategy.data.vostro.IVostroDataset;
 import org.trade.strategy.data.vostro.VostroItem;
 
 import java.awt.*;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +60,7 @@ public class VostroDataset extends AbstractXYDataset implements IIndicatorDatase
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = 3931818830267435673L;
 
     /**
@@ -72,7 +74,7 @@ public class VostroDataset extends AbstractXYDataset implements IIndicatorDatase
      * Creates a new instance of <code>OHLCSeriesCollection</code>.
      */
     public VostroDataset() {
-        this.data = new ArrayList<IndicatorSeries>();
+        this.data = new ArrayList<>();
     }
 
     /**
@@ -208,7 +210,7 @@ public class VostroDataset extends AbstractXYDataset implements IIndicatorDatase
      * @return The item count.
      * @throws IllegalArgumentException if <code>series</code> is not in the range <code>0</code> to
      *                                  <code>getSeriesCount() - 1</code>.
-     * @see org.jfree.data.xy.XYDataset#getItemCount(int)
+     * @see XYDataset#getItemCount(int)
      */
     public int getItemCount(int series) {
         // defer argument checking
@@ -239,7 +241,7 @@ public class VostroDataset extends AbstractXYDataset implements IIndicatorDatase
      * @param series the series index.
      * @param item   the item index.
      * @return The x-value.
-     * @see org.jfree.data.xy.XYDataset#getXValue(int, int)
+     * @see XYDataset#getXValue(int, int)
      */
     public double getXValue(int series, int item) {
         VostroSeries s = (VostroSeries) this.data.get(series);
@@ -254,10 +256,10 @@ public class VostroDataset extends AbstractXYDataset implements IIndicatorDatase
      * @param series the series index.
      * @param item   the item index.
      * @return The x-value.
-     * @see org.jfree.data.xy.XYDataset#getX(int, int)
+     * @see XYDataset#getX(int, int)
      */
     public Number getX(int series, int item) {
-        return new Double(getXValue(series, item));
+        return getXValue(series, item);
     }
 
     /**
@@ -266,12 +268,12 @@ public class VostroDataset extends AbstractXYDataset implements IIndicatorDatase
      * @param series the series index.
      * @param item   the item index.
      * @return The y-value.
-     * @see org.jfree.data.xy.XYDataset#getY(int, int)
+     * @see XYDataset#getY(int, int)
      */
     public Number getY(int series, int item) {
         VostroSeries s = (VostroSeries) this.data.get(series);
         VostroItem di = (VostroItem) s.getDataItem(item);
-        return new Double(di.getY());
+        return di.getY();
     }
 
     /**
@@ -299,7 +301,7 @@ public class VostroDataset extends AbstractXYDataset implements IIndicatorDatase
      * #getMovingAverage(int, int)
      */
     public Number getVostro(int series, int item) {
-        return new Double(getVostroValue(series, item));
+        return getVostroValue(series, item);
     }
 
     /**
@@ -312,14 +314,13 @@ public class VostroDataset extends AbstractXYDataset implements IIndicatorDatase
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof VostroDataset)) {
+        if (!(obj instanceof VostroDataset that)) {
             return false;
         }
-        VostroDataset that = (VostroDataset) obj;
         if (!this.xPosition.equals(that.xPosition)) {
             return false;
         }
-        return ObjectUtils.equal(this.data, that.data);
+        return this.data.equals(that.data);
     }
 
     /**
@@ -341,8 +342,6 @@ public class VostroDataset extends AbstractXYDataset implements IIndicatorDatase
      * @param source      CandleDataset
      * @param seriesIndex int
      * @param newBar      boolean
-     * @see IIndicatorDataset#updateDataset(CandleDataset,
-     * int)
      */
     public void updateDataset(CandleDataset source, int seriesIndex, boolean newBar) {
         if (source == null) {

@@ -53,7 +53,7 @@ public interface IRelativeStrengthIndexDataset extends XYDataset {
      * @param item   the item index.
      * @return The relativeStrengthIndex.
      */
-    public double getRelativeStrengthIndexValue(int series, int item);
+    double getRelativeStrengthIndexValue(int series, int item);
 
     /**
      * Returns the relativeStrengthIndex for an item within a series.
@@ -62,6 +62,6 @@ public interface IRelativeStrengthIndexDataset extends XYDataset {
      * @param item   the item index.
      * @return The relativeStrengthIndex.
      */
-    public Number getRelativeStrengthIndex(int series, int item);
+    Number getRelativeStrengthIndex(int series, int item);
 
 }

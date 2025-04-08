@@ -35,12 +35,9 @@
  */
 package org.trade.core.message;
 
-/**
- * this class represnts an error during an attempt to look up an exception
- * message from the exception message lookup file
- */
-
 import org.trade.core.exception.NestingException;
+
+import java.io.Serial;
 
 /**
  *
@@ -49,6 +46,7 @@ public class MessageTranslatorException extends NestingException {
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = -8703801242387795447L;
 
     /**

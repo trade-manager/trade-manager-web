@@ -35,8 +35,6 @@
  */
 package org.trade.core.conversion;
 
-import java.sql.Time;
-
 /**
  * This class converts instances of java.sql.Time to instances of
  * java.lang.String. Conversion is done using the toString() method of the
@@ -74,7 +72,7 @@ public class SQLTimeToStringConverter implements IJavaTypeConverter {
      */
     public Object convert(Object valueToConvert) throws IllegalArgumentException {
         if (valueToConvert instanceof java.sql.Time) {
-            return ((Time) valueToConvert).toString();
+            return valueToConvert.toString();
         }
 
         throw new IllegalArgumentException("The source object must be of type: " + getSourceType().getName());

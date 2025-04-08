@@ -48,15 +48,15 @@ import java.math.BigDecimal;
 public class PercentValidator implements IValidator {
     private IMessageFactory m_messageFactory;
 
-    private boolean m_isMandatory;
+    private final boolean m_isMandatory;
 
-    private boolean m_allowNegative;
+    private final boolean m_allowNegative;
 
-    private boolean m_allowZero;
+    private final boolean m_allowZero;
 
-    private int m_maxNonDecimalLength;
+    private final int m_maxNonDecimalLength;
 
-    private int m_maxDecimalLength;
+    private final int m_maxDecimalLength;
 
     /**
      * Constructor for PercentValidator.
@@ -131,12 +131,12 @@ public class PercentValidator implements IValidator {
             String decimalString = "";
             String nonDecimalString = stringValue;
             if (-1 != indexOfDot) {
-                decimalString = stringValue.substring(indexOfDot + 1, stringValue.length());
+                decimalString = stringValue.substring(indexOfDot + 1);
                 nonDecimalString = stringValue.substring(0, indexOfDot);
             }
 
-            if (nonDecimalString.length() > 0 && nonDecimalString.charAt(0) == '-') {
-                nonDecimalString = nonDecimalString.substring(1, nonDecimalString.length());
+            if (!nonDecimalString.isEmpty() && nonDecimalString.charAt(0) == '-') {
+                nonDecimalString = nonDecimalString.substring(1);
             }
 
             long nonDecimalLength = nonDecimalString.length();
@@ -153,7 +153,7 @@ public class PercentValidator implements IValidator {
             }
 
             // Enforce length of portion to left of decimal point
-            if (nonDecimalLength > m_maxNonDecimalLength) {
+            if (valid && nonDecimalLength > m_maxNonDecimalLength) {
                 valid = false;
                 receiver.addExceptionMessage(
                         getMessageFactory().create(MessageContextFactory.PERCENT_LEFT_OF_DECIMAL_TOO_LONG
@@ -161,14 +161,14 @@ public class PercentValidator implements IValidator {
             }
 
             // Disallow zero for certain formats
-            if (!m_allowZero && (0 == ((BigDecimal) value).compareTo(new BigDecimal(0)))) {
+            if (valid && !m_allowZero && (0 == ((BigDecimal) value).compareTo(new BigDecimal(0)))) {
                 valid = false;
                 receiver.addExceptionMessage(
                         getMessageFactory().create(MessageContextFactory.PERCENT_ZERO_NOT_ALLOWED.create()));
             }
 
             // Disallow negative numbers
-            if (!m_allowNegative && (((BigDecimal) value).compareTo(new BigDecimal(0)) < 0)) {
+            if (valid && !m_allowNegative && (((BigDecimal) value).compareTo(new BigDecimal(0)) < 0)) {
                 valid = false;
                 receiver.addExceptionMessage(
                         getMessageFactory().create(MessageContextFactory.PERCENT_NEGATIVE_NOT_ALLOWED.create()));
@@ -192,28 +192,27 @@ public class PercentValidator implements IValidator {
                         getMessageFactory().create(MessageContextFactory.PERCENT_DOT_WITH_NO_NUMBERS.create()));
             }
 
-            if (invalidValue.indexOf(".") != invalidValue.lastIndexOf(".")) {
+            if (valid && invalidValue.indexOf(".") != invalidValue.lastIndexOf(".")) {
                 valid = false;
                 receiver.addExceptionMessage(
                         getMessageFactory().create(MessageContextFactory.PERCENT_MULTIPLE_DOTS.create()));
             }
 
-            if (m_allowNegative && (invalidValue.indexOf("-") != invalidValue.lastIndexOf("-"))) {
+            if (valid && m_allowNegative && (invalidValue.indexOf("-") != invalidValue.lastIndexOf("-"))) {
                 valid = false;
                 receiver.addExceptionMessage(
                         getMessageFactory().create(MessageContextFactory.PERCENT_MULTIPLE_DASHES.create()));
             }
 
-            if (m_allowNegative && (invalidValue.indexOf("-") != -1) && (invalidValue.indexOf("-") != 0)) {
+            if (valid && m_allowNegative && (invalidValue.contains("-")) && (invalidValue.indexOf("-") != 0)) {
                 valid = false;
                 receiver.addExceptionMessage(
                         getMessageFactory().create(MessageContextFactory.PERCENT_DASH_NOT_FIRST_CHARACTER.create()));
             }
 
-            valid = validator.isValid(invalidValue, invalidValue, expectedFormat, receiver);
             if (valid) {
-                valid = false;
-                // TODO: Log this
+
+                valid = validator.isValid(invalidValue, invalidValue, expectedFormat, receiver);
             }
         }
 

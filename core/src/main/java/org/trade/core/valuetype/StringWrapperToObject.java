@@ -57,11 +57,9 @@ public class StringWrapperToObject implements IJavaDynamicTypeConverter {
      * @param targetType     Class<?>
      * @param valueToConvert Object
      * @return Object
-     * @throws JavaTypeTranslatorException
-     * @see com.cbsinc.esc.devtools.conversion.JavaDynamicTypeConverter
      */
     public Object convert(Class<?> targetType, Object valueToConvert) throws JavaTypeTranslatorException {
-        Object rVal = null;
+        Object rVal;
 
         if (valueToConvert instanceof StringWrapper) {
             rVal = JavaTypeTranslator.convert(targetType, valueToConvert.toString());
@@ -76,13 +74,8 @@ public class StringWrapperToObject implements IJavaDynamicTypeConverter {
      * @param targetType     Class<?>
      * @param valueToConvert Object
      * @return boolean
-     * @see com.cbsinc.esc.devtools.conversion.JavaDynamicTypeConverter
      */
     public boolean supportsConversion(Class<?> targetType, Object valueToConvert) {
-        boolean rVal = false;
-        if (valueToConvert instanceof StringWrapper) {
-            rVal = true;
-        }
-        return (rVal);
+        return (valueToConvert instanceof StringWrapper);
     }
 }

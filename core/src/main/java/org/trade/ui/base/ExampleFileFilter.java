@@ -46,7 +46,7 @@ import java.util.Hashtable;
  */
 public class ExampleFileFilter extends FileFilter {
 
-    private Hashtable<String, ExampleFileFilter> filters = null;
+    private Hashtable<String, ExampleFileFilter> filters;
 
     private String description = null;
 
@@ -61,7 +61,7 @@ public class ExampleFileFilter extends FileFilter {
      * @see #addExtension
      */
     public ExampleFileFilter() {
-        this((String) null, (String) null);
+        this((String) null, null);
     }
 
     /**
@@ -115,7 +115,7 @@ public class ExampleFileFilter extends FileFilter {
      * @see #addExtension
      */
     public ExampleFileFilter(String[] filters, String description) {
-        this.filters = new Hashtable<String, ExampleFileFilter>(filters.length);
+        this.filters = new Hashtable<>(filters.length);
 
         for (String filter : filters) {
             // add filters one by one
@@ -143,9 +143,7 @@ public class ExampleFileFilter extends FileFilter {
 
             String extension = getExtension(f);
 
-            if ((extension != null) && (filters.get(getExtension(f)) != null)) {
-                return true;
-            }
+            return (extension != null) && (filters.get(getExtension(f)) != null);
         }
 
         return false;
@@ -186,7 +184,7 @@ public class ExampleFileFilter extends FileFilter {
      */
     public void addExtension(String extension) {
         if (filters == null) {
-            filters = new Hashtable<String, ExampleFileFilter>(5);
+            filters = new Hashtable<>(5);
         }
 
         if (extension != null) {
@@ -201,8 +199,6 @@ public class ExampleFileFilter extends FileFilter {
      * and GIF Image Files (*.jpg, *.gif)"
      *
      * @return String
-     * @see setDescription * @see setExtensionListInDescription * @see
-     * isExtensionListInDescription * @see FileFilter#getDescription
      */
     public String getDescription() {
         if (fullDescription == null) {
@@ -238,8 +234,6 @@ public class ExampleFileFilter extends FileFilter {
      * filter.setDescription("Gif and JPG Images");
      *
      * @param description String
-     * @see setDescription * @see setExtensionListInDescription * @see
-     * isExtensionListInDescription
      */
     public void setDescription(String description) {
         this.description = description;
@@ -254,8 +248,6 @@ public class ExampleFileFilter extends FileFilter {
      * setDescription();
      *
      * @param b boolean
-     * @see getDescription * @see setDescription * @see
-     * isExtensionListInDescription
      */
     public void setExtensionListInDescription(boolean b) {
         useExtensionsInDescription = b;
@@ -270,8 +262,6 @@ public class ExampleFileFilter extends FileFilter {
      * setDescription();
      *
      * @return boolean
-     * @see getDescription * @see setDescription * @see
-     * setExtensionListInDescription
      */
     public boolean isExtensionListInDescription() {
         return useExtensionsInDescription;

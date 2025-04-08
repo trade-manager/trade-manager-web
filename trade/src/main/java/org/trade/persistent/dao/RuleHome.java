@@ -68,6 +68,7 @@ public class RuleHome {
     public Rule findById(Integer id) {
 
         try {
+
             EntityManager entityManager = EntityManagerHelper.getEntityManager();
             entityManager.getTransaction().begin();
             Rule instance = entityManager.find(Rule.class, id);
@@ -90,6 +91,7 @@ public class RuleHome {
     public Integer findByMaxVersion(Strategy strategy) {
 
         try {
+
             EntityManager entityManager = EntityManagerHelper.getEntityManager();
             entityManager.getTransaction().begin();
             CriteriaBuilder builder = entityManager.getCriteriaBuilder();
@@ -100,18 +102,24 @@ public class RuleHome {
             Expression<Integer> minExpression = builder.max(id);
             CriteriaQuery<Object> select = query.select(minExpression);
 
-            List<Predicate> predicates = new ArrayList<Predicate>();
+            List<Predicate> predicates = new ArrayList<>();
+
             if (null != strategy) {
+
                 Join<Rule, Strategy> strategies = from.join("strategy");
                 Predicate predicate = builder.equal(strategies.get("id"), strategy.getId());
                 predicates.add(predicate);
             }
+
             query.where(predicates.toArray(new Predicate[]{}));
             TypedQuery<Object> typedQuery = entityManager.createQuery(select);
             Object item = typedQuery.getSingleResult();
             entityManager.getTransaction().commit();
-            if (null == item)
-                item = new Integer(0);
+
+            if (null == item) {
+                item = 0;
+            }
+
 
             return (Integer) item;
 

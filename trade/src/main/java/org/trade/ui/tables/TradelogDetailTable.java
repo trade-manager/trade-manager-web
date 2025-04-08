@@ -36,7 +36,6 @@
 package org.trade.ui.tables;
 
 import org.trade.core.util.TradingCalendar;
-import org.trade.core.valuetype.Decode;
 import org.trade.core.valuetype.ValueTypeException;
 import org.trade.dictionary.valuetype.Action;
 import org.trade.dictionary.valuetype.DAOStrategy;
@@ -53,14 +52,15 @@ import org.trade.ui.widget.DateRenderer;
 import org.trade.ui.widget.DecodeTableEditor;
 
 import javax.swing.*;
+import java.io.Serial;
 import java.util.Calendar;
-import java.util.Vector;
 
 /**
  *
  */
 public class TradelogDetailTable extends Table {
 
+    @Serial
     private static final long serialVersionUID = 1132297931453070904L;
 
     private static final String DATETIMEFORMAT = "HH:mm:ss";
@@ -69,24 +69,23 @@ public class TradelogDetailTable extends Table {
      * Constructor for TradelogDetailTable.
      *
      * @param model TableModel
-     * @throws ValueTypeException
      */
     public TradelogDetailTable(TableModel model) throws ValueTypeException {
         super(model);
         DecodeTableEditor sideEditor = new DecodeTableEditor(
-                new JComboBox<Decode>((Vector<Decode>) (new Side()).getCodesDecodes()));
+                new JComboBox<>((new Side()).getCodesDecodes()));
         DecodeTableEditor tierEditor = new DecodeTableEditor(
-                new JComboBox<Decode>((Vector<Decode>) (new Tier()).getCodesDecodes()));
+                new JComboBox<>((new Tier()).getCodesDecodes()));
         DecodeTableEditor tradestrategyStatusEditor = new DecodeTableEditor(
-                new JComboBox<Decode>((Vector<Decode>) (new TradestrategyStatus()).getCodesDecodes()));
+                new JComboBox<>((new TradestrategyStatus()).getCodesDecodes()));
         DecodeTableEditor strategyEditor = new DecodeTableEditor(
-                new JComboBox<Decode>((Vector<Decode>) (new DAOStrategy()).getCodesDecodes()));
+                new JComboBox<>((new DAOStrategy()).getCodesDecodes()));
         DecodeTableEditor marketBiasEditor = new DecodeTableEditor(
-                new JComboBox<Decode>((Vector<Decode>) (new MarketBias()).getCodesDecodes()));
+                new JComboBox<>((new MarketBias()).getCodesDecodes()));
         DecodeTableEditor marketBarEditor = new DecodeTableEditor(
-                new JComboBox<Decode>((Vector<Decode>) (new MarketBar()).getCodesDecodes()));
+                new JComboBox<>((new MarketBar()).getCodesDecodes()));
         DecodeTableEditor actionEditor = new DecodeTableEditor(
-                new JComboBox<Decode>((Vector<Decode>) (new Action()).getCodesDecodes()));
+                new JComboBox<>((new Action()).getCodesDecodes()));
         this.setDefaultEditor(DAOStrategy.class, strategyEditor);
         this.setDefaultEditor(Side.class, sideEditor);
         this.setDefaultEditor(Tier.class, tierEditor);

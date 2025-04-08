@@ -53,7 +53,7 @@ public interface IVolumeDataset extends XYDataset {
      * @param item   the item index.
      * @return The Moving Average.
      */
-    public double getVolumeValue(int series, int item);
+    double getVolumeValue(int series, int item);
 
     /**
      * Returns the Moving Average for an item within a series.
@@ -62,6 +62,6 @@ public interface IVolumeDataset extends XYDataset {
      * @param item   the item index.
      * @return The Moving Average.
      */
-    public Number getVolume(int series, int item);
+    Number getVolume(int series, int item);
 
 }

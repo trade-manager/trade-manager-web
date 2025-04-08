@@ -38,6 +38,8 @@ package org.trade.persistent.dao;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 
+import java.io.Serial;
+
 /**
  *
  */
@@ -45,6 +47,7 @@ import jakarta.persistence.Entity;
 @DiscriminatorValue("StrategyParameters")
 public class StrategyParameters extends CodeType {
 
+    @Serial
     private static final long serialVersionUID = 2273276207080568947L;
 
     public StrategyParameters(String name, String description) {

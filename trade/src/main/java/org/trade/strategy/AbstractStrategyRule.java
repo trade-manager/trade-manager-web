@@ -69,6 +69,7 @@ import org.trade.strategy.data.candle.CandleItem;
 import org.trade.strategy.data.candle.CandlePeriod;
 
 import javax.swing.event.EventListenerList;
+import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
@@ -81,6 +82,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = 4876874276185644936L;
 
     private final static Logger _log = LoggerFactory.getLogger(AbstractStrategyRule.class);
@@ -89,15 +91,15 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
      * Message handler that allows the main controller to listen for errors.
      * Storage for registered change listeners.
      */
-    private transient EventListenerList listenerList;
+    private final transient EventListenerList listenerList;
 
-    private IBrokerModel brokerModel;
+    private final IBrokerModel brokerModel;
     private IPersistentModel tradePersistentModel;
-    private DAOEntryLimit entryLimits = new DAOEntryLimit();
-    private StrategyData strategyData = null;
+    private final DAOEntryLimit entryLimits = new DAOEntryLimit();
+    private final StrategyData strategyData;
     private Tradestrategy tradestrategy = null;
     private TradestrategyOrders tradestrategyOrders = null;
-    private Integer idTradestrategy = null;
+    private final Integer idTradestrategy;
     private String symbol = null;
     private boolean seriesChanged = false;
     private final Object lockStrategyWorker = new Object();
@@ -134,8 +136,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
     public void error(int id, int errorCode, String errorMsg) {
 
         if (id > 0) {
-            _log.warn("Error symbol: " + symbol + " Error Id: " + id + " Error Code: " + errorCode + " Error Msg: "
-                    + errorMsg);
+            _log.warn("Error symbol: {} Error Id: {} Error Code: {} Error Msg: {}", symbol, id, errorCode, errorMsg);
         }
         this.fireStrategyError(new StrategyRuleException(id, errorCode, "Symbol: " + symbol + " " + errorMsg));
         /*
@@ -151,7 +152,6 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
      * strategyRule.
      *
      * @param listener the object to register.
-     * @see #removeChangeListener(IStrategyChangeListener)
      */
     public void addMessageListener(IStrategyChangeListener listener) {
         this.listenerList.add(IStrategyChangeListener.class, listener);
@@ -162,7 +162,6 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
      * changes to the strategyRule.
      *
      * @param listener the object to deregister.
-     * @see #addChangeListener(IStrategyChangeListener)
      */
     public void removeMessageListener(IStrategyChangeListener listener) {
         this.listenerList.remove(IStrategyChangeListener.class, listener);
@@ -170,8 +169,8 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
 
     public void removeAllMessageListener() {
         IStrategyChangeListener[] listeners = this.listenerList.getListeners(IStrategyChangeListener.class);
-        for (int i = 0; i < listeners.length; i++) {
-            removeMessageListener(listeners[i]);
+        for (IStrategyChangeListener listener : listeners) {
+            removeMessageListener(listener);
         }
     }
 
@@ -179,7 +178,6 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
      * Notifies all registered listeners that the strategyRule has an error.
      *
      * @param strategyError StrategyRuleException
-     * @see #addChangeListener(IStrategyChangeListener)
      */
     protected void fireStrategyError(StrategyRuleException strategyError) {
         Object[] listeners = this.listenerList.getListenerList();
@@ -194,7 +192,6 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
      * Notifies all registered listeners that the strategyRule has completed.
      *
      * @param tradestrategy Tradestrategy
-     * @see #addChangeListener(IStrategyChangeListener)
      */
     protected void fireStrategyComplete(String strategyClassName, final Tradestrategy tradestrategy) {
         Object[] listeners = this.listenerList.getListenerList();
@@ -209,7 +206,6 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
      * Notifies all registered listeners that the strategyRule has started.
      *
      * @param tradestrategy Tradestrategy
-     * @see #addChangeListener(IStrategyChangeListener)
      */
     protected void fireStrategyStarted(String strategyClassName, final Tradestrategy tradestrategy) {
         Object[] listeners = this.listenerList.getListenerList();
@@ -225,7 +221,6 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
      * completed.
      *
      * @param tradestrategy Tradestrategy
-     * @see #addChangeListener(IStrategyChangeListener)
      */
     protected void fireRuleComplete(final Tradestrategy tradestrategy) {
         Object[] listeners = this.listenerList.getListenerList();
@@ -241,8 +236,6 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
      * done.
      * <p>
      * (non-Javadoc)
-     *
-     * @see org.trade.strategy.impl.Worker#doInBackground()
      */
 
     protected Void doInBackground() {
@@ -260,9 +253,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
             this.tradestrategy.setStrategyData(this.strategyData);
             this.symbol = this.tradestrategy.getContract().getSymbol();
 
-            _log.info("Starting strategyClass: " + this.getClass().getName() + " engine doInBackground Symbol: "
-                    + this.symbol + " idTradestrategy: " + this.idTradestrategy + " Tradingday Date: "
-                    + this.tradestrategy.getTradingday().getOpen());
+            _log.info("Starting strategyClass: {} engine doInBackground Symbol: {} idTradestrategy: {} Tradingday Date: {}", this.getClass().getName(), this.symbol, this.idTradestrategy, this.tradestrategy.getTradingday().getOpen());
 
             /*
              * Process the current candle if there is one on startup.
@@ -312,8 +303,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
 
                     } else if (currentCandleCount > (candleSeries.getItemCount() - 1)) {
 
-                        _log.info("Cancelled as candleSeries have been cleared Symbol: " + getSymbol() + " class: "
-                                + this.getClass().getName());
+                        _log.info("Cancelled as candleSeries have been cleared Symbol: {} class: {}", getSymbol(), this.getClass().getName());
                         this.cancel();
                         break;
                     } else if (currentCandleCount == (candleSeries.getItemCount() - 1)) {
@@ -366,9 +356,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
                         this.fireStrategyStarted(this.getClass().getSimpleName(), this.tradestrategy);
                         listeningCandles = true;
 
-                        _log.info("Started strategyClass: " + this.getClass().getName()
-                                + " engine doInBackground Symbol: " + this.symbol + " idTradestrategy: "
-                                + this.idTradestrategy);
+                        _log.info("Started strategyClass: {} engine doInBackground Symbol: {} idTradestrategy: {}", this.getClass().getName(), this.symbol, this.idTradestrategy);
                     } else {
                         this.fireRuleComplete(this.tradestrategy);
                     }
@@ -378,8 +366,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
         } catch (InterruptedException interExp) {
             // Do nothing.
         } catch (Exception ex) {
-            _log.error("Error StrategyWorker exception: " + getSymbol() + " class: " + this.getClass().getName()
-                    + " Msg: " + ex.getMessage(), ex);
+            _log.error("Error StrategyWorker exception: {} class: {} Msg: {}", getSymbol(), this.getClass().getName(), ex.getMessage(), ex);
             error(1, 100, "Error StrategyWorker exception: " + ex.getMessage());
         } finally {
             /*
@@ -400,7 +387,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
          * Unlock the doInBackground that may be waiting for a candle. This will
          * cause a clean finish to the process.
          */
-        _log.info("Started strategyClass: " + this.getClass().getName() + " canceled.");
+        _log.info("Started strategyClass: {} canceled.", this.getClass().getName());
         synchronized (lockStrategyWorker) {
             seriesChanged = true;
             lockStrategyWorker.notify();
@@ -430,9 +417,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
         this.fireStrategyComplete(this.getClass().getSimpleName(), this.tradestrategy);
         removeAllMessageListener();
         this.strategyData.getBaseCandleSeries().removeChangeListener(this);
-        _log.info("Rule engine done: " + getSymbol() + " class: " + this.getClass().getSimpleName()
-                + " idTradestrategy: " + this.tradestrategy.getId() + " Tradingday Date: "
-                + this.tradestrategy.getTradingday().getOpen());
+        _log.info("Rule engine done: {} class: {} idTradestrategy: {} Tradingday Date: {}", getSymbol(), this.getClass().getSimpleName(), this.tradestrategy.getId(), this.tradestrategy.getTradingday().getOpen());
     }
 
     /**
@@ -441,7 +426,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
      * Broker interface when new data is received by the market.
      *
      * @param event SeriesChangeEvent
-     * @see org.jfree.data.general.SeriesChangeListener#seriesChanged(SeriesChangeEvent)
+     * @see SeriesChangeListener#seriesChanged(SeriesChangeEvent)
      */
     public void seriesChanged(SeriesChangeEvent event) {
         synchronized (lockStrategyWorker) {
@@ -456,7 +441,6 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
      * the market.
      *
      * @param transmit boolean
-     * @throws StrategyRuleException
      */
     public TradeOrder closePosition(boolean transmit) throws StrategyRuleException {
 
@@ -483,11 +467,6 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
     /**
      * This method creates an open position order for the Trade. The order is
      * persisted and transmitted via the broker interface to the market.
-     *
-     * @param contract
-     * @param tradeOrder
-     * @return
-     * @throws StrategyRuleException
      */
 
     public TradeOrder submitOrder(final Contract contract, final TradeOrder tradeOrder) throws StrategyRuleException {
@@ -510,16 +489,14 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
      * This method creates an open position order for the Trade. The order is
      * persisted and transmitted via the broker interface to the market.
      *
-     * @param contract
-     * @param action
-     * @param orderType
-     * @param limitPrice
-     * @param auxPrice
-     * @param quantity
-     * @param roundPrice
-     * @param transmit
-     * @return
-     * @throws StrategyRuleException
+     * @param contract   Contract
+     * @param action     String
+     * @param orderType  String
+     * @param limitPrice Money
+     * @param auxPrice   Money
+     * @param quantity   Integer
+     * @param roundPrice Boolean
+     * @param transmit   Boolean
      */
     public TradeOrder createOrder(Contract contract, String action, String orderType, Money limitPrice, Money auxPrice,
                                   Integer quantity, Boolean roundPrice, Boolean transmit) throws StrategyRuleException {
@@ -533,18 +510,6 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
      * <p>
      * This method creates an open position order for the Trade. The order is
      * persisted and transmitted via the broker interface to the market.
-     *
-     * @param contract
-     * @param action
-     * @param orderType
-     * @param limitPrice
-     * @param auxPrice
-     * @param quantity
-     * @param ocaGroupName
-     * @param roundPrice
-     * @param transmit
-     * @return
-     * @throws StrategyRuleException
      */
     public TradeOrder createOrder(Contract contract, String action, String orderType, Money limitPrice, Money auxPrice,
                                   int quantity, String ocaGroupName, Boolean roundPrice, Boolean transmit) throws StrategyRuleException {
@@ -558,21 +523,6 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
      * <p>
      * This method creates an open position order for the Trade. The order is
      * persisted and transmitted via the broker interface to the market.
-     *
-     * @param contract
-     * @param action
-     * @param orderType
-     * @param limitPrice
-     * @param auxPrice
-     * @param quantity
-     * @param ocaGroupName
-     * @param triggerMethod
-     * @param overrideConstraints
-     * @param timeInForce
-     * @param roundPrice
-     * @param transmit
-     * @return
-     * @throws StrategyRuleException
      */
     public TradeOrder createOrder(Contract contract, String action, String orderType, Money limitPrice, Money auxPrice,
                                   Integer quantity, String ocaGroupName, Integer triggerMethod, Integer overrideConstraints,
@@ -587,28 +537,6 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
      * <p>
      * This method creates an open position order for the Trade. The order is
      * persisted and transmitted via the broker interface to the market.
-     *
-     * @param contract
-     * @param action
-     * @param orderType
-     * @param limitPrice
-     * @param auxPrice
-     * @param quantity
-     * @param ocaGroupName
-     * @param parentId
-     * @param triggerMethod
-     * @param overrideConstraints
-     * @param timeInForce
-     * @param roundPrice
-     * @param transmit
-     * @param trailStopPrice
-     * @param trailingPercent
-     * @param FAProfile
-     * @param FAGroup
-     * @param FAMethod
-     * @param FAPercent
-     * @return
-     * @throws StrategyRuleException
      */
     public TradeOrder createOrder(Contract contract, String action, String orderType, Money limitPrice, Money auxPrice,
                                   Integer quantity, String ocaGroupName, Integer parentId, Integer triggerMethod, Integer overrideConstraints,
@@ -622,8 +550,9 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
                     overrideConstraints, timeInForce, transmit, trailStopPrice, trailingPercent, FAProfile, FAGroup,
                     FAMethod, FAPercent);
 
-            if (roundPrice)
+            if (roundPrice) {
                 tradeOrder = this.roundTradeOrderPrice(tradeOrder);
+            }
             tradeOrder.validate();
             tradeOrder = getBrokerManager().onPlaceOrder(contract, tradeOrder);
             this.getTradestrategyOrders().addTradeOrder(tradeOrder);
@@ -641,17 +570,6 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
      * <p>
      * This method creates an open position order for the Trade. The order is
      * persisted and transmitted via the broker interface to the market.
-     *
-     * @param orderKey
-     * @param action
-     * @param orderType
-     * @param limitPrice
-     * @param auxPrice
-     * @param quantity
-     * @param roundPrice
-     * @param transmit
-     * @return
-     * @throws StrategyRuleException
      */
     public TradeOrder updateOrder(Integer orderKey, String action, String orderType, Money limitPrice, Money auxPrice,
                                   Integer quantity, Boolean roundPrice, Boolean transmit) throws StrategyRuleException {
@@ -712,17 +630,6 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
      * Method createRiskOpenPosition. This method creates an open position order
      * for the Trade. The order is persisted and transmitted via the broker
      * interface to the market.
-     *
-     * @param action
-     * @param entryPrice
-     * @param stopPrice
-     * @param transmit
-     * @param FAProfile
-     * @param FAGroup
-     * @param FAMethod
-     * @param FAPercent
-     * @return
-     * @throws StrategyRuleException
      */
     public TradeOrder createRiskOpenPosition(String action, Money entryPrice, Money stopPrice, boolean transmit,
                                              String FAProfile, String FAGroup, String FAMethod, Percent FAPercent) throws StrategyRuleException {
@@ -805,9 +712,6 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
      * Method cancelOrder. This method cancels the open order position for the
      * Trade. The order is persisted and transmitted via the broker interface to
      * the market.
-     *
-     * @param order
-     * @throws StrategyRuleException
      */
     public void cancelOrder(final TradeOrder order) throws StrategyRuleException {
         try {
@@ -827,9 +731,6 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
      * Method isPositionConvered. This method checks to see if the open order
      * position for the Trade has a order to cover the position i.e. a
      * target/stop that covers the total open quantity.
-     *
-     * @return
-     * @throws StrategyRuleException
      */
     public boolean isPositionCovered() throws StrategyRuleException {
 
@@ -847,9 +748,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
                         openQuantity = openQuantity + order.getQuantity();
                     }
                 }
-                if (openQuantity >= Math.abs(this.getOpenTradePosition().getOpenQuantity())) {
-                    return true;
-                }
+                return openQuantity >= Math.abs(this.getOpenTradePosition().getOpenQuantity());
             }
             return false;
 
@@ -873,13 +772,6 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
      * <p>
      * Note all orders are rounded up/down (around whole/half numbers.) based on
      * the EntryLimit table.
-     *
-     * @param stopPrice
-     * @param targetPrice
-     * @param quantity
-     * @param stopTransmit
-     * @return
-     * @throws StrategyRuleException
      */
     public TradeOrder createStopAndTargetOrder(final Money stopPrice, final Money targetPrice, final Integer quantity,
                                                final Boolean stopTransmit) throws StrategyRuleException {
@@ -896,7 +788,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
                 action = Action.SELL;
             }
 
-            String ocaID = new String(Integer.toString((new BigDecimal(Math.random() * 1000000)).intValue()));
+            String ocaID = Integer.toString((BigDecimal.valueOf(Math.random() * 1000000)).intValue());
 
             TradeOrder orderTarget = new TradeOrder(this.getTradestrategy(), action, OrderType.LMT, quantity, null,
                     targetPrice.getBigDecimalValue(), this.getOrderCreateDate());
@@ -946,16 +838,6 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
      * <p>
      * Note all orders are rounded up/down (around whole/half numbers.) based on
      * the EntryLimit table.
-     *
-     * @param openPosition
-     * @param stopRiskUnits
-     * @param stopAddAmount
-     * @param targetRiskUnits
-     * @param targetAddAmount
-     * @param quantity
-     * @param stopTransmit
-     * @return
-     * @throws StrategyRuleException
      */
     public TradeOrder createStopAndTargetOrder(final TradeOrder openPosition, final Integer stopRiskUnits,
                                                final Money stopAddAmount, final Integer targetRiskUnits, final Money targetAddAmount,
@@ -970,7 +852,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
              * price not the rounded quantity. But if the stop price is not set
              * use Risk Amount/Quantity.
              */
-            double riskAmount = 0;
+            double riskAmount;
             if (null == openPosition.getStopPrice()) {
                 riskAmount = Math.abs(this.getTradestrategy().getRiskAmount().doubleValue()
                         / openPosition.getFilledQuantity().doubleValue());
@@ -1001,7 +883,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
             Money targetPrice = addPennyAndRoundStop(target, this.getOpenTradePosition().getSide(), action,
                     targetAddAmount.doubleValue());
 
-            String ocaID = new String(Integer.toString((new BigDecimal(Math.random() * 1000000)).intValue()));
+            String ocaID = Integer.toString((BigDecimal.valueOf(Math.random() * 1000000)).intValue());
 
             TradeOrder orderTarget = new TradeOrder(this.getTradestrategy(), action, OrderType.LMT, quantity, null,
                     targetPrice.getBigDecimalValue(), this.getOrderCreateDate());
@@ -1044,11 +926,6 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
     /**
      * Method getStopPriceForPositionRisk. This method will calculate the Stop
      * price based on the number of risk units and the risk amount.
-     *
-     * @param openPosition
-     * @param numberRiskUnits
-     * @return
-     * @throws StrategyRuleException
      */
     public Money getStopPriceForPositionRisk(final TradeOrder openPosition, int numberRiskUnits)
             throws StrategyRuleException {
@@ -1061,8 +938,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
             }
 
             // Add a penny to the stop
-            Money stopPrice = new Money(openPosition.getAverageFilledPrice().doubleValue() + riskAmount);
-            return stopPrice;
+            return new Money(openPosition.getAverageFilledPrice().doubleValue() + riskAmount);
 
         } catch (Exception ex) {
             throw new StrategyRuleException(1, 370, "Error getting stop price for risk position: " + ex.getMessage());
@@ -1073,14 +949,10 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
      * Method cancelOrdersClosePosition. This method will close a position by
      * canceling all unfilled orders and creating a market order to close the
      * position.
-     *
-     * @param transmit
-     * @return
-     * @throws StrategyRuleException
      */
     public TradeOrder cancelOrdersClosePosition(boolean transmit) throws StrategyRuleException {
 
-        _log.debug("Strategy  closeOpenPosition symbol: " + symbol);
+        _log.debug("Strategy  closeOpenPosition symbol: {}", symbol);
         try {
             cancelAllOrders();
             if (this.isThereOpenPosition()) {
@@ -1095,10 +967,6 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
     /**
      * Method moveStopOCAPrice. This method will the stop order for a trade to
      * the new values..
-     *
-     * @param stopPrice
-     * @param transmit
-     * @throws StrategyRuleException
      */
     public void moveStopOCAPrice(Money stopPrice, Boolean transmit) throws StrategyRuleException {
 
@@ -1132,11 +1000,9 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
 
     /**
      * Method cancelAllOrders. This method will all orders for a trade position.
-     *
-     * @throws StrategyRuleException
      */
     public void cancelAllOrders() throws StrategyRuleException {
-        _log.debug("Strategy  cancelAllOrders symbol: " + symbol);
+        _log.debug("Strategy  cancelAllOrders symbol: {}", symbol);
         for (TradeOrder order : this.getTradestrategyOrders().getTradeOrders()) {
             cancelOrder(order);
         }
@@ -1145,20 +1011,13 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
     /**
      * Method addPennyAndRoundStop. This method takes a price and adds/subtracts
      * pennies to that prices and rounds the results based on whole/half number.
-     *
-     * @param price
-     * @param side
-     * @param action
-     * @param dollars
-     * @return
-     * @throws StrategyRuleException
      */
     public Money addPennyAndRoundStop(double price, String side, String action, double dollars)
             throws StrategyRuleException {
         if (price < 0) {
             throw new StrategyRuleException(1, 223, "Error rounding price cannot be less than zero price: " + price);
         }
-        double roundPrice = 0;
+        double roundPrice;
         if (Side.BOT.equals(side)) {
             roundPrice = roundPrice(price + dollars, action);
         } else {
@@ -1169,9 +1028,6 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
 
     /**
      * Method requestOrderExecutions.
-     *
-     * @param tradestrategy
-     * @throws StrategyRuleException
      */
     public void requestOrderExecutions(final Tradestrategy tradestrategy) throws StrategyRuleException {
 
@@ -1208,12 +1064,10 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
     /**
      * Method getCandle.
      *
-     * @param startPeriod
-     * @return
-     * @throws StrategyRuleException
+     * @param startPeriod ZonedDateTime
      */
     public CandleItem getCandle(ZonedDateTime startPeriod) throws StrategyRuleException {
-        CandleItem candle = null;
+        CandleItem candle;
         CandleSeries baseCandleSeries = getTradestrategy().getStrategyData().getBaseCandleSeries();
         CandlePeriod period = new CandlePeriod(startPeriod, baseCandleSeries.getBarSize());
         int index = baseCandleSeries.indexOf(period);
@@ -1230,9 +1084,6 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
 
     /**
      * Method updateTradestrategyStatus.
-     *
-     * @param status
-     * @throws StrategyRuleException
      */
     public void updateTradestrategyStatus(String status) throws StrategyRuleException {
         try {
@@ -1291,8 +1142,6 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
 
     /**
      * Method reFreshPositionOrders.
-     *
-     * @throws StrategyRuleException
      */
 
     public void reFreshPositionOrders() throws StrategyRuleException {
@@ -1309,7 +1158,6 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
      * is updated when connected to TWS every time the account values change.
      *
      * @return Account
-     * @throws StrategyRuleException
      */
     public Account getIndividualAccount() throws StrategyRuleException {
         try {
@@ -1343,10 +1191,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
      * @return boolean
      */
     public boolean isThereOpenPosition() {
-        if (null != getOpenTradePosition()) {
-            return true;
-        }
-        return false;
+        return null != getOpenTradePosition();
     }
 
     /**
@@ -1430,9 +1275,6 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
 
     /**
      * Method getTradeOrder.
-     *
-     * @param orderKey
-     * @return
      */
     public TradeOrder getTradeOrder(Integer orderKey) {
         for (TradeOrder order : this.getTradestrategyOrders().getTradeOrders()) {
@@ -1445,36 +1287,22 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
 
     /**
      * Method isDuringTradingday.
-     *
-     * @param dateTime
-     * @return
      */
     public boolean isDuringTradingday(ZonedDateTime dateTime) {
-        if (TradingCalendar.isMarketHours(getTradestrategy().getTradingday().getOpen(),
+        return TradingCalendar.isMarketHours(getTradestrategy().getTradingday().getOpen(),
                 getTradestrategy().getTradingday().getClose(), dateTime)
-                && TradingCalendar.sameDay(getTradestrategy().getTradingday().getOpen(), dateTime)) {
-            return true;
-        }
-        return false;
+                && TradingCalendar.sameDay(getTradestrategy().getTradingday().getOpen(), dateTime);
     }
 
     /**
      * Method isRiskViolated.
-     *
-     * @param currentPrice
-     * @param riskamount
-     * @param quantity
-     * @param averageFilledPrice
-     * @return
      */
     public boolean isRiskViolated(Double currentPrice, BigDecimal riskamount, Integer quantity,
                                   BigDecimal averageFilledPrice) {
 
         BigDecimal currentRiskAmount = new BigDecimal(
-                Math.abs(currentPrice.doubleValue() - averageFilledPrice.doubleValue()) * quantity);
-        if (CoreUtils.nullSafeComparator(currentRiskAmount, riskamount) == 1)
-            return true;
-        return false;
+                Math.abs(currentPrice - averageFilledPrice.doubleValue()) * quantity);
+        return CoreUtils.nullSafeComparator(currentRiskAmount, riskamount) == 1;
     }
 
     /**
@@ -1489,27 +1317,14 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
 
     /**
      * Method logCandle.
-     *
-     * @param context
-     * @param candle
      */
 
     public static void logCandle(AbstractStrategyRule context, Candle candle) {
-        _log.debug(context.getClass().getSimpleName() + " Symbol: " + candle.getContract().getSymbol()
-                + " startPeriod: " + candle.getStartPeriod() + " endPeriod: " + candle.getEndPeriod() + " Open: "
-                + new Money(candle.getOpen()) + " High: " + new Money(candle.getHigh()) + " Low: "
-                + new Money(candle.getLow()) + " Close: " + new Money(candle.getClose()) + " Volume: "
-                + new Money(candle.getVolume()) + " Vwap: " + new Money(candle.getVwap()) + " TradeCount: "
-                + new Money(candle.getTradeCount()) + " LastUpdate: " + candle.getLastUpdateDate());
+        _log.debug("{} Symbol: {} startPeriod: {} endPeriod: {} Open: {} High: {} Low: {} Close: {} Volume: {} Vwap: {} TradeCount: {} LastUpdate: {}", context.getClass().getSimpleName(), candle.getContract().getSymbol(), candle.getStartPeriod(), candle.getEndPeriod(), new Money(candle.getOpen()), new Money(candle.getHigh()), new Money(candle.getLow()), new Money(candle.getClose()), new Money(candle.getVolume()), new Money(candle.getVwap()), new Money(candle.getTradeCount()), candle.getLastUpdateDate());
     }
 
     /**
      * Method roundPrice.
-     *
-     * @param price
-     * @param action
-     * @return
-     * @throws StrategyRuleException
      */
     private double roundPrice(double price, String action) throws StrategyRuleException {
         try {
@@ -1547,7 +1362,6 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
      * otherwise we are testing use candle lastUpdateDate.
      *
      * @return LocalDatetime
-     * @throws StrategyRuleException
      */
     private ZonedDateTime getOrderCreateDate() {
         ZonedDateTime createDate = TradingCalendar.getDateTimeNowMarketTimeZone();
@@ -1560,10 +1374,6 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
 
     /**
      * Method roundTradeOrderPrice.
-     *
-     * @param tradeOrder
-     * @return
-     * @throws StrategyRuleException
      */
     private TradeOrder roundTradeOrderPrice(final TradeOrder tradeOrder) throws StrategyRuleException {
 

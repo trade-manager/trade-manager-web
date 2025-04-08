@@ -53,6 +53,7 @@ import org.trade.core.dao.Aspect;
 import org.trade.core.util.CoreUtils;
 import org.trade.core.util.TradingCalendar;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -76,6 +77,7 @@ public class Tradingday extends Aspect implements Serializable, Cloneable {
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = 3388042483785305102L;
 
     @NotNull
@@ -85,8 +87,8 @@ public class Tradingday extends Aspect implements Serializable, Cloneable {
     private String marketBias;
     private String marketGap;
     private String marketBar;
-    private List<Tradestrategy> tradestrategies = new ArrayList<Tradestrategy>(0);
-    private List<Candle> candles = new ArrayList<Candle>(0);
+    private List<Tradestrategy> tradestrategies = new ArrayList<>(0);
+    private List<Candle> candles = new ArrayList<>(0);
 
     public Tradingday() {
     }
@@ -134,15 +136,6 @@ public class Tradingday extends Aspect implements Serializable, Cloneable {
     @Column(name = "id", unique = true, nullable = false)
     public Integer getId() {
         return this.id;
-    }
-
-    /**
-     * Method setId.
-     *
-     * @param id Integer
-     */
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     /**
@@ -252,15 +245,6 @@ public class Tradingday extends Aspect implements Serializable, Cloneable {
     }
 
     /**
-     * Method setVersion.
-     *
-     * @param version Integer
-     */
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
-
-    /**
      * Method getTradestrategies.
      *
      * @return List<Tradestrategy>
@@ -333,28 +317,24 @@ public class Tradingday extends Aspect implements Serializable, Cloneable {
         this.candles.add(candle);
     }
 
-    public static final Comparator<Tradingday> DATE_ORDER_ASC = new Comparator<Tradingday>() {
-        public int compare(Tradingday o1, Tradingday o2) {
-            int returnVal = 0;
-            m_ascending = true;
-            returnVal = CoreUtils.nullSafeComparator(o1.getOpen(), o2.getOpen());
-            if (m_ascending.equals(Boolean.FALSE)) {
-                returnVal = returnVal * -1;
-            }
-            return returnVal;
+    public static final Comparator<Tradingday> DATE_ORDER_ASC = (o1, o2) -> {
+        int returnVal;
+        m_ascending = true;
+        returnVal = CoreUtils.nullSafeComparator(o1.getOpen(), o2.getOpen());
+        if (m_ascending.equals(Boolean.FALSE)) {
+            returnVal = returnVal * -1;
         }
+        return returnVal;
     };
 
-    public static final Comparator<Tradingday> DATE_ORDER_DESC = new Comparator<Tradingday>() {
-        public int compare(Tradingday o1, Tradingday o2) {
-            int returnVal = 0;
-            m_ascending = false;
-            returnVal = CoreUtils.nullSafeComparator(o1.getOpen(), o2.getOpen());
-            if (m_ascending.equals(Boolean.FALSE)) {
-                returnVal = returnVal * -1;
-            }
-            return returnVal;
+    public static final Comparator<Tradingday> DATE_ORDER_DESC = (o1, o2) -> {
+        int returnVal;
+        m_ascending = false;
+        returnVal = CoreUtils.nullSafeComparator(o1.getOpen(), o2.getOpen());
+        if (m_ascending.equals(Boolean.FALSE)) {
+            returnVal = returnVal * -1;
         }
+        return returnVal;
     };
 
     /**
@@ -409,12 +389,9 @@ public class Tradingday extends Aspect implements Serializable, Cloneable {
         if (super.equals(objectToCompare))
             return true;
 
-        if (objectToCompare instanceof Tradingday) {
-            Tradingday tradingday = (Tradingday) objectToCompare;
+        if (objectToCompare instanceof Tradingday tradingday) {
             if (tradingday.getOpen().compareTo(this.getOpen()) == 0) {
-                if (tradingday.getClose().compareTo(this.getClose()) == 0) {
-                    return true;
-                }
+                return tradingday.getClose().compareTo(this.getClose()) == 0;
             }
         }
         return false;
@@ -427,9 +404,8 @@ public class Tradingday extends Aspect implements Serializable, Cloneable {
      * @return Tradingday
      */
     public static Tradingday newInstance(ZonedDateTime date) {
-        Tradingday tradingday = new Tradingday(TradingCalendar.getTradingDayStart(date),
+        return new Tradingday(TradingCalendar.getTradingDayStart(date),
                 TradingCalendar.getTradingDayEnd(date));
-        return tradingday;
 
     }
 
@@ -486,14 +462,13 @@ public class Tradingday extends Aspect implements Serializable, Cloneable {
      * Method clone.
      *
      * @return Object
-     * @throws CloneNotSupportedException
      */
     public Object clone() throws CloneNotSupportedException {
 
         Tradingday tradingday = (Tradingday) super.clone();
-        List<Tradestrategy> tradestrategies = new ArrayList<Tradestrategy>(0);
+        List<Tradestrategy> tradestrategies = new ArrayList<>(0);
         tradingday.setTradestrategies(tradestrategies);
-        List<Candle> candles = new ArrayList<Candle>(0);
+        List<Candle> candles = new ArrayList<>(0);
         tradingday.setCandles(candles);
         return tradingday;
     }

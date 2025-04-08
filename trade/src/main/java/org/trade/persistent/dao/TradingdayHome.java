@@ -66,7 +66,6 @@ public class TradingdayHome {
      *
      * @param detachedInstance Tradingday as set of tradingdays with associated
      *                         tradestrategies.
-     * @throws Exception
      */
     public void persist(final Tradingday detachedInstance) throws Exception {
 
@@ -77,7 +76,7 @@ public class TradingdayHome {
              * Check the incoming tradingday to see if it exists if it does
              * merge with the persisted one if not persist.
              */
-            Tradingday tradingday = null;
+            Tradingday tradingday;
             if (null == detachedInstance.getId()) {
                 tradingday = this.findTradingdayByOpenCloseDate(detachedInstance.getOpen(),
                         detachedInstance.getClose());
@@ -218,7 +217,7 @@ public class TradingdayHome {
             Root<Tradingday> from = query.from(Tradingday.class);
             query.select(from);
             query.orderBy(builder.desc(from.get("open")));
-            List<Predicate> predicates = new ArrayList<Predicate>();
+            List<Predicate> predicates = new ArrayList<>();
 
             if (null != startDate) {
                 Predicate predicate = builder.greaterThanOrEqualTo(from.get("open").as(ZonedDateTime.class), startDate);
@@ -279,8 +278,8 @@ public class TradingdayHome {
                 }
             }
             entityManager.getTransaction().commit();
-            if (items.size() > 0) {
-                return items.get(0);
+            if (!items.isEmpty()) {
+                return items.getFirst();
             }
             return null;
 
@@ -300,25 +299,21 @@ public class TradingdayHome {
      */
     private Strategy findStrategyByName(String name) {
 
-        try {
-            EntityManager entityManager = EntityManagerHelper.getEntityManager();
-            CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-            CriteriaQuery<Strategy> query = builder.createQuery(Strategy.class);
-            Root<Strategy> from = query.from(Strategy.class);
-            query.select(from);
-            query.where(builder.equal(from.get("name"), name));
-            List<Strategy> items = entityManager.createQuery(query).getResultList();
-            if (items.size() > 0) {
-                for (Strategy itme : items) {
-                    itme.getIndicatorSeries().size();
-                }
-                return items.get(0);
+        EntityManager entityManager = EntityManagerHelper.getEntityManager();
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Strategy> query = builder.createQuery(Strategy.class);
+        Root<Strategy> from = query.from(Strategy.class);
+        query.select(from);
+        query.where(builder.equal(from.get("name"), name));
+        List<Strategy> items = entityManager.createQuery(query).getResultList();
+        if (!items.isEmpty()) {
+            for (Strategy itme : items) {
+                itme.getIndicatorSeries().size();
             }
-            return null;
-
-        } catch (Exception re) {
-            throw re;
+            return items.getFirst();
         }
+        return null;
+
     }
 
     /**
@@ -330,27 +325,23 @@ public class TradingdayHome {
      */
     private Tradingday findTradingdayByOpenCloseDate(ZonedDateTime openDate, ZonedDateTime closeDate) {
 
-        try {
-            EntityManager entityManager = EntityManagerHelper.getEntityManager();
-            CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-            CriteriaQuery<Tradingday> query = builder.createQuery(Tradingday.class);
-            Root<Tradingday> from = query.from(Tradingday.class);
-            query.select(from);
+        EntityManager entityManager = EntityManagerHelper.getEntityManager();
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Tradingday> query = builder.createQuery(Tradingday.class);
+        Root<Tradingday> from = query.from(Tradingday.class);
+        query.select(from);
 
-            if (null != openDate)
-                query.where(builder.equal(from.get("open"), openDate));
-            if (null != closeDate)
-                query.where(builder.equal(from.get("close"), closeDate));
-            List<Tradingday> items = entityManager.createQuery(query).getResultList();
+        if (null != openDate)
+            query.where(builder.equal(from.get("open"), openDate));
+        if (null != closeDate)
+            query.where(builder.equal(from.get("close"), closeDate));
+        List<Tradingday> items = entityManager.createQuery(query).getResultList();
 
-            if (items.size() > 0) {
-                return items.get(0);
-            }
-            return null;
-
-        } catch (Exception re) {
-            throw re;
+        if (!items.isEmpty()) {
+            return items.getFirst();
         }
+        return null;
+
     }
 
     /**
@@ -361,27 +352,22 @@ public class TradingdayHome {
      */
     private List<Tradestrategy> findTradestrategyByIdTradingday(Integer idTradingday) {
 
-        try {
-            EntityManager entityManager = EntityManagerHelper.getEntityManager();
-            CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-            CriteriaQuery<Tradestrategy> query = builder.createQuery(Tradestrategy.class);
-            Root<Tradestrategy> from = query.from(Tradestrategy.class);
-            query.select(from);
-            List<Predicate> predicates = new ArrayList<Predicate>();
+        EntityManager entityManager = EntityManagerHelper.getEntityManager();
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Tradestrategy> query = builder.createQuery(Tradestrategy.class);
+        Root<Tradestrategy> from = query.from(Tradestrategy.class);
+        query.select(from);
+        List<Predicate> predicates = new ArrayList<>();
 
-            if (null != idTradingday) {
-                Join<Tradestrategy, Tradingday> tradingday = from.join("tradingday");
-                Predicate predicate = builder.equal(tradingday.get("id"), idTradingday);
-                predicates.add(predicate);
-            }
-            query.where(predicates.toArray(new Predicate[]{}));
-            TypedQuery<Tradestrategy> typedQuery = entityManager.createQuery(query);
-            List<Tradestrategy> items = typedQuery.getResultList();
-            return items;
-
-        } catch (Exception re) {
-            throw re;
+        if (null != idTradingday) {
+            Join<Tradestrategy, Tradingday> tradingday = from.join("tradingday");
+            Predicate predicate = builder.equal(tradingday.get("id"), idTradingday);
+            predicates.add(predicate);
         }
+        query.where(predicates.toArray(new Predicate[]{}));
+        TypedQuery<Tradestrategy> typedQuery = entityManager.createQuery(query);
+        return typedQuery.getResultList();
+
     }
 
     /**
@@ -397,52 +383,48 @@ public class TradingdayHome {
     private Contract findContractByUniqueKey(String SECType, String symbol, String exchange, String currency,
                                              ZonedDateTime expiryDate) {
 
-        try {
-            EntityManager entityManager = EntityManagerHelper.getEntityManager();
-            CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-            CriteriaQuery<Contract> query = builder.createQuery(Contract.class);
-            Root<Contract> from = query.from(Contract.class);
-            query.select(from);
-            List<Predicate> predicates = new ArrayList<Predicate>();
+        EntityManager entityManager = EntityManagerHelper.getEntityManager();
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Contract> query = builder.createQuery(Contract.class);
+        Root<Contract> from = query.from(Contract.class);
+        query.select(from);
+        List<Predicate> predicates = new ArrayList<>();
 
-            if (null != SECType) {
-                Predicate predicate = builder.equal(from.get("secType"), SECType);
-                predicates.add(predicate);
-            }
-            if (null != symbol) {
-                Predicate predicate = builder.equal(from.get("symbol"), symbol);
-                predicates.add(predicate);
-            }
-            if (null != exchange) {
-                Predicate predicate = builder.equal(from.get("exchange"), exchange);
-                predicates.add(predicate);
-            }
-            if (null != currency) {
-                Predicate predicate = builder.equal(from.get("currency"), currency);
-                predicates.add(predicate);
-            }
-            if (null != expiryDate) {
-
-                Integer yearExpiry = expiryDate.getYear();
-                Expression<Integer> year = builder.function("year", Integer.class, from.get("expiry"));
-                Predicate predicateYear = builder.equal(year, yearExpiry);
-                predicates.add(predicateYear);
-
-                Integer monthExpiry = expiryDate.getMonthValue();
-                Expression<Integer> month = builder.function("month", Integer.class, from.get("expiry"));
-                Predicate predicateMonth = builder.equal(month, 1 + monthExpiry.intValue());
-                predicates.add(predicateMonth);
-            }
-            query.where(predicates.toArray(new Predicate[]{}));
-            TypedQuery<Contract> typedQuery = entityManager.createQuery(query);
-            List<Contract> items = typedQuery.getResultList();
-            if (items.size() > 0) {
-                return items.get(0);
-            }
-            return null;
-
-        } catch (Exception re) {
-            throw re;
+        if (null != SECType) {
+            Predicate predicate = builder.equal(from.get("secType"), SECType);
+            predicates.add(predicate);
         }
+        if (null != symbol) {
+            Predicate predicate = builder.equal(from.get("symbol"), symbol);
+            predicates.add(predicate);
+        }
+        if (null != exchange) {
+            Predicate predicate = builder.equal(from.get("exchange"), exchange);
+            predicates.add(predicate);
+        }
+        if (null != currency) {
+            Predicate predicate = builder.equal(from.get("currency"), currency);
+            predicates.add(predicate);
+        }
+        if (null != expiryDate) {
+
+            Integer yearExpiry = expiryDate.getYear();
+            Expression<Integer> year = builder.function("year", Integer.class, from.get("expiry"));
+            Predicate predicateYear = builder.equal(year, yearExpiry);
+            predicates.add(predicateYear);
+
+            int monthExpiry = expiryDate.getMonthValue();
+            Expression<Integer> month = builder.function("month", Integer.class, from.get("expiry"));
+            Predicate predicateMonth = builder.equal(month, 1 + monthExpiry);
+            predicates.add(predicateMonth);
+        }
+        query.where(predicates.toArray(new Predicate[]{}));
+        TypedQuery<Contract> typedQuery = entityManager.createQuery(query);
+        List<Contract> items = typedQuery.getResultList();
+        if (!items.isEmpty()) {
+            return items.getFirst();
+        }
+        return null;
+
     }
 }

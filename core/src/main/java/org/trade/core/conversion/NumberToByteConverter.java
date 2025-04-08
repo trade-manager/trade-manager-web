@@ -80,6 +80,6 @@ public class NumberToByteConverter extends NumberToNumberConverter {
      * @return Byte the Number converted to a Byte
      */
     protected Number getConvertedNumber(Number aNumber) {
-        return new Byte(aNumber.byteValue());
+        return aNumber.byteValue();
     }
 }

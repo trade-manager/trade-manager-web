@@ -75,8 +75,6 @@ import java.awt.dnd.DropTargetDragEvent;
 import java.awt.dnd.DropTargetDropEvent;
 import java.awt.dnd.DropTargetEvent;
 import java.awt.dnd.DropTargetListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -84,6 +82,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Hashtable;
 
@@ -93,6 +92,7 @@ import java.util.Hashtable;
 public class DOMTree extends JTree implements DragSourceListener, DragGestureListener, Autoscroll, TreeModelListener,
         TreeSelectionListener, MouseListener {
 
+    @Serial
     private static final long serialVersionUID = -8742998183708844989L;
 
     private final static Logger _log = LoggerFactory.getLogger(DOMTree.class);
@@ -101,17 +101,11 @@ public class DOMTree extends JTree implements DragSourceListener, DragGestureLis
      */
     protected TreePath m_selectedTreePath = null;
     protected DefaultMutableTreeNode m_selectedNode = null;
-    /**
-     * Variables needed for DnD
-     */
-    private DragSource m_dragSource = null;
     private static final int AUTOSCROLL_MARGIN = 12;
     private BufferedImage m_imgGhost; // The 'drag image'
-    private Point m_ptOffset = new Point(); // Where, in the drag image, the
-    private DOMTreeModel m_model = null;
-    private JPopupMenu popup = null;
-    private boolean m_dirty = false;
-    private BasePanel m_basePanel = null;
+    private final Point m_ptOffset = new Point(); // Where, in the drag image, the
+    private final DOMTreeModel m_model;
+    private final BasePanel m_basePanel;
 
     /**
      * Constructor for DOMTree.
@@ -145,7 +139,10 @@ public class DOMTree extends JTree implements DragSourceListener, DragGestureLis
         setCellEditor(new XMLTreeCellEditor(this, xMLTreeCellRenderer));
         this.setEditable(true);
         addTreeSelectionListener(this);
-        m_dragSource = DragSource.getDefaultDragSource();
+        /*
+         * Variables needed for DnD
+         */
+        DragSource m_dragSource = DragSource.getDefaultDragSource();
 
         DragGestureRecognizer dgr = m_dragSource.createDefaultDragGestureRecognizer(this, // DragSource
                 DnDConstants.ACTION_COPY_OR_MOVE, // specifies valid
@@ -158,7 +155,7 @@ public class DOMTree extends JTree implements DragSourceListener, DragGestureLis
          * you implement a JPopupMenu for the JTree
          */
 
-        dgr.setSourceActions(dgr.getSourceActions() & ~InputEvent.BUTTON3_MASK);
+        dgr.setSourceActions(dgr.getSourceActions() & ~InputEvent.BUTTON3_DOWN_MASK);
 
         /*
          * First argument: Component to associate the target with Second
@@ -215,7 +212,7 @@ public class DOMTree extends JTree implements DragSourceListener, DragGestureLis
      * @return boolean
      */
     public boolean isDirty() {
-        return m_dirty;
+        return false;
     }
 
     // Ok, weve been told to scroll because the mouse cursor is in our
@@ -244,7 +241,7 @@ public class DOMTree extends JTree implements DragSourceListener, DragGestureLis
         // bottom, just return the first or last row respectively.
         nRow = ((pt.y + raOuter.y) <= AUTOSCROLL_MARGIN) // Is row at top of
                 // screen?
-                ? (nRow <= 0 ? 0 : nRow - 1) // Yes, scroll up one row
+                ? (nRow == 0 ? 0 : nRow - 1) // Yes, scroll up one row
                 : (nRow < (getRowCount() - 1) ? nRow + 1 : nRow); // No, scroll
         // down one row
 
@@ -418,7 +415,7 @@ public class DOMTree extends JTree implements DragSourceListener, DragGestureLis
      */
     protected void createPopup(Point point) {
 
-        popup = new JPopupMenu();
+        JPopupMenu popup = new JPopupMenu();
 
         BaseMenuItem copy = new BaseMenuItem(m_basePanel, BaseUIPropertyCodes.COPY);
 
@@ -686,11 +683,12 @@ public class DOMTree extends JTree implements DragSourceListener, DragGestureLis
      */
     static class DOMTreeModel extends DefaultTreeModel implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = 558225099585471370L;
 
         private Document document;
 
-        private Hashtable<MutableTreeNode, Node> nodeMap = new Hashtable<MutableTreeNode, Node>();
+        private final Hashtable<MutableTreeNode, Node> nodeMap = new Hashtable<>();
 
         public DOMTreeModel() {
             this(null);
@@ -747,7 +745,7 @@ public class DOMTree extends JTree implements DragSourceListener, DragGestureLis
 
             // iterate over children of this node
             NodeList nodes = document.getChildNodes();
-            int len = (nodes != null) ? nodes.getLength() : 0;
+            int len = nodes.getLength();
             MutableTreeNode root = (MutableTreeNode) getRoot();
 
             for (int i = 0; i < len; i++) {
@@ -807,7 +805,7 @@ public class DOMTree extends JTree implements DragSourceListener, DragGestureLis
          */
         private MutableTreeNode insertElementNode(Node what, MutableTreeNode where) {
             // build up name
-            StringBuffer name = new StringBuffer();
+            StringBuilder name = new StringBuilder();
 
             name.append('<');
             name.append(what.getNodeName());
@@ -834,7 +832,7 @@ public class DOMTree extends JTree implements DragSourceListener, DragGestureLis
 
             // gather up attributes and children nodes
             NodeList children = what.getChildNodes();
-            int len = (children != null) ? children.getLength() : 0;
+            int len = children.getLength();
 
             for (int i = 0; i < len; i++) {
                 Node node = children.item(i);
@@ -867,7 +865,7 @@ public class DOMTree extends JTree implements DragSourceListener, DragGestureLis
         private MutableTreeNode insertTextNode(Node what, MutableTreeNode where) {
             String value = what.getNodeValue().trim();
 
-            if (value.length() > 0) {
+            if (!value.isEmpty()) {
                 MutableTreeNode treeNode = insertNode(value, where);
 
                 nodeMap.put(treeNode, what);
@@ -885,13 +883,13 @@ public class DOMTree extends JTree implements DragSourceListener, DragGestureLis
          * @return MutableTreeNode
          */
         private MutableTreeNode insertCDataSectionNode(Node what, MutableTreeNode where) {
-            StringBuffer CSectionBfr = new StringBuffer();
+            StringBuilder CSectionBfr = new StringBuilder();
 
             // --- optional --- CSectionBfr.append( "<![CDATA[" );
             CSectionBfr.append(what.getNodeValue());
 
             // --- optional --- CSectionBfr.append( "]]>" );
-            if (CSectionBfr.length() > 0) {
+            if (!CSectionBfr.isEmpty()) {
                 MutableTreeNode treeNode = insertNode(CSectionBfr.toString(), where);
                 nodeMap.put(treeNode, what);
                 return treeNode;
@@ -906,16 +904,16 @@ public class DOMTree extends JTree implements DragSourceListener, DragGestureLis
     class CDropTargetListener implements DropTargetListener {
         // Fields...
         private TreePath _pathLast = null;
-        private Rectangle2D _raCueLine = new Rectangle2D.Float();
+        private final Rectangle2D _raCueLine = new Rectangle2D.Float();
         private Rectangle2D _raGhost = new Rectangle2D.Float();
-        private Color _colorCueLine;
+        private final Color _colorCueLine;
         private Point _ptLast = new Point();
-        private Timer _timerHover;
+        private final Timer _timerHover;
         private int _nLeftRight = 0; // Cumulative left/right mouse movement
 
-        private BufferedImage _imgRight = new CArrowImage(15, 15, CArrowImage.ARROW_RIGHT);
+        private final BufferedImage _imgRight = new CArrowImage(15, 15, CArrowImage.ARROW_RIGHT);
 
-        private BufferedImage _imgLeft = new CArrowImage(15, 15, CArrowImage.ARROW_LEFT);
+        private final BufferedImage _imgLeft = new CArrowImage(15, 15, CArrowImage.ARROW_LEFT);
 
         public int _nShift = 0;
 
@@ -925,20 +923,18 @@ public class DOMTree extends JTree implements DragSourceListener, DragGestureLis
             // Set up a hover timer, so that a node will be automatically
             // expanded or collapsed
             // if the user lingers on it for more than a short time
-            _timerHover = new Timer(1000, new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    _nLeftRight = 0; // Reset left/right movement trend
+            _timerHover = new Timer(1000, _ -> {
+                _nLeftRight = 0; // Reset left/right movement trend
 
-                    if (isRootPath(_pathLast)) {
-                        return; // Do nothing if we are hovering over the root
-                        // node
-                    }
+                if (isRootPath(_pathLast)) {
+                    return; // Do nothing if we are hovering over the root
+                    // node
+                }
 
-                    if (isExpanded(_pathLast)) {
-                        collapsePath(_pathLast);
-                    } else {
-                        expandPath(_pathLast);
-                    }
+                if (isExpanded(_pathLast)) {
+                    collapsePath(_pathLast);
+                } else {
+                    expandPath(_pathLast);
                 }
             });
             _timerHover.setRepeats(false); // Set timer to one-shot mode
@@ -1039,7 +1035,7 @@ public class DOMTree extends JTree implements DragSourceListener, DragGestureLis
                 g2.drawImage(_imgRight, AffineTransform.getTranslateInstance(pt.x - m_ptOffset.x, pt.y - m_ptOffset.y),
                         null);
 
-                _nShift = +1;
+                _nShift = 1;
             } else if (_nLeftRight < -20) {
                 g2.drawImage(_imgLeft, AffineTransform.getTranslateInstance(pt.x - m_ptOffset.x, pt.y - m_ptOffset.y),
                         null);
@@ -1098,7 +1094,7 @@ public class DOMTree extends JTree implements DragSourceListener, DragGestureLis
                 // cast into appropriate data type
                 StringData childInfo = (StringData) tr.getTransferData(DataFlavor.stringFlavor);
 
-                _log.debug("String node value " + childInfo);
+                _log.debug("String node value {}", childInfo);
                 // get new parent node
                 Point loc = e.getLocation();
                 TreePath destinationPath = getPathForLocation(loc.x, loc.y);
@@ -1106,12 +1102,10 @@ public class DOMTree extends JTree implements DragSourceListener, DragGestureLis
 
                 if (msg != null) {
                     e.rejectDrop();
-                    SwingUtilities.invokeLater(new Runnable() {
-                        public void run() {
-                            // JOptionPane.showMessageDialog(this.Parent, msg,
-                            // "Error Dialog", JOptionPane.ERROR_MESSAGE);
-                            _log.error(msg);
-                        }
+                    SwingUtilities.invokeLater(() -> {
+                        // JOptionPane.showMessageDialog(this.Parent, msg,
+                        // "Error Dialog", JOptionPane.ERROR_MESSAGE);
+                        _log.error(msg);
                     });
 
                     return;
@@ -1156,9 +1150,7 @@ public class DOMTree extends JTree implements DragSourceListener, DragGestureLis
                 TreePath parentPath = new TreePath(newParent.getPath());
 
                 expandPath(parentPath);
-            } catch (IOException io) {
-                e.rejectDrop();
-            } catch (UnsupportedFlavorException ufe) {
+            } catch (IOException | UnsupportedFlavorException io) {
                 e.rejectDrop();
             }
         } // end of method
@@ -1246,7 +1238,7 @@ public class DOMTree extends JTree implements DragSourceListener, DragGestureLis
     /**
      *
      */
-    class XMLTreeCellEditor extends DefaultTreeCellEditor {
+    static class XMLTreeCellEditor extends DefaultTreeCellEditor {
         Image openFolder = DefaultImages.createOpenFolderImage();
         Image closedFolder = DefaultImages.createClosedFolderImage();
         Image leafImage = DefaultImages.createLeafImage();
@@ -1279,7 +1271,7 @@ public class DOMTree extends JTree implements DragSourceListener, DragGestureLis
             Node node = ((DOMTree) tree).getNode(value);
             Component comp = super.getTreeCellEditorComponent(tree, value, selected, expanded, leaf, row);
 
-            _log.debug("something to edit :" + node);
+            _log.debug("something to edit :{}", node);
 
             return comp;
         }
@@ -1293,8 +1285,9 @@ public class DOMTree extends JTree implements DragSourceListener, DragGestureLis
     /**
      *
      */
-    class XMLTreeCellRenderer extends DefaultTreeCellRenderer {
+    static class XMLTreeCellRenderer extends DefaultTreeCellRenderer {
 
+        @Serial
         private static final long serialVersionUID = 7664391812385841364L;
         Image openFolder = DefaultImages.createOpenFolderImage();
         Image closedFolder = DefaultImages.createClosedFolderImage();
@@ -1324,7 +1317,7 @@ public class DOMTree extends JTree implements DragSourceListener, DragGestureLis
             }
 
             if (node != null) {
-                _log.debug("something to render :" + node + " class: " + node.getClass().getName());
+                _log.debug("something to render :{} class: {}", node, node.getClass().getName());
 
                 if (!(node instanceof Element) /* leaf */) {
                     setIcon(new ImageIcon(leafImage));
@@ -1335,8 +1328,7 @@ public class DOMTree extends JTree implements DragSourceListener, DragGestureLis
                 }
             }
 
-            if ((node != null) && (node instanceof Element)) {
-                Element txNode = (Element) node;
+            if ((node instanceof Element txNode)) {
                 Attr txAtt = txNode.getAttributeNode("gender");
 
                 if (txAtt != null) {
