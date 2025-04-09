@@ -42,6 +42,7 @@ import org.trade.strategy.data.CandleSeries;
 import org.trade.strategy.data.StrategyData;
 import org.trade.strategy.data.candle.CandleItem;
 
+import java.io.Serial;
 import java.time.ZonedDateTime;
 
 /**
@@ -54,6 +55,7 @@ public class PosMgrAll5MinBarStrategy extends AbstractStrategyRule {
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = -2281013751087462982L;
     private final static Logger _log = LoggerFactory.getLogger(PosMgrAll5MinBarStrategy.class);
 
@@ -88,7 +90,6 @@ public class PosMgrAll5MinBarStrategy extends AbstractStrategyRule {
      *
      * @param candleSeries CandleSeries
      * @param newBar       boolean
-     * @see org.trade.strategy.StrategyRule#runStrategy(CandleSeries, boolean)
      */
     public void runStrategy(CandleSeries candleSeries, boolean newBar) {
 
@@ -102,7 +103,7 @@ public class PosMgrAll5MinBarStrategy extends AbstractStrategyRule {
             // + startPeriod);
 
             if (!this.isThereOpenPosition()) {
-                _log.info("No open position so Cancel Strategy Mgr Symbol: " + getSymbol() + " Time:" + startPeriod);
+                _log.info("No open position so Cancel Strategy Mgr Symbol: {} Time:{}", getSymbol(), startPeriod);
                 this.cancel();
                 return;
             }
@@ -113,8 +114,7 @@ public class PosMgrAll5MinBarStrategy extends AbstractStrategyRule {
             } else if (startPeriod.equals(this.getTradestrategy().getTradingday().getOpen().plusMinutes(60))) {
 
             } else if (startPeriod.isAfter(this.getTradestrategy().getTradingday().getOpen().plusMinutes(60))) {
-                _log.info("Rule after 10:30:00 bar, close the " + getTradestrategy().getStrategy().getClassName()
-                        + " Symbol: " + getSymbol());
+                _log.info("Rule after 10:30:00 bar, close the {} Symbol: {}", getTradestrategy().getStrategy().getClassName(), getSymbol());
                 // Kill this process we are done!
                 this.cancel();
             }
@@ -126,11 +126,11 @@ public class PosMgrAll5MinBarStrategy extends AbstractStrategyRule {
             if (!currentCandleItem.getLastUpdateDate()
                     .isBefore(this.getTradestrategy().getTradingday().getClose().minusMinutes(2))) {
                 cancelOrdersClosePosition(true);
-                _log.info("Rule 15:58:00 close all open positions: " + getSymbol() + " Time: " + startPeriod);
+                _log.info("Rule 15:58:00 close all open positions: {} Time: {}", getSymbol(), startPeriod);
                 this.cancel();
             }
         } catch (StrategyRuleException ex) {
-            _log.error("Error  runRule exception: " + ex.getMessage(), ex);
+            _log.error("Error  runRule exception: {}", ex.getMessage(), ex);
             error(1, 10, "Error  runRule exception: " + ex.getMessage());
         }
     }

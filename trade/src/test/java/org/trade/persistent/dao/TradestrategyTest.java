@@ -44,27 +44,13 @@ import org.junit.Test;
 import org.junit.rules.TestName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.trade.core.dao.Aspect;
 import org.trade.core.dao.AspectHome;
-import org.trade.core.dao.Aspects;
 import org.trade.core.util.TradingCalendar;
-import org.trade.dictionary.valuetype.AccountType;
-import org.trade.dictionary.valuetype.BarSize;
-import org.trade.dictionary.valuetype.ChartDays;
-import org.trade.dictionary.valuetype.Currency;
-import org.trade.dictionary.valuetype.DAOPortfolio;
-import org.trade.dictionary.valuetype.DAOStrategy;
-import org.trade.dictionary.valuetype.Exchange;
-import org.trade.dictionary.valuetype.SECType;
 import org.trade.dictionary.valuetype.TradestrategyStatus;
-import org.trade.strategy.data.StrategyData;
 import org.trade.ui.TradeAppLoadConfig;
 
-import java.math.BigDecimal;
 import java.time.ZonedDateTime;
-import java.util.Hashtable;
 import java.util.List;
-import java.util.Objects;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -104,7 +90,7 @@ public class TradestrategyTest {
      */
     @After
     public void tearDown() throws Exception {
-        TradestrategyTest.clearDBData();
+        TradestrategyBase.clearDBData();
     }
 
     /**
@@ -117,7 +103,7 @@ public class TradestrategyTest {
     @Test
     public void testFindVersionById() {
         try {
-            Tradestrategy tradestrategy = TradestrategyTest.getTestTradestrategy(symbol);
+            Tradestrategy tradestrategy = TradestrategyBase.getTestTradestrategy(symbol);
             assertNotNull("1", tradestrategy);
 
             Integer version = tradestrategyHome.findVersionById(tradestrategy.getId());
@@ -133,7 +119,7 @@ public class TradestrategyTest {
     @Test
     public void testFindPositionOrdersById() {
         try {
-            Tradestrategy tradestrategy = TradestrategyTest.getTestTradestrategy(symbol);
+            Tradestrategy tradestrategy = TradestrategyBase.getTestTradestrategy(symbol);
             assertNotNull("1", tradestrategy);
             _log.info("testTradingdaysSave IdTradeStrategy:{}", tradestrategy.getId());
 
@@ -159,7 +145,7 @@ public class TradestrategyTest {
 
         try {
 
-            Tradestrategy tradestrategy = TradestrategyTest.getTestTradestrategy(symbol);
+            Tradestrategy tradestrategy = TradestrategyBase.getTestTradestrategy(symbol);
             assertNotNull("1", tradestrategy);
             _log.info("testTradingdaysSave IdTradeStrategy:{}", tradestrategy.getId());
             tradestrategy = tradestrategyHome.findById(tradestrategy.getId());
@@ -261,137 +247,10 @@ public class TradestrategyTest {
         }
     }
 
-    /**
-     * Method getTestTradestrategy.
-     *
-     * @return Tradestrategy
-     */
-    public static Tradestrategy getTestTradestrategy(String symbol) throws Exception {
-        ContractHome contractHome = new ContractHome();
-        PortfolioHome portfolioHome = new PortfolioHome();
-        TradestrategyHome tradestrategyHome = new TradestrategyHome();
-        AspectHome aspectHome = new AspectHome();
-
-        Tradestrategy tradestrategy;
-        Strategy strategy = (Strategy) DAOStrategy.newInstance().getObject();
-        Portfolio portfolio = (Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
-        portfolio = portfolioHome.findByName(portfolio.getName());
-        if (portfolio.getPortfolioAccounts().isEmpty()) {
-            Account account = new Account("Test", "T123456", Currency.USD, AccountType.INDIVIDUAL);
-            account.setAvailableFunds(new BigDecimal(25000));
-            account.setBuyingPower(new BigDecimal(100000));
-            account.setCashBalance(new BigDecimal(25000));
-            PortfolioAccount portfolioAccount = new PortfolioAccount(portfolio, account);
-            portfolio.getPortfolioAccounts().add(portfolioAccount);
-            portfolio = aspectHome.persist(portfolio);
-        }
-        ZonedDateTime open = TradingCalendar
-                .getTradingDayStart(TradingCalendar.getPrevTradingDay(TradingCalendar.getDateTimeNowMarketTimeZone()));
-
-        Contract contract = contractHome.findByUniqueKey(SECType.STOCK, symbol, Exchange.SMART, Currency.USD, null);
-        if (null == contract) {
-            contract = new Contract(SECType.STOCK, symbol, Exchange.SMART, Currency.USD, null, null);
-            contract = aspectHome.persist(contract);
-
-        } else {
-            tradestrategy = tradestrategyHome.findTradestrategyByUniqueKeys(open, strategy.getName(),
-                    contract.getId(), portfolio.getName());
-            if (null != tradestrategy) {
-                Tradestrategy transientInstance = tradestrategyHome.findById(tradestrategy.getId());
-                transientInstance.setStatus(null);
-                aspectHome.persist(transientInstance);
-
-                Hashtable<Integer, TradePosition> tradePositions = new Hashtable<>();
-                for (TradeOrder tradeOrder : transientInstance.getTradeOrders()) {
-                    if (tradeOrder.hasTradePosition())
-                        tradePositions.put(tradeOrder.getTradePosition().getId(),
-                                tradeOrder.getTradePosition());
-
-                    if (null != tradeOrder.getId()) {
-                        aspectHome.remove(tradeOrder);
-                    }
-                }
-
-                for (TradePosition tradePosition : tradePositions.values()) {
-                    tradePosition = (TradePosition) aspectHome.findById(tradePosition);
-                    /*
-                     * Remove the open trade position from contract if this is a
-                     * tradePosition to be deleted.
-                     */
-                    if (tradePosition.equals(transientInstance.getContract().getTradePosition())) {
-                        transientInstance.getContract().setTradePosition(null);
-                        aspectHome.persist(transientInstance.getContract());
-                    }
-                    aspectHome.remove(tradePosition);
-                }
-
-                transientInstance.getTradeOrders().clear();
-                return transientInstance;
-            }
-        }
-        TradingdayHome tradingdayHome = new TradingdayHome();
-        Tradingday tradingday = Tradingday.newInstance(open);
-        Tradingday instanceTradingDay = tradingdayHome.findByOpenCloseDate(tradingday.getOpen(), tradingday.getClose());
-        if (null != instanceTradingDay) {
-            tradingday.getTradestrategies().clear();
-            tradingday = instanceTradingDay;
-        }
-        tradestrategy = new Tradestrategy(contract, tradingday, strategy, portfolio, new BigDecimal(100), "BUY", "0",
-                true, ChartDays.TWO_DAYS, BarSize.FIVE_MIN);
-        tradingday.addTradestrategy(tradestrategy);
-        tradingdayHome.persist(tradingday);
-        Tradestrategy instance = tradestrategyHome.findById(tradestrategy.getId());
-        instance.setStrategyData(StrategyData.create(instance));
-        return instance;
-    }
-
-    /**
-     * Method clearDBData.
-     */
-    public static void clearDBData() throws Exception {
-
-        AspectHome aspectHome = new AspectHome();
-        Aspects contracts = aspectHome.findByClassName(Contract.class.getName());
-        for (Aspect aspect : contracts.getAspect()) {
-            ((Contract) aspect).setTradePosition(null);
-            aspectHome.persist(aspect);
-        }
-
-        Aspects tradeOrders = aspectHome.findByClassName(TradeOrder.class.getName());
-        for (Aspect aspect : tradeOrders.getAspect()) {
-            aspectHome.remove(aspect);
-        }
-
-        Aspects tradePositions = aspectHome.findByClassName(TradePosition.class.getName());
-        for (Aspect aspect : tradePositions.getAspect()) {
-            aspectHome.remove(aspect);
-        }
-        Aspects portfolioAccounts = aspectHome.findByClassName(PortfolioAccount.class.getName());
-        for (Aspect aspect : portfolioAccounts.getAspect()) {
-            aspectHome.remove(aspect);
-        }
-        Aspects accounts = aspectHome.findByClassName(Account.class.getName());
-        for (Aspect aspect : accounts.getAspect()) {
-            aspectHome.remove(aspect);
-        }
-        Aspects tradestrategies = aspectHome.findByClassName(Tradestrategy.class.getName());
-        for (Aspect aspect : tradestrategies.getAspect()) {
-            aspectHome.remove(aspect);
-        }
-        contracts = aspectHome.findByClassName(Contract.class.getName());
-        for (Aspect aspect : contracts.getAspect()) {
-            aspectHome.remove(aspect);
-        }
-        Aspects tradingdays = aspectHome.findByClassName(Tradingday.class.getName());
-        for (Aspect aspect : tradingdays.getAspect()) {
-            aspectHome.remove(aspect);
-        }
-    }
-
     @Test
     public void testFindTradestrategyDistinctByDateRange() {
         try {
-            Tradestrategy tradestrategy = TradestrategyTest.getTestTradestrategy(symbol);
+            Tradestrategy tradestrategy = TradestrategyBase.getTestTradestrategy(symbol);
             assertNotNull("1", tradestrategy);
             _log.info("testTradingdaysSave IdTradeStrategy:{}", tradestrategy.getId());
             List<Tradestrategy> results = tradestrategyHome.findTradestrategyDistinctByDateRange(
@@ -410,7 +269,7 @@ public class TradestrategyTest {
     @Test
     public void testFindTradestrategyContractDistinctByDateRange() {
         try {
-            Tradestrategy tradestrategy = TradestrategyTest.getTestTradestrategy(symbol);
+            Tradestrategy tradestrategy = TradestrategyBase.getTestTradestrategy(symbol);
             assertNotNull("1", tradestrategy);
             _log.info("testTradingdaysSave IdTradeStrategy:{}", tradestrategy.getId());
             List<Tradestrategy> results = tradestrategyHome.findTradestrategyContractDistinctByDateRange(

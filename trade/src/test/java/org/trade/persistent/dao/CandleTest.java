@@ -89,7 +89,7 @@ public class CandleTest {
 
         TradeAppLoadConfig.loadAppProperties();
         String symbol = "TEST";
-        this.tradestrategy = TradestrategyTest.getTestTradestrategy(symbol);
+        this.tradestrategy = TradestrategyBase.getTestTradestrategy(symbol);
         assertNotNull("1", this.tradestrategy);
     }
 
@@ -98,7 +98,7 @@ public class CandleTest {
      */
     @After
     public void tearDown() throws Exception {
-        TradestrategyTest.clearDBData();
+        TradestrategyBase.clearDBData();
     }
 
     /**

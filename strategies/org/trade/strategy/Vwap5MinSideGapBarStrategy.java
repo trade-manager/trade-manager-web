@@ -49,7 +49,9 @@ import org.trade.strategy.data.CandleSeries;
 import org.trade.strategy.data.StrategyData;
 import org.trade.strategy.data.candle.CandleItem;
 
+import java.io.Serial;
 import java.time.ZonedDateTime;
+import java.util.Objects;
 
 /**
  * @author Simon Allen
@@ -61,6 +63,7 @@ public class Vwap5MinSideGapBarStrategy extends AbstractStrategyRule {
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = -2138009534354123773L;
     private final static Logger _log = LoggerFactory.getLogger(Vwap5MinSideGapBarStrategy.class);
 
@@ -101,7 +104,6 @@ public class Vwap5MinSideGapBarStrategy extends AbstractStrategyRule {
      *
      * @param candleSeries CandleSeries
      * @param newBar       boolean
-     * @see StrategyRule#runStrategy(CandleSeries, boolean)
      */
     public void runStrategy(CandleSeries candleSeries, boolean newBar) {
 
@@ -118,8 +120,7 @@ public class Vwap5MinSideGapBarStrategy extends AbstractStrategyRule {
              * Trade is open kill this Strategy as its job is done.
              */
             if (this.isThereOpenPosition()) {
-                _log.info("Strategy complete open position filled symbol: " + getSymbol() + " startPeriod: "
-                        + startPeriod);
+                _log.info("Strategy complete open position filled symbol: {} startPeriod: {}", getSymbol(), startPeriod);
                 /*
                  * If the order is partial filled chaeck and if the risk goes
                  * beyond 1 risk unit cancel the openPositionOrder this will
@@ -141,8 +142,7 @@ public class Vwap5MinSideGapBarStrategy extends AbstractStrategyRule {
              * is done.
              */
             if (null != openPositionOrderKey && !this.getTradeOrder(openPositionOrderKey).isActive()) {
-                _log.info("Strategy complete open position cancelled symbol: " + getSymbol() + " startPeriod: "
-                        + startPeriod);
+                _log.info("Strategy complete open position cancelled symbol: {} startPeriod: {}", getSymbol(), startPeriod);
                 updateTradestrategyStatus(TradestrategyStatus.CANCELLED);
                 this.cancel();
                 return;
@@ -165,7 +165,7 @@ public class Vwap5MinSideGapBarStrategy extends AbstractStrategyRule {
                     // AbstractStrategyRule
                     // .logCandle(this, prevCandleItem.getCandle());
                 }
-                if (prevCandleItem.isSide(getTradestrategy().getSide())) {
+                if (Objects.requireNonNull(prevCandleItem).isSide(getTradestrategy().getSide())) {
 
                     if ((Side.BOT.equals(getTradestrategy().getSide())
                             && prevCandleItem.getVwap() < currentCandleItem.getVwap())
@@ -192,8 +192,7 @@ public class Vwap5MinSideGapBarStrategy extends AbstractStrategyRule {
                         openPositionOrderKey = tradeOrder.getOrderKey();
 
                     } else {
-                        _log.info("Rule Vwap 5 min Side Gap bar. Vwap not in direction of side. Symbol: " + getSymbol()
-                                + " Time: " + startPeriod);
+                        _log.info("Rule Vwap 5 min Side Gap bar. Vwap not in direction of side. Symbol: {} Time: {}", getSymbol(), startPeriod);
 
                         if (Side.SLD.equals(getTradestrategy().getSide())) {
                             this.updateTradestrategyStatus(TradestrategyStatus.GB);
@@ -206,8 +205,7 @@ public class Vwap5MinSideGapBarStrategy extends AbstractStrategyRule {
                     }
 
                 } else {
-                    _log.info("Rule 5 min Red/Green bar opposite to trade direction. Symbol: " + getSymbol() + " Time: "
-                            + startPeriod);
+                    _log.info("Rule 5 min Red/Green bar opposite to trade direction. Symbol: {} Time: {}", getSymbol(), startPeriod);
 
                     if (Side.SLD.equals(getTradestrategy().getSide())) {
                         this.updateTradestrategyStatus(TradestrategyStatus.GB);
@@ -225,13 +223,12 @@ public class Vwap5MinSideGapBarStrategy extends AbstractStrategyRule {
                     this.updateTradestrategyStatus(TradestrategyStatus.TO);
                     this.cancelAllOrders();
                     // No trade we timed out
-                    _log.info("Rule 10:30:00 bar, time out unfilled open position Symbol: " + getSymbol() + " Time: "
-                            + startPeriod);
+                    _log.info("Rule 10:30:00 bar, time out unfilled open position Symbol: {} Time: {}", getSymbol(), startPeriod);
                 }
                 this.cancel();
             }
         } catch (StrategyRuleException ex) {
-            _log.error("Error  runRule exception: " + ex.getMessage(), ex);
+            _log.error("Error  runRule exception: {}", ex.getMessage(), ex);
             error(1, 20, "Error  runRule exception: " + ex.getMessage());
         }
     }

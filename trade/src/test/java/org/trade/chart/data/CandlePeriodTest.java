@@ -50,7 +50,7 @@ import org.trade.dictionary.valuetype.BarSize;
 import org.trade.persistent.IPersistentModel;
 import org.trade.persistent.dao.Candle;
 import org.trade.persistent.dao.Tradestrategy;
-import org.trade.persistent.dao.TradestrategyTest;
+import org.trade.persistent.dao.TradestrategyBase;
 import org.trade.persistent.dao.Tradingday;
 import org.trade.strategy.data.CandleDataset;
 import org.trade.strategy.data.StrategyData;
@@ -96,7 +96,7 @@ public class CandlePeriodTest {
         tradePersistentModel = (IPersistentModel) ClassFactory.getServiceForInterface(IPersistentModel._persistentModel,
                 this);
         String symbol = "TEST";
-        this.tradestrategy = TradestrategyTest.getTestTradestrategy(symbol);
+        this.tradestrategy = TradestrategyBase.getTestTradestrategy(symbol);
         assertNotNull("1", this.tradestrategy);
     }
 
@@ -105,7 +105,7 @@ public class CandlePeriodTest {
      */
     @After
     public void tearDown() throws Exception {
-        TradestrategyTest.clearDBData();
+        TradestrategyBase.clearDBData();
     }
 
     /**

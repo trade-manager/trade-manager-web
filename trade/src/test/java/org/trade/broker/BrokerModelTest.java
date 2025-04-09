@@ -55,7 +55,7 @@ import org.trade.dictionary.valuetype.OrderType;
 import org.trade.persistent.dao.TradeOrder;
 import org.trade.persistent.dao.TradePosition;
 import org.trade.persistent.dao.Tradestrategy;
-import org.trade.persistent.dao.TradestrategyTest;
+import org.trade.persistent.dao.TradestrategyBase;
 import org.trade.strategy.data.IndicatorSeries;
 import org.trade.strategy.data.StrategyData;
 import org.trade.strategy.data.base.RegularTimePeriod;
@@ -124,7 +124,7 @@ public class BrokerModelTest implements IBrokerChangeListener {
     public void setUp() throws Exception {
         try {
             String symbol = "TEST";
-            this.tradestrategy = TradestrategyTest.getTestTradestrategy(symbol);
+            this.tradestrategy = TradestrategyBase.getTestTradestrategy(symbol);
             backTestbrokerModel = (IBrokerModel) ClassFactory.getServiceForInterface(_broker, BrokerModelTest.class);
             backTestbrokerModel.onConnect(host, port, clientId);
             assertNotNull("1", this.tradestrategy);
@@ -176,7 +176,7 @@ public class BrokerModelTest implements IBrokerChangeListener {
         if (backTestbrokerModel.isConnected())
             backTestbrokerModel.onDisconnect();
 
-        TradestrategyTest.clearDBData();
+        TradestrategyBase.clearDBData();
     }
 
     /**

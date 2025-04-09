@@ -82,7 +82,7 @@ public class TradePositionTest {
         tradePositionHome = new TradePositionHome();
         aspectHome = new AspectHome();
         String symbol = "TEST";
-        this.tradestrategy = TradestrategyTest.getTestTradestrategy(symbol);
+        this.tradestrategy = TradestrategyBase.getTestTradestrategy(symbol);
         assertNotNull(this.tradestrategy);
     }
 
@@ -91,7 +91,7 @@ public class TradePositionTest {
      */
     @After
     public void tearDown() throws Exception {
-        TradestrategyTest.clearDBData();
+        TradestrategyBase.clearDBData();
     }
 
     /**

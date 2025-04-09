@@ -10,7 +10,7 @@ import org.junit.rules.TestName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trade.persistent.dao.Tradestrategy;
-import org.trade.persistent.dao.TradestrategyTest;
+import org.trade.persistent.dao.TradestrategyBase;
 import org.trade.ui.TradeAppLoadConfig;
 
 import static org.junit.Assert.assertEquals;
@@ -40,7 +40,7 @@ public class CandleSeriesTest {
         try {
             TradeAppLoadConfig.loadAppProperties();
             String symbol = "TEST";
-            this.tradestrategy = TradestrategyTest.getTestTradestrategy(symbol);
+            this.tradestrategy = TradestrategyBase.getTestTradestrategy(symbol);
             assertNotNull("1", this.tradestrategy);
         } catch (Exception | AssertionError ex) {
             String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
@@ -54,7 +54,7 @@ public class CandleSeriesTest {
      */
     @After
     public void tearDown() throws Exception {
-        TradestrategyTest.clearDBData();
+        TradestrategyBase.clearDBData();
     }
 
     /**

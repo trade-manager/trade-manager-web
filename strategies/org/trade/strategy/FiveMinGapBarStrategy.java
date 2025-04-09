@@ -51,7 +51,9 @@ import org.trade.strategy.data.CandleSeries;
 import org.trade.strategy.data.StrategyData;
 import org.trade.strategy.data.candle.CandleItem;
 
+import java.io.Serial;
 import java.time.ZonedDateTime;
+import java.util.Objects;
 
 /**
  * @author Simon Allen
@@ -80,6 +82,7 @@ public class FiveMinGapBarStrategy extends AbstractStrategyRule {
      * EntryLimit table).
      */
 
+    @Serial
     private static final long serialVersionUID = -1373776942145894938L;
     private final static Logger _log = LoggerFactory.getLogger(FiveMinGapBarStrategy.class);
 
@@ -106,7 +109,6 @@ public class FiveMinGapBarStrategy extends AbstractStrategyRule {
      *
      * @param candleSeries CandleSeries
      * @param newBar       boolean
-     * @see org.trade.strategy.StrategyRule#runStrategy(CandleSeries, boolean)
      */
     public void runStrategy(CandleSeries candleSeries, boolean newBar) {
 
@@ -122,8 +124,7 @@ public class FiveMinGapBarStrategy extends AbstractStrategyRule {
              * Trade is open kill this Strategy as its job is done.
              */
             if (this.isThereOpenPosition()) {
-                _log.info("Strategy complete open position filled symbol: " + getSymbol() + " startPeriod: "
-                        + startPeriod);
+                _log.info("Strategy complete open position filled symbol: {} startPeriod: {}", getSymbol(), startPeriod);
 
                 /*
                  * If the order is partial filled chaeck and if the risk goes
@@ -146,8 +147,7 @@ public class FiveMinGapBarStrategy extends AbstractStrategyRule {
              * is done.
              */
             if (null != openPositionOrderKey && !this.getTradeOrder(openPositionOrderKey).isActive()) {
-                _log.info("Strategy complete open position cancelled symbol: " + getSymbol() + " startPeriod: "
-                        + startPeriod);
+                _log.info("Strategy complete open position cancelled symbol: {} startPeriod: {}", getSymbol(), startPeriod);
                 updateTradestrategyStatus(TradestrategyStatus.CANCELLED);
                 this.cancel();
                 return;
@@ -170,12 +170,12 @@ public class FiveMinGapBarStrategy extends AbstractStrategyRule {
                     // AbstractStrategyRule
                     // .logCandle(this, prevCandleItem.getCandle());
                 }
-                if (CoreUtils.isBetween(prevCandleItem.getOpen(), prevCandleItem.getClose(),
+                if (CoreUtils.isBetween(Objects.requireNonNull(prevCandleItem).getOpen(), prevCandleItem.getClose(),
                         prevCandleItem.getVwap())) {
                     double barBodyPercent = (Math.abs(prevCandleItem.getOpen() - prevCandleItem.getClose())
                             / Math.abs(prevCandleItem.getHigh() - prevCandleItem.getLow())) * 100;
                     if (barBodyPercent < 10) {
-                        _log.info("Bar Body outside % range  Symbol: " + getSymbol() + " Time: " + startPeriod);
+                        _log.info("Bar Body outside % range  Symbol: {} Time: {}", getSymbol(), startPeriod);
                         updateTradestrategyStatus(TradestrategyStatus.NBB);
                         this.cancel();
                         return;
@@ -215,7 +215,7 @@ public class FiveMinGapBarStrategy extends AbstractStrategyRule {
                     /*
                      * Create an open position.
                      */
-                    _log.info("We have a trade!!  Symbol: " + getSymbol() + " Time: " + startPeriod);
+                    _log.info("We have a trade!!  Symbol: {} Time: {}", getSymbol(), startPeriod);
                     TradeOrder tradeOrder = createRiskOpenPosition(action, price, priceStop, true, null, null, null,
                             null);
                     openPositionOrderKey = tradeOrder.getOrderKey();
@@ -229,7 +229,7 @@ public class FiveMinGapBarStrategy extends AbstractStrategyRule {
                     // }
 
                 } else {
-                    _log.info("Rule 9:35 5min bar outside % limits. Symbol: " + getSymbol() + " Time: " + startPeriod);
+                    _log.info("Rule 9:35 5min bar outside % limits. Symbol: {} Time: {}", getSymbol(), startPeriod);
                     updateTradestrategyStatus(TradestrategyStatus.PERCENT);
                     // Kill this process we are done!
                     this.cancel();
@@ -269,20 +269,18 @@ public class FiveMinGapBarStrategy extends AbstractStrategyRule {
             }
 
             if (!startPeriod.isBefore(this.getTradestrategy().getTradingday().getOpen().plusMinutes(120))) {
-                _log.info("Rule 11:30:00 bar, time out unfilled open position Symbol: " + getSymbol() + " Time: "
-                        + startPeriod);
+                _log.info("Rule 11:30:00 bar, time out unfilled open position Symbol: {} Time: {}", getSymbol(), startPeriod);
                 if (!this.isThereOpenPosition()
                         && !TradestrategyStatus.CANCELLED.equals(getTradestrategy().getStatus())) {
                     updateTradestrategyStatus(TradestrategyStatus.TO);
                     this.cancelAllOrders();
                     // No trade we timed out
-                    _log.info("Rule 11:30:00 bar, time out unfilled open position Symbol: " + getSymbol() + " Time: "
-                            + startPeriod);
+                    _log.info("Rule 11:30:00 bar, time out unfilled open position Symbol: {} Time: {}", getSymbol(), startPeriod);
                 }
                 this.cancel();
             }
         } catch (StrategyRuleException ex) {
-            _log.error("Error  runRule exception: " + ex.getMessage(), ex);
+            _log.error("Error  runRule exception: {}", ex.getMessage(), ex);
             error(1, 10, "Error  runRule exception: " + ex.getMessage());
         }
     }

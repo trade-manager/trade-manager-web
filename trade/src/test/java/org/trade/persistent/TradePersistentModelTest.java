@@ -73,8 +73,8 @@ import org.trade.persistent.dao.TradeOrderfill;
 import org.trade.persistent.dao.TradePosition;
 import org.trade.persistent.dao.TradelogReport;
 import org.trade.persistent.dao.Tradestrategy;
+import org.trade.persistent.dao.TradestrategyBase;
 import org.trade.persistent.dao.TradestrategyOrders;
-import org.trade.persistent.dao.TradestrategyTest;
 import org.trade.persistent.dao.Tradingday;
 import org.trade.persistent.dao.Tradingdays;
 import org.trade.strategy.data.CandleSeries;
@@ -125,7 +125,7 @@ public class TradePersistentModelTest {
         this.tradePersistentModel = (IPersistentModel) ClassFactory
                 .getServiceForInterface(IPersistentModel._persistentModel, this);
         String symbol = "TEST";
-        this.tradestrategy = TradestrategyTest.getTestTradestrategy(symbol);
+        this.tradestrategy = TradestrategyBase.getTestTradestrategy(symbol);
         assertNotNull("1", this.tradestrategy);
     }
 
@@ -134,7 +134,7 @@ public class TradePersistentModelTest {
      */
     @After
     public void tearDown() throws Exception {
-        TradestrategyTest.clearDBData();
+        TradestrategyBase.clearDBData();
     }
 
     /**

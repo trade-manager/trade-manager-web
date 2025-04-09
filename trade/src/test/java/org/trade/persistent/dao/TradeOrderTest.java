@@ -97,7 +97,7 @@ public class TradeOrderTest {
         this.tradePersistentModel = (IPersistentModel) ClassFactory
                 .getServiceForInterface(IPersistentModel._persistentModel, this);
         String symbol = "TEST";
-        this.tradestrategy = TradestrategyTest.getTestTradestrategy(symbol);
+        this.tradestrategy = TradestrategyBase.getTestTradestrategy(symbol);
         assertNotNull(this.tradestrategy);
     }
 
@@ -106,7 +106,7 @@ public class TradeOrderTest {
      */
     @After
     public void tearDown() throws Exception {
-        TradestrategyTest.clearDBData();
+        TradestrategyBase.clearDBData();
     }
 
     /**

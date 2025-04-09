@@ -38,7 +38,6 @@ package org.trade.dictionary.valuetype;
 import org.trade.core.valuetype.Decode;
 
 import java.io.Serial;
-import java.util.Hashtable;
 
 /**
  *
