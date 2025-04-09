@@ -83,8 +83,9 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
      */
     public static final String _TYPE = "_TYPE";
     public static final String _CODE = "_CODE";
-    public static final String _DISPLAY_NAME = "_DISPLAY_NAME";
     public static final String _VALUE = "_VALUE";
+    public static final String _DISPLAY_NAME = "_DISPLAY_NAME";
+
 
     private String m_codeDecodeType = "";
     private String m_codeDecodeIdentifier = "";
@@ -136,6 +137,7 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
      * @param codeDecodeType String
      */
     public Decode(String codeDecodeType) {
+
         this(codeDecodeType, false);
     }
 
