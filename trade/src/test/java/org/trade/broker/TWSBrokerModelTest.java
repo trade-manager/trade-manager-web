@@ -59,14 +59,11 @@ import org.trade.persistent.dao.Tradestrategy;
 import org.trade.persistent.dao.Tradingday;
 import org.trade.persistent.dao.Tradingdays;
 import org.trade.ui.TradeAppLoadConfig;
-import org.trade.ui.base.BasePanel;
 
 import javax.swing.*;
 import java.time.ZonedDateTime;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import static org.junit.Assert.fail;
 
 /**
  * Some tests for the  DataUtilities class.
@@ -100,23 +97,19 @@ public class TWSBrokerModelTest implements IBrokerChangeListener {
      */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        try {
-            TradeAppLoadConfig.loadAppProperties();
 
-            clientId = ConfigProperties.getPropAsInt("trade.tws.clientId");
-            port = Integer.valueOf(ConfigProperties.getPropAsString("trade.tws.port"));
-            host = ConfigProperties.getPropAsString("trade.tws.host");
+        TradeAppLoadConfig.loadAppProperties();
 
-            timer = new Timer(250, _ -> {
-                synchronized (lockCoreUtilsTest) {
-                    timerRunning.addAndGet(250);
-                    lockCoreUtilsTest.notifyAll();
-                }
-            });
+        clientId = ConfigProperties.getPropAsInt("trade.tws.clientId");
+        port = Integer.valueOf(ConfigProperties.getPropAsString("trade.tws.port"));
+        host = ConfigProperties.getPropAsString("trade.tws.host");
 
-        } catch (Exception e) {
-            fail("Error on setup " + e.getMessage());
-        }
+        timer = new Timer(250, _ -> {
+            synchronized (lockCoreUtilsTest) {
+                timerRunning.addAndGet(250);
+                lockCoreUtilsTest.notifyAll();
+            }
+        });
     }
 
     /**
@@ -125,26 +118,23 @@ public class TWSBrokerModelTest implements IBrokerChangeListener {
      */
     @Before
     public void setUp() throws Exception {
-        try {
-            tradePersistentModel = (IPersistentModel) ClassFactory
-                    .getServiceForInterface(IPersistentModel._persistentModel, this);
-            tWSBrokerModel = (IBrokerModel) ClassFactory.getServiceForInterface(_broker, this);
-            tWSBrokerModel.addMessageListener(this);
-            tWSBrokerModel.onConnect(host, port, clientId);
-            timerRunning = new AtomicInteger(0);
-            timer.start();
-            synchronized (lockCoreUtilsTest) {
-                while (!tWSBrokerModel.isConnected() && !connectionFailed) {
-                    lockCoreUtilsTest.wait();
-                }
-            }
-            timer.stop();
-            if (!tWSBrokerModel.isConnected())
-                _log.warn("Could not connect to TWS test will be ignored.", tWSBrokerModel.isConnected());
 
-        } catch (InterruptedException e) {
-            _log.info("Thread interrupt: {}", e.getMessage());
+        tradePersistentModel = (IPersistentModel) ClassFactory
+                .getServiceForInterface(IPersistentModel._persistentModel, this);
+        tWSBrokerModel = (IBrokerModel) ClassFactory.getServiceForInterface(_broker, this);
+        tWSBrokerModel.addMessageListener(this);
+        tWSBrokerModel.onConnect(host, port, clientId);
+        timerRunning = new AtomicInteger(0);
+        timer.start();
+        synchronized (lockCoreUtilsTest) {
+            while (!tWSBrokerModel.isConnected() && !connectionFailed) {
+                lockCoreUtilsTest.wait();
+            }
         }
+        timer.stop();
+        if (!tWSBrokerModel.isConnected())
+            _log.warn("Could not connect to TWS test will be ignored. Connected: {}", tWSBrokerModel.isConnected());
+
     }
 
     /**
@@ -152,6 +142,7 @@ public class TWSBrokerModelTest implements IBrokerChangeListener {
      */
     @After
     public void tearDown() throws Exception {
+
         deleteData();
         if (tWSBrokerModel.isConnected())
             tWSBrokerModel.onDisconnect();
@@ -185,258 +176,236 @@ public class TWSBrokerModelTest implements IBrokerChangeListener {
     }
 
     @Test
-    public void testOneSymbolTodayOnBrokerData() {
+    public void testOneSymbolTodayOnBrokerData() throws Exception {
         tradingdays = new Tradingdays();
-        try {
-            if (tWSBrokerModel.isConnected()) {
 
-                String fileName = "trade/test/org/trade/broker/OneSymbolToday.csv";
-                ZonedDateTime tradingDay = TradingCalendar.getDateTimeNowMarketTimeZone();
-                tradingDay = TradingCalendar.getPrevTradingDay(tradingDay);
+        if (tWSBrokerModel.isConnected()) {
 
-                Tradingday tradingday = new Tradingday(TradingCalendar.getTradingDayStart(tradingDay),
-                        TradingCalendar.getTradingDayEnd(tradingDay));
+            String fileName = "trade/test/org/trade/broker/OneSymbolToday.csv";
+            ZonedDateTime tradingDay = TradingCalendar.getDateTimeNowMarketTimeZone();
+            tradingDay = TradingCalendar.getPrevTradingDay(tradingDay);
 
-                tradingdays.populateDataFromFile(fileName, tradingday);
+            Tradingday tradingday = new Tradingday(TradingCalendar.getTradingDayStart(tradingDay),
+                    TradingCalendar.getTradingDayEnd(tradingDay));
 
-                for (Tradingday item : tradingdays.getTradingdays()) {
-                    tradePersistentModel.persistTradingday(item);
-                }
-                brokerDataRequestProgressMonitor = new BrokerDataRequestMonitor(tWSBrokerModel, tradePersistentModel,
-                        tradingdays);
-                brokerDataRequestProgressMonitor.addPropertyChangeListener(evt -> {
-                    if ("progress".equals(evt.getPropertyName())) {
-                        int progress = (Integer) evt.getNewValue();
-                        String message = String.format("Completed %d%%.", progress);
+            tradingdays.populateDataFromFile(fileName, tradingday);
+
+            for (Tradingday item : tradingdays.getTradingdays()) {
+                tradePersistentModel.persistTradingday(item);
+            }
+            brokerDataRequestProgressMonitor = new BrokerDataRequestMonitor(tWSBrokerModel, tradePersistentModel,
+                    tradingdays);
+            brokerDataRequestProgressMonitor.addPropertyChangeListener(evt -> {
+                if ("progress".equals(evt.getPropertyName())) {
+                    int progress = (Integer) evt.getNewValue();
+                    String message = String.format("Completed %d%%.", progress);
+                    _log.warn(message);
+                } else if ("information".equals(evt.getPropertyName())) {
+                    _log.warn("Information message: {}", evt.getNewValue());
+                    if (brokerDataRequestProgressMonitor.isDone()) {
+                        String message = String.format("Completed %d%%.", 100);
                         _log.warn(message);
-                    } else if ("information".equals(evt.getPropertyName())) {
-                        _log.warn("Information message: {}", evt.getNewValue());
-                        if (brokerDataRequestProgressMonitor.isDone()) {
-                            String message = String.format("Completed %d%%.", 100);
-                            _log.warn(message);
-                        }
+                    }
 
-                    } else if ("error".equals(evt.getPropertyName())) {
-                        _log.error("Error getting history data.{}", ((Exception) evt.getNewValue()).getMessage());
-                    }
-                });
-                brokerDataRequestProgressMonitor.execute();
-                synchronized (lockCoreUtilsTest) {
-                    while (tWSBrokerModel.isConnected() && !connectionFailed
-                            && !brokerDataRequestProgressMonitor.isDone()) {
-                        lockCoreUtilsTest.wait(1000);
-                    }
+                } else if ("error".equals(evt.getPropertyName())) {
+                    _log.error("Error getting history data.{}", ((Exception) evt.getNewValue()).getMessage());
+                }
+            });
+            brokerDataRequestProgressMonitor.execute();
+            synchronized (lockCoreUtilsTest) {
+                while (tWSBrokerModel.isConnected() && !connectionFailed
+                        && !brokerDataRequestProgressMonitor.isDone()) {
+                    lockCoreUtilsTest.wait(1000);
                 }
             }
-        } catch (Exception | AssertionError ex) {
-            String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
-            _log.error(msg);
-            fail(msg);
         }
     }
 
     @Test
-    public void testOneMonthContractsOnBrokerData() {
+    public void testOneMonthContractsOnBrokerData() throws Exception {
+
         tradingdays = new Tradingdays();
-        try {
-            if (tWSBrokerModel.isConnected()) {
 
-                String fileName = "trade/test/org/trade/broker/OneMonthContracts.csv";
-                ZonedDateTime tradingDay = TradingCalendar.getDateTimeNowMarketTimeZone();
-                tradingDay = TradingCalendar.getPrevTradingDay(tradingDay);
+        if (tWSBrokerModel.isConnected()) {
 
-                Tradingday tradingday = new Tradingday(TradingCalendar.getTradingDayStart(tradingDay),
-                        TradingCalendar.getTradingDayEnd(tradingDay));
+            String fileName = "trade/test/org/trade/broker/OneMonthContracts.csv";
+            ZonedDateTime tradingDay = TradingCalendar.getDateTimeNowMarketTimeZone();
+            tradingDay = TradingCalendar.getPrevTradingDay(tradingDay);
 
-                tradingdays.populateDataFromFile(fileName, tradingday);
+            Tradingday tradingday = new Tradingday(TradingCalendar.getTradingDayStart(tradingDay),
+                    TradingCalendar.getTradingDayEnd(tradingDay));
 
-                for (Tradingday item : tradingdays.getTradingdays()) {
-                    tradePersistentModel.persistTradingday(item);
-                }
-                brokerDataRequestProgressMonitor = new BrokerDataRequestMonitor(tWSBrokerModel, tradePersistentModel,
-                        tradingdays);
-                brokerDataRequestProgressMonitor.addPropertyChangeListener(evt -> {
-                    if ("progress".equals(evt.getPropertyName())) {
-                        int progress = (Integer) evt.getNewValue();
-                        String message = String.format("Completed %d%%.", progress);
+            tradingdays.populateDataFromFile(fileName, tradingday);
+
+            for (Tradingday item : tradingdays.getTradingdays()) {
+                tradePersistentModel.persistTradingday(item);
+            }
+            brokerDataRequestProgressMonitor = new BrokerDataRequestMonitor(tWSBrokerModel, tradePersistentModel,
+                    tradingdays);
+            brokerDataRequestProgressMonitor.addPropertyChangeListener(evt -> {
+                if ("progress".equals(evt.getPropertyName())) {
+                    int progress = (Integer) evt.getNewValue();
+                    String message = String.format("Completed %d%%.", progress);
+                    _log.warn(message);
+                } else if ("information".equals(evt.getPropertyName())) {
+                    _log.warn("Information message: {}", evt.getNewValue());
+                    if (brokerDataRequestProgressMonitor.isDone()) {
+                        String message = String.format("Completed %d%%.", 100);
                         _log.warn(message);
-                    } else if ("information".equals(evt.getPropertyName())) {
-                        _log.warn("Information message: {}", evt.getNewValue());
-                        if (brokerDataRequestProgressMonitor.isDone()) {
-                            String message = String.format("Completed %d%%.", 100);
-                            _log.warn(message);
-                        }
+                    }
 
-                    } else if ("error".equals(evt.getPropertyName())) {
-                        _log.error("Error getting history data.{}", ((Exception) evt.getNewValue()).getMessage());
-                    }
-                });
-                brokerDataRequestProgressMonitor.execute();
-                synchronized (lockCoreUtilsTest) {
-                    while (tWSBrokerModel.isConnected() && !connectionFailed
-                            && !brokerDataRequestProgressMonitor.isDone()) {
-                        lockCoreUtilsTest.wait(1000);
-                    }
+                } else if ("error".equals(evt.getPropertyName())) {
+                    _log.error("Error getting history data.{}", ((Exception) evt.getNewValue()).getMessage());
+                }
+            });
+            brokerDataRequestProgressMonitor.execute();
+            synchronized (lockCoreUtilsTest) {
+                while (tWSBrokerModel.isConnected() && !connectionFailed
+                        && !brokerDataRequestProgressMonitor.isDone()) {
+                    lockCoreUtilsTest.wait(1000);
                 }
             }
-        } catch (Exception | AssertionError ex) {
-            String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
-            _log.error(msg);
-            fail(msg);
         }
     }
 
     @Test
-    public void testOneSymbolTwoMthsOnBrokerData() {
+    public void testOneSymbolTwoMthsOnBrokerData() throws Exception {
+
         tradingdays = new Tradingdays();
-        try {
-            if (tWSBrokerModel.isConnected()) {
 
-                String fileName = "trade/test/org/trade/broker/OneSymbolTwoMths.csv";
-                ZonedDateTime tradingDay = TradingCalendar.getDateTimeNowMarketTimeZone();
-                tradingDay = TradingCalendar.getPrevTradingDay(tradingDay);
+        if (tWSBrokerModel.isConnected()) {
 
-                Tradingday tradingday = new Tradingday(TradingCalendar.getTradingDayStart(tradingDay),
-                        TradingCalendar.getTradingDayEnd(tradingDay));
+            String fileName = "trade/test/org/trade/broker/OneSymbolTwoMths.csv";
+            ZonedDateTime tradingDay = TradingCalendar.getDateTimeNowMarketTimeZone();
+            tradingDay = TradingCalendar.getPrevTradingDay(tradingDay);
 
-                tradingdays.populateDataFromFile(fileName, tradingday);
-                /*
-                 * Set the chart days to one day so no over lap.
-                 */
-                for (Tradingday item : tradingdays.getTradingdays()) {
-                    for (Tradestrategy tradestrategy : item.getTradestrategies()) {
-                        tradestrategy.setChartDays(1);
-                    }
-                }
+            Tradingday tradingday = new Tradingday(TradingCalendar.getTradingDayStart(tradingDay),
+                    TradingCalendar.getTradingDayEnd(tradingDay));
 
-                for (Tradingday item : tradingdays.getTradingdays()) {
-                    tradePersistentModel.persistTradingday(item);
-                }
-
-                brokerDataRequestProgressMonitor = new BrokerDataRequestMonitor(tWSBrokerModel, tradePersistentModel,
-                        tradingdays);
-                brokerDataRequestProgressMonitor.addPropertyChangeListener(evt -> {
-                    if ("progress".equals(evt.getPropertyName())) {
-                        int progress = (Integer) evt.getNewValue();
-                        String message = String.format("Completed %d%%.", progress);
-                        _log.warn(message);
-                    } else if ("information".equals(evt.getPropertyName())) {
-                        _log.warn("Information message: {}", evt.getNewValue());
-                        if (brokerDataRequestProgressMonitor.isDone()) {
-                            String message = String.format("Completed %d%%.", 100);
-                            _log.warn(message);
-                        }
-
-                    } else if ("error".equals(evt.getPropertyName())) {
-                        _log.error("Error getting history data.{}", ((Exception) evt.getNewValue()).getMessage());
-                    }
-                });
-                brokerDataRequestProgressMonitor.execute();
-                synchronized (lockCoreUtilsTest) {
-                    while (tWSBrokerModel.isConnected() && !connectionFailed
-                            && !brokerDataRequestProgressMonitor.isDone()) {
-                        lockCoreUtilsTest.wait(1000);
-                    }
+            tradingdays.populateDataFromFile(fileName, tradingday);
+            /*
+             * Set the chart days to one day so no over lap.
+             */
+            for (Tradingday item : tradingdays.getTradingdays()) {
+                for (Tradestrategy tradestrategy : item.getTradestrategies()) {
+                    tradestrategy.setChartDays(1);
                 }
             }
-        } catch (Exception | AssertionError ex) {
-            String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
-            _log.error(msg);
-            fail(msg);
+
+            for (Tradingday item : tradingdays.getTradingdays()) {
+                tradePersistentModel.persistTradingday(item);
+            }
+
+            brokerDataRequestProgressMonitor = new BrokerDataRequestMonitor(tWSBrokerModel, tradePersistentModel,
+                    tradingdays);
+            brokerDataRequestProgressMonitor.addPropertyChangeListener(evt -> {
+                if ("progress".equals(evt.getPropertyName())) {
+                    int progress = (Integer) evt.getNewValue();
+                    String message = String.format("Completed %d%%.", progress);
+                    _log.warn(message);
+                } else if ("information".equals(evt.getPropertyName())) {
+                    _log.warn("Information message: {}", evt.getNewValue());
+                    if (brokerDataRequestProgressMonitor.isDone()) {
+                        String message = String.format("Completed %d%%.", 100);
+                        _log.warn(message);
+                    }
+
+                } else if ("error".equals(evt.getPropertyName())) {
+                    _log.error("Error getting history data.{}", ((Exception) evt.getNewValue()).getMessage());
+                }
+            });
+            brokerDataRequestProgressMonitor.execute();
+            synchronized (lockCoreUtilsTest) {
+                while (tWSBrokerModel.isConnected() && !connectionFailed
+                        && !brokerDataRequestProgressMonitor.isDone()) {
+                    lockCoreUtilsTest.wait(1000);
+                }
+            }
         }
     }
 
     @Test
-    public void testMultiContractsMultiDaysOnBrokerData() {
+    public void testMultiContractsMultiDaysOnBrokerData() throws Exception {
+
         tradingdays = new Tradingdays();
-        try {
-            if (tWSBrokerModel.isConnected()) {
 
-                String fileName = "trade/test/org/trade/broker/MultiContractsMultiDays.csv";
-                ZonedDateTime tradingDay = TradingCalendar.getDateTimeNowMarketTimeZone();
-                tradingDay = TradingCalendar.getPrevTradingDay(tradingDay);
+        if (tWSBrokerModel.isConnected()) {
 
-                Tradingday tradingday = new Tradingday(TradingCalendar.getTradingDayStart(tradingDay),
-                        TradingCalendar.getTradingDayEnd(tradingDay));
+            String fileName = "trade/test/org/trade/broker/MultiContractsMultiDays.csv";
+            ZonedDateTime tradingDay = TradingCalendar.getDateTimeNowMarketTimeZone();
+            tradingDay = TradingCalendar.getPrevTradingDay(tradingDay);
 
-                tradingdays.populateDataFromFile(fileName, tradingday);
-                /*
-                 * Set the chart days to one day so no over lap.
-                 */
-                for (Tradingday item : tradingdays.getTradingdays()) {
-                    for (Tradestrategy tradestrategy : item.getTradestrategies()) {
-                        tradestrategy.setChartDays(1);
-                    }
-                }
+            Tradingday tradingday = new Tradingday(TradingCalendar.getTradingDayStart(tradingDay),
+                    TradingCalendar.getTradingDayEnd(tradingDay));
 
-                for (Tradingday item : tradingdays.getTradingdays()) {
-                    tradePersistentModel.persistTradingday(item);
-                }
-
-                brokerDataRequestProgressMonitor = new BrokerDataRequestMonitor(tWSBrokerModel, tradePersistentModel,
-                        tradingdays);
-                brokerDataRequestProgressMonitor.addPropertyChangeListener(evt -> {
-                    if ("progress".equals(evt.getPropertyName())) {
-                        int progress = (Integer) evt.getNewValue();
-                        String message = String.format("Completed %d%%.", progress);
-                        _log.warn(message);
-                    } else if ("information".equals(evt.getPropertyName())) {
-                        _log.warn("Information message: {}", evt.getNewValue());
-                        if (brokerDataRequestProgressMonitor.isDone()) {
-                            String message = String.format("Completed %d%%.", 100);
-                            _log.warn(message);
-                        }
-
-                    } else if ("error".equals(evt.getPropertyName())) {
-                        _log.error("Error getting history data.{}", ((Exception) evt.getNewValue()).getMessage());
-                    }
-                });
-                brokerDataRequestProgressMonitor.execute();
-                synchronized (lockCoreUtilsTest) {
-                    while (tWSBrokerModel.isConnected() && !connectionFailed
-                            && !brokerDataRequestProgressMonitor.isDone()) {
-                        lockCoreUtilsTest.wait(1000);
-                    }
+            tradingdays.populateDataFromFile(fileName, tradingday);
+            /*
+             * Set the chart days to one day so no over lap.
+             */
+            for (Tradingday item : tradingdays.getTradingdays()) {
+                for (Tradestrategy tradestrategy : item.getTradestrategies()) {
+                    tradestrategy.setChartDays(1);
                 }
             }
-        } catch (Exception | AssertionError ex) {
-            String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
-            _log.error(msg);
-            fail(msg);
+
+            for (Tradingday item : tradingdays.getTradingdays()) {
+                tradePersistentModel.persistTradingday(item);
+            }
+
+            brokerDataRequestProgressMonitor = new BrokerDataRequestMonitor(tWSBrokerModel, tradePersistentModel,
+                    tradingdays);
+            brokerDataRequestProgressMonitor.addPropertyChangeListener(evt -> {
+                if ("progress".equals(evt.getPropertyName())) {
+                    int progress = (Integer) evt.getNewValue();
+                    String message = String.format("Completed %d%%.", progress);
+                    _log.warn(message);
+                } else if ("information".equals(evt.getPropertyName())) {
+                    _log.warn("Information message: {}", evt.getNewValue());
+                    if (brokerDataRequestProgressMonitor.isDone()) {
+                        String message = String.format("Completed %d%%.", 100);
+                        _log.warn(message);
+                    }
+
+                } else if ("error".equals(evt.getPropertyName())) {
+                    _log.error("Error getting history data.{}", ((Exception) evt.getNewValue()).getMessage());
+                }
+            });
+            brokerDataRequestProgressMonitor.execute();
+            synchronized (lockCoreUtilsTest) {
+                while (tWSBrokerModel.isConnected() && !connectionFailed
+                        && !brokerDataRequestProgressMonitor.isDone()) {
+                    lockCoreUtilsTest.wait(1000);
+                }
+            }
         }
     }
 
     /**
      * Method deleteData. Clean the test data added.
      */
-    private void deleteData() {
+    private void deleteData() throws Exception {
 
-        try {
 
-            Aspects candles = tradePersistentModel.findAspectsByClassName(Candle.class.getName());
-            for (Aspect item : candles.getAspect()) {
-                tradePersistentModel.removeAspect(item);
-            }
-
-            Aspects tradestrategies = tradePersistentModel.findAspectsByClassName(Tradestrategy.class.getName());
-            for (Aspect item : tradestrategies.getAspect()) {
-                tradePersistentModel.removeAspect(item);
-            }
-
-            Aspects contracts = tradePersistentModel.findAspectsByClassName(Contract.class.getName());
-            for (Aspect item : contracts.getAspect()) {
-                tradePersistentModel.removeAspect(item);
-            }
-
-            Aspects tradingdays = tradePersistentModel.findAspectsByClassName(Tradingday.class.getName());
-            for (Aspect item : tradingdays.getAspect()) {
-                tradePersistentModel.removeAspect(item);
-            }
-        } catch (Exception e) {
-            fail("Error deleteData Msg: " + e.getMessage());
-        } finally {
-            _log.info("All data deleted");
+        Aspects candles = tradePersistentModel.findAspectsByClassName(Candle.class.getName());
+        for (Aspect item : candles.getAspect()) {
+            tradePersistentModel.removeAspect(item);
         }
+
+        Aspects tradestrategies = tradePersistentModel.findAspectsByClassName(Tradestrategy.class.getName());
+        for (Aspect item : tradestrategies.getAspect()) {
+            tradePersistentModel.removeAspect(item);
+        }
+
+        Aspects contracts = tradePersistentModel.findAspectsByClassName(Contract.class.getName());
+        for (Aspect item : contracts.getAspect()) {
+            tradePersistentModel.removeAspect(item);
+        }
+
+        Aspects tradingdays = tradePersistentModel.findAspectsByClassName(Tradingday.class.getName());
+        for (Aspect item : tradingdays.getAspect()) {
+            tradePersistentModel.removeAspect(item);
+        }
+
     }
 
     public void connectionOpened() {
@@ -464,12 +433,14 @@ public class TWSBrokerModelTest implements IBrokerChangeListener {
      */
     public void historicalDataComplete(Tradestrategy tradestrategy) {
 
+
         try {
             _log.info("Symbol: {} Candles  saved: {}", tradestrategy.getContract().getSymbol(), tradePersistentModel.findCandleCount(tradestrategy.getTradingday().getId(),
                     tradestrategy.getContract().getId()));
         } catch (PersistentModelException ex) {
-            _log.error("Error historicalDataComplete Msg: {}", ex.getMessage());
+            _log.error("Error: Could not retrieve historical data: {}", ex.getMessage());
         }
+
     }
 
     /**
@@ -509,13 +480,13 @@ public class TWSBrokerModelTest implements IBrokerChangeListener {
             return;
         }
         if (ex.getErrorId() == 1) {
-            _log.error("Error: {}", ex.getErrorCode(), ex.getMessage(), ex);
+            _log.error("Error: code: {}, msg: {}, ex: {}", ex.getErrorCode(), ex.getMessage(), ex);
         } else if (ex.getErrorId() == 2) {
-            _log.warn("Warning: {}", ex.getMessage(), BasePanel.WARNING);
+            _log.warn("Warning: {}", ex.getMessage());
         } else if (ex.getErrorId() == 3) {
-            _log.info("Information: {}", ex.getMessage(), BasePanel.INFORMATION);
+            _log.info("Information: {}", ex.getMessage());
         } else {
-            _log.error("Unknown Error Id Code: {}", ex.getErrorCode(), ex.getMessage(), ex);
+            _log.error("Unknown Error Id Code: {}, msg: {}, ex: {}", ex.getErrorCode(), ex.getMessage(), ex);
         }
     }
 

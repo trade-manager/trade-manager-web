@@ -55,7 +55,6 @@ import org.trade.ui.TradeAppLoadConfig;
 import java.util.Objects;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
 
 /**
  *
@@ -102,22 +101,15 @@ public class PortfolioTest {
     }
 
     @Test
-    public void testCreateAccount() {
+    public void testCreateAccount() throws Exception {
 
-        try {
-            PortfolioHome portfolioHome = new PortfolioHome();
-            Portfolio portfolio = (Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
-            portfolio = portfolioHome.findByName(portfolio.getName());
-            Account account = new Account("Test", "T123456", Currency.USD, AccountType.INDIVIDUAL);
-            PortfolioAccount portfolioAccount = new PortfolioAccount(portfolio, account);
-            portfolio.getPortfolioAccounts().add(portfolioAccount);
-            portfolio = aspectHome.persist(portfolio);
-            assertNotNull("1", portfolio.getIndividualAccount());
-
-        } catch (Exception | AssertionError ex) {
-            String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
-            _log.error(msg);
-            fail(msg);
-        }
+        PortfolioHome portfolioHome = new PortfolioHome();
+        Portfolio portfolio = (Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
+        portfolio = portfolioHome.findByName(portfolio.getName());
+        Account account = new Account("Test", "T123456", Currency.USD, AccountType.INDIVIDUAL);
+        PortfolioAccount portfolioAccount = new PortfolioAccount(portfolio, account);
+        portfolio.getPortfolioAccounts().add(portfolioAccount);
+        portfolio = aspectHome.persist(portfolio);
+        assertNotNull("1", portfolio.getIndividualAccount());
     }
 }

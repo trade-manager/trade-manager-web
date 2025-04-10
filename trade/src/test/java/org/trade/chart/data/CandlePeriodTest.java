@@ -66,7 +66,6 @@ import java.util.TimeZone;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
 
 /**
  *
@@ -116,105 +115,91 @@ public class CandlePeriodTest {
     }
 
     @Test
-    public void testGetCandleBar() {
+    public void testGetCandleBar() throws Exception {
 
-        try {
 
-            ZonedDateTime startPeriod = this.tradestrategy.getTradingday().getOpen();
-            ZonedDateTime prevTradingday = tradestrategy.getTradingday().getOpen()
-                    .minusDays((tradestrategy.getChartDays() - 1));
-            prevTradingday = TradingCalendar.getPrevTradingDay(prevTradingday);
-            List<Candle> candles = tradePersistentModel.findCandlesByContractDateRangeBarSize(
-                    this.tradestrategy.getContract().getId(), prevTradingday,
-                    this.tradestrategy.getTradingday().getOpen(), this.tradestrategy.getBarSize());
-            if (candles.isEmpty()) {
-                StrategyData.doDummyData(this.tradestrategy.getStrategyData().getBaseCandleSeries(),
-                        Tradingday.newInstance(prevTradingday), 2, BarSize.FIVE_MIN, true, 0);
-            } else {
-                CandleDataset.populateSeries(this.tradestrategy.getStrategyData(), candles);
-            }
-            assertFalse(this.tradestrategy.getStrategyData().getBaseCandleSeries().isEmpty());
-            Candle candle = this.tradestrategy.getStrategyData().getBaseCandleSeries()
-                    .getBar(TradingCalendar.getDateAtTime(TradingCalendar.getPrevTradingDay(startPeriod),
-                                    this.tradestrategy.getTradingday().getOpen()),
-                            TradingCalendar.getDateAtTime(TradingCalendar.getPrevTradingDay(startPeriod),
-                                    this.tradestrategy.getTradingday().getClose()));
-            _log.info("Bar for Contract: {} Start Period: {} Open: {} High: {} Low: {} Close: {} Vwap: {} Volume: {}", candle.getContract().getSymbol(), candle.getPeriod(), candle.getOpen(), candle.getHigh(), candle.getLow(), candle.getClose(), candle.getVwap(), candle.getVolume());
-
-        } catch (Exception | AssertionError ex) {
-            String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
-            _log.error(msg);
-            fail(msg);
+        ZonedDateTime startPeriod = this.tradestrategy.getTradingday().getOpen();
+        ZonedDateTime prevTradingday = tradestrategy.getTradingday().getOpen()
+                .minusDays((tradestrategy.getChartDays() - 1));
+        prevTradingday = TradingCalendar.getPrevTradingDay(prevTradingday);
+        List<Candle> candles = tradePersistentModel.findCandlesByContractDateRangeBarSize(
+                this.tradestrategy.getContract().getId(), prevTradingday,
+                this.tradestrategy.getTradingday().getOpen(), this.tradestrategy.getBarSize());
+        if (candles.isEmpty()) {
+            StrategyData.doDummyData(this.tradestrategy.getStrategyData().getBaseCandleSeries(),
+                    Tradingday.newInstance(prevTradingday), 2, BarSize.FIVE_MIN, true, 0);
+        } else {
+            CandleDataset.populateSeries(this.tradestrategy.getStrategyData(), candles);
         }
+        assertFalse(this.tradestrategy.getStrategyData().getBaseCandleSeries().isEmpty());
+        Candle candle = this.tradestrategy.getStrategyData().getBaseCandleSeries()
+                .getBar(TradingCalendar.getDateAtTime(TradingCalendar.getPrevTradingDay(startPeriod),
+                                this.tradestrategy.getTradingday().getOpen()),
+                        TradingCalendar.getDateAtTime(TradingCalendar.getPrevTradingDay(startPeriod),
+                                this.tradestrategy.getTradingday().getClose()));
+        _log.info("Bar for Contract: {} Start Period: {} Open: {} High: {} Low: {} Close: {} Vwap: {} Volume: {}", candle.getContract().getSymbol(), candle.getPeriod(), candle.getOpen(), candle.getHigh(), candle.getLow(), candle.getClose(), candle.getVwap(), candle.getVolume());
+
+
     }
 
     @Test
-    public void testGetAvgCandleBar() {
+    public void testGetAvgCandleBar() throws Exception {
 
-        try {
 
-            ZonedDateTime startPeriod = this.tradestrategy.getTradingday().getOpen();
-            ZonedDateTime prevTradingday = this.tradestrategy.getTradingday().getOpen()
-                    .minusDays((this.tradestrategy.getChartDays() - 1));
-            prevTradingday = TradingCalendar.getPrevTradingDay(prevTradingday);
-            List<Candle> candles = tradePersistentModel.findCandlesByContractDateRangeBarSize(
-                    this.tradestrategy.getContract().getId(), prevTradingday,
-                    this.tradestrategy.getTradingday().getOpen(), this.tradestrategy.getBarSize());
-            if (candles.isEmpty()) {
-                StrategyData.doDummyData(this.tradestrategy.getStrategyData().getBaseCandleSeries(),
-                        Tradingday.newInstance(prevTradingday), 2, BarSize.FIVE_MIN, true, 0);
-            } else {
-                CandleDataset.populateSeries(this.tradestrategy.getStrategyData(), candles);
-            }
-            assertFalse("1", this.tradestrategy.getStrategyData().getBaseCandleSeries().isEmpty());
-            Candle candle = this.tradestrategy.getStrategyData().getBaseCandleSeries().getAverageBar(
-                    TradingCalendar.getDateAtTime(TradingCalendar.getPrevTradingDay(startPeriod),
-                            this.tradestrategy.getTradingday().getOpen()),
-                    TradingCalendar.getDateAtTime(TradingCalendar.getPrevTradingDay(startPeriod),
-                            this.tradestrategy.getTradingday().getClose()),
-                    false);
-            _log.info("Non wieghted avg bar for Contract: {} Start Period: {} Open: {} High: {} Low: {} Close: {} Vwap: {} Volume: {}", candle.getContract().getSymbol(), candle.getPeriod(), candle.getOpen(), candle.getHigh(), candle.getLow(), candle.getClose(), candle.getVwap(), candle.getVolume());
-
-            candle = this.tradestrategy.getStrategyData().getBaseCandleSeries().getAverageBar(
-                    TradingCalendar.getDateAtTime(TradingCalendar.getPrevTradingDay(startPeriod),
-                            this.tradestrategy.getTradingday().getOpen()),
-                    TradingCalendar.getDateAtTime(TradingCalendar.getPrevTradingDay(startPeriod),
-                            this.tradestrategy.getTradingday().getClose()),
-                    true);
-            _log.info("Wieghted avg bar for Contract: {} Start Period: {} Open: {} High: {} Low: {} Close: {} Vwap: {} Volume: {}", candle.getContract().getSymbol(), candle.getPeriod(), candle.getOpen(), candle.getHigh(), candle.getLow(), candle.getClose(), candle.getVwap(), candle.getVolume());
-
-        } catch (Exception | AssertionError ex) {
-            String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
-            _log.error(msg);
-            fail(msg);
+        ZonedDateTime startPeriod = this.tradestrategy.getTradingday().getOpen();
+        ZonedDateTime prevTradingday = this.tradestrategy.getTradingday().getOpen()
+                .minusDays((this.tradestrategy.getChartDays() - 1));
+        prevTradingday = TradingCalendar.getPrevTradingDay(prevTradingday);
+        List<Candle> candles = tradePersistentModel.findCandlesByContractDateRangeBarSize(
+                this.tradestrategy.getContract().getId(), prevTradingday,
+                this.tradestrategy.getTradingday().getOpen(), this.tradestrategy.getBarSize());
+        if (candles.isEmpty()) {
+            StrategyData.doDummyData(this.tradestrategy.getStrategyData().getBaseCandleSeries(),
+                    Tradingday.newInstance(prevTradingday), 2, BarSize.FIVE_MIN, true, 0);
+        } else {
+            CandleDataset.populateSeries(this.tradestrategy.getStrategyData(), candles);
         }
+        assertFalse("1", this.tradestrategy.getStrategyData().getBaseCandleSeries().isEmpty());
+        Candle candle = this.tradestrategy.getStrategyData().getBaseCandleSeries().getAverageBar(
+                TradingCalendar.getDateAtTime(TradingCalendar.getPrevTradingDay(startPeriod),
+                        this.tradestrategy.getTradingday().getOpen()),
+                TradingCalendar.getDateAtTime(TradingCalendar.getPrevTradingDay(startPeriod),
+                        this.tradestrategy.getTradingday().getClose()),
+                false);
+        _log.info("Non wieghted avg bar for Contract: {} Start Period: {} Open: {} High: {} Low: {} Close: {} Vwap: {} Volume: {}", candle.getContract().getSymbol(), candle.getPeriod(), candle.getOpen(), candle.getHigh(), candle.getLow(), candle.getClose(), candle.getVwap(), candle.getVolume());
+
+        candle = this.tradestrategy.getStrategyData().getBaseCandleSeries().getAverageBar(
+                TradingCalendar.getDateAtTime(TradingCalendar.getPrevTradingDay(startPeriod),
+                        this.tradestrategy.getTradingday().getOpen()),
+                TradingCalendar.getDateAtTime(TradingCalendar.getPrevTradingDay(startPeriod),
+                        this.tradestrategy.getTradingday().getClose()),
+                true);
+        _log.info("Wieghted avg bar for Contract: {} Start Period: {} Open: {} High: {} Low: {} Close: {} Vwap: {} Volume: {}", candle.getContract().getSymbol(), candle.getPeriod(), candle.getOpen(), candle.getHigh(), candle.getLow(), candle.getClose(), candle.getVwap(), candle.getVolume());
+
+
     }
 
     @Test
     public void testDateConversion() {
-        try {
-            String dateString = "20151129 09:35:11";
 
-            LocalDateTime formattedDate = TradingCalendar.getLocalDateTimeFromDateTimeString(dateString,
-                    "yyyyMMdd HH:mm:ss");
+        String dateString = "20151129 09:35:11";
 
-            _log.info("Date  time: {}", formattedDate);
-            ZonedDateTime date = ZonedDateTime.of(formattedDate, TradingCalendar.MKT_TIMEZONE);
-            _log.info("Date EST time: {}", date);
+        LocalDateTime formattedDate = TradingCalendar.getLocalDateTimeFromDateTimeString(dateString,
+                "yyyyMMdd HH:mm:ss");
 
-            ZoneId defaultZone = TimeZone.getDefault().toZoneId();
-            ZonedDateTime newLocal = date.withZoneSameInstant(defaultZone);
-            _log.info("Date PST time: {}", newLocal);
+        _log.info("Date  time: {}", formattedDate);
+        ZonedDateTime date = ZonedDateTime.of(formattedDate, TradingCalendar.MKT_TIMEZONE);
+        _log.info("Date EST time: {}", date);
 
-            ZonedDateTime newInstant = date.withZoneSameLocal(defaultZone);
-            _log.info("Date PST time: {}", newInstant);
+        ZoneId defaultZone = TimeZone.getDefault().toZoneId();
+        ZonedDateTime newLocal = date.withZoneSameInstant(defaultZone);
+        _log.info("Date PST time: {}", newLocal);
 
-            assertNotNull("1", date);
-        } catch (Exception | AssertionError ex) {
-            String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
-            _log.error(msg);
-            fail(msg);
-        }
+        ZonedDateTime newInstant = date.withZoneSameLocal(defaultZone);
+        _log.info("Date PST time: {}", newInstant);
+
+        assertNotNull("1", date);
+
     }
 
     @Test

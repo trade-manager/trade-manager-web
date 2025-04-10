@@ -47,7 +47,6 @@ import org.trade.core.dao.AspectHome;
 import org.trade.core.dao.Aspects;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
 
 /**
  * Some tests for the DataUtilities class.
@@ -91,23 +90,17 @@ public class AspectTest {
     }
 
     @Test
-    public void testFindAspectByClassName() {
+    public void testFindAspectByClassName() throws Exception {
 
         // Create new instance of Strategy and set
         // values in it by reading them from form object
+        String className = "org.trade.persistent.dao.Strategy";
+        _log.info("Find Aspects by className: {}", className);
 
-        try {
-            String className = "org.trade.persistent.dao.Strategy";
-            _log.info("Find Aspects by className: {}", className);
-
-            Aspects transientInstance = aspectHome.findByClassName(className);
-            assertNotNull(transientInstance);
-            for (Aspect aspect : transientInstance.getAspect()) {
-                _log.info("Aspect added Id = {}", aspect.getId());
-            }
-
-        } catch (Exception ex) {
-            fail("Error finding row " + ex.getMessage());
+        Aspects transientInstance = aspectHome.findByClassName(className);
+        assertNotNull(transientInstance);
+        for (Aspect aspect : transientInstance.getAspect()) {
+            _log.info("Aspect added Id = {}", aspect.getId());
         }
     }
 }

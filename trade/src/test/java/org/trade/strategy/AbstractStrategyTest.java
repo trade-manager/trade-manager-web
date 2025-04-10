@@ -133,14 +133,10 @@ public class AbstractStrategyTest {
                 this.tradestrategy.getId());
         assertNotNull("2", this.strategyProxy);
         strategyProxy.execute();
-        try {
-            do {
-                Thread.sleep(1000);
-            } while (!strategyProxy.isWaiting());
 
-        } catch (InterruptedException e) {
-            _log.info(" Thread interupt: {}", e.getMessage());
-        }
+        do {
+            Thread.sleep(1000);
+        } while (!strategyProxy.isWaiting());
         _log.info(" Test Initialized");
     }
 
@@ -176,16 +172,12 @@ public class AbstractStrategyTest {
                 IStrategyRule.PACKAGE + m_templateName, parm);
 
         strategyProxy.execute();
-        try {
-            do {
-                Thread.sleep(1000);
-            } while (!strategyProxy.isWaiting());
 
-        } catch (InterruptedException e) {
-            _log.info(" Thread interupt: {}", e.getMessage());
-        }
-        StrategyData.doDummyData(this.tradestrategy.getStrategyData().getBaseCandleSeries(),
-                this.tradestrategy.getTradingday(), 1, BarSize.FIVE_MIN, Side.BOT.equals(this.tradestrategy.getSide()), 0);
+        do {
+            Thread.sleep(1000);
+        } while (!strategyProxy.isWaiting());
+
+        StrategyData.doDummyData(this.tradestrategy.getStrategyData().getBaseCandleSeries(), this.tradestrategy.getTradingday(), 1, BarSize.FIVE_MIN, Side.BOT.equals(this.tradestrategy.getSide()), 0);
         strategyProxy.cancel();
     }
 
@@ -419,6 +411,7 @@ public class AbstractStrategyTest {
         openOrder.addTradeOrderfill(orderFill);
         openOrder.setStatus(OrderStatus.FILLED);
         openOrder = tradePersistentModel.persistTradeOrderfill(openOrder);
+        assertNotNull(openOrder);
 
         reFreshPositionOrders();
 

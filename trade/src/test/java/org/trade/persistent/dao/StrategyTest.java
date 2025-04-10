@@ -47,7 +47,6 @@ import org.slf4j.LoggerFactory;
 import org.trade.core.dao.AspectHome;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
 
 /**
  * Some tests for the DataUtilities class.
@@ -90,29 +89,21 @@ public class StrategyTest {
     }
 
     @Test
-    public void testStrategyHome() {
+    public void testStrategyHome() throws Exception {
 
         // Create new instance of Strategy and set
         // values in it by reading them from form object
-
-        try {
-            _log.debug("Adding Strategy");
-            AspectHome aspectHome = new AspectHome();
-            StrategyHome strategyHome = new StrategyHome();
-            String name = "TestStrategy";
-            Strategy transientInstance = strategyHome.findByName(name);
-            if (null == transientInstance) {
-                transientInstance = new Strategy(name);
-            }
-            transientInstance = aspectHome.persist(transientInstance);
-            _log.info("Strategy added Id = {}", transientInstance.getId());
-            assertNotNull("1", transientInstance.getId());
-            aspectHome.remove(transientInstance);
-
-        } catch (Exception | AssertionError ex) {
-            String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
-            _log.error(msg);
-            fail(msg);
+        _log.debug("Adding Strategy");
+        AspectHome aspectHome = new AspectHome();
+        StrategyHome strategyHome = new StrategyHome();
+        String name = "TestStrategy";
+        Strategy transientInstance = strategyHome.findByName(name);
+        if (null == transientInstance) {
+            transientInstance = new Strategy(name);
         }
+        transientInstance = aspectHome.persist(transientInstance);
+        _log.info("Strategy added Id = {}", transientInstance.getId());
+        assertNotNull("1", transientInstance.getId());
+        aspectHome.remove(transientInstance);
     }
 }

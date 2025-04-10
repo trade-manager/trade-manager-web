@@ -46,7 +46,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
 
 /**
  *
@@ -88,18 +87,14 @@ public class CodeTypeTest {
     @Test
     public void testFindCodeValueByName() {
 
-        try {
-            CodeTypeHome codeTypeHome = new CodeTypeHome();
-            CodeType codeType = codeTypeHome.findByName("MovingAverage");
-            assertNotNull("1", codeType);
-            _log.info("CodeType id: {}", codeType.getId());
-            CodeValue codeValue = codeTypeHome.findByAttributeName(codeType.getName(), "Length");
-            assertNotNull("2", codeValue);
-            _log.info("CodeValue id: {}", codeValue.getId());
-        } catch (Exception | AssertionError ex) {
-            String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
-            _log.error(msg);
-            fail(msg);
-        }
+
+        CodeTypeHome codeTypeHome = new CodeTypeHome();
+        CodeType codeType = codeTypeHome.findByName("MovingAverage");
+        assertNotNull("1", codeType);
+        _log.info("CodeType id: {}", codeType.getId());
+        CodeValue codeValue = codeTypeHome.findByAttributeName(codeType.getName(), "Length");
+        assertNotNull("2", codeValue);
+        _log.info("CodeValue id: {}", codeValue.getId());
+
     }
 }

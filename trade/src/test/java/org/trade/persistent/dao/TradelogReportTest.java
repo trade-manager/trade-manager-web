@@ -52,7 +52,6 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 /**
  * Some tests for the DataUtilities class.
@@ -98,42 +97,34 @@ public class TradelogReportTest {
     @Test
     public void testTradelogDetails() {
 
-        try {
-            TradelogHome tradelogHome = new TradelogHome();
-            Portfolio portfolio = (Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
-            TradelogReport tradelogReport = tradelogHome.findByTradelogDetail(portfolio, TradingCalendar.getYearStart(),
-                    TradingCalendar.getTradingDayEnd(TradingCalendar.getDateTimeNowMarketTimeZone()), false, null);
-            assertTrue("1", tradelogReport.getTradelogDetail().isEmpty());
-            for (TradelogDetail tradelogDetail : tradelogReport.getTradelogDetail()) {
-                _log.info("testTradelogDetails tradelogDetail:  getOpen:{} getAction:{} getMarketBias:{} getName:{} getSymbol:{} getQuantity:{} getLongShort:{} getAverageFilledPrice:{} getFilledDate:{}", tradelogDetail.getOpen(), tradelogDetail.getAction(), tradelogDetail.getMarketBias(), tradelogDetail.getName(), tradelogDetail.getSymbol(), tradelogDetail.getQuantity(), tradelogDetail.getLongShort(), tradelogDetail.getAverageFilledPrice(), tradelogDetail.getFilledDate());
-            }
 
-        } catch (Exception | AssertionError ex) {
-            String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
-            _log.error(msg);
-            fail(msg);
+        TradelogHome tradelogHome = new TradelogHome();
+        Portfolio portfolio = (Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
+        TradelogReport tradelogReport = tradelogHome.findByTradelogDetail(portfolio, TradingCalendar.getYearStart(),
+                TradingCalendar.getTradingDayEnd(TradingCalendar.getDateTimeNowMarketTimeZone()), false, null);
+        assertTrue("1", tradelogReport.getTradelogDetail().isEmpty());
+        for (TradelogDetail tradelogDetail : tradelogReport.getTradelogDetail()) {
+            _log.info("testTradelogDetails tradelogDetail:  getOpen:{} getAction:{} getMarketBias:{} getName:{} getSymbol:{} getQuantity:{} getLongShort:{} getAverageFilledPrice:{} getFilledDate:{}", tradelogDetail.getOpen(), tradelogDetail.getAction(), tradelogDetail.getMarketBias(), tradelogDetail.getName(), tradelogDetail.getSymbol(), tradelogDetail.getQuantity(), tradelogDetail.getLongShort(), tradelogDetail.getAverageFilledPrice(), tradelogDetail.getFilledDate());
         }
+
+
     }
 
     @Test
     public void testTradelogSummary() {
 
-        try {
-            TradelogHome tradelogHome = new TradelogHome();
-            Portfolio portfolio = (Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
-            TradelogReport tradelogReport = tradelogHome.findByTradelogSummary(portfolio,
-                    TradingCalendar.getYearStart(),
-                    TradingCalendar.getTradingDayEnd(TradingCalendar.getDateTimeNowMarketTimeZone()), null,
-                    new BigDecimal(0));
-            assertTrue("1", tradelogReport.getTradelogSummary().isEmpty());
-            for (TradelogSummary tradelogSummary : tradelogReport.getTradelogSummary()) {
-                _log.info("testTradelogSummary tradelogDetail: getPeriod:{}getBattingAverage:{}getSimpleSharpeRatio:{}getQuantity:{}getGrossProfitLoss:{}getQuantity:{}getNetProfitLoss:{}", tradelogSummary.getPeriod(), tradelogSummary.getBattingAverage(), tradelogSummary.getSimpleSharpeRatio(), tradelogSummary.getQuantity(), tradelogSummary.getGrossProfitLoss(), tradelogSummary.getQuantity(), tradelogSummary.getNetProfitLoss());
-            }
 
-        } catch (Exception | AssertionError ex) {
-            String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
-            _log.error(msg);
-            fail(msg);
+        TradelogHome tradelogHome = new TradelogHome();
+        Portfolio portfolio = (Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
+        TradelogReport tradelogReport = tradelogHome.findByTradelogSummary(portfolio,
+                TradingCalendar.getYearStart(),
+                TradingCalendar.getTradingDayEnd(TradingCalendar.getDateTimeNowMarketTimeZone()), null,
+                new BigDecimal(0));
+        assertTrue("1", tradelogReport.getTradelogSummary().isEmpty());
+        for (TradelogSummary tradelogSummary : tradelogReport.getTradelogSummary()) {
+            _log.info("testTradelogSummary tradelogDetail: getPeriod:{}getBattingAverage:{}getSimpleSharpeRatio:{}getQuantity:{}getGrossProfitLoss:{}getQuantity:{}getNetProfitLoss:{}", tradelogSummary.getPeriod(), tradelogSummary.getBattingAverage(), tradelogSummary.getSimpleSharpeRatio(), tradelogSummary.getQuantity(), tradelogSummary.getGrossProfitLoss(), tradelogSummary.getQuantity(), tradelogSummary.getNetProfitLoss());
         }
+
+
     }
 }
