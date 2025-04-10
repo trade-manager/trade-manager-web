@@ -35,14 +35,14 @@ tradeposition.id as id_trade_position,
 tradeposition.side as side,
 tradeorder.is_open_position  as is_open_position,
 tradeorder.action as action,
-tradeorder.stop_price as stop_price,
+ifnull(tradeorder.stop_price,0) as stop_price,
 tradeorder.status as order_status,
 tradeorder.filled_date as filled_date,
 ((if(tradeorder.action = 'BUY',  1 , -1)) * tradeorder.quantity) as quantity,
-tradeorder.average_filled_price as average_filled_price,
+ifnull(tradeorder.average_filled_price,0) as average_filled_price,
 ifnull(tradeorder.commission,0)  as commission,
-tradeposition.total_net_value as profit_loss
-from 
+ifnull(tradeposition.total_net_value,0) as profit_loss
+from
 contract
 left outer join tradeposition  on contract.id = tradeposition.id_contract
 left outer join tradeorder  on tradeposition.id = tradeorder.id_trade_position
@@ -72,7 +72,7 @@ tradeposition.id as id_trade_position,
 "" as side,
 "" as is_open_position,
 "" as action,
-"" as stop_price,
+"0" as stop_price,
 "" as order_status,
 null as filled_date,
 sum((if( tradeorder.action = 'BUY',  1 , -1)) * (if(tradeorder.is_filled =1, 1, 0))* tradeorder.quantity) as quantity,
@@ -112,13 +112,13 @@ tradestrategy.id as id_trade_position,
 "" as side,
 1 as is_open_position,
 "" as action,
-"" as stop_price,
+"0" as stop_price,
 "" as order_status,
 null as filled_date,
-"" as quantity,
-"" as average_filled_price,
-"" as commission,
-"" as profit_loss
+"0" as quantity,
+"0" as average_filled_price,
+"0" as commission,
+"0" as profit_loss
 from
 tradestrategy
 inner join contract on contract.id = tradestrategy.id_contract

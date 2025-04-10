@@ -551,10 +551,7 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
         if (e.getStateChange() == ItemEvent.SELECTED) {
 
             ChartPanel currentTab = (ChartPanel) m_jTabbedPaneContract.getSelectedComponent();
-            BarSize barSize = (BarSize) e.getItem();
-            Integer newPeriod = BarSize.getSeconds(barSize.getCode());
-            //TODO: Fix this
-            //Integer newPeriod = Integer.valueOf(barSize.getSeconds(barSize.getValue()));
+            Integer newPeriod = Integer.valueOf(((BarSize) e.getItem()).getValue());
 
             if (null != currentTab && !this.isConnected()) {
                 if (newPeriod.equals(BarSize.DAY)) {

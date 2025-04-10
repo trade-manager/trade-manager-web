@@ -290,7 +290,7 @@ public class TradestrategyTableModel extends TableModel {
                 break;
             }
             case 8: {
-                element.setBarSize(Integer.valueOf(((BarSize) value).getCode()));
+                element.setBarSize(Integer.valueOf(((BarSize) value).getValue()));
                 break;
             }
             case 9: {

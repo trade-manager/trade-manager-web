@@ -822,9 +822,12 @@ public class TradePersistentModel implements IPersistentModel {
     }
 
     public Aspect findAspectById(final Aspect aspect) throws PersistentModelException {
+
         Aspect instance = m_aspectHome.findById(aspect);
-        if (null == instance)
+        if (null == instance) {
             throw new PersistentModelException("Aspect not found for Id: " + aspect.getId());
+        }
+
         return instance;
     }
 

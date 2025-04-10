@@ -52,7 +52,6 @@ import org.trade.ui.TradeAppLoadConfig;
 import java.time.ZonedDateTime;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
 
 /**
  * Some tests for the  DataUtilities class.
@@ -96,61 +95,47 @@ public class TradingdayTest {
     }
 
     @Test
-    public void testAddTradingday() {
+    public void testAddTradingday() throws Exception {
 
         // Create new instance of Strategy and set
         // values in it by reading them from form object
+        _log.debug("Adding Tradingday");
 
-        try {
-            _log.debug("Adding Tradingday");
-
-            TradingdayHome tradingdayHome = new TradingdayHome();
-            AspectHome aspectHome = new AspectHome();
-            ZonedDateTime open = TradingCalendar.getTradingDayStart(
-                    TradingCalendar.getPrevTradingDay(TradingCalendar.getDateTimeNowMarketTimeZone()));
-            Tradingday transientInstance = tradingdayHome.findByOpenCloseDate(open,
-                    TradingCalendar.getTradingDayEnd(open));
-            if (null == transientInstance) {
-                transientInstance = Tradingday.newInstance(open);
-            }
-            tradingdayHome.persist(transientInstance);
-            _log.info("Tradingday added Id = {}", transientInstance.getId());
-            assertNotNull(transientInstance.getId());
-            aspectHome.remove(transientInstance);
-        } catch (Exception | AssertionError ex) {
-            String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
-            _log.error(msg);
-            fail(msg);
+        TradingdayHome tradingdayHome = new TradingdayHome();
+        AspectHome aspectHome = new AspectHome();
+        ZonedDateTime open = TradingCalendar.getTradingDayStart(
+                TradingCalendar.getPrevTradingDay(TradingCalendar.getDateTimeNowMarketTimeZone()));
+        Tradingday transientInstance = tradingdayHome.findByOpenCloseDate(open,
+                TradingCalendar.getTradingDayEnd(open));
+        if (null == transientInstance) {
+            transientInstance = Tradingday.newInstance(open);
         }
+        tradingdayHome.persist(transientInstance);
+        _log.info("Tradingday added Id = {}", transientInstance.getId());
+        assertNotNull(transientInstance.getId());
+        aspectHome.remove(transientInstance);
     }
 
     @Test
-    public void testUpdateTradingday() {
+    public void testUpdateTradingday() throws Exception {
 
         // Create new instance of Strategy and set
         // values in it by reading them from form object
+        _log.debug("Updating Tradingday");
 
-        try {
-            _log.debug("Updating Tradingday");
-
-            TradingdayHome tradingdayHome = new TradingdayHome();
-            AspectHome aspectHome = new AspectHome();
-            ZonedDateTime open = TradingCalendar.getTradingDayStart(
-                    TradingCalendar.getPrevTradingDay(TradingCalendar.getDateTimeNowMarketTimeZone()));
-            Tradingday transientInstance = tradingdayHome.findByOpenCloseDate(open,
-                    TradingCalendar.getTradingDayEnd(open));
-            if (null == transientInstance) {
-                transientInstance = Tradingday.newInstance(open);
-            }
-            transientInstance.setMarketBar(MarketBar.newInstance("+WRB").getCode());
-            tradingdayHome.persist(transientInstance);
-            _log.info("Tradingday Update Id = {}", transientInstance.getId());
-            assertNotNull(transientInstance.getId());
-            aspectHome.remove(transientInstance);
-        } catch (Exception | AssertionError ex) {
-            String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
-            _log.error(msg);
-            fail(msg);
+        TradingdayHome tradingdayHome = new TradingdayHome();
+        AspectHome aspectHome = new AspectHome();
+        ZonedDateTime open = TradingCalendar.getTradingDayStart(
+                TradingCalendar.getPrevTradingDay(TradingCalendar.getDateTimeNowMarketTimeZone()));
+        Tradingday transientInstance = tradingdayHome.findByOpenCloseDate(open,
+                TradingCalendar.getTradingDayEnd(open));
+        if (null == transientInstance) {
+            transientInstance = Tradingday.newInstance(open);
         }
+        transientInstance.setMarketBar(MarketBar.newInstance("+WRB").getCode());
+        tradingdayHome.persist(transientInstance);
+        _log.info("Tradingday Update Id = {}", transientInstance.getId());
+        assertNotNull(transientInstance.getId());
+        aspectHome.remove(transientInstance);
     }
 }

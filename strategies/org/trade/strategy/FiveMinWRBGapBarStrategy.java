@@ -51,7 +51,9 @@ import org.trade.strategy.data.CandleSeries;
 import org.trade.strategy.data.StrategyData;
 import org.trade.strategy.data.candle.CandleItem;
 
+import java.io.Serial;
 import java.time.ZonedDateTime;
+import java.util.Objects;
 
 /**
  * @author Simon Allen
@@ -86,6 +88,7 @@ public class FiveMinWRBGapBarStrategy extends AbstractStrategyRule {
      * WRB and then take an entry.
      */
 
+    @Serial
     private static final long serialVersionUID = -2517966650638318307L;
     private final static Logger _log = LoggerFactory.getLogger(FiveMinWRBGapBarStrategy.class);
 
@@ -114,7 +117,6 @@ public class FiveMinWRBGapBarStrategy extends AbstractStrategyRule {
      *
      * @param candleSeries CandleSeries
      * @param newBar       boolean
-     * @see org.trade.strategy.StrategyRule#runStrategy(CandleSeries, boolean)
      */
     public void runStrategy(CandleSeries candleSeries, boolean newBar) {
 
@@ -129,8 +131,7 @@ public class FiveMinWRBGapBarStrategy extends AbstractStrategyRule {
              * Trade is open kill this Strategy as its job is done.
              */
             if (this.isThereOpenPosition()) {
-                _log.info("Strategy complete open position filled symbol: " + getSymbol() + " startPeriod: "
-                        + startPeriod);
+                _log.info("Strategy complete open position filled symbol: {} startPeriod: {}", getSymbol(), startPeriod);
                 /*
                  * If the order is partial filled chaeck and if the risk goes
                  * beyond 1 risk unit cancel the openPositionOrder this will
@@ -152,8 +153,7 @@ public class FiveMinWRBGapBarStrategy extends AbstractStrategyRule {
              * is done.
              */
             if (null != openPositionOrderKey && !this.getTradeOrder(openPositionOrderKey).isActive()) {
-                _log.info("Strategy complete open position cancelled symbol: " + getSymbol() + " startPeriod: "
-                        + startPeriod);
+                _log.info("Strategy complete open position cancelled symbol: {} startPeriod: {}", getSymbol(), startPeriod);
                 updateTradestrategyStatus(TradestrategyStatus.CANCELLED);
                 this.cancel();
                 return;
@@ -172,16 +172,14 @@ public class FiveMinWRBGapBarStrategy extends AbstractStrategyRule {
                         TradingCalendar.getDateAtTime(TradingCalendar.getPrevTradingDay(startPeriod),
                                 this.getTradestrategy().getTradingday().getClose()),
                         true);
-                _log.info("Market Wieghted bar Open: " + candleAvgBar.getOpen() + " High: " + candleAvgBar.getHigh()
-                        + " Low: " + candleAvgBar.getLow() + " Close: " + candleAvgBar.getClose());
+                _log.info("Market Wieghted bar Open: {} High: {} Low: {} Close: {}", candleAvgBar.getOpen(), candleAvgBar.getHigh(), candleAvgBar.getLow(), candleAvgBar.getClose());
 
                 Candle candleBar = candleSeries.getBar(
                         TradingCalendar.getDateAtTime(TradingCalendar.getPrevTradingDay(startPeriod),
                                 this.getTradestrategy().getTradingday().getOpen()),
                         TradingCalendar.getDateAtTime(TradingCalendar.getPrevTradingDay(startPeriod),
                                 this.getTradestrategy().getTradingday().getClose()));
-                _log.info("Market Wieghted bar Open: " + candleBar.getOpen() + " High: " + candleBar.getHigh()
-                        + " Low: " + candleBar.getLow() + " Close: " + candleBar.getClose());
+                _log.info("Market Wieghted bar Open: {} High: {} Low: {} Close: {}", candleBar.getOpen(), candleBar.getHigh(), candleBar.getLow(), candleBar.getClose());
 
                 CandleItem prevCandleItem = null;
                 if (getCurrentCandleCount() > 0) {
@@ -191,7 +189,7 @@ public class FiveMinWRBGapBarStrategy extends AbstractStrategyRule {
                 }
 
                 Side side = Side.newInstance(Side.SLD);
-                if (prevCandleItem.isSide(Side.BOT)) {
+                if (Objects.requireNonNull(prevCandleItem).isSide(Side.BOT)) {
                     side = Side.newInstance(Side.BOT);
                 }
                 Money price = new Money(prevCandleItem.getHigh());
@@ -215,7 +213,7 @@ public class FiveMinWRBGapBarStrategy extends AbstractStrategyRule {
                 // If the candle less than the entry limit %
                 if ((highLowRange / prevCandleItem.getClose()) < entrylimit.getPercentOfPrice().doubleValue()) {
                     // TODO add the tails as a % of the body.
-                    _log.info(" We have a trade!!  Symbol: " + getSymbol() + " Time: " + startPeriod);
+                    _log.info(" We have a trade!!  Symbol: {} Time: {}", getSymbol(), startPeriod);
                     /*
                      * Create an open position.
                      */
@@ -224,7 +222,7 @@ public class FiveMinWRBGapBarStrategy extends AbstractStrategyRule {
                     openPositionOrderKey = tradeOrder.getOrderKey();
 
                 } else {
-                    _log.info("Rule 9:35 5min bar outside % limits. Symbol: " + getSymbol() + " Time: " + startPeriod);
+                    _log.info("Rule 9:35 5min bar outside % limits. Symbol: {} Time: {}", getSymbol(), startPeriod);
                     this.updateTradestrategyStatus(TradestrategyStatus.PERCENT);
                     // Kill this process we are done!
                     this.cancel();
@@ -237,13 +235,12 @@ public class FiveMinWRBGapBarStrategy extends AbstractStrategyRule {
                     this.updateTradestrategyStatus(TradestrategyStatus.TO);
                     this.cancelAllOrders();
                     // No trade we timed out
-                    _log.info("Rule 10:30:00 bar, time out unfilled open position Symbol: " + getSymbol() + " Time: "
-                            + startPeriod);
+                    _log.info("Rule 10:30:00 bar, time out unfilled open position Symbol: {} Time: {}", getSymbol(), startPeriod);
                 }
                 this.cancel();
             }
         } catch (StrategyRuleException ex) {
-            _log.error("Error  runRule exception: " + ex.getMessage(), ex);
+            _log.error("Error  runRule exception: {}", ex.getMessage(), ex);
             error(1, 10, "Error  runRule exception: " + ex.getMessage());
         }
     }

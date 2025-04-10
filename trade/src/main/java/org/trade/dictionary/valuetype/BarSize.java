@@ -38,7 +38,6 @@ package org.trade.dictionary.valuetype;
 import org.trade.core.valuetype.Decode;
 
 import java.io.Serial;
-import java.util.Hashtable;
 
 /**
  *
@@ -52,22 +51,8 @@ public class BarSize extends Decode {
     public static final Integer HOUR_MIN = 3600;
     public static final Integer DAY = 1;
 
-    // TODO: Fix value types to have a value
-    private static final Hashtable<String, Integer> seconds = new Hashtable<>();
-
     public BarSize() {
         super(DECODE, true);
-
-        seconds.put("_1_min", 60);
-        seconds.put("_2_mins", 120);
-        seconds.put("_5_mins", 300);
-        seconds.put("_10_mins", 600);
-        seconds.put("_15_mins", 900);
-        seconds.put("_20_mins", 1200);
-        seconds.put("_30_mins", 1800);
-        seconds.put("_1_hour", 3600);
-        seconds.put("_1_day", 86400);
-        seconds.put("_30_secs", 30);
     }
 
     /**
@@ -93,15 +78,6 @@ public class BarSize extends Decode {
         final BarSize returnInstance = new BarSize();
         returnInstance.setDefaultCode();
         return returnInstance;
-    }
-
-    /**
-     * @param barSize
-     * @return
-     */
-    public static int getSeconds(String barSize) {
-
-        return seconds.get(barSize);
     }
 
     /**

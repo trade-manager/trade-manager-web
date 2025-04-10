@@ -43,6 +43,7 @@ import org.trade.strategy.data.CandleSeries;
 import org.trade.strategy.data.StrategyData;
 import org.trade.strategy.data.candle.CandleItem;
 
+import java.io.Serial;
 import java.time.ZonedDateTime;
 
 /**
@@ -55,6 +56,7 @@ public class StrategyRuleTemplate extends AbstractStrategyRule {
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = -2281013751087462982L;
     private final static Logger _log = LoggerFactory.getLogger(StrategyRuleTemplate.class);
 
@@ -116,8 +118,7 @@ public class StrategyRuleTemplate extends AbstractStrategyRule {
              * the position.
              */
             if (this.isThereOpenPosition()) {
-                _log.info("Strategy complete open position filled symbol: " + getSymbol() + " startPeriod: "
-                        + startPeriod);
+                _log.info("Strategy complete open position filled symbol: {} startPeriod: {}", getSymbol(), startPeriod);
                 /*
                  * If the order is partial filled check if the risk goes beyond
                  * 1 risk unit. If it does cancel the openPositionOrder this
@@ -154,11 +155,11 @@ public class StrategyRuleTemplate extends AbstractStrategyRule {
             if (!currentCandleItem.getLastUpdateDate().isBefore(this.getTradestrategy().getTradingday().getClose()
                     .minusMinutes(this.getTradestrategy().getBarSize() / 60))) {
                 cancelOrdersClosePosition(true);
-                _log.info("Rule 15:55:00 close all open positions: " + getSymbol() + " Time: " + startPeriod);
+                _log.info("Rule 15:55:00 close all open positions: {} Time: {}", getSymbol(), startPeriod);
                 this.cancel();
             }
         } catch (StrategyRuleException ex) {
-            _log.error("Error  runRule exception: " + ex.getMessage(), ex);
+            _log.error("Error  runRule exception: {}", ex.getMessage(), ex);
             error(1, 10, "Error  runRule exception: " + ex.getMessage());
         }
     }

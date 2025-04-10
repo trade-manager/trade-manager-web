@@ -57,7 +57,6 @@ import java.util.Enumeration;
 import java.util.Vector;
 
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.fail;
 
 /**
  * Some tests for the  DataUtilities class.
@@ -101,79 +100,64 @@ public class ValueTypeDAOTest {
     }
 
     @Test
-    public void testDOAStrategies() {
-        try {
-            DAOStrategy strategies = new DAOStrategy();
-            Vector<Decode> decodes = strategies.getCodesDecodes();
-            Enumeration<Decode> eDecodes = decodes.elements();
-            assertFalse(decodes.isEmpty());
-            while (eDecodes.hasMoreElements()) {
-                Decode decode = eDecodes.nextElement();
-                _log.info("TYPE:{}", decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._TYPE));
-                _log.info("CODE:{}", decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._CODE));
-                _log.info("DISPLAY_NAME:{}", decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._DISPLAY_NAME));
+    public void testDOAStrategies() throws Exception {
 
-            }
+        DAOStrategy strategies = new DAOStrategy();
+        Vector<Decode> decodes = strategies.getCodesDecodes();
+        Enumeration<Decode> eDecodes = decodes.elements();
+        assertFalse(decodes.isEmpty());
+        while (eDecodes.hasMoreElements()) {
+            Decode decode = eDecodes.nextElement();
+            _log.info("TYPE:{}", decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._TYPE));
+            _log.info("CODE:{}", decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._CODE));
+            _log.info("DISPLAY_NAME:{}", decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._DISPLAY_NAME));
 
-            DAOStrategyManager strategyManagers = new DAOStrategyManager();
-            decodes = strategyManagers.getCodesDecodes();
-            assertFalse(decodes.isEmpty());
-            eDecodes = decodes.elements();
-            while (eDecodes.hasMoreElements()) {
-                Decode decode = eDecodes.nextElement();
-                _log.info("TYPE:{}", decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._TYPE));
-                _log.info("CODE:{}", decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._CODE));
-                _log.info("DISPLAY_NAME:{}", decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._DISPLAY_NAME));
+        }
 
-            }
-        } catch (Exception | AssertionError ex) {
-            String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
-            _log.error(msg);
-            fail(msg);
+        DAOStrategyManager strategyManagers = new DAOStrategyManager();
+        decodes = strategyManagers.getCodesDecodes();
+        assertFalse(decodes.isEmpty());
+        eDecodes = decodes.elements();
+        while (eDecodes.hasMoreElements()) {
+            Decode decode = eDecodes.nextElement();
+            _log.info("TYPE:{}", decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._TYPE));
+            _log.info("CODE:{}", decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._CODE));
+            _log.info("DISPLAY_NAME:{}", decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._DISPLAY_NAME));
+
         }
     }
 
     @Test
-    public void testDOAEntryLimit() {
-        try {
-            DAOEntryLimit entryLimits = new DAOEntryLimit();
-            Vector<Decode> decodes = entryLimits.getCodesDecodes();
-            assertFalse(decodes.isEmpty());
-            Enumeration<Decode> eDecodes = decodes.elements();
-            while (eDecodes.hasMoreElements()) {
-                Decode decode = eDecodes.nextElement();
-                _log.info("TYPE:{}", decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._TYPE));
-                _log.info("CODE:{}", decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._CODE));
-                _log.info("DISPLAY_NAME:{}", decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._DISPLAY_NAME));
+    public void testDOAEntryLimit() throws Exception {
 
-            }
-            Money price = new Money(20.22);
-            Entrylimit entrylimit = entryLimits.getValue(price);
-            _log.info("Price:{} Percent:{} LimitAmount:{}", price, entrylimit.getPercentOfPrice(), entrylimit.getLimitAmount());
-        } catch (Exception | AssertionError ex) {
-            String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
-            _log.error(msg);
-            fail(msg);
+        DAOEntryLimit entryLimits = new DAOEntryLimit();
+        Vector<Decode> decodes = entryLimits.getCodesDecodes();
+        assertFalse(decodes.isEmpty());
+        Enumeration<Decode> eDecodes = decodes.elements();
+        while (eDecodes.hasMoreElements()) {
+            Decode decode = eDecodes.nextElement();
+            _log.info("TYPE:{}", decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._TYPE));
+            _log.info("CODE:{}", decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._CODE));
+            _log.info("DISPLAY_NAME:{}", decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._DISPLAY_NAME));
+
         }
+        Money price = new Money(20.22);
+        Entrylimit entrylimit = entryLimits.getValue(price);
+        _log.info("Price:{} Percent:{} LimitAmount:{}", price, entrylimit.getPercentOfPrice(), entrylimit.getLimitAmount());
     }
 
     @Test
-    public void testChartDays() {
-        try {
-            ChartDays DAOValues = new ChartDays();
-            Vector<Decode> decodes = DAOValues.getCodesDecodes();
-            assertFalse(decodes.isEmpty());
-            Enumeration<Decode> eDecodes = decodes.elements();
-            while (eDecodes.hasMoreElements()) {
-                Decode decode = eDecodes.nextElement();
-                _log.info("TYPE:{}", decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._TYPE));
-                _log.info("CODE:{}", decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._CODE));
-                _log.info("DISPLAY_NAME:{}", decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._DISPLAY_NAME));
-            }
-        } catch (Exception | AssertionError ex) {
-            String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
-            _log.error(msg);
-            fail(msg);
+    public void testChartDays() throws Exception {
+
+        ChartDays DAOValues = new ChartDays();
+        Vector<Decode> decodes = DAOValues.getCodesDecodes();
+        assertFalse(decodes.isEmpty());
+        Enumeration<Decode> eDecodes = decodes.elements();
+        while (eDecodes.hasMoreElements()) {
+            Decode decode = eDecodes.nextElement();
+            _log.info("TYPE:{}", decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._TYPE));
+            _log.info("CODE:{}", decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._CODE));
+            _log.info("DISPLAY_NAME:{}", decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._DISPLAY_NAME));
         }
     }
 }

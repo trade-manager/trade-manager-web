@@ -44,7 +44,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 /**
  * Some tests for the TradingCalendar class.
@@ -86,14 +85,9 @@ public class ValueTypeTest {
 
     @Test
     public void testDecimal() {
-        try {
-            int scale = 2;
-            Decimal decimal = new Decimal("20.236", scale);
-            assertEquals(new Decimal(20.24, scale), decimal);
 
-        } catch (Exception ex) {
-            _log.error("Error creating Decimal: {}", ex.getMessage(), ex);
-            fail("Error creating Decimal: " + ex.getCause().getMessage());
-        }
+        int scale = 2;
+        Decimal decimal = new Decimal("20.236", scale);
+        assertEquals(new Decimal(20.24, scale), decimal);
     }
 }

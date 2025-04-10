@@ -46,6 +46,7 @@ import org.trade.strategy.data.CandleSeries;
 import org.trade.strategy.data.StrategyData;
 import org.trade.strategy.data.candle.CandleItem;
 
+import java.io.Serial;
 import java.time.ZonedDateTime;
 
 /**
@@ -65,6 +66,7 @@ public class PosMgrAllOrNothingStrategy extends AbstractStrategyRule {
      * 3/ Close any open positions at 15:58.
      */
 
+    @Serial
     private static final long serialVersionUID = 5998132222691879078L;
     private final static Logger _log = LoggerFactory.getLogger(PosMgrAllOrNothingStrategy.class);
 
@@ -90,7 +92,6 @@ public class PosMgrAllOrNothingStrategy extends AbstractStrategyRule {
      *
      * @param candleSeries CandleSeries
      * @param newBar       boolean
-     * @see org.trade.strategy.StrategyRule#runStrategy(CandleSeries, boolean)
      */
     public void runStrategy(CandleSeries candleSeries, boolean newBar) {
 
@@ -108,7 +109,7 @@ public class PosMgrAllOrNothingStrategy extends AbstractStrategyRule {
              */
 
             if (!this.isThereOpenPosition()) {
-                _log.info("No open position so Cancel Strategy Mgr Symbol: " + getSymbol() + " Time:" + startPeriod);
+                _log.info("No open position so Cancel Strategy Mgr Symbol: {} Time:{}", getSymbol(), startPeriod);
                 this.cancel();
                 return;
             }
@@ -129,14 +130,14 @@ public class PosMgrAllOrNothingStrategy extends AbstractStrategyRule {
                  * and stop orders for the open quantity. One target at xR.
                  */
 
-                _log.info("Open position submit Stop/Tgt orders Symbol: " + getSymbol() + " Time:" + startPeriod);
+                _log.info("Open position submit Stop/Tgt orders Symbol: {} Time:{}", getSymbol(), startPeriod);
 
                 /*
                  * Risk amount is based of the average filled price and actual
                  * stop price not the rounded quantity. But if the stop price is
                  * not set use Risk Amount/Quantity.
                  */
-                double riskAmount = 0;
+                double riskAmount;
                 if (null == this.getOpenPositionOrder().getStopPrice()) {
                     riskAmount = Math.abs(this.getTradestrategy().getRiskAmount().doubleValue()
                             / this.getOpenPositionOrder().getFilledQuantity().doubleValue());
@@ -169,11 +170,11 @@ public class PosMgrAllOrNothingStrategy extends AbstractStrategyRule {
             if (!currentCandleItem.getLastUpdateDate()
                     .isBefore(this.getTradestrategy().getTradingday().getClose().minusMinutes(2))) {
                 cancelOrdersClosePosition(true);
-                _log.info("PositionManagerStrategy 15:58:00 done: " + getSymbol() + " Time: " + startPeriod);
+                _log.info("PositionManagerStrategy 15:58:00 done: {} Time: {}", getSymbol(), startPeriod);
                 this.cancel();
             }
         } catch (StrategyRuleException ex) {
-            _log.error("Error Position User exception: " + ex.getMessage(), ex);
+            _log.error("Error Position User exception: {}", ex.getMessage(), ex);
             error(1, 30, "Error  Position User exception: " + ex.getMessage());
         }
     }

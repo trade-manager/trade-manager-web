@@ -57,7 +57,6 @@ import org.trade.ui.TradeAppLoadConfig;
 import java.util.Vector;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 /**
  * Some tests for the  DataUtilities class.
@@ -101,118 +100,92 @@ public class ConfigurationPanelTest {
     }
 
     @Test
-    public void testCreateIntegerClass() {
-        try {
-            CodeType codeType = new CodeType("Moving Average", CodeType.IndicatorParameters, "Moving Average");
-            CodeAttribute codeAttribute = new CodeAttribute(codeType, "Length", "The length of the MA", "10",
-                    "java.lang.Integer", null);
-            CodeValue codeValue = new CodeValue(codeAttribute, "20");
+    public void testCreateIntegerClass() throws Exception {
 
-            Vector<Object> parm = new Vector<>();
-            parm.add(codeValue.getCodeValue());
+        CodeType codeType = new CodeType("Moving Average", CodeType.IndicatorParameters, "Moving Average");
+        CodeAttribute codeAttribute = new CodeAttribute(codeType, "Length", "The length of the MA", "10",
+                "java.lang.Integer", null);
+        CodeValue codeValue = new CodeValue(codeAttribute, "20");
 
-            Integer value = (Integer) ClassFactory.getCreateClass(codeValue.getCodeAttribute().getClassName(), parm,
-                    this);
-            _log.info("Value is: {}", value);
-            assertEquals("1", 20, value, 0);
-        } catch (Exception | AssertionError ex) {
-            String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
-            _log.error(msg);
-            fail(msg);
-        }
+        Vector<Object> parm = new Vector<>();
+        parm.add(codeValue.getCodeValue());
+
+        Integer value = (Integer) ClassFactory.getCreateClass(codeValue.getCodeAttribute().getClassName(), parm,
+                this);
+        _log.info("Value is: {}", value);
+        assertEquals("1", 20, value, 0);
     }
 
     @Test
-    public void testCreateBooleanClass() {
-        try {
-            CodeType codeType = new CodeType("Moving Average", CodeType.IndicatorParameters, "Moving Average");
-            CodeAttribute codeAttribute = new CodeAttribute(codeType, "Length", "The length of the MA", "true",
-                    "java.lang.Boolean", null);
-            CodeValue codeValue = new CodeValue(codeAttribute, "true");
+    public void testCreateBooleanClass() throws Exception {
 
-            Vector<Object> parm = new Vector<>();
-            parm.add(codeValue.getCodeValue());
+        CodeType codeType = new CodeType("Moving Average", CodeType.IndicatorParameters, "Moving Average");
+        CodeAttribute codeAttribute = new CodeAttribute(codeType, "Length", "The length of the MA", "true",
+                "java.lang.Boolean", null);
+        CodeValue codeValue = new CodeValue(codeAttribute, "true");
 
-            Boolean value = (Boolean) ClassFactory.getCreateClass(codeValue.getCodeAttribute().getClassName(), parm,
-                    this);
-            _log.info("Value is: {}", value);
-            assertEquals("1", true, value);
-        } catch (Exception | AssertionError ex) {
-            String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
-            _log.error(msg);
-            fail(msg);
-        }
+        Vector<Object> parm = new Vector<>();
+        parm.add(codeValue.getCodeValue());
+
+        Boolean value = (Boolean) ClassFactory.getCreateClass(codeValue.getCodeAttribute().getClassName(), parm,
+                this);
+        _log.info("Value is: {}", value);
+        assertEquals("1", true, value);
     }
 
     @Test
-    public void testCreateStringClass() {
-        try {
-            CodeType codeType = new CodeType("Moving Average", CodeType.IndicatorParameters, "Moving Average");
-            CodeAttribute codeAttribute = new CodeAttribute(codeType, "Length", "The length of the MA", "Test",
-                    "java.lang.String", null);
-            CodeValue codeValue = new CodeValue(codeAttribute, "Simple");
+    public void testCreateStringClass() throws Exception {
 
-            Vector<Object> parm = new Vector<>();
-            parm.add(codeValue.getCodeValue());
+        CodeType codeType = new CodeType("Moving Average", CodeType.IndicatorParameters, "Moving Average");
+        CodeAttribute codeAttribute = new CodeAttribute(codeType, "Length", "The length of the MA", "Test",
+                "java.lang.String", null);
+        CodeValue codeValue = new CodeValue(codeAttribute, "Simple");
 
-            String value = (String) ClassFactory.getCreateClass(codeValue.getCodeAttribute().getClassName(), parm,
-                    this);
-            assertEquals("1", "Simple", value);
-            _log.info("Value is: {}", value);
-        } catch (Exception | AssertionError ex) {
-            String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
-            _log.error(msg);
-            fail(msg);
-        }
+        Vector<Object> parm = new Vector<>();
+        parm.add(codeValue.getCodeValue());
+
+        String value = (String) ClassFactory.getCreateClass(codeValue.getCodeAttribute().getClassName(), parm,
+                this);
+        assertEquals("1", "Simple", value);
+        _log.info("Value is: {}", value);
     }
 
     @Test
-    public void testCreateDecodeClass() {
-        try {
-            CodeType codeType = new CodeType("Moving Average", CodeType.IndicatorParameters, "Moving Average");
-            CodeAttribute codeAttribute = new CodeAttribute(codeType, "SMAType", "The length of the MA", "LINEAR",
-                    "org.trade.dictionary.valuetype.CalculationType", null);
-            CodeValue codeValue = new CodeValue(codeAttribute, CalculationType.LINEAR);
+    public void testCreateDecodeClass() throws Exception {
 
-            Vector<Object> parm = new Vector<>();
-            // parm.add(codeValue.getCodeValue());
+        CodeType codeType = new CodeType("Moving Average", CodeType.IndicatorParameters, "Moving Average");
+        CodeAttribute codeAttribute = new CodeAttribute(codeType, "SMAType", "The length of the MA", "LINEAR",
+                "org.trade.dictionary.valuetype.CalculationType", null);
+        CodeValue codeValue = new CodeValue(codeAttribute, CalculationType.LINEAR);
 
-            CalculationType value = (CalculationType) ClassFactory
-                    .getCreateClass(codeValue.getCodeAttribute().getClassName(), parm, this);
-            value.setValue(CalculationType.LINEAR);
-            assertEquals("1", CalculationType.LINEAR, value.getCode());
-            _log.info("Value is: {}", value);
-        } catch (Exception | AssertionError ex) {
-            String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
-            _log.error(msg);
-            fail(msg);
-        }
+        Vector<Object> parm = new Vector<>();
+        // parm.add(codeValue.getCodeValue());
+
+        CalculationType value = (CalculationType) ClassFactory
+                .getCreateClass(codeValue.getCodeAttribute().getClassName(), parm, this);
+        value.setValue(CalculationType.LINEAR);
+        assertEquals("1", CalculationType.LINEAR, value.getCode());
+        _log.info("Value is: {}", value);
     }
 
     @Test
-    public void testCreateIndicatorSeriesClass() {
-        try {
+    public void testCreateIndicatorSeriesClass() throws Exception {
 
-            final String packageName = "org.trade.strategy.data.";
-            Strategy strategy = (Strategy) DAOStrategy.newInstance().getObject();
-            Vector<Object> parm = new Vector<>();
-            parm.add(strategy);
-            parm.add("20-SMA");
-            parm.add(IndicatorSeries.MovingAverageSeries);
-            parm.add("20 Simple Moving Average");
-            parm.add(false);
-            parm.add(0);
-            parm.add(false);
-            String className = packageName + IndicatorSeries.MovingAverageSeries;
+        final String packageName = "org.trade.strategy.data.";
+        Strategy strategy = (Strategy) DAOStrategy.newInstance().getObject();
+        Vector<Object> parm = new Vector<>();
+        parm.add(strategy);
+        parm.add("20-SMA");
+        parm.add(IndicatorSeries.MovingAverageSeries);
+        parm.add("20 Simple Moving Average");
+        parm.add(false);
+        parm.add(0);
+        parm.add(false);
+        String className = packageName + IndicatorSeries.MovingAverageSeries;
 
-            IndicatorSeries value = (IndicatorSeries) ClassFactory.getCreateClass(className, parm, this);
+        IndicatorSeries value = (IndicatorSeries) ClassFactory.getCreateClass(className, parm, this);
 
-            assertEquals("1", className, value.getClass().getName());
-            _log.info("Value is: {}", value);
-        } catch (Exception | AssertionError ex) {
-            String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
-            _log.error(msg);
-            fail(msg);
-        }
+        assertEquals("1", className, value.getClass().getName());
+        _log.info("Value is: {}", value);
     }
 }

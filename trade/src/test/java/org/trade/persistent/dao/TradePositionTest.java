@@ -51,7 +51,6 @@ import org.trade.ui.TradeAppLoadConfig;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
 
 /**
  *
@@ -82,7 +81,7 @@ public class TradePositionTest {
         tradePositionHome = new TradePositionHome();
         aspectHome = new AspectHome();
         String symbol = "TEST";
-        this.tradestrategy = TradestrategyTest.getTestTradestrategy(symbol);
+        this.tradestrategy = TradestrategyBase.getTestTradestrategy(symbol);
         assertNotNull(this.tradestrategy);
     }
 
@@ -91,7 +90,7 @@ public class TradePositionTest {
      */
     @After
     public void tearDown() throws Exception {
-        TradestrategyTest.clearDBData();
+        TradestrategyBase.clearDBData();
     }
 
     /**
@@ -102,25 +101,21 @@ public class TradePositionTest {
     }
 
     @Test
-    public void testAddRemoveTradePosition() {
+    public void testAddRemoveTradePosition() throws Exception {
 
-        try {
-            TradePosition instance = new TradePosition(this.tradestrategy.getContract(),
-                    TradingCalendar.getDateTimeNowMarketTimeZone(), Side.BOT);
 
-            TradePosition tradePosition = aspectHome.persist(instance);
+        TradePosition instance = new TradePosition(this.tradestrategy.getContract(),
+                TradingCalendar.getDateTimeNowMarketTimeZone(), Side.BOT);
 
-            assertNotNull("1", tradePosition.getId());
-            _log.info("testAddTradePosition IdTradeStrategy: {}IdTradePosition: {}", this.tradestrategy.getId(), tradePosition.getId());
+        TradePosition tradePosition = aspectHome.persist(instance);
 
-            tradePositionHome.remove(tradePosition);
-            _log.info("testDeleteTradePosition IdTradeStrategy: {}", tradestrategy.getId());
-            tradePosition = tradePositionHome.findById(tradePosition.getId());
-            assertNull("2", tradePosition);
-        } catch (Exception | AssertionError ex) {
-            String msg = "Error running " + name.getMethodName() + " msg: " + ex.getMessage();
-            _log.error(msg);
-            fail(msg);
-        }
+        assertNotNull("1", tradePosition.getId());
+        _log.info("testAddTradePosition IdTradeStrategy: {}IdTradePosition: {}", this.tradestrategy.getId(), tradePosition.getId());
+
+        tradePositionHome.remove(tradePosition);
+        _log.info("testDeleteTradePosition IdTradeStrategy: {}", tradestrategy.getId());
+        tradePosition = tradePositionHome.findById(tradePosition.getId());
+        assertNull("2", tradePosition);
+
     }
 }
