@@ -35,13 +35,11 @@
  */
 package org.trade.strategy.data;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TestName;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trade.core.util.MatrixFunctions;
@@ -54,7 +52,7 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Some tests for the {@link TradingCalendar} class.
@@ -65,20 +63,18 @@ import static org.junit.Assert.assertEquals;
 public class MatrixFunctionsTest {
 
     private final static Logger _log = LoggerFactory.getLogger(MatrixFunctionsTest.class);
-    @Rule
-    public TestName name = new TestName();
 
     /**
      * Method setUpBeforeClass.
      */
-    @BeforeClass
+    @BeforeAll
     public static void setUpBeforeClass() throws Exception {
     }
 
     /**
      * Method setUp.
      */
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
 
     }
@@ -86,14 +82,14 @@ public class MatrixFunctionsTest {
     /**
      * Method tearDown.
      */
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
     }
 
     /**
      * Method tearDownAfterClass.
      */
-    @AfterClass
+    @AfterAll
     public static void tearDownAfterClass() throws Exception {
     }
 
@@ -140,7 +136,7 @@ public class MatrixFunctionsTest {
         double atan = Math.atan((endXY.y - startXY.y) / ((endXY.x - startXY.x)));
         double angle = (atan * 180) / Math.PI;
         _log.info("angle: {}", angle);
-        assertEquals("1", new BigDecimal("67.38").setScale(2, RoundingMode.HALF_UP),
+        assertEquals(new BigDecimal("67.38").setScale(2, RoundingMode.HALF_UP),
                 new BigDecimal(angle).setScale(2, RoundingMode.HALF_UP));
 
     }

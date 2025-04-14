@@ -35,13 +35,11 @@
  */
 package org.trade.persistent.dao;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TestName;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trade.core.dao.AspectHome;
@@ -56,8 +54,9 @@ import org.trade.ui.TradeAppLoadConfig;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 
 /**
  * Some tests for the DataUtilities class.
@@ -68,34 +67,33 @@ import static org.junit.Assert.assertNotNull;
 public class CandleTest {
 
     private final static Logger _log = LoggerFactory.getLogger(CandleTest.class);
-    @Rule
-    public TestName name = new TestName();
+
 
     private Tradestrategy tradestrategy = null;
 
     /**
      * Method setUpBeforeClass.
      */
-    @BeforeClass
+    @BeforeAll
     public static void setUpBeforeClass() throws Exception {
     }
 
     /**
      * Method setUp.
      */
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
 
         TradeAppLoadConfig.loadAppProperties();
         String symbol = "TEST";
         this.tradestrategy = TradestrategyBase.getTestTradestrategy(symbol);
-        assertNotNull("1", this.tradestrategy);
+        assertNotNull(this.tradestrategy);
     }
 
     /**
      * Method tearDown.
      */
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         TradestrategyBase.clearDBData();
     }
@@ -103,7 +101,7 @@ public class CandleTest {
     /**
      * Method tearDownAfterClass.
      */
-    @AfterClass
+    @AfterAll
     public static void tearDownAfterClass() throws Exception {
     }
 
@@ -125,7 +123,7 @@ public class CandleTest {
         transientInstance.setTradeCount(10);
 
         transientInstance = aspectHome.persist(transientInstance);
-        assertNotNull("1", transientInstance.getId());
+        assertNotNull(transientInstance.getId());
         _log.info("testAddCandle IdCandle: {}", transientInstance.getId());
     }
 
@@ -143,11 +141,11 @@ public class CandleTest {
                     (-1 * (tradestrategy.getChartDays() - 1)));
             StrategyData.doDummyData(tradestrategy.getStrategyData().getBaseCandleSeries(),
                     Tradingday.newInstance(prevTradingday), 2, BarSize.FIVE_MIN, true, 0);
-            assertFalse("1", tradestrategy.getStrategyData().getBaseCandleSeries().isEmpty());
+            assertFalse(tradestrategy.getStrategyData().getBaseCandleSeries().isEmpty());
             candleHome.persistCandleSeries(tradestrategy.getStrategyData().getBaseCandleSeries());
 
             _log.info("testAddCandle IdTradeStrategy: {}", tradestrategy.getId());
-            assertNotNull("2", ((CandleItem) tradestrategy.getStrategyData().getBaseCandleSeries().getDataItem(0))
+            assertNotNull(((CandleItem) tradestrategy.getStrategyData().getBaseCandleSeries().getDataItem(0))
                     .getCandle().getId());
         }
     }

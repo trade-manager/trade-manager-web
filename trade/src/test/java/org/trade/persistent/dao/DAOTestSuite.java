@@ -35,8 +35,7 @@
  */
 package org.trade.persistent.dao;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.junit.jupiter.api.Test;
 
 /**
  *
@@ -59,8 +58,7 @@ public class DAOTestSuite {
         // suite.addTestSuite(TradeTest.class);
         // suite.addTestSuite(TradeOrderTest.class);
         // suite.addTestSuite(TradelogReportTest.class);
-
-        return new TestSuite();
+        return null;
     }
 
     /**
@@ -69,6 +67,6 @@ public class DAOTestSuite {
      * @param args String[]
      */
     public static void main(String[] args) {
-        junit.textui.TestRunner.run(suite());
+
     }
 }

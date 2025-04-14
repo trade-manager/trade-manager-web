@@ -1,52 +1,50 @@
 package org.trade.strategy.data;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TestName;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trade.persistent.dao.Tradestrategy;
 import org.trade.persistent.dao.TradestrategyBase;
 import org.trade.ui.TradeAppLoadConfig;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 
 public class CandleSeriesTest {
 
     private final static Logger _log = LoggerFactory.getLogger(CandleSeriesTest.class);
-    @Rule
-    public TestName name = new TestName();
+
 
     private Tradestrategy tradestrategy = null;
 
     /**
      * Method setUpBeforeClass.
      */
-    @BeforeClass
+    @BeforeAll
     public static void setUpBeforeClass() throws Exception {
     }
 
     /**
      * Method setUp.
      */
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
 
         TradeAppLoadConfig.loadAppProperties();
         String symbol = "TEST";
         this.tradestrategy = TradestrategyBase.getTestTradestrategy(symbol);
-        assertNotNull("1", this.tradestrategy);
+        assertNotNull(this.tradestrategy);
     }
 
     /**
      * Method tearDown.
      */
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
 
         TradestrategyBase.clearDBData();
@@ -55,7 +53,7 @@ public class CandleSeriesTest {
     /**
      * Method tearDownAfterClass.
      */
-    @AfterClass
+    @AfterAll
     public static void tearDownAfterClass() throws Exception {
     }
 
@@ -67,7 +65,7 @@ public class CandleSeriesTest {
         if (candleSeries.equals(series)) {
             _log.info("CandleSeries: {}", series);
         }
-        assertEquals("1", series, candleSeries);
+        assertEquals(series, candleSeries);
 
     }
 }

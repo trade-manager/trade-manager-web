@@ -35,13 +35,11 @@
  */
 package org.trade.broker;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TestName;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trade.broker.client.Broker;
@@ -69,8 +67,8 @@ import java.math.BigDecimal;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Some tests for the DataUtilities class.
@@ -81,9 +79,6 @@ import static org.junit.Assert.assertNotNull;
 public class BrokerModelTest implements IBrokerChangeListener {
 
     private final static Logger _log = LoggerFactory.getLogger(BrokerModelTest.class);
-
-    @Rule
-    public TestName name = new TestName();
 
     private IBrokerModel backTestbrokerModel;
     private final BigDecimal price = new BigDecimal("108.85");
@@ -100,7 +95,7 @@ public class BrokerModelTest implements IBrokerChangeListener {
     /**
      * Method setUpBeforeClass.
      */
-    @BeforeClass
+    @BeforeAll
     public static void setUpBeforeClass() throws Exception {
         TradeAppLoadConfig.loadAppProperties();
         clientId = ConfigProperties.getPropAsInt("trade.tws.clientId");
@@ -118,14 +113,14 @@ public class BrokerModelTest implements IBrokerChangeListener {
     /**
      * Method setUp.
      */
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
 
         String symbol = "TEST";
         this.tradestrategy = TradestrategyBase.getTestTradestrategy(symbol);
         backTestbrokerModel = (IBrokerModel) ClassFactory.getServiceForInterface(_broker, BrokerModelTest.class);
         backTestbrokerModel.onConnect(host, port, clientId);
-        assertNotNull("1", this.tradestrategy);
+        assertNotNull(this.tradestrategy);
 
         backTestbrokerModel = (IBrokerModel) ClassFactory.getServiceForInterface(_broker, BrokerModelTest.class);
         backTestbrokerModel.onConnect(host, port, clientId);
@@ -148,7 +143,7 @@ public class BrokerModelTest implements IBrokerChangeListener {
     /**
      * Method tearDown.
      */
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
 
         // Wait for the BackTestBroker to complete. These tests use the testing
@@ -175,7 +170,7 @@ public class BrokerModelTest implements IBrokerChangeListener {
     /**
      * Method tearDownAfterClass.
      */
-    @AfterClass
+    @AfterAll
     public static void tearDownAfterClass() {
     }
 
@@ -191,7 +186,7 @@ public class BrokerModelTest implements IBrokerChangeListener {
         tradeOrder = backTestbrokerModel.onPlaceOrder(this.tradestrategy.getContract(), tradeOrder);
 
         _log.info("IdTradeOrder: {} OrderKey: {}", tradeOrder.getId(), tradeOrder.getOrderKey());
-        assertNotNull("1", tradeOrder);
+        assertNotNull(tradeOrder);
     }
 
     @Test
@@ -209,7 +204,7 @@ public class BrokerModelTest implements IBrokerChangeListener {
         tradeOrder = backTestbrokerModel.onPlaceOrder(this.tradestrategy.getContract(), tradeOrder);
 
         _log.info("IdTradeOrder: {} OrderKey: {}", tradeOrder.getId(), tradeOrder.getOrderKey());
-        assertNotNull("1", tradeOrder.getId());
+        assertNotNull(tradeOrder.getId());
     }
 
     @Test
@@ -226,7 +221,7 @@ public class BrokerModelTest implements IBrokerChangeListener {
         tradeOrder.setTransmit(true);
         tradeOrder.setStatus(OrderStatus.UNSUBMIT);
         tradeOrder = backTestbrokerModel.onPlaceOrder(this.tradestrategy.getContract(), tradeOrder);
-        assertNotNull("1", tradeOrder.getId());
+        assertNotNull(tradeOrder.getId());
 
         TradeOrder tradeOrder1 = new TradeOrder(this.tradestrategy, Action.SELL, OrderType.LMT, 50,
                 price.subtract(new BigDecimal("1.0")), price.add(new BigDecimal("2.0")),
@@ -239,7 +234,7 @@ public class BrokerModelTest implements IBrokerChangeListener {
         tradeOrder1.setStatus(OrderStatus.UNSUBMIT);
 
         tradeOrder1 = backTestbrokerModel.onPlaceOrder(this.tradestrategy.getContract(), tradeOrder1);
-        assertNotNull("2", tradeOrder1.getId());
+        assertNotNull(tradeOrder1.getId());
 
         TradeOrder tradeOrder2 = new TradeOrder(this.tradestrategy, Action.SELL, OrderType.STP, 50,
                 price.subtract(new BigDecimal("1.0")), null, TradingCalendar.getDateTimeNowMarketTimeZone());
@@ -250,7 +245,7 @@ public class BrokerModelTest implements IBrokerChangeListener {
         tradeOrder2.setTransmit(true);
         tradeOrder2.setStatus(OrderStatus.UNSUBMIT);
         tradeOrder2 = backTestbrokerModel.onPlaceOrder(this.tradestrategy.getContract(), tradeOrder2);
-        assertNotNull("3", tradeOrder2.getId());
+        assertNotNull(tradeOrder2.getId());
 
         TradeOrder tradeOrder3 = new TradeOrder(this.tradestrategy, Action.SELL, OrderType.STP, 50,
                 price.subtract(new BigDecimal("2.0")), null, TradingCalendar.getDateTimeNowMarketTimeZone());
@@ -260,7 +255,7 @@ public class BrokerModelTest implements IBrokerChangeListener {
         tradeOrder3.setTransmit(false);
         tradeOrder3.setStatus(OrderStatus.UNSUBMIT);
         tradeOrder3 = backTestbrokerModel.onPlaceOrder(this.tradestrategy.getContract(), tradeOrder3);
-        assertNotNull("4", tradeOrder3.getId());
+        assertNotNull(tradeOrder3.getId());
         _log.info("IdTradeOrder: {} OrderKey2: {} OrderKey2 Price: {} OrderKey3: {} OrderKey3 Price: {}", tradeOrder3.getId(), tradeOrder2.getOrderKey(), tradeOrder2.getLimitPrice(), tradeOrder3.getOrderKey(), tradeOrder3.getAuxPrice());
         // Update the Stop price
         tradeOrder2.setAuxPrice(price.subtract(new BigDecimal("0.9")));
@@ -277,7 +272,7 @@ public class BrokerModelTest implements IBrokerChangeListener {
         tradeOrder3 = backTestbrokerModel.onPlaceOrder(this.tradestrategy.getContract(), tradeOrder3);
 
         _log.info("IdTradeOrder: {} OrderKey: {}", tradeOrder2.getId(), tradeOrder3.getOrderKey());
-        assertNotNull("5", tradeOrder3);
+        assertNotNull(tradeOrder3);
     }
 
     @Test
@@ -288,7 +283,7 @@ public class BrokerModelTest implements IBrokerChangeListener {
         backTestbrokerModel.setBrokerDataOnly(true);
         backTestbrokerModel.onBrokerData(tradestrategy, tradestrategy.getTradingday().getClose());
 
-        assertFalse("1", this.tradestrategy.getStrategyData().getCandleDataset().getSeries(0).isEmpty());
+        assertFalse(this.tradestrategy.getStrategyData().getCandleDataset().getSeries(0).isEmpty());
 
         IndicatorSeries candleseries = this.tradestrategy.getStrategyData().getCandleDataset().getSeries(0);
         IndicatorSeries sma1Series = this.tradestrategy.getStrategyData()
@@ -346,21 +341,21 @@ public class BrokerModelTest implements IBrokerChangeListener {
     public void testOnConnect() {
 
         backTestbrokerModel.onConnect(host, port, clientId);
-        assertFalse("1", backTestbrokerModel.isConnected());
+        assertFalse(backTestbrokerModel.isConnected());
     }
 
     @Test
     public void testDisconnect() {
 
         backTestbrokerModel.onDisconnect();
-        assertFalse("1", backTestbrokerModel.isConnected());
+        assertFalse(backTestbrokerModel.isConnected());
     }
 
     @Test
     public void testGetNextRequestId() {
 
         Integer id = backTestbrokerModel.getNextRequestId();
-        assertNotNull("1", id);
+        assertNotNull(id);
     }
 
     @Test
@@ -368,7 +363,7 @@ public class BrokerModelTest implements IBrokerChangeListener {
 
         backTestbrokerModel.onSubscribeAccountUpdates(true,
                 tradestrategy.getPortfolio().getIndividualAccount().getAccountNumber());
-        assertFalse("1", backTestbrokerModel
+        assertFalse(backTestbrokerModel
                 .isAccountUpdatesRunning(tradestrategy.getPortfolio().getIndividualAccount().getAccountNumber()));
     }
 
@@ -379,7 +374,7 @@ public class BrokerModelTest implements IBrokerChangeListener {
                 tradestrategy.getPortfolio().getIndividualAccount().getAccountNumber());
         backTestbrokerModel
                 .onCancelAccountUpdates(tradestrategy.getPortfolio().getIndividualAccount().getAccountNumber());
-        assertFalse("1", backTestbrokerModel
+        assertFalse(backTestbrokerModel
                 .isAccountUpdatesRunning(tradestrategy.getPortfolio().getIndividualAccount().getAccountNumber()));
     }
 
@@ -387,7 +382,7 @@ public class BrokerModelTest implements IBrokerChangeListener {
     public void testOnReqManagedAccount() throws Exception {
 
         backTestbrokerModel.onReqManagedAccount();
-        assertFalse("1", backTestbrokerModel
+        assertFalse(backTestbrokerModel
                 .isAccountUpdatesRunning(tradestrategy.getPortfolio().getIndividualAccount().getAccountNumber()));
     }
 
@@ -408,7 +403,7 @@ public class BrokerModelTest implements IBrokerChangeListener {
 
         this.tradestrategy.getContract().addTradestrategy(this.tradestrategy);
         backTestbrokerModel.onReqRealTimeBars(this.tradestrategy.getContract(), false);
-        assertFalse("1", backTestbrokerModel.isRealtimeBarsRunning(tradestrategy));
+        assertFalse(backTestbrokerModel.isRealtimeBarsRunning(tradestrategy));
     }
 
     @Test
@@ -428,7 +423,7 @@ public class BrokerModelTest implements IBrokerChangeListener {
     public void testIsRealtimeBarsRunning() {
 
         backTestbrokerModel.onCancelRealtimeBars(this.tradestrategy);
-        assertFalse("1", backTestbrokerModel.isRealtimeBarsRunning(this.tradestrategy));
+        assertFalse(backTestbrokerModel.isRealtimeBarsRunning(this.tradestrategy));
 
     }
 
@@ -437,7 +432,7 @@ public class BrokerModelTest implements IBrokerChangeListener {
 
         backTestbrokerModel
                 .onCancelAccountUpdates(tradestrategy.getPortfolio().getIndividualAccount().getAccountNumber());
-        assertFalse("1", backTestbrokerModel
+        assertFalse(backTestbrokerModel
                 .isAccountUpdatesRunning(tradestrategy.getPortfolio().getIndividualAccount().getAccountNumber()));
     }
 
@@ -445,35 +440,35 @@ public class BrokerModelTest implements IBrokerChangeListener {
     public void testIsHistoricalDataRunningTradestrategy() {
 
         backTestbrokerModel.onCancelBrokerData(this.tradestrategy);
-        assertFalse("1", backTestbrokerModel.isHistoricalDataRunning(this.tradestrategy));
+        assertFalse(backTestbrokerModel.isHistoricalDataRunning(this.tradestrategy));
     }
 
     @Test
     public void testIsHistoricalDataRunningContract() {
 
         backTestbrokerModel.onCancelBrokerData(this.tradestrategy.getContract());
-        assertFalse("1", backTestbrokerModel.isHistoricalDataRunning(this.tradestrategy.getContract()));
+        assertFalse(backTestbrokerModel.isHistoricalDataRunning(this.tradestrategy.getContract()));
     }
 
     @Test
     public void testOnCancelAllRealtimeData() {
 
         backTestbrokerModel.onCancelAllRealtimeData();
-        assertFalse("1", backTestbrokerModel.isRealtimeBarsRunning(this.tradestrategy));
+        assertFalse(backTestbrokerModel.isRealtimeBarsRunning(this.tradestrategy));
     }
 
     @Test
     public void testOnCancelRealtimeBars() {
 
         backTestbrokerModel.onCancelRealtimeBars(this.tradestrategy);
-        assertFalse("1", backTestbrokerModel.isRealtimeBarsRunning(this.tradestrategy));
+        assertFalse(backTestbrokerModel.isRealtimeBarsRunning(this.tradestrategy));
     }
 
     @Test
     public void testOnCancelBrokerData() {
 
         backTestbrokerModel.onCancelBrokerData(this.tradestrategy);
-        assertFalse("1", backTestbrokerModel.isHistoricalDataRunning(this.tradestrategy));
+        assertFalse(backTestbrokerModel.isHistoricalDataRunning(this.tradestrategy));
     }
 
     @Test
@@ -492,7 +487,7 @@ public class BrokerModelTest implements IBrokerChangeListener {
     public void testGetHistoricalData() {
 
         ConcurrentHashMap<Integer, Tradestrategy> historicalDataList = backTestbrokerModel.getHistoricalData();
-        assertNotNull("1", historicalDataList);
+        assertNotNull(historicalDataList);
     }
 
     @Test
@@ -501,7 +496,7 @@ public class BrokerModelTest implements IBrokerChangeListener {
         TradeOrder tradeOrder = new TradeOrder(this.tradestrategy, Action.BUY, OrderType.MKT, 1000, null, null,
                 TradingCalendar.getDateTimeNowMarketTimeZone());
         tradeOrder = backTestbrokerModel.onPlaceOrder(this.tradestrategy.getContract(), tradeOrder);
-        assertNotNull("1", tradeOrder);
+        assertNotNull(tradeOrder);
     }
 
     @Test
@@ -510,7 +505,7 @@ public class BrokerModelTest implements IBrokerChangeListener {
         TradeOrder tradeOrder = new TradeOrder(this.tradestrategy, Action.BUY, OrderType.MKT, 1000, null, null,
                 TradingCalendar.getDateTimeNowMarketTimeZone());
         tradeOrder = backTestbrokerModel.onPlaceOrder(this.tradestrategy.getContract(), tradeOrder);
-        assertNotNull("1", tradeOrder);
+        assertNotNull(tradeOrder);
         backTestbrokerModel.onCancelOrder(tradeOrder);
     }
 
@@ -518,7 +513,7 @@ public class BrokerModelTest implements IBrokerChangeListener {
     public void testIsBrokerDataOnly() {
 
         boolean result = backTestbrokerModel.isBrokerDataOnly();
-        assertFalse("1", result);
+        assertFalse(result);
     }
 
     public void connectionOpened() {

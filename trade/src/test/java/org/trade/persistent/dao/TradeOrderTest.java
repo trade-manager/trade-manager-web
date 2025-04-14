@@ -36,13 +36,11 @@
 package org.trade.persistent.dao;
 
 import com.ib.client.Execution;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TestName;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trade.broker.TWSBrokerModel;
@@ -59,7 +57,7 @@ import org.trade.ui.TradeAppLoadConfig;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Some tests for the DataUtilities class.
@@ -70,8 +68,6 @@ import static org.junit.Assert.assertNotNull;
 public class TradeOrderTest {
 
     private final static Logger _log = LoggerFactory.getLogger(TradeOrderTest.class);
-    @Rule
-    public TestName name = new TestName();
 
     private IPersistentModel tradePersistentModel = null;
     private TradeOrderHome tradeOrderHome = null;
@@ -81,14 +77,14 @@ public class TradeOrderTest {
     /**
      * Method setUpBeforeClass.
      */
-    @BeforeClass
+    @BeforeAll
     public static void setUpBeforeClass() throws Exception {
     }
 
     /**
      * Method setUp.
      */
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
 
         TradeAppLoadConfig.loadAppProperties();
@@ -104,7 +100,7 @@ public class TradeOrderTest {
     /**
      * Method tearDown.
      */
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         TradestrategyBase.clearDBData();
     }
@@ -112,7 +108,7 @@ public class TradeOrderTest {
     /**
      * Method tearDownAfterClass.
      */
-    @AfterClass
+    @AfterAll
     public static void tearDownAfterClass() throws Exception {
     }
 
@@ -140,7 +136,7 @@ public class TradeOrderTest {
         tradeOrder.setStatus("SUBMITTED");
         tradeOrder.validate();
         tradeOrder = tradeOrderHome.persist(tradeOrder);
-        assertNotNull("1", tradeOrder);
+        assertNotNull(tradeOrder);
         _log.info("IdOrder: {}", tradeOrder.getId());
 
         TradeOrder tradeOrder1 = new TradeOrder(this.tradestrategy, Action.SELL, OrderType.STP, quantity,
@@ -153,7 +149,7 @@ public class TradeOrderTest {
         tradeOrder1.setStatus("SUBMITTED");
         tradeOrder1.validate();
         tradeOrder1 = tradeOrderHome.persist(tradeOrder1);
-        assertNotNull("2", tradeOrder1);
+        assertNotNull(tradeOrder1);
     }
 
     @Test

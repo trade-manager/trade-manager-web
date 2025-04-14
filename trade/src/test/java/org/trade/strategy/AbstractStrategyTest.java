@@ -35,13 +35,11 @@
  */
 package org.trade.strategy;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TestName;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trade.broker.BackTestBrokerModel;
@@ -78,10 +76,10 @@ import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.Vector;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  *
@@ -89,8 +87,6 @@ import static org.junit.Assert.assertTrue;
 public class AbstractStrategyTest {
 
     private final static Logger _log = LoggerFactory.getLogger(AbstractStrategyTest.class);
-    @Rule
-    public TestName name = new TestName();
 
     private IBrokerModel m_brokerModel = null;
     private IPersistentModel tradePersistentModel = null;
@@ -102,14 +98,14 @@ public class AbstractStrategyTest {
     /**
      * Method setUpBeforeClass.
      */
-    @BeforeClass
+    @BeforeAll
     public static void setUpBeforeClass() {
     }
 
     /**
      * Method setUp.
      */
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
 
         TradeAppLoadConfig.loadAppProperties();
@@ -127,11 +123,11 @@ public class AbstractStrategyTest {
         m_brokerModel.onConnect(host, port, clientId);
         String symbol = "TEST";
         this.tradestrategy = TradestrategyBase.getTestTradestrategy(symbol);
-        assertNotNull("1", this.tradestrategy);
+        assertNotNull(this.tradestrategy);
 
         this.strategyProxy = new StrategyRuleTest(m_brokerModel, this.tradestrategy.getStrategyData(),
                 this.tradestrategy.getId());
-        assertNotNull("2", this.strategyProxy);
+        assertNotNull(this.strategyProxy);
         strategyProxy.execute();
 
         do {
@@ -143,7 +139,7 @@ public class AbstractStrategyTest {
     /**
      * Method tearDown.
      */
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
 
         m_brokerModel.onDisconnect();
@@ -154,7 +150,7 @@ public class AbstractStrategyTest {
     /**
      * Method tearDownAfterClass.
      */
-    @AfterClass
+    @AfterAll
     public static void tearDownAfterClass() {
     }
 
@@ -202,7 +198,7 @@ public class AbstractStrategyTest {
                 execution);
         this.reFreshPositionOrders();
 
-        assertNotNull("1", strategyProxy.getOpenPositionOrder());
+        assertNotNull(strategyProxy.getOpenPositionOrder());
         /*
          * Position has been open submit the target and stop orders.
          */
@@ -234,92 +230,92 @@ public class AbstractStrategyTest {
         // Buy entry Long position
         Money price = new Money(19.99);
         price = strategyProxy.addPennyAndRoundStop(price.doubleValue(), Side.BOT, Action.BUY, 0);
-        assertEquals("1", 20.01, price.doubleValue(), 0);
+        assertEquals(20.01, price.doubleValue(), 0);
 
         // Target Long position
         price = new Money(21.01);
         price = strategyProxy.addPennyAndRoundStop(price.doubleValue(), Side.BOT, Action.SELL, 0);
-        assertEquals("2", 20.99, price.doubleValue(), 0);
+        assertEquals(20.99, price.doubleValue(), 0);
 
         // Stop Long position
         price = new Money(19.01);
         price = strategyProxy.addPennyAndRoundStop(price.doubleValue(), Side.BOT, Action.SELL, 0);
-        assertEquals("3", 18.99, price.doubleValue(), 0);
+        assertEquals(18.99, price.doubleValue(), 0);
 
         // Short entry Short position
         price = new Money(24.01);
         price = strategyProxy.addPennyAndRoundStop(price.doubleValue(), Side.SLD, Action.SELL, 0);
-        assertEquals("4", 23.99, price.doubleValue(), 0);
+        assertEquals(23.99, price.doubleValue(), 0);
 
         // Target Short position
         price = new Money(22.99);
         price = strategyProxy.addPennyAndRoundStop(price.doubleValue(), Side.SLD, Action.BUY, 0);
-        assertEquals("5", 23.01, price.doubleValue(), 0);
+        assertEquals(23.01, price.doubleValue(), 0);
 
         // Stop Short position
         price = new Money(24.99);
         price = strategyProxy.addPennyAndRoundStop(price.doubleValue(), Side.SLD, Action.BUY, 0);
-        assertEquals("6", 25.01, price.doubleValue(), 0);
+        assertEquals(25.01, price.doubleValue(), 0);
 
         // Buy entry Long position
         price = new Money(19.49);
         price = strategyProxy.addPennyAndRoundStop(price.doubleValue(), Side.BOT, Action.BUY, 0);
-        assertEquals("7", 19.51, price.doubleValue(), 0);
+        assertEquals(19.51, price.doubleValue(), 0);
 
         // Target Long position
         price = new Money(21.51);
         price = strategyProxy.addPennyAndRoundStop(price.doubleValue(), Side.BOT, Action.SELL, 0);
-        assertEquals("8", 21.49, price.doubleValue(), 0);
+        assertEquals(21.49, price.doubleValue(), 0);
 
         // Stop Long position
         price = new Money(18.51);
         price = strategyProxy.addPennyAndRoundStop(price.doubleValue(), Side.BOT, Action.SELL, 0);
-        assertEquals("9", 18.49, price.doubleValue(), 0);
+        assertEquals(18.49, price.doubleValue(), 0);
 
         // Short entry short position
         price = new Money(24.51);
         price = strategyProxy.addPennyAndRoundStop(price.doubleValue(), Side.SLD, Action.SELL, 0);
-        assertEquals("10", 24.49, price.doubleValue(), 0);
+        assertEquals(24.49, price.doubleValue(), 0);
 
         // Target Short position
         price = new Money(22.49);
         price = strategyProxy.addPennyAndRoundStop(price.doubleValue(), Side.SLD, Action.BUY, 0);
-        assertEquals("11", 22.51, price.doubleValue(), 0);
+        assertEquals(22.51, price.doubleValue(), 0);
 
         // Stop Short position
         price = new Money(25.49);
         price = strategyProxy.addPennyAndRoundStop(price.doubleValue(), Side.SLD, Action.BUY, 0);
-        assertEquals("12", 25.51, price.doubleValue(), 0);
+        assertEquals(25.51, price.doubleValue(), 0);
 
         // Short entry short position
         price = new Money(34.00);
         price = strategyProxy.addPennyAndRoundStop(price.doubleValue(), Side.SLD, Action.SELL, 0);
-        assertEquals("13", 33.99, price.doubleValue(), 0);
+        assertEquals(33.99, price.doubleValue(), 0);
 
         // Target Short position
         price = new Money(32.00);
         price = strategyProxy.addPennyAndRoundStop(price.doubleValue(), Side.SLD, Action.BUY, 0);
-        assertEquals("14", 32.01, price.doubleValue(), 0);
+        assertEquals(32.01, price.doubleValue(), 0);
 
         // Stop Short position
         price = new Money(35.00);
         price = strategyProxy.addPennyAndRoundStop(price.doubleValue(), Side.SLD, Action.BUY, 0);
-        assertEquals("15", 35.01, price.doubleValue(), 0);
+        assertEquals(35.01, price.doubleValue(), 0);
 
         // Buy entry Long position
         price = new Money(19.19);
         price = strategyProxy.addPennyAndRoundStop(price.doubleValue(), Side.BOT, Action.BUY, 0);
-        assertEquals("16", 19.19, price.doubleValue(), 0);
+        assertEquals(19.19, price.doubleValue(), 0);
 
         // Target Long position
         price = new Money(21.62);
         price = strategyProxy.addPennyAndRoundStop(price.doubleValue(), Side.BOT, Action.SELL, 0);
-        assertEquals("17", 21.62, price.doubleValue(), 0);
+        assertEquals(21.62, price.doubleValue(), 0);
 
         // Stop Long position
         price = new Money(18.57);
         price = strategyProxy.addPennyAndRoundStop(price.doubleValue(), Side.BOT, Action.SELL, 0);
-        assertEquals("18", 18.57, price.doubleValue(), 0);
+        assertEquals(18.57, price.doubleValue(), 0);
     }
 
     @Test
@@ -336,7 +332,7 @@ public class AbstractStrategyTest {
         TradeOrder result = this.strategyProxy.createOrder(tradestrategy.getContract(), Action.BUY,
                 OrderType.STPLMT, new Money(100.04), new Money(100.01), 1000, null, null, TriggerMethod.DEFAULT,
                 OverrideConstraints.YES, TimeInForce.DAY, true, true, null, null, null, null, null, null);
-        assertNotNull("1", result);
+        assertNotNull(result);
     }
 
     @Test
@@ -347,7 +343,7 @@ public class AbstractStrategyTest {
                 OverrideConstraints.YES, TimeInForce.GTC, false, true, new Money(191.60), null, null, null, null,
                 null);
 
-        assertNotNull("1", orderTrail);
+        assertNotNull(orderTrail);
     }
 
     @Test
@@ -355,7 +351,7 @@ public class AbstractStrategyTest {
 
         TradeOrder result = this.strategyProxy.createRiskOpenPosition(Action.BUY, new Money(100.00),
                 new Money(99.00), true, null, null, null, null);
-        assertNotNull("1", result);
+        assertNotNull(result);
     }
 
     @Test
@@ -377,10 +373,10 @@ public class AbstractStrategyTest {
         TradeOrder result = this.strategyProxy.createRiskOpenPosition(Action.BUY, new Money(20.00),
                 new Money(19.98), true, null, null, null, null);
 
-        assertEquals("1", 2500, result.getQuantity(), 0);
+        assertEquals(2500, result.getQuantity(), 0);
         entryLimit.setPercentOfMargin(new BigDecimal(0));
         entryLimit = tradePersistentModel.persistAspect(entryLimit);
-        assertEquals("2", new BigDecimal(0), entryLimit.getPercentOfMargin());
+        assertEquals(new BigDecimal(0), entryLimit.getPercentOfMargin());
     }
 
     @Test
@@ -402,7 +398,7 @@ public class AbstractStrategyTest {
         TradeOrder openOrder = this.strategyProxy.createRiskOpenPosition(Action.SELL, new Money(45.75),
                 new Money(46.00), true, null, null, null, null);
 
-        assertEquals("1", 400, openOrder.getQuantity(), 0);
+        assertEquals(400, openOrder.getQuantity(), 0);
 
         TradeOrderfill orderFill = new TradeOrderfill(openOrder, "Paper", new BigDecimal("45.74"),
                 openOrder.getQuantity(), this.tradestrategy.getContract().getExchange(), "1234567",
@@ -415,7 +411,7 @@ public class AbstractStrategyTest {
 
         reFreshPositionOrders();
 
-        assertNotNull("2", this.strategyProxy.getOpenPositionOrder());
+        assertNotNull(this.strategyProxy.getOpenPositionOrder());
 
         /*
          * Position has been opened and not covered submit the target and
@@ -446,14 +442,14 @@ public class AbstractStrategyTest {
         this.strategyProxy.cancelOrder(openOrder);
         reFreshPositionOrders();
         openOrder = tradePersistentModel.findTradeOrderByKey(openOrder.getOrderKey());
-        assertEquals("1", OrderStatus.CANCELLED, openOrder.getStatus());
+        assertEquals(OrderStatus.CANCELLED, openOrder.getStatus());
     }
 
     @Test
     public void testIsTradeConvered() throws Exception {
 
         createOpenBuyPosition(new Money(100), Action.BUY, false);
-        assertFalse("1", this.strategyProxy.isPositionCovered());
+        assertFalse(this.strategyProxy.isPositionCovered());
     }
 
     @Test
@@ -462,7 +458,7 @@ public class AbstractStrategyTest {
         createOpenBuyPosition(new Money(100), Action.BUY, true);
         TradeOrder targetOne = this.strategyProxy.createStopAndTargetOrder(new Money(99.0), new Money(103.99), 100,
                 true);
-        assertNotNull("1", targetOne);
+        assertNotNull(targetOne);
         this.strategyProxy.isPositionCovered();
     }
 
@@ -480,7 +476,7 @@ public class AbstractStrategyTest {
 
         createOpenBuyPosition(new Money(100), Action.BUY, true);
         Money price = this.strategyProxy.getStopPriceForPositionRisk(this.strategyProxy.getOpenPositionOrder(), 2);
-        assertNotNull("1", price);
+        assertNotNull(price);
     }
 
     @Test
@@ -489,7 +485,7 @@ public class AbstractStrategyTest {
         createOpenBuyPosition(new Money(100), Action.BUY, true);
         this.strategyProxy.cancelOrdersClosePosition(true);
         this.reFreshPositionOrders();
-        assertTrue("1", this.strategyProxy.isPositionCovered());
+        assertTrue(this.strategyProxy.isPositionCovered());
     }
 
     @Test
@@ -498,17 +494,17 @@ public class AbstractStrategyTest {
         this.createOpenBuyPosition(new Money(100), Action.BUY, true);
         TradeOrder targetOne = this.strategyProxy.createStopAndTargetOrder(new Money(99.0), new Money(103.99),
                 this.strategyProxy.getOpenPositionOrder().getQuantity() / 2, true);
-        assertNotNull("1", targetOne);
+        assertNotNull(targetOne);
         reFreshPositionOrders();
         TradeOrder targetTwo = this.strategyProxy.createStopAndTargetOrder(new Money(99.0), new Money(105.99),
                 this.strategyProxy.getOpenPositionOrder().getQuantity() / 2, true);
-        assertNotNull("2", targetTwo);
+        assertNotNull(targetTwo);
         reFreshPositionOrders();
         double avgPrice = this.strategyProxy.getOpenTradePosition().getTotalBuyValue().doubleValue()
                 / this.strategyProxy.getOpenTradePosition().getTotalBuyQuantity();
         this.strategyProxy.moveStopOCAPrice(new Money(avgPrice), true);
         reFreshPositionOrders();
-        assertTrue("1", this.strategyProxy.isPositionCovered());
+        assertTrue(this.strategyProxy.isPositionCovered());
     }
 
     @Test
@@ -516,14 +512,14 @@ public class AbstractStrategyTest {
 
         createOpenBuyPosition(new Money(100), Action.BUY, false);
         this.strategyProxy.cancelAllOrders();
-        assertFalse("1", this.strategyProxy.isThereOpenPosition());
+        assertFalse(this.strategyProxy.isThereOpenPosition());
     }
 
     @Test
     public void testIsTradeOpen() throws Exception {
 
         createOpenBuyPosition(new Money(100), Action.BUY, true);
-        assertTrue("1", this.strategyProxy.isThereOpenPosition());
+        assertTrue(this.strategyProxy.isThereOpenPosition());
     }
 
     @Test
@@ -539,7 +535,7 @@ public class AbstractStrategyTest {
 
         }
         int count = this.strategyProxy.getCurrentCandleCount();
-        assertEquals("1", -1, count);
+        assertEquals(-1, count);
     }
 
     @Test
@@ -548,7 +544,7 @@ public class AbstractStrategyTest {
         this.tradestrategy.getStrategyData().buildCandle(this.tradestrategy.getTradingday().getOpen(), 100d, 101d,
                 99d, 100d, 100000L, 100d, 100, 1, null);
         CandleItem candleItem = this.strategyProxy.getCandle(this.tradestrategy.getTradingday().getOpen());
-        assertNotNull("1", candleItem);
+        assertNotNull(candleItem);
     }
 
     @Test
@@ -562,49 +558,49 @@ public class AbstractStrategyTest {
     public void testGetEntryLimit() {
 
         DAOEntryLimit result = this.strategyProxy.getEntryLimit();
-        assertNotNull("1", result);
+        assertNotNull(result);
     }
 
     @Test
     public void testGetTradestrategy() throws Exception {
 
         createOpenBuyPosition(new Money(100), Action.BUY, false);
-        assertNotNull("1", this.strategyProxy.getTradestrategy());
+        assertNotNull(this.strategyProxy.getTradestrategy());
     }
 
     @Test
     public void testGetTradeAccount() throws Exception {
 
         createOpenBuyPosition(new Money(100), Action.BUY, false);
-        assertNotNull("1", this.strategyProxy.getIndividualAccount());
+        assertNotNull(this.strategyProxy.getIndividualAccount());
     }
 
     @Test
     public void testGetTradePosition() throws Exception {
 
         createOpenBuyPosition(new Money(100), Action.BUY, true);
-        assertNotNull("1", this.strategyProxy.getOpenTradePosition());
+        assertNotNull(this.strategyProxy.getOpenTradePosition());
     }
 
     @Test
     public void testGetSymbol() throws Exception {
 
         createOpenBuyPosition(new Money(100), Action.BUY, false);
-        assertNotNull("1", this.strategyProxy.getSymbol());
+        assertNotNull(this.strategyProxy.getSymbol());
     }
 
     @Test
     public void testGetOpenPositionOrder() throws Exception {
 
         createOpenBuyPosition(new Money(100), Action.BUY, true);
-        assertNotNull("1", this.strategyProxy.getOpenPositionOrder());
+        assertNotNull(this.strategyProxy.getOpenPositionOrder());
     }
 
     @Test
     public void testHasActiveOrders() throws Exception {
 
         createOpenBuyPosition(new Money(100), Action.BUY, false);
-        assertTrue("1", this.strategyProxy.hasActiveOrders());
+        assertTrue(this.strategyProxy.hasActiveOrders());
     }
 
     /**
@@ -625,7 +621,7 @@ public class AbstractStrategyTest {
         if (fillOpenPosition) {
             String side = (Action.BUY.equals(tradeOrder.getAction()) ? Side.BOT : Side.SLD);
 
-            assertNotNull("1", tradeOrder);
+            assertNotNull(tradeOrder);
             TradeOrderfill execution = new TradeOrderfill();
             execution.setTradeOrder(tradeOrder);
             execution.setTime(TradingCalendar.getDateTimeNowMarketTimeZone());
@@ -638,7 +634,7 @@ public class AbstractStrategyTest {
             ((BackTestBrokerModel) m_brokerModel).execDetails(tradeOrder.getOrderKey(),
                     this.tradestrategy.getContract(), execution);
             this.reFreshPositionOrders();
-            assertNotNull("2", strategyProxy.getOpenPositionOrder());
+            assertNotNull(strategyProxy.getOpenPositionOrder());
 
         } else {
 
