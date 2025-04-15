@@ -35,13 +35,11 @@
  */
 package org.trade.ui.configuration;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TestName;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trade.core.factory.ClassFactory;
@@ -56,7 +54,8 @@ import org.trade.ui.TradeAppLoadConfig;
 
 import java.util.Vector;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 /**
  * Some tests for the  DataUtilities class.
@@ -67,20 +66,18 @@ import static org.junit.Assert.assertEquals;
 public class ConfigurationPanelTest {
 
     private final static Logger _log = LoggerFactory.getLogger(ConfigurationPanelTest.class);
-    @Rule
-    public TestName name = new TestName();
 
     /**
      * Method setUpBeforeClass.
      */
-    @BeforeClass
+    @BeforeAll
     public static void setUpBeforeClass() throws Exception {
     }
 
     /**
      * Method setUp.
      */
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         TradeAppLoadConfig.loadAppProperties();
     }
@@ -88,14 +85,14 @@ public class ConfigurationPanelTest {
     /**
      * Method tearDown.
      */
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
     }
 
     /**
      * Method tearDownAfterClass.
      */
-    @AfterClass
+    @AfterAll
     public static void tearDownAfterClass() throws Exception {
     }
 
@@ -113,7 +110,7 @@ public class ConfigurationPanelTest {
         Integer value = (Integer) ClassFactory.getCreateClass(codeValue.getCodeAttribute().getClassName(), parm,
                 this);
         _log.info("Value is: {}", value);
-        assertEquals("1", 20, value, 0);
+        assertEquals(20, value, 0);
     }
 
     @Test
@@ -130,7 +127,7 @@ public class ConfigurationPanelTest {
         Boolean value = (Boolean) ClassFactory.getCreateClass(codeValue.getCodeAttribute().getClassName(), parm,
                 this);
         _log.info("Value is: {}", value);
-        assertEquals("1", true, value);
+        assertEquals(true, value);
     }
 
     @Test
@@ -146,7 +143,7 @@ public class ConfigurationPanelTest {
 
         String value = (String) ClassFactory.getCreateClass(codeValue.getCodeAttribute().getClassName(), parm,
                 this);
-        assertEquals("1", "Simple", value);
+        assertEquals("Simple", value);
         _log.info("Value is: {}", value);
     }
 
@@ -164,7 +161,7 @@ public class ConfigurationPanelTest {
         CalculationType value = (CalculationType) ClassFactory
                 .getCreateClass(codeValue.getCodeAttribute().getClassName(), parm, this);
         value.setValue(CalculationType.LINEAR);
-        assertEquals("1", CalculationType.LINEAR, value.getCode());
+        assertEquals(CalculationType.LINEAR, value.getCode());
         _log.info("Value is: {}", value);
     }
 
@@ -185,7 +182,7 @@ public class ConfigurationPanelTest {
 
         IndicatorSeries value = (IndicatorSeries) ClassFactory.getCreateClass(className, parm, this);
 
-        assertEquals("1", className, value.getClass().getName());
+        assertEquals(className, value.getClass().getName());
         _log.info("Value is: {}", value);
     }
 }

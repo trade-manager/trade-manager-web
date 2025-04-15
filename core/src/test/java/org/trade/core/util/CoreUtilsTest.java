@@ -35,14 +35,12 @@
  */
 package org.trade.core.util;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TestName;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trade.core.valuetype.Money;
@@ -62,9 +60,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Some tests for the {@link TradingCalendar} class.
@@ -76,8 +74,6 @@ public class CoreUtilsTest {
 
     private final static Logger _log = LoggerFactory.getLogger(CoreUtilsTest.class);
 
-    @Rule
-    public TestName name = new TestName();
 
     private static final int SCALE = 5;
     private AtomicInteger timerRunning = null;
@@ -86,91 +82,91 @@ public class CoreUtilsTest {
     /**
      * Method setUpBeforeClass.
      */
-    @BeforeClass
+    @BeforeAll
     public static void setUpBeforeClass() throws Exception {
     }
 
     /**
      * Method setUp.
      */
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
     }
 
     /**
      * Method tearDown.
      */
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
     }
 
     /**
      * Method tearDownAfterClass.
      */
-    @AfterClass
+    @AfterAll
     public static void tearDownAfterClass() throws Exception {
     }
 
     @Test
     public void testIsBetween() {
 
-        assertTrue("1", CoreUtils.isBetween(BigDecimal.valueOf(12.20), BigDecimal.valueOf(12.24), BigDecimal.valueOf(12.23)));
+        assertTrue(CoreUtils.isBetween(BigDecimal.valueOf(12.20), BigDecimal.valueOf(12.24), BigDecimal.valueOf(12.23)));
 
-        assertTrue("2", CoreUtils.isBetween(12, 18, 15));
+        assertTrue(CoreUtils.isBetween(12, 18, 15));
 
-        assertFalse("3", CoreUtils.isBetween(12, 18, 6));
+        assertFalse(CoreUtils.isBetween(12, 18, 6));
 
-        assertTrue("4", CoreUtils.isBetween(12.20d, 12.24d, 12.23d));
+        assertTrue(CoreUtils.isBetween(12.20d, 12.24d, 12.23d));
 
-        assertTrue("5", CoreUtils.isBetween(12.20d, 12.26d, 12.26d));
+        assertTrue(CoreUtils.isBetween(12.20d, 12.26d, 12.26d));
 
-        assertTrue("6", CoreUtils.isBetween(12.20d, 12.26d, 12.20d));
+        assertTrue(CoreUtils.isBetween(12.20d, 12.26d, 12.20d));
 
-        assertTrue("7", CoreUtils.isBetween(12.24d, 12.20d, 12.23d));
+        assertTrue(CoreUtils.isBetween(12.24d, 12.20d, 12.23d));
 
-        assertTrue("8", CoreUtils.isBetween(12.26d, 12.20d, 12.26d));
+        assertTrue(CoreUtils.isBetween(12.26d, 12.20d, 12.26d));
 
-        assertTrue("9", CoreUtils.isBetween(12.26d, 12.20d, 12.20d));
+        assertTrue(CoreUtils.isBetween(12.26d, 12.20d, 12.20d));
 
-        assertTrue("10", CoreUtils.isBetween(12.20d, 12.20d, 12.20d));
+        assertTrue(CoreUtils.isBetween(12.20d, 12.20d, 12.20d));
 
-        assertFalse("11", CoreUtils.isBetween(12, 14, 11));
+        assertFalse(CoreUtils.isBetween(12, 14, 11));
 
-        assertFalse("12", CoreUtils.isBetween(12, 14, 15));
+        assertFalse(CoreUtils.isBetween(12, 14, 15));
     }
 
     @Test
     public void testNullSafe() {
 
         int returnVal = CoreUtils.nullSafeComparator(null, BigDecimal.valueOf(1.23));
-        assertEquals("1", -1, returnVal);
+        assertEquals(-1, returnVal);
 
         returnVal = CoreUtils.nullSafeComparator(BigDecimal.valueOf(1.23), null);
-        assertEquals("2", 1, returnVal);
+        assertEquals(1, returnVal);
 
         returnVal = CoreUtils.nullSafeComparator(BigDecimal.valueOf(-1.23), BigDecimal.valueOf(-1.24));
-        assertEquals("3", 1, returnVal);
+        assertEquals(1, returnVal);
 
         returnVal = CoreUtils.nullSafeComparator(null, null);
-        assertEquals("4", 0, returnVal);
+        assertEquals(0, returnVal);
 
         returnVal = CoreUtils.nullSafeComparator(BigDecimal.valueOf(1.23), BigDecimal.valueOf(1.24));
-        assertEquals("5", -1, returnVal);
+        assertEquals(-1, returnVal);
 
         returnVal = CoreUtils.nullSafeComparator(BigDecimal.valueOf(1.25), BigDecimal.valueOf(1.24));
-        assertEquals("6", 1, returnVal);
+        assertEquals(1, returnVal);
 
         returnVal = CoreUtils.nullSafeComparator(null, 1);
-        assertEquals("7", -1, returnVal);
+        assertEquals(-1, returnVal);
 
         returnVal = CoreUtils.nullSafeComparator(null, 0);
-        assertEquals("8", -1, returnVal);
+        assertEquals(-1, returnVal);
 
         returnVal = CoreUtils.nullSafeComparator(0, 0);
-        assertEquals("9", 0, returnVal);
+        assertEquals(0, returnVal);
 
         returnVal = CoreUtils.nullSafeComparator(1, 0);
-        assertEquals("10", 1, returnVal);
+        assertEquals(1, returnVal);
 
         Money avgFilledPrice = new Money(186.75);
         Money lastPrice = new Money(186.78);
@@ -218,7 +214,7 @@ public class CoreUtilsTest {
                         .subtract(stopMoveAmount.getBigDecimalValue().multiply(new BigDecimal(buySellMultiplier))));
             }
         }
-        assertEquals("11",
+        assertEquals(
                 new Money(lastPrice.getBigDecimalValue()
                         .subtract(stopMoveAmount.getBigDecimalValue().multiply(new BigDecimal(buySellMultiplier)))),
                 auxPrice);
@@ -229,16 +225,16 @@ public class CoreUtilsTest {
     public void testBigDecimalRounding() {
 
         BigDecimal avgFillPrice = new BigDecimal("35.34567897").setScale(SCALE, RoundingMode.HALF_EVEN);
-        assertEquals("1", new BigDecimal("35.34568"), avgFillPrice);
+        assertEquals(new BigDecimal("35.34568"), avgFillPrice);
 
         avgFillPrice = new BigDecimal("35.34567344").setScale(SCALE, RoundingMode.HALF_EVEN);
-        assertEquals("2", new BigDecimal("35.34567"), avgFillPrice);
+        assertEquals(new BigDecimal("35.34567"), avgFillPrice);
 
-        assertEquals("3", 0, BigDecimal.ZERO.compareTo(BigDecimal.valueOf(0.00)));
+        assertEquals(0, BigDecimal.ZERO.compareTo(BigDecimal.valueOf(0.00)));
 
-        assertEquals("4", -1, BigDecimal.ZERO.compareTo(BigDecimal.valueOf(0.01)));
+        assertEquals(-1, BigDecimal.ZERO.compareTo(BigDecimal.valueOf(0.01)));
 
-        assertEquals("5", 1, BigDecimal.ZERO.compareTo(BigDecimal.valueOf(-0.01)));
+        assertEquals(1, BigDecimal.ZERO.compareTo(BigDecimal.valueOf(-0.01)));
     }
 
     @Test
@@ -278,7 +274,7 @@ public class CoreUtilsTest {
         }
     }
 
-    @Ignore
+    @Disabled
     @Test
     public void fixDemoData() {
 

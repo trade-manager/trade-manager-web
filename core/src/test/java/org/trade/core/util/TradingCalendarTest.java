@@ -35,13 +35,11 @@
  */
 package org.trade.core.util;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TestName;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,10 +62,11 @@ import java.util.GregorianCalendar;
 import java.util.TimeZone;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 /**
  * Some tests for the {@link TradingCalendar} class.
@@ -79,34 +78,32 @@ public class TradingCalendarTest {
 
     private final static Logger _log = LoggerFactory.getLogger(TradingCalendarTest.class);
 
-    @Rule
-    public TestName name = new TestName();
 
     /**
      * Method setUpBeforeClass.
      */
-    @BeforeClass
+    @BeforeAll
     public static void setUpBeforeClass() throws Exception {
     }
 
     /**
      * Method setUp.
      */
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
     }
 
     /**
      * Method tearDown.
      */
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
     }
 
     /**
      * Method tearDownAfterClass.
      */
-    @AfterClass
+    @AfterAll
     public static void tearDownAfterClass() throws Exception {
     }
 
@@ -114,8 +111,8 @@ public class TradingCalendarTest {
     public void testAddBusinessDays() {
 
         ZonedDateTime date = TradingCalendar.getDateTimeNowMarketTimeZone();
-        assertTrue("1", TradingCalendar.isTradingDay(TradingCalendar.addTradingDays(date, -4)));
-        assertTrue("2", TradingCalendar.isTradingDay(TradingCalendar.addTradingDays(date, -5)));
+        assertTrue(TradingCalendar.isTradingDay(TradingCalendar.addTradingDays(date, -4)));
+        assertTrue(TradingCalendar.isTradingDay(TradingCalendar.addTradingDays(date, -5)));
     }
 
     @Test
@@ -130,8 +127,8 @@ public class TradingCalendarTest {
         ZonedDateTime prevStartDate = TradingCalendar.getDateAtTime(date, todayStartDate);
         _log.debug("prevStartDate: {}", prevStartDate);
 
-        assertEquals("1", todayStartDate.getHour(), prevStartDate.getHour());
-        assertEquals("2", todayStartDate.getMinute(), prevStartDate.getMinute());
+        assertEquals(todayStartDate.getHour(), prevStartDate.getHour());
+        assertEquals(todayStartDate.getMinute(), prevStartDate.getMinute());
     }
 
     @Test
@@ -140,7 +137,7 @@ public class TradingCalendarTest {
         ZonedDateTime date = TradingCalendar.getDateTimeNowMarketTimeZone();
         date = TradingCalendar.getPrevTradingDay(date);
         _log.debug("date: {}", date);
-        assertTrue("1", TradingCalendar.isTradingDay(date));
+        assertTrue(TradingCalendar.isTradingDay(date));
     }
 
     @Test
@@ -149,7 +146,7 @@ public class TradingCalendarTest {
         ZonedDateTime date = TradingCalendar.getDateTimeNowMarketTimeZone();
         date = TradingCalendar.getNextTradingDay(date);
         _log.debug("date: {}", date);
-        assertTrue("1", TradingCalendar.isTradingDay(date));
+        assertTrue(TradingCalendar.isTradingDay(date));
     }
 
     @Test
@@ -158,7 +155,7 @@ public class TradingCalendarTest {
         ZonedDateTime date = TradingCalendar.getDateTimeNowMarketTimeZone();
         date = TradingCalendar.getCurrentTradingDay();
         _log.debug("date: {}", date);
-        assertTrue("1", TradingCalendar.isTradingDay(date));
+        assertTrue(TradingCalendar.isTradingDay(date));
     }
 
     @Test
@@ -191,30 +188,30 @@ public class TradingCalendarTest {
         date = TradingCalendar.getDateAtTime(date, 16, 0, 0);
         _log.debug("Business day openDate: {} Business day closeDate: {} Date: {}", openDate, closeDate, date);
 
-        assertFalse("1", TradingCalendar.isMarketHours(openDate, closeDate, date));
+        assertFalse(TradingCalendar.isMarketHours(openDate, closeDate, date));
 
         date = TradingCalendar.getDateAtTime(date, 15, 0, 0);
         _log.debug("Business day openDate: {} Business day closeDate: {} Date: {}", openDate, closeDate, date);
 
-        assertTrue("2", TradingCalendar.isMarketHours(openDate, closeDate, date));
+        assertTrue(TradingCalendar.isMarketHours(openDate, closeDate, date));
 
         date = TradingCalendar.getDateAtTime(date, 17, 0, 0);
         _log.debug("Business day openDate: {} Business day closeDate: {} Date: {}", openDate, closeDate, date);
 
-        assertFalse("3", TradingCalendar.isMarketHours(openDate, closeDate, date));
+        assertFalse(TradingCalendar.isMarketHours(openDate, closeDate, date));
     }
 
     @Test
     public void testIsTradingday() {
 
         ZonedDateTime date = TradingCalendar.getPrevTradingDay(TradingCalendar.getDateTimeNowMarketTimeZone());
-        assertTrue("1", TradingCalendar.isTradingDay(date));
+        assertTrue(TradingCalendar.isTradingDay(date));
 
         while (date.getDayOfWeek().compareTo(DayOfWeek.SUNDAY) != 0) {
             date = date.plusDays(1);
             _log.debug("dayOfWeek: {}", date.getDayOfWeek());
         }
-        assertFalse("2", TradingCalendar.isTradingDay(date));
+        assertFalse(TradingCalendar.isTradingDay(date));
     }
 
     @Test
@@ -228,7 +225,7 @@ public class TradingCalendarTest {
                     - TradingCalendar.getDurationInDays(TradingCalendar.getDateTimeNowMarketTimeZone(), endDate));
         }
         _log.debug("chartDays: {}", chartDays);
-        assertEquals("1", 365, chartDays);
+        assertEquals(365, chartDays);
     }
 
     @Test
@@ -240,7 +237,7 @@ public class TradingCalendarTest {
         reqId = new AtomicInteger((int) (TradingCalendar.geMillisFromZonedDateTime(date) / 1000d));
         _log.debug("reqId: {}", reqId);
         _log.debug("reqId: {}", reqId.incrementAndGet());
-        assertNotNull("1", reqId);
+        assertNotNull(reqId);
     }
 
     @Test
@@ -254,14 +251,14 @@ public class TradingCalendarTest {
 
         endDate = TradingCalendar
                 .getDateAtTime(TradingCalendar.getPrevTradingDay(TradingCalendar.addTradingDays(close, 0)), close);
-        assertTrue("1", TradingCalendar.isTradingDay(endDate));
+        assertTrue(TradingCalendar.isTradingDay(endDate));
 
         ZonedDateTime startDate = endDate.minusDays((2 - 1));
         startDate = TradingCalendar.getPrevTradingDay(startDate);
-        assertTrue("2", TradingCalendar.isTradingDay(startDate));
+        assertTrue(TradingCalendar.isTradingDay(startDate));
 
         startDate = TradingCalendar.getDateAtTime(startDate, open);
-        assertTrue("3", TradingCalendar.isTradingDay(startDate));
+        assertTrue(TradingCalendar.isTradingDay(startDate));
 
         _log.debug("startDate: {}", startDate);
     }
@@ -405,12 +402,12 @@ public class TradingCalendarTest {
         LocalDate formattedDate = TradingCalendar.getLocalDateFromDateString("03/31/2015", "MM/dd/yyyy");
 
         _log.debug("formattedDate: {}", formattedDate);
-        assertEquals("1", date, formattedDate);
+        assertEquals( date, formattedDate);
 
         formattedDate = TradingCalendar.getLocalDateFromDateString("2015-3-31", "y-M-d");
 
         _log.debug("formattedDate: {}", formattedDate);
-        assertEquals("2", date, formattedDate);
+        assertEquals( date, formattedDate);
 
         ZonedDateTime zonedDateTime = ZonedDateTime.of(2015, 3, 31, 0, 0, 0, 0, TradingCalendar.MKT_TIMEZONE);
 
@@ -418,7 +415,7 @@ public class TradingCalendarTest {
                 "yyyyMMdd", TradingCalendar.MKT_TIMEZONE);
 
         _log.debug("zonedDateTimeFormatted: {} zonedDateTime: {}", zonedDateTimeFormatted, zonedDateTime);
-        assertEquals("3", zonedDateTimeFormatted, zonedDateTime);
+        assertEquals( zonedDateTimeFormatted, zonedDateTime);
     }
 
     @Test
@@ -430,7 +427,7 @@ public class TradingCalendarTest {
 
         _log.debug("formattedDate: {}", formattedDate);
         _log.debug("date: {}", date);
-        assertEquals("1", date, formattedDate);
+        assertEquals( date, formattedDate);
     }
 
     @Test
@@ -460,7 +457,7 @@ public class TradingCalendarTest {
         dateFormated = TradingCalendar.getFormattedDate(date, DATE_TIME_FORMAT);
         _log.debug("dateFormated: {}", dateFormated);
 
-        assertEquals("1", date, TradingCalendar.getZonedDateTimeFromDateTimeString(dateFormated, DATE_TIME_FORMAT));
+        assertEquals( date, TradingCalendar.getZonedDateTimeFromDateTimeString(dateFormated, DATE_TIME_FORMAT));
     }
 
     @Test
@@ -481,7 +478,7 @@ public class TradingCalendarTest {
         _log.debug("nowPcZone: {}", nowPcZone);
         ZonedDateTime now = TradingCalendar.adjustDateTimeToMarketTimeZone(nowPcZone);
         _log.debug("now: {}", now);
-        assertEquals("1", now.getZone(), nowMkt.getZone());
+        assertEquals( now.getZone(), nowMkt.getZone());
     }
 
     @Test
@@ -495,12 +492,12 @@ public class TradingCalendarTest {
 
         long seconds = TradingCalendar.getDurationInSeconds(startOfPeriod, endOfPeriod);
         _log.debug("Duration: {}", seconds);
-        assertEquals("1", 299, seconds);
+        assertEquals( 299, seconds);
 
         endOfPeriod = endOfPeriod.plusDays(3);
         long days = TradingCalendar.getDurationInDays(startOfPeriod, endOfPeriod);
         _log.debug("Duration: {}", days);
-        assertEquals("2", 3, days);
+        assertEquals( 3, days);
     }
 
     @Test

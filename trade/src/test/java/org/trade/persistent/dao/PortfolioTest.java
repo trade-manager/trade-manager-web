@@ -35,13 +35,11 @@
  */
 package org.trade.persistent.dao;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TestName;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trade.core.dao.Aspect;
@@ -54,7 +52,7 @@ import org.trade.ui.TradeAppLoadConfig;
 
 import java.util.Objects;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  *
@@ -62,22 +60,20 @@ import static org.junit.Assert.assertNotNull;
 public class PortfolioTest {
 
     private final static Logger _log = LoggerFactory.getLogger(PortfolioTest.class);
-    @Rule
-    public TestName name = new TestName();
 
     private final AspectHome aspectHome = new AspectHome();
 
     /**
      * Method setUpBeforeClass.
      */
-    @BeforeClass
+    @BeforeAll
     public static void setUpBeforeClass() throws Exception {
     }
 
     /**
      * Method setUp.
      */
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         TradeAppLoadConfig.loadAppProperties();
     }
@@ -85,7 +81,7 @@ public class PortfolioTest {
     /**
      * Method tearDown.
      */
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         Aspects accounts = aspectHome.findByClassName(Account.class.getName());
         for (Aspect aspect : accounts.getAspect()) {
@@ -96,7 +92,7 @@ public class PortfolioTest {
     /**
      * Method tearDownAfterClass.
      */
-    @AfterClass
+    @AfterAll
     public static void tearDownAfterClass() throws Exception {
     }
 
@@ -110,6 +106,6 @@ public class PortfolioTest {
         PortfolioAccount portfolioAccount = new PortfolioAccount(portfolio, account);
         portfolio.getPortfolioAccounts().add(portfolioAccount);
         portfolio = aspectHome.persist(portfolio);
-        assertNotNull("1", portfolio.getIndividualAccount());
+        assertNotNull(portfolio.getIndividualAccount());
     }
 }

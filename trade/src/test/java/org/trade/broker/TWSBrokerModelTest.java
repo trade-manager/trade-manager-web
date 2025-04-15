@@ -35,13 +35,11 @@
  */
 package org.trade.broker;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TestName;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trade.core.dao.Aspect;
@@ -74,8 +72,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class TWSBrokerModelTest implements IBrokerChangeListener {
 
     private final static Logger _log = LoggerFactory.getLogger(TWSBrokerModelTest.class);
-    @Rule
-    public TestName name = new TestName();
 
     private Tradingdays tradingdays = null;
     private IBrokerModel tWSBrokerModel;
@@ -95,7 +91,7 @@ public class TWSBrokerModelTest implements IBrokerChangeListener {
     /**
      * Method setUpBeforeClass.
      */
-    @BeforeClass
+    @BeforeAll
     public static void setUpBeforeClass() throws Exception {
 
         TradeAppLoadConfig.loadAppProperties();
@@ -116,7 +112,7 @@ public class TWSBrokerModelTest implements IBrokerChangeListener {
      * Method setUp. Try to connect to the Broker for these tests that but
      * candle data from the broker and test the throtle monitor.
      */
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
 
         tradePersistentModel = (IPersistentModel) ClassFactory
@@ -140,7 +136,7 @@ public class TWSBrokerModelTest implements IBrokerChangeListener {
     /**
      * Method tearDown.
      */
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
 
         deleteData();
@@ -171,7 +167,7 @@ public class TWSBrokerModelTest implements IBrokerChangeListener {
     /**
      * Method tearDownAfterClass.
      */
-    @AfterClass
+    @AfterAll
     public static void tearDownAfterClass() throws Exception {
     }
 

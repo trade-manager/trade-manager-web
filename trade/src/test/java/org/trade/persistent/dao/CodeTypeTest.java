@@ -35,17 +35,15 @@
  */
 package org.trade.persistent.dao;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TestName;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  *
@@ -53,34 +51,32 @@ import static org.junit.Assert.assertNotNull;
 public class CodeTypeTest {
 
     private final static Logger _log = LoggerFactory.getLogger(CodeTypeTest.class);
-    @Rule
-    public TestName name = new TestName();
 
     /**
      * Method setUpBeforeClass.
      */
-    @BeforeClass
+    @BeforeAll
     public static void setUpBeforeClass() throws Exception {
     }
 
     /**
      * Method setUp.
      */
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
     }
 
     /**
      * Method tearDown.
      */
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
     }
 
     /**
      * Method tearDownAfterClass.
      */
-    @AfterClass
+    @AfterAll
     public static void tearDownAfterClass() throws Exception {
     }
 
@@ -90,10 +86,10 @@ public class CodeTypeTest {
 
         CodeTypeHome codeTypeHome = new CodeTypeHome();
         CodeType codeType = codeTypeHome.findByName("MovingAverage");
-        assertNotNull("1", codeType);
+        assertNotNull(codeType);
         _log.info("CodeType id: {}", codeType.getId());
         CodeValue codeValue = codeTypeHome.findByAttributeName(codeType.getName(), "Length");
-        assertNotNull("2", codeValue);
+        assertNotNull(codeValue);
         _log.info("CodeValue id: {}", codeValue.getId());
 
     }

@@ -35,13 +35,11 @@
  */
 package org.trade.chart.data;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TestName;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trade.core.factory.ClassFactory;
@@ -64,8 +62,8 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.TimeZone;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  *
@@ -73,8 +71,6 @@ import static org.junit.Assert.assertNotNull;
 public class CandlePeriodTest {
 
     private final static Logger _log = LoggerFactory.getLogger(CandlePeriodTest.class);
-    @Rule
-    public TestName name = new TestName();
 
     private IPersistentModel tradePersistentModel = null;
     private Tradestrategy tradestrategy = null;
@@ -82,27 +78,27 @@ public class CandlePeriodTest {
     /**
      * Method setUpBeforeClass.
      */
-    @BeforeClass
+    @BeforeAll
     public static void setUpBeforeClass() throws Exception {
     }
 
     /**
      * Method setUp.
      */
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         TradeAppLoadConfig.loadAppProperties();
         tradePersistentModel = (IPersistentModel) ClassFactory.getServiceForInterface(IPersistentModel._persistentModel,
                 this);
         String symbol = "TEST";
         this.tradestrategy = TradestrategyBase.getTestTradestrategy(symbol);
-        assertNotNull("1", this.tradestrategy);
+        assertNotNull(this.tradestrategy);
     }
 
     /**
      * Method tearDown.
      */
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         TradestrategyBase.clearDBData();
     }
@@ -110,7 +106,7 @@ public class CandlePeriodTest {
     /**
      * Method tearDownAfterClass.
      */
-    @AfterClass
+    @AfterAll
     public static void tearDownAfterClass() throws Exception {
     }
 
@@ -159,7 +155,7 @@ public class CandlePeriodTest {
         } else {
             CandleDataset.populateSeries(this.tradestrategy.getStrategyData(), candles);
         }
-        assertFalse("1", this.tradestrategy.getStrategyData().getBaseCandleSeries().isEmpty());
+        assertFalse(this.tradestrategy.getStrategyData().getBaseCandleSeries().isEmpty());
         Candle candle = this.tradestrategy.getStrategyData().getBaseCandleSeries().getAverageBar(
                 TradingCalendar.getDateAtTime(TradingCalendar.getPrevTradingDay(startPeriod),
                         this.tradestrategy.getTradingday().getOpen()),
@@ -198,7 +194,7 @@ public class CandlePeriodTest {
         ZonedDateTime newInstant = date.withZoneSameLocal(defaultZone);
         _log.info("Date PST time: {}", newInstant);
 
-        assertNotNull("1", date);
+        assertNotNull(date);
 
     }
 
@@ -214,7 +210,7 @@ public class CandlePeriodTest {
         for (int i = 0; i < size; i++) {
             _log.info("Time is : {} Start: {} End: {}", period, period.getStart(), period.getEnd());
             period = period.next();
-            assertNotNull("1", period);
+            assertNotNull(period);
         }
     }
 
@@ -230,7 +226,7 @@ public class CandlePeriodTest {
         for (int i = 0; i < size; i++) {
             _log.info("Time is : {} Start: {} End: {}", period, period.getStart(), period.getEnd());
             period = period.previous();
-            assertNotNull("1", period);
+            assertNotNull(period);
         }
     }
 
@@ -245,6 +241,6 @@ public class CandlePeriodTest {
 
         RegularTimePeriod period = new CandlePeriod(startBusDate, secondsLength);
         _log.info("\n Bus Day Start : {}\n Start: {}\n End: {}\n Periods: {}", startBusDate, period.getStart(), period.getEnd(), periods);
-        assertNotNull("1", period);
+        assertNotNull(period);
     }
 }

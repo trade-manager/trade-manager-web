@@ -35,13 +35,11 @@
  */
 package org.trade.persistent.dao;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TestName;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trade.core.dao.AspectHome;
@@ -49,8 +47,8 @@ import org.trade.core.util.TradingCalendar;
 import org.trade.dictionary.valuetype.Side;
 import org.trade.ui.TradeAppLoadConfig;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  *
@@ -58,8 +56,6 @@ import static org.junit.Assert.assertNull;
 public class TradePositionTest {
 
     private final static Logger _log = LoggerFactory.getLogger(TradePositionTest.class);
-    @Rule
-    public TestName name = new TestName();
 
     private TradePositionHome tradePositionHome = null;
     private AspectHome aspectHome = null;
@@ -68,14 +64,14 @@ public class TradePositionTest {
     /**
      * Method setUpBeforeClass.
      */
-    @BeforeClass
+    @BeforeAll
     public static void setUpBeforeClass() throws Exception {
     }
 
     /**
      * Method setUp.
      */
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         TradeAppLoadConfig.loadAppProperties();
         tradePositionHome = new TradePositionHome();
@@ -88,7 +84,7 @@ public class TradePositionTest {
     /**
      * Method tearDown.
      */
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         TradestrategyBase.clearDBData();
     }
@@ -96,7 +92,7 @@ public class TradePositionTest {
     /**
      * Method tearDownAfterClass.
      */
-    @AfterClass
+    @AfterAll
     public static void tearDownAfterClass() throws Exception {
     }
 
@@ -109,13 +105,13 @@ public class TradePositionTest {
 
         TradePosition tradePosition = aspectHome.persist(instance);
 
-        assertNotNull("1", tradePosition.getId());
+        assertNotNull(tradePosition.getId());
         _log.info("testAddTradePosition IdTradeStrategy: {}IdTradePosition: {}", this.tradestrategy.getId(), tradePosition.getId());
 
         tradePositionHome.remove(tradePosition);
         _log.info("testDeleteTradePosition IdTradeStrategy: {}", tradestrategy.getId());
         tradePosition = tradePositionHome.findById(tradePosition.getId());
-        assertNull("2", tradePosition);
+        assertNull(tradePosition);
 
     }
 }

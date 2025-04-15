@@ -35,13 +35,11 @@
  */
 package org.trade.persistent.dao;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TestName;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trade.core.util.TradingCalendar;
@@ -51,7 +49,7 @@ import org.trade.ui.TradeAppLoadConfig;
 import java.math.BigDecimal;
 import java.util.Objects;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Some tests for the DataUtilities class.
@@ -62,20 +60,18 @@ import static org.junit.Assert.assertTrue;
 public class TradelogReportTest {
 
     private final static Logger _log = LoggerFactory.getLogger(TradelogReportTest.class);
-    @Rule
-    public TestName name = new TestName();
 
     /**
      * Method setUpBeforeClass.
      */
-    @BeforeClass
+    @BeforeAll
     public static void setUpBeforeClass() throws Exception {
     }
 
     /**
      * Method setUp.
      */
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         TradeAppLoadConfig.loadAppProperties();
     }
@@ -83,14 +79,14 @@ public class TradelogReportTest {
     /**
      * Method tearDown.
      */
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
     }
 
     /**
      * Method tearDownAfterClass.
      */
-    @AfterClass
+    @AfterAll
     public static void tearDownAfterClass() throws Exception {
     }
 
@@ -102,7 +98,7 @@ public class TradelogReportTest {
         Portfolio portfolio = (Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
         TradelogReport tradelogReport = tradelogHome.findByTradelogDetail(portfolio, TradingCalendar.getYearStart(),
                 TradingCalendar.getTradingDayEnd(TradingCalendar.getDateTimeNowMarketTimeZone()), false, null);
-        assertTrue("1", tradelogReport.getTradelogDetail().isEmpty());
+        assertTrue(tradelogReport.getTradelogDetail().isEmpty());
         for (TradelogDetail tradelogDetail : tradelogReport.getTradelogDetail()) {
             _log.info("testTradelogDetails tradelogDetail:  getOpen:{} getAction:{} getMarketBias:{} getName:{} getSymbol:{} getQuantity:{} getLongShort:{} getAverageFilledPrice:{} getFilledDate:{}", tradelogDetail.getOpen(), tradelogDetail.getAction(), tradelogDetail.getMarketBias(), tradelogDetail.getName(), tradelogDetail.getSymbol(), tradelogDetail.getQuantity(), tradelogDetail.getLongShort(), tradelogDetail.getAverageFilledPrice(), tradelogDetail.getFilledDate());
         }
@@ -120,11 +116,11 @@ public class TradelogReportTest {
                 TradingCalendar.getYearStart(),
                 TradingCalendar.getTradingDayEnd(TradingCalendar.getDateTimeNowMarketTimeZone()), null,
                 new BigDecimal(0));
-        assertTrue("1", tradelogReport.getTradelogSummary().isEmpty());
+        assertTrue(tradelogReport.getTradelogSummary().isEmpty());
+
         for (TradelogSummary tradelogSummary : tradelogReport.getTradelogSummary()) {
+
             _log.info("testTradelogSummary tradelogDetail: getPeriod:{}getBattingAverage:{}getSimpleSharpeRatio:{}getQuantity:{}getGrossProfitLoss:{}getQuantity:{}getNetProfitLoss:{}", tradelogSummary.getPeriod(), tradelogSummary.getBattingAverage(), tradelogSummary.getSimpleSharpeRatio(), tradelogSummary.getQuantity(), tradelogSummary.getGrossProfitLoss(), tradelogSummary.getQuantity(), tradelogSummary.getNetProfitLoss());
         }
-
-
     }
 }

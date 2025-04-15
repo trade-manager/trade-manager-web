@@ -35,13 +35,11 @@
  */
 package org.trade.persistent.dao;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TestName;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trade.core.dao.AspectHome;
@@ -53,7 +51,7 @@ import org.trade.dictionary.valuetype.SECType;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  *
@@ -61,34 +59,33 @@ import static org.junit.Assert.assertNotNull;
 public class ContractTest {
 
     private final static Logger _log = LoggerFactory.getLogger(ContractTest.class);
-    @Rule
-    public TestName name = new TestName();
+
 
     /**
      * Method setUpBeforeClass.
      */
-    @BeforeClass
+    @BeforeAll
     public static void setUpBeforeClass() throws Exception {
     }
 
     /**
      * Method setUp.
      */
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
     }
 
     /**
      * Method tearDown.
      */
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
     }
 
     /**
      * Method tearDownAfterClass.
      */
-    @AfterClass
+    @AfterAll
     public static void tearDownAfterClass() throws Exception {
     }
 
@@ -107,7 +104,7 @@ public class ContractTest {
         Contract contract = contractHome.findByUniqueKey(transientInstance.getSecType(),
                 transientInstance.getSymbol(), transientInstance.getExchange(), transientInstance.getCurrency(),
                 null);
-        assertNotNull("Contract not found: " + contract.getSymbol(), contract);
+        assertNotNull(contract);
 
         aspectHome.remove(contract);
         _log.info("Contract deleted Id:{}", transientInstance.getId());
@@ -136,7 +133,7 @@ public class ContractTest {
         Contract contract = contractHome.findByUniqueKey(transientInstance.getSecType(),
                 transientInstance.getSymbol(), transientInstance.getExchange(), transientInstance.getCurrency(),
                 expiry);
-        assertNotNull("Contract not found: " + contract.getSymbol(), contract);
+        assertNotNull(contract);
 
         aspectHome.remove(contract);
         _log.info("Contract deleted Id:{}", transientInstance.getId());
