@@ -43,10 +43,12 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trade.core.dao.AspectHome;
-import org.trade.core.util.TradingCalendar;
-import org.trade.dictionary.valuetype.Currency;
-import org.trade.dictionary.valuetype.Exchange;
-import org.trade.dictionary.valuetype.SECType;
+import org.trade.core.persistent.dao.Contract;
+import org.trade.core.persistent.dao.ContractHome;
+import org.trade.core.util.time.TradingCalendar;
+import org.trade.core.valuetype.Currency;
+import org.trade.core.valuetype.Exchange;
+import org.trade.core.valuetype.SECType;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;

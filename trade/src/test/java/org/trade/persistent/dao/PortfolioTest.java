@@ -45,9 +45,13 @@ import org.slf4j.LoggerFactory;
 import org.trade.core.dao.Aspect;
 import org.trade.core.dao.AspectHome;
 import org.trade.core.dao.Aspects;
-import org.trade.dictionary.valuetype.AccountType;
-import org.trade.dictionary.valuetype.Currency;
-import org.trade.dictionary.valuetype.DAOPortfolio;
+import org.trade.core.persistent.dao.Account;
+import org.trade.core.persistent.dao.Portfolio;
+import org.trade.core.persistent.dao.PortfolioAccount;
+import org.trade.core.persistent.dao.PortfolioHome;
+import org.trade.core.valuetype.AccountType;
+import org.trade.core.valuetype.Currency;
+import org.trade.core.valuetype.DAOPortfolio;
 import org.trade.ui.TradeAppLoadConfig;
 
 import java.util.Objects;

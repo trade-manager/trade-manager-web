@@ -37,15 +37,15 @@ package org.trade.ui.models;
 
 import org.trade.core.dao.Aspect;
 import org.trade.core.dao.Aspects;
+import org.trade.core.persistent.dao.Account;
+import org.trade.core.persistent.dao.Portfolio;
+import org.trade.core.persistent.dao.PortfolioAccount;
 import org.trade.core.util.CoreUtils;
-import org.trade.core.util.TradingCalendar;
+import org.trade.core.util.time.TradingCalendar;
+import org.trade.core.valuetype.AllocationMethod;
+import org.trade.core.valuetype.DAOAccount;
 import org.trade.core.valuetype.Decode;
 import org.trade.core.valuetype.YesNo;
-import org.trade.dictionary.valuetype.AllocationMethod;
-import org.trade.dictionary.valuetype.DAOAccount;
-import org.trade.persistent.dao.Account;
-import org.trade.persistent.dao.Portfolio;
-import org.trade.persistent.dao.PortfolioAccount;
 
 import java.io.Serial;
 import java.util.Vector;

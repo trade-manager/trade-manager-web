@@ -35,29 +35,12 @@
  */
 package org.trade.strategy.data;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.DiscriminatorColumn;
-import jakarta.persistence.DiscriminatorType;
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Inheritance;
-import jakarta.persistence.InheritanceType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
-import jakarta.validation.constraints.NotNull;
 import org.jfree.data.ComparableObjectItem;
 import org.jfree.data.ComparableObjectSeries;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.trade.persistent.dao.CodeValue;
-import org.trade.persistent.dao.Strategy;
+import org.trade.core.persistent.dao.CodeValue;
+import org.trade.core.persistent.dao.Strategy;
 
 import java.awt.*;
 import java.io.Serial;
@@ -65,17 +48,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static jakarta.persistence.GenerationType.IDENTITY;
-
-
-/**
- *
- */
-@Entity
-@Table(name = "indicatorseries")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "type", discriminatorType = DiscriminatorType.STRING)
-@DiscriminatorValue("IndicatorSeries")
 public abstract class IndicatorSeries extends ComparableObjectSeries implements Cloneable, Serializable {
 
     @Serial
@@ -102,16 +74,11 @@ public abstract class IndicatorSeries extends ComparableObjectSeries implements 
     public static final String VostroSeries = "VostroSeries";
 
     private Integer id;
-    @NotNull
     private String name;
-    @NotNull
     private String type;
     private String description;
-    @NotNull
     private Boolean displaySeries;
-    @NotNull
     private Integer seriesRGBColor;
-    @NotNull
     private Boolean subChart;
     private Strategy strategy;
     protected Integer version;
@@ -193,9 +160,6 @@ public abstract class IndicatorSeries extends ComparableObjectSeries implements 
      *
      * @return Integer
      */
-    @Id
-    @GeneratedValue(strategy = IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
     public Integer getIdIndicatorSeries() {
         return this.id;
     }
@@ -214,7 +178,6 @@ public abstract class IndicatorSeries extends ComparableObjectSeries implements 
      *
      * @return String
      */
-    @Column(name = "name", length = 45)
     public String getName() {
         return this.name;
     }
@@ -233,7 +196,6 @@ public abstract class IndicatorSeries extends ComparableObjectSeries implements 
      *
      * @return String
      */
-    @Column(name = "type", length = 45, insertable = false, updatable = false, unique = true, nullable = false)
     public String getType() {
         return this.type;
     }
@@ -252,7 +214,6 @@ public abstract class IndicatorSeries extends ComparableObjectSeries implements 
      *
      * @return String
      */
-    @Column(name = "description", length = 100)
     public String getDescription() {
         return this.description;
     }
@@ -271,7 +232,6 @@ public abstract class IndicatorSeries extends ComparableObjectSeries implements 
      *
      * @return Integer
      */
-    @Column(name = "series_RGB_color")
     public Integer getSeriesRGBColor() {
         return this.seriesRGBColor;
     }
@@ -281,7 +241,6 @@ public abstract class IndicatorSeries extends ComparableObjectSeries implements 
      *
      * @return Color
      */
-    @Transient
     public Color getSeriesColor() {
         return new Color(this.seriesRGBColor);
     }
@@ -300,7 +259,6 @@ public abstract class IndicatorSeries extends ComparableObjectSeries implements 
      *
      * @return Boolean
      */
-    @Column(name = "display_series", length = 1)
     public Boolean getDisplaySeries() {
         return this.displaySeries;
     }
@@ -319,7 +277,6 @@ public abstract class IndicatorSeries extends ComparableObjectSeries implements 
      *
      * @return Boolean
      */
-    @Column(name = "sub_chart", length = 1)
     public Boolean getSubChart() {
         return this.subChart;
     }
@@ -338,7 +295,6 @@ public abstract class IndicatorSeries extends ComparableObjectSeries implements 
      *
      * @return Integer
      */
-    @Column(name = "version")
     public Integer getVersion() {
         return this.version;
     }
@@ -357,7 +313,6 @@ public abstract class IndicatorSeries extends ComparableObjectSeries implements 
      *
      * @return boolean
      */
-    @Transient
     public boolean isDirty() {
         for (CodeValue item : this.getCodeValues()) {
             if (item.isDirty())
@@ -381,8 +336,6 @@ public abstract class IndicatorSeries extends ComparableObjectSeries implements 
      *
      * @return Strategy
      */
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_strategy", nullable = false)
     public Strategy getStrategy() {
         return this.strategy;
     }
@@ -401,8 +354,6 @@ public abstract class IndicatorSeries extends ComparableObjectSeries implements 
      *
      * @return List<CodeValue>
      */
-    @OneToMany(mappedBy = "indicatorSeries", fetch = FetchType.EAGER, orphanRemoval = true, cascade = {
-            CascadeType.ALL})
     public List<CodeValue> getCodeValues() {
         return this.codeValues;
     }
@@ -434,7 +385,6 @@ public abstract class IndicatorSeries extends ComparableObjectSeries implements 
      * @param index the item index.
      * @return The data item.
      */
-    @Transient
     public ComparableObjectItem getDataItem(int index) {
         return super.getDataItem(index);
     }
@@ -459,6 +409,5 @@ public abstract class IndicatorSeries extends ComparableObjectSeries implements 
     /**
      * Method printSeries.
      */
-
     public abstract void printSeries();
 }

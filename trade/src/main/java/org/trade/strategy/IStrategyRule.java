@@ -35,7 +35,7 @@
  */
 package org.trade.strategy;
 
-import org.trade.persistent.dao.TradeOrder;
+import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.strategy.data.CandleSeries;
 
 /**

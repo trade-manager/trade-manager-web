@@ -39,6 +39,7 @@ import org.jfree.chart.renderer.xy.XYItemRenderer;
 
 import java.awt.*;
 
+
 /**
  * An interface that defines data in the form of (x, high, low, open, close)
  * tuples. This interface also defines how the data-set should be plotted.

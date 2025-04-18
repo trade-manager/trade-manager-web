@@ -35,8 +35,6 @@
  */
 package org.trade.core.util;
 
-import org.trade.ui.base.Parametric;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 

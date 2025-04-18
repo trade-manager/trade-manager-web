@@ -35,11 +35,11 @@
  */
 package org.trade.ui.models;
 
+import org.trade.core.persistent.dao.Tradestrategy;
+import org.trade.core.persistent.dao.Tradingday;
+import org.trade.core.persistent.dao.Tradingdays;
+import org.trade.core.valuetype.Side;
 import org.trade.core.valuetype.ValueTypeException;
-import org.trade.dictionary.valuetype.Side;
-import org.trade.persistent.dao.Tradestrategy;
-import org.trade.persistent.dao.Tradingday;
-import org.trade.persistent.dao.Tradingdays;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;

@@ -36,8 +36,8 @@
 package org.trade.broker.client;
 
 import org.trade.broker.BrokerModelException;
-import org.trade.persistent.dao.Contract;
-import org.trade.persistent.dao.Tradestrategy;
+import org.trade.core.persistent.dao.Contract;
+import org.trade.core.persistent.dao.Tradestrategy;
 
 import java.util.concurrent.ConcurrentHashMap;
 

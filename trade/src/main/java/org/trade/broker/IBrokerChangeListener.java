@@ -35,9 +35,9 @@
  */
 package org.trade.broker;
 
-import org.trade.persistent.dao.TradeOrder;
-import org.trade.persistent.dao.TradePosition;
-import org.trade.persistent.dao.Tradestrategy;
+import org.trade.core.persistent.dao.TradeOrder;
+import org.trade.core.persistent.dao.TradePosition;
+import org.trade.core.persistent.dao.Tradestrategy;
 
 import java.util.EventListener;
 import java.util.concurrent.ConcurrentHashMap;

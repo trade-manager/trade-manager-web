@@ -35,11 +35,8 @@
  */
 package org.trade.strategy.data;
 
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
-import org.jfree.data.time.ohlc.OHLCSeriesCollection;
-import org.trade.persistent.dao.Strategy;
-import org.trade.strategy.data.base.RegularTimePeriod;
+import org.trade.core.persistent.dao.Strategy;
+import org.trade.core.util.time.RegularTimePeriod;
 import org.trade.strategy.data.vwap.VwapItem;
 
 import java.io.Serial;
@@ -57,11 +54,8 @@ import java.math.BigDecimal;
  *
  * @author Simon Allen
  * @version $Revision: 1.0 $
- * @see OHLCSeriesCollection
- * @since 1.0.4
  */
-@Entity
-@DiscriminatorValue("VwapSeries")
+
 public class VwapSeries extends IndicatorSeries {
 
     @Serial

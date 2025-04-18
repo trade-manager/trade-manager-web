@@ -64,10 +64,10 @@ import org.jfree.data.Range;
 import org.jfree.data.general.SeriesChangeEvent;
 import org.jfree.data.general.SeriesChangeListener;
 import org.jfree.data.xy.XYDataset;
-import org.trade.core.util.TradingCalendar;
+import org.trade.core.persistent.dao.Tradingday;
+import org.trade.core.util.time.TradingCalendar;
+import org.trade.core.valuetype.Action;
 import org.trade.core.valuetype.Money;
-import org.trade.dictionary.valuetype.Action;
-import org.trade.persistent.dao.Tradingday;
 import org.trade.strategy.data.CandleSeries;
 import org.trade.strategy.data.IIndicatorDataset;
 import org.trade.strategy.data.IndicatorSeries;
@@ -335,7 +335,7 @@ public class CandlestickChart extends JPanel implements SeriesChangeListener {
                     if (IndicatorSeries.CandleSeries.equals(indicator.getType(0))) {
                         axisName = ((CandleSeries) indicator.getSeries(0)).getSymbol();
                     } else {
-                        org.trade.dictionary.valuetype.IndicatorSeries code = org.trade.dictionary.valuetype.IndicatorSeries
+                        org.trade.core.valuetype.IndicatorSeries code = org.trade.core.valuetype.IndicatorSeries
                                 .newInstance(indicator.getType(0));
                         axisName = code.getDisplayName();
                     }

@@ -42,13 +42,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.trade.core.persistent.dao.Entrylimit;
 import org.trade.core.valuetype.DAODecode;
 import org.trade.core.valuetype.Decode;
 import org.trade.core.valuetype.Money;
-import org.trade.dictionary.valuetype.ChartDays;
-import org.trade.dictionary.valuetype.DAOEntryLimit;
-import org.trade.dictionary.valuetype.DAOStrategy;
-import org.trade.dictionary.valuetype.DAOStrategyManager;
+import org.trade.core.valuetype.ChartDays;
+import org.trade.core.valuetype.DAOEntryLimit;
+import org.trade.core.valuetype.DAOStrategy;
+import org.trade.core.valuetype.DAOStrategyManager;
 import org.trade.ui.TradeAppLoadConfig;
 
 import java.util.Enumeration;

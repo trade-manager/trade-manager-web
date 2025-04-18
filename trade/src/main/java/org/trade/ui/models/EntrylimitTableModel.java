@@ -37,11 +37,11 @@ package org.trade.ui.models;
 
 import org.trade.core.dao.Aspect;
 import org.trade.core.dao.Aspects;
+import org.trade.core.persistent.dao.Entrylimit;
 import org.trade.core.util.CoreUtils;
 import org.trade.core.valuetype.Money;
 import org.trade.core.valuetype.Percent;
 import org.trade.core.valuetype.Quantity;
-import org.trade.persistent.dao.Entrylimit;
 
 import java.io.Serial;
 import java.util.Vector;

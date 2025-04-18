@@ -35,12 +35,9 @@
  */
 package org.trade.strategy.data;
 
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
-import org.jfree.data.time.ohlc.OHLCSeriesCollection;
-import org.trade.persistent.dao.Contract;
-import org.trade.persistent.dao.Strategy;
-import org.trade.strategy.data.base.RegularTimePeriod;
+import org.trade.core.persistent.dao.Contract;
+import org.trade.core.persistent.dao.Strategy;
+import org.trade.core.util.time.RegularTimePeriod;
 import org.trade.strategy.data.candle.CandleItem;
 import org.trade.strategy.data.heikinashi.HeikinAshiItem;
 
@@ -92,12 +89,8 @@ import java.time.ZonedDateTime;
  *
  * @author Simon Allen
  * @version $Revision: 1.0 $
- * @see OHLCSeriesCollection
- * @since 1.0.4
  */
 
-@Entity
-@DiscriminatorValue("HeikinAshiSeries")
 public class HeikinAshiSeries extends IndicatorSeries {
 
     @Serial

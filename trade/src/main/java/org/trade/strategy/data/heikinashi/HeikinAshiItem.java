@@ -36,10 +36,10 @@
 package org.trade.strategy.data.heikinashi;
 
 import org.jfree.data.ComparableObjectItem;
-import org.trade.dictionary.valuetype.Side;
-import org.trade.persistent.dao.Candle;
-import org.trade.persistent.dao.Contract;
-import org.trade.strategy.data.base.RegularTimePeriod;
+import org.trade.core.persistent.dao.Candle;
+import org.trade.core.persistent.dao.Contract;
+import org.trade.core.util.time.RegularTimePeriod;
+import org.trade.core.valuetype.Side;
 
 import java.io.Serial;
 import java.math.BigDecimal;

@@ -43,8 +43,11 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trade.core.dao.AspectHome;
-import org.trade.core.util.TradingCalendar;
-import org.trade.dictionary.valuetype.Side;
+import org.trade.core.persistent.dao.TradePosition;
+import org.trade.core.persistent.dao.TradePositionHome;
+import org.trade.core.persistent.dao.Tradestrategy;
+import org.trade.core.util.time.TradingCalendar;
+import org.trade.core.valuetype.Side;
 import org.trade.ui.TradeAppLoadConfig;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;

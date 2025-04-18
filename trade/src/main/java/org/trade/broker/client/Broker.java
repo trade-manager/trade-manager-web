@@ -1,6 +1,6 @@
 package org.trade.broker.client;
 
-import org.trade.persistent.dao.Tradestrategy;
+import org.trade.core.persistent.dao.Tradestrategy;
 import org.trade.strategy.IStrategyChangeListener;
 import org.trade.strategy.StrategyRuleException;
 

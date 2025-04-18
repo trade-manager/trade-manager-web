@@ -1,12 +1,12 @@
 package org.trade.broker.request;
 
 import org.trade.core.dao.Aspects;
+import org.trade.core.persistent.dao.Account;
+import org.trade.core.persistent.dao.Portfolio;
+import org.trade.core.persistent.dao.PortfolioAccount;
 import org.trade.core.xml.SaxMapper;
 import org.trade.core.xml.TagTracker;
 import org.trade.core.xml.XMLModelException;
-import org.trade.persistent.dao.Account;
-import org.trade.persistent.dao.Portfolio;
-import org.trade.persistent.dao.PortfolioAccount;
 import org.xml.sax.Attributes;
 
 import java.io.CharArrayWriter;

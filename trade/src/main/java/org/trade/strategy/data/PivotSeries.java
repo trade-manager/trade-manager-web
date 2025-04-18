@@ -35,18 +35,15 @@
  */
 package org.trade.strategy.data;
 
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Transient;
-import org.jfree.data.time.ohlc.OHLCSeriesCollection;
+
+import org.trade.core.persistent.dao.CodeValue;
+import org.trade.core.persistent.dao.Entrylimit;
+import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.util.Pair;
+import org.trade.core.util.time.RegularTimePeriod;
+import org.trade.core.valuetype.DAOEntryLimit;
 import org.trade.core.valuetype.Money;
-import org.trade.dictionary.valuetype.DAOEntryLimit;
-import org.trade.dictionary.valuetype.Side;
-import org.trade.persistent.dao.CodeValue;
-import org.trade.persistent.dao.Entrylimit;
-import org.trade.persistent.dao.Strategy;
-import org.trade.strategy.data.base.RegularTimePeriod;
+import org.trade.core.valuetype.Side;
 import org.trade.strategy.data.candle.CandleItem;
 import org.trade.strategy.data.candle.CandlePeriod;
 import org.trade.strategy.data.pivot.PivotCalculator;
@@ -62,12 +59,8 @@ import java.util.Hashtable;
  *
  * @author Simon Allen
  * @version $Revision: 1.0 $
- * @see OHLCSeriesCollection
- * @since 1.0.4
  */
 
-@Entity
-@DiscriminatorValue("PivotSeries")
 public class PivotSeries extends IndicatorSeries {
 
     @Serial
@@ -176,7 +169,6 @@ public class PivotSeries extends IndicatorSeries {
      *
      * @return Integer
      */
-    @Transient
     public Integer getBars() {
         try {
             if (null == this.bars)
@@ -201,7 +193,6 @@ public class PivotSeries extends IndicatorSeries {
      *
      * @return Boolean
      */
-    @Transient
     public Boolean getSide() {
         try {
             if (null == this.side)
@@ -226,7 +217,6 @@ public class PivotSeries extends IndicatorSeries {
      *
      * @return Boolean
      */
-    @Transient
     public Boolean getQuadratic() {
         try {
             if (null == this.quadratic)

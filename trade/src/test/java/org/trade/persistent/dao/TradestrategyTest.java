@@ -43,8 +43,14 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trade.core.dao.AspectHome;
-import org.trade.core.util.TradingCalendar;
-import org.trade.dictionary.valuetype.TradestrategyStatus;
+import org.trade.core.persistent.dao.Tradestrategy;
+import org.trade.core.persistent.dao.TradestrategyHome;
+import org.trade.core.persistent.dao.TradestrategyOrders;
+import org.trade.core.persistent.dao.Tradingday;
+import org.trade.core.persistent.dao.TradingdayHome;
+import org.trade.core.persistent.dao.Tradingdays;
+import org.trade.core.util.time.TradingCalendar;
+import org.trade.core.valuetype.TradestrategyStatus;
 import org.trade.ui.TradeAppLoadConfig;
 
 import java.time.ZonedDateTime;

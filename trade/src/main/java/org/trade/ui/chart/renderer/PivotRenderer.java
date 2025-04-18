@@ -53,7 +53,7 @@ import org.jfree.chart.util.PublicCloneable;
 import org.jfree.chart.util.SerialUtils;
 import org.jfree.chart.util.ShapeUtils;
 import org.jfree.data.xy.XYDataset;
-import org.trade.dictionary.valuetype.Side;
+import org.trade.core.valuetype.Side;
 import org.trade.strategy.data.PivotDataset;
 
 import java.awt.*;

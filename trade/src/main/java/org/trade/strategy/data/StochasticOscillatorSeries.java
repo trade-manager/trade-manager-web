@@ -35,14 +35,10 @@
  */
 package org.trade.strategy.data;
 
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Transient;
 import org.jfree.data.general.SeriesChangeEvent;
-import org.jfree.data.time.ohlc.OHLCSeriesCollection;
-import org.trade.persistent.dao.CodeValue;
-import org.trade.persistent.dao.Strategy;
-import org.trade.strategy.data.base.RegularTimePeriod;
+import org.trade.core.persistent.dao.CodeValue;
+import org.trade.core.persistent.dao.Strategy;
+import org.trade.core.util.time.RegularTimePeriod;
 import org.trade.strategy.data.candle.CandleItem;
 import org.trade.strategy.data.stochasticoscillator.StochasticOscillatorItem;
 
@@ -113,12 +109,8 @@ import java.util.LinkedList;
  *
  * @author Simon Allen
  * @version $Revision: 1.0 $
- * @see OHLCSeriesCollection
- * @since 1.0.4
  */
 
-@Entity
-@DiscriminatorValue("StochasticOscillatorSeries")
 public class StochasticOscillatorSeries extends IndicatorSeries {
 
     @Serial
@@ -263,7 +255,6 @@ public class StochasticOscillatorSeries extends IndicatorSeries {
      *
      * @return Integer
      */
-    @Transient
     public Integer getLength() {
         try {
             if (null == this.length)
@@ -290,7 +281,6 @@ public class StochasticOscillatorSeries extends IndicatorSeries {
      *
      * @return Integer
      */
-    @Transient
     public Integer getPercentD() {
         try {
             if (null == this.percentD)
@@ -317,7 +307,6 @@ public class StochasticOscillatorSeries extends IndicatorSeries {
      *
      * @return Integer
      */
-    @Transient
     public Integer getKSmoothing() {
         try {
             if (null == this.kSmoothing)
@@ -344,7 +333,6 @@ public class StochasticOscillatorSeries extends IndicatorSeries {
      *
      * @return Boolean
      */
-    @Transient
     public Boolean getInverse() {
         try {
             if (null == this.inverse)

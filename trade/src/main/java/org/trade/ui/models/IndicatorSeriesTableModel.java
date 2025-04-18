@@ -35,16 +35,16 @@
  */
 package org.trade.ui.models;
 
+import org.trade.base.TableModel;
 import org.trade.core.dao.Aspect;
 import org.trade.core.dao.Aspects;
 import org.trade.core.factory.ClassFactory;
+import org.trade.core.persistent.dao.CodeValue;
+import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.util.CoreUtils;
+import org.trade.core.valuetype.DAOStrategy;
 import org.trade.core.valuetype.YesNo;
-import org.trade.dictionary.valuetype.DAOStrategy;
-import org.trade.persistent.dao.CodeValue;
-import org.trade.persistent.dao.Strategy;
 import org.trade.strategy.data.IndicatorSeries;
-import org.trade.ui.base.TableModel;
 
 import javax.swing.event.TableModelEvent;
 import java.awt.*;
@@ -157,7 +157,7 @@ public class IndicatorSeriesTableModel extends TableModel {
                 break;
             }
             case 1: {
-                String type = ((org.trade.dictionary.valuetype.IndicatorSeries) value).getCode();
+                String type = ((org.trade.core.valuetype.IndicatorSeries) value).getCode();
                 String indicatorName = type.substring(0, type.indexOf("Series"));
                 element = this.getIndicatorSeries(element.getStrategy(), indicatorName, type, indicatorName
                 );
@@ -222,7 +222,7 @@ public class IndicatorSeriesTableModel extends TableModel {
      */
     public void deleteRow(int selectedRow) {
 
-        String type = ((org.trade.dictionary.valuetype.IndicatorSeries) this.getValueAt(selectedRow, 1)).getCode();
+        String type = ((org.trade.core.valuetype.IndicatorSeries) this.getValueAt(selectedRow, 1)).getCode();
         String name = (String) this.getValueAt(selectedRow, 2);
         for (final IndicatorSeries element : getData().getIndicatorSeries()) {
             if (CoreUtils.nullSafeComparator(element.getName(), name) == 0
@@ -296,9 +296,9 @@ public class IndicatorSeriesTableModel extends TableModel {
         }
 
         if (null == element.getType()) {
-            newRow.addElement(org.trade.dictionary.valuetype.IndicatorSeries.newInstance());
+            newRow.addElement(org.trade.core.valuetype.IndicatorSeries.newInstance());
         } else {
-            newRow.addElement(org.trade.dictionary.valuetype.IndicatorSeries.newInstance(element.getType()));
+            newRow.addElement(org.trade.core.valuetype.IndicatorSeries.newInstance(element.getType()));
         }
         newRow.addElement(element.getName());
         newRow.addElement(element.getDescription());

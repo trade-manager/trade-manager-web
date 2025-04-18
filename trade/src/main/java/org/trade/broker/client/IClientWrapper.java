@@ -35,10 +35,10 @@
  */
 package org.trade.broker.client;
 
-import org.trade.persistent.dao.Contract;
-import org.trade.persistent.dao.TradeOrder;
-import org.trade.persistent.dao.TradeOrderfill;
-import org.trade.persistent.dao.Tradestrategy;
+import org.trade.core.persistent.dao.Contract;
+import org.trade.core.persistent.dao.TradeOrder;
+import org.trade.core.persistent.dao.TradeOrderfill;
+import org.trade.core.persistent.dao.Tradestrategy;
 
 public interface IClientWrapper {
     void error(Exception e);

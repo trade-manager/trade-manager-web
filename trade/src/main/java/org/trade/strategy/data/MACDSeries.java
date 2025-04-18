@@ -35,14 +35,10 @@
  */
 package org.trade.strategy.data;
 
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Transient;
 import org.jfree.data.general.SeriesChangeEvent;
-import org.jfree.data.time.ohlc.OHLCSeriesCollection;
-import org.trade.persistent.dao.CodeValue;
-import org.trade.persistent.dao.Strategy;
-import org.trade.strategy.data.base.RegularTimePeriod;
+import org.trade.core.persistent.dao.CodeValue;
+import org.trade.core.persistent.dao.Strategy;
+import org.trade.core.util.time.RegularTimePeriod;
 import org.trade.strategy.data.candle.CandleItem;
 import org.trade.strategy.data.macd.MACDItem;
 
@@ -71,12 +67,7 @@ import java.util.LinkedList;
  *
  * @author Simon Allen
  * @version $Revision: 1.0 $
- * @see OHLCSeriesCollection
- * @since 1.0.4
  */
-
-@Entity
-@DiscriminatorValue("MACDSeries")
 public class MACDSeries extends IndicatorSeries {
 
     @Serial
@@ -230,7 +221,6 @@ public class MACDSeries extends IndicatorSeries {
      *
      * @return Integer
      */
-    @Transient
     public Integer getFastLength() {
         try {
             if (null == this.fastLength)
@@ -255,7 +245,6 @@ public class MACDSeries extends IndicatorSeries {
      *
      * @return Integer
      */
-    @Transient
     public Integer getSlowLength() {
         try {
             if (null == this.slowLength)
@@ -280,7 +269,6 @@ public class MACDSeries extends IndicatorSeries {
      *
      * @return Integer
      */
-    @Transient
     public Integer getSignalSmoothing() {
         try {
             if (null == this.signalSmoothing)
@@ -305,7 +293,6 @@ public class MACDSeries extends IndicatorSeries {
      *
      * @return Boolean
      */
-    @Transient
     public Boolean getSimpleMAType() {
         try {
             if (null == this.simpleMAType)

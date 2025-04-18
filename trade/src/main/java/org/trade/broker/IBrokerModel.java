@@ -36,9 +36,9 @@
 package org.trade.broker;
 
 import org.trade.broker.client.Broker;
-import org.trade.persistent.dao.Contract;
-import org.trade.persistent.dao.TradeOrder;
-import org.trade.persistent.dao.Tradestrategy;
+import org.trade.core.persistent.dao.Contract;
+import org.trade.core.persistent.dao.TradeOrder;
+import org.trade.core.persistent.dao.Tradestrategy;
 
 import java.time.ZonedDateTime;
 import java.util.EventListener;

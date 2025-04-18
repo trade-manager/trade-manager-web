@@ -35,7 +35,7 @@
  */
 package org.trade.strategy;
 
-import org.trade.persistent.dao.Tradestrategy;
+import org.trade.core.persistent.dao.Tradestrategy;
 
 import java.util.EventListener;
 

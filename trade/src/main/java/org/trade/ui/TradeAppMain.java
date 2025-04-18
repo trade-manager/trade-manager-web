@@ -35,8 +35,8 @@
  */
 package org.trade.ui;
 
-import org.trade.ui.base.ImageBuilder;
-import org.trade.ui.base.WaitCursorEventQueue;
+import org.trade.base.ImageBuilder;
+import org.trade.base.WaitCursorEventQueue;
 
 import javax.swing.*;
 import java.awt.*;

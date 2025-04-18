@@ -39,7 +39,7 @@ import org.trade.core.conversion.JavaTypeTranslator;
 import org.trade.core.message.IMessageFactory;
 import org.trade.core.message.MessageFactory;
 import org.trade.core.util.CoreUtils;
-import org.trade.core.util.TradingCalendar;
+import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.validator.DateValidator;
 import org.trade.core.validator.IExceptionMessageListener;
 import org.trade.core.validator.IValidator;

@@ -35,12 +35,8 @@
  */
 package org.trade.strategy.data;
 
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Transient;
-import org.jfree.data.time.ohlc.OHLCSeriesCollection;
-import org.trade.persistent.dao.Strategy;
-import org.trade.strategy.data.base.RegularTimePeriod;
+import org.trade.core.persistent.dao.Strategy;
+import org.trade.core.util.time.RegularTimePeriod;
 import org.trade.strategy.data.candle.CandleItem;
 import org.trade.strategy.data.volume.VolumeItem;
 
@@ -51,11 +47,8 @@ import java.io.Serial;
  *
  * @author Simon Allen
  * @version $Revision: 1.0 $
- * @see OHLCSeriesCollection
- * @since 1.0.4
  */
-@Entity
-@DiscriminatorValue("VolumeSeries")
+
 public class VolumeSeries extends IndicatorSeries {
 
     @Serial
@@ -218,7 +211,6 @@ public class VolumeSeries extends IndicatorSeries {
      *
      * @return long
      */
-    @Transient
     public long getBarWidthInMilliseconds() {
         return this.barWidthInMilliseconds;
     }

@@ -37,11 +37,11 @@ package org.trade.broker.client;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.trade.core.util.TradingCalendar;
-import org.trade.dictionary.valuetype.BarSize;
-import org.trade.dictionary.valuetype.ChartDays;
-import org.trade.persistent.dao.Candle;
-import org.trade.persistent.dao.Contract;
+import org.trade.core.persistent.dao.Candle;
+import org.trade.core.persistent.dao.Contract;
+import org.trade.core.util.time.TradingCalendar;
+import org.trade.core.valuetype.BarSize;
+import org.trade.core.valuetype.ChartDays;
 import org.trade.strategy.data.candle.CandlePeriod;
 
 import java.io.BufferedReader;

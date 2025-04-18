@@ -35,8 +35,8 @@
  */
 package org.trade.strategy.data.candle;
 
-import org.trade.core.util.TradingCalendar;
-import org.trade.strategy.data.base.RegularTimePeriod;
+import org.trade.core.util.time.RegularTimePeriod;
+import org.trade.core.util.time.TradingCalendar;
 
 import java.io.Serial;
 import java.io.Serializable;

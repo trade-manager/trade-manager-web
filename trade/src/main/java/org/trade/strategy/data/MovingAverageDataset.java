@@ -41,8 +41,8 @@ import org.jfree.chart.util.ObjectUtils;
 import org.jfree.data.general.DatasetChangeEvent;
 import org.jfree.data.xy.AbstractXYDataset;
 import org.jfree.data.xy.XYDataset;
-import org.trade.strategy.data.base.RegularTimePeriod;
-import org.trade.strategy.data.base.TimePeriodAnchor;
+import org.trade.core.util.time.RegularTimePeriod;
+import org.trade.core.util.time.TimePeriodAnchor;
 import org.trade.strategy.data.movingaverage.IMovingAverageDataset;
 import org.trade.strategy.data.movingaverage.MovingAverageItem;
 

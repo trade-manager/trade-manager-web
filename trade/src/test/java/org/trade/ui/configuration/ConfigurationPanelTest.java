@@ -43,12 +43,12 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trade.core.factory.ClassFactory;
-import org.trade.dictionary.valuetype.CalculationType;
-import org.trade.dictionary.valuetype.DAOStrategy;
-import org.trade.persistent.dao.CodeAttribute;
-import org.trade.persistent.dao.CodeType;
-import org.trade.persistent.dao.CodeValue;
-import org.trade.persistent.dao.Strategy;
+import org.trade.core.valuetype.CalculationType;
+import org.trade.core.valuetype.DAOStrategy;
+import org.trade.core.persistent.dao.CodeAttribute;
+import org.trade.core.persistent.dao.CodeType;
+import org.trade.core.persistent.dao.CodeValue;
+import org.trade.core.persistent.dao.Strategy;
 import org.trade.strategy.data.IndicatorSeries;
 import org.trade.ui.TradeAppLoadConfig;
 

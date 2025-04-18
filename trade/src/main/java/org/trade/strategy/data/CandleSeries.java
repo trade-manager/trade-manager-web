@@ -35,21 +35,17 @@
  */
 package org.trade.strategy.data;
 
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Transient;
 import org.jfree.data.ComparableObjectItem;
 import org.jfree.data.general.SeriesChangeEvent;
-import org.jfree.data.time.ohlc.OHLCSeriesCollection;
-import org.trade.core.util.TradingCalendar;
+import org.trade.core.persistent.dao.Candle;
+import org.trade.core.persistent.dao.CodeValue;
+import org.trade.core.persistent.dao.Contract;
+import org.trade.core.persistent.dao.Strategy;
+import org.trade.core.persistent.dao.Tradingday;
+import org.trade.core.util.time.RegularTimePeriod;
+import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.Percent;
 import org.trade.core.valuetype.ValueTypeException;
-import org.trade.persistent.dao.Candle;
-import org.trade.persistent.dao.CodeValue;
-import org.trade.persistent.dao.Contract;
-import org.trade.persistent.dao.Strategy;
-import org.trade.persistent.dao.Tradingday;
-import org.trade.strategy.data.base.RegularTimePeriod;
 import org.trade.strategy.data.candle.CandleItem;
 import org.trade.strategy.data.candle.CandlePeriod;
 
@@ -64,11 +60,8 @@ import java.util.LinkedList;
  *
  * @author Simon Allen
  * @version $Revision: 1.0 $
- * @see OHLCSeriesCollection
- * @since 1.0.4
  */
-@Entity
-@DiscriminatorValue("CandleSeries")
+
 public class CandleSeries extends IndicatorSeries {
 
     @Serial
@@ -181,7 +174,6 @@ public class CandleSeries extends IndicatorSeries {
      *
      * @return contractId.
      */
-    @Transient
     public Contract getContract() {
         if (null == this.contract) {
             this.contract = new Contract(this.getSecType(), this.getSymbol(), this.getExchange(), this.getCurrency(),
@@ -195,7 +187,6 @@ public class CandleSeries extends IndicatorSeries {
      *
      * @return ZonedDateTime
      */
-    @Transient
     public ZonedDateTime getStartTime() {
         return this.startTime;
     }
@@ -214,7 +205,6 @@ public class CandleSeries extends IndicatorSeries {
      *
      * @return ZonedDateTime
      */
-    @Transient
     public ZonedDateTime getEndTime() {
         return this.endTime;
     }
@@ -233,7 +223,6 @@ public class CandleSeries extends IndicatorSeries {
      *
      * @return String
      */
-    @Transient
     public String getSymbol() {
         try {
             if (null == this.symbol)
@@ -258,7 +247,6 @@ public class CandleSeries extends IndicatorSeries {
      *
      * @return String
      */
-    @Transient
     public String getCurrency() {
         try {
             if (null == this.currency)
@@ -283,7 +271,6 @@ public class CandleSeries extends IndicatorSeries {
      *
      * @return String
      */
-    @Transient
     public String getExchange() {
         try {
             if (null == this.exchange)
@@ -308,7 +295,6 @@ public class CandleSeries extends IndicatorSeries {
      *
      * @return String
      */
-    @Transient
     public String getSecType() {
         try {
             if (null == this.secType)
@@ -344,7 +330,6 @@ public class CandleSeries extends IndicatorSeries {
      *
      * @return The time period.
      */
-    @Transient
     public int getBarSize() {
         return this.barSize;
     }
@@ -548,7 +533,6 @@ public class CandleSeries extends IndicatorSeries {
      * @param barSize int
      * @return RegularTimePeriod
      */
-    @Transient
     public RegularTimePeriod getPeriodStart(ZonedDateTime time, int barSize) {
         /*
          * For 60min time period start the clock at 9:00am. This matches most
@@ -575,7 +559,6 @@ public class CandleSeries extends IndicatorSeries {
      *
      * @return RollingCandle
      */
-    @Transient
     public RollingCandle getRollingCandle() {
         return this.rollingCandleValues.getFirst();
     }
@@ -586,7 +569,6 @@ public class CandleSeries extends IndicatorSeries {
      * @param index int
      * @return RollingCandle
      */
-    @Transient
     public RollingCandle getRollingCandle(int index) {
         return this.rollingCandleValues.get(index);
     }
@@ -596,7 +578,6 @@ public class CandleSeries extends IndicatorSeries {
      *
      * @return int
      */
-    @Transient
     public int getRollingCandleSize() {
         return this.rollingCandleValues.size();
     }
@@ -606,7 +587,6 @@ public class CandleSeries extends IndicatorSeries {
      *
      * @return RollupCandle
      */
-    @Transient
     public RollingCandle getPreviousRollingCandle() {
         return this.prevRollingCandle;
     }
@@ -767,7 +747,6 @@ public class CandleSeries extends IndicatorSeries {
      *
      * @return Percent
      */
-    @Transient
     public Percent getPercentChangeFromClose() {
         return percentChangeFromClose;
     }
@@ -777,7 +756,6 @@ public class CandleSeries extends IndicatorSeries {
      *
      * @return Percent
      */
-    @Transient
     public Percent getPercentChangeFromOpen() {
         return percentChangeFromOpen;
     }

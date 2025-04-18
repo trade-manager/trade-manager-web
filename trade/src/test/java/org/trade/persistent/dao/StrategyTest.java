@@ -43,6 +43,8 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trade.core.dao.AspectHome;
+import org.trade.core.persistent.dao.Strategy;
+import org.trade.core.persistent.dao.StrategyHome;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 

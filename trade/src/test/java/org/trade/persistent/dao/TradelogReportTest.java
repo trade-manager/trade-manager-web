@@ -42,8 +42,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.trade.core.util.TradingCalendar;
-import org.trade.dictionary.valuetype.DAOPortfolio;
+import org.trade.core.persistent.dao.Portfolio;
+import org.trade.core.persistent.dao.TradelogDetail;
+import org.trade.core.persistent.dao.TradelogHome;
+import org.trade.core.persistent.dao.TradelogReport;
+import org.trade.core.persistent.dao.TradelogSummary;
+import org.trade.core.util.time.TradingCalendar;
+import org.trade.core.valuetype.DAOPortfolio;
 import org.trade.ui.TradeAppLoadConfig;
 
 import java.math.BigDecimal;

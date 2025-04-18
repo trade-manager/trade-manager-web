@@ -35,9 +35,9 @@
  */
 package org.trade.ui.tables.renderer;
 
-import org.trade.dictionary.valuetype.Side;
-import org.trade.persistent.dao.TradeOrder;
-import org.trade.persistent.dao.Tradestrategy;
+import org.trade.core.persistent.dao.TradeOrder;
+import org.trade.core.persistent.dao.Tradestrategy;
+import org.trade.core.valuetype.Side;
 import org.trade.ui.models.TradingdayTreeModel;
 
 import javax.swing.*;

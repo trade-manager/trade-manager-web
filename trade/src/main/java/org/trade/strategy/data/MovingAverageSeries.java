@@ -35,15 +35,12 @@
  */
 package org.trade.strategy.data;
 
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Transient;
+
 import org.jfree.data.general.SeriesChangeEvent;
-import org.jfree.data.time.ohlc.OHLCSeriesCollection;
-import org.trade.dictionary.valuetype.CalculationType;
-import org.trade.persistent.dao.CodeValue;
-import org.trade.persistent.dao.Strategy;
-import org.trade.strategy.data.base.RegularTimePeriod;
+import org.trade.core.persistent.dao.CodeValue;
+import org.trade.core.persistent.dao.Strategy;
+import org.trade.core.util.time.RegularTimePeriod;
+import org.trade.core.valuetype.CalculationType;
 import org.trade.strategy.data.candle.CandleItem;
 import org.trade.strategy.data.movingaverage.MovingAverageItem;
 
@@ -56,12 +53,7 @@ import java.util.LinkedList;
  *
  * @author Simon Allen
  * @version $Revision: 1.0 $
- * @see OHLCSeriesCollection
- * @since 1.0.4
  */
-
-@Entity
-@DiscriminatorValue("MovingAverageSeries")
 public class MovingAverageSeries extends IndicatorSeries {
 
     @Serial
@@ -198,7 +190,6 @@ public class MovingAverageSeries extends IndicatorSeries {
      *
      * @return Integer
      */
-    @Transient
     public Integer getPriceSource() {
         try {
             if (null == this.priceSource)
@@ -223,7 +214,6 @@ public class MovingAverageSeries extends IndicatorSeries {
      *
      * @return Integer
      */
-    @Transient
     public Integer getLength() {
         try {
             if (null == this.length)
@@ -248,7 +238,6 @@ public class MovingAverageSeries extends IndicatorSeries {
      *
      * @return String
      */
-    @Transient
     public String getMAType() {
         try {
             if (null == this.MAType)

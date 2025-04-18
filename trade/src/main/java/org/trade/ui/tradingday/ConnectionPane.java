@@ -37,11 +37,11 @@ package org.trade.ui.tradingday;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.trade.core.persistent.dao.Portfolio;
 import org.trade.core.properties.ConfigProperties;
+import org.trade.core.valuetype.DAOPortfolio;
 import org.trade.core.valuetype.Decode;
 import org.trade.core.valuetype.ValueTypeException;
-import org.trade.dictionary.valuetype.DAOPortfolio;
-import org.trade.persistent.dao.Portfolio;
 import org.trade.ui.widget.DecodeComboBoxEditor;
 import org.trade.ui.widget.DecodeComboBoxRenderer;
 

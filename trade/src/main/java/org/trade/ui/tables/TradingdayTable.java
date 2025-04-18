@@ -35,11 +35,11 @@
  */
 package org.trade.ui.tables;
 
-import org.trade.core.util.TradingCalendar;
+import org.trade.base.Table;
+import org.trade.base.TableModel;
+import org.trade.core.util.time.TradingCalendar;
+import org.trade.core.valuetype.MarketBar;
 import org.trade.core.valuetype.ValueTypeException;
-import org.trade.dictionary.valuetype.MarketBar;
-import org.trade.ui.base.Table;
-import org.trade.ui.base.TableModel;
 import org.trade.ui.widget.DateEditor;
 import org.trade.ui.widget.DateField;
 import org.trade.ui.widget.DateRenderer;

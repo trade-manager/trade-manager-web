@@ -35,11 +35,11 @@
  */
 package org.trade.ui;
 
-import org.trade.ui.base.BaseButton;
-import org.trade.ui.base.BaseMenuItem;
-import org.trade.ui.base.BasePanel;
-import org.trade.ui.base.BasePanelMenu;
-import org.trade.ui.base.BaseUIPropertyCodes;
+import org.trade.base.BaseButton;
+import org.trade.base.BaseMenuItem;
+import org.trade.base.BasePanel;
+import org.trade.base.BasePanelMenu;
+import org.trade.base.BaseUIPropertyCodes;
 
 import javax.swing.*;
 import java.io.Serial;

@@ -44,7 +44,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trade.core.util.MatrixFunctions;
 import org.trade.core.util.Pair;
-import org.trade.core.util.TradingCalendar;
+import org.trade.core.util.time.TradingCalendar;
 import org.trade.strategy.data.candle.CandlePeriod;
 
 import java.math.BigDecimal;
