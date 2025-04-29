@@ -48,7 +48,7 @@ import jakarta.persistence.Version;
 import jakarta.validation.constraints.NotNull;
 import org.trade.core.dao.Aspect;
 import org.trade.core.factory.ClassFactory;
-import org.trade.core.persistent.dao.indicator.IndicatorSeries;
+import org.trade.core.persistent.dao.series.indicator.IndicatorSeries;
 
 import java.io.Serial;
 import java.util.List;

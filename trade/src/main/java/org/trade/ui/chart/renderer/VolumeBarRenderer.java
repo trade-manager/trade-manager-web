@@ -50,8 +50,8 @@ import org.jfree.chart.renderer.xy.XYItemRendererState;
 import org.jfree.chart.ui.RectangleEdge;
 import org.jfree.data.xy.XYDataset;
 import org.trade.core.valuetype.Quantity;
-import org.trade.strategy.data.VolumeDataset;
-import org.trade.strategy.data.volume.VolumeItem;
+import org.trade.indicator.VolumeDatasetUI;
+import org.trade.indicator.volume.VolumeItemUI;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
@@ -85,7 +85,7 @@ public class VolumeBarRenderer extends XYBarRenderer {
     private void configureToolTips() {
         setDefaultToolTipGenerator((dataset, series, item) -> {
             StringBuilder result = new StringBuilder("<html>");
-            if (dataset instanceof VolumeDataset d) {
+            if (dataset instanceof VolumeDatasetUI d) {
                 Number time = d.getX(series, item);
                 Number volume = d.getVolume(series, item);
                 result.append("<b>Volume:</b> ").append(new Quantity(volume.intValue())).append("<br/>");
@@ -137,8 +137,8 @@ public class VolumeBarRenderer extends XYBarRenderer {
             return;
         }
 
-        VolumeDataset volumeDataset = (VolumeDataset) dataset;
-        VolumeItem volumeItem = (VolumeItem) volumeDataset.getSeries(series).getDataItem(item);
+        VolumeDatasetUI volumeDataset = (VolumeDatasetUI) dataset;
+        VolumeItemUI volumeItem = (VolumeItemUI) volumeDataset.getSeries(series).getDataItem(item);
 
         if (volumeItem.isSide()) {
             this.color = Color.GREEN;

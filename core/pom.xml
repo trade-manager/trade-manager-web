@@ -11,4 +11,12 @@
     <version>1.0.0-SNAPSHOT</version>
     <name>Trade Manager - Core</name>
     <description>Trade Manager core components</description>
+    <dependencies>
+        <dependency>
+            <groupId>com.interactivebrokers</groupId>
+            <artifactId>tws-api</artifactId>
+            <version>10.20.01</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
 </project>

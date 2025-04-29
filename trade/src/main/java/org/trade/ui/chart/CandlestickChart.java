@@ -68,13 +68,13 @@ import org.trade.core.persistent.dao.Tradingday;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.Action;
 import org.trade.core.valuetype.Money;
-import org.trade.strategy.data.CandleSeries;
-import org.trade.strategy.data.IIndicatorDataset;
-import org.trade.strategy.data.IndicatorSeries;
-import org.trade.strategy.data.StrategyData;
-import org.trade.strategy.data.candle.CandleItem;
-import org.trade.strategy.data.candle.SegmentedTimeline;
-import org.trade.strategy.data.candle.SegmentedTimeline.Segment;
+import org.trade.indicator.CandleSeriesUI;
+import org.trade.indicator.IIndicatorDatasetUI;
+import org.trade.indicator.IndicatorSeriesUI;
+import org.trade.indicator.StrategyDataUI;
+import org.trade.indicator.candle.CandleItemUI;
+import org.trade.indicator.candle.SegmentedTimelineUI;
+import org.trade.indicator.candle.SegmentedTimelineUI.Segment;
 
 import javax.swing.*;
 import java.awt.*;
@@ -102,7 +102,7 @@ public class CandlestickChart extends JPanel implements SeriesChangeListener {
     private final ValueMarker valueMarker;
     private XYTextAnnotation closePriceLine = null;
     private XYTextAnnotation clickCrossHairs = null;
-    private final StrategyData strategyData;
+    private final StrategyDataUI strategyData;
 
     /**
      * A demonstration application showing a candlestick chart.
@@ -110,7 +110,7 @@ public class CandlestickChart extends JPanel implements SeriesChangeListener {
      * @param title        the frame title.
      * @param strategyData StrategyData
      */
-    public CandlestickChart(final String title, StrategyData strategyData, Tradingday tradingday) {
+    public CandlestickChart(final String title, StrategyDataUI strategyData, Tradingday tradingday) {
 
         this.strategyData = strategyData;
         this.setLayout(new BorderLayout());
@@ -226,11 +226,11 @@ public class CandlestickChart extends JPanel implements SeriesChangeListener {
             }
         });
         this.add(chartPanel, null);
-        this.strategyData.getCandleDataset().getSeries(0).addChangeListener(this);
+        this.strategyData.getCandleDatasetUI().getSeries(0).addChangeListener(this);
     }
 
     public void removeChart() {
-        this.strategyData.getCandleDataset().getSeries(0).removeChangeListener(this);
+        this.strategyData.getCandleDatasetUI().getSeries(0).removeChangeListener(this);
         this.chart.getXYPlot().clearAnnotations();
         this.chart.getXYPlot().clearDomainAxes();
         this.chart.getXYPlot().clearDomainMarkers();
@@ -250,11 +250,11 @@ public class CandlestickChart extends JPanel implements SeriesChangeListener {
     /**
      * Method createChart.
      *
-     * @param strategyData StrategyData
+     * @param strategyData StrategyDataUI
      * @param title        String
      * @return JFreeChart
      */
-    private JFreeChart createChart(StrategyData strategyData, String title, Tradingday tradingday) {
+    private JFreeChart createChart(StrategyDataUI strategyData, String title, Tradingday tradingday) {
 
         DateAxis dateAxis = new DateAxis("Date");
         dateAxis.setVerticalTickLabels(true);
@@ -263,8 +263,8 @@ public class CandlestickChart extends JPanel implements SeriesChangeListener {
         NumberAxis priceAxis = new NumberAxis("Price");
         priceAxis.setAutoRange(true);
         priceAxis.setAutoRangeIncludesZero(false);
-        XYPlot pricePlot = new XYPlot(strategyData.getCandleDataset(), dateAxis, priceAxis,
-                strategyData.getCandleDataset().getRenderer());
+        XYPlot pricePlot = new XYPlot(strategyData.getCandleDatasetUI(), dateAxis, priceAxis,
+                strategyData.getCandleDatasetUI().getRenderer());
         pricePlot.setOrientation(PlotOrientation.VERTICAL);
         pricePlot.setDomainPannable(true);
         pricePlot.setRangePannable(true);
@@ -283,17 +283,17 @@ public class CandlestickChart extends JPanel implements SeriesChangeListener {
         int segments15min = (int) (TradingCalendar.getDurationInSeconds(tradingday.getOpen(), tradingday.getClose())
                 / (60 * 15));
 
-        SegmentedTimeline segmentedTimeline = new SegmentedTimeline(SegmentedTimeline.FIFTEEN_MINUTE_SEGMENT_SIZE,
+        SegmentedTimelineUI segmentedTimeline = new SegmentedTimelineUI(SegmentedTimelineUI.FIFTEEN_MINUTE_SEGMENT_SIZE,
                 segments15min, (96 - segments15min));
 
         ZonedDateTime startDate = tradingday.getOpen();
         ZonedDateTime endDate = tradingday.getClose();
 
         if (!strategyData.getCandleDataset().getSeries(0).isEmpty()) {
-            startDate = ((CandleItem) strategyData.getCandleDataset().getSeries(0).getDataItem(0)).getPeriod()
+            startDate = ((CandleItemUI) strategyData.getCandleDatasetUI().getSeries(0).getDataItem(0)).getPeriod()
                     .getStart();
             startDate = TradingCalendar.getDateAtTime(startDate, tradingday.getOpen());
-            endDate = ((CandleItem) strategyData.getCandleDataset().getSeries(0)
+            endDate = ((CandleItemUI) strategyData.getCandleDatasetUI().getSeries(0)
                     .getDataItem(strategyData.getCandleDataset().getSeries(0).getItemCount() - 1)).getPeriod()
                     .getStart();
             endDate = TradingCalendar.getDateAtTime(endDate, tradingday.getClose());
@@ -315,25 +315,25 @@ public class CandlestickChart extends JPanel implements SeriesChangeListener {
          * Change the List of indicators so that the candle dataset is the first
          * one in the list. The main chart must be plotted first.
          */
-        List<IIndicatorDataset> indicators = new ArrayList<>(0);
-        for (IIndicatorDataset item : strategyData.getIndicators()) {
-            if (IndicatorSeries.CandleSeries.equals(item.getType(0))) {
+        List<IIndicatorDatasetUI> indicators = new ArrayList<>(0);
+        for (IIndicatorDatasetUI item : strategyData.getIndicatorsUI()) {
+            if (IndicatorSeriesUI.CandleSeries.equals(item.getType(0))) {
                 indicators.add(item);
             }
         }
-        for (IIndicatorDataset item : strategyData.getIndicators()) {
-            if (!IndicatorSeries.CandleSeries.equals(item.getType(0))) {
+        for (IIndicatorDatasetUI item : strategyData.getIndicatorsUI()) {
+            if (!IndicatorSeriesUI.CandleSeries.equals(item.getType(0))) {
                 indicators.add(item);
             }
         }
         for (int i = 0; i < indicators.size(); i++) {
-            IIndicatorDataset indicator = indicators.get(i);
+            IIndicatorDatasetUI indicator = indicators.get(i);
             if (indicator.getDisplaySeries(0)) {
 
                 if (indicator.getSubChart(0)) {
                     String axisName;
-                    if (IndicatorSeries.CandleSeries.equals(indicator.getType(0))) {
-                        axisName = ((CandleSeries) indicator.getSeries(0)).getSymbol();
+                    if (IndicatorSeriesUI.CandleSeries.equals(indicator.getType(0))) {
+                        axisName = ((CandleSeriesUI) indicator.getSeries(0)).getSymbol();
                     } else {
                         org.trade.core.valuetype.IndicatorSeries code = org.trade.core.valuetype.IndicatorSeries
                                 .newInstance(indicator.getType(0));
@@ -364,11 +364,11 @@ public class CandlestickChart extends JPanel implements SeriesChangeListener {
                 } else {
                     datasetIndex++;
                     pricePlot.setDataset(datasetIndex, (XYDataset) indicator);
-                    if (IndicatorSeries.CandleSeries.equals(indicator.getType(0))) {
+                    if (IndicatorSeriesUI.CandleSeries.equals(indicator.getType(0))) {
                         // add secondary axis
                         axixIndex++;
 
-                        final NumberAxis axis2 = new NumberAxis(((CandleSeries) indicator.getSeries(0)).getSymbol());
+                        final NumberAxis axis2 = new NumberAxis(((CandleSeriesUI) indicator.getSeries(0)).getSymbol());
                         axis2.setAutoRange(true);
                         axis2.setAutoRangeIncludesZero(false);
                         pricePlot.setRangeAxis(datasetIndex, axis2);
@@ -400,14 +400,14 @@ public class CandlestickChart extends JPanel implements SeriesChangeListener {
     public void seriesChanged(SeriesChangeEvent event) {
 
         Object series = event.getSource();
-        if (series instanceof CandleSeries candleSeries) {
+        if (series instanceof CandleSeriesUI candleSeries) {
 
             if (!candleSeries.isEmpty()) {
                 CombinedDomainXYPlot combinedXYplot = (CombinedDomainXYPlot) this.chart.getPlot();
                 List<XYPlot> subplots = combinedXYplot.getSubplots();
                 XYPlot xyplot = subplots.getFirst();
 
-                CandleItem candleItem = (CandleItem) candleSeries.getDataItem(candleSeries.getItemCount() - 1);
+                CandleItemUI candleItem = (CandleItemUI) candleSeries.getDataItem(candleSeries.getItemCount() - 1);
                 String msg = "Time: " + TradingCalendar.getFormattedDate(candleItem.getLastUpdateDate(), TIME_FORMAT)
                         + " Open: " + new Money(candleItem.getOpen()) + " High: " + new Money(candleItem.getHigh())
                         + " Low: " + new Money(candleItem.getLow()) + " Close: " + new Money(candleItem.getClose())
@@ -472,7 +472,7 @@ public class CandlestickChart extends JPanel implements SeriesChangeListener {
      * @return List<Date>
      */
     private List<java.util.Date> getNonTradingPeriods(ZonedDateTime startDate, ZonedDateTime endDate,
-                                                      ZonedDateTime openDate, ZonedDateTime closeDate, SegmentedTimeline segmentedTimeline) {
+                                                      ZonedDateTime openDate, ZonedDateTime closeDate, SegmentedTimelineUI segmentedTimeline) {
         /*
          * Add all 15min periods that are not trading times.
          */

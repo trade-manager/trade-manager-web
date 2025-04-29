@@ -54,7 +54,7 @@ import org.jfree.chart.util.SerialUtils;
 import org.jfree.chart.util.ShapeUtils;
 import org.jfree.data.xy.XYDataset;
 import org.trade.core.valuetype.Side;
-import org.trade.strategy.data.PivotDataset;
+import org.trade.indicator.PivotDatasetUI;
 
 import java.awt.*;
 import java.awt.geom.GeneralPath;
@@ -296,7 +296,7 @@ public class PivotRenderer extends AbstractXYItemRenderer implements XYItemRende
             int rangeAxisIndex = plot.getRangeAxisIndex(rangeAxis);
             updateCrosshairValues(crosshairState, x, y, domainAxisIndex, transX, transY, orientation);
 
-            PivotDataset pivotDataset = (PivotDataset) dataset;
+            PivotDatasetUI pivotDataset = (PivotDatasetUI) dataset;
             if (null != pivotDataset.getPivotSide(series, item)) {
                 String ledgend = "Pivot";
                 if (pivotDataset.getPivotSide(series, item).equals(Side.BOT)) {

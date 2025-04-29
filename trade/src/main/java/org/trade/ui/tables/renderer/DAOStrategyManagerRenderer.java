@@ -37,8 +37,8 @@ package org.trade.ui.tables.renderer;
 
 import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.Tradestrategy;
+import org.trade.core.persistent.dao.strategy.IStrategyRule;
 import org.trade.core.valuetype.DAOStrategyManager;
-import org.trade.strategy.IStrategyRule;
 import org.trade.ui.models.TradestrategyTableModel;
 
 import javax.swing.*;

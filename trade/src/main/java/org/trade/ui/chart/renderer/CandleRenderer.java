@@ -49,9 +49,9 @@ import org.jfree.data.xy.OHLCDataset;
 import org.jfree.data.xy.XYDataset;
 import org.trade.core.valuetype.Money;
 import org.trade.core.valuetype.Quantity;
-import org.trade.strategy.data.CandleDataset;
-import org.trade.strategy.data.candle.CandleItem;
-import org.trade.strategy.data.candle.OHLCVwapDataset;
+import org.trade.indicator.CandleDatasetUI;
+import org.trade.indicator.candle.CandleItemUI;
+import org.trade.indicator.candle.OHLCVwapDatasetUI;
 
 import java.awt.*;
 import java.awt.geom.Line2D;
@@ -93,7 +93,7 @@ public class CandleRenderer extends CandlestickRenderer {
     private void configureToolTips() {
         setDefaultToolTipGenerator((dataset, series, item) -> {
             StringBuilder result = new StringBuilder("<html>");
-            if (dataset instanceof CandleDataset d) {
+            if (dataset instanceof CandleDatasetUI d) {
                 Number time = d.getX(series, item);
                 Number high = d.getHigh(series, item);
                 Number low = d.getLow(series, item);
@@ -136,7 +136,7 @@ public class CandleRenderer extends CandlestickRenderer {
                          XYPlot plot, ValueAxis domainAxis, ValueAxis rangeAxis, XYDataset dataset, int series, int item,
                          CrosshairState crosshairState, int pass) {
 
-        if (dataset instanceof OHLCVwapDataset) {
+        if (dataset instanceof OHLCVwapDatasetUI) {
 
             // setup for collecting optional entity info...
             EntityCollection entities = null;
@@ -144,8 +144,8 @@ public class CandleRenderer extends CandlestickRenderer {
                 entities = info.getOwner().getEntityCollection();
             }
 
-            CandleDataset candleDataset = (CandleDataset) dataset;
-            CandleItem candle = (CandleItem) candleDataset.getSeries(series).getDataItem(item);
+            CandleDatasetUI candleDataset = (CandleDatasetUI) dataset;
+            CandleItemUI candle = (CandleItemUI) candleDataset.getSeries(series).getDataItem(item);
 
             double startX = candle.getPeriod().getFirstMillisecond();
             double endX = candle.getPeriod().getLastMillisecond();

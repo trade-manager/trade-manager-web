@@ -49,9 +49,9 @@ import org.trade.core.persistent.dao.CodeType;
 import org.trade.core.persistent.dao.CodeValue;
 import org.trade.core.persistent.dao.Portfolio;
 import org.trade.core.persistent.dao.Strategy;
+import org.trade.core.persistent.dao.series.indicator.IndicatorSeries;
 import org.trade.core.valuetype.DAOEntryLimit;
 import org.trade.core.valuetype.ReferenceTable;
-import org.trade.strategy.data.IndicatorSeries;
 import org.trade.ui.models.AccountTableModel;
 import org.trade.ui.models.AspectTableModel;
 import org.trade.ui.models.CodeAttributeTableModel;
@@ -291,8 +291,9 @@ public class ConfigurationPanel extends BasePanel {
                      */
                     for (CodeValue value : codeAttributePanel.getCodeValues()) {
                         series.setDirty(true);
-                        if (null == value.getIndicatorSeries())
+                        if (null == value.getIndicatorSeries()) {
                             value.setIndicatorSeries(series);
+                        }
                     }
                 }
             }

@@ -49,8 +49,8 @@ import org.trade.core.persistent.dao.CodeAttribute;
 import org.trade.core.persistent.dao.CodeType;
 import org.trade.core.persistent.dao.CodeValue;
 import org.trade.core.persistent.dao.Strategy;
-import org.trade.strategy.data.IndicatorSeries;
-import org.trade.ui.TradeAppLoadConfig;
+import org.trade.indicator.IndicatorSeriesUI;
+import org.trade.core.TradeAppLoadConfig;
 
 import java.util.Vector;
 
@@ -173,14 +173,14 @@ public class ConfigurationPanelTest {
         Vector<Object> parm = new Vector<>();
         parm.add(strategy);
         parm.add("20-SMA");
-        parm.add(IndicatorSeries.MovingAverageSeries);
+        parm.add(IndicatorSeriesUI.MovingAverageSeries);
         parm.add("20 Simple Moving Average");
         parm.add(false);
         parm.add(0);
         parm.add(false);
-        String className = packageName + IndicatorSeries.MovingAverageSeries;
+        String className = packageName + IndicatorSeriesUI.MovingAverageSeries;
 
-        IndicatorSeries value = (IndicatorSeries) ClassFactory.getCreateClass(className, parm, this);
+        IndicatorSeriesUI value = (IndicatorSeriesUI) ClassFactory.getCreateClass(className, parm, this);
 
         assertEquals(className, value.getClass().getName());
         _log.info("Value is: {}", value);

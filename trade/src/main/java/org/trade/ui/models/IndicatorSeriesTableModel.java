@@ -41,10 +41,11 @@ import org.trade.core.dao.Aspects;
 import org.trade.core.factory.ClassFactory;
 import org.trade.core.persistent.dao.CodeValue;
 import org.trade.core.persistent.dao.Strategy;
+import org.trade.core.persistent.dao.series.indicator.IndicatorSeries;
 import org.trade.core.util.CoreUtils;
 import org.trade.core.valuetype.DAOStrategy;
 import org.trade.core.valuetype.YesNo;
-import org.trade.strategy.data.IndicatorSeries;
+import org.trade.indicator.IndicatorSeriesUI;
 
 import javax.swing.event.TableModelEvent;
 import java.awt.*;
@@ -268,9 +269,9 @@ public class IndicatorSeriesTableModel extends TableModel {
 
     public void addRow() {
 
-        String indicatorName = IndicatorSeries.MovingAverageSeries.substring(0,
-                IndicatorSeries.MovingAverageSeries.indexOf("Series"));
-        IndicatorSeries element = getIndicatorSeries(getData(), indicatorName, IndicatorSeries.MovingAverageSeries,
+        String indicatorName = IndicatorSeriesUI.MovingAverageSeries.substring(0,
+                IndicatorSeriesUI.MovingAverageSeries.indexOf("Series"));
+        IndicatorSeries element = getIndicatorSeries(getData(), indicatorName, IndicatorSeriesUI.MovingAverageSeries,
                 indicatorName);
         getData().getIndicatorSeries().add(element);
         getData().setDirty(true);

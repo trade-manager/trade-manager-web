@@ -48,7 +48,7 @@ import org.jfree.chart.ui.RectangleEdge;
 import org.jfree.data.xy.OHLCDataset;
 import org.jfree.data.xy.XYDataset;
 import org.trade.core.valuetype.Money;
-import org.trade.strategy.data.HeikinAshiDataset;
+import org.trade.indicator.HeikinAshiDatasetUI;
 
 import java.awt.*;
 import java.awt.geom.Line2D;
@@ -89,7 +89,7 @@ public class HeikinAshiRenderer extends CandlestickRenderer {
     private void configureToolTips() {
         setDefaultToolTipGenerator((dataset, series, item) -> {
             StringBuilder result = new StringBuilder("<html>");
-            if (dataset instanceof HeikinAshiDataset d) {
+            if (dataset instanceof HeikinAshiDatasetUI d) {
                 Number time = d.getX(series, item);
                 Number high = d.getHigh(series, item);
                 Number low = d.getLow(series, item);
@@ -134,7 +134,7 @@ public class HeikinAshiRenderer extends CandlestickRenderer {
                          XYPlot plot, ValueAxis domainAxis, ValueAxis rangeAxis, XYDataset dataset, int series, int item,
                          CrosshairState crosshairState, int pass) {
 
-        if (dataset instanceof HeikinAshiDataset highLowData) {
+        if (dataset instanceof HeikinAshiDatasetUI highLowData) {
 
             // setup for collecting optional entity info...
             EntityCollection entities = null;

@@ -403,12 +403,12 @@ public class TradingCalendarTest {
         LocalDate formattedDate = TradingCalendar.getLocalDateFromDateString("03/31/2015", "MM/dd/yyyy");
 
         _log.debug("formattedDate: {}", formattedDate);
-        assertEquals( date, formattedDate);
+        assertEquals(date, formattedDate);
 
         formattedDate = TradingCalendar.getLocalDateFromDateString("2015-3-31", "y-M-d");
 
         _log.debug("formattedDate: {}", formattedDate);
-        assertEquals( date, formattedDate);
+        assertEquals(date, formattedDate);
 
         ZonedDateTime zonedDateTime = ZonedDateTime.of(2015, 3, 31, 0, 0, 0, 0, TradingCalendar.MKT_TIMEZONE);
 
@@ -416,7 +416,7 @@ public class TradingCalendarTest {
                 "yyyyMMdd", TradingCalendar.MKT_TIMEZONE);
 
         _log.debug("zonedDateTimeFormatted: {} zonedDateTime: {}", zonedDateTimeFormatted, zonedDateTime);
-        assertEquals( zonedDateTimeFormatted, zonedDateTime);
+        assertEquals(zonedDateTimeFormatted, zonedDateTime);
     }
 
     @Test
@@ -428,7 +428,7 @@ public class TradingCalendarTest {
 
         _log.debug("formattedDate: {}", formattedDate);
         _log.debug("date: {}", date);
-        assertEquals( date, formattedDate);
+        assertEquals(date, formattedDate);
     }
 
     @Test
@@ -458,7 +458,7 @@ public class TradingCalendarTest {
         dateFormated = TradingCalendar.getFormattedDate(date, DATE_TIME_FORMAT);
         _log.debug("dateFormated: {}", dateFormated);
 
-        assertEquals( date, TradingCalendar.getZonedDateTimeFromDateTimeString(dateFormated, DATE_TIME_FORMAT));
+        assertEquals(date, TradingCalendar.getZonedDateTimeFromDateTimeString(dateFormated, DATE_TIME_FORMAT));
     }
 
     @Test
@@ -479,7 +479,7 @@ public class TradingCalendarTest {
         _log.debug("nowPcZone: {}", nowPcZone);
         ZonedDateTime now = TradingCalendar.adjustDateTimeToMarketTimeZone(nowPcZone);
         _log.debug("now: {}", now);
-        assertEquals( now.getZone(), nowMkt.getZone());
+        assertEquals(now.getZone(), nowMkt.getZone());
     }
 
     @Test
@@ -493,12 +493,12 @@ public class TradingCalendarTest {
 
         long seconds = TradingCalendar.getDurationInSeconds(startOfPeriod, endOfPeriod);
         _log.debug("Duration: {}", seconds);
-        assertEquals( 299, seconds);
+        assertEquals(299, seconds);
 
         endOfPeriod = endOfPeriod.plusDays(3);
         long days = TradingCalendar.getDurationInDays(startOfPeriod, endOfPeriod);
         _log.debug("Duration: {}", days);
-        assertEquals( 3, days);
+        assertEquals(3, days);
     }
 
     @Test

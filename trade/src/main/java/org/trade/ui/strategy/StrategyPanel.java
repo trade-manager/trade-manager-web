@@ -42,13 +42,14 @@ import org.trade.base.BaseUIPropertyCodes;
 import org.trade.base.StreamEditorPane;
 import org.trade.base.Tree;
 import org.trade.base.UIPropertyCodes;
-import org.trade.broker.IBrokerModel;
+import org.trade.core.broker.IBrokerModel;
 import org.trade.core.factory.ClassFactory;
 import org.trade.core.persistent.IPersistentModel;
 import org.trade.core.persistent.PersistentModelException;
 import org.trade.core.persistent.dao.Contract;
 import org.trade.core.persistent.dao.Rule;
 import org.trade.core.persistent.dao.Strategy;
+import org.trade.core.persistent.dao.strategy.IStrategyRule;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.DynamicCode;
 import org.trade.core.util.time.TradingCalendar;
@@ -57,10 +58,9 @@ import org.trade.core.valuetype.Currency;
 import org.trade.core.valuetype.Exchange;
 import org.trade.core.valuetype.SECType;
 import org.trade.core.valuetype.ValueTypeException;
-import org.trade.strategy.IStrategyRule;
-import org.trade.strategy.data.CandleDataset;
-import org.trade.strategy.data.CandleSeries;
-import org.trade.strategy.data.StrategyData;
+import org.trade.indicator.CandleDatasetUI;
+import org.trade.indicator.CandleSeriesUI;
+import org.trade.indicator.StrategyDataUI;
 import org.trade.ui.models.StrategyTreeModel;
 import org.trade.ui.tables.renderer.StrategyTreeCellRenderer;
 
@@ -293,12 +293,12 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
             Vector<Object> parm = new Vector<>(0);
             IBrokerModel brokerManagerModel = (IBrokerModel) ClassFactory.getServiceForInterface(IBrokerModel._brokerTest,
                     this);
-            CandleDataset candleDataset = new CandleDataset();
-            CandleSeries candleSeries = new CandleSeries("Test",
+            CandleDatasetUI candleDataset = new CandleDatasetUI();
+            CandleSeriesUI candleSeries = new CandleSeriesUI("Test",
                     new Contract(SECType.STOCK, "Test", Exchange.SMART, Currency.USD, null, null), BarSize.FIVE_MIN,
                     TradingCalendar.getDateTimeNowMarketTimeZone(), TradingCalendar.getDateTimeNowMarketTimeZone());
             candleDataset.addSeries(candleSeries);
-            StrategyData strategyData = new StrategyData(rule.getStrategy(), candleDataset);
+            StrategyDataUI strategyData = new StrategyDataUI(rule.getStrategy(), candleDataset);
             parm.add(brokerManagerModel);
             parm.add(strategyData);
             parm.add(0);
