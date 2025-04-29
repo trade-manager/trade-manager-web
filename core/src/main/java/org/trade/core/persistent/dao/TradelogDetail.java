@@ -503,7 +503,7 @@ public class TradelogDetail extends Aspect implements java.io.Serializable {
     public static String getSQLString() {
         String sql = null;
         try {
-            sql = ConfigProperties.readFileAsString("org/trade/persistent/dao/sql/TradelogDetail.sql",
+            sql = ConfigProperties.readFileAsString("org/trade/core/persistent/dao/sql/TradelogDetail.sql",
                     Thread.currentThread().getContextClassLoader());
         } catch (IOException e) {
             // TODO Auto-generated catch block

@@ -31,7 +31,7 @@
         <class>org.trade.core.persistent.dao.TradelogSummary</class>
         <class>org.trade.core.persistent.dao.Tradingday</class>
         <class>org.trade.core.persistent.dao.Rule</class>
-        <class>org.trade.indicator.IndicatorSeriesUI</class>
+        <class>org.trade.core.persistent.dao.series.indicator.IndicatorSeries</class>
         <shared-cache-mode>ENABLE_SELECTIVE</shared-cache-mode>
         <validation-mode>CALLBACK</validation-mode>
         <properties>

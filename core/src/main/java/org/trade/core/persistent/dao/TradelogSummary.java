@@ -391,7 +391,7 @@ public class TradelogSummary extends Aspect implements java.io.Serializable {
     public static String getSQLString() {
         String sql = null;
         try {
-            sql = ConfigProperties.readFileAsString("org/trade/persistent/dao/sql/TradelogSummary.sql",
+            sql = ConfigProperties.readFileAsString("org/trade/core/persistent/dao/sql/TradelogSummary.sql",
                     Thread.currentThread().getContextClassLoader());
         } catch (IOException e) {
             // TODO Auto-generated catch block
