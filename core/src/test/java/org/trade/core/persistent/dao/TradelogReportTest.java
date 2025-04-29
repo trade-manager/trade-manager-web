@@ -93,17 +93,16 @@ public class TradelogReportTest {
     @Test
     public void testTradelogDetails() {
 
-
         TradelogHome tradelogHome = new TradelogHome();
         Portfolio portfolio = (Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
         TradelogReport tradelogReport = tradelogHome.findByTradelogDetail(portfolio, TradingCalendar.getYearStart(),
                 TradingCalendar.getTradingDayEnd(TradingCalendar.getDateTimeNowMarketTimeZone()), false, null);
         assertTrue(tradelogReport.getTradelogDetail().isEmpty());
+
         for (TradelogDetail tradelogDetail : tradelogReport.getTradelogDetail()) {
+
             _log.info("testTradelogDetails tradelogDetail:  getOpen:{} getAction:{} getMarketBias:{} getName:{} getSymbol:{} getQuantity:{} getLongShort:{} getAverageFilledPrice:{} getFilledDate:{}", tradelogDetail.getOpen(), tradelogDetail.getAction(), tradelogDetail.getMarketBias(), tradelogDetail.getName(), tradelogDetail.getSymbol(), tradelogDetail.getQuantity(), tradelogDetail.getLongShort(), tradelogDetail.getAverageFilledPrice(), tradelogDetail.getFilledDate());
         }
-
-
     }
 
     @Test

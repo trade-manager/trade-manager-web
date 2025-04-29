@@ -95,7 +95,7 @@ public class AspectTest {
 
         // Create new instance of Strategy and set
         // values in it by reading them from form object
-        String className = "org.trade.persistent.dao.Strategy";
+        String className = "org.trade.core.persistent.dao.Strategy";
         _log.info("Find Aspects by className: {}", className);
 
         Aspects transientInstance = aspectHome.findByClassName(className);
