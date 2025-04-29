@@ -719,24 +719,34 @@ public class CandleSeries extends IndicatorSeries {
         int sumTradeCount = 0;
         double sunClosePriceXVolumeVwap = 0;
         CandleItem candle = null;
+
         for (int i = itemCount; i > -1; i--) {
+
             candle = (CandleItem) this.getDataItem(i);
+
             if ((candle.getPeriod().getStart().equals(startDate) || candle.getPeriod().getStart().isAfter(startDate))
                     && (candle.getPeriod().getStart().isBefore(endDate))) {
+
                 if (null == this.candleBar) {
+
                     this.candleBar = new Candle(getContract(), candle.getPeriod(), 0, 0, Double.MAX_VALUE, 0,
                             TradingCalendar.getDateTimeNowMarketTimeZone());
                     this.candleBar.setEndPeriod(candle.getPeriod().getEnd());
                 }
 
-                if (this.candleBar.getClose().doubleValue() == 0)
+                if (this.candleBar.getClose().doubleValue() == 0){
+
                     this.candleBar.setClose(BigDecimal.valueOf(candle.getClose()));
+                }
 
-                if (this.candleBar.getHigh().doubleValue() < candle.getHigh())
+
+                if (this.candleBar.getHigh().doubleValue() < candle.getHigh()) {
                     this.candleBar.setHigh(BigDecimal.valueOf(candle.getHigh()));
+                }
 
-                if (this.candleBar.getLow().doubleValue() > candle.getLow())
+                if (this.candleBar.getLow().doubleValue() > candle.getLow()) {
                     this.candleBar.setLow(BigDecimal.valueOf(candle.getLow()));
+                }
 
                 sunClosePriceXVolumeVwap = sunClosePriceXVolumeVwap + (candle.getVolume() * candle.getClose());
                 sumVolume = sumVolume + candle.getVolume();
@@ -744,13 +754,17 @@ public class CandleSeries extends IndicatorSeries {
             }
         }
         if (null != candle) {
+
             this.candleBar.setStartPeriod(candle.getPeriod().getStart());
             this.candleBar.setOpen(BigDecimal.valueOf(candle.getOpen()));
             this.candleBar.setTradeCount(sumTradeCount);
+
             if (sumVolume > 0) {
+
                 this.candleBar.setVwap(new BigDecimal(sunClosePriceXVolumeVwap / sumVolume));
                 this.candleBar.setVolume(sumVolume);
             } else {
+
                 this.candleBar.setVwap(new BigDecimal(sunClosePriceXVolumeVwap));
                 this.candleBar.setVolume(0L);
             }

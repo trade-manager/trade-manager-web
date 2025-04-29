@@ -409,8 +409,10 @@ public class StrategyData extends Worker {
         CandleSeries candleSeries = this.getBaseCandleSeries();
 
         for (int i = 0; i < candleSeries.getItemCount(); i++) {
+
             CandleItem candleItem = (CandleItem) candleSeries.getDataItem(i);
-            candles.add(candleSeries.getBar(candleItem.getPeriod().getStart(), candleItem.getPeriod().getEnd()));
+            Candle candle = candleSeries.getBar(candleItem.getPeriod().getStart(), candleItem.getPeriod().getEnd());
+            candles.add(candle);
         }
 
         return candles;
