@@ -35,7 +35,7 @@
  */
 package org.trade.ui;
 
-import org.trade.core.AppLoadConfig;
+import org.trade.core.properties.AppLoadConfig;
 
 import javax.swing.*;
 import java.awt.*;

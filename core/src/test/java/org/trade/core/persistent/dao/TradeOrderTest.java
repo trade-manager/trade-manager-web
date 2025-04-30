@@ -43,7 +43,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.trade.core.TradeAppLoadConfig;
+import org.trade.core.properties.TradeAppLoadConfig;
 import org.trade.core.broker.TWSBrokerModel;
 import org.trade.core.factory.ClassFactory;
 import org.trade.core.persistent.IPersistentModel;

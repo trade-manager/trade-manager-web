@@ -44,7 +44,6 @@ import org.trade.core.broker.client.IClientWrapper;
 import org.trade.core.broker.client.OrderState;
 import org.trade.core.factory.ClassFactory;
 import org.trade.core.persistent.IPersistentModel;
-import org.trade.core.persistent.dao.Candle;
 import org.trade.core.persistent.dao.Contract;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradeOrderfill;
@@ -62,7 +61,6 @@ import java.io.Serial;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.ZonedDateTime;
-import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -986,7 +984,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
                     CandleSeries candleSeries = tradestrategy.getStrategyData().getBaseCandleSeries();
                     m_tradePersistentModel.persistCandleSeries(candleSeries);
 
-                    _log.debug("HistoricalData complete Req Id: {} Symbol: {} Tradingday: {} candles to saved: {} Contract Tradestrategies size:: {}", reqId, tradestrategy.getContract().getSymbol(), tradestrategy.getTradingday().getOpen(), candles.size(), tradestrategy.getContract().getTradestrategies().size());
+                    _log.debug("HistoricalData complete Req Id: {} Symbol: {} Tradingday: {} candles to saved: {} Contract Tradestrategies size:: {}", reqId, tradestrategy.getContract().getSymbol(), tradestrategy.getTradingday().getOpen(), candleSeries.getItemCount(), tradestrategy.getContract().getTradestrategies().size());
 
                     /*
                      * Check to see if the trading day is today and this

@@ -46,10 +46,10 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import org.trade.core.dao.EntityManagerHelper;
 import org.trade.core.persistent.dao.series.indicator.CandleSeries;
+import org.trade.core.persistent.dao.series.indicator.candle.CandleItem;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -65,55 +65,52 @@ public class CandleHome {
     /**
      * Method persistCandleSeries.
      *
-     * @param candles LinkedList<Candle>
+     * @param candleSeries CandleSeries
      */
-    public synchronized void persistCandleSeries(final CandleSeries candles) throws Exception {
+    public synchronized void persistCandleSeries(final CandleSeries candleSeries) throws Exception {
 
         Candle transientInstance;
         try {
 
-            if (candles.isEmpty()) {
+            if (candleSeries.isEmpty()) {
                 return;
             }
-
 
             EntityManager entityManager = EntityManagerHelper.getEntityManager();
             entityManager.getTransaction().begin();
             Tradingday tradingday = null;
-            Contract contract = findContractById(candles.getFirst().getContract().getId());
-            int count = 0;
+            Contract contract = findContractById(candleSeries.getContract().getId());
+            for (int i = 0; i < candleSeries.getItemCount(); i++) {
 
-            for (Candle candle : candles) {
-
-                count++;
-                if (null != candle.getId()) {
-                    Candle instance = entityManager.find(Candle.class, candle.getId());
-                    if (instance.equals(candle)) {
+                CandleItem candleItem = (CandleItem) candleSeries.getDataItem(i);
+                if (null != candleItem.getCandle().getId()) {
+                    Candle instance = entityManager.find(Candle.class, candleItem.getCandle().getId());
+                    if (instance.equals(candleItem.getCandle())) {
                         continue;
                     } else {
                         // This should never happen.
-                        throw new Exception("Symbol: " + candle.getContract().getSymbol() + "candleid: "
-                                + candle.getId() + " open: "
-                                + candle.getStartPeriod());
+                        throw new Exception("Count: " + i + " Symbol: " + candleSeries.getSymbol() + "candleid: "
+                                + candleItem.getCandle().getId() + " open: "
+                                + candleItem.getCandle().getStartPeriod());
                     }
                 }
 
-                if (!candle.getTradingday().equals(tradingday)) {
+                if (!candleItem.getCandle().getTradingday().equals(tradingday)) {
 
-                    if (null == candle.getTradingday().getId()) {
-                        tradingday = findTradingdayByDate(candle.getTradingday().getOpen(),
-                                candle.getTradingday().getClose());
+                    if (null == candleItem.getCandle().getTradingday().getId()) {
+                        tradingday = findTradingdayByDate(candleItem.getCandle().getTradingday().getOpen(),
+                                candleItem.getCandle().getTradingday().getClose());
                     } else {
-                        tradingday = findTradingdayById(candle.getTradingday().getId());
+                        tradingday = findTradingdayById(candleItem.getCandle().getTradingday().getId());
                     }
 
                     if (null == tradingday) {
-                        entityManager.persist(candle.getTradingday());
+                        entityManager.persist(candleItem.getCandle().getTradingday());
                         entityManager.getTransaction().commit();
                         entityManager.getTransaction().begin();
-                        tradingday = candle.getTradingday();
+                        tradingday = candleItem.getCandle().getTradingday();
                     } else {
-                        Integer barSize = candle.getBarSize();
+                        Integer barSize = candleSeries.getBarSize();
                         String hqlDelete = "delete Candle where contract = :contract and tradingday = :tradingday and barSize = :barSize";
                         entityManager.createQuery(hqlDelete).setParameter("contract", contract)
                                 .setParameter("tradingday", tradingday).setParameter("barSize", barSize)
@@ -123,13 +120,13 @@ public class CandleHome {
                     }
                 }
 
-                transientInstance = candle;
+                transientInstance = candleItem.getCandle();
                 transientInstance.setTradingday(tradingday);
                 transientInstance.setContract(contract);
                 entityManager.persist(transientInstance);
 
                 // Commit every 50 rows
-                if ((Math.floor(count / 50d) == (count / 50d)) && (count > 0)) {
+                if ((Math.floor(i / 50d) == (i / 50d)) && (i > 0)) {
                     entityManager.getTransaction().commit();
                     entityManager.getTransaction().begin();
                 }

@@ -42,7 +42,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.trade.core.TradeAppLoadConfig;
+import org.trade.core.properties.TradeAppLoadConfig;
 import org.trade.core.valuetype.ChartDays;
 import org.trade.core.valuetype.DAODecode;
 import org.trade.core.valuetype.DAOEntryLimit;

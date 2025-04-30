@@ -734,7 +734,7 @@ public class CandleSeries extends IndicatorSeries {
                     this.candleBar.setEndPeriod(candle.getPeriod().getEnd());
                 }
 
-                if (this.candleBar.getClose().doubleValue() == 0){
+                if (this.candleBar.getClose().doubleValue() == 0) {
 
                     this.candleBar.setClose(BigDecimal.valueOf(candle.getClose()));
                 }

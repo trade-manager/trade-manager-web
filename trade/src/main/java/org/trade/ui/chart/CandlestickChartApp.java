@@ -7,7 +7,7 @@ import org.trade.base.BasePanelMenu;
 import org.trade.base.ComponentPrintService;
 import org.trade.base.ImageBuilder;
 import org.trade.base.WaitCursorEventQueue;
-import org.trade.core.TradeAppLoadConfig;
+import org.trade.core.properties.TradeAppLoadConfig;
 import org.trade.core.persistent.dao.Candle;
 import org.trade.core.persistent.dao.Contract;
 import org.trade.core.persistent.dao.Strategy;

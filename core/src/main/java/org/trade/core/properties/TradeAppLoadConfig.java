@@ -33,20 +33,18 @@
  * -------
  *
  */
-package org.trade.core;
-
-import org.trade.core.properties.ConfigProperties;
+package org.trade.core.properties;
 
 import java.io.IOException;
 
 /**
  *
  */
-public class AppLoadConfig {
-    private final static String PROPERTIES_PROPERTY_FILE = "core.properties";
-    private final static AppLoadConfig m_AppConfigLoad = new AppLoadConfig();
+public class TradeAppLoadConfig {
+    private final static String PROPERTIES_PROPERTY_FILE = "trade.properties";
+    private final static TradeAppLoadConfig m_AppConfigLoad = new TradeAppLoadConfig();
 
-    AppLoadConfig() {
+    TradeAppLoadConfig() {
     }
 
     /**

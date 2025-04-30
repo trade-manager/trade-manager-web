@@ -22,12 +22,12 @@ import org.trade.core.dao.Aspects;
 import org.trade.core.factory.ClassFactory;
 import org.trade.core.persistent.IPersistentModel;
 import org.trade.core.persistent.dao.Account;
-import org.trade.core.persistent.dao.Candle;
 import org.trade.core.persistent.dao.Contract;
 import org.trade.core.persistent.dao.Portfolio;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradeOrderfill;
 import org.trade.core.persistent.dao.Tradestrategy;
+import org.trade.core.persistent.dao.series.indicator.CandleSeries;
 import org.trade.core.persistent.dao.series.indicator.StrategyData;
 import org.trade.core.persistent.dao.series.indicator.candle.CandleItem;
 import org.trade.core.properties.ConfigProperties;
@@ -57,7 +57,6 @@ import java.nio.charset.StandardCharsets;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -1574,10 +1573,10 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
 
                 if (dateString.contains("finished-")) {
 
-                    LinkedList<Candle> candles = tradestrategy.getStrategyData().getCandles();
-                    m_tradePersistentModel.persistCandleSeries(candles);
+                    CandleSeries candleSeries = tradestrategy.getStrategyData().getBaseCandleSeries();
+                    m_tradePersistentModel.persistCandleSeries(candleSeries);
 
-                    _log.debug("HistoricalData complete Req Id: {} Symbol: {} Tradingday: {} candles to saved: {} Contract Tradestrategies size:: {}", reqId, tradestrategy.getContract().getSymbol(), tradestrategy.getTradingday().getOpen(), candles.size(), tradestrategy.getContract().getTradestrategies().size());
+                    _log.debug("HistoricalData complete Req Id: {} Symbol: {} Tradingday: {} candles to saved: {} Contract Tradestrategies size:: {}", reqId, tradestrategy.getContract().getSymbol(), tradestrategy.getTradingday().getOpen(), candleSeries.getItemCount(), tradestrategy.getContract().getTradestrategies().size());
 
                     /*
                      * The last one has arrived the reqId is the

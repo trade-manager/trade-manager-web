@@ -94,7 +94,7 @@ public class BaseButton extends JButton {
             setMethod(basePropertyCodes.getMethod());
             this.addActionListener(_ -> buttonPressed());
         } catch (Exception ex) {
-            _log.error(" Error instanciating Base Button ", ex);
+            _log.error(" Error instantiating Base Button ", ex);
         }
     }
 

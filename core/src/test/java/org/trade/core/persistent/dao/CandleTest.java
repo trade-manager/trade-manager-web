@@ -42,7 +42,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.trade.core.TradeAppLoadConfig;
+import org.trade.core.properties.TradeAppLoadConfig;
 import org.trade.core.dao.AspectHome;
 import org.trade.core.persistent.dao.series.indicator.StrategyData;
 import org.trade.core.persistent.dao.series.indicator.candle.CandleItem;
@@ -142,7 +142,7 @@ public class CandleTest {
             StrategyData.doDummyData(tradestrategy.getStrategyData().getBaseCandleSeries(),
                     Tradingday.newInstance(prevTradingday), 2, BarSize.FIVE_MIN, true, 0);
             assertFalse(tradestrategy.getStrategyData().getBaseCandleSeries().isEmpty());
-            candleHome.persistCandleSeries(tradestrategy.getStrategyData().getCandles());
+            candleHome.persistCandleSeries(tradestrategy.getStrategyData().getBaseCandleSeries());
 
             _log.info("testAddCandle IdTradeStrategy: {}", tradestrategy.getId());
             assertNotNull(((CandleItem) tradestrategy.getStrategyData().getBaseCandleSeries().getDataItem(0))

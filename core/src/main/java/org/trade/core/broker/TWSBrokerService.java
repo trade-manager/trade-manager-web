@@ -25,12 +25,12 @@ import org.trade.core.factory.ClassFactory;
 import org.trade.core.persistent.IPersistentModel;
 import org.trade.core.persistent.PersistentModelException;
 import org.trade.core.persistent.dao.Account;
-import org.trade.core.persistent.dao.Candle;
 import org.trade.core.persistent.dao.Contract;
 import org.trade.core.persistent.dao.Portfolio;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradeOrderfill;
 import org.trade.core.persistent.dao.Tradestrategy;
+import org.trade.core.persistent.dao.series.indicator.CandleSeries;
 import org.trade.core.persistent.dao.series.indicator.StrategyData;
 import org.trade.core.persistent.dao.series.indicator.candle.CandleItem;
 import org.trade.core.properties.ConfigProperties;
@@ -57,7 +57,6 @@ import java.text.ParseException;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.concurrent.ConcurrentHashMap;
@@ -1234,13 +1233,13 @@ public class TWSBrokerService extends AbstractBrokerModel {
             try {
                 Tradestrategy tradestrategy = m_historyDataRequests.get(getReqId());
 
-                LinkedList<Candle> candles = tradestrategy.getStrategyData().getCandles();
-                m_tradePersistentModel.persistCandleSeries(candles);
+                CandleSeries candleSeries = tradestrategy.getStrategyData().getBaseCandleSeries();
+                m_tradePersistentModel.persistCandleSeries(candleSeries);
 
                 _log.debug("HistoricalData complete Req Id: " + getReqId() + " Symbol: "
                         + tradestrategy.getContract().getSymbol() + " Tradingday: "
                         + tradestrategy.getTradingday().getOpen() + " candles to saved: "
-                        + candles.size() + " Contract Tradestrategies size:: "
+                        + candleSeries.getItemCount() + " Contract Tradestrategies size:: "
                         + tradestrategy.getContract().getTradestrategies().size());
 
                 /*
