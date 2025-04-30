@@ -119,6 +119,7 @@ public class TradePersistentModelTest {
      */
     @BeforeEach
     public void setUp() throws Exception {
+
         TradeAppLoadConfig.loadAppProperties();
         clientId = ConfigProperties.getPropAsInt("trade.tws.clientId");
         this.tradePersistentModel = (IPersistentModel) ClassFactory

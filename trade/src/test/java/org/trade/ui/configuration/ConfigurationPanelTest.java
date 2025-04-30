@@ -152,7 +152,7 @@ public class ConfigurationPanelTest {
 
         CodeType codeType = new CodeType("Moving Average", CodeType.IndicatorParameters, "Moving Average");
         CodeAttribute codeAttribute = new CodeAttribute(codeType, "SMAType", "The length of the MA", "LINEAR",
-                "org.trade.dictionary.valuetype.CalculationType", null);
+                "org.trade.core.valuetype.CalculationType", null);
         CodeValue codeValue = new CodeValue(codeAttribute, CalculationType.LINEAR);
 
         Vector<Object> parm = new Vector<>();
@@ -168,7 +168,7 @@ public class ConfigurationPanelTest {
     @Test
     public void testCreateIndicatorSeriesClass() throws Exception {
 
-        final String packageName = "org.trade.strategy.data.";
+        final String packageName = "org.trade.indicator.";
         Strategy strategy = (Strategy) DAOStrategy.newInstance().getObject();
         Vector<Object> parm = new Vector<>();
         parm.add(strategy);

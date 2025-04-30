@@ -58,20 +58,20 @@ public abstract class IndicatorSeriesUI extends ComparableObjectSeries implement
     /*
      * These names must match the names of the classes for that series.
      */
-    public static final String MovingAverageSeries = "MovingAverageSeries";
-    public static final String PivotSeries = "PivotSeries";
-    public static final String HeikinAshiSeries = "HeikinAshiSeries";
-    public static final String VwapSeries = "VwapSeries";
-    public static final String VolumeSeries = "VolumeSeries";
-    public static final String CandleSeries = "CandleSeries";
-    public static final String AverageTrueRangeSeries = "AverageTrueRangeSeries";
-    public static final String RelativeStrengthIndexSeries = "RelativeStrengthIndexSeries";
-    public static final String CommodityChannelIndexSeries = "CommodityChannelIndexSeries";
-    public static final String BollingerBandsSeries = "BollingerBandsSeries";
-    public static final String StochasticOscillatorSeries = "StochasticOscillatorSeries";
-    public static final String MoneyFlowIndexSeries = "MoneyFlowIndexSeries";
-    public static final String MACDSeries = "MACDSeries";
-    public static final String VostroSeries = "VostroSeries";
+    public static final String MovingAverageSeries = "MovingAverageSeriesUI";
+    public static final String PivotSeries = "PivotSeriesUI";
+    public static final String HeikinAshiSeries = "HeikinAshiSeriesUI";
+    public static final String VwapSeries = "VwapSeriesUI";
+    public static final String VolumeSeries = "VolumeSeriesUI";
+    public static final String CandleSeries = "CandleSeriesUI";
+    public static final String AverageTrueRangeSeries = "AverageTrueRangeSeriesUI";
+    public static final String RelativeStrengthIndexSeries = "RelativeStrengthIndexSeriesUI";
+    public static final String CommodityChannelIndexSeries = "CommodityChannelIndexSeriesUI";
+    public static final String BollingerBandsSeries = "BollingerBandsSeriesUI";
+    public static final String StochasticOscillatorSeries = "StochasticOscillatorSeriesUI";
+    public static final String MoneyFlowIndexSeries = "MoneyFlowIndexSeriesUI";
+    public static final String MACDSeries = "MACDSeriesUI";
+    public static final String VostroSeries = "VostroSeriesUI";
 
     private Integer id;
     private String name;
