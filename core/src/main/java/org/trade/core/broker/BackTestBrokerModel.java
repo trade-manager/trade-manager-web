@@ -49,6 +49,7 @@ import org.trade.core.persistent.dao.Contract;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradeOrderfill;
 import org.trade.core.persistent.dao.Tradestrategy;
+import org.trade.core.persistent.dao.series.indicator.CandleSeries;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.CoreUtils;
 import org.trade.core.util.time.TradingCalendar;
@@ -982,8 +983,8 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
                      * The last one has arrived the reqId is the
                      * tradeStrategyId. Remove this from the processing vector.
                      */
-                    LinkedList<Candle> candles = tradestrategy.getStrategyData().getCandles();
-                    m_tradePersistentModel.persistCandleSeries(candles);
+                    CandleSeries candleSeries = tradestrategy.getStrategyData().getBaseCandleSeries();
+                    m_tradePersistentModel.persistCandleSeries(candleSeries);
 
                     _log.debug("HistoricalData complete Req Id: {} Symbol: {} Tradingday: {} candles to saved: {} Contract Tradestrategies size:: {}", reqId, tradestrategy.getContract().getSymbol(), tradestrategy.getTradingday().getOpen(), candles.size(), tradestrategy.getContract().getTradestrategies().size());
 

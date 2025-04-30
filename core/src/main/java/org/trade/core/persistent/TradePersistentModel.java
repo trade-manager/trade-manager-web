@@ -68,6 +68,7 @@ import org.trade.core.persistent.dao.TradestrategyOrders;
 import org.trade.core.persistent.dao.Tradingday;
 import org.trade.core.persistent.dao.TradingdayHome;
 import org.trade.core.persistent.dao.Tradingdays;
+import org.trade.core.persistent.dao.series.indicator.CandleSeries;
 import org.trade.core.util.CoreUtils;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.Action;
@@ -389,23 +390,23 @@ public class TradePersistentModel implements IPersistentModel {
         }
     }
 
-    public void persistCandleSeries(final LinkedList<Candle> candles) throws PersistentModelException {
+    public void persistCandleSeries(final CandleSeries candleSeries) throws PersistentModelException {
         try {
             /*
              * This can happen when an indicator is a contract that has never
              * been used.
              */
-            if (!candles.isEmpty() && null == candles.getFirst().getContract().getId()) {
-                Contract contract = this.persistContract(candles.getFirst().getContract());
-                candles.getFirst().getContract().setId(contract.getId());
-                candles.getFirst().getContract().setVersion(contract.getVersion());
+            if (null == candleSeries.getContract().getId()) {
+                Contract contract = this.persistContract(candleSeries.getContract());
+                candleSeries.getContract().setId(contract.getId());
+                candleSeries.getContract().setVersion(contract.getVersion());
             }
-            m_candleHome.persistCandleSeries(candles);
+            m_candleHome.persistCandleSeries(candleSeries);
         } catch (OptimisticLockException ex1) {
             throw new PersistentModelException("Error saving CandleSeries please refresh before save.");
-        } catch (Exception ex) {
+        } catch (Exception e) {
             throw new PersistentModelException(
-                    "Error saving CandleSeries: " + candles.getFirst().getContract().getSymbol() + "\n Msg: " + ex.getMessage());
+                    "Error saving CandleSeries: " + candleSeries.getDescription() + "\n Msg: " + e.getMessage());
         }
     }
 

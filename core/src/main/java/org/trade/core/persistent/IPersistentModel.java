@@ -53,10 +53,10 @@ import org.trade.core.persistent.dao.TradestrategyLite;
 import org.trade.core.persistent.dao.TradestrategyOrders;
 import org.trade.core.persistent.dao.Tradingday;
 import org.trade.core.persistent.dao.Tradingdays;
+import org.trade.core.persistent.dao.series.indicator.CandleSeries;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -109,9 +109,9 @@ public interface IPersistentModel {
     /**
      * Method persistCandleSeries.
      *
-     * @param candles LinkedList<Candle>
+     * @param candleSeries CandleSeries
      */
-    void persistCandleSeries(LinkedList<Candle> candles) throws PersistentModelException;
+    void persistCandleSeries(CandleSeries candleSeries) throws PersistentModelException;
 
     /**
      * Method persistCandle.

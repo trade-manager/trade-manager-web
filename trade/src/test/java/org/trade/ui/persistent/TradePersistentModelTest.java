@@ -607,7 +607,7 @@ public class TradePersistentModelTest {
                 this.tradestrategy.getTradingday().getClose());
         StrategyData.doDummyData(candleSeries, this.tradestrategy.getTradingday(), 5, BarSize.FIVE_MIN, true, 0);
         long timeStart = System.currentTimeMillis();
-        this.tradePersistentModel.persistCandleSeries(this.tradestrategy.getStrategyData().getCandles());
+        this.tradePersistentModel.persistCandleSeries(candleSeries);
         _log.info("Total time: {}", (System.currentTimeMillis() - timeStart) / 1000);
         assertFalse(candleSeries.isEmpty());
         assertNotNull(((CandleItem) candleSeries.getDataItem(0)).getCandle().getId());

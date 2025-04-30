@@ -45,6 +45,7 @@ import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import org.trade.core.dao.EntityManagerHelper;
+import org.trade.core.persistent.dao.series.indicator.CandleSeries;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -66,7 +67,7 @@ public class CandleHome {
      *
      * @param candles LinkedList<Candle>
      */
-    public synchronized void persistCandleSeries(final LinkedList<Candle> candles) throws Exception {
+    public synchronized void persistCandleSeries(final CandleSeries candles) throws Exception {
 
         Candle transientInstance;
         try {
