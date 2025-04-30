@@ -117,7 +117,7 @@ public class TWSFinancialAccountRequestTest {
         // xml.getBytes("utf-8"));
         // final Aspects aspects = (Aspects) request.fromXML(inputSource);
         final Aspects aspects = (Aspects) request.fromXML(Thread.currentThread().getContextClassLoader()
-                .getResourceAsStream("org/trade/broker/request/aliasesEmpty.xml"));
+                .getResourceAsStream("broker/request/aliasesEmpty.xml"));
         for (Aspect aspect : aspects.getAspect()) {
             Account item = (Account) aspect;
             Account account = m_tradePersistentModel.findAccountByNumber(item.getAccountNumber());
@@ -131,7 +131,7 @@ public class TWSFinancialAccountRequestTest {
 
         final TWSAccountAliasRequest request = new TWSAccountAliasRequest();
         final Aspects aspects = (Aspects) request.fromXML(Thread.currentThread().getContextClassLoader()
-                .getResourceAsStream("org/trade/broker/request/aliases.xml"));
+                .getResourceAsStream("broker/request/aliases.xml"));
         for (Aspect aspect : aspects.getAspect()) {
             Account item = (Account) aspect;
             Account account = m_tradePersistentModel.findAccountByNumber(item.getAccountNumber());
@@ -150,7 +150,7 @@ public class TWSFinancialAccountRequestTest {
 
         final TWSAccountAliasRequest request = new TWSAccountAliasRequest();
         final Aspects aspects = (Aspects) request.fromXML(Thread.currentThread().getContextClassLoader()
-                .getResourceAsStream("org/trade/broker/request/aliases1.xml"));
+                .getResourceAsStream("broker/request/aliases1.xml"));
         for (Aspect aspect : aspects.getAspect()) {
             Account item = (Account) aspect;
             Account account = m_tradePersistentModel.findAccountByNumber(item.getAccountNumber());
@@ -169,7 +169,7 @@ public class TWSFinancialAccountRequestTest {
 
         final TWSAllocationRequest request = new TWSAllocationRequest();
         final Aspects aspects = (Aspects) request.fromXML(Thread.currentThread().getContextClassLoader()
-                .getResourceAsStream("org/trade/broker/request/allocationEmpty.xml"));
+                .getResourceAsStream("broker/request/allocationEmpty.xml"));
 
         for (Aspect aspect : aspects.getAspect()) {
             m_tradePersistentModel.persistPortfolio((Portfolio) aspect);
@@ -181,7 +181,7 @@ public class TWSFinancialAccountRequestTest {
 
         final TWSAllocationRequest request = new TWSAllocationRequest();
         final Aspects aspects = (Aspects) request.fromXML(Thread.currentThread().getContextClassLoader()
-                .getResourceAsStream("org/trade/broker/request/allocation.xml"));
+                .getResourceAsStream("broker/request/allocation.xml"));
         for (Aspect aspect : aspects.getAspect()) {
             m_tradePersistentModel.persistPortfolio((Portfolio) aspect);
         }
@@ -192,7 +192,7 @@ public class TWSFinancialAccountRequestTest {
 
         final TWSAllocationRequest request = new TWSAllocationRequest();
         final Aspects aspects = (Aspects) request.fromXML(Thread.currentThread().getContextClassLoader()
-                .getResourceAsStream("org/trade/broker/request/allocation1.xml"));
+                .getResourceAsStream("broker/request/allocation1.xml"));
         for (Aspect aspect : aspects.getAspect()) {
             m_tradePersistentModel.persistPortfolio((Portfolio) aspect);
         }
@@ -218,7 +218,7 @@ public class TWSFinancialAccountRequestTest {
 
         final TWSGroupRequest request = new TWSGroupRequest();
         final Aspects aspects = (Aspects) request.fromXML(Thread.currentThread().getContextClassLoader()
-                .getResourceAsStream("org/trade/broker/request/groupsEmpty.xml"));
+                .getResourceAsStream("broker/request/groupsEmpty.xml"));
         for (Aspect aspect : aspects.getAspect()) {
             m_tradePersistentModel.persistPortfolio((Portfolio) aspect);
         }
@@ -229,7 +229,7 @@ public class TWSFinancialAccountRequestTest {
 
         final TWSGroupRequest request = new TWSGroupRequest();
         final Aspects aspects = (Aspects) request.fromXML(Thread.currentThread().getContextClassLoader()
-                .getResourceAsStream("org/trade/broker/request/groups.xml"));
+                .getResourceAsStream("broker/request/groups.xml"));
         for (Aspect aspect : aspects.getAspect()) {
             m_tradePersistentModel.persistPortfolio((Portfolio) aspect);
         }
@@ -240,7 +240,7 @@ public class TWSFinancialAccountRequestTest {
 
         final TWSGroupRequest request = new TWSGroupRequest();
         final Aspects aspects = (Aspects) request.fromXML(Thread.currentThread().getContextClassLoader()
-                .getResourceAsStream("org/trade/broker/request/groups1.xml"));
+                .getResourceAsStream("broker/request/groups1.xml"));
         for (Aspect aspect : aspects.getAspect()) {
             m_tradePersistentModel.persistPortfolio((Portfolio) aspect);
         }

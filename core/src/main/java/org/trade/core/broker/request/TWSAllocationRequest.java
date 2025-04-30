@@ -13,6 +13,7 @@ import java.io.CharArrayWriter;
 import java.util.Stack;
 
 public class TWSAllocationRequest extends SaxMapper {
+
     private Aspects m_target = null;
     private final Stack<Object> m_stack = new Stack<>();
 
