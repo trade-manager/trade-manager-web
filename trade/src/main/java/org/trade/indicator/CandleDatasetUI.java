@@ -43,7 +43,6 @@ import org.trade.core.persistent.PersistentModelException;
 import org.trade.core.persistent.dao.Candle;
 import org.trade.core.persistent.dao.Contract;
 import org.trade.core.persistent.dao.series.indicator.CandleDataset;
-import org.trade.core.persistent.dao.series.indicator.CandleSeries;
 import org.trade.core.persistent.dao.series.indicator.StrategyData;
 import org.trade.core.util.CloneUtils;
 import org.trade.core.util.time.RegularTimePeriod;
@@ -506,7 +505,6 @@ public class CandleDatasetUI extends AbstractXYDataset implements OHLCVwapDatase
         }
 
         return series;
-
     }
 
     /**

@@ -42,8 +42,19 @@ import org.trade.core.persistent.PersistentModelException;
 import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.Tradestrategy;
 import org.trade.core.persistent.dao.Tradingday;
+import org.trade.core.persistent.dao.series.indicator.AverageTrueRangeSeries;
+import org.trade.core.persistent.dao.series.indicator.BollingerBandsSeries;
+import org.trade.core.persistent.dao.series.indicator.CommodityChannelIndexSeries;
 import org.trade.core.persistent.dao.series.indicator.IndicatorSeries;
+import org.trade.core.persistent.dao.series.indicator.MACDSeries;
+import org.trade.core.persistent.dao.series.indicator.MoneyFlowIndexSeries;
+import org.trade.core.persistent.dao.series.indicator.MovingAverageSeries;
+import org.trade.core.persistent.dao.series.indicator.PivotSeries;
+import org.trade.core.persistent.dao.series.indicator.RelativeStrengthIndexSeries;
+import org.trade.core.persistent.dao.series.indicator.StochasticOscillatorSeries;
 import org.trade.core.persistent.dao.series.indicator.StrategyData;
+import org.trade.core.persistent.dao.series.indicator.VolumeSeries;
+import org.trade.core.persistent.dao.series.indicator.VostroSeries;
 import org.trade.core.persistent.dao.series.indicator.candle.CandlePeriod;
 import org.trade.core.util.time.RegularTimePeriod;
 import org.trade.core.util.time.TradingCalendar;
@@ -79,10 +90,7 @@ public class StrategyDataUI extends StrategyData {
     public StrategyDataUI(Strategy strategy, CandleDatasetUI baseCandleDataset) {
 
         this.baseCandleDataset = baseCandleDataset;
-        candleDataset = new CandleDatasetUI();
-        candleDataset.addSeries(CandleDatasetUI.createSeries(baseCandleDataset, 0, getBaseCandleSeries().getContract(),
-                getBaseCandleSeries().getBarSize(), getBaseCandleSeries().getStartTime(),
-                getBaseCandleSeries().getEndTime()));
+        this.candleDataset = baseCandleDataset;
 
         for (IndicatorSeries indicator : strategy.getIndicatorSeries()) {
 
@@ -91,10 +99,80 @@ public class StrategyDataUI extends StrategyData {
                  * For each indicator create a series that is a clone for this
                  * trade strategy.
                  */
-                IndicatorSeriesUI series = (IndicatorSeriesUI) indicator.clone();
+                //IndicatorSeries series = (IndicatorSeries) indicator.clone();
+                Vector<Object> parm = new Vector<>();
+                parm.add(strategy);
+                parm.add(indicator.getName());
+                parm.add(indicator.getType());
+                parm.add(indicator.getDescription());
+                parm.add(indicator.getDisplaySeries());
+                parm.add(indicator.getSeriesRGBColor());
+                parm.add(indicator.getSubChart());
+
+                IndicatorSeriesUI series = (IndicatorSeriesUI) ClassFactory
+                        .getCreateClass(IIndicatorDatasetUI.PACKAGE + indicator.getType() + "UI", parm, this);
+
+                switch (indicator.getType()) {
+                    case IndicatorSeries.MovingAverageSeries:
+
+                        ((MovingAverageSeriesUI) series).setMAType(((MovingAverageSeries) indicator).getMAType());
+                        ((MovingAverageSeriesUI) series).setLength(((MovingAverageSeries) indicator).getLength());
+                        ((MovingAverageSeriesUI) series).setPriceSource(((MovingAverageSeries) indicator).getPriceSource());
+                        break;
+                    case IndicatorSeries.AverageTrueRangeSeries:
+
+                        ((AverageTrueRangeSeriesUI) series).setLength(((AverageTrueRangeSeries) indicator).getLength());
+                        break;
+                    case IndicatorSeries.BollingerBandsSeries:
+
+                        ((BollingerBandsSeriesUI) series).setNumberOfSTD(((BollingerBandsSeries) indicator).getNumberOfSTD());
+                        ((BollingerBandsSeriesUI) series).setLength(((BollingerBandsSeries) indicator).getLength());
+                        break;
+                    case IndicatorSeries.CommodityChannelIndexSeries:
+
+                        ((CommodityChannelIndexSeriesUI) series).setLength(((CommodityChannelIndexSeries) indicator).getLength());
+                        break;
+                    case IndicatorSeries.MACDSeries:
+
+                        ((MACDSeriesUI) series).setFastLength(((MACDSeries) indicator).getFastLength());
+                        ((MACDSeriesUI) series).setSlowLength(((MACDSeries) indicator).getSlowLength());
+                        ((MACDSeriesUI) series).setSignalSmoothing(((MACDSeries) indicator).getSignalSmoothing());
+                        break;
+                    case IndicatorSeries.MoneyFlowIndexSeries:
+
+                        ((MoneyFlowIndexSeriesUI) series).setLength(((MoneyFlowIndexSeries) indicator).getLength());
+                        break;
+                    case IndicatorSeries.PivotSeries:
+
+                        ((PivotSeriesUI) series).setSide(((PivotSeries) indicator).getSide());
+                        ((PivotSeriesUI) series).setQuadratic(((PivotSeries) indicator).getQuadratic());
+                        ((PivotSeriesUI) series).setBars(((PivotSeries) indicator).getBars());
+                        break;
+                    case IndicatorSeries.RelativeStrengthIndexSeries:
+
+                        ((RelativeStrengthIndexSeriesUI) series).setLength(((RelativeStrengthIndexSeries) indicator).getLength());
+                        break;
+                    case IndicatorSeries.StochasticOscillatorSeries:
+
+                        ((StochasticOscillatorSeriesUI) series).setLength(((StochasticOscillatorSeries) indicator).getLength());
+                        ((StochasticOscillatorSeriesUI) series).setKSmoothing(((StochasticOscillatorSeries) indicator).getKSmoothing());
+                        ((StochasticOscillatorSeriesUI) series).setPercentD(((StochasticOscillatorSeries) indicator).getPercentD());
+                        break;
+                    case IndicatorSeries.VolumeSeries:
+
+                        ((VolumeSeriesUI) series).setBarWidthInMilliseconds(((VolumeSeries) indicator).getBarWidthInMilliseconds());
+                        break;
+                    case IndicatorSeries.VostroSeries:
+
+                        ((VostroSeriesUI) series).setLength(((VostroSeries) indicator).getLength());
+                        ((VostroSeriesUI) series).setMAType(((VostroSeries) indicator).getMAType());
+                        break;
+                    default:
+                        // Code to execute if no case matches
+                }
                 series.setKey(series.getName());
                 series.createSeries(candleDataset, 0);
-                IIndicatorDatasetUI indicatorDataset = this.getIndicatorByTypeUI(indicator.getType());
+                IIndicatorDatasetUI indicatorDataset = this.getIndicatorByTypeUI(indicator.getType() + "UI");
 
                 if (null == indicatorDataset) {
                     /*
@@ -104,8 +182,8 @@ public class StrategyDataUI extends StrategyData {
                      * table in the DB to represent the Dataset which is just a
                      * holder for series and is required by the Chart API.
                      */
-                    String datasetName = indicator.getType().replaceAll("Series", "Dataset");
-                    Vector<Object> parm = new Vector<>();
+                    String datasetName = indicator.getType().replaceAll("Series", "DatasetUI");
+                    parm = new Vector<>();
                     indicatorDataset = (IIndicatorDatasetUI) ClassFactory
                             .getCreateClass(IIndicatorDatasetUI.PACKAGE + datasetName, parm, this);
                     this.indicators.add(indicatorDataset);

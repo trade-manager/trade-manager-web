@@ -332,7 +332,7 @@ public class StochasticOscillatorSeries extends IndicatorSeries {
      *
      * @param kSmoothing Integer
      */
-    public void setSmoothing(Integer kSmoothing) {
+    public void setKSmoothing(Integer kSmoothing) {
         this.kSmoothing = kSmoothing;
     }
 
