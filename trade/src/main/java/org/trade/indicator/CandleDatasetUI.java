@@ -42,6 +42,7 @@ import org.jfree.data.xy.XYDataset;
 import org.trade.core.persistent.PersistentModelException;
 import org.trade.core.persistent.dao.Candle;
 import org.trade.core.persistent.dao.Contract;
+import org.trade.core.persistent.dao.series.indicator.StrategyData;
 import org.trade.core.util.CloneUtils;
 import org.trade.core.util.time.RegularTimePeriod;
 import org.trade.core.util.time.TimePeriodAnchor;
@@ -511,9 +512,12 @@ public class CandleDatasetUI extends AbstractXYDataset implements OHLCVwapDatase
      * @param strategyData StrategyData
      * @param candles      List<Candle>
      */
-    public static void populateSeries(StrategyDataUI strategyData, List<Candle> candles) throws PersistentModelException {
+    public static void populateSeries(StrategyData strategyData, List<Candle> candles) throws PersistentModelException {
+
         strategyData.clearBaseCandleDataset();
+
         for (Candle candle : candles) {
+
             strategyData.buildCandle(candle.getStartPeriod(), candle.getOpen().doubleValue(),
                     candle.getHigh().doubleValue(), candle.getLow().doubleValue(), candle.getClose().doubleValue(),
                     candle.getVolume(), candle.getVwap().doubleValue(), candle.getTradeCount(), 1, null);
