@@ -49,6 +49,9 @@ import org.trade.core.persistent.PersistentModelException;
 import org.trade.core.persistent.dao.Contract;
 import org.trade.core.persistent.dao.Rule;
 import org.trade.core.persistent.dao.Strategy;
+import org.trade.core.persistent.dao.series.indicator.CandleDataset;
+import org.trade.core.persistent.dao.series.indicator.CandleSeries;
+import org.trade.core.persistent.dao.series.indicator.StrategyData;
 import org.trade.core.persistent.dao.strategy.IStrategyRule;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.DynamicCode;
@@ -58,9 +61,6 @@ import org.trade.core.valuetype.Currency;
 import org.trade.core.valuetype.Exchange;
 import org.trade.core.valuetype.SECType;
 import org.trade.core.valuetype.ValueTypeException;
-import org.trade.indicator.CandleDatasetUI;
-import org.trade.indicator.CandleSeriesUI;
-import org.trade.indicator.StrategyDataUI;
 import org.trade.ui.models.StrategyTreeModel;
 import org.trade.ui.tables.renderer.StrategyTreeCellRenderer;
 
@@ -293,12 +293,12 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
             Vector<Object> parm = new Vector<>(0);
             IBrokerModel brokerManagerModel = (IBrokerModel) ClassFactory.getServiceForInterface(IBrokerModel._brokerTest,
                     this);
-            CandleDatasetUI candleDataset = new CandleDatasetUI();
-            CandleSeriesUI candleSeries = new CandleSeriesUI("Test",
+            CandleDataset candleDataset = new CandleDataset();
+            CandleSeries candleSeries = new CandleSeries("Test",
                     new Contract(SECType.STOCK, "Test", Exchange.SMART, Currency.USD, null, null), BarSize.FIVE_MIN,
                     TradingCalendar.getDateTimeNowMarketTimeZone(), TradingCalendar.getDateTimeNowMarketTimeZone());
             candleDataset.addSeries(candleSeries);
-            StrategyDataUI strategyData = new StrategyDataUI(rule.getStrategy(), candleDataset);
+            StrategyData strategyData = new StrategyData(rule.getStrategy(), candleDataset);
             parm.add(brokerManagerModel);
             parm.add(strategyData);
             parm.add(0);
