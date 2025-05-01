@@ -42,6 +42,8 @@ import org.jfree.data.xy.XYDataset;
 import org.trade.core.persistent.PersistentModelException;
 import org.trade.core.persistent.dao.Candle;
 import org.trade.core.persistent.dao.Contract;
+import org.trade.core.persistent.dao.series.indicator.CandleDataset;
+import org.trade.core.persistent.dao.series.indicator.CandleSeries;
 import org.trade.core.persistent.dao.series.indicator.StrategyData;
 import org.trade.core.util.CloneUtils;
 import org.trade.core.util.time.RegularTimePeriod;
@@ -479,6 +481,32 @@ public class CandleDatasetUI extends AbstractXYDataset implements OHLCVwapDatase
         for (int i = 0; i < this.getSeriesCount(); i++) {
             this.getSeries(i).clear();
         }
+    }
+
+    /**
+     * Method createSeries.
+     *
+     * @param source      CandleDataset
+     * @param seriesIndex int
+     * @param contract    Contract
+     * @param bars        int
+     * @return CandleSeries
+     */
+    public static CandleSeriesUI createSeries(CandleDataset source, int seriesIndex, Contract contract, int bars,
+                                              ZonedDateTime startTime, ZonedDateTime endTime) {
+
+        if (source.getSeries(seriesIndex) == null) {
+            throw new IllegalArgumentException("Null source (CandleDataset).");
+        }
+
+        CandleSeriesUI series = new CandleSeriesUI(source.getSeries(seriesIndex), bars, startTime, endTime);
+        for (int i = 0; i < source.getSeries(seriesIndex).getItemCount() - 1; i++) {
+
+            series.updateSeries(source.getSeries(seriesIndex), i, true);
+        }
+
+        return series;
+
     }
 
     /**

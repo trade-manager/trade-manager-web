@@ -974,7 +974,12 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
                     : tradestrategy.getContract().getLongName());
 
             StrategyData strategyData = tradestrategy.getStrategyData();
-            StrategyDataUI strategyDataUI = new StrategyDataUI(tradestrategy.getStrategy(), new CandleDatasetUI());
+            CandleDatasetUI candleDatasetUI = new CandleDatasetUI();
+            candleDatasetUI.addSeries(CandleDatasetUI.createSeries(strategyData.getBaseCandleDataset(), 0, strategyData.getBaseCandleSeries().getContract(),
+                    strategyData.getBaseCandleSeries().getBarSize(), strategyData.getBaseCandleSeries().getStartTime(),
+                    strategyData.getBaseCandleSeries().getEndTime()));
+
+            StrategyDataUI strategyDataUI = new StrategyDataUI(tradestrategy.getStrategy(), candleDatasetUI);
             this.candlestickChart = new CandlestickChart(ledgend, strategyDataUI,
                     tradestrategy.getTradingday());
             this.candlestickChart.setName(tradestrategy.getContract().getSymbol());

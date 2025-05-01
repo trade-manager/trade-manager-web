@@ -42,6 +42,7 @@ import org.trade.core.persistent.dao.CodeValue;
 import org.trade.core.persistent.dao.Contract;
 import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.Tradingday;
+import org.trade.core.persistent.dao.series.indicator.CandleSeries;
 import org.trade.core.persistent.dao.series.indicator.candle.CandlePeriod;
 import org.trade.core.util.time.RegularTimePeriod;
 import org.trade.core.util.time.TradingCalendar;
@@ -123,6 +124,23 @@ public class CandleSeriesUI extends IndicatorSeriesUI {
         this.endTime = endTime;
     }
 
+    /**
+     * Creates a new empty series. By default, items added to the series will be
+     * sorted into ascending order by period, and duplicate periods will not be
+     * allowed.
+     *
+     * @param series the Contract for this candle series.
+     * @param bars   the length in minutes for each bar ie. 5, 15, 30, 60
+     */
+    public CandleSeriesUI(CandleSeries series, int bars, ZonedDateTime startTime, ZonedDateTime endTime) {
+        super(series.getContract().getSymbol(), CandleSeries, series.getDisplaySeries(), 0,
+                series.getSubChart());
+        this.symbol = series.getContract().getSymbol();
+        this.contract = series.getContract();
+        this.barSize = series.getBarSize();
+        this.startTime = startTime;
+        this.endTime = endTime;
+    }
     /**
      * Creates a new empty series. By default, items added to the series will be
      * sorted into ascending order by period, and duplicate periods will not be
