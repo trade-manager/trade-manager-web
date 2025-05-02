@@ -65,6 +65,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
@@ -460,6 +461,19 @@ public abstract class IndicatorSeries extends ComparableObjectSeries implements 
     /**
      * Method printSeries.
      */
-
     public abstract void printSeries();
+
+    @Transient
+    public Vector<Object> getParam() {
+
+        Vector<Object> parms = new Vector<>();
+        parms.add(strategy);
+        parms.add(this.getName());
+        parms.add(this.getType());
+        parms.add(this.getDescription());
+        parms.add(this.getDisplaySeries());
+        parms.add(this.getSeriesRGBColor());
+        parms.add(this.getSubChart());
+        return parms;
+    }
 }

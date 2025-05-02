@@ -47,6 +47,7 @@ import org.trade.core.util.time.RegularTimePeriod;
 
 import java.io.Serial;
 import java.math.BigDecimal;
+import java.util.Vector;
 
 /**
  * Developed J. Welles Wilder, the Relative Strength Index (RSI) is a momentum
@@ -379,5 +380,13 @@ public class RelativeStrengthIndexSeries extends IndicatorSeries {
             RelativeStrengthIndexItem dataItem = (RelativeStrengthIndexItem) this.getDataItem(i);
             _log.debug("Type: {} Time: {} Value: {}", this.getType(), dataItem.getPeriod().getStart(), dataItem.getRelativeStrengthIndex());
         }
+    }
+
+    @Transient
+    public Vector<Object> getParam() {
+
+        Vector<Object> parms = super.getParam();
+        parms.add(getLength());
+        return parms;
     }
 }

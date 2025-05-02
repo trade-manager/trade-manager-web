@@ -49,6 +49,7 @@ import org.trade.core.valuetype.CalculationType;
 import java.io.Serial;
 import java.math.BigDecimal;
 import java.util.LinkedList;
+import java.util.Vector;
 
 /**
  * A list of (RegularTimePeriod, open, high, low, close) data items.
@@ -602,6 +603,15 @@ public class VostroSeries extends IndicatorSeries {
             VostroItem dataItem = (VostroItem) this.getDataItem(i);
             _log.debug("Type: {} Time: {} Value: {}", this.getType(), dataItem.getPeriod().getStart(), dataItem.getVostro());
         }
+    }
+
+    @Transient
+    public Vector<Object> getParam() {
+
+        Vector<Object> parms = super.getParam();
+        parms.add(getLength());
+        parms.add(getMAType());
+        return parms;
     }
 
     /**

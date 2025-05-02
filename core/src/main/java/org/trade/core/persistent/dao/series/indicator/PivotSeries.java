@@ -56,6 +56,7 @@ import java.io.Serial;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.Vector;
 
 /**
  * A list of (RegularTimePeriod, open, high, low, close) data items.
@@ -484,5 +485,15 @@ public class PivotSeries extends IndicatorSeries {
      */
     public Object clone() throws CloneNotSupportedException {
         return super.clone();
+    }
+
+    @Transient
+    public Vector<Object> getParam() {
+
+        Vector<Object> parms = super.getParam();
+        parms.add(getSide());
+        parms.add(getQuadratic());
+        parms.add(getBars());
+        return parms;
     }
 }

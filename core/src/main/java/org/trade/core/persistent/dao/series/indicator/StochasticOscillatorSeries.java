@@ -49,6 +49,7 @@ import java.io.Serial;
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.Vector;
 
 /**
  * Fast, Slow or Full
@@ -543,5 +544,15 @@ public class StochasticOscillatorSeries extends IndicatorSeries {
             StochasticOscillatorItem dataItem = (StochasticOscillatorItem) this.getDataItem(i);
             _log.debug("Type: {} Time: {} Value: {}", this.getType(), dataItem.getPeriod().getStart(), dataItem.getStochasticOscillator());
         }
+    }
+
+    @Transient
+    public Vector<Object> getParam() {
+
+        Vector<Object> parms = super.getParam();
+        parms.add(getLength());
+        parms.add(getKSmoothing());
+        parms.add(getPercentD());
+        return parms;
     }
 }

@@ -614,7 +614,7 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
             } else {
                 // Populate the candle series.
                 StrategyData strategyData = tradestrategy.getStrategyData();
-               // StrategyDataUI strategyDataUI = new StrategyDataUI(tradestrategy.getStrategy(), new CandleDatasetUI());
+                // StrategyDataUI strategyDataUI = new StrategyDataUI(tradestrategy.getStrategy(), new CandleDatasetUI());
                 CandleDatasetUI.populateSeries(strategyData, candles);
                 candles.clear();
                 populateIndicatorCandleSeries(tradestrategy, startDate, endDate);
@@ -965,7 +965,7 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
          * @param tradestrategy Tradestrategy
          */
         ChartPanel(Tradestrategy tradestrategy) {
-            
+
             this.tradestrategy = tradestrategy;
             this.setLayout(new BorderLayout());
 

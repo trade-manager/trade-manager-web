@@ -57,6 +57,7 @@ import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.Vector;
 
 /**
  * A list of (RegularTimePeriod, open, high, low, close) data items.

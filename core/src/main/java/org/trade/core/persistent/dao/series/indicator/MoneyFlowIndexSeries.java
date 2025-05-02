@@ -48,6 +48,7 @@ import org.trade.core.util.time.RegularTimePeriod;
 import java.io.Serial;
 import java.math.BigDecimal;
 import java.util.LinkedList;
+import java.util.Vector;
 
 /**
  * The Money Flow Index (MFI) is an oscillator that uses both price and volume
@@ -400,4 +401,11 @@ public class MoneyFlowIndexSeries extends IndicatorSeries {
         }
     }
 
+    @Transient
+    public Vector<Object> getParam() {
+
+        Vector<Object> parms = super.getParam();
+        parms.add(getLength());
+        return parms;
+    }
 }

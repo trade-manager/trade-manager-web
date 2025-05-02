@@ -37,6 +37,7 @@ package org.trade.core.persistent.dao.series.indicator;
 
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Transient;
 import org.trade.core.persistent.PersistentModelException;
 import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.series.indicator.vwap.VwapItem;
@@ -44,6 +45,7 @@ import org.trade.core.util.time.RegularTimePeriod;
 
 import java.io.Serial;
 import java.math.BigDecimal;
+import java.util.Vector;
 
 /**
  * Volume-Weighted Average Price (VWAP) is exactly what it sounds like: the
@@ -196,5 +198,11 @@ public class VwapSeries extends IndicatorSeries {
      */
     public Object clone() throws CloneNotSupportedException {
         return super.clone();
+    }
+
+    @Transient
+    public Vector<Object> getParam() {
+
+        return super.getParam();
     }
 }

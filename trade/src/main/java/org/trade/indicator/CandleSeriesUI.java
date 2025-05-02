@@ -142,6 +142,7 @@ public class CandleSeriesUI extends IndicatorSeriesUI {
         this.startTime = startTime;
         this.endTime = endTime;
     }
+
     /**
      * Creates a new empty series. By default, items added to the series will be
      * sorted into ascending order by period, and duplicate periods will not be

@@ -49,6 +49,7 @@ import org.trade.core.valuetype.CalculationType;
 import java.io.Serial;
 import java.math.BigDecimal;
 import java.util.LinkedList;
+import java.util.Vector;
 
 /**
  * A list of (RegularTimePeriod, open, high, low, close) data items.
@@ -112,10 +113,11 @@ public class MovingAverageSeries extends IndicatorSeries {
      * @param length         Integer
      */
     public MovingAverageSeries(Strategy strategy, String name, String type, String description, Boolean displayOnChart,
-                               Integer chartRGBColor, Boolean subChart, String MAType, Integer length) {
+                               Integer chartRGBColor, Boolean subChart, String MAType, Integer length, Integer priceSource) {
         super(strategy, name, type, description, displayOnChart, chartRGBColor, subChart);
         this.MAType = MAType;
         this.length = length;
+        this.priceSource = priceSource;
     }
 
     public MovingAverageSeries() {
@@ -360,6 +362,16 @@ public class MovingAverageSeries extends IndicatorSeries {
             MovingAverageItem dataItem = (MovingAverageItem) this.getDataItem(i);
             _log.debug("Type: {} Time: {} Value: {}", this.getType(), dataItem.getPeriod().getStart(), dataItem.getMovingAverage());
         }
+    }
+
+    @Transient
+    public Vector<Object> getParam() {
+
+        Vector<Object> parms = super.getParam();
+        parms.add(getMAType());
+        parms.add(getLength());
+        parms.add(getPriceSource());
+        return parms;
     }
 
     /**

@@ -47,6 +47,7 @@ import org.trade.core.util.time.RegularTimePeriod;
 
 import java.io.Serial;
 import java.math.BigDecimal;
+import java.util.Vector;
 
 /**
  * Typically, the Average True Range (ATR) is based on 14 periods and can be
@@ -344,5 +345,13 @@ public class AverageTrueRangeSeries extends IndicatorSeries {
             AverageTrueRangeItem dataItem = (AverageTrueRangeItem) this.getDataItem(i);
             _log.debug("Type: {} Time: {} Value: {}", this.getType(), dataItem.getPeriod().getStart(), dataItem.getAverageTrueRange());
         }
+    }
+
+    @Transient
+    public Vector<Object> getParam() {
+
+        Vector<Object> parms = super.getParam();
+        parms.add(getLength());
+        return parms;
     }
 }

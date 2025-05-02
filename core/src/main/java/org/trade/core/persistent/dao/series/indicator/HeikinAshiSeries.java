@@ -37,6 +37,7 @@ package org.trade.core.persistent.dao.series.indicator;
 
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Transient;
 import org.trade.core.persistent.PersistentModelException;
 import org.trade.core.persistent.dao.Contract;
 import org.trade.core.persistent.dao.Strategy;
@@ -46,6 +47,7 @@ import org.trade.core.util.time.RegularTimePeriod;
 
 import java.io.Serial;
 import java.time.ZonedDateTime;
+import java.util.Vector;
 
 /**
  * Heikin-Ashi Candlesticks are an offshoot from Japanese candlesticks.
@@ -284,5 +286,11 @@ public class HeikinAshiSeries extends IndicatorSeries {
             HeikinAshiItem dataItem = (HeikinAshiItem) this.getDataItem(i);
             _log.debug("Type: {} Time: {} Open: {} Close: {} High: {} Low: {}", this.getType(), dataItem.getPeriod().getStart(), dataItem.getOpen(), dataItem.getClose(), dataItem.getHigh(), dataItem.getLow());
         }
+    }
+
+    @Transient
+    public Vector<Object> getParam() {
+
+        return super.getParam();
     }
 }

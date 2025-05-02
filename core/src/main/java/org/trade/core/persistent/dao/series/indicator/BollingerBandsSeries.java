@@ -48,6 +48,7 @@ import org.trade.core.util.time.RegularTimePeriod;
 import java.io.Serial;
 import java.math.BigDecimal;
 import java.util.LinkedList;
+import java.util.Vector;
 
 /**
  * Developed by John Bollinger, Bollinger Bands are volatility bands placed
@@ -391,5 +392,14 @@ public class BollingerBandsSeries extends IndicatorSeries {
             BollingerBandsItem dataItem = (BollingerBandsItem) this.getDataItem(i);
             _log.debug("Type: {} Time: {} Value: {}", this.getType(), dataItem.getPeriod().getStart(), dataItem.getBollingerBands());
         }
+    }
+
+    @Transient
+    public Vector<Object> getParam() {
+
+        Vector<Object> parms = super.getParam();
+        parms.add(getNumberOfSTD());
+        parms.add(getLength());
+        return parms;
     }
 }

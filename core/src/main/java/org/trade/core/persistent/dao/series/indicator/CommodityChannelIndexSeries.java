@@ -48,6 +48,7 @@ import org.trade.core.util.time.RegularTimePeriod;
 import java.io.Serial;
 import java.math.BigDecimal;
 import java.util.LinkedList;
+import java.util.Vector;
 
 /**
  * Developed by Donald Lambert and featured in Commodities magazine in 1980, the
@@ -372,5 +373,13 @@ public class CommodityChannelIndexSeries extends IndicatorSeries {
         if (sumMeanDeviation == 0)
             return 0;
         return (typicalPriceValues.getFirst() - typicalPriceSMA) / (0.015 * (sumMeanDeviation / getLength()));
+    }
+
+    @Transient
+    public Vector<Object> getParam() {
+
+        Vector<Object> parms = super.getParam();
+        parms.add(getLength());
+        return parms;
     }
 }
