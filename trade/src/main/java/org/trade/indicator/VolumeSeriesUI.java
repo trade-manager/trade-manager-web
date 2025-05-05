@@ -132,9 +132,13 @@ public class VolumeSeriesUI extends IndicatorSeriesUI {
      * @param dataItem VolumeItem
      */
     public void add(VolumeItemUI dataItem, boolean notify) {
+
         if (!this.isEmpty()) {
+
             VolumeItemUI item0 = (VolumeItemUI) this.getDataItem(0);
+
             if (!dataItem.getPeriod().getClass().equals(item0.getPeriod().getClass())) {
+
                 throw new IllegalArgumentException("Can't mix RegularTimePeriod class types.");
             }
         }

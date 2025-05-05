@@ -347,6 +347,16 @@ public class BollingerBandsSeriesUI extends IndicatorSeriesUI {
     }
 
     /**
+     * Method printSeries.
+     */
+    public void printSeries() {
+        for (int i = 0; i < this.getItemCount(); i++) {
+            BollingerBandsItemUI dataItem = (BollingerBandsItemUI) this.getDataItem(i);
+            _log.debug("Type: {} Time: {} Value: {}", this.getType(), dataItem.getPeriod().getStart(), dataItem.getBollingerBands());
+        }
+    }
+
+    /**
      * Method calculateMA.
      *
      * @param numberOfSTD BigDecimal
@@ -372,15 +382,5 @@ public class BollingerBandsSeriesUI extends IndicatorSeriesUI {
         for (Double i : a)
             sumTotal += Math.pow((i - mean), 2);
         return Math.sqrt(sumTotal / (a.size() - 1)); // sample
-    }
-
-    /**
-     * Method printSeries.
-     */
-    public void printSeries() {
-        for (int i = 0; i < this.getItemCount(); i++) {
-            BollingerBandsItemUI dataItem = (BollingerBandsItemUI) this.getDataItem(i);
-            _log.debug("Type: {} Time: {} Value: {}", this.getType(), dataItem.getPeriod().getStart(), dataItem.getBollingerBands());
-        }
     }
 }

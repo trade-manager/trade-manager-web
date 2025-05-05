@@ -122,17 +122,12 @@ public class CandleSeries extends IndicatorSeries {
      * @param subChart       Boolean
      * @param contract       Contract
      * @param barSize        Integer
-     * @param startTime      ZonedDateTime
-     * @param endTime        ZonedDateTime
      */
     public CandleSeries(Strategy strategy, String name, String type, String description, Boolean displayOnChart,
-                        Integer chartRGBColor, Boolean subChart, Contract contract, Integer barSize, ZonedDateTime startTime,
-                        ZonedDateTime endTime) {
+                        Integer chartRGBColor, Boolean subChart, Contract contract, Integer barSize) {
         super(strategy, name, type, description, displayOnChart, chartRGBColor, subChart);
         this.contract = contract;
         this.barSize = barSize;
-        this.startTime = startTime;
-        this.endTime = endTime;
         this.symbol = contract.getSymbol();
         this.currency = contract.getCurrency();
         this.exchange = contract.getExchange();
@@ -893,8 +888,6 @@ public class CandleSeries extends IndicatorSeries {
         Vector<Object> parms = super.getParam(type);
         parms.add(this.getContract());
         parms.add(this.getBarSize());
-        parms.add(this.getStartTime());
-        parms.add(this.getEndTime());
         return parms;
     }
 

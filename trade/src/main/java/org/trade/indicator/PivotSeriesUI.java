@@ -292,6 +292,7 @@ public class PivotSeriesUI extends IndicatorSeriesUI {
         if ((startBar + 1) >= this.getBars()) {
             // Get the x,y pairs
             for (int i = startBar; i > (startBar - this.getBars()); i--) {
+
                 CandleItemUI candleItem = (CandleItemUI) source.getDataItem(i);
                 // TODO next line just for debugging
                 // if (((BarPeriod) candle.getPeriod()).getDaySerialIndex() ==

@@ -179,6 +179,30 @@ public class CandleSeriesUI extends IndicatorSeriesUI {
     }
 
     /**
+     * Constructor for CandleSeries.
+     *
+     * @param strategy       Strategy
+     * @param name           String
+     * @param type           String
+     * @param description    String
+     * @param displayOnChart Boolean
+     * @param chartRGBColor  Integer
+     * @param subChart       Boolean
+     * @param contract       Contract
+     * @param barSize        Integer
+     */
+    public CandleSeriesUI(Strategy strategy, String name, String type, String description, Boolean displayOnChart,
+                        Integer chartRGBColor, Boolean subChart, Contract contract, Integer barSize) {
+        super(strategy, name, type, description, displayOnChart, chartRGBColor, subChart);
+        this.contract = contract;
+        this.barSize = barSize;
+        this.symbol = contract.getSymbol();
+        this.currency = contract.getCurrency();
+        this.exchange = contract.getExchange();
+        this.secType = contract.getSecType();
+    }
+
+    /**
      * Method createSeries.
      *
      * @param source      CandleDataset
