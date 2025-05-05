@@ -547,9 +547,9 @@ public class StochasticOscillatorSeries extends IndicatorSeries {
     }
 
     @Transient
-    public Vector<Object> getParam() {
+    public Vector<Object> getParam(String type) {
 
-        Vector<Object> parms = super.getParam();
+        Vector<Object> parms = super.getParam(type);
         parms.add(getLength());
         parms.add(getKSmoothing());
         parms.add(getPercentD());

@@ -289,8 +289,8 @@ public class HeikinAshiSeries extends IndicatorSeries {
     }
 
     @Transient
-    public Vector<Object> getParam() {
+    public Vector<Object> getParam(String type) {
 
-        return super.getParam();
+        return super.getParam(type);
     }
 }

@@ -89,9 +89,8 @@ public class StrategyDataUI extends StrategyData {
                  * For each indicator create a series that is a clone for this
                  * trade strategy.
                  */
-
                 IndicatorSeriesUI series = (IndicatorSeriesUI) ClassFactory
-                        .getCreateClass(IIndicatorDatasetUI.PACKAGE + indicator.getType() + "UI", indicator.getParam(), this);
+                        .getCreateClass(IIndicatorDatasetUI.PACKAGE + indicator.getType() + "UI", indicator.getParam(indicator.getType()), this);
 
                 series.setKey(series.getName());
                 series.createSeries(candleDataset, 0);
@@ -115,7 +114,7 @@ public class StrategyDataUI extends StrategyData {
 
             } catch (Exception ex) {
                 throw new IllegalArgumentException(
-                        "Could not construct StrategyData Object. Either indicator was not found or was not cloneable Msg: "
+                        "Could not construct StrategyDataUI Object. Either indicator was not found or was not cloneable Msg: "
                                 + ex.getMessage());
             }
         }

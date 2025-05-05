@@ -92,6 +92,7 @@ public class StrategyData extends Worker {
         candleDataset.addSeries(CandleDataset.createSeries(baseCandleDataset, 0, getBaseCandleSeries().getContract(),
                 getBaseCandleSeries().getBarSize(), getBaseCandleSeries().getStartTime(),
                 getBaseCandleSeries().getEndTime()));
+
         for (IndicatorSeries indicator : strategy.getIndicatorSeries()) {
 
             try {
@@ -103,6 +104,7 @@ public class StrategyData extends Worker {
                 series.setKey(series.getName());
                 series.createSeries(candleDataset, 0);
                 IIndicatorDataset indicatorDataset = this.getIndicatorByType(indicator.getType());
+
                 if (null == indicatorDataset) {
                     /*
                      * Data-set and Series names should have the same name with

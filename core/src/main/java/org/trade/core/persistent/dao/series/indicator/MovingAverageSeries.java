@@ -365,9 +365,9 @@ public class MovingAverageSeries extends IndicatorSeries {
     }
 
     @Transient
-    public Vector<Object> getParam() {
+    public Vector<Object> getParam(String type) {
 
-        Vector<Object> parms = super.getParam();
+        Vector<Object> parms = super.getParam(type);
         parms.add(getMAType());
         parms.add(getLength());
         parms.add(getPriceSource());

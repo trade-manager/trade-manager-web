@@ -101,8 +101,11 @@ public class ConfigurationPanel extends BasePanel {
 
     public ConfigurationPanel(IPersistentModel tradePersistentModel) {
         try {
-            if (null != getMenu())
+
+            if (null != getMenu()) {
                 getMenu().addMessageListener(this);
+            }
+
             this.setLayout(new BorderLayout());
             /*
              * Initialize the ValueType decode tables. This caused the tables to
@@ -119,8 +122,11 @@ public class ConfigurationPanel extends BasePanel {
             DecodeComboBoxRenderer refTableRenderer = new DecodeComboBoxRenderer();
             refTableEditorComboBox.setRenderer(refTableRenderer);
             refTableEditorComboBox.addItemListener(e -> {
+
                 if (e.getStateChange() == ItemEvent.SELECTED) {
+
                     if (null != m_tableChild) {
+
                         m_jScrollPane1.getViewport().remove(m_tableChild);
                     }
                     addReferenceTablePanel(((ReferenceTable) e.getItem()).getCode());

@@ -45,6 +45,7 @@ public class CodeAttributePanel extends JPanel {
 
         int i = 0;
         for (CodeAttribute codeAttribute : this.codeType.getCodeAttribute()) {
+
             JLabel jLabel = new JLabel(codeAttribute.getName() + ": ");
             jLabel.setToolTipText(codeAttribute.getDescription());
             jLabel.setHorizontalTextPosition(SwingConstants.RIGHT);

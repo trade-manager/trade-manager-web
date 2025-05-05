@@ -107,10 +107,11 @@ public class MovingAverageSeriesUI extends IndicatorSeriesUI {
      * @param length         Integer
      */
     public MovingAverageSeriesUI(Strategy strategy, String name, String type, String description, Boolean displayOnChart,
-                                 Integer chartRGBColor, Boolean subChart, String MAType, Integer length) {
+                                 Integer chartRGBColor, Boolean subChart, String MAType, Integer length, Integer priceSource) {
         super(strategy, name, type, description, displayOnChart, chartRGBColor, subChart);
         this.MAType = MAType;
         this.length = length;
+        this.priceSource = priceSource;
     }
 
     public MovingAverageSeriesUI() {

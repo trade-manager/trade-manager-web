@@ -464,12 +464,19 @@ public abstract class IndicatorSeries extends ComparableObjectSeries implements 
     public abstract void printSeries();
 
     @Transient
-    public Vector<Object> getParam() {
+    public Vector<Object> getParam(String type) {
 
         Vector<Object> parms = new Vector<>();
         parms.add(strategy);
         parms.add(this.getName());
-        parms.add(this.getType());
+
+        if (null == type) {
+
+            parms.add(this.getType());
+        } else {
+
+            parms.add(type);
+        }
         parms.add(this.getDescription());
         parms.add(this.getDisplaySeries());
         parms.add(this.getSeriesRGBColor());

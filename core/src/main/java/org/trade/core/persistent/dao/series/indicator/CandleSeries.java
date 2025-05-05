@@ -111,6 +111,36 @@ public class CandleSeries extends IndicatorSeries {
     }
 
     /**
+     * Constructor for CandleSeries.
+     *
+     * @param strategy       Strategy
+     * @param name           String
+     * @param type           String
+     * @param description    String
+     * @param displayOnChart Boolean
+     * @param chartRGBColor  Integer
+     * @param subChart       Boolean
+     * @param contract       Contract
+     * @param barSize        Integer
+     * @param startTime      ZonedDateTime
+     * @param endTime        ZonedDateTime
+     */
+    public CandleSeries(Strategy strategy, String name, String type, String description, Boolean displayOnChart,
+                        Integer chartRGBColor, Boolean subChart, Contract contract, Integer barSize, ZonedDateTime startTime,
+                        ZonedDateTime endTime) {
+        super(strategy, name, type, description, displayOnChart, chartRGBColor, subChart);
+        this.contract = contract;
+        this.barSize = barSize;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.symbol = contract.getSymbol();
+        this.currency = contract.getCurrency();
+        this.exchange = contract.getExchange();
+        this.secType = contract.getSecType();
+    }
+
+
+    /**
      * Creates a new empty series. By default, items added to the series will be
      * sorted into ascending order by period, and duplicate periods will not be
      * allowed.
@@ -855,6 +885,17 @@ public class CandleSeries extends IndicatorSeries {
     public void printCandleItem(CandleItem dataItem) {
 
         _log.debug("Symbol: {} Start Time: {} Open: {} High: {} Low: {} Close: {} Vwap: {} Volume: {} Count: {} LastUpdateDate: {}", this.getSymbol(), dataItem.getPeriod().getStart(), dataItem.getOpen(), dataItem.getHigh(), dataItem.getLow(), dataItem.getClose(), dataItem.getVwap(), dataItem.getVolume(), dataItem.getCount(), dataItem.getLastUpdateDate());
+    }
+
+    @Transient
+    public Vector<Object> getParam(String type) {
+
+        Vector<Object> parms = super.getParam(type);
+        parms.add(this.getContract());
+        parms.add(this.getBarSize());
+        parms.add(this.getStartTime());
+        parms.add(this.getEndTime());
+        return parms;
     }
 
     /**

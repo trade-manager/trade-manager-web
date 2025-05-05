@@ -69,14 +69,14 @@ INSERT INTO codetype (id, name, type, description, version) VALUES(11,'Vostro','
 COMMIT//
 
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, id_code_type, version) VALUES(1,'Length','The length of the Moving Average','10','java.lang.Integer',null, 1,0) //
-INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, id_code_type, version) VALUES(2,'MAType','Type of the Moving Average','LINEAR','java.lang.String', 'org.trade.dictionary.valuetype.CalculationType',1,0) //
+INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, id_code_type, version) VALUES(2,'MAType','Type of the Moving Average','LINEAR','java.lang.String', 'org.trade.core.valuetype.CalculationType',1,0) //
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, id_code_type, version) VALUES(3,'Side','Use candle direct for V','false','java.lang.Boolean','org.trade.core.valuetype.YesNo', 2,0) //
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, id_code_type, version) VALUES(4,'Quadratic','Use quadratic calc for pivot','true','java.lang.Boolean','org.trade.core.valuetype.YesNo', 2,0) //
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, id_code_type, version) VALUES(5,'Bars','Number of bars to use for pivot 5 or 7','5','java.lang.Integer', null,2,0) //
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, id_code_type, version) VALUES(6,'Symbol','The contract symbol','SPY','java.lang.String', null,3,0)//
-INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, id_code_type, version) VALUES(7,'Currency','The contract currency','USD','java.lang.String', 'org.trade.dictionary.valuetype.Currency',3,0)//
-INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, id_code_type, version) VALUES(8,'Exchange','The contract exchange','SMART','java.lang.String', 'org.trade.dictionary.valuetype.Exchange',3,0)//
-INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, id_code_type, version) VALUES(9,'SECType','The contract SECType','STK','java.lang.String', 'org.trade.dictionary.valuetype.SECType',3,0)//
+INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, id_code_type, version) VALUES(7,'Currency','The contract currency','USD','java.lang.String', 'org.trade.core.valuetype.Currency',3,0)//
+INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, id_code_type, version) VALUES(8,'Exchange','The contract exchange','SMART','java.lang.String', 'org.trade.core.valuetype.Exchange',3,0)//
+INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, id_code_type, version) VALUES(9,'SECType','The contract SECType','STK','java.lang.String', 'org.trade.core.valuetype.SECType',3,0)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, id_code_type, version) VALUES(10,'Length','The length of the Average True Range','14','java.lang.Integer',null, 4,0) //
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, id_code_type, version) VALUES(11,'RollingCandle','Use rolling candle values','false','java.lang.Boolean','org.trade.core.valuetype.YesNo', 4,0) //
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, id_code_type, version) VALUES(12,'Length','The length of the Relative Strength Index','14','java.lang.Integer',null, 5,0) //
@@ -96,11 +96,11 @@ INSERT INTO codeattribute (id, name, description, default_value, class_name, cla
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, id_code_type, version) VALUES(26,'Signal Smoothing','The EMA length of the MACD','9','java.lang.Integer',null, 10,0) //
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, id_code_type, version) VALUES(27,'Simple Smoothing MA','Use SMA for signal line smoothing','true','java.lang.Boolean','org.trade.core.valuetype.YesNo', 10,0) //
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, id_code_type, version) VALUES(28,'Length','The length of the Moving Average','100','java.lang.Integer',null, 11,0) //
-INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, id_code_type, version) VALUES(29,'MAType','Type of the Moving Average','WEIGHTED','java.lang.String', 'org.trade.dictionary.valuetype.CalculationType',11,0) //
+INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, id_code_type, version) VALUES(29,'MAType','Type of the Moving Average','WEIGHTED','java.lang.String', 'org.trade.core.valuetype.CalculationType',11,0) //
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, id_code_type, version) VALUES(30,'Vostro Period','The number of periods for Vostro calc','5','java.lang.Integer',null, 11,0) //
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, id_code_type, version) VALUES(31,'Vostro Range','The range +/- to indicate a Vostro','8.0','java.math.BigDecimal',null, 11,0) //
-INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, id_code_type, version) VALUES(32,'Price Source','Price source used for calculations','5','java.lang.Integer', 'org.trade.dictionary.valuetype.PriceSource',11,0)//
-INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, id_code_type, version) VALUES(33,'Price Source','Price source used for calculations','1','java.lang.Integer', 'org.trade.dictionary.valuetype.PriceSource',1,0)//
+INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, id_code_type, version) VALUES(32,'Price Source','Price source used for calculations','5','java.lang.Integer', 'org.trade.core.valuetype.PriceSource',11,0)//
+INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, id_code_type, version) VALUES(33,'Price Source','Price source used for calculations','1','java.lang.Integer', 'org.trade.core.valuetype.PriceSource',1,0)//
 
 COMMIT//
 
