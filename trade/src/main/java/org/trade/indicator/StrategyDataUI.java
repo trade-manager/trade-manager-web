@@ -43,8 +43,8 @@ import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.Tradestrategy;
 import org.trade.core.persistent.dao.Tradingday;
 import org.trade.core.persistent.dao.series.indicator.IndicatorSeries;
-import org.trade.core.persistent.dao.series.indicator.StrategyData;
 import org.trade.core.persistent.dao.series.indicator.candle.CandlePeriod;
+import org.trade.core.util.Worker;
 import org.trade.core.util.time.RegularTimePeriod;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.indicator.candle.CandleItemUI;
@@ -57,7 +57,7 @@ import java.util.Vector;
 /**
  *
  */
-public class StrategyDataUI extends StrategyData {
+public class StrategyDataUI extends Worker {
 
     private final static Logger _log = LoggerFactory.getLogger(StrategyDataUI.class);
 
@@ -94,7 +94,7 @@ public class StrategyDataUI extends StrategyData {
 
                 series.setKey(series.getName());
                 series.createSeries(candleDataset, 0);
-                IIndicatorDatasetUI indicatorDataset = this.getIndicatorByTypeUI(indicator.getType() + "UI");
+                IIndicatorDatasetUI indicatorDataset = this.getIndicatorByType(indicator.getType() + "UI");
 
                 if (null == indicatorDataset) {
                     /*
@@ -221,12 +221,12 @@ public class StrategyDataUI extends StrategyData {
 
         for (int i = 0; i < getBaseCandleSeries().getItemCount(); i++) {
 
-            CandleItemUI candelItem = (CandleItemUI) getBaseCandleSeriesUI().getDataItem(i);
-            boolean newBar = this.getCandleDatasetUI().getSeries(0).buildCandle(candelItem.getPeriod().getStart(),
-                    candelItem.getOpen(), candelItem.getHigh(), candelItem.getLow(), candelItem.getClose(),
-                    candelItem.getVolume(), candelItem.getVwap(), candelItem.getCount(),
+            CandleItemUI candleItemUI = (CandleItemUI) getBaseCandleSeries().getDataItem(i);
+            boolean newBar = this.getCandleDataset().getSeries(0).buildCandle(candleItemUI.getPeriod().getStart(),
+                    candleItemUI.getOpen(), candleItemUI.getHigh(), candleItemUI.getLow(), candleItemUI.getClose(),
+                    candleItemUI.getVolume(), candleItemUI.getVwap(), candleItemUI.getCount(),
                     this.getCandleDataset().getSeries(0).getBarSize() / getBaseCandleSeries().getBarSize(), null);
-            updateIndicators(this.getCandleDatasetUI(), newBar);
+            updateIndicators(this.getCandleDataset(), newBar);
         }
         this.getCandleDataset().getSeries(0).fireSeriesChanged();
     }
@@ -251,14 +251,14 @@ public class StrategyDataUI extends StrategyData {
     public boolean buildCandle(ZonedDateTime time, double open, double high, double low, double close, long volume,
                                double vwap, int tradeCount, int rollupInterval, ZonedDateTime lastUpdateDate) throws PersistentModelException {
 
-        boolean newBar = this.getBaseCandleSeriesUI().buildCandle(time, open, high, low, close, volume, vwap, tradeCount,
+        boolean newBar = this.getBaseCandleSeries().buildCandle(time, open, high, low, close, volume, vwap, tradeCount,
                 rollupInterval, lastUpdateDate);
 
         this.currentBaseCandleCount = this.getBaseCandleSeries().getItemCount() - 1;
 
-        CandleItemUI candleItem = (CandleItemUI) this.getBaseCandleSeriesUI().getDataItem(this.currentBaseCandleCount);
-        this.getBaseCandleSeriesUI().updatePercentChanged(candleItem);
-        updateIndicators(this.getBaseCandleDatasetUI(), newBar);
+        CandleItemUI candleItem = (CandleItemUI) this.getBaseCandleSeries().getDataItem(this.currentBaseCandleCount);
+        this.getBaseCandleSeries().updatePercentChanged(candleItem);
+        updateIndicators(this.getBaseCandleDataset(), newBar);
         this.getBaseCandleSeries().fireSeriesChanged();
         /*
          * If thread Indicators the updates to all indicators and the subsequent
@@ -276,7 +276,7 @@ public class StrategyDataUI extends StrategyData {
                 lockStrategyWorker.notifyAll();
             }
             // _log.info("buildCandle symbol: "
-            // + this.getBaseCandleSeries().getSymbol() + " Count: "
+            // + this.getBaseCandleSeriesUI().getSymbol() + " Count: "
             // + this.currentCandleCount);
         } else {
 
@@ -320,8 +320,11 @@ public class StrategyDataUI extends StrategyData {
     public void createIndicators(CandleDatasetUI source) {
 
         for (IIndicatorDatasetUI indicator : indicators) {
+
             if (!IndicatorSeriesUI.CandleSeries.equals(indicator.getType(0))) {
+
                 for (int x = 0; x < indicator.getSeriesCount(); x++) {
+
                     IndicatorSeriesUI series = indicator.getSeries(x);
                     /*
                      * CandleSeries are only updated via the API i.e. these are
@@ -334,8 +337,12 @@ public class StrategyDataUI extends StrategyData {
     }
 
     public synchronized void clearBaseCandleDataset() {
-        if (this.isRunning())
+
+        if (this.isRunning()) {
+
             this.cancel();
+        }
+
         this.currentBaseCandleCount = -1;
         this.lastBaseCandleProcessed = this.currentBaseCandleCount;
         clearChartDatasets();
@@ -343,6 +350,7 @@ public class StrategyDataUI extends StrategyData {
     }
 
     public void clearChartDatasets() {
+
         for (IIndicatorDatasetUI indicator : indicators) {
             if (!IndicatorSeriesUI.CandleSeries.equals(indicator.getType(0))) {
                 indicator.clear();
@@ -356,7 +364,7 @@ public class StrategyDataUI extends StrategyData {
      *
      * @return List<IIndicatorDatasetUI>
      */
-    public List<IIndicatorDatasetUI> getIndicatorsUI() {
+    public List<IIndicatorDatasetUI> getIndicators() {
         return indicators;
     }
 
@@ -366,9 +374,12 @@ public class StrategyDataUI extends StrategyData {
      * @param type String
      * @return IIndicatorDatasetUI
      */
-    public IIndicatorDatasetUI getIndicatorByTypeUI(String type) {
+    public IIndicatorDatasetUI getIndicatorByType(String type) {
+
         for (IIndicatorDatasetUI series : indicators) {
+
             if (series.getType(0).equals(type)) {
+
                 return series;
             }
         }
@@ -380,7 +391,7 @@ public class StrategyDataUI extends StrategyData {
      *
      * @return CandleDataset
      */
-    public CandleDatasetUI getBaseCandleDatasetUI() {
+    public CandleDatasetUI getBaseCandleDataset() {
         return baseCandleDataset;
     }
 
@@ -389,7 +400,7 @@ public class StrategyDataUI extends StrategyData {
      *
      * @return CandleSeries
      */
-    public CandleSeriesUI getBaseCandleSeriesUI() {
+    public CandleSeriesUI getBaseCandleSeries() {
         return baseCandleDataset.getSeries(0);
     }
 
@@ -398,7 +409,7 @@ public class StrategyDataUI extends StrategyData {
      *
      * @return CandleDataset
      */
-    public CandleDatasetUI getCandleDatasetUI() {
+    public CandleDatasetUI getCandleDataset() {
         return candleDataset;
     }
 
@@ -483,11 +494,11 @@ public class StrategyDataUI extends StrategyData {
         this.getBaseCandleSeries().printSeries();
 
         for (int i = 0; i < this.getCandleDataset().getSeriesCount(); i++) {
-            IndicatorSeriesUI series = this.getCandleDatasetUI().getSeries(i);
+            IndicatorSeriesUI series = this.getCandleDataset().getSeries(i);
             series.printSeries();
         }
 
-        for (IIndicatorDatasetUI indicatorDataset : this.getIndicatorsUI()) {
+        for (IIndicatorDatasetUI indicatorDataset : this.getIndicators()) {
             for (int i = 0; i < indicatorDataset.getSeriesCount(); i++) {
                 IndicatorSeriesUI series = indicatorDataset.getSeries(i);
                 series.printSeries();

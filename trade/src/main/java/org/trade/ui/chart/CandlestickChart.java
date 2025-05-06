@@ -226,11 +226,11 @@ public class CandlestickChart extends JPanel implements SeriesChangeListener {
             }
         });
         this.add(chartPanel, null);
-        this.strategyData.getCandleDatasetUI().getSeries(0).addChangeListener(this);
+        this.strategyData.getCandleDataset().getSeries(0).addChangeListener(this);
     }
 
     public void removeChart() {
-        this.strategyData.getCandleDatasetUI().getSeries(0).removeChangeListener(this);
+        this.strategyData.getCandleDataset().getSeries(0).removeChangeListener(this);
         this.chart.getXYPlot().clearAnnotations();
         this.chart.getXYPlot().clearDomainAxes();
         this.chart.getXYPlot().clearDomainMarkers();
@@ -263,8 +263,8 @@ public class CandlestickChart extends JPanel implements SeriesChangeListener {
         NumberAxis priceAxis = new NumberAxis("Price");
         priceAxis.setAutoRange(true);
         priceAxis.setAutoRangeIncludesZero(false);
-        XYPlot pricePlot = new XYPlot(strategyData.getCandleDatasetUI(), dateAxis, priceAxis,
-                strategyData.getCandleDatasetUI().getRenderer());
+        XYPlot pricePlot = new XYPlot(strategyData.getCandleDataset(), dateAxis, priceAxis,
+                strategyData.getCandleDataset().getRenderer());
         pricePlot.setOrientation(PlotOrientation.VERTICAL);
         pricePlot.setDomainPannable(true);
         pricePlot.setRangePannable(true);
@@ -290,10 +290,10 @@ public class CandlestickChart extends JPanel implements SeriesChangeListener {
         ZonedDateTime endDate = tradingday.getClose();
 
         if (!strategyData.getCandleDataset().getSeries(0).isEmpty()) {
-            startDate = ((CandleItemUI) strategyData.getCandleDatasetUI().getSeries(0).getDataItem(0)).getPeriod()
+            startDate = ((CandleItemUI) strategyData.getCandleDataset().getSeries(0).getDataItem(0)).getPeriod()
                     .getStart();
             startDate = TradingCalendar.getDateAtTime(startDate, tradingday.getOpen());
-            endDate = ((CandleItemUI) strategyData.getCandleDatasetUI().getSeries(0)
+            endDate = ((CandleItemUI) strategyData.getCandleDataset().getSeries(0)
                     .getDataItem(strategyData.getCandleDataset().getSeries(0).getItemCount() - 1)).getPeriod()
                     .getStart();
             endDate = TradingCalendar.getDateAtTime(endDate, tradingday.getClose());
@@ -316,12 +316,12 @@ public class CandlestickChart extends JPanel implements SeriesChangeListener {
          * one in the list. The main chart must be plotted first.
          */
         List<IIndicatorDatasetUI> indicators = new ArrayList<>(0);
-        for (IIndicatorDatasetUI item : strategyData.getIndicatorsUI()) {
+        for (IIndicatorDatasetUI item : strategyData.getIndicators()) {
             if (IndicatorSeriesUI.CandleSeries.equals(item.getType(0))) {
                 indicators.add(item);
             }
         }
-        for (IIndicatorDatasetUI item : strategyData.getIndicatorsUI()) {
+        for (IIndicatorDatasetUI item : strategyData.getIndicators()) {
             if (!IndicatorSeriesUI.CandleSeries.equals(item.getType(0))) {
                 indicators.add(item);
             }

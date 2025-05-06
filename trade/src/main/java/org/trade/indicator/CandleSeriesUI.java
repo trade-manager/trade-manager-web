@@ -426,13 +426,17 @@ public class CandleSeriesUI extends IndicatorSeriesUI {
     /**
      * Adds a data item to the series.
      *
-     * @param candleItem CandleItem
+     * @param candleItem CandleItemUI
      * @param notify     boolean
      */
     public void add(CandleItemUI candleItem, boolean notify) {
+
         if (!this.isEmpty()) {
+
             CandleItemUI item0 = (CandleItemUI) this.getDataItem(0);
+
             if (!candleItem.getPeriod().getClass().equals(item0.getPeriod().getClass())) {
+
                 throw new IllegalArgumentException("Can't mix RegularTimePeriod class types.");
             }
         }
@@ -662,42 +666,6 @@ public class CandleSeriesUI extends IndicatorSeriesUI {
              */
             if (newBar) {
                 this.add(candleItem, true);
-            } else {
-                CandleItemUI dataItem = (CandleItemUI) this.getDataItem(this.getItemCount() - 1);
-                this.update(dataItem.getPeriod(), dataItem.getCandle());
-            }
-        }
-    }
-
-    /**
-     * Method updateSeries.
-     *
-     * @param source CandleSeries
-     * @param skip   int
-     * @param newBar boolean
-     */
-    public void updateSeries(CandleSeries source, int skip, boolean newBar) {
-
-        if (source == null) {
-            throw new IllegalArgumentException("Null source (CandleSeries).");
-        }
-        /*
-         * Do not want to add the new bar.
-         */
-        if (source.getItemCount() > skip) {
-
-            // get the current data item...
-            CandleItem candleItem = (CandleItem) source.getDataItem(skip);
-            CandleItemUI candleItemUI = new CandleItemUI(candleItem.getCandle().getContract(), candleItem.getCandle().getTradingday(), candleItem.getPeriod(), candleItem.getOpen(), candleItem.getHigh(),
-                    candleItem.getLow(), candleItem.getClose(), candleItem.getVolume(), candleItem.getVwap(), candleItem.getCount(), candleItem.getLastUpdateDate());
-            /*
-             * If the item does not exist in the series then this is a new time
-             * period and so we need to remove the last in the set and add the
-             * new periods values. Otherwise, we just update the last value in
-             * the set.
-             */
-            if (newBar) {
-                this.add(candleItemUI, true);
             } else {
                 CandleItemUI dataItem = (CandleItemUI) this.getDataItem(this.getItemCount() - 1);
                 this.update(dataItem.getPeriod(), dataItem.getCandle());
