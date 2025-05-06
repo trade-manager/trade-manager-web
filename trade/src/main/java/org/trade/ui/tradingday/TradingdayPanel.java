@@ -431,7 +431,9 @@ public class TradingdayPanel extends BasePanel {
      */
 
     public void doSearch() {
+        
         try {
+
             this.clearStatusBarMessage();
 
             ZonedDateTime startDate = TradingCalendar
@@ -456,18 +458,23 @@ public class TradingdayPanel extends BasePanel {
             Tradingday todayTradingday = tradingdays.getTradingday(
                     TradingCalendar.getTradingDayStart(TradingCalendar.getDateTimeNowMarketTimeZone()),
                     TradingCalendar.getTradingDayEnd(TradingCalendar.getDateTimeNowMarketTimeZone()));
+
             if (null != todayTradingday) {
+
                 Tradingday currTodayTradingday = m_tradingdays.getTradingday(
                         TradingCalendar.getTradingDayStart(TradingCalendar.getDateTimeNowMarketTimeZone()),
                         TradingCalendar.getTradingDayEnd(TradingCalendar.getDateTimeNowMarketTimeZone()));
+
                 if (null != currTodayTradingday && !currTodayTradingday.getTradestrategies().isEmpty()
                         && this.isConnected()) {
+
                     todayTradingday.populateStrategyData(currTodayTradingday);
                 }
             }
             m_tradingdays.getTradingdays().clear();
 
             if (tradingdays.getTradingdays().isEmpty()) {
+
                 m_tradestrategyModel.setData(new Tradingday());
                 this.setStatusBarMessage(
                         "Did not find data for period From Date: "
@@ -485,10 +492,13 @@ public class TradingdayPanel extends BasePanel {
             rsDetail.setSortKeys(null);
             RowSorter<?> rsSummary = m_tradestrategyTable.getRowSorter();
             rsSummary.setSortKeys(null);
+
             if (!m_tradingdays.getTradingdays().isEmpty()) {
+
                 m_tradingdayTable.setRowSelectionInterval(0, 0);
 
             } else {
+
                 m_tradestrategyModel.setData(new Tradingday());
             }
             m_tradestrategyTable.enablePopupMenu(true);

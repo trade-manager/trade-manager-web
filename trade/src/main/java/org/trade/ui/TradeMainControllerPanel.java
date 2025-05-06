@@ -284,6 +284,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
      */
 
     public void doData() {
+
         if (m_tradingdays.isDirty()) {
             this.setStatusBarMessage("Please save before running strategy ...\n", BasePanel.WARNING);
         } else {
