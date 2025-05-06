@@ -73,6 +73,7 @@ import org.trade.core.valuetype.Tier;
 import org.trade.core.valuetype.TradestrategyStatus;
 import org.trade.indicator.CandleDatasetUI;
 import org.trade.indicator.CandleSeriesUI;
+import org.trade.indicator.IndicatorSeriesUI;
 import org.trade.indicator.StrategyDataUI;
 import org.trade.ui.chart.CandlestickChart;
 import org.trade.ui.models.TradeOrderTableModel;
@@ -709,7 +710,7 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
                                                ZonedDateTime endDate) throws PersistentModelException {
 
         CandleDatasetUI candleDatasetUI = (CandleDatasetUI) strategyDataUI
-                .getIndicatorByType(IndicatorSeries.CandleSeries);
+                .getIndicatorByType(IndicatorSeriesUI.CandleSeries);
 
         if (null != candleDatasetUI) {
 
@@ -737,22 +738,20 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
                                 "No chart data available for " + childTradestrategy.getContract().getSymbol(),
                                 BasePanel.INFORMATION);
                     } else {
+
                         StrategyDataUI childStrategyDataUI = StrategyDataUI.create(childTradestrategy);
                         CandleDatasetUI.populateSeries(childStrategyDataUI, indicatorCandles);
                         indicatorCandles.clear();
 
-                        candleDatasetUI.addSeries(CandleDatasetUI.createSeries(childStrategyDataUI.getBaseCandleDataset(), 0, childStrategyDataUI.getBaseCandleSeries().getContract(),
-                                childStrategyDataUI.getBaseCandleSeries().getBarSize(), childStrategyDataUI.getBaseCandleSeries().getStartTime(),
-                                childStrategyDataUI.getBaseCandleSeries().getEndTime()));
-                        CandleSeriesUI childSeriesUI = candleDatasetUI.getSeries(0);
-
-                        childSeriesUI.setDisplaySeries(series.getDisplaySeries());
-                        childSeriesUI.setSeriesRGBColor(series.getSeriesRGBColor());
-                        childSeriesUI.setSubChart(series.getSubChart());
-                        childSeriesUI.setSymbol(series.getSymbol());
-                        childSeriesUI.setSecType(series.getSecType());
-                        childSeriesUI.setCurrency(series.getCurrency());
-                        childSeriesUI.setExchange(series.getExchange());
+                        CandleSeriesUI childSeries = childStrategyDataUI.getBaseCandleSeries();
+                        childSeries.setDisplaySeries(series.getDisplaySeries());
+                        childSeries.setSeriesRGBColor(series.getSeriesRGBColor());
+                        childSeries.setSubChart(series.getSubChart());
+                        childSeries.setSymbol(series.getSymbol());
+                        childSeries.setSecType(series.getSecType());
+                        childSeries.setCurrency(series.getCurrency());
+                        childSeries.setExchange(series.getExchange());
+                        candleDatasetUI.setSeries(seriesIndex, childSeries);
                     }
                 }
             }

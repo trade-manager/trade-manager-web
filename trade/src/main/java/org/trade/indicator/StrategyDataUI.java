@@ -79,7 +79,10 @@ public class StrategyDataUI extends Worker {
     public StrategyDataUI(Strategy strategy, CandleDatasetUI baseCandleDataset) {
 
         this.baseCandleDataset = baseCandleDataset;
-        this.candleDataset = baseCandleDataset;
+        this.candleDataset  = new CandleDatasetUI();
+        candleDataset.addSeries(CandleDatasetUI.createSeries(baseCandleDataset, 0, getBaseCandleSeries().getContract(),
+                getBaseCandleSeries().getBarSize(), getBaseCandleSeries().getStartTime(),
+                getBaseCandleSeries().getEndTime()));
 
         for (IndicatorSeries indicator : strategy.getIndicatorSeries()) {
 
