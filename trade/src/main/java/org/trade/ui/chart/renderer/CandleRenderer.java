@@ -49,9 +49,9 @@ import org.jfree.data.xy.OHLCDataset;
 import org.jfree.data.xy.XYDataset;
 import org.trade.core.valuetype.Money;
 import org.trade.core.valuetype.Quantity;
-import org.trade.strategy.data.CandleDataset;
-import org.trade.strategy.data.candle.CandleItem;
-import org.trade.strategy.data.candle.OHLCVwapDataset;
+import org.trade.indicator.CandleDataset;
+import org.trade.indicator.candle.CandleItem;
+import org.trade.indicator.candle.OHLCVwapDataset;
 
 import java.awt.*;
 import java.awt.geom.Line2D;

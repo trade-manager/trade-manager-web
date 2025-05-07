@@ -35,9 +35,9 @@
  */
 package org.trade.ui.models;
 
+import org.trade.core.persistent.dao.Rule;
+import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.valuetype.ValueTypeException;
-import org.trade.persistent.dao.Rule;
-import org.trade.persistent.dao.Strategy;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;

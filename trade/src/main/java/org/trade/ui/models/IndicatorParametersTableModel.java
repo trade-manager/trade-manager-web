@@ -37,9 +37,9 @@ package org.trade.ui.models;
 
 import org.trade.core.dao.Aspect;
 import org.trade.core.dao.Aspects;
+import org.trade.core.persistent.dao.CodeType;
+import org.trade.core.persistent.dao.IndicatorParameters;
 import org.trade.core.util.CoreUtils;
-import org.trade.persistent.dao.CodeType;
-import org.trade.persistent.dao.IndicatorParameters;
 
 import java.io.Serial;
 import java.util.Vector;

@@ -124,8 +124,8 @@ import org.jfree.chart.urls.XYURLGenerator;
 import org.jfree.chart.util.ShapeUtils;
 import org.jfree.chart.util.UnitType;
 import org.jfree.data.xy.XYDataset;
-import org.trade.strategy.data.MACDDataset;
-import org.trade.strategy.data.macd.MACDItem;
+import org.trade.indicator.MACDDataset;
+import org.trade.indicator.macd.MACDItem;
 
 import java.awt.*;
 import java.awt.geom.GeneralPath;

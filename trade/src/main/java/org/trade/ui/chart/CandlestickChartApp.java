@@ -2,28 +2,28 @@ package org.trade.ui.chart;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.trade.core.util.TradingCalendar;
-import org.trade.dictionary.valuetype.BarSize;
-import org.trade.dictionary.valuetype.Currency;
-import org.trade.dictionary.valuetype.DAOStrategy;
-import org.trade.dictionary.valuetype.Exchange;
-import org.trade.dictionary.valuetype.SECType;
-import org.trade.persistent.dao.Candle;
-import org.trade.persistent.dao.Contract;
-import org.trade.persistent.dao.Strategy;
-import org.trade.persistent.dao.StrategyHome;
-import org.trade.persistent.dao.Tradingday;
-import org.trade.strategy.data.CandleDataset;
-import org.trade.strategy.data.CandleSeries;
-import org.trade.strategy.data.StrategyData;
-import org.trade.strategy.data.candle.CandlePeriod;
+import org.trade.base.BasePanel;
+import org.trade.base.BasePanelMenu;
+import org.trade.base.ComponentPrintService;
+import org.trade.base.ImageBuilder;
+import org.trade.base.WaitCursorEventQueue;
+import org.trade.core.persistent.dao.Candle;
+import org.trade.core.persistent.dao.Contract;
+import org.trade.core.persistent.dao.Strategy;
+import org.trade.core.persistent.dao.StrategyHome;
+import org.trade.core.persistent.dao.Tradingday;
+import org.trade.core.persistent.dao.series.indicator.candle.CandlePeriod;
+import org.trade.core.properties.TradeAppLoadConfig;
+import org.trade.core.util.time.TradingCalendar;
+import org.trade.core.valuetype.BarSize;
+import org.trade.core.valuetype.Currency;
+import org.trade.core.valuetype.DAOStrategy;
+import org.trade.core.valuetype.Exchange;
+import org.trade.core.valuetype.SECType;
+import org.trade.indicator.CandleDataset;
+import org.trade.indicator.CandleSeries;
+import org.trade.indicator.StrategyDataUI;
 import org.trade.ui.MainPanelMenu;
-import org.trade.ui.TradeAppLoadConfig;
-import org.trade.ui.base.BasePanel;
-import org.trade.ui.base.BasePanelMenu;
-import org.trade.ui.base.ComponentPrintService;
-import org.trade.ui.base.ImageBuilder;
-import org.trade.ui.base.WaitCursorEventQueue;
 import org.trade.ui.widget.Clock;
 
 import javax.swing.*;
@@ -69,15 +69,18 @@ public class CandlestickChartApp extends BasePanel {
      * @param args String[]
      */
     public static void main(String[] args) {
+
         SwingUtilities.invokeLater(() -> {
+
             try {
+
                 TradeAppLoadConfig.loadAppProperties();
                 JFrame frame = new JFrame();
                 String symbol = "MSFT";
                 // StrategyData data = CandlestickChartTest
                 // .getPriceDataSetYahooDay(symbol);
                 int numberOfDays = 2;
-                StrategyData strategyData = CandlestickChartApp.getPriceDataSetYahooIntraday(symbol, numberOfDays,
+                StrategyDataUI strategyData = CandlestickChartApp.getPriceDataSetYahooIntraday(symbol, numberOfDays,
                         BarSize.FIVE_MIN);
                 CandlestickChart chart = new CandlestickChart(symbol, strategyData,
                         Tradingday.newInstance(TradingCalendar.getDateTimeNowMarketTimeZone()));
@@ -214,7 +217,7 @@ public class CandlestickChartApp extends BasePanel {
      * @param symbol String
      * @return StrategyData
      */
-    protected static StrategyData getPriceDataSetYahooDay(String symbol) {
+    protected static StrategyDataUI getPriceDataSetYahooDay(String symbol) {
         try {
 
             List<Candle> candles = new ArrayList<>();
@@ -272,7 +275,7 @@ public class CandlestickChartApp extends BasePanel {
                     TradingCalendar.getTradingDayEnd(today));
             CandleSeries candleSeries = new CandleSeries(contract.getSymbol(), contract, daySeconds, startDate, today);
             candleDataset.addSeries(candleSeries);
-            StrategyData strategyData = new StrategyData(strategy, candleDataset);
+            StrategyDataUI strategyData = new StrategyDataUI(strategy, candleDataset);
             CandleDataset.populateSeries(strategyData, candles);
             return strategyData;
         } catch (Exception ex) {
@@ -289,7 +292,7 @@ public class CandlestickChartApp extends BasePanel {
      * @param periodSeconds int
      * @return StrategyData
      */
-    protected static StrategyData getPriceDataSetYahooIntraday(String symbol, int days, int periodSeconds) {
+    protected static StrategyDataUI getPriceDataSetYahooIntraday(String symbol, int days, int periodSeconds) {
         try {
             ZonedDateTime today = TradingCalendar.getDateTimeNowMarketTimeZone();
             ZonedDateTime startDate = today.minusDays(days);
@@ -303,7 +306,7 @@ public class CandlestickChartApp extends BasePanel {
             CandleSeries candleSeries = new CandleSeries(contract.getSymbol(), contract, periodSeconds, startDate,
                     today);
             candleDataset.addSeries(candleSeries);
-            StrategyData strategyData = new StrategyData(strategy, candleDataset);
+            StrategyDataUI strategyData = new StrategyDataUI(strategy, candleDataset);
 
             /*
              * Yahoo finance

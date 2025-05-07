@@ -48,7 +48,7 @@ import org.jfree.chart.ui.RectangleEdge;
 import org.jfree.data.xy.OHLCDataset;
 import org.jfree.data.xy.XYDataset;
 import org.trade.core.valuetype.Money;
-import org.trade.strategy.data.HeikinAshiDataset;
+import org.trade.indicator.HeikinAshiDataset;
 
 import java.awt.*;
 import java.awt.geom.Line2D;

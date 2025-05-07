@@ -35,9 +35,9 @@
  */
 package org.trade.ui.tables;
 
+import org.trade.base.Table;
+import org.trade.base.TableModel;
 import org.trade.core.valuetype.ValueTypeException;
-import org.trade.ui.base.Table;
-import org.trade.ui.base.TableModel;
 
 import javax.swing.*;
 import java.io.Serial;

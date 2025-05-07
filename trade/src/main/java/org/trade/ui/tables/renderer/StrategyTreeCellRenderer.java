@@ -35,8 +35,8 @@
  */
 package org.trade.ui.tables.renderer;
 
-import org.trade.persistent.dao.Rule;
-import org.trade.persistent.dao.Strategy;
+import org.trade.core.persistent.dao.Rule;
+import org.trade.core.persistent.dao.Strategy;
 import org.trade.ui.models.StrategyTreeModel;
 
 import javax.swing.*;

@@ -35,15 +35,15 @@
  */
 package org.trade.ui.models;
 
+import org.trade.base.TableModel;
+import org.trade.core.persistent.dao.Account;
+import org.trade.core.persistent.dao.Portfolio;
+import org.trade.core.persistent.dao.PortfolioAccount;
 import org.trade.core.util.CoreUtils;
+import org.trade.core.valuetype.AccountType;
+import org.trade.core.valuetype.Currency;
 import org.trade.core.valuetype.Date;
 import org.trade.core.valuetype.Money;
-import org.trade.dictionary.valuetype.AccountType;
-import org.trade.dictionary.valuetype.Currency;
-import org.trade.persistent.dao.Account;
-import org.trade.persistent.dao.Portfolio;
-import org.trade.persistent.dao.PortfolioAccount;
-import org.trade.ui.base.TableModel;
 
 import java.io.Serial;
 import java.util.Vector;

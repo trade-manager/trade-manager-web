@@ -35,20 +35,20 @@
  */
 package org.trade.ui.models;
 
+import org.trade.base.TableModel;
+import org.trade.core.persistent.dao.TradelogDetail;
+import org.trade.core.persistent.dao.TradelogReport;
+import org.trade.core.valuetype.Action;
+import org.trade.core.valuetype.DAOStrategy;
 import org.trade.core.valuetype.Date;
 import org.trade.core.valuetype.Decimal;
+import org.trade.core.valuetype.MarketBar;
 import org.trade.core.valuetype.Money;
+import org.trade.core.valuetype.OrderStatus;
 import org.trade.core.valuetype.Quantity;
-import org.trade.dictionary.valuetype.Action;
-import org.trade.dictionary.valuetype.DAOStrategy;
-import org.trade.dictionary.valuetype.MarketBar;
-import org.trade.dictionary.valuetype.OrderStatus;
-import org.trade.dictionary.valuetype.Side;
-import org.trade.dictionary.valuetype.Tier;
-import org.trade.dictionary.valuetype.TradestrategyStatus;
-import org.trade.persistent.dao.TradelogDetail;
-import org.trade.persistent.dao.TradelogReport;
-import org.trade.ui.base.TableModel;
+import org.trade.core.valuetype.Side;
+import org.trade.core.valuetype.Tier;
+import org.trade.core.valuetype.TradestrategyStatus;
 
 import javax.swing.event.TableModelEvent;
 import java.io.Serial;

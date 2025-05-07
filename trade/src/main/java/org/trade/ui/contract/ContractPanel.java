@@ -35,42 +35,43 @@
  */
 package org.trade.ui.contract;
 
+import org.trade.base.BaseButton;
+import org.trade.base.BasePanel;
+import org.trade.base.BaseUIPropertyCodes;
+import org.trade.base.TabbedAppPanel;
+import org.trade.base.TabbedCloseButton;
+import org.trade.base.Table;
+import org.trade.base.TextDialog;
+import org.trade.base.Tree;
 import org.trade.core.dao.Aspects;
+import org.trade.core.persistent.IPersistentModel;
+import org.trade.core.persistent.PersistentModelException;
+import org.trade.core.persistent.dao.Candle;
+import org.trade.core.persistent.dao.Contract;
+import org.trade.core.persistent.dao.Portfolio;
+import org.trade.core.persistent.dao.Strategy;
+import org.trade.core.persistent.dao.TradeOrder;
+import org.trade.core.persistent.dao.TradePosition;
+import org.trade.core.persistent.dao.Tradestrategy;
+import org.trade.core.persistent.dao.TradestrategyOrders;
+import org.trade.core.persistent.dao.Tradingdays;
+import org.trade.core.persistent.dao.series.indicator.StrategyData;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.CoreUtils;
-import org.trade.core.util.TradingCalendar;
+import org.trade.core.util.time.TradingCalendar;
+import org.trade.core.valuetype.AllocationMethod;
+import org.trade.core.valuetype.BarSize;
+import org.trade.core.valuetype.DAOGroup;
+import org.trade.core.valuetype.DAOProfile;
 import org.trade.core.valuetype.Decode;
 import org.trade.core.valuetype.Money;
-import org.trade.dictionary.valuetype.AllocationMethod;
-import org.trade.dictionary.valuetype.BarSize;
-import org.trade.dictionary.valuetype.DAOGroup;
-import org.trade.dictionary.valuetype.DAOProfile;
-import org.trade.dictionary.valuetype.Side;
-import org.trade.dictionary.valuetype.Tier;
-import org.trade.dictionary.valuetype.TradestrategyStatus;
-import org.trade.persistent.IPersistentModel;
-import org.trade.persistent.PersistentModelException;
-import org.trade.persistent.dao.Candle;
-import org.trade.persistent.dao.Contract;
-import org.trade.persistent.dao.Portfolio;
-import org.trade.persistent.dao.Strategy;
-import org.trade.persistent.dao.TradeOrder;
-import org.trade.persistent.dao.TradePosition;
-import org.trade.persistent.dao.Tradestrategy;
-import org.trade.persistent.dao.TradestrategyOrders;
-import org.trade.persistent.dao.Tradingdays;
-import org.trade.strategy.data.CandleDataset;
-import org.trade.strategy.data.CandleSeries;
-import org.trade.strategy.data.IndicatorSeries;
-import org.trade.strategy.data.StrategyData;
-import org.trade.ui.base.BaseButton;
-import org.trade.ui.base.BasePanel;
-import org.trade.ui.base.BaseUIPropertyCodes;
-import org.trade.ui.base.TabbedAppPanel;
-import org.trade.ui.base.TabbedCloseButton;
-import org.trade.ui.base.Table;
-import org.trade.ui.base.TextDialog;
-import org.trade.ui.base.Tree;
+import org.trade.core.valuetype.Side;
+import org.trade.core.valuetype.Tier;
+import org.trade.core.valuetype.TradestrategyStatus;
+import org.trade.indicator.CandleDataset;
+import org.trade.indicator.CandleSeries;
+import org.trade.indicator.IndicatorSeries;
+import org.trade.indicator.StrategyDataUI;
 import org.trade.ui.chart.CandlestickChart;
 import org.trade.ui.models.TradeOrderTableModel;
 import org.trade.ui.models.TradingdayTreeModel;
@@ -100,6 +101,7 @@ import java.io.Serial;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.time.ZonedDateTime;
+import java.util.Hashtable;
 import java.util.List;
 
 /**
@@ -135,6 +137,7 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
     private static final SimpleAttributeSet bold = new SimpleAttributeSet();
     private static final SimpleAttributeSet colorRedAttr = new SimpleAttributeSet();
     private static final SimpleAttributeSet colorGreenAttr = new SimpleAttributeSet();
+    private static final Hashtable<Integer, StrategyDataUI> strategyDataTable = new Hashtable();
 
     static {
         StyleConstants.setBold(bold, true);
@@ -482,14 +485,19 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
                 periodEditorComboBox.setItem(BarSize.newInstance(tradestrategy.getBarSize()));
                 int currentTabIndex = -1;
                 for (int index = 0; index < m_jTabbedPaneContract.getTabCount(); index++) {
+
                     ChartPanel chartPanel = (ChartPanel) m_jTabbedPaneContract.getComponentAt(index);
+
                     if ((null != chartPanel) && chartPanel.getTradestrategy().getId()
                             .equals(tradestrategy.getId())) {
+
                         currentTabIndex = index;
                         break;
                     }
                 }
+
                 if (currentTabIndex == -1) {
+
                     ChartPanel chartPanel = createChartPanel(tradestrategy);
                     m_jTabbedPaneContract.add(chartPanel.getCandlestickChart().getName(), chartPanel);
                     currentTabIndex = m_jTabbedPaneContract.getTabCount() - 1;
@@ -560,7 +568,11 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
                 if (!newPeriod.equals(
                         currentTab.getTradestrategy().getStrategyData().getCandleDataset().getSeries(0).getBarSize())) {
                     if (newPeriod.compareTo(currentTab.getTradestrategy().getBarSize()) > -1) {
-                        currentTab.getTradestrategy().getStrategyData().changeCandleSeriesPeriod(newPeriod);
+                        try {
+                            currentTab.getTradestrategy().getStrategyData().changeCandleSeriesPeriod(newPeriod);
+                        } catch (PersistentModelException ex) {
+                            throw new RuntimeException(ex);
+                        }
                         this.clearStatusBarMessage();
                     } else {
                         this.setStatusBarMessage("Time period not supported by candle series", BasePanel.WARNING);
@@ -589,12 +601,20 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
 
         ZonedDateTime startDate;
         ZonedDateTime endDate;
+        StrategyDataUI strategyDataUI = null;
 
         if (null == tradestrategy.getStrategyData()) {
+
             tradestrategy.setStrategyData(StrategyData.create(tradestrategy));
+            strategyDataUI = StrategyDataUI.create(tradestrategy);
+            strategyDataTable.put(tradestrategy.getContract().getId(), strategyDataUI);
+        } else {
+
+            strategyDataUI = strategyDataTable.get(tradestrategy.getContract().getId());
         }
 
         if (tradestrategy.getStrategyData().getBaseCandleSeries().isEmpty()) {
+
             endDate = TradingCalendar.getDateAtTime(
                     TradingCalendar.addTradingDays(tradestrategy.getTradingday().getClose(), backfillOffsetDays),
                     tradestrategy.getTradingday().getClose());
@@ -603,18 +623,23 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
             startDate = TradingCalendar.getDateAtTime(startDate, tradestrategy.getTradingday().getOpen());
             List<Candle> candles = m_tradePersistentModel.findCandlesByContractDateRangeBarSize(
                     tradestrategy.getContract().getId(), startDate, endDate, tradestrategy.getBarSize());
+
             if (candles.isEmpty()) {
+
                 this.setStatusBarMessage("No chart data available for " + tradestrategy.getContract().getSymbol(),
                         BasePanel.INFORMATION);
             } else {
+
                 // Populate the candle series.
-                CandleDataset.populateSeries(tradestrategy.getStrategyData(), candles);
+                org.trade.core.persistent.dao.series.indicator.CandleDataset.populateSeries(tradestrategy.getStrategyData(), candles);
+                CandleDataset.populateSeries(strategyDataUI, candles);
                 candles.clear();
                 populateIndicatorCandleSeries(tradestrategy, startDate, endDate);
+                populateIndicatorCandleSeries(tradestrategy, strategyDataUI, startDate, endDate);
             }
         }
 
-        return new ChartPanel(tradestrategy);
+        return new ChartPanel(tradestrategy, strategyDataUI);
     }
 
     /**
@@ -630,12 +655,14 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
     private void populateIndicatorCandleSeries(Tradestrategy tradestrategy, ZonedDateTime startDate,
                                                ZonedDateTime endDate) throws PersistentModelException {
 
-        CandleDataset candleDataset = (CandleDataset) tradestrategy.getStrategyData()
-                .getIndicatorByType(IndicatorSeries.CandleSeries);
+        org.trade.core.persistent.dao.series.indicator.CandleDataset candleDataset = (org.trade.core.persistent.dao.series.indicator.CandleDataset) tradestrategy.getStrategyData()
+                .getIndicatorByType(org.trade.core.persistent.dao.series.indicator.IndicatorSeries.CandleSeries);
+
         if (null != candleDataset) {
+
             for (int seriesIndex = 0; seriesIndex < candleDataset.getSeriesCount(); seriesIndex++) {
 
-                CandleSeries series = candleDataset.getSeries(seriesIndex);
+                org.trade.core.persistent.dao.series.indicator.CandleSeries series = candleDataset.getSeries(seriesIndex);
 
                 Contract contract = m_tradePersistentModel.findContractByUniqueKey(series.getSecType(),
                         series.getSymbol(), series.getExchange(), series.getCurrency(), null);
@@ -654,10 +681,10 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
                                 BasePanel.INFORMATION);
                     } else {
                         StrategyData strategyData = StrategyData.create(childTradestrategy);
-                        CandleDataset.populateSeries(strategyData, indicatorCandles);
+                        org.trade.core.persistent.dao.series.indicator.CandleDataset.populateSeries(strategyData, indicatorCandles);
                         indicatorCandles.clear();
 
-                        CandleSeries childSeries = strategyData.getBaseCandleSeries();
+                        org.trade.core.persistent.dao.series.indicator.CandleSeries childSeries = strategyData.getBaseCandleSeries();
                         childSeries.setDisplaySeries(series.getDisplaySeries());
                         childSeries.setSeriesRGBColor(series.getSeriesRGBColor());
                         childSeries.setSubChart(series.getSubChart());
@@ -666,6 +693,69 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
                         childSeries.setCurrency(series.getCurrency());
                         childSeries.setExchange(series.getExchange());
                         candleDataset.setSeries(seriesIndex, childSeries);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Method populateIndicatorCandleSeries. For any child indicators that are
+     * candle based create a Tradestrategy that will get the data. If this
+     * tradestrategy already exist share this with any other tradestrategy that
+     * requires this.
+     *
+     * @param tradestrategy  Tradestrategy
+     * @param strategyDataUI StrategyDataUI
+     * @param startDate      Date
+     * @param endDate        Date
+     */
+    private void populateIndicatorCandleSeries(Tradestrategy tradestrategy, StrategyDataUI strategyDataUI, ZonedDateTime startDate,
+                                               ZonedDateTime endDate) throws PersistentModelException {
+
+        CandleDataset candleDatasetUI = (CandleDataset) strategyDataUI
+                .getIndicatorByType(IndicatorSeries.CandleSeries);
+
+        if (null != candleDatasetUI) {
+
+            for (int seriesIndex = 0; seriesIndex < candleDatasetUI.getSeriesCount(); seriesIndex++) {
+
+                CandleSeries series = candleDatasetUI.getSeries(seriesIndex);
+
+                Contract contract = m_tradePersistentModel.findContractByUniqueKey(series.getSecType(),
+                        series.getSymbol(), series.getExchange(), series.getCurrency(), null);
+
+                if (null != contract) {
+
+                    Tradestrategy childTradestrategy = new Tradestrategy(contract, tradestrategy.getTradingday(),
+                            new Strategy(), tradestrategy.getPortfolio(), new BigDecimal(0), null, null, false,
+                            tradestrategy.getChartDays(), tradestrategy.getBarSize());
+                    childTradestrategy.setDirty(false);
+
+                    List<Candle> indicatorCandles = m_tradePersistentModel.findCandlesByContractDateRangeBarSize(
+                            childTradestrategy.getContract().getId(), startDate, endDate,
+                            childTradestrategy.getBarSize());
+
+                    if (indicatorCandles.isEmpty()) {
+
+                        this.setStatusBarMessage(
+                                "No chart data available for " + childTradestrategy.getContract().getSymbol(),
+                                BasePanel.INFORMATION);
+                    } else {
+
+                        StrategyDataUI childStrategyDataUI = StrategyDataUI.create(childTradestrategy);
+                        CandleDataset.populateSeries(childStrategyDataUI, indicatorCandles);
+                        indicatorCandles.clear();
+
+                        CandleSeries childSeries = childStrategyDataUI.getBaseCandleSeries();
+                        childSeries.setDisplaySeries(series.getDisplaySeries());
+                        childSeries.setSeriesRGBColor(series.getSeriesRGBColor());
+                        childSeries.setSubChart(series.getSubChart());
+                        childSeries.setSymbol(series.getSymbol());
+                        childSeries.setSecType(series.getSecType());
+                        childSeries.setCurrency(series.getCurrency());
+                        childSeries.setExchange(series.getExchange());
+                        candleDatasetUI.setSeries(seriesIndex, childSeries);
                     }
                 }
             }
@@ -957,14 +1047,16 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
          *
          * @param tradestrategy Tradestrategy
          */
-        ChartPanel(Tradestrategy tradestrategy) {
+        ChartPanel(Tradestrategy tradestrategy, StrategyDataUI strategyDataUI) {
+
             this.tradestrategy = tradestrategy;
             this.setLayout(new BorderLayout());
 
             String ledgend = "(" + tradestrategy.getContract().getSymbol() + ") "
                     + (tradestrategy.getContract().getLongName() == null ? "Contract details not available."
                     : tradestrategy.getContract().getLongName());
-            this.candlestickChart = new CandlestickChart(ledgend, tradestrategy.getStrategyData(),
+
+            this.candlestickChart = new CandlestickChart(ledgend, strategyDataUI,
                     tradestrategy.getTradingday());
             this.candlestickChart.setName(tradestrategy.getContract().getSymbol());
             this.add(this.candlestickChart);

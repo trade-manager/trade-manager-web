@@ -35,6 +35,8 @@
  */
 package org.trade.ui;
 
+import org.trade.core.properties.TradeAppLoadConfig;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowEvent;

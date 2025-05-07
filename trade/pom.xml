@@ -23,12 +23,6 @@
             <version>1.3.0</version>
         </dependency>
         <dependency>
-            <groupId>com.interactivebrokers</groupId>
-            <artifactId>tws-api</artifactId>
-            <version>10.20.01</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>org.trade</groupId>
             <artifactId>trade-manager-core</artifactId>
             <version>1.0.0-SNAPSHOT</version>

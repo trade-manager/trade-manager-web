@@ -50,8 +50,8 @@ import org.jfree.chart.renderer.xy.XYItemRendererState;
 import org.jfree.chart.ui.RectangleEdge;
 import org.jfree.data.xy.XYDataset;
 import org.trade.core.valuetype.Quantity;
-import org.trade.strategy.data.VolumeDataset;
-import org.trade.strategy.data.volume.VolumeItem;
+import org.trade.indicator.VolumeDataset;
+import org.trade.indicator.volume.VolumeItem;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;

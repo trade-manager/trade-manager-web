@@ -35,13 +35,13 @@
  */
 package org.trade.ui.models;
 
+import org.trade.base.TableModel;
+import org.trade.core.persistent.dao.TradelogReport;
+import org.trade.core.persistent.dao.TradelogSummary;
 import org.trade.core.valuetype.Decimal;
 import org.trade.core.valuetype.Money;
 import org.trade.core.valuetype.Percent;
 import org.trade.core.valuetype.Quantity;
-import org.trade.persistent.dao.TradelogReport;
-import org.trade.persistent.dao.TradelogSummary;
-import org.trade.ui.base.TableModel;
 
 import javax.swing.event.TableModelEvent;
 import java.io.Serial;

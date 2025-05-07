@@ -64,17 +64,17 @@ import org.jfree.data.Range;
 import org.jfree.data.general.SeriesChangeEvent;
 import org.jfree.data.general.SeriesChangeListener;
 import org.jfree.data.xy.XYDataset;
-import org.trade.core.util.TradingCalendar;
+import org.trade.core.persistent.dao.Tradingday;
+import org.trade.core.util.time.TradingCalendar;
+import org.trade.core.valuetype.Action;
 import org.trade.core.valuetype.Money;
-import org.trade.dictionary.valuetype.Action;
-import org.trade.persistent.dao.Tradingday;
-import org.trade.strategy.data.CandleSeries;
-import org.trade.strategy.data.IIndicatorDataset;
-import org.trade.strategy.data.IndicatorSeries;
-import org.trade.strategy.data.StrategyData;
-import org.trade.strategy.data.candle.CandleItem;
-import org.trade.strategy.data.candle.SegmentedTimeline;
-import org.trade.strategy.data.candle.SegmentedTimeline.Segment;
+import org.trade.indicator.CandleSeries;
+import org.trade.indicator.IIndicatorDataset;
+import org.trade.indicator.IndicatorSeries;
+import org.trade.indicator.StrategyDataUI;
+import org.trade.indicator.candle.CandleItem;
+import org.trade.indicator.candle.SegmentedTimeline;
+import org.trade.indicator.candle.SegmentedTimeline.Segment;
 
 import javax.swing.*;
 import java.awt.*;
@@ -102,7 +102,7 @@ public class CandlestickChart extends JPanel implements SeriesChangeListener {
     private final ValueMarker valueMarker;
     private XYTextAnnotation closePriceLine = null;
     private XYTextAnnotation clickCrossHairs = null;
-    private final StrategyData strategyData;
+    private final StrategyDataUI strategyData;
 
     /**
      * A demonstration application showing a candlestick chart.
@@ -110,7 +110,7 @@ public class CandlestickChart extends JPanel implements SeriesChangeListener {
      * @param title        the frame title.
      * @param strategyData StrategyData
      */
-    public CandlestickChart(final String title, StrategyData strategyData, Tradingday tradingday) {
+    public CandlestickChart(final String title, StrategyDataUI strategyData, Tradingday tradingday) {
 
         this.strategyData = strategyData;
         this.setLayout(new BorderLayout());
@@ -250,11 +250,11 @@ public class CandlestickChart extends JPanel implements SeriesChangeListener {
     /**
      * Method createChart.
      *
-     * @param strategyData StrategyData
+     * @param strategyData StrategyDataUI
      * @param title        String
      * @return JFreeChart
      */
-    private JFreeChart createChart(StrategyData strategyData, String title, Tradingday tradingday) {
+    private JFreeChart createChart(StrategyDataUI strategyData, String title, Tradingday tradingday) {
 
         DateAxis dateAxis = new DateAxis("Date");
         dateAxis.setVerticalTickLabels(true);
@@ -335,7 +335,7 @@ public class CandlestickChart extends JPanel implements SeriesChangeListener {
                     if (IndicatorSeries.CandleSeries.equals(indicator.getType(0))) {
                         axisName = ((CandleSeries) indicator.getSeries(0)).getSymbol();
                     } else {
-                        org.trade.dictionary.valuetype.IndicatorSeries code = org.trade.dictionary.valuetype.IndicatorSeries
+                        org.trade.core.valuetype.IndicatorSeries code = org.trade.core.valuetype.IndicatorSeries
                                 .newInstance(indicator.getType(0));
                         axisName = code.getDisplayName();
                     }

@@ -35,11 +35,11 @@
  */
 package org.trade.ui.models;
 
+import org.trade.base.TableModel;
+import org.trade.core.persistent.dao.CodeAttribute;
+import org.trade.core.persistent.dao.CodeType;
 import org.trade.core.util.CoreUtils;
-import org.trade.dictionary.valuetype.DataType;
-import org.trade.persistent.dao.CodeAttribute;
-import org.trade.persistent.dao.CodeType;
-import org.trade.ui.base.TableModel;
+import org.trade.core.valuetype.DataType;
 
 import java.io.Serial;
 import java.util.Vector;

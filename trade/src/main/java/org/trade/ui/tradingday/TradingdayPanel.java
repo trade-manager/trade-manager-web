@@ -35,30 +35,30 @@
  */
 package org.trade.ui.tradingday;
 
+import org.trade.base.BaseButton;
+import org.trade.base.BasePanel;
+import org.trade.base.BaseUIPropertyCodes;
+import org.trade.base.Table;
+import org.trade.base.UIPropertyCodes;
+import org.trade.core.persistent.IPersistentModel;
+import org.trade.core.persistent.PersistentModelException;
+import org.trade.core.persistent.dao.CodeType;
+import org.trade.core.persistent.dao.Portfolio;
+import org.trade.core.persistent.dao.PortfolioAccount;
+import org.trade.core.persistent.dao.Strategy;
+import org.trade.core.persistent.dao.Tradestrategy;
+import org.trade.core.persistent.dao.Tradingday;
+import org.trade.core.persistent.dao.Tradingdays;
+import org.trade.core.persistent.dao.strategy.IStrategyRule;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.CoreUtils;
-import org.trade.core.util.TradingCalendar;
+import org.trade.core.util.time.TradingCalendar;
+import org.trade.core.valuetype.DAOPortfolio;
+import org.trade.core.valuetype.DAOStrategy;
+import org.trade.core.valuetype.DAOStrategyManager;
 import org.trade.core.valuetype.Date;
 import org.trade.core.valuetype.Decode;
 import org.trade.core.valuetype.ValueTypeException;
-import org.trade.dictionary.valuetype.DAOPortfolio;
-import org.trade.dictionary.valuetype.DAOStrategy;
-import org.trade.dictionary.valuetype.DAOStrategyManager;
-import org.trade.dictionary.valuetype.UIPropertyCodes;
-import org.trade.persistent.IPersistentModel;
-import org.trade.persistent.PersistentModelException;
-import org.trade.persistent.dao.CodeType;
-import org.trade.persistent.dao.Portfolio;
-import org.trade.persistent.dao.PortfolioAccount;
-import org.trade.persistent.dao.Strategy;
-import org.trade.persistent.dao.Tradestrategy;
-import org.trade.persistent.dao.Tradingday;
-import org.trade.persistent.dao.Tradingdays;
-import org.trade.strategy.IStrategyRule;
-import org.trade.ui.base.BaseButton;
-import org.trade.ui.base.BasePanel;
-import org.trade.ui.base.BaseUIPropertyCodes;
-import org.trade.ui.base.Table;
 import org.trade.ui.models.TradestrategyTableModel;
 import org.trade.ui.models.TradingdayTableModel;
 import org.trade.ui.tables.TradestrategyTable;
@@ -431,7 +431,9 @@ public class TradingdayPanel extends BasePanel {
      */
 
     public void doSearch() {
+
         try {
+
             this.clearStatusBarMessage();
 
             ZonedDateTime startDate = TradingCalendar
@@ -456,18 +458,23 @@ public class TradingdayPanel extends BasePanel {
             Tradingday todayTradingday = tradingdays.getTradingday(
                     TradingCalendar.getTradingDayStart(TradingCalendar.getDateTimeNowMarketTimeZone()),
                     TradingCalendar.getTradingDayEnd(TradingCalendar.getDateTimeNowMarketTimeZone()));
+
             if (null != todayTradingday) {
+
                 Tradingday currTodayTradingday = m_tradingdays.getTradingday(
                         TradingCalendar.getTradingDayStart(TradingCalendar.getDateTimeNowMarketTimeZone()),
                         TradingCalendar.getTradingDayEnd(TradingCalendar.getDateTimeNowMarketTimeZone()));
+
                 if (null != currTodayTradingday && !currTodayTradingday.getTradestrategies().isEmpty()
                         && this.isConnected()) {
+
                     todayTradingday.populateStrategyData(currTodayTradingday);
                 }
             }
             m_tradingdays.getTradingdays().clear();
 
             if (tradingdays.getTradingdays().isEmpty()) {
+
                 m_tradestrategyModel.setData(new Tradingday());
                 this.setStatusBarMessage(
                         "Did not find data for period From Date: "
@@ -485,10 +492,13 @@ public class TradingdayPanel extends BasePanel {
             rsDetail.setSortKeys(null);
             RowSorter<?> rsSummary = m_tradestrategyTable.getRowSorter();
             rsSummary.setSortKeys(null);
+
             if (!m_tradingdays.getTradingdays().isEmpty()) {
+
                 m_tradingdayTable.setRowSelectionInterval(0, 0);
 
             } else {
+
                 m_tradestrategyModel.setData(new Tradingday());
             }
             m_tradestrategyTable.enablePopupMenu(true);

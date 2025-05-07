@@ -35,23 +35,23 @@
  */
 package org.trade.ui.configuration;
 
+import org.trade.base.BaseButton;
+import org.trade.base.BasePanel;
+import org.trade.base.BaseUIPropertyCodes;
+import org.trade.base.TableModel;
+import org.trade.base.TextDialog;
 import org.trade.core.dao.Aspect;
 import org.trade.core.dao.Aspects;
 import org.trade.core.factory.ClassFactory;
 import org.trade.core.lookup.DBTableLookupServiceProvider;
-import org.trade.dictionary.valuetype.DAOEntryLimit;
-import org.trade.dictionary.valuetype.ReferenceTable;
-import org.trade.persistent.IPersistentModel;
-import org.trade.persistent.dao.CodeType;
-import org.trade.persistent.dao.CodeValue;
-import org.trade.persistent.dao.Portfolio;
-import org.trade.persistent.dao.Strategy;
-import org.trade.strategy.data.IndicatorSeries;
-import org.trade.ui.base.BaseButton;
-import org.trade.ui.base.BasePanel;
-import org.trade.ui.base.BaseUIPropertyCodes;
-import org.trade.ui.base.TableModel;
-import org.trade.ui.base.TextDialog;
+import org.trade.core.persistent.IPersistentModel;
+import org.trade.core.persistent.dao.CodeType;
+import org.trade.core.persistent.dao.CodeValue;
+import org.trade.core.persistent.dao.Portfolio;
+import org.trade.core.persistent.dao.Strategy;
+import org.trade.core.persistent.dao.series.indicator.IndicatorSeries;
+import org.trade.core.valuetype.DAOEntryLimit;
+import org.trade.core.valuetype.ReferenceTable;
 import org.trade.ui.models.AccountTableModel;
 import org.trade.ui.models.AspectTableModel;
 import org.trade.ui.models.CodeAttributeTableModel;
@@ -101,8 +101,11 @@ public class ConfigurationPanel extends BasePanel {
 
     public ConfigurationPanel(IPersistentModel tradePersistentModel) {
         try {
-            if (null != getMenu())
+
+            if (null != getMenu()) {
                 getMenu().addMessageListener(this);
+            }
+
             this.setLayout(new BorderLayout());
             /*
              * Initialize the ValueType decode tables. This caused the tables to
@@ -119,8 +122,11 @@ public class ConfigurationPanel extends BasePanel {
             DecodeComboBoxRenderer refTableRenderer = new DecodeComboBoxRenderer();
             refTableEditorComboBox.setRenderer(refTableRenderer);
             refTableEditorComboBox.addItemListener(e -> {
+
                 if (e.getStateChange() == ItemEvent.SELECTED) {
+
                     if (null != m_tableChild) {
+
                         m_jScrollPane1.getViewport().remove(m_tableChild);
                     }
                     addReferenceTablePanel(((ReferenceTable) e.getItem()).getCode());
@@ -291,8 +297,9 @@ public class ConfigurationPanel extends BasePanel {
                      */
                     for (CodeValue value : codeAttributePanel.getCodeValues()) {
                         series.setDirty(true);
-                        if (null == value.getIndicatorSeries())
+                        if (null == value.getIndicatorSeries()) {
                             value.setIndicatorSeries(series);
+                        }
                     }
                 }
             }
