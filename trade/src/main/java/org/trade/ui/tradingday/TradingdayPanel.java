@@ -431,7 +431,7 @@ public class TradingdayPanel extends BasePanel {
      */
 
     public void doSearch() {
-        
+
         try {
 
             this.clearStatusBarMessage();

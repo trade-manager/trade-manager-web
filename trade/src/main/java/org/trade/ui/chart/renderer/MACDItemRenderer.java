@@ -124,8 +124,8 @@ import org.jfree.chart.urls.XYURLGenerator;
 import org.jfree.chart.util.ShapeUtils;
 import org.jfree.chart.util.UnitType;
 import org.jfree.data.xy.XYDataset;
-import org.trade.indicator.MACDDatasetUI;
-import org.trade.indicator.macd.MACDItemUI;
+import org.trade.indicator.MACDDataset;
+import org.trade.indicator.macd.MACDItem;
 
 import java.awt.*;
 import java.awt.geom.GeneralPath;
@@ -227,17 +227,17 @@ public class MACDItemRenderer extends StandardXYItemRenderer {
                          CrosshairState crosshairState, int pass) {
 
         // get the data point...
-        MACDDatasetUI mACDDataset = (MACDDatasetUI) dataset;
-        MACDItemUI mACDItem = (MACDItemUI) mACDDataset.getSeries(series).getDataItem(item);
+        MACDDataset mACDDataset = (MACDDataset) dataset;
+        MACDItem mACDItem = (MACDItem) mACDDataset.getSeries(series).getDataItem(item);
         double x1 = dataset.getXValue(series, item);
         double y1 = mACDItem.getMACD();
         double x0 = 0;
         double y0 = 0;
         int lastItem = 0;
-        MACDItemUI prevMACDItem = null;
+        MACDItem prevMACDItem = null;
 
         if (item != 0) {
-            prevMACDItem = (MACDItemUI) mACDDataset.getSeries(series).getDataItem(item - 1);
+            prevMACDItem = (MACDItem) mACDDataset.getSeries(series).getDataItem(item - 1);
             x0 = mACDDataset.getXValue(series, item - 1);
             y0 = prevMACDItem.getMACD();
             lastItem = mACDDataset.getItemCount(series) - 1;

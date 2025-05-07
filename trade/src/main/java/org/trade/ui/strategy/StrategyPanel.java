@@ -119,7 +119,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
     public StrategyPanel(IPersistentModel tradePersistentModel) {
         try {
 
-            if (null != getMenu()){
+            if (null != getMenu()) {
                 getMenu().addMessageListener(this);
             }
 

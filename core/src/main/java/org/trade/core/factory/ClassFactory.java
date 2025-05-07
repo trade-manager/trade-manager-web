@@ -117,18 +117,23 @@ public class ClassFactory {
         Class<?> c = Class.forName(className);
 
         try {
+
             constructor = c.getDeclaredConstructor(params);
             instance = constructor.newInstance(object);
         } catch (Exception e) {
+
             _log.debug("Could not find constructor for default params[{}] will test all constructors.", classes);
             Constructor<?>[] constructors = c.getConstructors();
             for (Constructor<?> constructor2 : constructors) {
+
                 try {
+
                     instance = constructor2.newInstance(object);
                     _log.info("Found constructor: {} for params[{}]", constructor2.toGenericString(), classes);
                     break;
                 } catch (Exception ex) {
-                    _log.error("Constructor: {} failed!!", constructor2.toGenericString());
+
+                    _log.error("Constructor: {}, classes: {}, param: {} failed!!", constructor2.toGenericString(), classes, param);
                 }
             }
         }

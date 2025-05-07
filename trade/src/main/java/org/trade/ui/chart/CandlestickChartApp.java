@@ -20,8 +20,8 @@ import org.trade.core.valuetype.Currency;
 import org.trade.core.valuetype.DAOStrategy;
 import org.trade.core.valuetype.Exchange;
 import org.trade.core.valuetype.SECType;
-import org.trade.indicator.CandleDatasetUI;
-import org.trade.indicator.CandleSeriesUI;
+import org.trade.indicator.CandleDataset;
+import org.trade.indicator.CandleSeries;
 import org.trade.indicator.StrategyDataUI;
 import org.trade.ui.MainPanelMenu;
 import org.trade.ui.widget.Clock;
@@ -270,13 +270,13 @@ public class CandlestickChartApp extends BasePanel {
             in.close();
 
             Collections.reverse(candles);
-            CandleDatasetUI candleDataset = new CandleDatasetUI();
+            CandleDataset candleDataset = new CandleDataset();
             int daySeconds = (int) TradingCalendar.getDurationInSeconds(TradingCalendar.getTradingDayStart(today),
                     TradingCalendar.getTradingDayEnd(today));
-            CandleSeriesUI candleSeries = new CandleSeriesUI(contract.getSymbol(), contract, daySeconds, startDate, today);
+            CandleSeries candleSeries = new CandleSeries(contract.getSymbol(), contract, daySeconds, startDate, today);
             candleDataset.addSeries(candleSeries);
             StrategyDataUI strategyData = new StrategyDataUI(strategy, candleDataset);
-            CandleDatasetUI.populateSeries(strategyData, candles);
+            CandleDataset.populateSeries(strategyData, candles);
             return strategyData;
         } catch (Exception ex) {
             _log.error("Error getting Yahoo data msg: {}", ex.getMessage(), ex);
@@ -302,8 +302,8 @@ public class CandlestickChartApp extends BasePanel {
             String name = daoStrategy.getName();
             Strategy strategy = home.findByName(name);
             Contract contract = new Contract(SECType.STOCK, symbol, Exchange.SMART, Currency.USD, null, null);
-            CandleDatasetUI candleDataset = new CandleDatasetUI();
-            CandleSeriesUI candleSeries = new CandleSeriesUI(contract.getSymbol(), contract, periodSeconds, startDate,
+            CandleDataset candleDataset = new CandleDataset();
+            CandleSeries candleSeries = new CandleSeries(contract.getSymbol(), contract, periodSeconds, startDate,
                     today);
             candleDataset.addSeries(candleSeries);
             StrategyDataUI strategyData = new StrategyDataUI(strategy, candleDataset);

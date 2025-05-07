@@ -94,7 +94,7 @@ public class VolumeSeries extends IndicatorSeries {
      * @param barWidthInMilliseconds long
      */
     public VolumeSeries(Strategy strategy, String name, String type, String description, Boolean displayOnChart,
-                        Integer chartRGBColor, Boolean subChart, long barWidthInMilliseconds) {
+                        Integer chartRGBColor, Boolean subChart, Long barWidthInMilliseconds) {
         super(strategy, name, type, description, displayOnChart, chartRGBColor, subChart);
         this.barWidthInMilliseconds = barWidthInMilliseconds;
     }

@@ -66,9 +66,7 @@ import org.trade.core.persistent.dao.Tradingday;
 import org.trade.core.persistent.dao.Tradingdays;
 import org.trade.core.persistent.dao.series.indicator.CandleSeries;
 import org.trade.core.persistent.dao.series.indicator.IIndicatorDataset;
-import org.trade.core.persistent.dao.series.indicator.IndicatorSeries;
 import org.trade.core.persistent.dao.series.indicator.StrategyData;
-import org.trade.core.persistent.dao.series.indicator.candle.CandleItem;
 import org.trade.core.persistent.dao.series.indicator.candle.CandlePeriod;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.time.TradingCalendar;
@@ -84,8 +82,8 @@ import org.trade.core.valuetype.OrderStatus;
 import org.trade.core.valuetype.OrderType;
 import org.trade.core.valuetype.SECType;
 import org.trade.core.valuetype.Side;
-import org.trade.indicator.IndicatorSeriesUI;
-import org.trade.indicator.candle.CandleItemUI;
+import org.trade.indicator.IndicatorSeries;
+import org.trade.indicator.candle.CandleItem;
 import org.trade.ui.models.TradingdayTableModel;
 import org.trade.ui.tables.TradingdayTable;
 
@@ -610,14 +608,14 @@ public class TradePersistentModelTest {
         this.tradePersistentModel.persistCandleSeries(candleSeries);
         _log.info("Total time: {}", (System.currentTimeMillis() - timeStart) / 1000);
         assertFalse(candleSeries.isEmpty());
-        assertNotNull(((CandleItem) candleSeries.getDataItem(0)).getCandle().getId());
+        assertNotNull(((org.trade.core.persistent.dao.series.indicator.candle.CandleItem) candleSeries.getDataItem(0)).getCandle().getId());
     }
 
     @Test
     public void testPersistCandle() throws Exception {
 
         ZonedDateTime date = TradingCalendar.getTradingDayStart(TradingCalendar.getDateTimeNowMarketTimeZone());
-        CandleItemUI candleItem = new CandleItemUI(this.tradestrategy.getContract(), this.tradestrategy.getTradingday(),
+        CandleItem candleItem = new CandleItem(this.tradestrategy.getContract(), this.tradestrategy.getTradingday(),
                 new CandlePeriod(date, 300), 100.23, 100.23, 100.23, 100.23, 10000000L, 100.23, 100, date);
         Candle candle = this.tradePersistentModel.persistCandle(candleItem.getCandle());
         assertNotNull(candle.getId());
@@ -919,8 +917,8 @@ public class TradePersistentModelTest {
     @Test
     public void testFindCodeTypeByNameType() throws Exception {
 
-        String indicatorName = IndicatorSeriesUI.MovingAverageSeries.substring(0,
-                IndicatorSeriesUI.MovingAverageSeries.indexOf("Series"));
+        String indicatorName = IndicatorSeries.MovingAverageSeries.substring(0,
+                IndicatorSeries.MovingAverageSeries.indexOf("Series"));
         CodeType result = this.tradePersistentModel.findCodeTypeByNameType(indicatorName,
                 CodeType.IndicatorParameters);
         assertNotNull(result);
@@ -955,7 +953,7 @@ public class TradePersistentModelTest {
     public void testFindAspectsByClassNameFieldName() throws Exception {
 
         for (IIndicatorDataset indicator : this.tradestrategy.getStrategyData().getIndicators()) {
-            IndicatorSeries series = indicator.getSeries(0);
+            org.trade.core.persistent.dao.series.indicator.IndicatorSeries series = indicator.getSeries(0);
             String indicatorName = series.getType().substring(0, series.getType().indexOf("Series"));
             Aspects result = this.tradePersistentModel.findAspectsByClassNameFieldName(CodeType.class.getName(),
                     "name", indicatorName);

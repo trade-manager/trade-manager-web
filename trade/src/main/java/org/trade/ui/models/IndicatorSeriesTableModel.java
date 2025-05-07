@@ -41,11 +41,10 @@ import org.trade.core.dao.Aspects;
 import org.trade.core.factory.ClassFactory;
 import org.trade.core.persistent.dao.CodeValue;
 import org.trade.core.persistent.dao.Strategy;
-import org.trade.core.persistent.dao.series.indicator.IndicatorSeries;
 import org.trade.core.util.CoreUtils;
 import org.trade.core.valuetype.DAOStrategy;
 import org.trade.core.valuetype.YesNo;
-import org.trade.indicator.IndicatorSeriesUI;
+import org.trade.indicator.IndicatorSeries;
 
 import javax.swing.event.TableModelEvent;
 import java.awt.*;
@@ -113,7 +112,7 @@ public class IndicatorSeriesTableModel extends TableModel {
         this.clearAll();
         if (!getData().getIndicatorSeries().isEmpty()) {
 
-            for (final IndicatorSeries element : getData().getIndicatorSeries()) {
+            for (final org.trade.core.persistent.dao.series.indicator.IndicatorSeries element : getData().getIndicatorSeries()) {
                 final Vector<Object> newRow = new Vector<>();
                 getNewRow(newRow, element);
                 rows.add(newRow);
@@ -135,7 +134,7 @@ public class IndicatorSeriesTableModel extends TableModel {
             return false;
         }
         if (Objects.equals(columnNames[column], TYPE)) {
-            IndicatorSeries element = getData().getIndicatorSeries().get(row);
+            org.trade.core.persistent.dao.series.indicator.IndicatorSeries element = getData().getIndicatorSeries().get(row);
             return null == element.getIdIndicatorSeries();
         }
         return true;
@@ -150,7 +149,7 @@ public class IndicatorSeriesTableModel extends TableModel {
      */
     public void populateDAO(Object value, int row, int column) {
 
-        IndicatorSeries element = getData().getIndicatorSeries().get(row);
+        org.trade.core.persistent.dao.series.indicator.IndicatorSeries element = getData().getIndicatorSeries().get(row);
 
         switch (column) {
             case 0: {
@@ -206,7 +205,7 @@ public class IndicatorSeriesTableModel extends TableModel {
      * @param newElement  IndicatorSeries
      * @param selectedRow int
      */
-    public void replaceRow(IndicatorSeries newElement, int selectedRow) {
+    public void replaceRow(org.trade.core.persistent.dao.series.indicator.IndicatorSeries newElement, int selectedRow) {
 
         getData().getIndicatorSeries().set(selectedRow, newElement);
         final Vector<Object> newRow = new Vector<>();
@@ -225,7 +224,7 @@ public class IndicatorSeriesTableModel extends TableModel {
 
         String type = ((org.trade.core.valuetype.IndicatorSeries) this.getValueAt(selectedRow, 1)).getCode();
         String name = (String) this.getValueAt(selectedRow, 2);
-        for (final IndicatorSeries element : getData().getIndicatorSeries()) {
+        for (final org.trade.core.persistent.dao.series.indicator.IndicatorSeries element : getData().getIndicatorSeries()) {
             if (CoreUtils.nullSafeComparator(element.getName(), name) == 0
                     && CoreUtils.nullSafeComparator(element.getType(), type) == 0) {
                 getData().getIndicatorSeries().remove(element);
@@ -247,7 +246,7 @@ public class IndicatorSeriesTableModel extends TableModel {
      * @param description String
      * @return IndicatorSeries
      */
-    private IndicatorSeries getIndicatorSeries(Strategy strategy, String name, String type, String description) {
+    private org.trade.core.persistent.dao.series.indicator.IndicatorSeries getIndicatorSeries(Strategy strategy, String name, String type, String description) {
         try {
             Vector<Object> parm = new Vector<>();
             parm.add(strategy);
@@ -258,7 +257,7 @@ public class IndicatorSeriesTableModel extends TableModel {
             parm.add(0);
             parm.add(false);
             String className = "org.trade.strategy.data." + type;
-            return (IndicatorSeries) ClassFactory.getCreateClass(className, parm, this);
+            return (org.trade.core.persistent.dao.series.indicator.IndicatorSeries) ClassFactory.getCreateClass(className, parm, this);
         } catch (Exception e) {
             /*
              * will only ever happen is IndicatorSeries does not exist.
@@ -269,9 +268,9 @@ public class IndicatorSeriesTableModel extends TableModel {
 
     public void addRow() {
 
-        String indicatorName = IndicatorSeriesUI.MovingAverageSeries.substring(0,
-                IndicatorSeriesUI.MovingAverageSeries.indexOf("Series"));
-        IndicatorSeries element = getIndicatorSeries(getData(), indicatorName, IndicatorSeriesUI.MovingAverageSeries,
+        String indicatorName = IndicatorSeries.MovingAverageSeries.substring(0,
+                IndicatorSeries.MovingAverageSeries.indexOf("Series"));
+        org.trade.core.persistent.dao.series.indicator.IndicatorSeries element = getIndicatorSeries(getData(), indicatorName, IndicatorSeries.MovingAverageSeries,
                 indicatorName);
         getData().getIndicatorSeries().add(element);
         getData().setDirty(true);
@@ -288,7 +287,7 @@ public class IndicatorSeriesTableModel extends TableModel {
      * @param newRow  Vector<Object>
      * @param element IndicatorSeries
      */
-    public void getNewRow(Vector<Object> newRow, IndicatorSeries element) {
+    public void getNewRow(Vector<Object> newRow, org.trade.core.persistent.dao.series.indicator.IndicatorSeries element) {
 
         if (null == element.getStrategy()) {
             newRow.addElement(DAOStrategy.newInstance());

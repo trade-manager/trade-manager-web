@@ -42,12 +42,11 @@ import org.trade.core.persistent.PersistentModelException;
 import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.Tradestrategy;
 import org.trade.core.persistent.dao.Tradingday;
-import org.trade.core.persistent.dao.series.indicator.IndicatorSeries;
 import org.trade.core.persistent.dao.series.indicator.candle.CandlePeriod;
 import org.trade.core.util.Worker;
 import org.trade.core.util.time.RegularTimePeriod;
 import org.trade.core.util.time.TradingCalendar;
-import org.trade.indicator.candle.CandleItemUI;
+import org.trade.indicator.candle.CandleItem;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -61,9 +60,9 @@ public class StrategyDataUI extends Worker {
 
     private final static Logger _log = LoggerFactory.getLogger(StrategyDataUI.class);
 
-    private final CandleDatasetUI baseCandleDataset;
-    private final CandleDatasetUI candleDataset;
-    private final List<IIndicatorDatasetUI> indicators = new ArrayList<>();
+    private final CandleDataset baseCandleDataset;
+    private final CandleDataset candleDataset;
+    private final List<IIndicatorDataset> indicators = new ArrayList<>();
 
     private boolean seriesChanged = true;
     private final Object lockStrategyWorker = new Object();
@@ -76,15 +75,15 @@ public class StrategyDataUI extends Worker {
      * @param strategy          Strategy
      * @param baseCandleDataset CandleDatasetUI
      */
-    public StrategyDataUI(Strategy strategy, CandleDatasetUI baseCandleDataset) {
+    public StrategyDataUI(Strategy strategy, CandleDataset baseCandleDataset) {
 
         this.baseCandleDataset = baseCandleDataset;
-        this.candleDataset  = new CandleDatasetUI();
-        candleDataset.addSeries(CandleDatasetUI.createSeries(baseCandleDataset, 0, getBaseCandleSeries().getContract(),
+        this.candleDataset = new CandleDataset();
+        candleDataset.addSeries(CandleDataset.createSeries(baseCandleDataset, 0, getBaseCandleSeries().getContract(),
                 getBaseCandleSeries().getBarSize(), getBaseCandleSeries().getStartTime(),
                 getBaseCandleSeries().getEndTime()));
 
-        for (IndicatorSeries indicator : strategy.getIndicatorSeries()) {
+        for (org.trade.core.persistent.dao.series.indicator.IndicatorSeries indicator : strategy.getIndicatorSeries()) {
 
             try {
 
@@ -92,12 +91,14 @@ public class StrategyDataUI extends Worker {
                  * For each indicator create a series that is a clone for this
                  * trade strategy.
                  */
-                IndicatorSeriesUI series = (IndicatorSeriesUI) ClassFactory
-                        .getCreateClass(IIndicatorDatasetUI.PACKAGE + indicator.getType() + "UI", indicator.getParam(indicator.getType()), this);
+
+                Vector<Object> params = indicator.getParam(indicator.getType());
+                IndicatorSeries series = (IndicatorSeries) ClassFactory
+                        .getCreateClass(IIndicatorDataset.PACKAGE + indicator.getType(), params, this);
 
                 series.setKey(series.getName());
                 series.createSeries(candleDataset, 0);
-                IIndicatorDatasetUI indicatorDataset = this.getIndicatorByType(indicator.getType() + "UI");
+                IIndicatorDataset indicatorDataset = this.getIndicatorByType(indicator.getType());
 
                 if (null == indicatorDataset) {
                     /*
@@ -107,10 +108,10 @@ public class StrategyDataUI extends Worker {
                      * table in the DB to represent the Dataset which is just a
                      * holder for series and is required by the Chart API.
                      */
-                    String datasetName = indicator.getType().replaceAll("Series", "DatasetUI");
+                    String datasetName = indicator.getType().replaceAll("Series", "Dataset");
                     Vector<Object> parm = new Vector<>();
-                    indicatorDataset = (IIndicatorDatasetUI) ClassFactory
-                            .getCreateClass(IIndicatorDatasetUI.PACKAGE + datasetName, parm, this);
+                    indicatorDataset = (IIndicatorDataset) ClassFactory
+                            .getCreateClass(IIndicatorDataset.PACKAGE + datasetName, parm, this);
                     this.indicators.add(indicatorDataset);
                 }
                 indicatorDataset.addSeries(series);
@@ -224,7 +225,7 @@ public class StrategyDataUI extends Worker {
 
         for (int i = 0; i < getBaseCandleSeries().getItemCount(); i++) {
 
-            CandleItemUI candleItemUI = (CandleItemUI) getBaseCandleSeries().getDataItem(i);
+            CandleItem candleItemUI = (CandleItem) getBaseCandleSeries().getDataItem(i);
             boolean newBar = this.getCandleDataset().getSeries(0).buildCandle(candleItemUI.getPeriod().getStart(),
                     candleItemUI.getOpen(), candleItemUI.getHigh(), candleItemUI.getLow(), candleItemUI.getClose(),
                     candleItemUI.getVolume(), candleItemUI.getVwap(), candleItemUI.getCount(),
@@ -259,7 +260,7 @@ public class StrategyDataUI extends Worker {
 
         this.currentBaseCandleCount = this.getBaseCandleSeries().getItemCount() - 1;
 
-        CandleItemUI candleItem = (CandleItemUI) this.getBaseCandleSeries().getDataItem(this.currentBaseCandleCount);
+        CandleItem candleItem = (CandleItem) this.getBaseCandleSeries().getDataItem(this.currentBaseCandleCount);
         this.getBaseCandleSeries().updatePercentChanged(candleItem);
         updateIndicators(this.getBaseCandleDataset(), newBar);
         this.getBaseCandleSeries().fireSeriesChanged();
@@ -301,14 +302,14 @@ public class StrategyDataUI extends Worker {
      * @param source CandleDataset
      * @param newBar boolean
      */
-    private void updateIndicators(CandleDatasetUI source, boolean newBar) {
+    private void updateIndicators(CandleDataset source, boolean newBar) {
 
-        for (IIndicatorDatasetUI indicator : indicators) {
+        for (IIndicatorDataset indicator : indicators) {
             /*
              * CandleSeries are only updated via the API i.e. these are not true
              * indicators and are shared across Data-sets.
              */
-            if (!IndicatorSeriesUI.CandleSeries.equals(indicator.getType(0))) {
+            if (!IndicatorSeries.CandleSeries.equals(indicator.getType(0))) {
                 indicator.updateDataset(source, 0, newBar);
             }
         }
@@ -320,15 +321,15 @@ public class StrategyDataUI extends Worker {
      *
      * @param source CandleDataset
      */
-    public void createIndicators(CandleDatasetUI source) {
+    public void createIndicators(CandleDataset source) {
 
-        for (IIndicatorDatasetUI indicator : indicators) {
+        for (IIndicatorDataset indicator : indicators) {
 
-            if (!IndicatorSeriesUI.CandleSeries.equals(indicator.getType(0))) {
+            if (!IndicatorSeries.CandleSeries.equals(indicator.getType(0))) {
 
                 for (int x = 0; x < indicator.getSeriesCount(); x++) {
 
-                    IndicatorSeriesUI series = indicator.getSeries(x);
+                    IndicatorSeries series = indicator.getSeries(x);
                     /*
                      * CandleSeries are only updated via the API i.e. these are
                      * not true indicators and are shared across Data-sets.
@@ -354,8 +355,8 @@ public class StrategyDataUI extends Worker {
 
     public void clearChartDatasets() {
 
-        for (IIndicatorDatasetUI indicator : indicators) {
-            if (!IndicatorSeriesUI.CandleSeries.equals(indicator.getType(0))) {
+        for (IIndicatorDataset indicator : indicators) {
+            if (!IndicatorSeries.CandleSeries.equals(indicator.getType(0))) {
                 indicator.clear();
             }
         }
@@ -367,7 +368,7 @@ public class StrategyDataUI extends Worker {
      *
      * @return List<IIndicatorDatasetUI>
      */
-    public List<IIndicatorDatasetUI> getIndicators() {
+    public List<IIndicatorDataset> getIndicators() {
         return indicators;
     }
 
@@ -377,9 +378,9 @@ public class StrategyDataUI extends Worker {
      * @param type String
      * @return IIndicatorDatasetUI
      */
-    public IIndicatorDatasetUI getIndicatorByType(String type) {
+    public IIndicatorDataset getIndicatorByType(String type) {
 
-        for (IIndicatorDatasetUI series : indicators) {
+        for (IIndicatorDataset series : indicators) {
 
             if (series.getType(0).equals(type)) {
 
@@ -394,7 +395,7 @@ public class StrategyDataUI extends Worker {
      *
      * @return CandleDataset
      */
-    public CandleDatasetUI getBaseCandleDataset() {
+    public CandleDataset getBaseCandleDataset() {
         return baseCandleDataset;
     }
 
@@ -403,7 +404,7 @@ public class StrategyDataUI extends Worker {
      *
      * @return CandleSeries
      */
-    public CandleSeriesUI getBaseCandleSeries() {
+    public CandleSeries getBaseCandleSeries() {
         return baseCandleDataset.getSeries(0);
     }
 
@@ -412,7 +413,7 @@ public class StrategyDataUI extends Worker {
      *
      * @return CandleDataset
      */
-    public CandleDatasetUI getCandleDataset() {
+    public CandleDataset getCandleDataset() {
         return candleDataset;
     }
 
@@ -424,8 +425,8 @@ public class StrategyDataUI extends Worker {
      */
     public static StrategyDataUI create(final Tradestrategy tradestrategy) {
 
-        CandleDatasetUI candleDataset = new CandleDatasetUI();
-        CandleSeriesUI candleSeries = new CandleSeriesUI(tradestrategy.getContract().getSymbol(),
+        CandleDataset candleDataset = new CandleDataset();
+        CandleSeries candleSeries = new CandleSeries(tradestrategy.getContract().getSymbol(),
                 tradestrategy.getContract(), tradestrategy.getBarSize(), tradestrategy.getTradingday().getOpen(),
                 tradestrategy.getTradingday().getClose());
         candleDataset.addSeries(candleSeries);
@@ -442,7 +443,7 @@ public class StrategyDataUI extends Worker {
      * @param longTrade          boolean
      * @param milliSecondsDeplay int
      */
-    public static void doDummyData(CandleSeriesUI series, Tradingday start, int noDays, int barSize, boolean longTrade,
+    public static void doDummyData(CandleSeries series, Tradingday start, int noDays, int barSize, boolean longTrade,
                                    int milliSecondsDeplay) {
 
         double high = 33.98;
@@ -497,13 +498,13 @@ public class StrategyDataUI extends Worker {
         this.getBaseCandleSeries().printSeries();
 
         for (int i = 0; i < this.getCandleDataset().getSeriesCount(); i++) {
-            IndicatorSeriesUI series = this.getCandleDataset().getSeries(i);
+            IndicatorSeries series = this.getCandleDataset().getSeries(i);
             series.printSeries();
         }
 
-        for (IIndicatorDatasetUI indicatorDataset : this.getIndicators()) {
+        for (IIndicatorDataset indicatorDataset : this.getIndicators()) {
             for (int i = 0; i < indicatorDataset.getSeriesCount(); i++) {
-                IndicatorSeriesUI series = indicatorDataset.getSeries(i);
+                IndicatorSeries series = indicatorDataset.getSeries(i);
                 series.printSeries();
             }
         }

@@ -114,7 +114,7 @@ public class PivotSeries extends IndicatorSeries {
      * @param bars           Integer
      */
     public PivotSeries(Strategy strategy, String name, String type, String description, Boolean displayOnChart,
-                       Integer chartRGBColor, Boolean subChart, boolean side, boolean quadratic, Integer bars) {
+                       Integer chartRGBColor, Boolean subChart, Boolean side, Boolean quadratic, Integer bars) {
         super(strategy, name, type, description, displayOnChart, chartRGBColor, subChart);
         this.side = side;
         this.quadratic = quadratic;
