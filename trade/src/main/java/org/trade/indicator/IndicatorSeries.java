@@ -41,6 +41,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trade.core.persistent.dao.CodeValue;
 import org.trade.core.persistent.dao.Strategy;
+import org.trade.core.persistent.dao.series.indicator.AverageTrueRangeSeries;
+import org.trade.core.persistent.dao.series.indicator.BollingerBandsSeries;
+import org.trade.core.persistent.dao.series.indicator.CommodityChannelIndexSeries;
+import org.trade.core.persistent.dao.series.indicator.HeikinAshiSeries;
+import org.trade.core.persistent.dao.series.indicator.MACDSeries;
+import org.trade.core.persistent.dao.series.indicator.MoneyFlowIndexSeries;
+import org.trade.core.persistent.dao.series.indicator.MovingAverageSeries;
+import org.trade.core.persistent.dao.series.indicator.PivotSeries;
+import org.trade.core.persistent.dao.series.indicator.RelativeStrengthIndexSeries;
+import org.trade.core.persistent.dao.series.indicator.StochasticOscillatorSeries;
+import org.trade.core.persistent.dao.series.indicator.VolumeSeries;
+import org.trade.core.persistent.dao.series.indicator.VostroSeries;
+import org.trade.core.persistent.dao.series.indicator.VwapSeries;
 
 import java.awt.*;
 import java.io.Serial;
@@ -58,20 +71,20 @@ public abstract class IndicatorSeries extends ComparableObjectSeries implements 
     /*
      * These names must match the names of the classes for that series.
      */
-    public static final String MovingAverageSeries = "MovingAverageSeries";
-    public static final String PivotSeries = "PivotSeries";
-    public static final String HeikinAshiSeries = "HeikinAshiSeries";
-    public static final String VwapSeries = "VwapSeries";
-    public static final String VolumeSeries = "VolumeSeries";
-    public static final String CandleSeries = "CandleSeries";
-    public static final String AverageTrueRangeSeries = "AverageTrueRangeSeries";
-    public static final String RelativeStrengthIndexSeries = "RelativeStrengthIndexSeries";
-    public static final String CommodityChannelIndexSeries = "CommodityChannelIndexSeries";
-    public static final String BollingerBandsSeries = "BollingerBandsSeries";
-    public static final String StochasticOscillatorSeries = "StochasticOscillatorSeries";
-    public static final String MoneyFlowIndexSeries = "MoneyFlowIndexSeries";
-    public static final String MACDSeries = "MACDSeries";
-    public static final String VostroSeries = "VostroSeries";
+    public static final String MovingAverageSeries = MovingAverageSeries.class.getSimpleName();
+    public static final String PivotSeries = PivotSeries.class.getSimpleName();
+    public static final String HeikinAshiSeries = HeikinAshiSeries.class.getSimpleName();
+    public static final String VwapSeries = VwapSeries.class.getSimpleName();
+    public static final String VolumeSeries = VolumeSeries.class.getSimpleName();
+    public static final String CandleSeries = org.trade.core.persistent.dao.series.indicator.CandleSeries.class.getSimpleName();
+    public static final String AverageTrueRangeSeries = AverageTrueRangeSeries.class.getSimpleName();
+    public static final String RelativeStrengthIndexSeries = RelativeStrengthIndexSeries.class.getSimpleName();
+    public static final String CommodityChannelIndexSeries = CommodityChannelIndexSeries.class.getSimpleName();
+    public static final String BollingerBandsSeries = BollingerBandsSeries.class.getSimpleName();
+    public static final String StochasticOscillatorSeries = StochasticOscillatorSeries.class.getSimpleName();
+    public static final String MoneyFlowIndexSeries = MoneyFlowIndexSeries.class.getSimpleName();
+    public static final String MACDSeries = MACDSeries.class.getSimpleName();
+    public static final String VostroSeries = VostroSeries.class.getSimpleName();
 
     private Integer id;
     private String name;

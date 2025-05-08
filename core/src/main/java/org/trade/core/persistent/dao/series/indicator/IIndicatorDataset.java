@@ -48,7 +48,7 @@ import java.awt.*;
  */
 public interface IIndicatorDataset {
 
-    String PACKAGE = "org.trade.core.persistent.dao.series.indicator.";
+    String PACKAGE = IIndicatorDataset.class.getPackageName() + ".";
 
     /**
      * Method updateDataset.
