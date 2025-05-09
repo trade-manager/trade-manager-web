@@ -87,9 +87,12 @@ public class DBBroker extends Broker {
     private static final Integer _backTestBarSize;
 
     static {
+
         try {
+
             _backTestBarSize = ConfigProperties.getPropAsInt("trade.backtest.barSize");
         } catch (IOException ex) {
+
             throw new IllegalArgumentException("Error initializing BackTestBroker Msg: " + ex.getMessage());
         }
     }
@@ -102,6 +105,7 @@ public class DBBroker extends Broker {
      * @param brokerModel     IBrokerModel
      */
     public DBBroker(StrategyData strategyData, Integer idTradestrategy, IClientWrapper brokerModel) {
+
         this.idTradestrategy = idTradestrategy;
         this.brokerModel = brokerModel;
         this.strategyData = strategyData;

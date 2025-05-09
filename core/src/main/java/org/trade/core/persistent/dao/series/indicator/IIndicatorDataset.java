@@ -48,7 +48,7 @@ import java.awt.*;
  */
 public interface IIndicatorDataset {
 
-    String PACKAGE = IIndicatorDataset.class.getPackageName() + ".";
+    String PACKAGE = IIndicatorDataset.class.getPackageName();
 
     /**
      * Method updateDataset.

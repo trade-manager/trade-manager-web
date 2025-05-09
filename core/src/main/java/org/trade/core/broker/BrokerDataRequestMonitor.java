@@ -88,7 +88,9 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
             for (Tradingday tradingday : tradingdays.getTradingdays()) {
 
                 Tradingday toProcessTradingday = (Tradingday) tradingday.clone();
+
                 for (Tradestrategy tradestrategy : tradingday.getTradestrategies()) {
+
                     tradestrategy.setStrategyData(StrategyData.create(tradestrategy));
                     toProcessTradingday.addTradestrategy(tradestrategy);
                     addIndicatorTradestrategyToTradingday(toProcessTradingday, tradestrategy);
@@ -101,6 +103,7 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
                  * run due to a conflict. Run them in asc date order.
                  */
                 if (totalSumbitted > reSumbittedAt) {
+
                     reSumbittedAt = totalSumbitted + reSumbittedAt;
                     totalSumbitted = reProcessTradingdays(tradingdays, runningContractRequests, totalSumbitted);
                 }
@@ -113,17 +116,24 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
              * candles to build up the candle on the Tradestrategy/BarSize.
              */
             if (backTestBarSize > 0 && this.brokerModel.isBrokerDataOnly()) {
+
                 tradingdays.getTradingdays().sort(Tradingday.DATE_ORDER_ASC);
+
                 for (Tradingday itemTradingday : tradingdays.getTradingdays()) {
+
                     if (TradingCalendar.isTradingDay(itemTradingday.getOpen())
                             && TradingCalendar.sameDay(itemTradingday.getOpen(),
                             TradingCalendar.getZonedDateTimeFromMilli(this.startTime))
-                            && !TradingCalendar.isAfterHours(TradingCalendar.getZonedDateTimeFromMilli(this.startTime)))
+                            && !TradingCalendar.isAfterHours(TradingCalendar.getZonedDateTimeFromMilli(this.startTime))) {
                         continue;
+                    }
 
                     Tradingday tradingday = (Tradingday) itemTradingday.clone();
+
                     for (Tradestrategy itemTradestrategy : itemTradingday.getTradestrategies()) {
+
                         if (getBarSize(tradingday) < itemTradestrategy.getBarSize()) {
+
                             try {
                                 Tradestrategy tradestrategy = (Tradestrategy) itemTradestrategy.clone();
                                 tradestrategy.setBarSize(getBarSize(tradingday));
@@ -427,23 +437,31 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
             throws PersistentModelException {
 
         Tradestrategy indicatorTradestrategy = null;
+
         for (Tradestrategy indicator : indicatorRequests.values()) {
+
             if (indicator.getContract().equals(series.getContract())
                     && indicator.getTradingday().equals(tradestrategy.getTradingday())
                     && indicator.getBarSize().equals(tradestrategy.getBarSize())
                     && indicator.getChartDays().equals(tradestrategy.getChartDays())
                     && indicator.getPortfolio().equals(tradestrategy.getPortfolio())) {
+
                 indicatorTradestrategy = indicator;
                 break;
             }
         }
         if (null == indicatorTradestrategy) {
+
             Contract contract = series.getContract();
+
             if (null == series.getContract().getId()) {
+
                 contract = this.tradePersistentModel.findContractByUniqueKey(series.getContract().getSecType(),
                         series.getContract().getSymbol(), series.getContract().getExchange(),
                         series.getContract().getCurrency(), series.getContract().getExpiry());
+
                 if (null == contract) {
+
                     contract = this.tradePersistentModel.persistAspect(series.getContract());
                 }
             }
@@ -479,8 +497,11 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
     private int processTradingday(Tradingday tradingday, int totalSumbitted)
             throws BrokerModelException, InterruptedException {
 
-        if (tradingday.getTradestrategies().isEmpty())
+        if (tradingday.getTradestrategies().isEmpty()) {
+
             return totalSumbitted;
+        }
+
 
         for (Tradestrategy tradestrategy : tradingday.getTradestrategies()) {
 
@@ -567,13 +588,17 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
         }
 
         for (Tradestrategy tradestrategy : toProcessTradingday.getTradestrategies()) {
-            if (reProcessTradingday.existTradestrategy(tradestrategy))
+            if (reProcessTradingday.existTradestrategy(tradestrategy)) {
+
                 reProcessTradingday.removeTradestrategy(tradestrategy);
+            }
         }
         if (reProcessTradingday.getTradestrategies().isEmpty()) {
+
             runningContractRequests.remove(reProcessTradingday.getId());
         }
         if (!reProcessTradingday.getTradestrategies().isEmpty()) {
+
             runningContractRequests.put(reProcessTradingday.getId(), reProcessTradingday);
         }
         return toProcessTradingday;
@@ -591,7 +616,6 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
      * @param startTime long
      * @return Integer The total number of tradestrategies to process.
      */
-
     private Integer calculateTotalTradestrategiesToProcess(long startTime) throws PersistentModelException {
 
         int total = 0;

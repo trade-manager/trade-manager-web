@@ -94,7 +94,7 @@ public class StrategyDataUI extends Worker {
 
                 Vector<Object> params = indicator.getParam(indicator.getType());
                 IndicatorSeries series = (IndicatorSeries) ClassFactory
-                        .getCreateClass(IIndicatorDataset.PACKAGE + indicator.getType(), params, this);
+                        .getCreateClass(IIndicatorDataset.PACKAGE + "." + indicator.getType(), params, this);
 
                 series.setKey(series.getName());
                 series.createSeries(candleDataset, 0);
@@ -111,7 +111,7 @@ public class StrategyDataUI extends Worker {
                     String datasetName = indicator.getType().replaceAll("Series", "Dataset");
                     Vector<Object> parm = new Vector<>();
                     indicatorDataset = (IIndicatorDataset) ClassFactory
-                            .getCreateClass(IIndicatorDataset.PACKAGE + datasetName, parm, this);
+                            .getCreateClass(IIndicatorDataset.PACKAGE + "." + datasetName, parm, this);
                     this.indicators.add(indicatorDataset);
                 }
                 indicatorDataset.addSeries(series);

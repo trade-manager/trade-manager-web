@@ -351,10 +351,14 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
      */
 
     public void doRun() {
+
         try {
+
             if (m_tradingdays.isDirty()) {
+
                 this.setStatusBarMessage("Please save or refresh before running strategy ...\n", BasePanel.WARNING);
             } else {
+
                 runStrategy(m_tradingdays, false);
             }
         } catch (Exception ex) {
@@ -371,7 +375,9 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
 
     public void doRun(final Tradestrategy tradestrategy) {
         try {
+
             if (tradestrategy.isDirty()) {
+
                 this.setStatusBarMessage("Please save or refresh before running strategy ...\n", BasePanel.WARNING);
             } else {
                 Tradingdays tradingdays = new Tradingdays();
@@ -480,8 +486,10 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
     public void doTest(final Tradestrategy tradestrategy) {
 
         if (tradestrategy.isDirty()) {
+
             this.setStatusBarMessage("Please save before running strategy ...\n", BasePanel.WARNING);
         } else {
+
             contractPanel.doClose(tradestrategy);
             Tradingdays tradingdays = new Tradingdays();
             Tradingday tradingday = Tradingday.newInstance(tradestrategy.getTradingday().getOpen());
@@ -1236,6 +1244,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
      */
     public void doStrategyParameters(final Tradestrategy tradestrategy) {
         try {
+
             this.clearStatusBarMessage();
             CodeType codeType = m_tradePersistentModel.findCodeTypeByNameType(tradestrategy.getStrategy().getName(),
                     CodeType.StrategyParameters);
@@ -1244,11 +1253,15 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
 
                 Tradestrategy instance = m_tradePersistentModel.findTradestrategyById(tradestrategy);
                 CodeAttributePanel codeAttributePanel = new CodeAttributePanel(codeType, instance.getCodeValues());
+
                 if (null != codeAttributePanel) {
+
                     TextDialog dialog = new TextDialog(this.getFrame(), "Strategy Parms", true, codeAttributePanel);
                     dialog.setLocationRelativeTo(this);
                     dialog.setVisible(true);
+
                     if (!dialog.getCancel()) {
+
                         /*
                          * Populate the code values from the fields.
                          */
@@ -1521,11 +1534,15 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
     private void runStrategy(final Tradingdays tradingdays, boolean brokerDataOnly) {
         try {
             m_brokerModel.setBrokerDataOnly(brokerDataOnly);
+
             if ((null != brokerDataRequestProgressMonitor) && !brokerDataRequestProgressMonitor.isDone()) {
+
                 this.setStatusBarMessage("Strategies already running please wait or cancel ...", BasePanel.INFORMATION);
                 return;
             } else {
+
                 if (brokerDataOnly && !m_brokerModel.isConnected()) {
+
                     int result = JOptionPane.showConfirmDialog(this.getFrame(),
                             "Yahoo Finance will be used to retrieve candle data." + "\n" + "Do you want to continue ?"
                                     + "\n" + "Note there is a 20min delay to data. This option should " + " \n"
@@ -1535,27 +1552,37 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                                     + "Chart Hist > 1 D to 1 M, Bar Size >= 5min" + "\n"
                                     + "Chart Hist > 1 M to 3 M, Bar Size = 1 day",
                             "Information", JOptionPane.YES_NO_OPTION);
+
                     if (result == JOptionPane.NO_OPTION) {
                         return;
                     }
                 }
+
                 for (Tradingday tradingday : tradingdays.getTradingdays()) {
+
                     if (tradingdayPanel.isStrategyWorkerRunning(tradingday)) {
+
                         this.setStatusBarMessage("Strategies already running please wait or cancel ...",
                                 BasePanel.INFORMATION);
                         return;
                     }
+
                     if (Tradingdays.hasTradeOrders(tradingday) && !brokerDataOnly) {
                         int result = JOptionPane.showConfirmDialog(this.getFrame(),
                                 "Tradingday: " + tradingday.getOpen()
                                         + " has orders. Do you want to delete all orders?",
                                 "Information", JOptionPane.YES_NO_OPTION);
+
                         if (result == JOptionPane.YES_OPTION) {
+
                             m_tradePersistentModel.removeTradingdayTradeOrders(tradingday);
                         }
                     }
+
                     for (Tradestrategy tradestrategy : tradingday.getTradestrategies()) {
+
                         try {
+
                             if (brokerDataOnly && !m_brokerModel.validateBrokerData(tradestrategy)) {
                                 return;
                             }
@@ -1613,10 +1640,12 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
             }
 
             this.getFrame().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+
             if (brokerDataOnly) {
-                this.setStatusBarMessage("Runing data retrieval please wait ...", BasePanel.INFORMATION);
+
+                this.setStatusBarMessage("Running data retrieval please wait ...", BasePanel.INFORMATION);
             } else {
-                this.setStatusBarMessage("Runing strategy please wait ...", BasePanel.INFORMATION);
+                this.setStatusBarMessage("Running strategy please wait ...", BasePanel.INFORMATION);
             }
 
             if (m_brokerModel.isConnected()) {
@@ -1636,15 +1665,19 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
             brokerDataRequestProgressMonitor = new BrokerDataRequestMonitor(m_brokerModel, m_tradePersistentModel,
                     tradingdays);
             brokerDataRequestProgressMonitor.addPropertyChangeListener(evt -> SwingUtilities.invokeLater(() -> {
+
                 if ("progress".equals(evt.getPropertyName())) {
+
                     int progress = (Integer) evt.getNewValue();
                     setProgressBarProgress(progress, brokerDataRequestProgressMonitor);
                 } else if ("information".equals(evt.getPropertyName())) {
+
                     if (brokerDataRequestProgressMonitor.isDone())
                         refreshTradingdays(tradingdays);
                     setStatusBarMessage((String) evt.getNewValue(), BasePanel.INFORMATION);
 
                 } else if ("error".equals(evt.getPropertyName())) {
+
                     setErrorMessage("Error getting history data.",
                             ((Exception) evt.getNewValue()).getMessage(), (Exception) evt.getNewValue());
                 }
