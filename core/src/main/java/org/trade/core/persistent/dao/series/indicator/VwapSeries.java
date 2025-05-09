@@ -203,6 +203,6 @@ public class VwapSeries extends IndicatorSeries {
     @Transient
     public Vector<Object> getParam(String type) {
 
-         return super.getParam(type);
+        return super.getParam(type);
     }
 }

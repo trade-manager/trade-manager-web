@@ -139,10 +139,10 @@ public class CandleSeries extends IndicatorSeries {
      * sorted into ascending order by period, and duplicate periods will not be
      * allowed.
      *
-     * @param series  the Contract for this candle series.
-     * @param barSize the length in minutes for each bar ie. 5, 15, 30, 60
-     * @param startTime  ZonedDateTime
-     * @param endTime  ZonedDateTime
+     * @param series    the Contract for this candle series.
+     * @param barSize   the length in minutes for each bar ie. 5, 15, 30, 60
+     * @param startTime ZonedDateTime
+     * @param endTime   ZonedDateTime
      */
     public CandleSeries(CandleSeries series, int barSize, ZonedDateTime startTime, ZonedDateTime endTime) {
         super(series.getContract().getSymbol(), IndicatorSeries.CandleSeries, series.getDisplaySeries(), 0,
@@ -159,11 +159,11 @@ public class CandleSeries extends IndicatorSeries {
      * sorted into ascending order by period, and duplicate periods will not be
      * allowed.
      *
-     * @param legend   the title that appears on the bottom of the chart.
-     * @param contract the Contract for this candle series.
-     * @param barSize  the length in minutes for each bar ie. 5, 15, 30, 60
-     * @param startTime  ZonedDateTime
-     * @param endTime  ZonedDateTime
+     * @param legend    the title that appears on the bottom of the chart.
+     * @param contract  the Contract for this candle series.
+     * @param barSize   the length in minutes for each bar ie. 5, 15, 30, 60
+     * @param startTime ZonedDateTime
+     * @param endTime   ZonedDateTime
      */
 
     public CandleSeries(String legend, Contract contract, Integer barSize, ZonedDateTime startTime, ZonedDateTime endTime) {

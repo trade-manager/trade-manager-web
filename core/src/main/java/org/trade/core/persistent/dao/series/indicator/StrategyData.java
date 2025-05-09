@@ -116,7 +116,7 @@ public class StrategyData extends Worker {
                     String datasetName = indicator.getType().replaceAll("Series", "Dataset");
                     Vector<Object> parm = new Vector<>();
                     indicatorDataset = (IIndicatorDataset) ClassFactory
-                            .getCreateClass(IIndicatorDataset.PACKAGE + datasetName, parm, this);
+                            .getCreateClass(IIndicatorDataset.PACKAGE + "." + datasetName, parm, this);
                     this.indicators.add(indicatorDataset);
                 }
                 indicatorDataset.addSeries(series);

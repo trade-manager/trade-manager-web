@@ -49,7 +49,7 @@ import java.awt.*;
  */
 public interface IIndicatorDataset {
 
-    String PACKAGE = "org.trade.indicator.";
+    String PACKAGE = IIndicatorDataset.class.getPackageName();
 
     /**
      * Method updateDataset.

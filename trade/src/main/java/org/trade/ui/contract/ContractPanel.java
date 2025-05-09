@@ -773,16 +773,22 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
          * @see ListSelectionListener#valueChanged(ListSelectionEvent)
          */
         public void valueChanged(ListSelectionEvent event) {
+
             if (!event.getValueIsAdjusting()) {
+
                 ListSelectionModel model = (ListSelectionModel) event.getSource();
+
                 if (model.getLeadSelectionIndex() > -1) {
+
                     clearStatusBarMessage();
                     int row = m_tradeOrderTable.convertRowIndexToModel(model.getLeadSelectionIndex());
 
                     int i = 0;
 
                     for (TradeOrder tradeOrder : m_tradeOrderModel.getData().getTradeOrders()) {
+
                         if (i == row) {
+
                             cancelButton.setTransferObject(tradeOrder);
                             executeButton.setTransferObject(tradeOrder);
                             propertiesButton.setTransferObject(tradeOrder);
@@ -791,6 +797,7 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
                         i++;
                     }
                 } else {
+
                     cancelButton.setTransferObject(new Aspects());
                     executeButton.setTransferObject(null);
                     propertiesButton.setTransferObject(null);
