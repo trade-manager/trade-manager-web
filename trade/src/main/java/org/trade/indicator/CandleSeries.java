@@ -467,7 +467,7 @@ public class CandleSeries extends IndicatorSeries {
                         double vwap, int tradeCount, int rollupInterval, ZonedDateTime lastUpdateDate) {
 
         int index = this.indexOf(time);
-        // _log.error("Symbol :" + this.getSymbol() + " Bar Time: " + time
+        // _log.info("Symbol :" + this.getSymbol() + " Bar Time: " + time
         // + " Index: " + index + " open: " + open + " high: " + high
         // + " low: " + low + " close: " + close + " volume: " + volume
         // + " vwap: " + vwap + " tradeCount: " + tradeCount
@@ -886,7 +886,9 @@ public class CandleSeries extends IndicatorSeries {
                  * Build current bar
                  */
                 CandleItem candleItem = (CandleItem) this.getDataItem(this.getItemCount() - 1);
+
                 if (candleItem.getPeriod().equals(period)) {
+
                     this.rollingCandle = new RollingCandle(period, rollupInterval, candleItem.getOpen(),
                             candleItem.getHigh(), candleItem.getLow(), candleItem.getClose(), candleItem.getVolume(),
                             candleItem.getCount(), candleItem.getVwap(), lastUpdateDate);
@@ -947,21 +949,28 @@ public class CandleSeries extends IndicatorSeries {
                                      double close, long volume, int tradeCount, double vwap, ZonedDateTime lastUpdateDate) {
 
         if (rollupInterval == this.rollingCandleValues.size()) {
-            this.prevRollingCandle = this.rollingCandleValues.removeLast();
 
+            this.prevRollingCandle = this.rollingCandleValues.removeLast();
             this.rollingCandle.open = this.openValues.removeLast();
-            if (this.openValues.isEmpty())
+
+            if (this.openValues.isEmpty()) {
+
                 this.rollingCandle.open = open;
+            }
 
             if (this.rollingCandle.high == this.highValues.removeLast()) {
+
                 if (this.highValues.isEmpty()) {
+
                     this.rollingCandle.high = high;
                 } else {
+
                     this.rollingCandle.high = Collections.max(this.highValues);
                 }
             }
 
             if (this.rollingCandle.low == this.lowValues.removeLast()) {
+
                 if (this.lowValues.isEmpty()) {
                     this.rollingCandle.low = low;
                 } else {
@@ -976,33 +985,36 @@ public class CandleSeries extends IndicatorSeries {
 
         this.rollingCandle.period = period;
         this.rollingCandle.lastUpdateDate = lastUpdateDate;
-
         this.openValues.addFirst(open);
-
         this.highValues.addFirst(high);
-        if (high > this.rollingCandle.high)
+
+        if (high > this.rollingCandle.high) {
+
             this.rollingCandle.high = high;
+        }
 
         this.lowValues.addFirst(low);
-        if (low < this.rollingCandle.low)
+
+        if (low < this.rollingCandle.low) {
+
             this.rollingCandle.low = low;
+        }
 
         this.rollingCandle.close = close;
-
         this.tradeCountValues.addFirst(tradeCount);
         sumTradeCount = sumTradeCount + tradeCount;
         this.rollingCandle.tradeCount = sumTradeCount;
-
         this.volumeValues.addFirst(volume);
         sumVolume = sumVolume + volume;
         this.rollingCandle.volume = sumVolume;
-
         this.vwapVolumeValues.addFirst(vwap * volume);
         sumVwapVolume = sumVwapVolume + this.vwapVolumeValues.getFirst();
 
         if (sumVolume > 0) {
+
             this.rollingCandle.vwap = sumVwapVolume / sumVolume;
         } else {
+
             this.rollingCandle.vwap = this.rollingCandle.close;
         }
 
@@ -1010,10 +1022,12 @@ public class CandleSeries extends IndicatorSeries {
         // + sumVwapVolume + " sumVolume: " + sumVolume + " volume: "
         // + volume + " vwap: " + this.rollingCandle.vwap);
         try {
+
             this.rollingCandleValues.addFirst((RollingCandle) this.rollingCandle.clone());
-        } catch (CloneNotSupportedException e) {
+        } catch (CloneNotSupportedException ex) {
+
             // TODO Auto-generated catch block
-            _log.error("Error updateRollingCandle cannot clone candle Msg: {}", e.getMessage());
+            _log.error("Error: CandleSeries::updateRollingCandle cannot clone candle Msg: {}", ex.getMessage());
         }
     }
 

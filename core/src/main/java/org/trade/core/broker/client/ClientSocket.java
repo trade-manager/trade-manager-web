@@ -68,10 +68,10 @@ public class ClientSocket {
         try {
 
             if (null != endDateTime) {
-                YahooBroker yahooBroker = new YahooBroker(reqId, tradestrategy.getContract(), endDateTime, durationStr,
+                PolygonBroker broker = new PolygonBroker(reqId, tradestrategy.getContract(), endDateTime, durationStr,
                         barSizeSetting, m_client);
-                m_backTestBroker.put(reqId, yahooBroker);
-                yahooBroker.execute();
+                m_backTestBroker.put(reqId, broker);
+                broker.execute();
 
             } else {
 

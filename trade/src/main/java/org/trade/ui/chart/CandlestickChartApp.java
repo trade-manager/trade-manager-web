@@ -1,5 +1,7 @@
 package org.trade.ui.chart;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trade.base.BasePanel;
@@ -31,17 +33,15 @@ import java.awt.*;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterJob;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.io.Serial;
 import java.net.URI;
-import java.net.URL;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.StringTokenizer;
 
 /**
  *
@@ -78,9 +78,9 @@ public class CandlestickChartApp extends BasePanel {
                 JFrame frame = new JFrame();
                 String symbol = "MSFT";
                 // StrategyData data = CandlestickChartTest
-                // .getPriceDataSetYahooDay(symbol);
+                // .getPriceDataSetDay(symbol);
                 int numberOfDays = 2;
-                StrategyDataUI strategyData = CandlestickChartApp.getPriceDataSetYahooIntraday(symbol, numberOfDays,
+                StrategyDataUI strategyData = CandlestickChartApp.getPriceDataSetIntraday(symbol, numberOfDays,
                         BarSize.FIVE_MIN);
                 CandlestickChart chart = new CandlestickChart(symbol, strategyData,
                         Tradingday.newInstance(TradingCalendar.getDateTimeNowMarketTimeZone()));
@@ -98,7 +98,7 @@ public class CandlestickChartApp extends BasePanel {
                 EventQueue waitQue = new WaitCursorEventQueue(500);
                 Toolkit.getDefaultToolkit().getSystemEventQueue().push(waitQue);
             } catch (Exception ex) {
-                _log.error("Error getting Yahoo data msg: {}", ex.getMessage(), ex);
+                _log.error("Error getting broker data msg: {}", ex.getMessage(), ex);
             }
         });
     }
@@ -212,12 +212,12 @@ public class CandlestickChartApp extends BasePanel {
     }
 
     /**
-     * Method getPriceDataSetYahooDay.
+     * Method getPriceDataSetDay.
      *
      * @param symbol String
      * @return StrategyData
      */
-    protected static StrategyDataUI getPriceDataSetYahooDay(String symbol) {
+    protected static StrategyDataUI getPriceDataSetDay(String symbol) {
         try {
 
             List<Candle> candles = new ArrayList<>();
@@ -226,76 +226,88 @@ public class CandlestickChartApp extends BasePanel {
             String name = daoStrategy.getName();
             Strategy strategy = home.findByName(name);
             Contract contract = new Contract(SECType.STOCK, symbol, Exchange.SMART, Currency.USD, null, null);
-            ZonedDateTime today = TradingCalendar.getDateTimeNowMarketTimeZone();
-            ZonedDateTime startDate = today.minusMonths(3);
+            ZonedDateTime endDate = TradingCalendar.getDateTimeNowMarketTimeZone();
+            ZonedDateTime startDate = endDate.minusMonths(3);
 
             /*
-             * Yahoo finance So IBM form 1/1/2012 thru 06/30/2012
-             * http://ichart.finance
-             * .yahoo.com/table.csv?s=IBM&a=0&b=1&c=2012&d=5
-             * &e=30&f=2012&ignore=.csv"
+             * Polygon curl -X GET "https://api.polygon.io/v2/aggs/ticker/AAPL/range/1/day/1746696600000/1746734400000?adjusted=true&sort=asc&limit=1500&apiKey=WGlljpSus0Ai1mj2ayaASNTcxchw9aUp"
              */
+            String strUrl = "https://api.polygon.io/v2/aggs/ticker/" + symbol + "/range/1/day/" + startDate.toInstant().toEpochMilli() + "/" + endDate.toInstant().toEpochMilli() + "?adjusted=true&sort=asc&limit=1500&apiKey=WGlljpSus0Ai1mj2ayaASNTcxchw9aUp";
 
-            String strUrl = "http://ichart.finance.yahoo.com/table.csv?s=" + symbol + "&a=" + startDate.getMonth()
-                    + "&b=" + startDate.getDayOfMonth() + "&c=" + startDate.getYear() + "&d=" + today.getMonth() + "&e="
-                    + today.getDayOfMonth() + "&f=" + today.getYear() + "&ignore=.csv";
+            _log.debug("Debug: CandlestickChartApp::getPriceDataSetIntraday URL: {}", strUrl);
 
-            URL url = new URI(strUrl).toURL();
-            BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
-            DateTimeFormatter df = DateTimeFormatter.ofPattern("y-M-d");
+            // create a request
+            HttpClient client = HttpClient.newHttpClient();
+            var request = HttpRequest.newBuilder(
+                            URI.create(strUrl))
+                    .header("accept", "application/json")
+                    .build();
 
-            String inputLine;
-            in.readLine();
-            while ((inputLine = in.readLine()) != null) {
-                StringTokenizer st = new StringTokenizer(inputLine, ",");
-                ZonedDateTime date = ZonedDateTime.parse(st.nextToken(), df);
-                Tradingday tradingday = Tradingday.newInstance(date);
-                double open = Double.parseDouble(st.nextToken());
-                double high = Double.parseDouble(st.nextToken());
-                double low = Double.parseDouble(st.nextToken());
-                double close = Double.parseDouble(st.nextToken());
-                long volume = Long.parseLong(st.nextToken());
-                // double adjClose = Double.parseDouble( st.nextToken() );
-                CandlePeriod period = new CandlePeriod(TradingCalendar.getTradingDayStart(date),
-                        TradingCalendar.getTradingDayEnd(date).minusSeconds(1));
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-                Candle candle = new Candle(contract, period, open, high, low, close, volume, (open + close) / 2,
-                        ((int) volume / 100), TradingCalendar.getDateTimeNowMarketTimeZone());
+            if (response.statusCode() == 200) {
 
-                candle.setContract(contract);
-                candle.setTradingday(tradingday);
-                candle.setLastUpdateDate(candle.getStartPeriod());
-                candles.add(candle);
+                String jsonString = response.body();
+                JSONObject contractObj = new JSONObject(jsonString);
+                JSONArray bars = contractObj.getJSONArray("results");
+
+                for (int i = 0; i < bars.length(); i++) {
+
+                    JSONObject barObj = bars.getJSONObject(i);
+
+                    ZonedDateTime time = TradingCalendar.getZonedDateTimeFromMilli((barObj.getLong("t")));
+                    Tradingday tradingday = Tradingday.newInstance(time);
+                    // values:Timestamp,close,high,low,open,volume
+                    double close = barObj.getDouble("c");
+                    double high = barObj.getDouble("h");
+                    double low = barObj.getDouble("l");
+                    double open = barObj.getDouble("o");
+                    long volume = barObj.getLong("v");
+
+                    _log.info("Time : {} Open: {} High: {} Low: {} Close: {} Volume: {}", time, open, high, low, close, volume);
+                    CandlePeriod period = new CandlePeriod(TradingCalendar.getTradingDayStart(time),
+                            TradingCalendar.getTradingDayEnd(time).minusSeconds(1));
+
+                    Candle candle = new Candle(contract, period, open, high, low, close, volume, (open + close) / 2,
+                            ((int) volume / 100), TradingCalendar.getDateTimeNowMarketTimeZone());
+
+                    candle.setContract(contract);
+                    candle.setTradingday(tradingday);
+                    candle.setLastUpdateDate(candle.getStartPeriod());
+                    candles.add(candle);
+                }
+
+                Collections.reverse(candles);
+                CandleDataset candleDataset = new CandleDataset();
+                int daySeconds = (int) TradingCalendar.getDurationInSeconds(TradingCalendar.getTradingDayStart(endDate),
+                        TradingCalendar.getTradingDayEnd(endDate));
+                CandleSeries candleSeries = new CandleSeries(contract.getSymbol(), contract, daySeconds, startDate, endDate);
+                candleDataset.addSeries(candleSeries);
+                StrategyDataUI strategyData = new StrategyDataUI(strategy, candleDataset);
+                CandleDataset.populateSeries(strategyData, candles);
+                return strategyData;
+            } else {
+                _log.error("Error: CandlestickChartApp::getPriceDataSetIntraday request to URL: {}, failed with status code: {}", strUrl, response.statusCode());
             }
-            in.close();
-
-            Collections.reverse(candles);
-            CandleDataset candleDataset = new CandleDataset();
-            int daySeconds = (int) TradingCalendar.getDurationInSeconds(TradingCalendar.getTradingDayStart(today),
-                    TradingCalendar.getTradingDayEnd(today));
-            CandleSeries candleSeries = new CandleSeries(contract.getSymbol(), contract, daySeconds, startDate, today);
-            candleDataset.addSeries(candleSeries);
-            StrategyDataUI strategyData = new StrategyDataUI(strategy, candleDataset);
-            CandleDataset.populateSeries(strategyData, candles);
-            return strategyData;
         } catch (Exception ex) {
-            _log.error("Error getting Yahoo data msg: {}", ex.getMessage(), ex);
+            _log.error("Error getting broker data msg: {}", ex.getMessage(), ex);
         }
         return null;
     }
 
     /**
-     * Method getPriceDataSetYahooIntraday.
+     * Method getPriceDataSetIntraday.
      *
      * @param symbol        String
      * @param days          int
-     * @param periodSeconds int
+     * @param barSize int
      * @return StrategyData
      */
-    protected static StrategyDataUI getPriceDataSetYahooIntraday(String symbol, int days, int periodSeconds) {
+    protected static StrategyDataUI getPriceDataSetIntraday(String symbol, int days, int barSize) {
         try {
-            ZonedDateTime today = TradingCalendar.getDateTimeNowMarketTimeZone();
-            ZonedDateTime startDate = today.minusDays(days);
+
+            ZonedDateTime endDate = TradingCalendar.getDateTimeNowMarketTimeZone();
+            ZonedDateTime startDate = endDate.minusDays(days);
             startDate = TradingCalendar.getPrevTradingDay(startDate);
             Strategy daoStrategy = (Strategy) DAOStrategy.newInstance().getObject();
             StrategyHome home = new StrategyHome();
@@ -303,52 +315,61 @@ public class CandlestickChartApp extends BasePanel {
             Strategy strategy = home.findByName(name);
             Contract contract = new Contract(SECType.STOCK, symbol, Exchange.SMART, Currency.USD, null, null);
             CandleDataset candleDataset = new CandleDataset();
-            CandleSeries candleSeries = new CandleSeries(contract.getSymbol(), contract, periodSeconds, startDate,
-                    today);
+            CandleSeries candleSeries = new CandleSeries(contract.getSymbol(), contract, barSize, startDate,
+                    endDate);
             candleDataset.addSeries(candleSeries);
             StrategyDataUI strategyData = new StrategyDataUI(strategy, candleDataset);
 
             /*
-             * Yahoo finance
-             * http://chartapi.finance.yahoo.com/instrument/1.0/IBM
-             * /chartdata;type=quote;range=1d/csv/
+             * Polygon curl -X GET "https://api.polygon.io/v2/aggs/ticker/AAPL/range/1/minute/1746696600000/1746734400000?adjusted=true&sort=asc&limit=1500&apiKey=WGlljpSus0Ai1mj2ayaASNTcxchw9aUp"
              */
+Integer periodSeconds = 60;
+            String strUrl = "https://api.polygon.io/v2/aggs/ticker/" + symbol + "/range/1/minute/" + startDate.withZoneSameInstant(TradingCalendar.MKT_TIMEZONE).toInstant().toEpochMilli() + "/" + endDate.withZoneSameInstant(TradingCalendar.MKT_TIMEZONE).toInstant().toEpochMilli() + "?adjusted=true&sort=asc&limit=1500&apiKey=WGlljpSus0Ai1mj2ayaASNTcxchw9aUp";
 
-            String strUrl = "http://chartapi.finance.yahoo.com/instrument/1.0/" + symbol
-                    + "/chartdata;type=quote;range=" + days + "d/csv/";
+            _log.debug("Debug: CandlestickChartApp::getPriceDataSetIntraday URL: {}", strUrl);
 
-            _log.info("URL : {}", strUrl);
-            URL url = new URI(strUrl).toURL();
-            BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+            // create a request
+            HttpClient client = HttpClient.newHttpClient();
+            var request = HttpRequest.newBuilder(
+                            URI.create(strUrl))
+                    .header("accept", "application/json")
+                    .build();
 
-            String inputLine;
-            in.readLine();
-            while ((inputLine = in.readLine()) != null) {
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-                if (!inputLine.contains(":")) {
-                    StringTokenizer scanLine = new StringTokenizer(inputLine, ",");
-                    while (scanLine.hasMoreTokens()) {
-                        ZonedDateTime time = TradingCalendar
-                                .getZonedDateTimeFromMilli(Long.parseLong(scanLine.nextToken()) * 1000);
+            if (response.statusCode() == 200) {
 
-                        // values:Timestamp,close,high,low,open,volume
-                        double close = Double.parseDouble(scanLine.nextToken());
-                        double high = Double.parseDouble(scanLine.nextToken());
-                        double low = Double.parseDouble(scanLine.nextToken());
-                        double open = Double.parseDouble(scanLine.nextToken());
-                        long volume = Long.parseLong(scanLine.nextToken());
-                        _log.info("Time : {} Open: {} High: {} Low: {} Close: {} Volume: {}", time, open, high, low, close, volume);
-                        if (startDate.isBefore(time)) {
-                            strategyData.buildCandle(time, open, high, low, close, volume, (open + close) / 2,
-                                    ((int) volume / 100), periodSeconds / BarSize.FIVE_MIN, null);
-                        }
+                String jsonString = response.body();
+                JSONObject contractObj = new JSONObject(jsonString);
+                JSONArray bars = contractObj.getJSONArray("results");
+
+                for (int i = 0; i < bars.length(); i++) {
+
+                    JSONObject barObj = bars.getJSONObject(i);
+
+                    ZonedDateTime time = TradingCalendar.getZonedDateTimeFromMilli((barObj.getLong("t")));
+                    // values:Timestamp,close,high,low,open,volume
+                    double close = barObj.getDouble("c");
+                    double high = barObj.getDouble("h");
+                    double low = barObj.getDouble("l");
+                    double open = barObj.getDouble("o");
+                    long volume = barObj.getLong("v");
+
+                    _log.info("Info: CandlestickChartApp::getPriceDataSetIntraday Time : {} Open: {} High: {} Low: {} Close: {} Volume: {}", time, open, high, low, close, volume);
+
+                    if (startDate.isBefore(time) || startDate.equals(time)) {
+
+                        strategyData.buildCandle(time, open, high, low, close, volume, (open + close) / 2,
+                                ((int) volume / 100), BarSize.FIVE_MIN / periodSeconds  , null);
                     }
                 }
+            } else {
+                _log.error("Error: CandlestickChartApp::getPriceDataSetIntraday request to URL: {}, failed with status code: {}", strUrl, response.statusCode());
             }
-            in.close();
+
             return strategyData;
         } catch (Exception ex) {
-            _log.error("Error getting Yahoo data msg: {}", ex.getMessage(), ex);
+            _log.error("rror: CandlestickChartApp::getPriceDataSetIntraday getting broker data msg: {}", ex.getMessage(), ex);
         }
         return null;
     }

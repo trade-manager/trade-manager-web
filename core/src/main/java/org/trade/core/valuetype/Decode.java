@@ -48,7 +48,7 @@ import java.util.Comparator;
 import java.util.Vector;
 
 /**
- * This class is suppose to represent a base class for a specialized CodeDecode
+ * This class purpose is to represent a base class for a specialized CodeDecode
  * type object e.g. US State Codes and Descriptions.
  * <p>
  * Note : This object is not intended to be used directly.
@@ -148,6 +148,7 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
      * @param optional       boolean
      */
     public Decode(String codeDecodeType, boolean optional) {
+
         m_codeDecodeType = codeDecodeType;
         m_codeDecodeIdentifier = CODE_DECODE_IDENTIFIER;
 
@@ -448,14 +449,24 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
      * @param value Object
      */
     public void setValue(Object value) {
+
         if (value instanceof Decode) {
+
             setCode(((Decode) value).getCode());
+
         } else if (value instanceof Aspect) {
+
             setCode(value);
         } else {
 
             try {
+
+                String code = (String) JavaTypeTranslator.convert(String.class, value);
                 setCode((String) JavaTypeTranslator.convert(String.class, value));
+
+                if (null != m_badValue && m_lookup.setPos(code, m_codeDecodeIdentifier + _VALUE)) {
+                    m_badValue = null;
+                }
             } catch (final Exception _) {
 
             }
@@ -480,7 +491,9 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
      * @param code String
      */
     private void setCode(String code) {
+
         try {
+
             String codeToLookup;
 
             if (convertToUppercase()) {

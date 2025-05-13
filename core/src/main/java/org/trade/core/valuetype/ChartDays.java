@@ -63,7 +63,9 @@ public class ChartDays extends Decode {
      * @return ChartDays
      */
     public static ChartDays newInstance(Integer value) {
+
         final ChartDays returnInstance = new ChartDays();
+
         returnInstance.setValue(value);
         return returnInstance;
     }

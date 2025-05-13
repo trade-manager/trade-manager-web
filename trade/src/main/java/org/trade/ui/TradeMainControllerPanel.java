@@ -1544,9 +1544,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                 if (brokerDataOnly && !m_brokerModel.isConnected()) {
 
                     int result = JOptionPane.showConfirmDialog(this.getFrame(),
-                            "Yahoo Finance will be used to retrieve candle data." + "\n" + "Do you want to continue ?"
-                                    + "\n" + "Note there is a 20min delay to data. This option should " + " \n"
-                                    + "only be used 30mins after market close." + "\n"
+                            "Polygon will be used to retrieve candle data." + "\n" + "Do you want to continue ?"
                                     + "Valid Bar Size/Chart Hist vales are:" + "\n"
                                     + "Chart Hist = 1 D, Bar Size >= 1min" + "\n"
                                     + "Chart Hist > 1 D to 1 M, Bar Size >= 5min" + "\n"

@@ -37,6 +37,7 @@ package org.trade.core.util.time;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.system.SystemProperties;
 import org.trade.core.properties.ConfigProperties;
 
 import java.io.IOException;
@@ -89,7 +90,15 @@ public class TradingCalendar {
         try {
             String localTimeZone = ConfigProperties.getPropAsString("trade.tws.timezone");
             LOCAL_TIMEZONE = ZoneId.of(localTimeZone);
-            MKT_TIMEZONE = TimeZone.getDefault().toZoneId();
+            String mktTZ = SystemProperties.get("user.timezone");
+            //MKT_TIMEZONE = TimeZone.getDefault().toZoneId();
+            //MKT_TIMEZONE = ZoneId.of(SystemProperties.get("user.timezone"));
+            mktTZ = "America/New_York";
+            MKT_TIMEZONE = ZoneId.of(mktTZ);
+            TimeZone mktTimeZone
+                    = TimeZone.getTimeZone(mktTZ);
+            TimeZone.setDefault(mktTimeZone);
+            //ZonedDateTime currentDateTime = ZonedDateTime.now(MKT_TIMEZONE);
             ZonedDateTime currentDateTime = ZonedDateTime.now(LOCAL_TIMEZONE);
             currentYear = currentDateTime.getYear();
             currentMonth = currentDateTime.getMonthValue();
