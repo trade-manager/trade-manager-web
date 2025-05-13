@@ -60,14 +60,13 @@ import java.util.TimeZone;
 public class TradingCalendar {
 
     /*
-     * This will use the timezone that was set on the command line to start the
-     * add i.e. -Duser.timezone=EST
+     * Set the default time zone i.e. user.timezone system property.
      */
 
     private final static Logger _log = LoggerFactory.getLogger(TradingCalendar.class);
 
-    public static ZoneId LOCAL_TIMEZONE = null;
     public static ZoneId MKT_TIMEZONE = null;
+    public static ZoneId LOCAL_TIMEZONE = null;
 
     private static final HashMap<Integer, int[]> HOLIDAYS = new HashMap<>();
     private static int[] NONTRADINGDAYS = new int[]{};
@@ -87,23 +86,19 @@ public class TradingCalendar {
      * defaults will be used.
      */
     static {
+
         try {
-            String localTimeZone = ConfigProperties.getPropAsString("trade.tws.timezone");
-            LOCAL_TIMEZONE = ZoneId.of(localTimeZone);
-            String mktTZ = SystemProperties.get("user.timezone");
-            //MKT_TIMEZONE = TimeZone.getDefault().toZoneId();
-            //MKT_TIMEZONE = ZoneId.of(SystemProperties.get("user.timezone"));
-            mktTZ = "America/New_York";
+
+            LOCAL_TIMEZONE =  TimeZone.getDefault().toZoneId();
+
+            String mktTZ = ConfigProperties.getPropAsString("trade.tws.timezone");
             MKT_TIMEZONE = ZoneId.of(mktTZ);
-            TimeZone mktTimeZone
-                    = TimeZone.getTimeZone(mktTZ);
+            TimeZone mktTimeZone = TimeZone.getTimeZone(mktTZ);
             TimeZone.setDefault(mktTimeZone);
-            //ZonedDateTime currentDateTime = ZonedDateTime.now(MKT_TIMEZONE);
-            ZonedDateTime currentDateTime = ZonedDateTime.now(LOCAL_TIMEZONE);
+            ZonedDateTime currentDateTime = ZonedDateTime.now(MKT_TIMEZONE);
             currentYear = currentDateTime.getYear();
             currentMonth = currentDateTime.getMonthValue();
             currentDay = currentDateTime.getDayOfMonth();
-
         } catch (Exception ex) {
             _log.warn("Property trade.tws.market.timezone not set in config.properties will use default");
         }
@@ -487,11 +482,11 @@ public class TradingCalendar {
     /**
      * Method getPrevTradingDay.
      *
-     * @param input ZonedDateTime
+     * @param tradingDay ZonedDateTime
      * @return ZonedDateTime
      */
-    public static ZonedDateTime getPrevTradingDay(ZonedDateTime input) {
-        ZonedDateTime prevTradingDay = TradingCalendar.getTradingDayStart(input);
+    public static ZonedDateTime getPrevTradingDay(ZonedDateTime tradingDay) {
+        ZonedDateTime prevTradingDay = TradingCalendar.getTradingDayStart(tradingDay);
         do {
             prevTradingDay = prevTradingDay.minusDays(1);
         } while (!TradingCalendar.isTradingDay(prevTradingDay));

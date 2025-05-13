@@ -35,7 +35,7 @@ Note demo data for 2023 is added by default comment out the file in the web/pom.
 
 4/ To run the old Swing UI. From project dir, cd web, then run
 
-web>$mvnw -Duser.timezone=America/New_York -Dlog4j.configuration=file:../config.properties exec:java  
+web>$mvnw -Dlog4j.configuration=file:../config.properties exec:java
 
 OR the new Spring boot Web app
 
@@ -53,4 +53,4 @@ If you wish to deploy the app to another director after building it complete the
 
     c/ To run the old Swing UI from the command line"
 
->$mvn exec:java -Dexec.mainClass="org.trade.ui.TradeAppMain" -Dexec.args="-Duser.timezone=America/New_York -Dlog4j.configuration=config.properties"
+>$mvn exec:java -Dexec.mainClass="org.trade.ui.TradeAppMain" -Dexec.args="-Dlog4j.configuration=config.properties"

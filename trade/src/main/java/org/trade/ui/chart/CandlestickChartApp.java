@@ -218,6 +218,7 @@ public class CandlestickChartApp extends BasePanel {
      * @return StrategyData
      */
     protected static StrategyDataUI getPriceDataSetDay(String symbol) {
+
         try {
 
             List<Candle> candles = new ArrayList<>();
@@ -298,8 +299,8 @@ public class CandlestickChartApp extends BasePanel {
     /**
      * Method getPriceDataSetIntraday.
      *
-     * @param symbol        String
-     * @param days          int
+     * @param symbol  String
+     * @param days    int
      * @param barSize int
      * @return StrategyData
      */
@@ -307,7 +308,8 @@ public class CandlestickChartApp extends BasePanel {
         try {
 
             ZonedDateTime endDate = TradingCalendar.getDateTimeNowMarketTimeZone();
-            ZonedDateTime startDate = endDate.minusDays(days);
+            endDate = TradingCalendar.getTradingDayEnd(endDate);
+            ZonedDateTime startDate = endDate.minusDays(days + 1);
             startDate = TradingCalendar.getPrevTradingDay(startDate);
             Strategy daoStrategy = (Strategy) DAOStrategy.newInstance().getObject();
             StrategyHome home = new StrategyHome();
@@ -320,51 +322,58 @@ public class CandlestickChartApp extends BasePanel {
             candleDataset.addSeries(candleSeries);
             StrategyDataUI strategyData = new StrategyDataUI(strategy, candleDataset);
 
-            /*
-             * Polygon curl -X GET "https://api.polygon.io/v2/aggs/ticker/AAPL/range/1/minute/1746696600000/1746734400000?adjusted=true&sort=asc&limit=1500&apiKey=WGlljpSus0Ai1mj2ayaASNTcxchw9aUp"
-             */
-Integer periodSeconds = 60;
-            String strUrl = "https://api.polygon.io/v2/aggs/ticker/" + symbol + "/range/1/minute/" + startDate.withZoneSameInstant(TradingCalendar.MKT_TIMEZONE).toInstant().toEpochMilli() + "/" + endDate.withZoneSameInstant(TradingCalendar.MKT_TIMEZONE).toInstant().toEpochMilli() + "?adjusted=true&sort=asc&limit=1500&apiKey=WGlljpSus0Ai1mj2ayaASNTcxchw9aUp";
+            while (startDate.isBefore(TradingCalendar.getTradingDayStart(endDate))) {
 
-            _log.debug("Debug: CandlestickChartApp::getPriceDataSetIntraday URL: {}", strUrl);
+                if (TradingCalendar.isTradingDay(startDate)) {
 
-            // create a request
-            HttpClient client = HttpClient.newHttpClient();
-            var request = HttpRequest.newBuilder(
-                            URI.create(strUrl))
-                    .header("accept", "application/json")
-                    .build();
+                    /*
+                     * Polygon curl -X GET "https://api.polygon.io/v2/aggs/ticker/AAPL/range/1/minute/1746696600000/1746734400000?adjusted=true&sort=asc&limit=1500&apiKey=WGlljpSus0Ai1mj2ayaASNTcxchw9aUp"
+                     */
+                    Integer periodSeconds = 60;
+                    String strUrl = "https://api.polygon.io/v2/aggs/ticker/" + symbol + "/range/1/minute/" + startDate.toInstant().toEpochMilli() + "/" + TradingCalendar.getTradingDayEnd(startDate).toInstant().toEpochMilli() + "?adjusted=true&sort=asc&limit=1500&apiKey=WGlljpSus0Ai1mj2ayaASNTcxchw9aUp";
 
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+                    _log.debug("Debug: CandlestickChartApp::getPriceDataSetIntraday URL: {}", strUrl);
 
-            if (response.statusCode() == 200) {
+                    // create a request
+                    HttpClient client = HttpClient.newHttpClient();
+                    var request = HttpRequest.newBuilder(
+                                    URI.create(strUrl))
+                            .header("accept", "application/json")
+                            .build();
 
-                String jsonString = response.body();
-                JSONObject contractObj = new JSONObject(jsonString);
-                JSONArray bars = contractObj.getJSONArray("results");
+                    HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-                for (int i = 0; i < bars.length(); i++) {
+                    if (response.statusCode() == 200) {
 
-                    JSONObject barObj = bars.getJSONObject(i);
+                        String jsonString = response.body();
+                        JSONObject contractObj = new JSONObject(jsonString);
+                        JSONArray bars = contractObj.getJSONArray("results");
 
-                    ZonedDateTime time = TradingCalendar.getZonedDateTimeFromMilli((barObj.getLong("t")));
-                    // values:Timestamp,close,high,low,open,volume
-                    double close = barObj.getDouble("c");
-                    double high = barObj.getDouble("h");
-                    double low = barObj.getDouble("l");
-                    double open = barObj.getDouble("o");
-                    long volume = barObj.getLong("v");
+                        for (int i = 0; i < bars.length(); i++) {
 
-                    _log.info("Info: CandlestickChartApp::getPriceDataSetIntraday Time : {} Open: {} High: {} Low: {} Close: {} Volume: {}", time, open, high, low, close, volume);
+                            JSONObject barObj = bars.getJSONObject(i);
 
-                    if (startDate.isBefore(time) || startDate.equals(time)) {
+                            ZonedDateTime time = TradingCalendar.getZonedDateTimeFromMilli((barObj.getLong("t")));
+                            // values:Timestamp,close,high,low,open,volume
+                            double close = barObj.getDouble("c");
+                            double high = barObj.getDouble("h");
+                            double low = barObj.getDouble("l");
+                            double open = barObj.getDouble("o");
+                            long volume = barObj.getLong("v");
 
-                        strategyData.buildCandle(time, open, high, low, close, volume, (open + close) / 2,
-                                ((int) volume / 100), BarSize.FIVE_MIN / periodSeconds  , null);
+                            _log.info("Info: CandlestickChartApp::getPriceDataSetIntraday Time : {} Open: {} High: {} Low: {} Close: {} Volume: {}", time, open, high, low, close, volume);
+
+                            if (startDate.isBefore(time) || startDate.equals(time)) {
+
+                                strategyData.buildCandle(time, open, high, low, close, volume, (open + close) / 2,
+                                        ((int) volume / 100), BarSize.FIVE_MIN / periodSeconds, null);
+                            }
+                        }
+                    } else {
+                        _log.error("Error: CandlestickChartApp::getPriceDataSetIntraday request to URL: {}, failed with status code: {}", strUrl, response.statusCode());
                     }
                 }
-            } else {
-                _log.error("Error: CandlestickChartApp::getPriceDataSetIntraday request to URL: {}, failed with status code: {}", strUrl, response.statusCode());
+                startDate = startDate.plusDays(1);
             }
 
             return strategyData;

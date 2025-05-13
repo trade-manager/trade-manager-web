@@ -129,7 +129,7 @@
                     <version>3.0.0-M3</version>
                     <configuration>
                         <skipTests>${skip.tests}</skipTests>
-                        <argLine>-Duser.timezone=America/New_York -Dlog4j.configuration=${basedir}/../config.properties
+                        <argLine>-Dlog4j.configuration=${basedir}/../config.properties
                         </argLine>
                     </configuration>
                 </plugin>
