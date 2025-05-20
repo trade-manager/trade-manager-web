@@ -534,11 +534,14 @@ public class CandleDataset extends AbstractXYDataset implements OHLCVwapDataset,
      * @param newBar      boolean
      */
     public void updateDataset(CandleDataset source, int seriesIndex, boolean newBar) {
+
         if (source == null) {
+
             throw new IllegalArgumentException("Null source (CandleDataset).");
         }
 
         for (int i = 0; i < this.getSeriesCount(); i++) {
+
             CandleSeries series = this.getSeries(i);
             series.updateSeries(source.getSeries(seriesIndex), source.getSeries(seriesIndex).getItemCount() - 1,
                     newBar);

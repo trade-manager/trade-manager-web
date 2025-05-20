@@ -209,12 +209,16 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
         try {
 
             int maxKey = m_tradePersistentModel.findTradeOrderByMaxKey();
+
             if (maxKey < minOrderId) {
                 maxKey = minOrderId;
             }
+
             if (maxKey < orderId) {
+
                 orderKey = new AtomicInteger(orderId);
             } else {
+
                 orderKey = new AtomicInteger(maxKey + 1);
             }
             this.fireConnectionOpened();
@@ -333,6 +337,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
             throws BrokerModelException {
 
         try {
+
             if (this.isHistoricalDataRunning(tradestrategy)) {
 
                 throw new BrokerModelException(tradestrategy.getId(), 3010, "Data request is already in progress for: "
@@ -574,8 +579,11 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
                     break;
                 }
             }
-            if (contract.getTradestrategies().isEmpty())
+
+            if (contract.getTradestrategies().isEmpty()) {
                 onCancelRealtimeBars(contract);
+            }
+
         }
     }
 
@@ -972,19 +980,20 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
         try {
 
             if (m_contractRequests.containsKey(reqId)) {
+
                 Contract contract = m_contractRequests.get(reqId);
                 BackTestBrokerModel.logContract(contractDetails);
+
                 if (BackTestBrokerModel.populateContract(contractDetails, contract)) {
+
                     m_tradePersistentModel.persistContract(contract);
                     synchronized (m_contractRequests) {
                         m_contractRequests.remove(reqId);
                     }
-                } else {
-                    error(reqId, 3220, "Contract details not found for reqId: " + reqId + " Symbol: "
-                            + contractDetails.getSymbol());
                 }
             }
         } catch (Exception ex) {
+
             error(reqId, 3230, ex.getMessage());
         }
     }
@@ -1012,16 +1021,80 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
      * @param high       double
      * @param low        double
      * @param close      double
-     * @param volume     int
+     * @param volume     long
      * @param tradeCount int
+     * @param barSize    int
      * @param vwap       double
      * @param hasGaps    boolean
      */
     public void historicalData(int reqId, String dateString, double open, double high, double low, double close,
-                               int volume, int tradeCount, double vwap, boolean hasGaps) {
+                               long volume, int tradeCount, int barSize, double vwap, boolean hasGaps) {
         try {
 
-            volume = volume * 100;
+            /*
+             * Check to see if the trading day is today and this strategy is
+             * selected to trade and that the market is open
+             */
+            if (m_historyDataRequests.containsKey(reqId)) {
+
+                /*
+                 * There is a bug in the TWS interface format for dates
+                 * should always be milli sec but when 1 day is selected as
+                 * the period the dates come through as yyyyMMdd.
+                 */
+                Tradestrategy tradestrategy = m_historyDataRequests.get(reqId);
+                ZonedDateTime date;
+
+                if (dateString.length() == 8) {
+
+                    date = TradingCalendar.getZonedDateTimeFromDateString(dateString, "yyyyMMdd",
+                            TradingCalendar.MKT_TIMEZONE);
+                } else {
+
+                    date = TradingCalendar.getZonedDateTimeFromMilli((Long.parseLong(dateString)));
+                }
+
+                /*
+                 * For daily bars set the time to the open time.
+                 */
+                if (tradestrategy.getBarSize() > 3600) {
+
+                    date = TradingCalendar.getDateAtTime(date, tradestrategy.getTradingday().getOpen());
+                }
+
+                if (tradestrategy.getTradingday().getClose().isAfter(date)) {
+
+                    if (backfillUseRTH == 1
+                            && !TradingCalendar.isMarketHours(tradestrategy.getTradingday().getOpen(),
+                            tradestrategy.getTradingday().getClose(), date)) {
+
+                        return;
+                    }
+
+                    BigDecimal price = (new BigDecimal(close)).setScale(SCALE, RoundingMode.HALF_EVEN);
+                    tradestrategy.getStrategyData().getBaseCandleSeries().getContract().setLastAskPrice(price);
+                    tradestrategy.getStrategyData().getBaseCandleSeries().getContract().setLastBidPrice(price);
+                    tradestrategy.getStrategyData().getBaseCandleSeries().getContract().setLastPrice(price);
+                    tradestrategy.getStrategyData().buildCandle(date, open, high, low, close, volume, vwap,
+                            tradeCount, tradestrategy.getStrategyData().getCandleDataset().getSeries(0).getBarSize() / barSize, null);
+                }
+            } else {
+                _log.error("HistoricalData request not found for Req Id: {} Date: {}", reqId, dateString);
+            }
+        } catch (Exception ex) {
+            error(reqId, 3260, ex.getMessage());
+        }
+    }
+
+    /**
+     * Method historicalDataComplete.
+     *
+     * @param reqId int
+     */
+    public void historicalDataComplete(int reqId) {
+
+        try {
+
             /*
              * Check to see if the trading day is today and this strategy is
              * selected to trade and that the market is open
@@ -1030,69 +1103,46 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
 
                 Tradestrategy tradestrategy = m_historyDataRequests.get(reqId);
 
-                if (dateString.contains("finished-")) {
+                CandleSeries candleSeries = tradestrategy.getStrategyData().getBaseCandleSeries();
+                m_tradePersistentModel.persistCandleSeries(candleSeries);
 
-                    /*
-                     * The last one has arrived the reqId is the
-                     * tradeStrategyId. Remove this from the processing vector.
-                     */
-                    CandleSeries candleSeries = tradestrategy.getStrategyData().getBaseCandleSeries();
-                    m_tradePersistentModel.persistCandleSeries(candleSeries);
+                _log.debug("HistoricalData complete Req Id: {}, Symbol: {}, Tradingday: {}, candles to saved: {}, Contract Tradestrategies size:: {}", reqId, tradestrategy.getContract().getSymbol(), tradestrategy.getTradingday().getOpen(), candleSeries.getItemCount(), tradestrategy.getContract().getTradestrategies().size());
 
-                    _log.debug("HistoricalData complete Req Id: {} Symbol: {} Tradingday: {} candles to saved: {} Contract Tradestrategies size:: {}", reqId, tradestrategy.getContract().getSymbol(), tradestrategy.getTradingday().getOpen(), candleSeries.getItemCount(), tradestrategy.getContract().getTradestrategies().size());
+                /*
+                 * The last one has arrived the reqId is the
+                 * tradeStrategyId. Remove this from the processing vector.
+                 */
 
-                    /*
-                     * Check to see if the trading day is today and this
-                     * strategy is selected to trade and that the market is open
-                     */
+                synchronized (m_historyDataRequests) {
 
-                    if (tradestrategy.getTrade() && !this.isBrokerDataOnly()) {
-                        this.fireHistoricalDataComplete(tradestrategy);
-                    } else {
-                        synchronized (m_historyDataRequests) {
-                            m_historyDataRequests.remove(reqId);
-                            m_historyDataRequests.notify();
+                    m_historyDataRequests.remove(reqId);
+                    m_historyDataRequests.notify();
+                }
+
+                /*
+                 * Check to see if the trading day is today and this
+                 * strategy is selected to trade and that the market is open
+                 */
+                synchronized (tradestrategy.getContract().getTradestrategies()) {
+
+                    this.fireHistoricalDataComplete(tradestrategy);
+
+                    if (tradestrategy.getTradingday().getClose()
+                            .isAfter(TradingCalendar.getDateTimeNowMarketTimeZone())) {
+
+                        if (!this.isRealtimeBarsRunning(tradestrategy.getContract())) {
+
+                            tradestrategy.getContract().addTradestrategy(tradestrategy);
+                            this.onReqRealTimeBars(tradestrategy.getContract(),
+                                    tradestrategy.getStrategy().getMarketData());
+                        } else {
+                            Contract contract = m_realTimeBarsRequests.get(tradestrategy.getContract().getId());
+                            contract.addTradestrategy(tradestrategy);
                         }
-                    }
-                } else {
-
-                    ZonedDateTime date;
-                    /*
-                     * There is a bug in the TWS interface format for dates
-                     * should always be milli sec but when 1 day is selected as
-                     * the period the dates come through as yyyyMMdd.
-                     */
-                    if (dateString.length() == 8) {
-                        date = TradingCalendar.getZonedDateTimeFromDateString(dateString, "yyyyMMdd",
-                                TradingCalendar.MKT_TIMEZONE);
-                    } else {
-                        date = TradingCalendar.getZonedDateTimeFromMilli((Long.parseLong(dateString) * 1000));
-                    }
-                    /*
-                     * For daily bars set the time to the open time.
-                     */
-                    if (tradestrategy.getBarSize() > 3600) {
-                        date = TradingCalendar.getDateAtTime(date, tradestrategy.getTradingday().getOpen());
-                    }
-
-                    if (tradestrategy.getTradingday().getClose().isAfter(date)) {
-
-                        if (backfillUseRTH == 1
-                                && !TradingCalendar.isMarketHours(tradestrategy.getTradingday().getOpen(),
-                                tradestrategy.getTradingday().getClose(), date)) {
-                            return;
-                        }
-
-                        BigDecimal price = (new BigDecimal(close)).setScale(SCALE, RoundingMode.HALF_EVEN);
-                        tradestrategy.getStrategyData().getBaseCandleSeries().getContract().setLastAskPrice(price);
-                        tradestrategy.getStrategyData().getBaseCandleSeries().getContract().setLastBidPrice(price);
-                        tradestrategy.getStrategyData().getBaseCandleSeries().getContract().setLastPrice(price);
-                        tradestrategy.getStrategyData().buildCandle(date, open, high, low, close, volume, vwap,
-                                tradeCount, 1, null);
                     }
                 }
             } else {
-                _log.error("HistoricalData request not found for Req Id: {} Date: {}", reqId, dateString);
+                _log.error("HistoricalDataComplete request not found for Req Id: {}", reqId);
             }
         } catch (Exception ex) {
             error(reqId, 3260, ex.getMessage());
@@ -1127,32 +1177,37 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
 
         boolean valid = true;
         String errorMsg = "Symbol: " + tradestrategy.getContract().getSymbol()
-                + " Bar Size/Chart Days combination was not valid for Yahoo API, these values have been updated." + "\n"
-                + "Please validate and save." + "\n" + "Note Chart Days/BarSize combinations for Yahoo: " + "\n"
-                + "Chart Hist = 1 D, Bar Size >= 1min" + "\n" + "Chart Hist > 1 D to 1 M, Bar Size >= 5min" + "\n"
-                + "Chart Hist > 1 M to 3 M, Bar Size = 1 day";
+                + " Bar Size/Chart Days combination was not valid for Polygon API, these values have been updated." + "\n"
+                + "Please validate and save.\n Note Polygon only supports 1 min bars these will be rolled up to the desired bar size.";
+
         if (tradestrategy.getBarSize() < 60) {
+
             tradestrategy.setBarSize(60);
             valid = false;
 
         } else if ((tradestrategy.getChartDays() > 1 && tradestrategy.getChartDays() < 7)
                 && tradestrategy.getBarSize() < 300) {
+
             tradestrategy.setBarSize(300);
             valid = false;
-
         } else if (tradestrategy.getChartDays() > 30 && (tradestrategy.getBarSize() <= 3600)) {
+
             tradestrategy.setBarSize(1);
             valid = false;
         }
 
         if ((tradestrategy.getBarSize() < 300) && tradestrategy.getChartDays() > 1) {
+
             tradestrategy.setChartDays(1);
             valid = false;
         } else if (tradestrategy.getBarSize() <= 3600 && tradestrategy.getChartDays() > 30) {
+
             tradestrategy.setChartDays(7);
             valid = false;
         }
+
         if (!valid) {
+
             tradestrategy.setDirty(true);
             throw new BrokerModelException(1, 3901, errorMsg);
         }
@@ -1330,60 +1385,72 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
 
             if (CoreUtils.nullSafeComparator(transientContract.getLocalSymbol(),
                     contractDetails.getLocalSymbol()) != 0) {
+
                 transientContract.setLocalSymbol(contractDetails.getLocalSymbol());
                 changed = true;
             }
 
             if (CoreUtils.nullSafeComparator(transientContract.getIdContractIB(),
                     contractDetails.getIdContractIB()) != 0) {
+
                 transientContract.setIdContractIB(contractDetails.getIdContractIB());
                 changed = true;
             }
 
             if (CoreUtils.nullSafeComparator(transientContract.getPrimaryExchange(),
                     contractDetails.getPrimaryExchange()) != 0) {
+
                 transientContract.setPrimaryExchange(contractDetails.getPrimaryExchange());
                 changed = true;
             }
 
             if (CoreUtils.nullSafeComparator(transientContract.getExchange(), contractDetails.getExchange()) != 0) {
+
                 transientContract.setExchange(contractDetails.getExchange());
                 changed = true;
             }
 
             if (null != contractDetails.getExpiry()) {
+
                 if (CoreUtils.nullSafeComparator(transientContract.getExpiry(), contractDetails.getExpiry()) != 0) {
+
                     transientContract.setExpiry(contractDetails.getExpiry());
                     changed = true;
                 }
             }
 
             if (CoreUtils.nullSafeComparator(transientContract.getSecIdType(), contractDetails.getSecIdType()) != 0) {
+
                 transientContract.setSecIdType(contractDetails.getSecIdType());
                 changed = true;
             }
 
             if (CoreUtils.nullSafeComparator(transientContract.getLongName(), contractDetails.getLongName()) != 0) {
+
                 transientContract.setLongName(contractDetails.getLongName());
                 changed = true;
             }
 
             if (CoreUtils.nullSafeComparator(transientContract.getCurrency(), contractDetails.getCurrency()) != 0) {
+
                 transientContract.setCurrency(contractDetails.getCurrency());
                 changed = true;
             }
 
             if (CoreUtils.nullSafeComparator(transientContract.getCategory(), contractDetails.getCategory()) != 0) {
+
                 transientContract.setCategory(contractDetails.getCategory());
                 changed = true;
             }
 
             if (CoreUtils.nullSafeComparator(transientContract.getIndustry(), contractDetails.getIndustry()) != 0) {
+
                 transientContract.setIndustry(contractDetails.getIndustry());
                 changed = true;
             }
 
             Money minTick = new Money(contractDetails.getMinTick());
+
             if (CoreUtils.nullSafeComparator(minTick, new Money(Double.MAX_VALUE)) != 0 && CoreUtils
                     .nullSafeComparator(transientContract.getMinTick(), minTick.getBigDecimalValue()) != 0) {
 
@@ -1392,28 +1459,34 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
             }
 
             Money priceMagnifier = new Money(contractDetails.getPriceMagnifier());
+
             if (CoreUtils.nullSafeComparator(priceMagnifier, new Money(Double.MAX_VALUE)) != 0
                     && CoreUtils.nullSafeComparator(transientContract.getPriceMagnifier(),
                     priceMagnifier.getBigDecimalValue()) != 0) {
+
                 transientContract.setPriceMagnifier(priceMagnifier.getBigDecimalValue());
                 changed = true;
             }
 
             Money multiplier = new Money(contractDetails.getPriceMultiplier());
+
             if (CoreUtils.nullSafeComparator(multiplier, new Money(Double.MAX_VALUE)) != 0 && CoreUtils
                     .nullSafeComparator(transientContract.getPriceMultiplier(), multiplier.getBigDecimalValue()) != 0) {
+
                 transientContract.setPriceMultiplier(multiplier.getBigDecimalValue());
                 changed = true;
             }
 
             if (CoreUtils.nullSafeComparator(transientContract.getSubCategory(),
                     contractDetails.getSubCategory()) != 0) {
+
                 transientContract.setSubCategory(contractDetails.getSubCategory());
                 changed = true;
             }
 
             if (CoreUtils.nullSafeComparator(transientContract.getTradingClass(),
                     contractDetails.getTradingClass()) != 0) {
+
                 transientContract.setTradingClass(contractDetails.getTradingClass());
                 changed = true;
             }

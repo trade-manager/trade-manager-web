@@ -603,9 +603,13 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
         ZonedDateTime endDate;
         StrategyDataUI strategyDataUI = null;
 
-        if (null == tradestrategy.getStrategyData()) {
+        if (!strategyDataTable.contains(tradestrategy.getContract().getId())) {
 
-            tradestrategy.setStrategyData(StrategyData.create(tradestrategy));
+            if (null == tradestrategy.getStrategyData()) {
+
+                tradestrategy.setStrategyData(StrategyData.create(tradestrategy));
+            }
+
             strategyDataUI = StrategyDataUI.create(tradestrategy);
             strategyDataTable.put(tradestrategy.getContract().getId(), strategyDataUI);
         } else {
@@ -613,7 +617,7 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
             strategyDataUI = strategyDataTable.get(tradestrategy.getContract().getId());
         }
 
-        if (tradestrategy.getStrategyData().getBaseCandleSeries().isEmpty()) {
+        if (strategyDataUI.getBaseCandleSeries().isEmpty()) {
 
             endDate = TradingCalendar.getDateAtTime(
                     TradingCalendar.addTradingDays(tradestrategy.getTradingday().getClose(), backfillOffsetDays),

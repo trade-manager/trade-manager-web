@@ -303,6 +303,7 @@ public class DBBroker extends Broker {
     }
 
     public void done() {
+
         brokerModel.onCancelRealtimeBars(this.tradestrategy);
         brokerModel.onCancelBrokerData(this.tradestrategy);
         // Free some memory!!
@@ -321,8 +322,11 @@ public class DBBroker extends Broker {
     private boolean filledOrders(Contract contract, TradestrategyOrders positionOrders, Candle candle) {
 
         boolean orderfilled = false;
+
         for (TradeOrder order : positionOrders.getTradeOrders()) {
+
             if (OrderStatus.UNSUBMIT.equals(order.getStatus())) {
+
                 /*
                  * Can't use the com.ib.client.OrderState as constructor is no
                  * visible.
@@ -337,10 +341,13 @@ public class DBBroker extends Broker {
                 order.setStatus(OrderStatus.SUBMITTED);
             }
         }
+
         for (TradeOrder order : positionOrders.getTradeOrders()) {
+
             if (OrderStatus.SUBMITTED.equals(order.getStatus()) && order.getTransmit()) {
 
                 BigDecimal filledPrice = getFilledPrice(order, candle);
+
                 if (null != filledPrice) {
 
                     if (!orderfilled) {
@@ -490,11 +497,15 @@ public class DBBroker extends Broker {
                     }
                 }
             }
+
             BigDecimal avgFillPrice;
+
             if (order.hasTradePosition()) {
+
                 avgFillPrice = order.getTradePosition().getTotalNetValue()
                         .divide(new BigDecimal(order.getTradePosition().getOpenQuantity()), 2, RoundingMode.HALF_EVEN);
             } else {
+
                 avgFillPrice = candle.getClose();
             }
 
@@ -506,17 +517,26 @@ public class DBBroker extends Broker {
              * amt/percent
              */
             if (Action.SELL.equals(order.getAction()) && (candle.getClose().compareTo(avgFillPrice) > 0)) {
+
                 if (candle.getClose().subtract(trailAmount).compareTo(order.getAuxPrice()) > 0) {
+
                     order.setAuxPrice(candle.getClose().subtract(trailAmount));
+
                     if (OrderType.TRAILLIMIT.equals(order.getOrderType())) {
+
                         order.setLimitPrice(candle.getClose().subtract(trailAmount.subtract(trailLimitOffsetAmount)));
                     }
                 }
             }
+
             if (Action.BUY.equals(order.getAction()) && (candle.getClose().compareTo(avgFillPrice) < 0)) {
+
                 if (candle.getClose().add(trailAmount).compareTo(order.getAuxPrice()) < 0) {
+
                     order.setAuxPrice(candle.getClose().add(trailAmount));
+
                     if (OrderType.TRAILLIMIT.equals(order.getOrderType())) {
+
                         order.setLimitPrice(candle.getClose().add(trailAmount.add(trailLimitOffsetAmount)));
                     }
                 }
@@ -524,23 +544,33 @@ public class DBBroker extends Broker {
         }
 
         if (Action.SELL.equals(order.getAction())) {
+
             if (OrderType.STP.equals(order.getOrderType()) || OrderType.TRAIL.equals(order.getOrderType())) {
+
                 if (candle.getLow().compareTo(order.getAuxPrice()) < 1) {
+
                     if (candle.getOpen().compareTo(order.getAuxPrice()) < 1) {
+
                         return candle.getOpen();
                     }
                     return order.getAuxPrice();
                 }
             } else if (OrderType.STPLMT.equals(order.getOrderType())
                     || OrderType.TRAILLIMIT.equals(order.getOrderType())) {
+
                 if (candle.getLow().compareTo(order.getAuxPrice()) < 1
                         && candle.getHigh().compareTo(order.getLimitPrice()) > -1) {
+
                     if (candle.getOpen().compareTo(order.getAuxPrice()) > -1) {
+
                         return order.getAuxPrice();
                     } else {
+
                         if (CoreUtils.isBetween(order.getAuxPrice(), order.getLimitPrice(), candle.getOpen())) {
+
                             return candle.getOpen();
                         } else {
+
                             if (candle.getOpen().compareTo(order.getLimitPrice()) < 1) {
                                 return order.getLimitPrice();
                             }
@@ -548,17 +578,22 @@ public class DBBroker extends Broker {
                     }
                 }
             } else if (OrderType.LMT.equals(order.getOrderType())) {
+
                 if (candle.getHigh().compareTo(order.getLimitPrice()) > -1) {
+
                     if (candle.getOpen().compareTo(order.getLimitPrice()) > -1) {
+
                         return candle.getOpen();
                     }
                     return order.getLimitPrice();
                 }
             }
-
         } else {
+
             if (OrderType.STP.equals(order.getOrderType()) || OrderType.TRAIL.equals(order.getOrderType())) {
+
                 if (candle.getHigh().compareTo(order.getAuxPrice()) > -1) {
+
                     if (candle.getOpen().compareTo(order.getAuxPrice()) > -1) {
                         return candle.getOpen();
                     }
@@ -566,11 +601,14 @@ public class DBBroker extends Broker {
                 }
             } else if (OrderType.STPLMT.equals(order.getOrderType())
                     || OrderType.TRAILLIMIT.equals(order.getOrderType())) {
+
                 if (candle.getHigh().compareTo(order.getAuxPrice()) > -1
                         && candle.getLow().compareTo(order.getLimitPrice()) < 1) {
+
                     if (candle.getOpen().compareTo(order.getAuxPrice()) < 1) {
                         return order.getAuxPrice();
                     } else {
+
                         if (CoreUtils.isBetween(order.getAuxPrice(), order.getLimitPrice(), candle.getOpen())) {
                             return candle.getOpen();
                         } else {
@@ -582,7 +620,9 @@ public class DBBroker extends Broker {
                 }
 
             } else if (OrderType.LMT.equals(order.getOrderType())) {
+
                 if (candle.getLow().compareTo(order.getLimitPrice()) < 1) {
+
                     if (candle.getOpen().compareTo(order.getLimitPrice()) < 1) {
                         return candle.getOpen();
                     }
@@ -616,6 +656,7 @@ public class DBBroker extends Broker {
         execution.setExchange("BATS");
         execution.setPrice(filledPrice);
         execution.setTime(date);
+
         if (Action.BUY.equals(order.getAction())) {
             execution.setSide(Side.BOT);
         } else {
@@ -637,6 +678,7 @@ public class DBBroker extends Broker {
      * @param order    TradeOrder
      */
     private void cancelOrder(Contract contract, TradeOrder order) {
+
         OrderState orderState = new OrderState();
         orderState.m_status = OrderStatus.CANCELLED;
         this.brokerModel.openOrder(order.getOrderKey(), contract, order, orderState);
@@ -656,27 +698,34 @@ public class DBBroker extends Broker {
     private void populateIndicatorCandleSeries(Tradestrategy tradestrategy, ZonedDateTime startDate,
                                                ZonedDateTime endDate) throws PersistentModelException {
 
+
         CandleDataset candleDataset = (CandleDataset) tradestrategy.getStrategyData()
                 .getIndicatorByType(IndicatorSeries.CandleSeries);
+
         if (null != candleDataset) {
+
             for (int seriesIndex = 0; seriesIndex < candleDataset.getSeriesCount(); seriesIndex++) {
 
                 CandleSeries series = candleDataset.getSeries(seriesIndex);
 
                 Contract contract = this.tradePersistentModel.findContractByUniqueKey(series.getSecType(),
                         series.getSymbol(), series.getExchange(), series.getCurrency(), null);
-                if (null == contract)
+
+                if (null == contract) {
+
                     continue;
+                }
 
                 Tradestrategy childTradestrategy = new Tradestrategy(contract, tradestrategy.getTradingday(),
                         new Strategy(), tradestrategy.getPortfolio(), new BigDecimal(0), null, null, false,
                         tradestrategy.getChartDays(), tradestrategy.getBarSize());
                 childTradestrategy.setDirty(false);
-
                 List<Candle> indicatorCandles = this.tradePersistentModel.findCandlesByContractDateRangeBarSize(
                         childTradestrategy.getContract().getId(), startDate, endDate,
                         childTradestrategy.getBarSize());
+
                 if (indicatorCandles.isEmpty()) {
+
                     _log.warn("No data available for {} and Tradingday: {} to {} and barSize: {}", childTradestrategy.getContract().getSymbol(), startDate, endDate, childTradestrategy.getBarSize());
                 } else {
 
@@ -710,9 +759,11 @@ public class DBBroker extends Broker {
 
     private List<Candle> getCandles(Tradestrategy tradestrategy, ZonedDateTime startDate, ZonedDateTime endDate,
                                     int barSize) throws PersistentModelException {
+
         List<Candle> candles = new ArrayList<>(0);
         int[] barSizes = {3600, 1800, 900, 300, 120, 60, 30};
         for (int size : barSizes) {
+
             if (size <= barSize) {
                 /*
                  * Only go for barSize that are whole integer divisible.

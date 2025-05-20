@@ -509,8 +509,11 @@ public class CandleDataset extends AbstractXYDataset implements OHLCVwapDataset,
      * @param candles      List<Candle>
      */
     public static void populateSeries(StrategyData strategyData, List<Candle> candles) throws PersistentModelException {
+
         strategyData.clearBaseCandleDataset();
+
         for (Candle candle : candles) {
+
             strategyData.buildCandle(candle.getStartPeriod(), candle.getOpen().doubleValue(),
                     candle.getHigh().doubleValue(), candle.getLow().doubleValue(), candle.getClose().doubleValue(),
                     candle.getVolume(), candle.getVwap().doubleValue(), candle.getTradeCount(), 1, null);

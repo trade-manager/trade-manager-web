@@ -38,7 +38,6 @@ package org.trade.indicator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trade.core.factory.ClassFactory;
-import org.trade.core.persistent.PersistentModelException;
 import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.Tradestrategy;
 import org.trade.core.persistent.dao.Tradingday;
@@ -253,17 +252,27 @@ public class StrategyDataUI extends Worker {
      * @return boolean
      */
     public boolean buildCandle(ZonedDateTime time, double open, double high, double low, double close, long volume,
-                               double vwap, int tradeCount, int rollupInterval, ZonedDateTime lastUpdateDate) throws PersistentModelException {
+                               double vwap, int tradeCount, int rollupInterval, ZonedDateTime lastUpdateDate) {
 
         boolean newBar = this.getBaseCandleSeries().buildCandle(time, open, high, low, close, volume, vwap, tradeCount,
-                rollupInterval, lastUpdateDate);
+                1, lastUpdateDate);
 
         this.currentBaseCandleCount = this.getBaseCandleSeries().getItemCount() - 1;
-
         CandleItem candleItem = (CandleItem) this.getBaseCandleSeries().getDataItem(this.currentBaseCandleCount);
         this.getBaseCandleSeries().updatePercentChanged(candleItem);
-        updateIndicators(this.getBaseCandleDataset(), newBar);
         this.getBaseCandleSeries().fireSeriesChanged();
+
+        /*
+         * Another candle has been added. Add the new candle to the base
+         * series in the dataset.
+         */
+        if (newBar) {
+
+            newBar = this.getCandleSeries().buildCandle(time, open, high, low, close, volume, vwap, tradeCount,
+                    rollupInterval, lastUpdateDate);
+            updateIndicators(this.getCandleDataset(), newBar);
+        }
+
         /*
          * If thread Indicators the updates to all indicators and the subsequent
          * firing of base series changed is performed via the worker thread.
@@ -282,16 +291,8 @@ public class StrategyDataUI extends Worker {
             // _log.info("buildCandle symbol: "
             // + this.getBaseCandleSeriesUI().getSymbol() + " Count: "
             // + this.currentCandleCount);
-        } else {
-
-            /*
-             * Another candle has been added. Add the new candle to the base
-             * series in the dataset.
-             */
-            synchronized (this.getBaseCandleDataset()) {
-                this.getCandleDataset().updateDataset(this.getBaseCandleDataset(), 0, newBar);
-            }
         }
+
         return newBar;
     }
 
@@ -310,6 +311,7 @@ public class StrategyDataUI extends Worker {
              * indicators and are shared across Data-sets.
              */
             if (!IndicatorSeries.CandleSeries.equals(indicator.getType(0))) {
+
                 indicator.updateDataset(source, 0, newBar);
             }
         }
@@ -356,7 +358,9 @@ public class StrategyDataUI extends Worker {
     public void clearChartDatasets() {
 
         for (IIndicatorDataset indicator : indicators) {
+
             if (!IndicatorSeries.CandleSeries.equals(indicator.getType(0))) {
+
                 indicator.clear();
             }
         }
@@ -396,7 +400,8 @@ public class StrategyDataUI extends Worker {
      * @return CandleDataset
      */
     public CandleDataset getBaseCandleDataset() {
-        return baseCandleDataset;
+
+        return this.baseCandleDataset;
     }
 
     /**
@@ -405,7 +410,7 @@ public class StrategyDataUI extends Worker {
      * @return CandleSeries
      */
     public CandleSeries getBaseCandleSeries() {
-        return baseCandleDataset.getSeries(0);
+        return this.baseCandleDataset.getSeries(0);
     }
 
     /**
@@ -414,7 +419,16 @@ public class StrategyDataUI extends Worker {
      * @return CandleDataset
      */
     public CandleDataset getCandleDataset() {
-        return candleDataset;
+        return this.candleDataset;
+    }
+
+    /**
+     * Method getCandleSeries.
+     *
+     * @return CandleSeries
+     */
+    public CandleSeries getCandleSeries() {
+        return this.candleDataset.getSeries(0);
     }
 
     /**

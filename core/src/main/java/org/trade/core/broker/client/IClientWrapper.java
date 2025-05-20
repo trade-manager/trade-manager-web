@@ -64,8 +64,10 @@ public interface IClientWrapper {
 
     void execDetailsEnd(int reqId);
 
-    void historicalData(int reqId, String date, double open, double high, double low, double close, int volume,
-                        int count, double WAP, boolean hasGaps);
+    void historicalData(int reqId, String date, double open, double high, double low, double close, long volume,
+                        int tradeCount, int barSize, double WAP, boolean hasGaps);
+
+    void historicalDataComplete(int reqId);
 
     void realtimeBar(int reqId, long time, double open, double high, double low, double close, long volume, double wap,
                      int count);
