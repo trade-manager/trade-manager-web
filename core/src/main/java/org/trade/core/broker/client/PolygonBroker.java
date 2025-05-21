@@ -46,6 +46,7 @@ import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.BarSize;
 import org.trade.core.valuetype.ChartDays;
+import org.trade.core.valuetype.Currency;
 import org.trade.core.valuetype.Exchange;
 
 import java.io.IOException;
@@ -161,7 +162,8 @@ public class PolygonBroker extends Broker {
             JSONObject contractObj = new JSONObject(jsonString);
             contract.setLongName(contractObj.getJSONObject("results").getString("name"));
             contract.setSymbol(contractObj.getJSONObject("results").getString("ticker").toUpperCase());
-            contract.setCurrency(contractObj.getJSONObject("results").getString("currency_name").toUpperCase());
+            String currency = contractObj.getJSONObject("results").getString("currency_name").toUpperCase();
+            contract.setCurrency(Currency.newInstance(currency).getCode());
             String exchange = contractObj.getJSONObject("results").getString("primary_exchange");
             contract.setPrimaryExchange(Exchange.newInstance(exchange).getCode());
         } else {

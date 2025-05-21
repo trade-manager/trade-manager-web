@@ -285,8 +285,8 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
 
         /*
          * Need to slow things down as limit is 5 per minute including real time bars
-         * requests. When using Polygon. Note only broker model return false for
-         * connected.
+         * requests. When using Polygon. Note broker model return false for
+         * back testing data.
          */
         if (((Math.floor(totalSumbitted / 5d) == (totalSumbitted / 5d)) && (totalSumbitted > 0))
                 && !this.brokerModel.isConnected()) {
@@ -295,19 +295,21 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
             timer.start();
             synchronized (lockCoreUtilsTest) {
 
-                while (timerRunning.get() / 1000 < 601 && !this.isCancelled()) {
+                while (timerRunning.get() / 1000 < 61 && !this.isCancelled()) {
 
                     if ((timerRunning.get() % 60000) == 0) {
 
-                        String message = "Please wait " + (10 - (timerRunning.get() / 1000 / 5))
-                                + " minutes as there are more than 5 data requests.";
+                        String message = "Please wait " + Math.round((Math.floor(getGrandTotal() / 5d) - Math.floor(totalSumbitted / 5d)))
+                                + " minutes as Polygon license only allows 5 request per minute.";
+
+                        //_log.info("Wait 1min wait grand total: {}, totalSumbitted: {}, timer get: {},  " , getGrandTotal(), totalSumbitted, timerRunning.get());
                         publish(message);
                     }
                     lockCoreUtilsTest.wait();
                 }
             }
             timer.stop();
-            _log.debug("Finished wait 10min wait");
+            _log.info("Finished wait 1min wait");
         }
         /*
          * The SwingWorker has a maximum of 10 threads to run and this process
