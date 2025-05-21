@@ -70,7 +70,7 @@ public class ConfigProperties {
     // This is loaded as a system resource from the current core package
     private final static String ENVIRONMENT_VARIABLE_SYSTEM_PROPERTY_FILE = "config.properties";
     private final static String DEFAULT_PROPERTY_FILE = "config.properties";
-    private final static String ENVIRONMENT_VARIABLE_PROPERTY_FILE = "log4j.configuration";
+    private final static String ENVIRONMENT_VARIABLE_PROPERTY_FILE = "trade.config";
     private Properties m_properties = null;
     private static final ConfigProperties m_theConfig = new ConfigProperties();
 

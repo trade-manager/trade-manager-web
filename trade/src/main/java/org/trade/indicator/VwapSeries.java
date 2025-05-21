@@ -117,9 +117,13 @@ public class VwapSeries extends IndicatorSeries {
      * @param dataItem VwapItem
      */
     public void add(VwapItem dataItem, boolean notify) {
+
         if (!this.isEmpty()) {
+
             VwapItem item0 = (VwapItem) this.getDataItem(0);
+
             if (!dataItem.getPeriod().getClass().equals(item0.getPeriod().getClass())) {
+
                 throw new IllegalArgumentException("Can't mix RegularTimePeriod class types.");
             }
         }

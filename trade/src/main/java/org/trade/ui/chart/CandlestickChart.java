@@ -317,24 +317,36 @@ public class CandlestickChart extends JPanel implements SeriesChangeListener {
          */
         List<IIndicatorDataset> indicators = new ArrayList<>(0);
         for (IIndicatorDataset item : strategyData.getIndicators()) {
+
             if (IndicatorSeries.CandleSeries.equals(item.getType(0))) {
+
                 indicators.add(item);
             }
         }
+
         for (IIndicatorDataset item : strategyData.getIndicators()) {
+
             if (!IndicatorSeries.CandleSeries.equals(item.getType(0))) {
+
                 indicators.add(item);
             }
         }
+
         for (int i = 0; i < indicators.size(); i++) {
+
             IIndicatorDataset indicator = indicators.get(i);
+
             if (indicator.getDisplaySeries(0)) {
 
                 if (indicator.getSubChart(0)) {
+
                     String axisName;
+
                     if (IndicatorSeries.CandleSeries.equals(indicator.getType(0))) {
+
                         axisName = ((CandleSeries) indicator.getSeries(0)).getSymbol();
                     } else {
+
                         org.trade.core.valuetype.IndicatorSeries code = org.trade.core.valuetype.IndicatorSeries
                                 .newInstance(indicator.getType(0));
                         axisName = code.getDisplayName();
@@ -362,12 +374,14 @@ public class CandlestickChart extends JPanel implements SeriesChangeListener {
                     mainPlot.add(subPlot, 1);
 
                 } else {
+
                     datasetIndex++;
                     pricePlot.setDataset(datasetIndex, (XYDataset) indicator);
+
                     if (IndicatorSeries.CandleSeries.equals(indicator.getType(0))) {
+
                         // add secondary axis
                         axixIndex++;
-
                         final NumberAxis axis2 = new NumberAxis(((CandleSeries) indicator.getSeries(0)).getSymbol());
                         axis2.setAutoRange(true);
                         axis2.setAutoRangeIncludesZero(false);
@@ -376,16 +390,19 @@ public class CandlestickChart extends JPanel implements SeriesChangeListener {
                         pricePlot.mapDatasetToRangeAxis(datasetIndex, axixIndex);
                         pricePlot.setRenderer(datasetIndex, new StandardXYItemRenderer());
                     } else {
+
                         pricePlot.setRenderer(datasetIndex, indicator.getRenderer());
                     }
                     XYItemRenderer renderer = pricePlot.getRendererForDataset((XYDataset) indicator);
 
                     for (int seriesIndex = 0; seriesIndex < ((XYDataset) indicator).getSeriesCount(); seriesIndex++) {
+
                         renderer.setSeriesPaint(seriesIndex, indicator.getSeriesColor(seriesIndex));
                     }
                 }
             }
         }
+
         JFreeChart jfreechart = new JFreeChart(title, null, mainPlot, true);
         jfreechart.setAntiAlias(false);
         return jfreechart;

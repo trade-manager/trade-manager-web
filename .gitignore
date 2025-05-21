@@ -3,6 +3,7 @@
 .mvn/
 mvnw.cmd
 target
+logs
 bower_components
 node_modules
 node

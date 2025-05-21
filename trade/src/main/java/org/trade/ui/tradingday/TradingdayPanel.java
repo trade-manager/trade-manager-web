@@ -143,8 +143,9 @@ public class TradingdayPanel extends BasePanel {
 
     public TradingdayPanel(Tradingdays tradingdays, BasePanel controller, IPersistentModel tradePersistentModel) {
         try {
-            if (null != getMenu())
+            if (null != getMenu()) {
                 getMenu().addMessageListener(this);
+            }
             this.setLayout(new BorderLayout());
 
             m_tradingdays = tradingdays;
@@ -173,10 +174,12 @@ public class TradingdayPanel extends BasePanel {
             BaseButton reAssignButton = new BaseButton(this, UIPropertyCodes.newInstance(UIPropertyCodes.REASSIGN));
             m_tradestrategyModel = new TradestrategyTableModel();
             Tradingday tradingday = null;
+
             for (Tradingday instance : m_tradingdays.getTradingdays()) {
                 tradingday = instance;
                 break;
             }
+
             m_tradestrategyModel.setData(tradingday);
             m_tradestrategyTable = new TradestrategyTable(m_tradestrategyModel, m_strategyWorkers);
             ToolTipManager.sharedInstance().registerComponent(m_tradestrategyTable);

@@ -24,7 +24,9 @@ public abstract class Broker extends SwingWorker<Void, Void> implements IStrateg
      * @param tradestrategy     Tradestrategy
      */
     public synchronized void strategyComplete(String strategyClassName, Tradestrategy tradestrategy) {
+
         synchronized (lockBackTestWorker) {
+
             strategiesRunning.getAndDecrement();
             lockBackTestWorker.notifyAll();
         }
@@ -37,6 +39,7 @@ public abstract class Broker extends SwingWorker<Void, Void> implements IStrateg
      * @param tradestrategy     Tradestrategy
      */
     public synchronized void strategyStarted(String strategyClassName, Tradestrategy tradestrategy) {
+
         synchronized (lockBackTestWorker) {
             strategiesRunning.getAndIncrement();
             lockBackTestWorker.notifyAll();
@@ -50,6 +53,7 @@ public abstract class Broker extends SwingWorker<Void, Void> implements IStrateg
      * @see IStrategyChangeListener#ruleComplete(Tradestrategy)
      */
     public synchronized void ruleComplete(Tradestrategy tradestrategy) {
+
         synchronized (lockBackTestWorker) {
             ruleComplete.getAndIncrement();
             lockBackTestWorker.notifyAll();

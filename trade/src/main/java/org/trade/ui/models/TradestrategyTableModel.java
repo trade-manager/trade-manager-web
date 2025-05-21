@@ -351,19 +351,23 @@ public class TradestrategyTableModel extends TableModel {
         String symbol = ((String) this.getValueAt(selectedRow, 2)).trim().toUpperCase();
         final Strategy strategy = (Strategy) ((DAOStrategy) this.getValueAt(selectedRow, 5)).getObject();
         Portfolio portfolio = (Portfolio) ((DAOPortfolio) this.getValueAt(selectedRow, 7)).getObject();
-        int barSize = Integer.parseInt(((BarSize) this.getValueAt(selectedRow, 8)).getCode());
+        int barSize = Integer.parseInt(((BarSize) this.getValueAt(selectedRow, 8)).getValue());
         String currency = ((Currency) this.getValueAt(selectedRow, 14)).getCode();
         String exchange = ((Exchange) this.getValueAt(selectedRow, 15)).getCode();
         String priaryExchange = ((Exchange) this.getValueAt(selectedRow, 16)).getCode();
         String secType = ((SECType) this.getValueAt(selectedRow, 17)).getCode();
 
         for (final Tradestrategy element : getData().getTradestrategies()) {
+
             if (barSize == 1) {
+
                 long daySeconds = TradingCalendar.getDurationInSeconds(element.getTradingday().getOpen(),
                         element.getTradingday().getClose());
                 barSize = (int) daySeconds * barSize;
             }
+
             if (CoreUtils.nullSafeComparator(element.getContract().getSymbol(), symbol) == 0 && element.getStrategy().getName().equals(strategy.getName()) && element.getPortfolio().getName().equals(portfolio.getName()) && element.getBarSize().equals(barSize) && element.getContract().getCurrency().equals(currency) && element.getContract().getExchange().equals(exchange) && element.getContract().getPrimaryExchange().equals(priaryExchange) && element.getContract().getSecType().equals(secType)) {
+
                 getData().getTradestrategies().remove(element);
                 getData().setDirty(true);
                 final Vector<Object> currRow = rows.get(selectedRow);

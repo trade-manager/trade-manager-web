@@ -133,20 +133,24 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
     private static final boolean marketUpdateOnClose;
 
     static {
+
         try {
+
             backfillUseRTH = ConfigProperties.getPropAsInt("trade.backfill.useRTH");
             backfillWhatToShow = ConfigProperties.getPropAsString("trade.backfill.whatToShow");
             backfillOffsetDays = ConfigProperties.getPropAsInt("trade.backfill.offsetDays");
             genericTicklist = ConfigProperties.getPropAsString("trade.marketdata.genericTicklist");
             marketUpdateOnClose = ConfigProperties.getPropAsBoolean("trade.marketdata.realtime.updateClose");
-
         } catch (Exception ex) {
+
             throw new IllegalArgumentException("Error initializing IBrokerModel Msg: " + ex.getMessage());
         }
     }
 
     public TWSBrokerModel() {
+
         try {
+
             m_client = new EClientSocket(this, this);
             m_tradePersistentModel = (IPersistentModel) ClassFactory
                     .getServiceForInterface(IPersistentModel._persistentModel, this);
@@ -168,15 +172,20 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
 
 
     public void onConnect(String host, Integer port, Integer clientId) {
+
         this.m_clientId = clientId;
         m_client.eConnect(host, port, clientId);
         openOrders.clear();
     }
 
     public void onDisconnect() {
+
         onCancelAllRealtimeData();
+
         if (m_client.isConnected()) {
+
             for (String accountNumber : m_accountRequests.keySet()) {
+
                 this.onCancelAccountUpdates(accountNumber);
             }
             m_client.eDisconnect();
@@ -185,6 +194,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
     }
 
     public void connectionClosed() {
+
         _log.error("TWS Broker Model connectionClosed ");
         onCancelAllRealtimeData();
         this.fireConnectionClosed(true);
@@ -195,8 +205,11 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
     }
 
     public void onReqFinancialAccount() {
+
         try {
+
             if (m_client.isConnected()) {
+
                 m_client.requestFA(EClientSocket.ALIASES);
             } else {
                 throw new BrokerModelException(0, 3010, "Not conected Financial Account data cannot be retrieved");
@@ -207,8 +220,11 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
     }
 
     public void onReqReplaceFinancialAccount(int faDataType, String xml) {
+
         try {
+
             if (m_client.isConnected()) {
+
                 m_client.replaceFA(faDataType, xml);
             } else {
                 throw new BrokerModelException(0, 3010, "Not conected Financial Account data cannot be replaced");
@@ -221,6 +237,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
     public void onReqManagedAccount() throws BrokerModelException {
         // request list of all open orders
         if (m_client.isConnected()) {
+
             m_client.reqManagedAccts();
         } else {
             throw new BrokerModelException(0, 3010, "Not conected to TWS historical data cannot be retrieved");
@@ -228,12 +245,17 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
     }
 
     public void onSubscribeAccountUpdates(boolean subscribe, String accountNumber) {
+
         try {
+
             Account account = m_tradePersistentModel.findAccountByNumber(accountNumber);
             m_accountRequests.put(accountNumber, account);
+
             if (m_client.isConnected()) {
+
                 m_client.reqAccountUpdates(subscribe, accountNumber);
             } else {
+
                 throw new BrokerModelException(0, 3010,
                         "Not conected to TWS historical account data cannot be retrieved");
             }
@@ -407,7 +429,9 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
         try {
 
             if (m_client.isConnected()) {
+
                 if (this.isHistoricalDataRunning(tradestrategy)) {
+
                     throw new BrokerModelException(tradestrategy.getId(), 3010,
                             "HistoricalData request is already in progress for: "
                                     + tradestrategy.getContract().getSymbol() + " Please wait or cancel.");
@@ -419,8 +443,10 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
                  * and all indicator updates. That reduces the delay to the
                  * broker interface thread for messages coming in.
                  */
-                if (!tradestrategy.getStrategyData().isRunning())
+                if (!tradestrategy.getStrategyData().isRunning()) {
+
                     tradestrategy.getStrategyData().execute();
+                }
 
                 m_historyDataRequests.put(tradestrategy.getId(), tradestrategy);
 
@@ -1443,10 +1469,14 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
     }
 
     public void contractDetails(int reqId, ContractDetails contractDetails) {
+
         try {
+
             if (m_contractRequests.containsKey(reqId)) {
+
                 Contract contract = m_contractRequests.get(reqId);
                 TWSBrokerModel.logContractDetails(contractDetails);
+
                 if (TWSBrokerModel.populateContract(contractDetails, contract)) {
                     m_tradePersistentModel.persistContract(contract);
                 }
@@ -1567,47 +1597,16 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
     public void historicalData(int reqId, String dateString, double open, double high, double low, double close,
                                int volume, int tradeCount, double vwap, boolean hasGaps) {
         try {
+
             volume = volume * 100;
+
             if (m_historyDataRequests.containsKey(reqId)) {
+
                 Tradestrategy tradestrategy = m_historyDataRequests.get(reqId);
 
                 if (dateString.contains("finished-")) {
 
-                    CandleSeries candleSeries = tradestrategy.getStrategyData().getBaseCandleSeries();
-                    m_tradePersistentModel.persistCandleSeries(candleSeries);
-
-                    _log.debug("HistoricalData complete Req Id: {} Symbol: {} Tradingday: {} candles to saved: {} Contract Tradestrategies size:: {}", reqId, tradestrategy.getContract().getSymbol(), tradestrategy.getTradingday().getOpen(), candleSeries.getItemCount(), tradestrategy.getContract().getTradestrategies().size());
-
-                    /*
-                     * The last one has arrived the reqId is the
-                     * tradeStrategyId. Remove this from the processing vector.
-                     */
-
-                    synchronized (m_historyDataRequests) {
-                        m_historyDataRequests.remove(reqId);
-                        m_historyDataRequests.notify();
-                    }
-
-                    /*
-                     * Check to see if the trading day is today and this
-                     * strategy is selected to trade and that the market is open
-                     */
-                    synchronized (tradestrategy.getContract().getTradestrategies()) {
-
-                        this.fireHistoricalDataComplete(tradestrategy);
-                        if (tradestrategy.getTradingday().getClose()
-                                .isAfter(TradingCalendar.getDateTimeNowMarketTimeZone())) {
-                            if (!this.isRealtimeBarsRunning(tradestrategy.getContract())) {
-                                tradestrategy.getContract().addTradestrategy(tradestrategy);
-                                this.onReqRealTimeBars(tradestrategy.getContract(),
-                                        tradestrategy.getStrategy().getMarketData());
-                            } else {
-                                Contract contract = m_realTimeBarsRequests.get(tradestrategy.getContract().getId());
-                                contract.addTradestrategy(tradestrategy);
-                            }
-                        }
-                    }
-
+                    historicalDataComplete(reqId);
                 } else {
 
                     ZonedDateTime date;
@@ -1617,6 +1616,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
                      * the period the dates come through as yyyyMMdd.
                      */
                     if (dateString.length() == 8) {
+
                         date = TradingCalendar.getZonedDateTimeFromDateString(dateString, "yyyyMMdd",
                                 TradingCalendar.MKT_TIMEZONE);
                     } else {
@@ -1643,6 +1643,59 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
                                 tradeCount, 1, null);
                     }
                 }
+            }
+        } catch (Exception ex) {
+            error(reqId, 3260, ex.getMessage());
+        }
+    }
+
+    public void historicalDataComplete(int reqId) {
+
+        try {
+
+            if (m_historyDataRequests.containsKey(reqId)) {
+
+                Tradestrategy tradestrategy = m_historyDataRequests.get(reqId);
+
+                CandleSeries candleSeries = tradestrategy.getStrategyData().getBaseCandleSeries();
+                m_tradePersistentModel.persistCandleSeries(candleSeries);
+
+                _log.debug("HistoricalDataComplete complete Req Id: {} Symbol: {} Tradingday: {} candles to saved: {} Contract Tradestrategies size:: {}", reqId, tradestrategy.getContract().getSymbol(), tradestrategy.getTradingday().getOpen(), candleSeries.getItemCount(), tradestrategy.getContract().getTradestrategies().size());
+
+                /*
+                 * The last one has arrived the reqId is the
+                 * tradeStrategyId. Remove this from the processing vector.
+                 */
+
+                synchronized (m_historyDataRequests) {
+                    m_historyDataRequests.remove(reqId);
+                    m_historyDataRequests.notify();
+                }
+
+                /*
+                 * Check to see if the trading day is today and this
+                 * strategy is selected to trade and that the market is open
+                 */
+                synchronized (tradestrategy.getContract().getTradestrategies()) {
+
+                    this.fireHistoricalDataComplete(tradestrategy);
+
+                    if (tradestrategy.getTradingday().getClose()
+                            .isAfter(TradingCalendar.getDateTimeNowMarketTimeZone())) {
+
+                        if (!this.isRealtimeBarsRunning(tradestrategy.getContract())) {
+
+                            tradestrategy.getContract().addTradestrategy(tradestrategy);
+                            this.onReqRealTimeBars(tradestrategy.getContract(),
+                                    tradestrategy.getStrategy().getMarketData());
+                        } else {
+                            Contract contract = m_realTimeBarsRequests.get(tradestrategy.getContract().getId());
+                            contract.addTradestrategy(tradestrategy);
+                        }
+                    }
+                }
+
+
             }
         } catch (Exception ex) {
             error(reqId, 3260, ex.getMessage());

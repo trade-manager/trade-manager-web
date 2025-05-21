@@ -7,21 +7,32 @@ import org.trade.base.BasePanelMenu;
 import org.trade.base.ComponentPrintService;
 import org.trade.base.ImageBuilder;
 import org.trade.base.WaitCursorEventQueue;
+import org.trade.core.broker.BrokerDataRequestMonitor;
+import org.trade.core.broker.BrokerModelException;
+import org.trade.core.broker.IBrokerChangeListener;
+import org.trade.core.broker.IBrokerModel;
+import org.trade.core.factory.ClassFactory;
+import org.trade.core.persistent.IPersistentModel;
 import org.trade.core.persistent.dao.Candle;
 import org.trade.core.persistent.dao.Contract;
+import org.trade.core.persistent.dao.Portfolio;
 import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.StrategyHome;
+import org.trade.core.persistent.dao.TradeOrder;
+import org.trade.core.persistent.dao.TradePosition;
+import org.trade.core.persistent.dao.Tradestrategy;
 import org.trade.core.persistent.dao.Tradingday;
-import org.trade.core.persistent.dao.series.indicator.candle.CandlePeriod;
+import org.trade.core.persistent.dao.Tradingdays;
+import org.trade.core.properties.ConfigProperties;
 import org.trade.core.properties.TradeAppLoadConfig;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.BarSize;
+import org.trade.core.valuetype.ChartDays;
 import org.trade.core.valuetype.Currency;
+import org.trade.core.valuetype.DAOPortfolio;
 import org.trade.core.valuetype.DAOStrategy;
 import org.trade.core.valuetype.Exchange;
 import org.trade.core.valuetype.SECType;
-import org.trade.indicator.CandleDataset;
-import org.trade.indicator.CandleSeries;
 import org.trade.indicator.StrategyDataUI;
 import org.trade.ui.MainPanelMenu;
 import org.trade.ui.widget.Clock;
@@ -31,22 +42,17 @@ import java.awt.*;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterJob;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.io.Serial;
-import java.net.URI;
-import java.net.URL;
+import java.math.BigDecimal;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.StringTokenizer;
+import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  *
  */
-public class CandlestickChartApp extends BasePanel {
+public class CandlestickChartApp extends BasePanel implements IBrokerChangeListener {
 
     /**
      *
@@ -58,8 +64,11 @@ public class CandlestickChartApp extends BasePanel {
      */
 
     private final static Logger _log = LoggerFactory.getLogger(CandlestickChartApp.class);
-
     private final JPanel m_menuPanel;
+    private static IPersistentModel m_tradePersistentModel = null;
+    private static IBrokerModel m_brokerModel = null;
+    private static BrokerDataRequestMonitor m_brokerDataRequestProgressMonitor = null;
+    private static JFrame m_frame = null;
 
     // Main method
 
@@ -75,30 +84,28 @@ public class CandlestickChartApp extends BasePanel {
             try {
 
                 TradeAppLoadConfig.loadAppProperties();
-                JFrame frame = new JFrame();
+                m_frame = new JFrame();
                 String symbol = "MSFT";
-                // StrategyData data = CandlestickChartTest
-                // .getPriceDataSetYahooDay(symbol);
-                int numberOfDays = 2;
-                StrategyDataUI strategyData = CandlestickChartApp.getPriceDataSetYahooIntraday(symbol, numberOfDays,
-                        BarSize.FIVE_MIN);
-                CandlestickChart chart = new CandlestickChart(symbol, strategyData,
-                        Tradingday.newInstance(TradingCalendar.getDateTimeNowMarketTimeZone()));
-                CandlestickChartApp panel = new CandlestickChartApp(chart);
 
-                frame.getContentPane().add(panel);
-                frame.setSize(1200, 900);
-                Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
+                m_brokerModel = (IBrokerModel) ClassFactory.getServiceForInterface(IBrokerModel._brokerTest, CandlestickChartApp.class);
+                m_tradePersistentModel = (IPersistentModel) ClassFactory
+                        .getServiceForInterface(IPersistentModel._persistentModel, CandlestickChartApp.class);
+                Contract contract = new Contract(SECType.STOCK, symbol, Exchange.SMART, Currency.USD, null, null);
+                contract.setId(Integer.MAX_VALUE);
+                ZonedDateTime endDate = TradingCalendar.getDateTimeNowMarketTimeZone();
+                endDate = TradingCalendar.getTradingDayEnd(TradingCalendar.getPrevTradingDay(endDate));
+                ZonedDateTime startDate = TradingCalendar.getTradingDayStart(endDate);
 
-                frame.setLocation((d.width - frame.getSize().width) / 2, (d.height - frame.getSize().height) / 2);
-                frame.setIconImage(ImageBuilder.getImage("trade.gif"));
-                frame.validate();
-                frame.repaint();
-                frame.setVisible(true);
-                EventQueue waitQue = new WaitCursorEventQueue(500);
-                Toolkit.getDefaultToolkit().getSystemEventQueue().push(waitQue);
+                Strategy daoStrategy = (Strategy) DAOStrategy.newInstance().getObject();
+                StrategyHome home = new StrategyHome();
+                String name = daoStrategy.getName();
+                Strategy strategy = home.findByName(name);
+                Tradestrategy tradestrategy = getTradestrategy(contract, strategy, ChartDays.TWO_DAYS, BarSize.FIVE_MIN, startDate, endDate);
+                tradestrategy.setId(Integer.MAX_VALUE);
+                runStrategy(tradestrategy, true);
+
             } catch (Exception ex) {
-                _log.error("Error getting Yahoo data msg: {}", ex.getMessage(), ex);
+                _log.error("Error getting broker data msg: {}", ex.getMessage(), ex);
             }
         });
     }
@@ -154,7 +161,6 @@ public class CandlestickChartApp extends BasePanel {
         setMenu(m_menuBar);
         /* This is always true as main panel needs to receive all events */
         setSelected(true);
-
     }
 
     /**
@@ -163,6 +169,7 @@ public class CandlestickChartApp extends BasePanel {
      * @param menu BasePanelMenu
      */
     public void setMenu(BasePanelMenu menu) {
+
         m_menuPanel.removeAll();
         m_menuPanel.add(menu, BorderLayout.NORTH);
         super.setMenu(menu);
@@ -190,6 +197,7 @@ public class CandlestickChartApp extends BasePanel {
     }
 
     public void doPrint() {
+
         try {
 
             PageFormat pageFormat = new PageFormat();
@@ -211,146 +219,281 @@ public class CandlestickChartApp extends BasePanel {
         }
     }
 
-    /**
-     * Method getPriceDataSetYahooDay.
-     *
-     * @param symbol String
-     * @return StrategyData
-     */
-    protected static StrategyDataUI getPriceDataSetYahooDay(String symbol) {
-        try {
+    public void connectionOpened() {
 
-            List<Candle> candles = new ArrayList<>();
-            Strategy daoStrategy = (Strategy) DAOStrategy.newInstance().getObject();
-            StrategyHome home = new StrategyHome();
-            String name = daoStrategy.getName();
-            Strategy strategy = home.findByName(name);
-            Contract contract = new Contract(SECType.STOCK, symbol, Exchange.SMART, Currency.USD, null, null);
-            ZonedDateTime today = TradingCalendar.getDateTimeNowMarketTimeZone();
-            ZonedDateTime startDate = today.minusMonths(3);
+    }
 
-            /*
-             * Yahoo finance So IBM form 1/1/2012 thru 06/30/2012
-             * http://ichart.finance
-             * .yahoo.com/table.csv?s=IBM&a=0&b=1&c=2012&d=5
-             * &e=30&f=2012&ignore=.csv"
-             */
+    public void connectionClosed(boolean forced) {
 
-            String strUrl = "http://ichart.finance.yahoo.com/table.csv?s=" + symbol + "&a=" + startDate.getMonth()
-                    + "&b=" + startDate.getDayOfMonth() + "&c=" + startDate.getYear() + "&d=" + today.getMonth() + "&e="
-                    + today.getDayOfMonth() + "&f=" + today.getYear() + "&ignore=.csv";
-
-            URL url = new URI(strUrl).toURL();
-            BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
-            DateTimeFormatter df = DateTimeFormatter.ofPattern("y-M-d");
-
-            String inputLine;
-            in.readLine();
-            while ((inputLine = in.readLine()) != null) {
-                StringTokenizer st = new StringTokenizer(inputLine, ",");
-                ZonedDateTime date = ZonedDateTime.parse(st.nextToken(), df);
-                Tradingday tradingday = Tradingday.newInstance(date);
-                double open = Double.parseDouble(st.nextToken());
-                double high = Double.parseDouble(st.nextToken());
-                double low = Double.parseDouble(st.nextToken());
-                double close = Double.parseDouble(st.nextToken());
-                long volume = Long.parseLong(st.nextToken());
-                // double adjClose = Double.parseDouble( st.nextToken() );
-                CandlePeriod period = new CandlePeriod(TradingCalendar.getTradingDayStart(date),
-                        TradingCalendar.getTradingDayEnd(date).minusSeconds(1));
-
-                Candle candle = new Candle(contract, period, open, high, low, close, volume, (open + close) / 2,
-                        ((int) volume / 100), TradingCalendar.getDateTimeNowMarketTimeZone());
-
-                candle.setContract(contract);
-                candle.setTradingday(tradingday);
-                candle.setLastUpdateDate(candle.getStartPeriod());
-                candles.add(candle);
-            }
-            in.close();
-
-            Collections.reverse(candles);
-            CandleDataset candleDataset = new CandleDataset();
-            int daySeconds = (int) TradingCalendar.getDurationInSeconds(TradingCalendar.getTradingDayStart(today),
-                    TradingCalendar.getTradingDayEnd(today));
-            CandleSeries candleSeries = new CandleSeries(contract.getSymbol(), contract, daySeconds, startDate, today);
-            candleDataset.addSeries(candleSeries);
-            StrategyDataUI strategyData = new StrategyDataUI(strategy, candleDataset);
-            CandleDataset.populateSeries(strategyData, candles);
-            return strategyData;
-        } catch (Exception ex) {
-            _log.error("Error getting Yahoo data msg: {}", ex.getMessage(), ex);
-        }
-        return null;
     }
 
     /**
-     * Method getPriceDataSetYahooIntraday.
+     * Method executionDetailsEnd.
      *
-     * @param symbol        String
-     * @param days          int
-     * @param periodSeconds int
-     * @return StrategyData
+     * @param execDetails ConcurrentHashMap<Integer,TradeOrder>
      */
-    protected static StrategyDataUI getPriceDataSetYahooIntraday(String symbol, int days, int periodSeconds) {
+    public void executionDetailsEnd(ConcurrentHashMap<Integer, TradeOrder> execDetails) {
+
+    }
+
+    /**
+     * Method historicalDataComplete.
+     *
+     * @param tradestrategy Tradestrategy
+     */
+    public void historicalDataComplete(Tradestrategy tradestrategy) {
+
+    }
+
+    /**
+     * Method managedAccountsUpdated.
+     *
+     * @param accountNumber String
+     */
+    public void managedAccountsUpdated(String accountNumber) {
+
+    }
+
+    /**
+     * Method fAAccountsCompleted. Notifies all registered listeners that the
+     * brokerManagerModel has received all FA Accounts information.
+     */
+    public void fAAccountsCompleted() {
+
+    }
+
+    /**
+     * Method updateAccountTime.
+     *
+     * @param accountNumber String
+     */
+    public void updateAccountTime(String accountNumber) {
+
+    }
+
+    /**
+     * Method brokerError.
+     *
+     * @param brokerError BrokerModelException
+     */
+    public void brokerError(BrokerModelException brokerError) {
+
+    }
+
+    /**
+     * Method tradeOrderFilled.
+     *
+     * @param tradeOrder TradeOrder
+     */
+    public void tradeOrderFilled(TradeOrder tradeOrder) {
+
+    }
+
+    /**
+     * Method tradeOrderCancelled.
+     *
+     * @param tradeOrder TradeOrder
+     */
+    public void tradeOrderCancelled(TradeOrder tradeOrder) {
+
+    }
+
+    /**
+     * Method tradeOrderStatusChanged.
+     *
+     * @param tradeOrder TradeOrder
+     */
+    public void tradeOrderStatusChanged(TradeOrder tradeOrder) {
+
+    }
+
+    /**
+     * Method positionClosed.
+     *
+     * @param tradePosition TradePosition
+     */
+    public void positionClosed(TradePosition tradePosition) {
+
+    }
+
+    /**
+     * Method openOrderEnd.
+     *
+     * @param openOrders ConcurrentHashMap<Integer,TradeOrder>
+     */
+    public void openOrderEnd(ConcurrentHashMap<Integer, TradeOrder> openOrders) {
+
+    }
+
+    private static void createChart(Tradestrategy tradestrategy) {
+
+        StrategyDataUI strategyData = StrategyDataUI.create(tradestrategy);
+
+        CandlestickChart chart = new CandlestickChart(tradestrategy.getContract().getSymbol(), strategyData,
+                Tradingday.newInstance(TradingCalendar.getDateTimeNowMarketTimeZone()));
+        CandlestickChartApp panel = new CandlestickChartApp(chart);
+
+        m_frame.getContentPane().add(panel);
+        m_frame.setSize(1200, 900);
+        Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
+
+        m_frame.setLocation((d.width - m_frame.getSize().width) / 2, (d.height - m_frame.getSize().height) / 2);
+        m_frame.setIconImage(ImageBuilder.getImage("trade.gif"));
+        m_frame.validate();
+        m_frame.repaint();
+        m_frame.setVisible(true);
+        EventQueue waitQue = new WaitCursorEventQueue(500);
+        Toolkit.getDefaultToolkit().getSystemEventQueue().push(waitQue);
+    }
+
+    private static Tradestrategy getTradestrategy(Contract contract, Strategy strategy, Integer chartDays, Integer barSize, ZonedDateTime open, ZonedDateTime close) {
+
+        Tradingday tradingday = new Tradingday(open, close);
+        tradingday.setId(Integer.MAX_VALUE);
+        Tradestrategy tradestrategy;
+        Portfolio portfolio = (Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
+        int riskAmount = 0;
+
         try {
-            ZonedDateTime today = TradingCalendar.getDateTimeNowMarketTimeZone();
-            ZonedDateTime startDate = today.minusDays(days);
-            startDate = TradingCalendar.getPrevTradingDay(startDate);
-            Strategy daoStrategy = (Strategy) DAOStrategy.newInstance().getObject();
-            StrategyHome home = new StrategyHome();
-            String name = daoStrategy.getName();
-            Strategy strategy = home.findByName(name);
-            Contract contract = new Contract(SECType.STOCK, symbol, Exchange.SMART, Currency.USD, null, null);
-            CandleDataset candleDataset = new CandleDataset();
-            CandleSeries candleSeries = new CandleSeries(contract.getSymbol(), contract, periodSeconds, startDate,
-                    today);
-            candleDataset.addSeries(candleSeries);
-            StrategyDataUI strategyData = new StrategyDataUI(strategy, candleDataset);
 
-            /*
-             * Yahoo finance
-             * http://chartapi.finance.yahoo.com/instrument/1.0/IBM
-             * /chartdata;type=quote;range=1d/csv/
-             */
+            chartDays = ConfigProperties.getPropAsInt("trade.backfill.duration");
 
-            String strUrl = "http://chartapi.finance.yahoo.com/instrument/1.0/" + symbol
-                    + "/chartdata;type=quote;range=" + days + "d/csv/";
+            if (!ChartDays.newInstance(chartDays).isValid()) {
 
-            _log.info("URL : {}", strUrl);
-            URL url = new URI(strUrl).toURL();
-            BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+                chartDays = 2;
+            }
 
-            String inputLine;
-            in.readLine();
-            while ((inputLine = in.readLine()) != null) {
+            barSize = ConfigProperties.getPropAsInt("trade.backfill.barsize");
 
-                if (!inputLine.contains(":")) {
-                    StringTokenizer scanLine = new StringTokenizer(inputLine, ",");
-                    while (scanLine.hasMoreTokens()) {
-                        ZonedDateTime time = TradingCalendar
-                                .getZonedDateTimeFromMilli(Long.parseLong(scanLine.nextToken()) * 1000);
+            if (!BarSize.newInstance(barSize).isValid()) {
 
-                        // values:Timestamp,close,high,low,open,volume
-                        double close = Double.parseDouble(scanLine.nextToken());
-                        double high = Double.parseDouble(scanLine.nextToken());
-                        double low = Double.parseDouble(scanLine.nextToken());
-                        double open = Double.parseDouble(scanLine.nextToken());
-                        long volume = Long.parseLong(scanLine.nextToken());
-                        _log.info("Time : {} Open: {} High: {} Low: {} Close: {} Volume: {}", time, open, high, low, close, volume);
-                        if (startDate.isBefore(time)) {
-                            strategyData.buildCandle(time, open, high, low, close, volume, (open + close) / 2,
-                                    ((int) volume / 100), periodSeconds / BarSize.FIVE_MIN, null);
+                barSize = 300;
+            }
+
+            riskAmount = ConfigProperties.getPropAsInt("trade.risk");
+
+        } catch (Exception e) {
+            // Do nothing
+        }
+
+        tradestrategy = new Tradestrategy(
+                new Contract(SECType.STOCK, "", Exchange.SMART, Currency.USD, null, null), tradingday, strategy,
+                portfolio, new BigDecimal(riskAmount), null, null, true, chartDays, barSize);
+
+        tradestrategy.setRiskAmount(new BigDecimal(riskAmount));
+        tradestrategy.setBarSize(barSize);
+        tradestrategy.setChartDays(chartDays);
+        tradestrategy.setTrade(true);
+        tradestrategy.setDirty(true);
+        tradestrategy.setStrategy(strategy);
+        tradestrategy.setPortfolio(portfolio);
+        tradestrategy.setContract(contract);
+        tradingday.addTradestrategy(tradestrategy);
+        return tradestrategy;
+    }
+
+    /**
+     * Method runStrategy.
+     *
+     * @param tradestrategy  Tradestrategy
+     * @param brokerDataOnly boolean
+     */
+    private static void runStrategy(Tradestrategy tradestrategy, boolean brokerDataOnly) {
+
+        try {
+
+            m_brokerModel.setBrokerDataOnly(brokerDataOnly);
+
+            Tradingday tradingday = tradestrategy.getTradingday();
+
+            if (Tradingdays.hasTradeOrders(tradingday) && !brokerDataOnly) {
+
+                int result = JOptionPane.showConfirmDialog(m_frame,
+                        "Tradingday: " + tradingday.getOpen()
+                                + " has orders. Do you want to delete all orders?",
+                        "Information", JOptionPane.YES_NO_OPTION);
+
+                if (result == JOptionPane.YES_OPTION) {
+
+                    m_tradePersistentModel.removeTradingdayTradeOrders(tradingday);
+                }
+            }
+
+            try {
+
+                if (brokerDataOnly && !m_brokerModel.validateBrokerData(tradestrategy)) {
+
+                    return;
+                }
+            } catch (BrokerModelException ex) {
+
+                JOptionPane.showConfirmDialog(m_frame, ex.getMessage(), "Warning",
+                        JOptionPane.OK_CANCEL_OPTION);
+                return;
+            }
+
+            if (brokerDataOnly && !m_brokerModel.isConnected()) {
+
+                ZonedDateTime endDate = TradingCalendar.getDateAtTime(
+                        TradingCalendar.getPrevTradingDay(TradingCalendar
+                                .addTradingDays(tradestrategy.getTradingday().getClose(), 0)),
+                        tradestrategy.getTradingday().getClose());
+                ZonedDateTime startDate = endDate.minusDays((tradestrategy.getChartDays() - 1));
+                startDate = TradingCalendar.getPrevTradingDay(startDate);
+
+                List<Candle> candles = m_tradePersistentModel.findCandlesByContractDateRangeBarSize(
+                        tradestrategy.getContract().getId(), startDate, endDate,
+                        tradestrategy.getBarSize());
+
+                if (!candles.isEmpty()) {
+
+                    int result = JOptionPane.showConfirmDialog(m_frame,
+                            "Candle data already exists for Symbol: "
+                                    + tradestrategy.getContract().getSymbol() + " Do you want to delete?",
+                            "Information", JOptionPane.YES_NO_OPTION);
+
+                    if (result == JOptionPane.YES_OPTION) {
+
+                        for (Candle item : candles) {
+
+                            m_tradePersistentModel.removeAspect(item);
                         }
+                    } else {
+                        return;
                     }
                 }
             }
-            in.close();
-            return strategyData;
+
+            Tradingdays tradingdays = new Tradingdays();
+            tradingdays.add(tradingday);
+            m_brokerDataRequestProgressMonitor = new BrokerDataRequestMonitor(m_brokerModel, m_tradePersistentModel,
+                    tradingdays);
+            m_brokerDataRequestProgressMonitor.addPropertyChangeListener(evt -> SwingUtilities.invokeLater(() -> {
+
+                if ("progress".equals(evt.getPropertyName())) {
+
+                    int progress = (Integer) evt.getNewValue();
+                } else if ("information".equals(evt.getPropertyName())) {
+
+                    if (m_brokerDataRequestProgressMonitor.isDone()) {
+
+                        createChart(tradestrategy);
+                    }
+                } else if ("error".equals(evt.getPropertyName())) {
+
+                    JOptionPane.showConfirmDialog(m_frame, "Error getting history data msg: " +
+                                    ((Exception) evt.getNewValue()).getMessage() + " value: " + evt.getNewValue(), "Error",
+                            JOptionPane.OK_CANCEL_OPTION);
+                }
+            }));
+
+            m_brokerDataRequestProgressMonitor.execute();
         } catch (Exception ex) {
-            _log.error("Error getting Yahoo data msg: {}", ex.getMessage(), ex);
+
+            JOptionPane.showConfirmDialog(m_frame, "Error running Strategies or Chart Data msg: " +
+                            ex.getMessage(), "Error",
+                    JOptionPane.OK_CANCEL_OPTION);
         }
-        return null;
     }
 
     /**
@@ -378,8 +521,12 @@ public class CandlestickChartApp extends BasePanel {
          * @see Printable#print(Graphics, PageFormat, int)
          */
         public int print(Graphics g, PageFormat pageFormat, int pageIndex) {
-            if (pageIndex > 0)
+
+            if (pageIndex > 0) {
+
                 return NO_SUCH_PAGE;
+            }
+
             Graphics2D g2 = (Graphics2D) g;
             g2.translate(pageFormat.getImageableX(), pageFormat.getImageableY());
             boolean wasBuffered = disableDoubleBuffering(m_component);
@@ -395,8 +542,11 @@ public class CandlestickChartApp extends BasePanel {
          * @return boolean
          */
         private boolean disableDoubleBuffering(Component c) {
-            if (!(c instanceof JComponent jc))
+
+            if (!(c instanceof JComponent jc)) {
                 return false;
+            }
+
             boolean wasBuffered = jc.isDoubleBuffered();
             jc.setDoubleBuffered(false);
             return wasBuffered;
@@ -409,8 +559,10 @@ public class CandlestickChartApp extends BasePanel {
          * @param wasBuffered boolean
          */
         private void restoreDoubleBuffering(Component c, boolean wasBuffered) {
-            if (c instanceof JComponent)
+
+            if (c instanceof JComponent) {
                 ((JComponent) c).setDoubleBuffered(wasBuffered);
+            }
         }
     }
 }

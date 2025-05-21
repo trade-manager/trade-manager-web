@@ -13,6 +13,11 @@
     <description>Trade Manager core components</description>
     <dependencies>
         <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20250107</version>
+        </dependency>
+        <dependency>
             <groupId>com.interactivebrokers</groupId>
             <artifactId>tws-api</artifactId>
             <version>10.20.01</version>

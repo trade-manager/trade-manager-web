@@ -42,7 +42,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.trade.core.properties.TradeAppLoadConfig;
 import org.trade.core.broker.client.Broker;
 import org.trade.core.factory.ClassFactory;
 import org.trade.core.persistent.dao.TradeOrder;
@@ -55,6 +54,7 @@ import org.trade.core.persistent.dao.series.indicator.candle.CandleItem;
 import org.trade.core.persistent.dao.series.indicator.movingaverage.MovingAverageItem;
 import org.trade.core.persistent.dao.series.indicator.vwap.VwapItem;
 import org.trade.core.properties.ConfigProperties;
+import org.trade.core.properties.TradeAppLoadConfig;
 import org.trade.core.util.time.RegularTimePeriod;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.Action;
@@ -97,6 +97,7 @@ public class BrokerModelTest implements IBrokerChangeListener {
      */
     @BeforeAll
     public static void setUpBeforeClass() throws Exception {
+
         TradeAppLoadConfig.loadAppProperties();
         clientId = ConfigProperties.getPropAsInt("trade.tws.clientId");
         port = Integer.valueOf(ConfigProperties.getPropAsString("trade.tws.port"));
@@ -116,7 +117,7 @@ public class BrokerModelTest implements IBrokerChangeListener {
     @BeforeEach
     public void setUp() throws Exception {
 
-        String symbol = "TEST";
+        String symbol = "NVDA";
         this.tradestrategy = TradestrategyBase.getTestTradestrategy(symbol);
         backTestbrokerModel = (IBrokerModel) ClassFactory.getServiceForInterface(_broker, BrokerModelTest.class);
         backTestbrokerModel.onConnect(host, port, clientId);
@@ -154,7 +155,9 @@ public class BrokerModelTest implements IBrokerChangeListener {
             // returns false for BackTestBrokerModel.
             timer.start();
             synchronized (lockCoreUtilsTest) {
+
                 while (!backTestbrokerModel.isConnected() && !connectionFailed && !backTestBroker.isDone()) {
+
                     lockCoreUtilsTest.wait();
                 }
             }

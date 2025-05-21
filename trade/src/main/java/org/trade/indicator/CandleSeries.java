@@ -276,10 +276,13 @@ public class CandleSeries extends IndicatorSeries {
      * @return String
      */
     public String getCurrency() {
+
         try {
-            if (null == this.currency)
+
+            if (null == this.currency) {
                 this.currency = (String) CodeValue.getValueCode(CURRENCY, this.getCodeValues());
-        } catch (Exception e) {
+            }
+        } catch (Exception ex) {
             this.currency = null;
         }
         return this.currency;
@@ -467,7 +470,7 @@ public class CandleSeries extends IndicatorSeries {
                         double vwap, int tradeCount, int rollupInterval, ZonedDateTime lastUpdateDate) {
 
         int index = this.indexOf(time);
-        // _log.error("Symbol :" + this.getSymbol() + " Bar Time: " + time
+        // _log.info("Symbol :" + this.getSymbol() + " Bar Time: " + time
         // + " Index: " + index + " open: " + open + " high: " + high
         // + " low: " + low + " close: " + close + " volume: " + volume
         // + " vwap: " + vwap + " tradeCount: " + tradeCount
@@ -479,26 +482,36 @@ public class CandleSeries extends IndicatorSeries {
 
             candleItem = (CandleItem) this.getDataItem(index);
 
-            if (null == lastUpdateDate)
+            if (null == lastUpdateDate) {
+
                 lastUpdateDate = candleItem.getPeriod().getEnd();
+            }
+
 
             this.rollCandle(candleItem.getPeriod(), rollupInterval, open, high, low, close, volume, tradeCount, vwap,
                     lastUpdateDate);
 
             if (candleItem.getHigh() < high) {
+
                 candleItem.setHigh(high);
             }
+
             if (candleItem.getLow() > low) {
                 candleItem.setLow(low);
             }
+
             candleItem.setClose(close);
+
             if (rollupInterval > 1) {
+
                 candleItem.setVolume(candleItem.getVolume() + volume);
                 candleItem.setCount(candleItem.getCount() + tradeCount);
             } else {
+
                 candleItem.setVolume(volume);
                 candleItem.setCount(tradeCount);
             }
+
             candleItem.setVwap(this.rollingCandle.getVwap());
             candleItem.setLastUpdateDate(lastUpdateDate);
         } else {
@@ -508,15 +521,16 @@ public class CandleSeries extends IndicatorSeries {
                     TradingCalendar.getDateAtTime(period.getStart(), this.getStartTime()),
                     TradingCalendar.getDateAtTime(period.getStart(), this.getEndTime()));
 
-            if (null == lastUpdateDate)
+            if (null == lastUpdateDate) {
+
                 lastUpdateDate = period.getEnd();
+            }
 
             this.rollCandle(period, rollupInterval, open, high, low, close, volume, tradeCount, vwap, lastUpdateDate);
 
             candleItem = new CandleItem(this.getContract(), tradingday, period, open, high, low, close, volume,
                     this.rollingCandle.getVwap(), tradeCount, lastUpdateDate);
             this.add(candleItem, false);
-
             newCandle = true;
         }
         // printCandleItem(candleItem);
@@ -633,6 +647,7 @@ public class CandleSeries extends IndicatorSeries {
     public void updateSeries(CandleSeries source, int skip, boolean newBar) {
 
         if (source == null) {
+
             throw new IllegalArgumentException("Null source (CandleSeries).");
         }
         /*
@@ -644,13 +659,15 @@ public class CandleSeries extends IndicatorSeries {
             CandleItem candleItem = (CandleItem) source.getDataItem(skip);
             /*
              * If the item does not exist in the series then this is a new time
-             * period and so we need to remove the last in the set and add the
-             * new periods values. Otherwise we just update the last value in
+             * period, and so we need to remove the last in the set and add the
+             * new periods values. Otherwise, we just update the last value in
              * the set.
              */
             if (newBar) {
+
                 this.add(candleItem, true);
             } else {
+
                 CandleItem dataItem = (CandleItem) this.getDataItem(this.getItemCount() - 1);
                 this.update(dataItem.getPeriod(), dataItem.getCandle());
             }
@@ -877,7 +894,7 @@ public class CandleSeries extends IndicatorSeries {
         if (rollupInterval != this.rollingCandle.rollupInterval || this.isEmpty()) {
 
             /*
-             * Going to a lower period i.e say we were 5 min bars now going to
+             * Going to a lower period i.e. say we were 5 min bars now going to
              * 5sec bars within the current 5min bar.
              */
             if (!this.isEmpty()) {
@@ -886,7 +903,9 @@ public class CandleSeries extends IndicatorSeries {
                  * Build current bar
                  */
                 CandleItem candleItem = (CandleItem) this.getDataItem(this.getItemCount() - 1);
+
                 if (candleItem.getPeriod().equals(period)) {
+
                     this.rollingCandle = new RollingCandle(period, rollupInterval, candleItem.getOpen(),
                             candleItem.getHigh(), candleItem.getLow(), candleItem.getClose(), candleItem.getVolume(),
                             candleItem.getCount(), candleItem.getVwap(), lastUpdateDate);
@@ -895,12 +914,15 @@ public class CandleSeries extends IndicatorSeries {
                     this.sumVolume = candleItem.getVolume();
                     this.sumTradeCount = candleItem.getCount();
                 } else {
+
                     this.sumVwapVolume = 0d;
                     this.sumVolume = 0L;
                     this.sumTradeCount = 0;
                     this.rollingCandle.rollupInterval = rollupInterval;
                 }
+
                 if (this.getItemCount() > 1) {
+
                     CandleItem prevCandleItem = (CandleItem) this.getDataItem(this.getItemCount() - 2);
                     this.prevRollingCandle = new RollingCandle(prevCandleItem.getPeriod(),
                             this.rollingCandle.rollupInterval, prevCandleItem.getOpen(), prevCandleItem.getHigh(),
@@ -908,6 +930,7 @@ public class CandleSeries extends IndicatorSeries {
                             prevCandleItem.getCount(), prevCandleItem.getVwap(), prevCandleItem.getLastUpdateDate());
                 }
             } else {
+
                 this.rollingCandle.rollupInterval = rollupInterval;
                 this.rollingCandle.open = open;
                 this.sumVwapVolume = 0d;
@@ -947,21 +970,28 @@ public class CandleSeries extends IndicatorSeries {
                                      double close, long volume, int tradeCount, double vwap, ZonedDateTime lastUpdateDate) {
 
         if (rollupInterval == this.rollingCandleValues.size()) {
-            this.prevRollingCandle = this.rollingCandleValues.removeLast();
 
+            this.prevRollingCandle = this.rollingCandleValues.removeLast();
             this.rollingCandle.open = this.openValues.removeLast();
-            if (this.openValues.isEmpty())
+
+            if (this.openValues.isEmpty()) {
+
                 this.rollingCandle.open = open;
+            }
 
             if (this.rollingCandle.high == this.highValues.removeLast()) {
+
                 if (this.highValues.isEmpty()) {
+
                     this.rollingCandle.high = high;
                 } else {
+
                     this.rollingCandle.high = Collections.max(this.highValues);
                 }
             }
 
             if (this.rollingCandle.low == this.lowValues.removeLast()) {
+
                 if (this.lowValues.isEmpty()) {
                     this.rollingCandle.low = low;
                 } else {
@@ -976,33 +1006,36 @@ public class CandleSeries extends IndicatorSeries {
 
         this.rollingCandle.period = period;
         this.rollingCandle.lastUpdateDate = lastUpdateDate;
-
         this.openValues.addFirst(open);
-
         this.highValues.addFirst(high);
-        if (high > this.rollingCandle.high)
+
+        if (high > this.rollingCandle.high) {
+
             this.rollingCandle.high = high;
+        }
 
         this.lowValues.addFirst(low);
-        if (low < this.rollingCandle.low)
+
+        if (low < this.rollingCandle.low) {
+
             this.rollingCandle.low = low;
+        }
 
         this.rollingCandle.close = close;
-
         this.tradeCountValues.addFirst(tradeCount);
         sumTradeCount = sumTradeCount + tradeCount;
         this.rollingCandle.tradeCount = sumTradeCount;
-
         this.volumeValues.addFirst(volume);
         sumVolume = sumVolume + volume;
         this.rollingCandle.volume = sumVolume;
-
         this.vwapVolumeValues.addFirst(vwap * volume);
         sumVwapVolume = sumVwapVolume + this.vwapVolumeValues.getFirst();
 
         if (sumVolume > 0) {
+
             this.rollingCandle.vwap = sumVwapVolume / sumVolume;
         } else {
+
             this.rollingCandle.vwap = this.rollingCandle.close;
         }
 
@@ -1010,10 +1043,12 @@ public class CandleSeries extends IndicatorSeries {
         // + sumVwapVolume + " sumVolume: " + sumVolume + " volume: "
         // + volume + " vwap: " + this.rollingCandle.vwap);
         try {
+
             this.rollingCandleValues.addFirst((RollingCandle) this.rollingCandle.clone());
-        } catch (CloneNotSupportedException e) {
+        } catch (CloneNotSupportedException ex) {
+
             // TODO Auto-generated catch block
-            _log.error("Error updateRollingCandle cannot clone candle Msg: {}", e.getMessage());
+            _log.error("Error: CandleSeries::updateRollingCandle cannot clone candle Msg: {}", ex.getMessage());
         }
     }
 

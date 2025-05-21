@@ -107,6 +107,7 @@ public class CandleSeries extends IndicatorSeries {
     private final LinkedList<Double> vwapVolumeValues = new LinkedList<>();
 
     public CandleSeries() {
+
         super(IndicatorSeries.CandleSeries, true, 0, false);
     }
 
@@ -145,6 +146,7 @@ public class CandleSeries extends IndicatorSeries {
      * @param endTime   ZonedDateTime
      */
     public CandleSeries(CandleSeries series, int barSize, ZonedDateTime startTime, ZonedDateTime endTime) {
+
         super(series.getContract().getSymbol(), IndicatorSeries.CandleSeries, series.getDisplaySeries(), 0,
                 series.getSubChart());
         this.symbol = series.getContract().getSymbol();
@@ -167,6 +169,7 @@ public class CandleSeries extends IndicatorSeries {
      */
 
     public CandleSeries(String legend, Contract contract, Integer barSize, ZonedDateTime startTime, ZonedDateTime endTime) {
+
         super(legend, IndicatorSeries.CandleSeries, true, 0, false);
         this.contract = contract;
         this.symbol = contract.getSymbol();
