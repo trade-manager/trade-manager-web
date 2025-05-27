@@ -43,6 +43,7 @@ import org.trade.core.persistent.dao.Candle;
 import org.trade.core.persistent.dao.Contract;
 import org.trade.core.persistent.dao.series.indicator.candle.CandlePeriod;
 import org.trade.core.properties.ConfigProperties;
+import org.trade.core.util.CoreUtils;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.BarSize;
 import org.trade.core.valuetype.ChartDays;
@@ -51,7 +52,6 @@ import org.trade.core.valuetype.Exchange;
 
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -71,7 +71,7 @@ public class PolygonBroker extends Broker {
     private final String barSize;
     private final String endDateTime;
     private final IClientWrapper brokerModel;
-    private static String apiKey = null;
+    private final static String apiKey;
 
     static {
 
@@ -98,37 +98,40 @@ public class PolygonBroker extends Broker {
 
         try {
 
-            setContractDetails(contract);
+            if (setContractDetails(contract)) {
 
-            this.brokerModel.contractDetails(contract.getId(), contract);
-            this.brokerModel.contractDetailsEnd(contract.getId());
+                this.brokerModel.contractDetails(contract.getId(), contract);
 
-            ZonedDateTime endDate = TradingCalendar.getZonedDateTimeFromDateTimeString(this.endDateTime,
-                    "yyyyMMdd HH:mm:ss");
-            ChartDays chartDays = ChartDays.newInstance();
-            chartDays.setDisplayName(this.chartDays);
+                ZonedDateTime endDate = TradingCalendar.getZonedDateTimeFromDateTimeString(this.endDateTime,
+                        "yyyyMMdd HH:mm:ss");
+                ChartDays chartDays = ChartDays.newInstance();
+                chartDays.setDisplayName(this.chartDays);
 
-            BarSize barSize = BarSize.newInstance();
-            barSize.setDisplayName(this.barSize);
+                BarSize barSize = BarSize.newInstance();
+                barSize.setDisplayName(this.barSize);
 
-            ZonedDateTime startDate = endDate.minusDays((Integer.parseInt(chartDays.getCode()) - 1));
-            startDate = TradingCalendar.getPrevTradingDay(startDate);
+                ZonedDateTime startDate = endDate.minusDays((Integer.parseInt(chartDays.getCode()) - 1));
+                startDate = TradingCalendar.getPrevTradingDay(startDate);
 
-            if (BarSize.DAY == Integer.parseInt(barSize.getValue())) {
+                if (BarSize.DAY == Integer.parseInt(barSize.getValue())) {
 
-                this.setPriceDataDay(this.reqId, this.contract.getSymbol(), startDate, endDate);
-            } else {
+                    this.setPriceDataDay(this.reqId, this.contract.getSymbol(), startDate, endDate);
+                } else {
 
-                this.setPriceDataIntraday(this.reqId, this.contract.getSymbol(),
-                        Integer.parseInt(chartDays.getValue()), startDate, endDate);
+                    this.setPriceDataIntraday(this.reqId, this.contract.getSymbol(),
+                            Integer.parseInt(chartDays.getValue()), startDate, endDate);
+                }
+
+
             }
-
-            // This will save the candle series.
-            _log.debug("Debug: PolygonBroker::doInBackground finished ReqId: {} Symbol: {} Start Date: {} End Date: {} BarSize: {} ChartDays: {}", this.reqId, this.contract.getSymbol(), startDate, endDate, barSize.getCode(), chartDays.getCode());
-            this.brokerModel.historicalDataComplete(this.reqId);
-
         } catch (Exception ex) {
+
             _log.error("Error: PolygonBroker::doInBackground Symbol: {} Msg: {}", contract.getSymbol(), ex.getMessage(), ex);
+        } finally {
+            // This will save the candle series.
+            _log.debug("Debug: PolygonBroker::doInBackground finished ReqId: {} Symbol: {}", this.reqId, this.contract.getSymbol());
+            this.brokerModel.contractDetailsEnd(contract.getId());
+            this.brokerModel.historicalDataComplete(this.reqId);
         }
         return null;
     }
@@ -138,37 +141,68 @@ public class PolygonBroker extends Broker {
         _log.debug("PolygonBroker done for: {}", contract.getSymbol());
     }
 
-    private void setContractDetails(Contract contract) throws IOException, URISyntaxException, InterruptedException {
+    private boolean setContractDetails(Contract contract) throws IOException, InterruptedException {
+
 
         /*
          * Polygon curl -X GET "https://api.polygon.io/v3/reference/tickers/AAPL?apiKey=WGlljpSus0Ai1mj2ayaASNTcxchw9aUp"
          */
         String strUrl = "https://api.polygon.io/v3/reference/tickers/" + contract.getSymbol() + "?apiKey=" + apiKey;
 
-        _log.debug("Debug: PolygonBroker::setContractDetails URL: " + strUrl);
+        _log.debug("Debug: PolygonBroker::setContractDetails URL: {}", strUrl);
 
         // create a request
-        HttpClient client = HttpClient.newHttpClient();
-        var request = HttpRequest.newBuilder(
-                        URI.create(strUrl))
-                .header("accept", "application/json")
-                .build();
+        HttpResponse<String> response;
+        try (HttpClient client = HttpClient.newHttpClient()) {
 
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            var request = HttpRequest.newBuilder(
+                            URI.create(strUrl))
+                    .header("accept", "application/json")
+                    .build();
+
+            response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        }
 
         if (response.statusCode() == 200) {
 
             String jsonString = response.body();
             JSONObject contractObj = new JSONObject(jsonString);
-            contract.setLongName(contractObj.getJSONObject("results").getString("name"));
-            contract.setSymbol(contractObj.getJSONObject("results").getString("ticker").toUpperCase());
-            String currency = contractObj.getJSONObject("results").getString("currency_name").toUpperCase();
-            contract.setCurrency(Currency.newInstance(currency).getCode());
-            String exchange = contractObj.getJSONObject("results").getString("primary_exchange");
-            contract.setPrimaryExchange(Exchange.newInstance(exchange).getCode());
+            JSONObject resultObj = contractObj.optJSONObject("results");
+
+            if (null != resultObj) {
+                String name = resultObj.getString("name");
+
+                if (CoreUtils.nullSafeComparator(contract.getLongName(), name) != 0) {
+
+                    contract.setLongName(name);
+                    contract.setDirty(true);
+                }
+
+                String currency = resultObj.getString("currency_name").toUpperCase();
+
+                if (CoreUtils.nullSafeComparator(contract.getCurrency(), currency) != 0) {
+
+                    contract.setCurrency(Currency.newInstance(currency).getCode());
+                    contract.setDirty(true);
+                }
+
+                String exchange = resultObj.getString("primary_exchange");
+
+                if (CoreUtils.nullSafeComparator(contract.getPrimaryExchange(), exchange) != 0) {
+
+                    contract.setPrimaryExchange(Exchange.newInstance(exchange).getCode());
+                    contract.setDirty(true);
+                }
+                return true;
+            } else {
+
+                _log.error("Error: PolygonBroker::setContractDetails  request to URL: {}, no results found: {}, contractObj: {}", strUrl, response.statusCode(), contractObj);
+            }
         } else {
+
             _log.error("Error: PolygonBroker::setContractDetails request to URL: {}, failed with status code: {}", strUrl, response.statusCode());
         }
+        return false;
     }
 
     private void setPriceDataIntraday(int reqId, String symbol, int charDays, ZonedDateTime startDate,
@@ -183,54 +217,65 @@ public class PolygonBroker extends Broker {
         _log.debug("Debug: PolygonBroker::getPriceDataSetIntraday URL: {}", strUrl);
 
         // create a request
-        HttpClient client = HttpClient.newHttpClient();
-        var request = HttpRequest.newBuilder(
-                        URI.create(strUrl))
-                .header("accept", "application/json")
-                .build();
+        HttpResponse<String> response;
+        try (HttpClient client = HttpClient.newHttpClient()) {
 
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            var request = HttpRequest.newBuilder(
+                            URI.create(strUrl))
+                    .header("accept", "application/json")
+                    .build();
+
+            response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        }
 
         if (response.statusCode() == 200) {
 
             String jsonString = response.body();
             JSONObject contractObj = new JSONObject(jsonString);
-            JSONArray bars = contractObj.getJSONArray("results");
+            int resultsCount = contractObj.getInt("resultsCount");
 
-            for (int i = 0; i < bars.length(); i++) {
+            if (resultsCount > 0) {
 
-                JSONObject barObj = bars.getJSONObject(i);
+                JSONArray bars = contractObj.optJSONArray("results");
 
-                ZonedDateTime time = TradingCalendar.getZonedDateTimeFromMilli((barObj.getLong("t")));
-                ZonedDateTime tradingdayStart = TradingCalendar.getTradingDayStart(time);
-                ZonedDateTime tradingdayEnd = TradingCalendar.getTradingDayEnd(time);
+                for (int i = 0; i < bars.length(); i++) {
 
-                // values:Timestamp,close,high,low,open,volume
-                double close = barObj.getDouble("c");
-                double high = barObj.getDouble("h");
-                double low = barObj.getDouble("l");
-                double open = barObj.getDouble("o");
-                double vwap = barObj.getDouble("vw");
-                long volume = barObj.getLong("v");
-                int tradeCount = barObj.getInt("n");
+                    JSONObject barObj = bars.getJSONObject(i);
 
-                _log.debug("Info: PolygonBroker::getPriceDataSetIntraday Time : {}, Open: {}, High: {}, Low: {}, Close: {}, VW: {}, Volume: {}, tradeCount: {}", time, open, high, low, close, vwap, volume, tradeCount);
+                    ZonedDateTime time = TradingCalendar.getZonedDateTimeFromMilli((barObj.getLong("t")));
+                    ZonedDateTime tradingdayStart = TradingCalendar.getTradingDayStart(time);
+                    ZonedDateTime tradingdayEnd = TradingCalendar.getTradingDayEnd(time);
 
-                if ((time.isAfter(tradingdayStart) || time.equals(tradingdayStart)) && time.isBefore(tradingdayEnd)) {
+                    // values:Timestamp,close,high,low,open,volume
+                    double close = barObj.getDouble("c");
+                    double high = barObj.getDouble("h");
+                    double low = barObj.getDouble("l");
+                    double open = barObj.getDouble("o");
+                    double vwap = barObj.getDouble("vw");
+                    long volume = barObj.getLong("v");
+                    int tradeCount = barObj.getInt("n");
 
-                    // On the last one let the brokerModel model know its finished.
-                    String dateString = String.valueOf(time.toInstant().toEpochMilli());
-                    this.brokerModel.historicalData(reqId, dateString, open, high, low, close, volume,
-                            tradeCount, barSize, vwap, false);
+                    _log.debug("Info: PolygonBroker::getPriceDataSetIntraday Time : {}, Open: {}, High: {}, Low: {}, Close: {}, VW: {}, Volume: {}, tradeCount: {}", time, open, high, low, close, vwap, volume, tradeCount);
+
+                    if ((time.isAfter(tradingdayStart) || time.equals(tradingdayStart)) && time.isBefore(tradingdayEnd)) {
+
+                        // On the last one let the brokerModel model know its finished.
+                        String dateString = String.valueOf(time.toInstant().toEpochMilli());
+                        this.brokerModel.historicalData(reqId, dateString, open, high, low, close, volume,
+                                tradeCount, barSize, vwap, false);
+                    }
                 }
+            } else {
+
+                _log.error("Error: PolygonBroker::setPriceDataIntraday  request to URL: {}, no results found: {}, contractObj: {}", strUrl, response.statusCode(), contractObj);
             }
         } else {
+
             _log.error("Error: PolygonBroker::setPriceDataIntraday request to URL: {}, failed with status code: {}, msg: {}", strUrl, response.statusCode(), response.body());
         }
     }
 
-    private void setPriceDataDay(int reqId, String symbol, ZonedDateTime startDate, ZonedDateTime endDate)
-            throws IOException, InterruptedException {
+    private void setPriceDataDay(int reqId, String symbol, ZonedDateTime startDate, ZonedDateTime endDate) throws IOException, InterruptedException {
 
         /*
          * Polygon curl -X GET "https://api.polygon.io/v2/aggs/ticker/AAPL/range/1/day/1746696600000/1746734400000?adjusted=true&sort=asc&limit=1500&apiKey=WGlljpSus0Ai1mj2ayaASNTcxchw9aUp"
@@ -240,55 +285,67 @@ public class PolygonBroker extends Broker {
         _log.debug("Debug: PolygonBroker::setPriceDataDay URL: {}", strUrl);
 
         // create a request
-        HttpClient client = HttpClient.newHttpClient();
-        var request = HttpRequest.newBuilder(
-                        URI.create(strUrl))
-                .header("accept", "application/json")
-                .build();
+        HttpResponse<String> response;
+        try (HttpClient client = HttpClient.newHttpClient()) {
 
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            var request = HttpRequest.newBuilder(
+                            URI.create(strUrl))
+                    .header("accept", "application/json")
+                    .build();
+
+            response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        }
 
         if (response.statusCode() == 200) {
 
             List<Candle> candles = new ArrayList<>();
             String jsonString = response.body();
             JSONObject contractObj = new JSONObject(jsonString);
-            JSONArray bars = contractObj.getJSONArray("results");
+            int resultsCount = contractObj.getInt("resultsCount");
 
-            for (int i = 0; i < bars.length(); i++) {
+            if (resultsCount > 0) {
 
-                JSONObject barObj = bars.getJSONObject(i);
+                JSONArray bars = contractObj.optJSONArray("results");
 
-                ZonedDateTime time = TradingCalendar.getZonedDateTimeFromMilli((barObj.getLong("t")));
-                // values:Timestamp,close,high,low,open,volume
-                double close = barObj.getDouble("c");
-                double high = barObj.getDouble("h");
-                double low = barObj.getDouble("l");
-                double open = barObj.getDouble("o");
-                double vw = barObj.getDouble("vw");
-                long volume = barObj.getLong("v");
-                int tradeCount = barObj.getInt("n");
+                for (int i = 0; i < bars.length(); i++) {
 
-                _log.info("Info: PolygonBroker::getPriceDataSetIntraday Time : {}, Open: {}, High: {}, Low: {}, Close: {}, VW: {}, Volume: {}, tradeCount: {}", time, open, high, low, close, vw, volume, tradeCount);
-                CandlePeriod period = new CandlePeriod(time, TradingCalendar.getDateAtTime(time, endDate).minusSeconds(1));
+                    JSONObject barObj = bars.getJSONObject(i);
 
-                Candle candle = new Candle(null, period, open, high, low, close, volume, vw,
-                        tradeCount, TradingCalendar.getDateTimeNowMarketTimeZone());
+                    ZonedDateTime time = TradingCalendar.getZonedDateTimeFromMilli((barObj.getLong("t")));
+                    // values:Timestamp,close,high,low,open,volume
+                    double close = barObj.getDouble("c");
+                    double high = barObj.getDouble("h");
+                    double low = barObj.getDouble("l");
+                    double open = barObj.getDouble("o");
+                    double vw = barObj.getDouble("vw");
+                    long volume = barObj.getLong("v");
+                    int tradeCount = barObj.getInt("n");
 
-                candle.setLastUpdateDate(time);
-                candles.add(candle);
-            }
+                    _log.info("Info: PolygonBroker::getPriceDataSetIntraday Time : {}, Open: {}, High: {}, Low: {}, Close: {}, VW: {}, Volume: {}, tradeCount: {}", time, open, high, low, close, vw, volume, tradeCount);
+                    CandlePeriod period = new CandlePeriod(time, TradingCalendar.getDateAtTime(time, endDate).minusSeconds(1));
 
-            Collections.reverse(candles);
-            for (Candle candle : candles) {
+                    Candle candle = new Candle(null, period, open, high, low, close, volume, vw,
+                            tradeCount, TradingCalendar.getDateTimeNowMarketTimeZone());
 
-                long millis = TradingCalendar.geMillisFromZonedDateTime(candle.getStartPeriod());
+                    candle.setLastUpdateDate(time);
+                    candles.add(candle);
+                }
 
-                this.brokerModel.historicalData(reqId, String.valueOf(millis), candle.getOpen().doubleValue(),
-                        candle.getHigh().doubleValue(), candle.getLow().doubleValue(), candle.getClose().doubleValue(),
-                        candle.getVolume().intValue(), candle.getTradeCount(), 1, candle.getVwap().doubleValue(), false);
+                Collections.reverse(candles);
+                for (Candle candle : candles) {
+
+                    long millis = TradingCalendar.geMillisFromZonedDateTime(candle.getStartPeriod());
+
+                    this.brokerModel.historicalData(reqId, String.valueOf(millis), candle.getOpen().doubleValue(),
+                            candle.getHigh().doubleValue(), candle.getLow().doubleValue(), candle.getClose().doubleValue(),
+                            candle.getVolume().intValue(), candle.getTradeCount(), 1, candle.getVwap().doubleValue(), false);
+                }
+            } else {
+
+                _log.error("Error: PolygonBroker::setPriceDataDay  request to URL: {}, no results found: {}, contractObj: {}", strUrl, response.statusCode(), contractObj);
             }
         } else {
+
             _log.error("Error: PolygonBroker::setPriceDataDay  request to URL: {}, failed with status code: {}", strUrl, response.statusCode());
         }
     }

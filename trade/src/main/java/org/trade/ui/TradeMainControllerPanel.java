@@ -176,8 +176,11 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
             Tradingday tradingday = Tradingday.newInstance(TradingCalendar.getCurrentTradingDay());
             Tradingday todayTradingday = m_tradePersistentModel.findTradingdayByOpenCloseDate(tradingday.getOpen(),
                     tradingday.getClose());
-            if (null != todayTradingday)
+
+            if (null != todayTradingday) {
                 tradingday = todayTradingday;
+            }
+
             m_tradingdays = new Tradingdays();
             m_tradingdays.add(tradingday);
             String strategyDir = ConfigProperties.getPropAsString("trade.strategy.default.dir");

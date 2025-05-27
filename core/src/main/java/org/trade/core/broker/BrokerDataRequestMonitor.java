@@ -299,7 +299,7 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
 
                     if ((timerRunning.get() % 60000) == 0) {
 
-                        String message = "Please wait " + Math.round((Math.floor(getGrandTotal() / 5d) - Math.floor(totalSumbitted / 5d)))
+                        String message = "Please wait " + (1 + Math.round((Math.floor(getGrandTotal() / 5d) - Math.floor(totalSumbitted / 5d))))
                                 + " minutes as Polygon license only allows 5 request per minute.";
 
                         //_log.info("Wait 1min wait grand total: {}, totalSumbitted: {}, timer get: {},  " , getGrandTotal(), totalSumbitted, timerRunning.get());
