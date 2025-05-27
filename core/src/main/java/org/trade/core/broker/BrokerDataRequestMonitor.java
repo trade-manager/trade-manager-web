@@ -309,7 +309,7 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
                 }
             }
             timer.stop();
-            _log.info("Finished wait 1min wait");
+            _log.debug("Finished wait 1min wait");
         }
         /*
          * The SwingWorker has a maximum of 10 threads to run and this process
