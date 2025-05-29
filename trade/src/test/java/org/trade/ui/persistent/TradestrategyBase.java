@@ -78,6 +78,7 @@ public class TradestrategyBase {
      * @return Tradestrategy
      */
     public static Tradestrategy getTestTradestrategy(String symbol) throws Exception {
+
         ContractHome contractHome = new ContractHome();
         PortfolioHome portfolioHome = new PortfolioHome();
         TradestrategyHome tradestrategyHome = new TradestrategyHome();
@@ -87,7 +88,9 @@ public class TradestrategyBase {
         Strategy strategy = (Strategy) DAOStrategy.newInstance().getObject();
         Portfolio portfolio = (Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
         portfolio = portfolioHome.findByName(portfolio.getName());
+
         if (portfolio.getPortfolioAccounts().isEmpty()) {
+
             Account account = new Account("Test", "T123456", Currency.USD, AccountType.INDIVIDUAL);
             account.setAvailableFunds(new BigDecimal(25000));
             account.setBuyingPower(new BigDecimal(100000));
@@ -96,40 +99,52 @@ public class TradestrategyBase {
             portfolio.getPortfolioAccounts().add(portfolioAccount);
             portfolio = aspectHome.persist(portfolio);
         }
+
         ZonedDateTime open = TradingCalendar
                 .getTradingDayStart(TradingCalendar.getPrevTradingDay(TradingCalendar.getDateTimeNowMarketTimeZone()));
 
         Contract contract = contractHome.findByUniqueKey(SECType.STOCK, symbol, Exchange.SMART, Currency.USD, null);
+
         if (null == contract) {
+
             contract = new Contract(SECType.STOCK, symbol, Exchange.SMART, Currency.USD, null, null);
             contract = aspectHome.persist(contract);
 
         } else {
+
             tradestrategy = tradestrategyHome.findTradestrategyByUniqueKeys(open, strategy.getName(),
                     contract.getId(), portfolio.getName());
+
             if (null != tradestrategy) {
+
                 Tradestrategy transientInstance = tradestrategyHome.findById(tradestrategy.getId());
                 transientInstance.setStatus(null);
                 aspectHome.persist(transientInstance);
-
                 Hashtable<Integer, TradePosition> tradePositions = new Hashtable<>();
+
                 for (TradeOrder tradeOrder : transientInstance.getTradeOrders()) {
-                    if (tradeOrder.hasTradePosition())
+
+                    if (tradeOrder.hasTradePosition()){
+
                         tradePositions.put(tradeOrder.getTradePosition().getId(),
                                 tradeOrder.getTradePosition());
+                    }
 
                     if (null != tradeOrder.getId()) {
+
                         aspectHome.remove(tradeOrder);
                     }
                 }
 
                 for (TradePosition tradePosition : tradePositions.values()) {
+
                     tradePosition = (TradePosition) aspectHome.findById(tradePosition);
                     /*
                      * Remove the open trade position from contract if this is a
                      * tradePosition to be deleted.
                      */
                     if (tradePosition.equals(transientInstance.getContract().getTradePosition())) {
+
                         transientInstance.getContract().setTradePosition(null);
                         aspectHome.persist(transientInstance.getContract());
                     }
@@ -140,10 +155,13 @@ public class TradestrategyBase {
                 return transientInstance;
             }
         }
+
         TradingdayHome tradingdayHome = new TradingdayHome();
         Tradingday tradingday = Tradingday.newInstance(open);
         Tradingday instanceTradingDay = tradingdayHome.findByOpenCloseDate(tradingday.getOpen(), tradingday.getClose());
+
         if (null != instanceTradingDay) {
+
             tradingday.getTradestrategies().clear();
             tradingday = instanceTradingDay;
         }

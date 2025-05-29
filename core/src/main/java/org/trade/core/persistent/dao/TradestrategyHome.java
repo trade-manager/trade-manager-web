@@ -312,13 +312,13 @@ public class TradestrategyHome {
 
             if (null != fromOpen) {
                 Join<Tradestrategy, Tradingday> tradingday = from.join("tradingday");
-                Predicate predicate = builder.greaterThanOrEqualTo(tradingday.get("open").as(ZonedDateTime.class),
+                Predicate predicate = builder.greaterThanOrEqualTo(tradingday.get("open"),
                         fromOpen);
                 predicates.add(predicate);
             }
             if (null != toOpen) {
                 Join<Tradestrategy, Tradingday> tradingday = from.join("tradingday");
-                Predicate predicate = builder.lessThanOrEqualTo(tradingday.get("open").as(ZonedDateTime.class), toOpen);
+                Predicate predicate = builder.lessThanOrEqualTo(tradingday.get("open"), toOpen);
                 predicates.add(predicate);
             }
 
@@ -361,13 +361,13 @@ public class TradestrategyHome {
 
             if (null != fromOpen) {
                 Join<Tradestrategy, Tradingday> tradingday = from.join("tradingday");
-                Predicate predicate = builder.greaterThanOrEqualTo(tradingday.get("open").as(ZonedDateTime.class),
+                Predicate predicate = builder.greaterThanOrEqualTo(tradingday.get("open"),
                         fromOpen);
                 predicates.add(predicate);
             }
             if (null != toOpen) {
                 Join<Tradestrategy, Tradingday> tradingday = from.join("tradingday");
-                Predicate predicate = builder.lessThanOrEqualTo(tradingday.get("open").as(ZonedDateTime.class), toOpen);
+                Predicate predicate = builder.lessThanOrEqualTo(tradingday.get("open"), toOpen);
                 predicates.add(predicate);
             }
 

@@ -197,7 +197,7 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
                         setProgress(percent);
                     } catch (InterruptedException ex) {
                         // Do nothing
-                        _log.error("doInBackground finally interupted Msg: {}", ex.getMessage());
+                        _log.error("doInBackground finally interrupted Msg: {}", ex.getMessage());
                     }
                 }
             }

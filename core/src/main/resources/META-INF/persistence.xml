@@ -47,8 +47,11 @@
 
             <property name="packagesToScan" value="org.trade.persistent.dao" />
             <!--
-            <property name="hibernate.connection.driver_class" value="org.mariadb.jdbc.Driver"/>
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
+            <property name="hibernate.use_sql_comments" value="true"/>
 
+            <property name="hibernate.connection.driver_class" value="org.mariadb.jdbc.Driver"/>
             <property name="hibernate.connection.url" value="@db-dba.url@/@db-dba.schema@?serverTimezone=@db-dba.time_zone@"/>
             <property name="hibernate.default_schema" value="@db-dba.schema@"/>
             <property name="hibernate.connection.password" value="@db-user.password@"/>

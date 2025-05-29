@@ -121,8 +121,6 @@ public class PolygonBroker extends Broker {
                     this.setPriceDataIntraday(this.reqId, this.contract.getSymbol(),
                             Integer.parseInt(chartDays.getValue()), startDate, endDate);
                 }
-
-
             }
         } catch (Exception ex) {
 

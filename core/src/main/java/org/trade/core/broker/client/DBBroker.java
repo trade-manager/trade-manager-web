@@ -762,6 +762,7 @@ public class DBBroker extends Broker {
 
         List<Candle> candles = new ArrayList<>(0);
         int[] barSizes = {3600, 1800, 900, 300, 120, 60, 30};
+
         for (int size : barSizes) {
 
             if (size <= barSize) {
