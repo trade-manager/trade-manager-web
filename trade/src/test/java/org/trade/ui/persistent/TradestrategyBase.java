@@ -124,7 +124,7 @@ public class TradestrategyBase {
 
                 for (TradeOrder tradeOrder : transientInstance.getTradeOrders()) {
 
-                    if (tradeOrder.hasTradePosition()){
+                    if (tradeOrder.hasTradePosition()) {
 
                         tradePositions.put(tradeOrder.getTradePosition().getId(),
                                 tradeOrder.getTradePosition());
