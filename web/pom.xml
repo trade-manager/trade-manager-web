@@ -141,7 +141,7 @@
 								<srcFile>target/classes/schema/default-data.sql</srcFile>
 								<!-- Demo data for 2024 comment out if not needed
 								<srcFile>target/classes/schema/demo-data.sql</srcFile>
-								-->
+								 -->
 							</srcFiles>
 						</configuration>
 					</execution>

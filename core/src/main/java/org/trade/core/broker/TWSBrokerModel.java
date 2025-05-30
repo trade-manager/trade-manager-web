@@ -2106,7 +2106,6 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
 
     private static boolean populateContract(ContractDetails contractDetails, Contract transientContract) {
 
-        boolean changed = false;
         /*
          * For stock the localsymbol must match. For futues they will not e.g
          * Symbol ES Local will be ES06. TODO Need to find out how to handle
@@ -2114,176 +2113,176 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
          */
         if (CoreUtils.nullSafeComparator(transientContract.getSymbol(), contractDetails.contract().localSymbol()) != 0
                 && SECType.STOCK.equals(transientContract.getSecType())) {
-            return changed;
+            return false;
 
         }
         if (CoreUtils.nullSafeComparator(transientContract.getSymbol(), contractDetails.contract().symbol()) == 0) {
             if (CoreUtils.nullSafeComparator(transientContract.getLocalSymbol(),
                     contractDetails.contract().localSymbol()) != 0) {
                 transientContract.setLocalSymbol(contractDetails.contract().localSymbol());
-                changed = true;
+                transientContract.setDirty(true);
             }
             if (CoreUtils.nullSafeComparator(transientContract.getIdContractIB(),
                     contractDetails.contract().conid()) != 0) {
                 transientContract.setIdContractIB(contractDetails.contract().conid());
-                changed = true;
+                transientContract.setDirty(true);
             }
             if (CoreUtils.nullSafeComparator(transientContract.getPrimaryExchange(),
                     contractDetails.contract().primaryExch()) != 0) {
                 transientContract.setPrimaryExchange(contractDetails.contract().primaryExch());
-                changed = true;
+                transientContract.setDirty(true);
             }
             if (CoreUtils.nullSafeComparator(transientContract.getExchange(),
                     contractDetails.contract().exchange()) != 0) {
                 transientContract.setExchange(contractDetails.contract().exchange());
-                changed = true;
+                transientContract.setDirty(true);
             }
             if (null != contractDetails.contract().lastTradeDateOrContractMonth()) {
                 ZonedDateTime expiryDateTime = TradingCalendar.getZonedDateTimeFromDateString(
                         contractDetails.contract().lastTradeDateOrContractMonth(), "yyyyMMdd", TradingCalendar.MKT_TIMEZONE);
                 if (CoreUtils.nullSafeComparator(transientContract.getExpiry(), expiryDateTime) != 0) {
                     transientContract.setExpiry(expiryDateTime);
-                    changed = true;
+                    transientContract.setDirty(true);
                 }
             }
             if (CoreUtils.nullSafeComparator(transientContract.getSecIdType(),
                     contractDetails.contract().secIdType().getApiString()) != 0) {
                 transientContract.setSecIdType(contractDetails.contract().secIdType().getApiString());
-                changed = true;
+                transientContract.setDirty(true);
             }
             if (CoreUtils.nullSafeComparator(transientContract.getLongName(), contractDetails.longName()) != 0) {
                 transientContract.setLongName(contractDetails.longName());
-                changed = true;
+                transientContract.setDirty(true);
             }
             if (CoreUtils.nullSafeComparator(transientContract.getCurrency(),
                     contractDetails.contract().currency()) != 0) {
                 transientContract.setCurrency(contractDetails.contract().currency());
-                changed = true;
+                transientContract.setDirty(true);
             }
             if (CoreUtils.nullSafeComparator(transientContract.getCategory(), contractDetails.category()) != 0) {
                 transientContract.setCategory(contractDetails.category());
-                changed = true;
+                transientContract.setDirty(true);
             }
             if (CoreUtils.nullSafeComparator(transientContract.getIndustry(), contractDetails.industry()) != 0) {
                 transientContract.setIndustry(contractDetails.industry());
-                changed = true;
+                transientContract.setDirty(true);
             }
             Money minTick = new Money(contractDetails.minTick());
             if (CoreUtils.nullSafeComparator(minTick, new Money(Double.MAX_VALUE)) != 0 && CoreUtils
                     .nullSafeComparator(transientContract.getMinTick(), minTick.getBigDecimalValue()) != 0) {
                 transientContract.setMinTick(minTick.getBigDecimalValue());
-                changed = true;
+                transientContract.setDirty(true);
             }
             Money priceMagnifier = new Money(contractDetails.priceMagnifier());
             if (CoreUtils.nullSafeComparator(priceMagnifier, new Money(Double.MAX_VALUE)) != 0
                     && CoreUtils.nullSafeComparator(transientContract.getPriceMagnifier(),
                     priceMagnifier.getBigDecimalValue()) != 0) {
                 transientContract.setPriceMagnifier(priceMagnifier.getBigDecimalValue());
-                changed = true;
+                transientContract.setDirty(true);
             }
 
             Money multiplier = new Money(contractDetails.contract().multiplier());
             if (CoreUtils.nullSafeComparator(multiplier, new Money(Double.MAX_VALUE)) != 0 && CoreUtils
                     .nullSafeComparator(transientContract.getPriceMultiplier(), multiplier.getBigDecimalValue()) != 0) {
                 transientContract.setPriceMultiplier(multiplier.getBigDecimalValue());
-                changed = true;
+                transientContract.setDirty(true);
             }
             if (CoreUtils.nullSafeComparator(transientContract.getSubCategory(), contractDetails.subcategory()) != 0) {
                 transientContract.setSubCategory(contractDetails.subcategory());
-                changed = true;
+                transientContract.setDirty(true);
             }
             if (CoreUtils.nullSafeComparator(transientContract.getTradingClass(),
                     contractDetails.contract().tradingClass()) != 0) {
                 transientContract.setTradingClass(contractDetails.contract().tradingClass());
-                changed = true;
+                transientContract.setDirty(true);
             }
             if (CoreUtils.nullSafeComparator(transientContract.getComboLegDescription(),
                     contractDetails.contract().comboLegsDescrip()) != 0) {
                 transientContract.setComboLegDescription(contractDetails.contract().comboLegsDescrip());
-                changed = true;
+                transientContract.setDirty(true);
             }
             if (CoreUtils.nullSafeComparator(transientContract.getContractMonth(),
                     contractDetails.contractMonth()) != 0) {
                 transientContract.setContractMonth(contractDetails.contractMonth());
-                changed = true;
+                transientContract.setDirty(true);
             }
             Money evMultiplier = new Money(contractDetails.evMultiplier());
             if (CoreUtils.nullSafeComparator(evMultiplier, new Money(Double.MAX_VALUE)) != 0 && CoreUtils
                     .nullSafeComparator(transientContract.getEvMultiplier(), evMultiplier.getBigDecimalValue()) != 0) {
                 transientContract.setEvMultiplier(evMultiplier.getBigDecimalValue());
-                changed = true;
+                transientContract.setDirty(true);
             }
             if (CoreUtils.nullSafeComparator(transientContract.getEvRule(), contractDetails.evRule()) != 0) {
                 transientContract.setEvRule(contractDetails.evRule());
-                changed = true;
+                transientContract.setDirty(true);
             }
             if (CoreUtils.nullSafeComparator(transientContract.getIncludeExpired(),
                     contractDetails.contract().includeExpired()) != 0) {
                 transientContract.setIncludeExpired(contractDetails.contract().includeExpired());
-                changed = true;
+                transientContract.setDirty(true);
             }
             if (CoreUtils.nullSafeComparator(transientContract.getLiquidHours(), contractDetails.liquidHours()) != 0) {
                 transientContract.setLiquidHours(contractDetails.liquidHours());
-                changed = true;
+                transientContract.setDirty(true);
             }
             if (CoreUtils.nullSafeComparator(transientContract.getMarketName(), contractDetails.marketName()) != 0) {
                 transientContract.setMarketName(contractDetails.marketName());
-                changed = true;
+                transientContract.setDirty(true);
             }
             if (CoreUtils.nullSafeComparator(transientContract.getOrderTypes(), contractDetails.orderTypes()) != 0) {
                 String orderTypes = OrderType.MKT;
                 if (contractDetails.orderTypes().contains(OrderType.STP)) {
                     orderTypes = orderTypes + "," + OrderType.STP;
-                    changed = true;
+                    transientContract.setDirty(true);
                 }
                 if (contractDetails.orderTypes().contains(OrderType.STPLMT)) {
                     orderTypes = orderTypes + "," + OrderType.STPLMT;
-                    changed = true;
+                    transientContract.setDirty(true);
                 }
                 if (contractDetails.orderTypes().contains(OrderType.LMT)) {
                     orderTypes = orderTypes + "," + OrderType.LMT;
-                    changed = true;
+                    transientContract.setDirty(true);
                 }
                 transientContract.setOrderTypes(orderTypes);
 
             }
             if (CoreUtils.nullSafeComparator(transientContract.getSecId(), contractDetails.contract().secId()) != 0) {
                 transientContract.setSecId(contractDetails.contract().secId());
-                changed = true;
+                transientContract.setDirty(true);
             }
             Money strike = new Money(contractDetails.contract().strike());
             if (CoreUtils.nullSafeComparator(strike, new Money(Double.MAX_VALUE)) != 0
                     && CoreUtils.nullSafeComparator(transientContract.getStrike(), strike.getBigDecimalValue()) != 0) {
                 transientContract.setStrike(strike.getBigDecimalValue());
-                changed = true;
+                transientContract.setDirty(true);
             }
             if (CoreUtils.nullSafeComparator(transientContract.getTimeZoneId(), contractDetails.timeZoneId()) != 0) {
                 transientContract.setTimeZoneId(contractDetails.timeZoneId());
-                changed = true;
+                transientContract.setDirty(true);
             }
             if (CoreUtils.nullSafeComparator(transientContract.getTradingHours(),
                     contractDetails.tradingHours()) != 0) {
                 transientContract.setTradingHours(contractDetails.tradingHours());
-                changed = true;
+                transientContract.setDirty(true);
             }
             if (CoreUtils.nullSafeComparator(transientContract.getUnderConId(),
                     contractDetails.underConid()) != 0) {
                 transientContract.setUnderConId(contractDetails.underConid());
-                changed = true;
+                transientContract.setDirty(true);
             }
             if (CoreUtils.nullSafeComparator(transientContract.getValidExchanges(),
                     contractDetails.validExchanges()) != 0) {
                 transientContract.setValidExchanges(contractDetails.validExchanges());
-                changed = true;
+                transientContract.setDirty(true);
             }
             if (CoreUtils.nullSafeComparator(transientContract.getOptionType(),
                     contractDetails.contract().right().getApiString()) != 0) {
                 transientContract.setOptionType(contractDetails.contract().right().getApiString());
-                changed = true;
+                transientContract.setDirty(true);
             }
         }
 
-        return changed;
+        return transientContract.isDirty();
     }
 
     public static void populateTradeOrderfill(Execution execution, TradeOrderfill tradeOrderfill) {
@@ -2301,6 +2300,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
         tradeOrderfill.setExecId(execution.execId());
         tradeOrderfill.setOrderReference(execution.orderRef());
         tradeOrderfill.setPermId(execution.permId());
+        tradeOrderfill.setDirty(true);
     }
 
     private static com.ib.client.ExecutionFilter getIBExecutionFilter(Integer clientId, ZonedDateTime mktOpen,

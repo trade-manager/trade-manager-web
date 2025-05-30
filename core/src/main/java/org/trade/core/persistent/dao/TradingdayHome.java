@@ -220,11 +220,11 @@ public class TradingdayHome {
             List<Predicate> predicates = new ArrayList<>();
 
             if (null != startDate) {
-                Predicate predicate = builder.greaterThanOrEqualTo(from.get("open").as(ZonedDateTime.class), startDate);
+                Predicate predicate = builder.greaterThanOrEqualTo(from.get("open"), startDate);
                 predicates.add(predicate);
             }
             if (null != endDate) {
-                Predicate predicate = builder.lessThanOrEqualTo(from.get("open").as(ZonedDateTime.class), endDate);
+                Predicate predicate = builder.lessThanOrEqualTo(from.get("open"), endDate);
                 predicates.add(predicate);
             }
 

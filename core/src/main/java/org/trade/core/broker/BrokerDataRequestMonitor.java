@@ -197,7 +197,7 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
                         setProgress(percent);
                     } catch (InterruptedException ex) {
                         // Do nothing
-                        _log.error("doInBackground finally interupted Msg: {}", ex.getMessage());
+                        _log.error("doInBackground finally interrupted Msg: {}", ex.getMessage());
                     }
                 }
             }
@@ -289,7 +289,7 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
          * back testing data.
          */
         if (((Math.floor(totalSumbitted / 5d) == (totalSumbitted / 5d)) && (totalSumbitted > 0))
-                && !this.brokerModel.isConnected()) {
+                && !this.brokerModel.isConnected() && this.brokerModel.isBrokerDataOnly()) {
 
             timerRunning = new AtomicInteger(0);
             timer.start();
@@ -299,7 +299,7 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
 
                     if ((timerRunning.get() % 60000) == 0) {
 
-                        String message = "Please wait " + Math.round((Math.floor(getGrandTotal() / 5d) - Math.floor(totalSumbitted / 5d)))
+                        String message = "Please wait " + (1 + Math.round((Math.floor(getGrandTotal() / 5d) - Math.floor(totalSumbitted / 5d))))
                                 + " minutes as Polygon license only allows 5 request per minute.";
 
                         //_log.info("Wait 1min wait grand total: {}, totalSumbitted: {}, timer get: {},  " , getGrandTotal(), totalSumbitted, timerRunning.get());
@@ -309,8 +309,37 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
                 }
             }
             timer.stop();
-            _log.info("Finished wait 1min wait");
+            _log.debug("Finished wait 1min wait");
         }
+        /*
+         * Need to slow things down as limit is 5 per minute including real time bars
+         * requests. When using Polygon. Note broker model return false for
+         * back testing data.
+         */
+        if (((Math.floor(totalSumbitted / 5d) == (totalSumbitted / 5d)) && (totalSumbitted > 0))
+                && !this.brokerModel.isConnected() && !this.brokerModel.isBrokerDataOnly()) {
+
+            timerRunning = new AtomicInteger(0);
+            timer.start();
+            synchronized (lockCoreUtilsTest) {
+
+                while (timerRunning.get() / 1000 < 6 && !this.isCancelled()) {
+
+                    if ((timerRunning.get() % 5000) == 0) {
+
+                        String message = "Please wait " + 5 * (1 + Math.round((Math.floor(getGrandTotal() / 5d) - Math.floor(totalSumbitted / 5d))))
+                                + " seconds as connection pool only allows 1 request per second.";
+
+                        //_log.info("Wait 5 seconds wait grand total: {}, total Submitted: {}, timer get: {},  " , getGrandTotal(), totalSubmitted, timerRunning.get());
+                        publish(message);
+                    }
+                    lockCoreUtilsTest.wait();
+                }
+            }
+            timer.stop();
+            _log.debug("Finished wait 5 seconds wait");
+        }
+
         /*
          * The SwingWorker has a maximum of 10 threads to run and this process
          * uses one so we have 9 left for the BrokerWorkers. So wait while the

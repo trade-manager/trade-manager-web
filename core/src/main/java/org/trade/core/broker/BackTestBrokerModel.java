@@ -1234,142 +1234,140 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
      */
     public static boolean updateTradeOrder(TradeOrder clientOrder, OrderState clientOrderState, TradeOrder order) {
 
-        boolean changed = false;
-
         if (CoreUtils.nullSafeComparator(order.getOrderKey(), clientOrder.getOrderKey()) == 0) {
 
             if (CoreUtils.nullSafeComparator(order.getStatus(), clientOrderState.m_status.toUpperCase()) != 0) {
                 order.setStatus(clientOrderState.m_status.toUpperCase());
-                changed = true;
+                order.setDirty(true);
             }
 
             if (CoreUtils.nullSafeComparator(order.getWarningMessage(), clientOrderState.m_warningText) != 0) {
                 order.setWarningMessage(clientOrderState.m_warningText);
-                changed = true;
+                order.setDirty(true);
             }
             Money comms = new Money(clientOrderState.m_commission);
 
             if (CoreUtils.nullSafeComparator(comms, new Money(Double.MAX_VALUE)) != 0
                     && CoreUtils.nullSafeComparator(order.getCommission(), comms.getBigDecimalValue()) != 0) {
                 order.setCommission(comms.getBigDecimalValue());
-                changed = true;
+                order.setDirty(true);
 
             }
 
             if (CoreUtils.nullSafeComparator(order.getClientId(), clientOrder.getClientId()) != 0) {
                 order.setClientId(clientOrder.getClientId());
-                changed = true;
+                order.setDirty(true);
             }
 
             if (CoreUtils.nullSafeComparator(order.getAction(), clientOrder.getAction()) != 0) {
                 order.setAction(clientOrder.getAction());
-                changed = true;
+                order.setDirty(true);
             }
 
             if (CoreUtils.nullSafeComparator(order.getQuantity(), clientOrder.getQuantity()) != 0) {
                 order.setQuantity(clientOrder.getQuantity());
-                changed = true;
+                order.setDirty(true);
             }
 
             if (CoreUtils.nullSafeComparator(order.getOrderType(), clientOrder.getOrderType()) != 0) {
                 order.setOrderType(clientOrder.getOrderType());
-                changed = true;
+                order.setDirty(true);
             }
 
             if (CoreUtils.nullSafeComparator(new Money(clientOrder.getLimitPrice()), new Money(Double.MAX_VALUE)) != 0
                     && CoreUtils.nullSafeComparator(order.getLimitPrice(), clientOrder.getLimitPrice()) != 0) {
                 order.setLimitPrice(clientOrder.getLimitPrice());
-                changed = true;
+                order.setDirty(true);
             }
 
             if (CoreUtils.nullSafeComparator(new Money(clientOrder.getAuxPrice()), new Money(Double.MAX_VALUE)) != 0
                     && CoreUtils.nullSafeComparator(order.getAuxPrice(), clientOrder.getAuxPrice()) != 0) {
                 order.setAuxPrice(clientOrder.getAuxPrice());
-                changed = true;
+                order.setDirty(true);
             }
 
             if (CoreUtils.nullSafeComparator(order.getTimeInForce(), clientOrder.getTimeInForce()) != 0) {
                 order.setTimeInForce(clientOrder.getTimeInForce());
-                changed = true;
+                order.setDirty(true);
             }
 
             if (CoreUtils.nullSafeComparator(order.getOcaGroupName(), clientOrder.getOcaGroupName()) != 0) {
                 order.setOcaGroupName(clientOrder.getOcaGroupName());
-                changed = true;
+                order.setDirty(true);
             }
 
             if (CoreUtils.nullSafeComparator(order.getOcaType(), clientOrder.getOcaType()) != 0) {
                 order.setOcaType(clientOrder.getOcaType());
-                changed = true;
+                order.setDirty(true);
             }
 
             if (CoreUtils.nullSafeComparator(order.getOrderReference(), clientOrder.getOrderReference()) != 0) {
                 order.setOrderReference(clientOrder.getOrderReference());
-                changed = true;
+                order.setDirty(true);
             }
 
             if (CoreUtils.nullSafeComparator(order.getPermId(), clientOrder.getPermId()) != 0) {
                 order.setPermId(clientOrder.getPermId());
-                changed = true;
+                order.setDirty(true);
             }
 
             if (CoreUtils.nullSafeComparator(order.getParentId(), clientOrder.getParentId()) != 0) {
                 order.setParentId(clientOrder.getParentId());
-                changed = true;
+                order.setDirty(true);
             }
 
             if (CoreUtils.nullSafeComparator(order.getTransmit(), clientOrder.getTransmit()) != 0) {
                 order.setTransmit(clientOrder.getTransmit());
-                changed = true;
+                order.setDirty(true);
             }
 
             if (CoreUtils.nullSafeComparator(order.getDisplayQuantity(), clientOrder.getDisplayQuantity()) != 0) {
                 order.setDisplayQuantity(clientOrder.getDisplayQuantity());
-                changed = true;
+                order.setDirty(true);
             }
 
             if (CoreUtils.nullSafeComparator(order.getTriggerMethod(), clientOrder.getTriggerMethod()) != 0) {
                 order.setTriggerMethod(clientOrder.getTriggerMethod());
-                changed = true;
+                order.setDirty(true);
             }
 
             if (CoreUtils.nullSafeComparator(order.getHidden(), clientOrder.getHidden()) != 0) {
                 order.setHidden(clientOrder.getHidden());
-                changed = true;
+                order.setDirty(true);
             }
 
             if (null != clientOrder.getGoodAfterTime()) {
 
                 if (CoreUtils.nullSafeComparator(order.getGoodAfterTime(), clientOrder.getGoodAfterTime()) != 0) {
                     order.setGoodAfterTime(clientOrder.getGoodAfterTime());
-                    changed = true;
+                    order.setDirty(true);
                 }
             }
 
             if (null != clientOrder.getGoodTillTime()) {
                 if (CoreUtils.nullSafeComparator(order.getGoodTillTime(), clientOrder.getGoodTillTime()) != 0) {
                     order.setGoodTillTime(clientOrder.getGoodTillTime());
-                    changed = true;
+                    order.setDirty(true);
                 }
             }
 
             if (CoreUtils.nullSafeComparator(order.getOverrideConstraints(),
                     clientOrder.getOverrideConstraints()) != 0) {
                 order.setOverrideConstraints(clientOrder.getOverrideConstraints());
-                changed = true;
+                order.setDirty(true);
             }
 
             if (CoreUtils.nullSafeComparator(order.getAllOrNothing(), clientOrder.getAllOrNothing()) != 0) {
                 order.setAllOrNothing(clientOrder.getAllOrNothing());
-                changed = true;
+                order.setDirty(true);
             }
 
-            if (changed) {
+            if (order.isDirty()) {
 
                 order.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
             }
         }
-        return changed;
+        return order.isDirty();
     }
 
     /**
@@ -1380,34 +1378,33 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
      */
     public static boolean populateContract(Contract contractDetails, Contract transientContract) {
 
-        boolean changed = false;
         if (CoreUtils.nullSafeComparator(transientContract.getSymbol(), contractDetails.getSymbol()) == 0) {
 
             if (CoreUtils.nullSafeComparator(transientContract.getLocalSymbol(),
                     contractDetails.getLocalSymbol()) != 0) {
 
                 transientContract.setLocalSymbol(contractDetails.getLocalSymbol());
-                changed = true;
+                transientContract.setDirty(true);
             }
 
             if (CoreUtils.nullSafeComparator(transientContract.getIdContractIB(),
                     contractDetails.getIdContractIB()) != 0) {
 
                 transientContract.setIdContractIB(contractDetails.getIdContractIB());
-                changed = true;
+                transientContract.setDirty(true);
             }
 
             if (CoreUtils.nullSafeComparator(transientContract.getPrimaryExchange(),
                     contractDetails.getPrimaryExchange()) != 0) {
 
                 transientContract.setPrimaryExchange(contractDetails.getPrimaryExchange());
-                changed = true;
+                transientContract.setDirty(true);
             }
 
             if (CoreUtils.nullSafeComparator(transientContract.getExchange(), contractDetails.getExchange()) != 0) {
 
                 transientContract.setExchange(contractDetails.getExchange());
-                changed = true;
+                transientContract.setDirty(true);
             }
 
             if (null != contractDetails.getExpiry()) {
@@ -1415,38 +1412,38 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
                 if (CoreUtils.nullSafeComparator(transientContract.getExpiry(), contractDetails.getExpiry()) != 0) {
 
                     transientContract.setExpiry(contractDetails.getExpiry());
-                    changed = true;
+                    transientContract.setDirty(true);
                 }
             }
 
             if (CoreUtils.nullSafeComparator(transientContract.getSecIdType(), contractDetails.getSecIdType()) != 0) {
 
                 transientContract.setSecIdType(contractDetails.getSecIdType());
-                changed = true;
+                transientContract.setDirty(true);
             }
 
             if (CoreUtils.nullSafeComparator(transientContract.getLongName(), contractDetails.getLongName()) != 0) {
 
                 transientContract.setLongName(contractDetails.getLongName());
-                changed = true;
+                transientContract.setDirty(true);
             }
 
             if (CoreUtils.nullSafeComparator(transientContract.getCurrency(), contractDetails.getCurrency()) != 0) {
 
                 transientContract.setCurrency(contractDetails.getCurrency());
-                changed = true;
+                transientContract.setDirty(true);
             }
 
             if (CoreUtils.nullSafeComparator(transientContract.getCategory(), contractDetails.getCategory()) != 0) {
 
                 transientContract.setCategory(contractDetails.getCategory());
-                changed = true;
+                transientContract.setDirty(true);
             }
 
             if (CoreUtils.nullSafeComparator(transientContract.getIndustry(), contractDetails.getIndustry()) != 0) {
 
                 transientContract.setIndustry(contractDetails.getIndustry());
-                changed = true;
+                transientContract.setDirty(true);
             }
 
             Money minTick = new Money(contractDetails.getMinTick());
@@ -1455,7 +1452,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
                     .nullSafeComparator(transientContract.getMinTick(), minTick.getBigDecimalValue()) != 0) {
 
                 transientContract.setMinTick(minTick.getBigDecimalValue());
-                changed = true;
+                transientContract.setDirty(true);
             }
 
             Money priceMagnifier = new Money(contractDetails.getPriceMagnifier());
@@ -1465,7 +1462,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
                     priceMagnifier.getBigDecimalValue()) != 0) {
 
                 transientContract.setPriceMagnifier(priceMagnifier.getBigDecimalValue());
-                changed = true;
+                transientContract.setDirty(true);
             }
 
             Money multiplier = new Money(contractDetails.getPriceMultiplier());
@@ -1474,25 +1471,25 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
                     .nullSafeComparator(transientContract.getPriceMultiplier(), multiplier.getBigDecimalValue()) != 0) {
 
                 transientContract.setPriceMultiplier(multiplier.getBigDecimalValue());
-                changed = true;
+                transientContract.setDirty(true);
             }
 
             if (CoreUtils.nullSafeComparator(transientContract.getSubCategory(),
                     contractDetails.getSubCategory()) != 0) {
 
                 transientContract.setSubCategory(contractDetails.getSubCategory());
-                changed = true;
+                transientContract.setDirty(true);
             }
 
             if (CoreUtils.nullSafeComparator(transientContract.getTradingClass(),
                     contractDetails.getTradingClass()) != 0) {
 
                 transientContract.setTradingClass(contractDetails.getTradingClass());
-                changed = true;
+                transientContract.setDirty(true);
             }
         }
 
-        return changed;
+        return transientContract.isDirty();
     }
 
     /**
@@ -1512,6 +1509,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
         tradeOrderfill.setAveragePrice(execution.getAveragePrice());
         tradeOrderfill.setCumulativeQuantity(execution.getCumulativeQuantity());
         tradeOrderfill.setExecId(execution.getExecId());
+        tradeOrderfill.setDirty(true);
     }
 
     /**

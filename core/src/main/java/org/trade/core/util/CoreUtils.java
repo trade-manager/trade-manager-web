@@ -358,11 +358,14 @@ public class CoreUtils {
      */
 
     public static <T extends Comparable<T>> int nullSafeComparator(T one, T two) {
+
         if (one == null ^ two == null) {
+
             return (one == null) ? -1 : 1;
         }
 
         if (one == null) {
+
             return 0;
         }
         return one.compareTo(two);

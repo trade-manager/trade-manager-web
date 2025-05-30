@@ -44,11 +44,22 @@
 
             <property name="hibernate.connection.autocommit" value="false"/>
             <property name="hibernate.hbm2ddl.auto" value="none" />
-
             <property name="packagesToScan" value="org.trade.persistent.dao" />
-            <!--
-            <property name="hibernate.connection.driver_class" value="org.mariadb.jdbc.Driver"/>
 
+            <!-- C3P0 connection pool settings need to add maven dependency
+            <property name="hibernate.c3p0.min_size" value="15"/>
+            <property name="hibernate.c3p0.max_size" value="100"/>
+            <property name="hibernate.c3p0.timeout" value="300"/>
+            <property name="hibernate.c3p0.idle_test_period" value="300"/>
+            <property name="hibernate.c3p0.max_statements" value="50"/>
+            -->
+
+            <!--
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
+            <property name="hibernate.use_sql_comments" value="true"/>
+
+            <property name="hibernate.connection.driver_class" value="org.mariadb.jdbc.Driver"/>
             <property name="hibernate.connection.url" value="@db-dba.url@/@db-dba.schema@?serverTimezone=@db-dba.time_zone@"/>
             <property name="hibernate.default_schema" value="@db-dba.schema@"/>
             <property name="hibernate.connection.password" value="@db-user.password@"/>
@@ -91,5 +102,7 @@
                 a regular hibernate.cfg.xml file -->
             <!-- property name="hibernate.ejb.cfgfile" value="/org/hibernate/ejb/test/hibernate.cfg.xml"/ -->
         </properties>
+
     </persistence-unit>
+
 </persistence>

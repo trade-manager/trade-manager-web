@@ -227,10 +227,10 @@ public class CandleHome {
 
                 Join<Candle, Tradingday> tradingdayOpenDate = from.join("tradingday");
                 Predicate predicateStartDate = builder
-                        .greaterThanOrEqualTo(tradingdayOpenDate.get("open").as(ZonedDateTime.class), startOpenDate);
+                        .greaterThanOrEqualTo(tradingdayOpenDate.get("open"), startOpenDate);
                 predicates.add(predicateStartDate);
                 Predicate predicateEndDate = builder
-                        .lessThanOrEqualTo(tradingdayOpenDate.get("open").as(ZonedDateTime.class), endOpenDate);
+                        .lessThanOrEqualTo(tradingdayOpenDate.get("open"), endOpenDate);
                 predicates.add(predicateEndDate);
             }
 
