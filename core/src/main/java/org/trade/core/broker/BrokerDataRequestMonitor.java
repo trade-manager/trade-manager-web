@@ -337,7 +337,7 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
                 }
             }
             timer.stop();
-            _log.info("Finished wait 5 seconds wait");
+            _log.debug("Finished wait 5 seconds wait");
         }
 
         /*
