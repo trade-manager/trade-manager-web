@@ -110,7 +110,7 @@ public class PolygonBroker extends Broker {
                 BarSize barSize = BarSize.newInstance();
                 barSize.setDisplayName(this.barSize);
 
-                ZonedDateTime startDate = endDate.minusDays((Integer.parseInt(chartDays.getCode()) - 1));
+                ZonedDateTime startDate = endDate.minusDays((Integer.parseInt(chartDays.getCode())));
                 startDate = TradingCalendar.getPrevTradingDay(startDate);
 
                 if (BarSize.DAY == Integer.parseInt(barSize.getValue())) {
