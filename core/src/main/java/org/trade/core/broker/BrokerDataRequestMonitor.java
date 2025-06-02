@@ -273,7 +273,7 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
              */
             numberPerPeriod = 60;
             periodSeconds = 601; // Ten minutes
-             message = " as there are more than 60 data requests.";
+            message = " as there are more than 60 data requests.";
         } else if (!this.brokerModel.isConnected() && this.brokerModel.isBrokerDataOnly()) {
 
             /*
@@ -281,7 +281,7 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
              */
             numberPerPeriod = 5;
             periodSeconds = 61;
-             message = " as Polygon license only allows 5 request per minute.";
+            message = " as Polygon license only allows 5 request per minute.";
         } else if (!this.brokerModel.isConnected() && !this.brokerModel.isBrokerDataOnly()) {
 
             /*
@@ -306,7 +306,7 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
                         percent = (int) (((double) (totalSumbitted - this.brokerModel.getHistoricalData().size()) / getGrandTotal())
                                 * 100d);
                         setProgress(percent);
-                        Duration duration = Duration.ofSeconds((periodSeconds -1) + ((periodSeconds -1) * (Math.round((Math.floor(getGrandTotal() / numberPerPeriod) - Math.floor(totalSumbitted / numberPerPeriod))))));
+                        Duration duration = Duration.ofSeconds((periodSeconds - 1) + ((periodSeconds - 1) * (Math.round((Math.floor(getGrandTotal() / numberPerPeriod) - Math.floor(totalSumbitted / numberPerPeriod))))));
                         publish("Please wait " + String.format(durationFormat, duration.toHoursPart(), duration.toMinutesPart(), duration.toSecondsPart()) + message);
                     }
                     lockCoreUtilsTest.wait();
