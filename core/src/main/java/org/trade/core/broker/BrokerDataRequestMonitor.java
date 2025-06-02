@@ -30,6 +30,8 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
 
     private final static Logger _log = LoggerFactory.getLogger(BrokerDataRequestMonitor.class);
 
+    private static final String durationFormat = "%s hr %s min %s sec";
+
     private final IBrokerModel brokerModel;
     private final IPersistentModel tradePersistentModel;
     private final Tradingdays tradingdays;
@@ -202,8 +204,9 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
                 }
             }
             setProgress(100);
-            message = "Completed Historical data total contracts processed: " + totalSumbitted + " in : "
-                    + ((System.currentTimeMillis() - this.startTime) / 1000) + " Seconds.";
+            Duration duration = Duration.ofSeconds(((System.currentTimeMillis() - this.startTime) / 1000));
+            message = "Completed total contracts processed: " + totalSumbitted + " in: "
+                    + String.format(durationFormat, duration.toHoursPart(), duration.toMinutesPart(), duration.toSecondsPart());
             _log.debug(message);
             publish(message);
         }
@@ -256,88 +259,61 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
                 * 100d);
         setProgress(percent);
 
-        /*
-         * Need to slow things down as limit is 60 including real time bars
-         * requests. When connected to TWS. Note only TWSManager return true for
-         * connected.
-         */
-        if (((Math.floor(totalSumbitted / 58d) == (totalSumbitted / 58d)) && (totalSumbitted > 0))
-                && this.brokerModel.isConnected()) {
+        double numberPerPeriod = 0;
+        int periodSeconds = 0;
+        String message = "";
 
-            timerRunning = new AtomicInteger(0);
-            timer.start();
-            synchronized (lockCoreUtilsTest) {
 
-                while (timerRunning.get() / 1000 < 601 && !this.isCancelled()) {
+        if (this.brokerModel.isConnected()) {
 
-                    if ((timerRunning.get() % 60000) == 0) {
+            /*
+             * Need to slow things down as limit is 60 including real time bars
+             * requests per 10 minutes. When connected to TWS. Note only TWSManager return true for
+             * connected.
+             */
+            numberPerPeriod = 60;
+            periodSeconds = 601; // Ten minutes
+             message = " as there are more than 60 data requests.";
+        } else if (!this.brokerModel.isConnected() && this.brokerModel.isBrokerDataOnly()) {
 
-                        String message = "Please wait " + (10 - (timerRunning.get() / 1000 / 60))
-                                + " minutes as there are more than 60 data requests.";
-                        publish(message);
-                    }
-                    lockCoreUtilsTest.wait();
-                }
-            }
-            timer.stop();
-            _log.debug("Finished wait 10min wait");
+            /*
+             * Need to slow things down as limit is 5 per minute for Polygon data with free license.
+             */
+            numberPerPeriod = 5;
+            periodSeconds = 61;
+             message = " as Polygon license only allows 5 request per minute.";
+        } else if (!this.brokerModel.isConnected() && !this.brokerModel.isBrokerDataOnly()) {
+
+            /*
+             * Need to slow things down as limit is 5 per 5 second for the DB poll.
+             */
+            numberPerPeriod = 5;
+            periodSeconds = 6;
+            message = " as connection pool only allows 1 request per second.";
         }
 
-        /*
-         * Need to slow things down as limit is 5 per minute including real time bars
-         * requests. When using Polygon. Note broker model return false for
-         * back testing data.
-         */
-        if (((Math.floor(totalSumbitted / 5d) == (totalSumbitted / 5d)) && (totalSumbitted > 0))
-                && !this.brokerModel.isConnected() && this.brokerModel.isBrokerDataOnly()) {
+        if (((Math.floor(totalSumbitted / numberPerPeriod) == (totalSumbitted / numberPerPeriod)) && (totalSumbitted > 0))) {
 
             timerRunning = new AtomicInteger(0);
             timer.start();
             synchronized (lockCoreUtilsTest) {
 
-                while (timerRunning.get() / 1000 < 61 && !this.isCancelled()) {
+                while (timerRunning.get() / 1000 < periodSeconds && !this.isCancelled()) {
 
-                    if ((timerRunning.get() % 60000) == 0) {
+                    // Update the message every 5 seconds
+                    if (timerRunning.get() % (5 * 1000) == 0) {
 
-                        String message = "Please wait " + (1 + Math.round((Math.floor(getGrandTotal() / 5d) - Math.floor(totalSumbitted / 5d))))
-                                + " minutes as Polygon license only allows 5 request per minute.";
-
-                        //_log.info("Wait 1min wait grand total: {}, totalSumbitted: {}, timer get: {},  " , getGrandTotal(), totalSumbitted, timerRunning.get());
-                        publish(message);
+                        percent = (int) (((double) (totalSumbitted - this.brokerModel.getHistoricalData().size()) / getGrandTotal())
+                                * 100d);
+                        setProgress(percent);
+                        Duration duration = Duration.ofSeconds((periodSeconds -1) + ((periodSeconds -1) * (Math.round((Math.floor(getGrandTotal() / numberPerPeriod) - Math.floor(totalSumbitted / numberPerPeriod))))));
+                        publish("Please wait " + String.format(durationFormat, duration.toHoursPart(), duration.toMinutesPart(), duration.toSecondsPart()) + message);
                     }
                     lockCoreUtilsTest.wait();
                 }
             }
             timer.stop();
-            _log.debug("Finished wait 1min wait");
-        }
-        /*
-         * Need to slow things down as limit is 5 per minute including real time bars
-         * requests. When using Polygon. Note broker model return false for
-         * back testing data.
-         */
-        if (((Math.floor(totalSumbitted / 5d) == (totalSumbitted / 5d)) && (totalSumbitted > 0))
-                && !this.brokerModel.isConnected() && !this.brokerModel.isBrokerDataOnly()) {
-
-            timerRunning = new AtomicInteger(0);
-            timer.start();
-            synchronized (lockCoreUtilsTest) {
-
-                while (timerRunning.get() / 1000 < 6 && !this.isCancelled()) {
-
-                    if ((timerRunning.get() % 5000) == 0) {
-
-                        String message = "Please wait " + 5 * (1 + Math.round((Math.floor(getGrandTotal() / 5d) - Math.floor(totalSumbitted / 5d))))
-                                + " seconds as connection pool only allows 1 request per second.";
-
-                        //_log.info("Wait 5 seconds wait grand total: {}, total Submitted: {}, timer get: {},  " , getGrandTotal(), totalSubmitted, timerRunning.get());
-                        publish(message);
-                    }
-                    lockCoreUtilsTest.wait();
-                }
-            }
-            timer.stop();
-            _log.debug("Finished wait 5 seconds wait");
+            _log.debug("Finished wait.");
         }
 
         /*
@@ -501,8 +477,9 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
 
         contractRequests.clear();
         indicatorRequests.clear();
-        String message = "Completed Historical data total contracts processed: " + this.getGrandTotal() + " in : "
-                + ((System.currentTimeMillis() - this.startTime) / 1000) + " Seconds.";
+        Duration duration = Duration.ofSeconds((System.currentTimeMillis() - this.startTime) / 1000);
+        String message = "Completed total contracts processed: " + this.getGrandTotal() + " in: "
+                + String.format(durationFormat, duration.toHoursPart(), duration.toMinutesPart(), duration.toSecondsPart());
         this.firePropertyChange("information", "OK", message);
     }
 
