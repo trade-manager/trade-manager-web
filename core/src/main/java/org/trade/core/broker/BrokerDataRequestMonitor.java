@@ -248,7 +248,6 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
          * This can happen if there is the same indicator contract but in
          * different barSize/duration.
          */
-
         if (totalSumbitted > getGrandTotal()) {
 
             incrementGrandTotal();
@@ -262,7 +261,6 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
         double numberPerPeriod = 0;
         int periodSeconds = 0;
         String message = "";
-
 
         if (this.brokerModel.isConnected()) {
 
@@ -307,7 +305,7 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
                                 * 100d);
                         setProgress(percent);
                         Duration duration = Duration.ofSeconds((periodSeconds - 1) + ((periodSeconds - 1) * (Math.round((Math.floor(getGrandTotal() / numberPerPeriod) - Math.floor(totalSumbitted / numberPerPeriod))))));
-                        publish("Please wait " + String.format(durationFormat, duration.toHoursPart(), duration.toMinutesPart(), duration.toSecondsPart()) + message);
+                        publish("Please wait " + String.format(durationFormat, duration.toHoursPart(), duration.toMinutesPart(), duration.toSecondsPart()) + message + " Completed: " + (totalSumbitted - this.brokerModel.getHistoricalData().size()) + ", of: " + getGrandTotal());
                     }
                     lockCoreUtilsTest.wait();
                 }
