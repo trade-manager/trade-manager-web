@@ -26,6 +26,7 @@ public class TWSGroupRequest extends SaxMapper {
     }
 
     public TagTracker createTagTrackerNetwork() {
+
         // -- create root: /
         final TagTracker rootTagTracker = new TagTracker() {
 
@@ -42,14 +43,16 @@ public class TWSGroupRequest extends SaxMapper {
         };
 
         final TagTracker groupsTracker = new TagTracker() {
-            public void onStart(String namespaceURI, String localName, String qName, Attributes attr) {
-                Portfolio aspect = new Portfolio();
 
+            public void onStart(String namespaceURI, String localName, String qName, Attributes attr) {
+
+                Portfolio aspect = new Portfolio();
                 m_target.add(aspect);
                 m_stack.push(aspect);
             }
 
             public void onEnd(String namespaceURI, String localName, String qName, CharArrayWriter contents) {
+
                 // Clean up the directory stack...
                 m_stack.pop();
             }
@@ -61,6 +64,7 @@ public class TWSGroupRequest extends SaxMapper {
         final TagTracker nameTracker = new TagTracker() {
 
             public void onEnd(String namespaceURI, String localName, String qName, CharArrayWriter contents) {
+
                 final String value = contents.toString();
                 final Portfolio temp = (Portfolio) m_stack.peek();
                 temp.setName(value);
@@ -73,6 +77,7 @@ public class TWSGroupRequest extends SaxMapper {
         final TagTracker methodTracker = new TagTracker() {
 
             public void onEnd(String namespaceURI, String localName, String qName, CharArrayWriter contents) {
+
                 final String value = contents.toString();
                 final Portfolio temp = (Portfolio) m_stack.peek();
                 temp.setAllocationMethod(value);
@@ -83,12 +88,15 @@ public class TWSGroupRequest extends SaxMapper {
         methodTracker.track("defaultMethod", methodTracker);
 
         final TagTracker listOfAcctsTracker = new TagTracker() {
+
             public void onStart(String namespaceURI, String localName, String qName, Attributes attr) {
+
                 final Portfolio temp = (Portfolio) m_stack.peek();
                 m_stack.push(temp);
             }
 
             public void onEnd(String namespaceURI, String localName, String qName, CharArrayWriter contents) {
+
                 // Clean up the directory stack...
                 m_stack.pop();
             }
@@ -100,6 +108,7 @@ public class TWSGroupRequest extends SaxMapper {
         final TagTracker accountTracker = new TagTracker() {
 
             public void onEnd(String namespaceURI, String localName, String qName, CharArrayWriter contents) {
+
                 final String value = contents.toString();
                 final Portfolio portfolio = (Portfolio) m_stack.peek();
                 PortfolioAccount temp = new PortfolioAccount(portfolio, new Account());

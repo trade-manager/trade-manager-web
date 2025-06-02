@@ -98,6 +98,7 @@ public class OrderState {
         if (objectToCompare == null) {
             return false;
         }
+
         if (!(objectToCompare instanceof OrderState state)) {
             return false;
         }

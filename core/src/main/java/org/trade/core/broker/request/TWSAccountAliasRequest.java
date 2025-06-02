@@ -28,6 +28,7 @@ public class TWSAccountAliasRequest extends SaxMapper {
     }
 
     public TagTracker createTagTrackerNetwork() {
+
         _log.trace("creating tag track network");
 
         // -- create root: /
@@ -48,7 +49,9 @@ public class TWSAccountAliasRequest extends SaxMapper {
         };
 
         final TagTracker accountAliasTracker = new TagTracker() {
+
             public void onStart(String namespaceURI, String localName, String qName, Attributes attr) {
+
                 _log.trace("accountAliasTracker onStart()");
                 Account aspect = new Account();
                 m_target.add(aspect);
@@ -68,6 +71,7 @@ public class TWSAccountAliasRequest extends SaxMapper {
         final TagTracker accountTracker = new TagTracker() {
 
             public void onEnd(String namespaceURI, String localName, String qName, CharArrayWriter contents) {
+
                 final String value = contents.toString();
                 final Account temp = (Account) m_stack.peek();
                 temp.setAccountNumber(value);
@@ -81,6 +85,7 @@ public class TWSAccountAliasRequest extends SaxMapper {
         final TagTracker aliasTracker = new TagTracker() {
 
             public void onEnd(String namespaceURI, String localName, String qName, CharArrayWriter contents) {
+
                 final String value = contents.toString();
                 final Account temp = (Account) m_stack.peek();
                 temp.setAlias(value);
