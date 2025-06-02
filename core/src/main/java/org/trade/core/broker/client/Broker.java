@@ -66,7 +66,7 @@ public abstract class Broker extends SwingWorker<Void, Void> implements IStrateg
      * @param strategyError StrategyRuleException
      */
     public void strategyError(StrategyRuleException strategyError) {
+
         this.cancel(true);
     }
-
 }

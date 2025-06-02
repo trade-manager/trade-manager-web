@@ -127,7 +127,6 @@ public class TWSBrokerService extends AbstractBrokerModel {
     private IPersistentModel m_tradePersistentModel = null;
     private ApiController m_controller;
 
-
     public TWSBrokerService() {
         try {
 

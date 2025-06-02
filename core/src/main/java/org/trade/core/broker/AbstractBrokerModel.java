@@ -87,6 +87,7 @@ public abstract class AbstractBrokerModel implements IBrokerModel, Cloneable, Se
      * @param listener the object to register.
      */
     public void addMessageListener(IBrokerChangeListener listener) {
+
         this.listenerList.add(IBrokerChangeListener.class, listener);
     }
 
@@ -97,6 +98,7 @@ public abstract class AbstractBrokerModel implements IBrokerModel, Cloneable, Se
      * @param listener the object to deregister.
      */
     public void removeMessageListener(IBrokerChangeListener listener) {
+
         this.listenerList.remove(IBrokerChangeListener.class, listener);
     }
 
@@ -109,6 +111,7 @@ public abstract class AbstractBrokerModel implements IBrokerModel, Cloneable, Se
      * @return A boolean. * @see #addChangeListener(IBrokerChangeListener)
      */
     public boolean hasListener(EventListener listener) {
+
         List<Object> list = Arrays.asList(this.listenerList.getListenerList());
         return list.contains(listener);
     }
@@ -118,9 +121,13 @@ public abstract class AbstractBrokerModel implements IBrokerModel, Cloneable, Se
      * a connection.
      */
     protected void fireConnectionOpened() {
+
         Object[] listeners = this.listenerList.getListenerList();
+
         for (int i = listeners.length - 2; i >= 0; i -= 2) {
+
             if (listeners[i] == IBrokerChangeListener.class) {
+
                 ((IBrokerChangeListener) listeners[i + 1]).connectionOpened();
             }
         }
@@ -131,9 +138,13 @@ public abstract class AbstractBrokerModel implements IBrokerModel, Cloneable, Se
      * a connection.
      */
     protected void fireConnectionClosed(boolean forced) {
+
         Object[] listeners = this.listenerList.getListenerList();
+
         for (int i = listeners.length - 2; i >= 0; i -= 2) {
+
             if (listeners[i] == IBrokerChangeListener.class) {
+
                 ((IBrokerChangeListener) listeners[i + 1]).connectionClosed(forced);
             }
         }
@@ -146,9 +157,13 @@ public abstract class AbstractBrokerModel implements IBrokerModel, Cloneable, Se
      * @param execDetails ConcurrentHashMap<Integer,TradeOrder>
      */
     protected void fireExecutionDetailsEnd(ConcurrentHashMap<Integer, TradeOrder> execDetails) {
+
         Object[] listeners = this.listenerList.getListenerList();
+
         for (int i = listeners.length - 2; i >= 0; i -= 2) {
+
             if (listeners[i] == IBrokerChangeListener.class) {
+
                 ((IBrokerChangeListener) listeners[i + 1]).executionDetailsEnd(execDetails);
             }
         }
@@ -161,9 +176,13 @@ public abstract class AbstractBrokerModel implements IBrokerModel, Cloneable, Se
      * @param tradestrategy Tradestrategy
      */
     protected void fireHistoricalDataComplete(Tradestrategy tradestrategy) {
+
         Object[] listeners = this.listenerList.getListenerList();
+
         for (int i = listeners.length - 2; i >= 0; i -= 2) {
+
             if (listeners[i] == IBrokerChangeListener.class) {
+
                 ((IBrokerChangeListener) listeners[i + 1]).historicalDataComplete(tradestrategy);
             }
         }
@@ -176,9 +195,13 @@ public abstract class AbstractBrokerModel implements IBrokerModel, Cloneable, Se
      * @param accountNumber String
      */
     protected void fireManagedAccountsUpdated(String accountNumber) {
+
         Object[] listeners = this.listenerList.getListenerList();
+
         for (int i = listeners.length - 2; i >= 0; i -= 2) {
+
             if (listeners[i] == IBrokerChangeListener.class) {
+
                 ((IBrokerChangeListener) listeners[i + 1]).managedAccountsUpdated(accountNumber);
             }
         }
@@ -189,9 +212,13 @@ public abstract class AbstractBrokerModel implements IBrokerModel, Cloneable, Se
      * received all FA Accounts information.
      */
     protected void fireFAAccountsCompleted() {
+
         Object[] listeners = this.listenerList.getListenerList();
+
         for (int i = listeners.length - 2; i >= 0; i -= 2) {
+
             if (listeners[i] == IBrokerChangeListener.class) {
+
                 ((IBrokerChangeListener) listeners[i + 1]).fAAccountsCompleted();
             }
         }
@@ -204,9 +231,13 @@ public abstract class AbstractBrokerModel implements IBrokerModel, Cloneable, Se
      * @param accountNumber String
      */
     protected void fireUpdateAccountTime(String accountNumber) {
+
         Object[] listeners = this.listenerList.getListenerList();
+
         for (int i = listeners.length - 2; i >= 0; i -= 2) {
+
             if (listeners[i] == IBrokerChangeListener.class) {
+
                 ((IBrokerChangeListener) listeners[i + 1]).updateAccountTime(accountNumber);
             }
         }
@@ -219,9 +250,13 @@ public abstract class AbstractBrokerModel implements IBrokerModel, Cloneable, Se
      * @param brokerError BrokerModelException
      */
     protected void fireBrokerError(BrokerModelException brokerError) {
+
         Object[] listeners = this.listenerList.getListenerList();
+
         for (int i = listeners.length - 2; i >= 0; i -= 2) {
+
             if (listeners[i] == IBrokerChangeListener.class) {
+
                 ((IBrokerChangeListener) listeners[i + 1]).brokerError(brokerError);
             }
         }
@@ -234,9 +269,13 @@ public abstract class AbstractBrokerModel implements IBrokerModel, Cloneable, Se
      * @param tradeOrder TradeOrder
      */
     protected void fireTradeOrderFilled(TradeOrder tradeOrder) {
+
         Object[] listeners = this.listenerList.getListenerList();
+
         for (int i = listeners.length - 2; i >= 0; i -= 2) {
+
             if (listeners[i] == IBrokerChangeListener.class) {
+
                 ((IBrokerChangeListener) listeners[i + 1]).tradeOrderFilled(tradeOrder);
             }
         }
@@ -249,9 +288,13 @@ public abstract class AbstractBrokerModel implements IBrokerModel, Cloneable, Se
      * @param tradeOrder TradeOrder
      */
     protected void fireTradeOrderStatusChanged(TradeOrder tradeOrder) {
+
         Object[] listeners = this.listenerList.getListenerList();
+
         for (int i = listeners.length - 2; i >= 0; i -= 2) {
+
             if (listeners[i] == IBrokerChangeListener.class) {
+
                 ((IBrokerChangeListener) listeners[i + 1]).tradeOrderStatusChanged(tradeOrder);
             }
         }
@@ -264,9 +307,13 @@ public abstract class AbstractBrokerModel implements IBrokerModel, Cloneable, Se
      * @param tradePosition TradePosition
      */
     protected void firePositionClosed(TradePosition tradePosition) {
+
         Object[] listeners = this.listenerList.getListenerList();
+
         for (int i = listeners.length - 2; i >= 0; i -= 2) {
+
             if (listeners[i] == IBrokerChangeListener.class) {
+
                 ((IBrokerChangeListener) listeners[i + 1]).positionClosed(tradePosition);
             }
         }
@@ -279,9 +326,13 @@ public abstract class AbstractBrokerModel implements IBrokerModel, Cloneable, Se
      * @param tradeOrder TradeOrder
      */
     protected void fireTradeOrderCancelled(TradeOrder tradeOrder) {
+
         Object[] listeners = this.listenerList.getListenerList();
+
         for (int i = listeners.length - 2; i >= 0; i -= 2) {
+
             if (listeners[i] == IBrokerChangeListener.class) {
+
                 ((IBrokerChangeListener) listeners[i + 1]).tradeOrderCancelled(tradeOrder);
             }
         }
@@ -294,9 +345,13 @@ public abstract class AbstractBrokerModel implements IBrokerModel, Cloneable, Se
      * @param openOrders ConcurrentHashMap<Integer,TradeOrder>
      */
     protected void fireOpenOrderEnd(ConcurrentHashMap<Integer, TradeOrder> openOrders) {
+
         Object[] listeners = this.listenerList.getListenerList();
+
         for (int i = listeners.length - 2; i >= 0; i -= 2) {
+
             if (listeners[i] == IBrokerChangeListener.class) {
+
                 ((IBrokerChangeListener) listeners[i + 1]).openOrderEnd(openOrders);
             }
         }
@@ -309,6 +364,7 @@ public abstract class AbstractBrokerModel implements IBrokerModel, Cloneable, Se
      * @see IBrokerModel#isBrokerDataOnly()
      */
     public boolean isBrokerDataOnly() {
+
         return this.brokerDataOnly;
     }
 
@@ -319,6 +375,7 @@ public abstract class AbstractBrokerModel implements IBrokerModel, Cloneable, Se
      * @see IBrokerModel#setBrokerDataOnly(boolean)
      */
     public void setBrokerDataOnly(boolean brokerDataOnly) {
+
         this.brokerDataOnly = brokerDataOnly;
     }
 
@@ -331,6 +388,7 @@ public abstract class AbstractBrokerModel implements IBrokerModel, Cloneable, Se
      * not support cloning.
      */
     public Object clone() throws CloneNotSupportedException {
+
         AbstractBrokerModel clone = (AbstractBrokerModel) super.clone();
         clone.listenerList = new EventListenerList();
         return clone;
@@ -344,6 +402,7 @@ public abstract class AbstractBrokerModel implements IBrokerModel, Cloneable, Se
      */
     @Serial
     private void writeObject(ObjectOutputStream stream) throws IOException {
+
         stream.defaultWriteObject();
     }
 
@@ -356,6 +415,7 @@ public abstract class AbstractBrokerModel implements IBrokerModel, Cloneable, Se
      */
     @Serial
     private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+
         stream.defaultReadObject();
         this.listenerList = new EventListenerList();
         stream.registerValidation(this, 10); // see comments about priority of
@@ -378,6 +438,7 @@ public abstract class AbstractBrokerModel implements IBrokerModel, Cloneable, Se
      * brokerManagerModel has changed.
      */
     public void validateObject() {
+
         fireConnectionOpened();
     }
 }

@@ -60,7 +60,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-
 public class PolygonBroker extends Broker {
 
     private final static Logger _log = LoggerFactory.getLogger(PolygonBroker.class);
@@ -86,6 +85,7 @@ public class PolygonBroker extends Broker {
 
     public PolygonBroker(Integer reqId, Contract contract, String endDateTime, String chartDays, String barSize,
                          IClientWrapper brokerModel) {
+
         this.reqId = reqId;
         this.contract = contract;
         this.barSize = barSize;
@@ -126,6 +126,7 @@ public class PolygonBroker extends Broker {
 
             _log.error("Error: PolygonBroker::doInBackground Symbol: {} Msg: {}", contract.getSymbol(), ex.getMessage(), ex);
         } finally {
+
             // This will save the candle series.
             _log.debug("Debug: PolygonBroker::doInBackground finished ReqId: {} Symbol: {}", this.reqId, this.contract.getSymbol());
             this.brokerModel.contractDetailsEnd(contract.getId());
@@ -141,7 +142,6 @@ public class PolygonBroker extends Broker {
 
     private boolean setContractDetails(Contract contract) throws IOException, InterruptedException {
 
-
         /*
          * Polygon curl -X GET "https://api.polygon.io/v3/reference/tickers/AAPL?apiKey=WGlljpSus0Ai1mj2ayaASNTcxchw9aUp"
          */
@@ -151,6 +151,7 @@ public class PolygonBroker extends Broker {
 
         // create a request
         HttpResponse<String> response;
+
         try (HttpClient client = HttpClient.newHttpClient()) {
 
             var request = HttpRequest.newBuilder(
@@ -211,7 +212,6 @@ public class PolygonBroker extends Broker {
          */
         int barSize = 60;
         String strUrl = "https://api.polygon.io/v2/aggs/ticker/" + symbol + "/range/1/minute/" + startDate.toInstant().toEpochMilli() + "/" + endDate.toInstant().toEpochMilli() + "?adjusted=true&sort=asc&limit=3000&apiKey=" + apiKey;
-
         _log.debug("Debug: PolygonBroker::getPriceDataSetIntraday URL: {}", strUrl);
 
         // create a request
@@ -279,7 +279,6 @@ public class PolygonBroker extends Broker {
          * Polygon curl -X GET "https://api.polygon.io/v2/aggs/ticker/AAPL/range/1/day/1746696600000/1746734400000?adjusted=true&sort=asc&limit=1500&apiKey=WGlljpSus0Ai1mj2ayaASNTcxchw9aUp"
          */
         String strUrl = "https://api.polygon.io/v2/aggs/ticker/" + symbol + "/range/1/day/" + startDate.toInstant().toEpochMilli() + "/" + endDate.toInstant().toEpochMilli() + "?adjusted=true&sort=asc&limit=1500&apiKey=" + apiKey;
-
         _log.debug("Debug: PolygonBroker::setPriceDataDay URL: {}", strUrl);
 
         // create a request

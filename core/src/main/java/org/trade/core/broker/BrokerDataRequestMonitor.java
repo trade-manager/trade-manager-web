@@ -253,7 +253,6 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
             incrementGrandTotal();
         }
 
-
         int percent = (int) (((double) (totalSumbitted - this.brokerModel.getHistoricalData().size()) / getGrandTotal())
                 * 100d);
         setProgress(percent);

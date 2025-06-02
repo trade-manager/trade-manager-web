@@ -79,5 +79,4 @@ public interface IClientWrapper {
     void onCancelBrokerData(Contract contract);
 
     void onCancelRealtimeBars(Contract contract);
-
 }

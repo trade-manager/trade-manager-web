@@ -59,7 +59,7 @@ public class BrokerModelException extends ModelException {
      * @param code    Integer
      */
     public BrokerModelException(Integer id, Integer code, String message) {
-        super(id, code, message);
 
+        super(id, code, message);
     }
 }

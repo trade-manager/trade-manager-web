@@ -81,9 +81,7 @@ public class DBBroker extends Broker {
     private final IClientWrapper brokerModel;
     private BigDecimal trailAmount = null;
     private BigDecimal trailLimitOffsetAmount = null;
-
     private long execId = TradingCalendar.geMillisFromZonedDateTime(TradingCalendar.getDateTimeNowMarketTimeZone());
-
     private static final Integer _backTestBarSize;
 
     static {
@@ -153,8 +151,8 @@ public class DBBroker extends Broker {
                             this.tradestrategy.getTradingday().getOpen(), this.tradestrategy.getTradingday().getOpen(),
                             this.tradestrategy.getBarSize());
                 }
-
             } else {
+
                 candlesTradingday = this.getCandles(this.tradestrategy, this.tradestrategy.getTradingday().getOpen(),
                         this.tradestrategy.getTradingday().getOpen(), this.tradestrategy.getBarSize());
             }
@@ -163,17 +161,22 @@ public class DBBroker extends Broker {
              * Wait for the strategy to start.
              */
             synchronized (lockBackTestWorker) {
+
                 while (strategiesRunning.get() < 1) {
+
                     lockBackTestWorker.wait();
                 }
             }
+
             if (candlesTradingday.isEmpty()) {
+
                 _log.warn("No data available to run a backtest for Symbol: {} and Tradingday: {}", this.tradestrategy.getContract().getSymbol(), this.tradestrategy.getTradingday().getOpen());
                 /*
                  * Poke the strategy this will kill it as there is no data.
                  */
                 this.tradestrategy.getStrategyData().getBaseCandleSeries().fireSeriesChanged();
             } else {
+
                 candles.addAll(candlesTradingday);
                 candlesTradingday.clear();
                 /*
@@ -187,13 +190,13 @@ public class DBBroker extends Broker {
             TradestrategyOrders positionOrders;
 
             for (Candle candle : candles) {
+
                 /*
                  * We use the direct add to BaseCandle data-set rather than
                  * going via the IBrokerModel because the IBrokerModel is in
                  * another thread and so this thread tends to be blocked by
                  * other activities.
                  */
-
                 ruleComplete.set(0);
 
                 this.tradestrategy.getStrategyData().getBaseCandleSeries().getContract()
@@ -202,7 +205,6 @@ public class DBBroker extends Broker {
                         .setLastBidPrice(candle.getClose());
                 this.tradestrategy.getStrategyData().getBaseCandleSeries().getContract()
                         .setLastPrice(candle.getClose());
-
                 this.tradestrategy.getStrategyData().buildCandle(candle.getStartPeriod(),
                         candle.getOpen().doubleValue(), candle.getHigh().doubleValue(), candle.getLow().doubleValue(),
                         candle.getClose().doubleValue(), candle.getVolume(), candle.getVwap().doubleValue(),
@@ -221,8 +223,11 @@ public class DBBroker extends Broker {
                         lockBackTestWorker.wait();
                     }
                 }
-                if (candle.getStartPeriod().isBefore(this.tradestrategy.getTradingday().getOpen()))
+
+                if (candle.getStartPeriod().isBefore(this.tradestrategy.getTradingday().getOpen())) {
+
                     continue;
+                }
 
                 positionOrders = this.tradePersistentModel.findPositionOrdersByTradestrategyId(this.idTradestrategy);
 
@@ -255,19 +260,27 @@ public class DBBroker extends Broker {
                             .findPositionOrdersByTradestrategyId(this.idTradestrategy);
 
                     if (this.tradestrategy.getStrategy().hasStrategyManager()) {
+
                         synchronized (lockBackTestWorker) {
+
                             while (strategiesRunning.get() < 1 && positionOrders.hasOpenTradePosition()) {
+
                                 lockBackTestWorker.wait();
                             }
                         }
                     }
+
                     if (positionOrders.hasOpenTradePosition()) {
+
                         if (!this.tradestrategy.getStrategyData().getBaseCandleSeries().isEmpty()) {
+
                             CandleItem candleItem = (CandleItem) this.tradestrategy.getStrategyData()
                                     .getBaseCandleSeries().getDataItem(
                                             this.tradestrategy.getStrategyData().getBaseCandleSeries().getItemCount()
                                                     - 1);
+
                             if (!candleItem.isSide(positionOrders.getOpenTradePosition().getSide())) {
+
                                 /*
                                  * Refresh the orders as the other thread may
                                  * have added orders that need to be filled.
@@ -289,14 +302,17 @@ public class DBBroker extends Broker {
                         }
                     }
                 }
-                if (strategiesRunning.get() == 0 && !positionOrders.hasOpenTradePosition())
-                    break;
-            }
-            candles.clear();
 
+                if (strategiesRunning.get() == 0 && !positionOrders.hasOpenTradePosition()) {
+                    break;
+                }
+            }
+
+            candles.clear();
         } catch (InterruptedException interExp) {
             // Do nothing.
         } catch (Exception ex) {
+
             _log.error("Error BackTestBroker Symbol: {} Msg: {}", this.tradestrategy.getContract().getSymbol(), ex.getMessage(), ex);
         }
         return null;
@@ -355,7 +371,6 @@ public class DBBroker extends Broker {
                         orderfilled = true;
                     }
 
-
                     if (null == order.getOcaGroupName()) {
 
                         createOrderExecution(contract, order, filledPrice, candle.getStartPeriod());
@@ -379,6 +394,7 @@ public class DBBroker extends Broker {
                                      * a green bar we went open/low/high/close.
                                      */
                                     if (candle.getClose().compareTo(candle.getOpen()) > 0) {
+
                                         // Green bar
                                         if (filledPrice.compareTo(orderOCAFilledPrice) > 0) {
                                             cancelOrder(contract, order);
@@ -399,6 +415,7 @@ public class DBBroker extends Broker {
                                         }
                                     }
                                 }
+
                                 cancelOrder(contract, orderOCA);
                                 orderOCA.setDirty(true);
                                 createOrderExecution(contract, order, filledPrice, candle.getStartPeriod());
@@ -431,8 +448,9 @@ public class DBBroker extends Broker {
          * processed by the Strategy at this point. Note assume mkt orders are
          * always filled.
          */
-        if (OrderType.MKT.equals(order.getOrderType()))
+        if (OrderType.MKT.equals(order.getOrderType())) {
             return candle.getClose();
+        }
 
         /*
          * There must be enough volume to fill the unfilled quantity. For none
@@ -440,8 +458,9 @@ public class DBBroker extends Broker {
          *
          * TODO add logic to handle partial fills.
          */
-        if (candle.getVolume() < order.getQuantity())
+        if (candle.getVolume() < order.getQuantity()) {
             return null;
+        }
 
         /*
          * Set the AuxPrice to the trailing amount.
@@ -466,6 +485,7 @@ public class DBBroker extends Broker {
              */
 
             if (null != order.getAuxPrice()) {
+
                 if (null == trailAmount) {
                     trailAmount = order.getAuxPrice();
                     trailLimitOffsetAmount = order.getLimitPrice();
@@ -474,20 +494,28 @@ public class DBBroker extends Broker {
                 }
 
             } else {
+
                 if (null != order.getTrailingPercent()) {
+
                     if (null == trailAmount) {
+
                         trailAmount = (candle.getClose().multiply(order.getTrailingPercent()))
                                 .divide(new BigDecimal(100), 2, RoundingMode.HALF_EVEN);
                         trailLimitOffsetAmount = order.getLimitPrice();
+
                         if (null != order.getTrailStopPrice()) {
+
                             if (Action.SELL.equals(order.getAction())
                                     && order.getTrailStopPrice().compareTo(candle.getClose()) > 0) {
+
                                 order.setAuxPrice(order.getTrailStopPrice());
                             } else if (Action.BUY.equals(order.getAction())
                                     && order.getTrailStopPrice().compareTo(candle.getClose()) < 0) {
+
                                 order.setAuxPrice(order.getTrailStopPrice());
                             }
                         } else {
+
                             order.setAuxPrice((Action.SELL.equals(order.getAction())
                                     ? candle.getClose().subtract(trailAmount) : candle.getClose().add(trailAmount)));
                             order.setLimitPrice((Action.SELL.equals(order.getAction())
@@ -658,8 +686,10 @@ public class DBBroker extends Broker {
         execution.setTime(date);
 
         if (Action.BUY.equals(order.getAction())) {
+
             execution.setSide(Side.BOT);
         } else {
+
             execution.setSide(Side.SLD);
         }
         execution.setQuantity(order.getQuantity());
@@ -697,7 +727,6 @@ public class DBBroker extends Broker {
      */
     private void populateIndicatorCandleSeries(Tradestrategy tradestrategy, ZonedDateTime startDate,
                                                ZonedDateTime endDate) throws PersistentModelException {
-
 
         CandleDataset candleDataset = (CandleDataset) tradestrategy.getStrategyData()
                 .getIndicatorByType(IndicatorSeries.CandleSeries);

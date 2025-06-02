@@ -64,6 +64,7 @@ public class BrokerChangeEvent extends java.util.EventObject {
      * @param brokerManagerModel IBrokerModel
      */
     public BrokerChangeEvent(Object source, IBrokerModel brokerManagerModel) {
+
         super(source);
         this.brokerManagerModel = brokerManagerModel;
     }
@@ -77,7 +78,7 @@ public class BrokerChangeEvent extends java.util.EventObject {
      * @return The brokerManagerModel (possibly <code>null</code>).
      */
     public IBrokerModel getBrokerManagerModel() {
+
         return this.brokerManagerModel;
     }
-
 }
