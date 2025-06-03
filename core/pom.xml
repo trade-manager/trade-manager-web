@@ -24,4 +24,75 @@
             <scope>compile</scope>
         </dependency>
     </dependencies>
+    <build>
+        <plugins>
+            <!-- Used to load params for sql:execute -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>properties-maven-plugin</artifactId>
+                <version>1.0.0</version>
+                <executions>
+                    <execution>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>read-project-properties</goal>
+                        </goals>
+                        <configuration>
+                            <files>
+                                <file>${basedir}/../db.properties</file>
+                            </files>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- Used to build the database i.e. run sql -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>sql-maven-plugin</artifactId>
+                <version>1.5</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>sql-maven-plugin</artifactId>
+                        <version>1.5</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.mariadb.jdbc</groupId>
+                        <artifactId>mariadb-java-client</artifactId>
+                        <version>3.5.2</version>
+                    </dependency>
+                </dependencies>
+                <!-- Must run initialize first i.e. initialize sql:execute -->
+                <configuration>
+                    <driver>org.mariadb.jdbc.Driver</driver>
+                    <url>${db-dba.url}?serverTimezone=${db-dba.time_zone}</url>
+                    <username>${db-dba.username}</username>
+                    <password>${db-dba.password}</password>
+                    <settingsKey>sensibleKey</settingsKey>
+                    <!--all executions are ignored if -Dmaven.test.skip=true-->
+                    <skip>false</skip>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>default-cli</id>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <delimiter>//</delimiter>
+                            <autocommit>true</autocommit>
+                            <srcFiles>
+                                <srcFile>target/classes/schema/schema-ddl.sql</srcFile>
+                                <srcFile>target/classes/schema/drop-create-user.sql</srcFile>
+                                <srcFile>target/classes/schema/default-data.sql</srcFile>
+                                <!-- Demo data for 2024 comment out if not needed
+                                <srcFile>target/classes/schema/demo-data.sql</srcFile>
+                                 -->
+                            </srcFiles>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

@@ -142,6 +142,7 @@
                         </argLine>
                     </configuration>
                 </plugin>
+
             </plugins>
         </pluginManagement>
     </build>
