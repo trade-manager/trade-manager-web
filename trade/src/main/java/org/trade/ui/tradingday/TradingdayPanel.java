@@ -346,10 +346,14 @@ public class TradingdayPanel extends BasePanel {
      */
 
     public void doDelete() {
+
         try {
+
             int result = JOptionPane.showConfirmDialog(this.getFrame(),
                     "Are you sure you want to delete all Trade Orders?", "Warning", JOptionPane.YES_NO_OPTION);
+
             if (result == JOptionPane.YES_OPTION) {
+
                 deleteTradeOrders(m_tradingdays);
             }
         } catch (Exception ex) {
@@ -371,7 +375,9 @@ public class TradingdayPanel extends BasePanel {
             int result = JOptionPane.showConfirmDialog(this.getFrame(),
                     "Do you want to delete order for the selected Tradestrategy?", "Information",
                     JOptionPane.YES_NO_OPTION);
+
             if (result == JOptionPane.YES_OPTION) {
+
                 Tradingdays tradingdays = new Tradingdays();
                 Tradingday tradingday = Tradingday.newInstance(tradestrategy.getTradingday().getOpen());
                 tradingday.addTradestrategy(tradestrategy);
@@ -396,17 +402,24 @@ public class TradingdayPanel extends BasePanel {
 
             // Save the Trading days
             SwingUtilities.invokeLater(() -> {
+
                 try {
+
                     getFrame().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
                     boolean dirty = false;
+
                     for (Tradingday tradingday : m_tradingdays.getTradingdays()) {
+
                         if (tradingday.getClose().isBefore(tradingday.getOpen())
                                 || tradingday.getClose().equals(tradingday.getOpen())) {
+
                             String msg = "Tradingday Open " + tradingday.getOpen()
                                     + " cannot be after trading day close " + tradingday.getClose();
                             setErrorMessage("Error Tradingday", msg, new PersistentModelException(msg));
                         }
+
                         if (tradingday.isDirty()) {
+
                             dirty = true;
                             m_tradePersistentModel.persistTradingday(tradingday);
                         }
@@ -651,7 +664,9 @@ public class TradingdayPanel extends BasePanel {
      * menu Open File.
      */
     public void doOpen() {
+
         try {
+
             this.setStatusBarMessage(
                     "CSV file format is: SYM,Symbol,SMART,BOT/SLD(opt),DATE(MM/dd/yyyy) (opt), Tier(Opt), Mkt Bias(opt), Mkt Bar(opt), Mkt Gap(opt)",
                     BasePanel.INFORMATION);
@@ -661,29 +676,39 @@ public class TradingdayPanel extends BasePanel {
             fileView.addChoosableFileFilter(new CVSFilter());
             fileView.setAcceptAllFileFilterUsed(false);
             fileView.setMultiSelectionEnabled(true);
+
             if (null == m_defaultDir) {
+
                 fileView.setCurrentDirectory(new File(System.getProperty("user.dir")));
             } else {
+
                 fileView.setCurrentDirectory(new File(m_defaultDir));
             }
 
             int returnVal = fileView.showOpenDialog(this);
 
             if (returnVal == JFileChooser.APPROVE_OPTION) {
+
                 File[] files = fileView.getSelectedFiles();
+
                 if (null == files) {
+
                     this.setStatusBarMessage("No file selected ", BasePanel.INFORMATION);
                     return;
                 }
 
                 int selectedRow = 0;
                 Tradingday tradingday = null;
+
                 if (m_tradingdayTable.getSelectionModel().getLeadSelectionIndex() == -1) {
+
                     if (!m_tradingdays.getTradingdays().isEmpty()) {
+
                         m_tradingdayTable.setRowSelectionInterval(0, 0);
                     }
                 }
                 if (m_tradingdayTable.getSelectionModel().getLeadSelectionIndex() > -1) {
+
                     selectedRow = m_tradingdayTable.getSelectionModel().getLeadSelectionIndex();
                     Date openDate = (Date) m_tradingdayModel
                             .getValueAt(m_tradingdayTable.convertRowIndexToModel(selectedRow), 0);
@@ -692,18 +717,21 @@ public class TradingdayPanel extends BasePanel {
                     tradingday = m_tradingdayModel.getData().getTradingday(openDate.getZonedDateTime(),
                             closeDate.getZonedDateTime());
                 }
+
                 for (File file : files) {
+
                     String fileName = file.getPath();
                     m_tradingdays.populateDataFromFile(fileName, tradingday);
                 }
 
                 m_tradingdayModel.setData(m_tradingdays);
+
                 if (!m_tradingdays.getTradingdays().isEmpty()) {
+
                     m_tradingdayTable.setRowSelectionInterval(selectedRow, selectedRow);
                     spinnerEnd.setValue(
                             ((Date) m_tradingdayModel.getValueAt(m_tradingdayTable.convertRowIndexToModel(0), 0))
                                     .getDate());
-
                     spinnerStart.setValue(((Date) m_tradingdayModel.getValueAt(
                             m_tradingdayTable.convertRowIndexToModel(m_tradingdayModel.getRowCount() - 1), 1))
                             .getDate());
