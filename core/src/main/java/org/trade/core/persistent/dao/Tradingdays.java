@@ -374,6 +374,7 @@ public class Tradingdays extends Aspect implements java.io.Serializable {
          * Refresh the decode tables.
          */
         DBTableLookupServiceProvider.clearLookup();
+
         try (FileReader fileReader = new FileReader(fileName);
              BufferedReader bufferedReader = new BufferedReader(fileReader)) {
 
@@ -382,59 +383,78 @@ public class Tradingdays extends Aspect implements java.io.Serializable {
             }
 
             Integer chartDays = ConfigProperties.getPropAsInt("trade.backfill.duration");
-            if (!ChartDays.newInstance(chartDays).isValid())
-                chartDays = 2;
 
+            if (!ChartDays.newInstance(chartDays).isValid()) {
+
+                chartDays = 2;
+            }
             String tierDefault = ConfigProperties.getPropAsString("trade.tier.default");
-            if (!Tier.newInstance(tierDefault).isValid())
+
+            if (!Tier.newInstance(tierDefault).isValid()) {
+
                 tierDefault = null;
+            }
 
             Integer barSize = ConfigProperties.getPropAsInt("trade.backfill.barsize");
-            if (!BarSize.newInstance(barSize).isValid())
+
+            if (!BarSize.newInstance(barSize).isValid()) {
+
                 barSize = 300;
+            }
 
             int riskAmount = ConfigProperties.getPropAsInt("trade.risk");
             String strategyName = ConfigProperties.getPropAsString("trade.strategy.default");
-            if (!DAOStrategy.newInstance(strategyName).isValid())
+
+            if (!DAOStrategy.newInstance(strategyName).isValid()) {
+
                 strategyName = DAOStrategy.newInstance().getCode();
-
+            }
             Strategy strategy = (Strategy) DAOStrategy.newInstance(strategyName).getObject();
-
             Portfolio portfolio = (Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
             String strLine;
 
             // read comma separated file line by line
-
             while ((strLine = bufferedReader.readLine()) != null) {
+
                 Tradestrategy tradestrategy = Tradingdays.parseContractLine(strLine);
 
                 if (null != tradestrategy) {
 
                     Contract contract = this.getContract(tradestrategy.getContract().getSymbol());
                     if (null != contract) {
+
                         tradestrategy.setContract(contract);
                     }
 
                     if (null == tradestrategy.getTradingday()) {
+
                         if (null == tradingday) {
+
                             throw new PersistentModelException("Please select a Tradingday");
                         }
                         tradestrategy.setTradingday(tradingday);
                     } else {
+
                         Tradingday currTradingday = this.getTradingday(tradestrategy.getTradingday().getOpen(),
                                 tradestrategy.getTradingday().getClose());
 
                         if (null != currTradingday) {
+
                             if (null != tradestrategy.getTradingday().getMarketGap()
                                     && null == currTradingday.getMarketGap()) {
+
                                 currTradingday.setMarketGap(tradestrategy.getTradingday().getMarketGap());
                             }
+
                             if (null != tradestrategy.getTradingday().getMarketBias()
                                     && null == currTradingday.getMarketBias()) {
+
                                 currTradingday.setMarketBias(tradestrategy.getTradingday().getMarketBias());
                             }
+
                             if (null != tradestrategy.getTradingday().getMarketBar()
                                     && null == currTradingday.getMarketBar()) {
+
                                 currTradingday.setMarketBar(tradestrategy.getTradingday().getMarketBar());
                             }
                             tradestrategy.setTradingday(currTradingday);
@@ -444,6 +464,7 @@ public class Tradingdays extends Aspect implements java.io.Serializable {
                      * Do not load tradestrategies for trading holidays.
                      */
                     if (TradingCalendar.isHoliday(tradestrategy.getTradingday().getOpen())) {
+
                         continue;
                     }
                     tradestrategy.setRiskAmount(new BigDecimal(riskAmount));
@@ -454,10 +475,13 @@ public class Tradingdays extends Aspect implements java.io.Serializable {
                     tradestrategy.setDirty(true);
                     tradestrategy.setStrategy(strategy);
                     tradestrategy.setPortfolio(portfolio);
-                    if (!tradestrategy.getTradingday().existTradestrategy(tradestrategy))
-                        tradestrategy.getTradingday().addTradestrategy(tradestrategy);
 
+                    if (!tradestrategy.getTradingday().existTradestrategy(tradestrategy)) {
+
+                        tradestrategy.getTradingday().addTradestrategy(tradestrategy);
+                    }
                     if (!this.containsTradingday(tradestrategy.getTradingday())) {
+
                         this.add(tradestrategy.getTradingday());
                     }
                     tradestrategy.getTradingday().getTradestrategies().sort(Tradestrategy.DATE_ORDER_ASC);

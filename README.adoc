@@ -21,7 +21,8 @@ IntelliJ open source version
 
 $git clone <URL> i.e. https://github.com/trade-manager/trade-manager-web.git
 
-2/ Change the following properties in the project dir db.properties file: db-dba.username(root is default)/db-dba.password. Note the db-dba.username must have schema create privileges i.e. root. The other values can be changed if so desired.
+2/ Change the following properties in the project dir db.properties file: db-dba.username(root is default)/db-dba.password.
+Note the db-dba.username must have schema create privileges i.e. root. The other values can be changed if so desired.
 
 3/ Create the mariadb DB. From project dir, cd web, then run (make sure $JAVA_HOME is version 1.8, check with $>echo $JAVA_HOME).
 
@@ -29,17 +30,17 @@ $git clone <URL> i.e. https://github.com/trade-manager/trade-manager-web.git
 
 >$ cd web
 
-web>$mvnw initialize sql:execute
+core>$../mvnw initialize sql:execute
 
-Note demo data for 2024 is not added by default uncomment the file in the web/pom.xml if not needed.
+Note demo data for 04/23/2025 is not added by default uncomment the file in the core/pom.xml if not needed.
 
 4/ To run the old Swing UI. From project dir, cd web, then run
 
-web>$mvnw -Dtrade.config=file:../config.properties exec:java
+trade>$../mvnw -Dtrade.config=file:../config.properties exec:java
 
 OR the new Spring boot Web app
 
-web>$mvnw spring-boot:run   Note WIP so not much to see yet
+web>$../mvnw spring-boot:run   Note WIP so not much to see yet
 
 5/ Open IntelliJ and import the parent pom.xml from the project dir. You can now set run configurations for 6/
 

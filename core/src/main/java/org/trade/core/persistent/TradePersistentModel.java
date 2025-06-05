@@ -857,14 +857,18 @@ public class TradePersistentModel implements IPersistentModel {
     }
 
     public void removeAspect(final Aspect transientInstance) throws PersistentModelException {
+
         try {
+
             m_aspectHome.remove(transientInstance);
         } catch (OptimisticLockException ex1) {
+
             throw new PersistentModelException(
                     "Error removing " + transientInstance.getClass().getSimpleName() + " please refresh before save.");
-        } catch (Exception e) {
+        } catch (Exception ex) {
+
             throw new PersistentModelException(
-                    "Error removing  " + transientInstance.getClass().getSimpleName() + " : " + e.getMessage());
+                    "Error removing  " + transientInstance.getClass().getSimpleName() + " : " + ex.getMessage());
         }
     }
 

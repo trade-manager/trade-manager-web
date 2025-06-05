@@ -62,7 +62,6 @@ public abstract class BasePanel extends JPanel implements IMessageListener {
     public static final int WARNING = 2;
     public static final int ERROR = 3;
     public static final int PROGRESS = 4;
-
     private static final int CLEAR = 0;
     private static BasePanelMenu menuBar = null;
     private static Frame m_frame = null;
@@ -74,7 +73,6 @@ public abstract class BasePanel extends JPanel implements IMessageListener {
 
         Dimension size = new Dimension(400, 300);
         this.setPreferredSize(size);
-
     }
 
     /**
@@ -83,6 +81,7 @@ public abstract class BasePanel extends JPanel implements IMessageListener {
      * @param selected boolean
      */
     public void setSelected(boolean selected) {
+
         m_isSelected = selected;
     }
 
@@ -92,6 +91,7 @@ public abstract class BasePanel extends JPanel implements IMessageListener {
      * @return boolean
      */
     public boolean isSelected() {
+
         return m_isSelected;
     }
 
@@ -101,7 +101,9 @@ public abstract class BasePanel extends JPanel implements IMessageListener {
      * @param statusBar JTextField
      */
     public void setStatusBar(JTextField statusBar) {
+
         if (m_statusBar == null) {
+
             m_statusBar = statusBar;
         }
     }
@@ -112,7 +114,9 @@ public abstract class BasePanel extends JPanel implements IMessageListener {
      * @param progressBar JProgressBar
      */
     public void setProgressBar(JProgressBar progressBar) {
+
         if (m_progressBar == null) {
+
             m_progressBar = progressBar;
         }
     }
@@ -123,10 +127,12 @@ public abstract class BasePanel extends JPanel implements IMessageListener {
      * @return JProgressBar
      */
     public static JProgressBar getProgressBar() {
+
         return m_progressBar;
     }
 
     public void clearStatusBarMessage() {
+
         setStatusBarMessage("", BasePanel.CLEAR);
     }
 
@@ -137,37 +143,45 @@ public abstract class BasePanel extends JPanel implements IMessageListener {
      * @param state   int
      */
     public void setStatusBarMessage(String message, int state) {
+
         switch (state) {
             case 0: {
+
                 m_statusBar.setBackground(Color.white);
                 m_statusBar.setText("");
                 break;
             }
             case 1: {
+
                 _log.info(message);
                 m_statusBar.setBackground(Color.green);
                 break;
             }
             case 2: {
+
                 _log.warn(message);
                 m_statusBar.setBackground(Color.yellow);
                 break;
             }
             case 3: {
+
                 _log.error(message);
                 m_statusBar.setBackground(Color.red);
                 break;
             }
             case 4: {
+
                 m_statusBar.setBackground(Color.yellow);
                 break;
             }
             default: {
+
                 m_statusBar.setBackground(Color.white);
             }
         }
 
         if ((message != null) && (state != BasePanel.CLEAR)) {
+
             m_statusBar.setText(message);
         }
     }
@@ -178,9 +192,12 @@ public abstract class BasePanel extends JPanel implements IMessageListener {
      * @return Frame
      */
     protected Frame getFrame() {
+
         if (m_frame == null) {
+
             Component parent = this;
             while ((parent != null) && !(parent instanceof JFrame)) {
+
                 parent = parent.getParent();
             }
             m_frame = (Frame) parent;
@@ -199,6 +216,7 @@ public abstract class BasePanel extends JPanel implements IMessageListener {
     public void handleEvent(MessageEvent e, Vector<Object> parm) {
 
         if ((e.getSource() instanceof String method) && m_isSelected) {
+
             // _log.info("Fire Method: " + method + " in Class: "
             // + this.getClass().getName());
             doFireMethod(method, parm);
@@ -228,12 +246,12 @@ public abstract class BasePanel extends JPanel implements IMessageListener {
 
         int vectorSize;
         vectorSize = parm.size();
-
         Class<?>[] parms = new Class[vectorSize];
         Object[] objects = new Object[vectorSize];
         StringBuilder classes = new StringBuilder();
 
         for (Object object : parm) {
+
             classes.append(object.getClass().getName()).append("\n");
             parms[parm.indexOf(object)] = object.getClass();
             objects[parm.indexOf(object)] = object;
@@ -244,9 +262,11 @@ public abstract class BasePanel extends JPanel implements IMessageListener {
             Method method = Reflector.findMethod(this.getClass(), methodName, parms);
 
             if (null != method) {
+
                 method.invoke(this, objects);
             }
         } catch (Exception e) {
+
             // Do nothing this panel is not actively listening for this event
             _log.error("Exception in reflection BasePanel method: {} Parms #: {} Method {} Parms class: {} not found in class: {} Error Msg: {}", methodName, vectorSize, methodName, classes, this.getClass().getName(), e.getMessage());
             setStatusBarMessage(e.getMessage(), ERROR);
@@ -259,6 +279,7 @@ public abstract class BasePanel extends JPanel implements IMessageListener {
      * @return BasePanelMenu
      */
     public static BasePanelMenu getMenu() {
+
         return menuBar;
     }
 
@@ -268,6 +289,7 @@ public abstract class BasePanel extends JPanel implements IMessageListener {
      * @param menu BasePanelMenu
      */
     public void setMenu(final BasePanelMenu menu) {
+
         menuBar = menu;
     }
 
@@ -279,6 +301,7 @@ public abstract class BasePanel extends JPanel implements IMessageListener {
      * @param ex      Exception
      */
     public void setErrorMessage(String title, String message, Exception ex) {
+
         _log.error("Title: {} Msg: {}", title, message, ex);
         this.setStatusBarMessage(message, ERROR);
         JOptionPane.showMessageDialog(getFrame(), message + " See log for details.", title, JOptionPane.ERROR_MESSAGE);

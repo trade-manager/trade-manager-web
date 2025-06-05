@@ -196,8 +196,11 @@ public class AccountTableModel extends TableModel {
     public void deleteRow(int selectedRow) {
 
         String acctNumber = (String) this.getValueAt(selectedRow, 1);
+
         for (final PortfolioAccount element : getData().getPortfolioAccounts()) {
+
             if (CoreUtils.nullSafeComparator(element.getAccount().getAccountNumber(), acctNumber) == 0) {
+
                 getData().getPortfolioAccounts().remove(element);
                 getData().setDirty(true);
                 final Vector<Object> currRow = rows.get(selectedRow);
