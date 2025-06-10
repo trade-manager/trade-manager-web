@@ -65,6 +65,9 @@ public class StrategyTest {
     @Autowired
     private AspectRepository aspectRepository;
 
+    @Autowired
+    private StrategyRepository strategyRepository;
+
     /**
      * Method setUpBeforeClass.
      */
@@ -99,9 +102,8 @@ public class StrategyTest {
         // Create new instance of Strategy and set
         // values in it by reading them from form object
         _log.debug("Adding Strategy");
-        StrategyHome strategyHome = new StrategyHome();
         String name = "TestStrategy";
-        Strategy transientInstance = strategyHome.findByName(name);
+        Strategy transientInstance = strategyRepository.findByName(name);
         if (null == transientInstance) {
             transientInstance = new Strategy(name);
         }

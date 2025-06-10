@@ -1,5 +1,5 @@
 select
-cast(rand()*1000000000 as unsigned integer) as id_tradelog_detail,
+cast(rand()*1000000000 as unsigned integer) as tradelog_detail_id,
 data.sort_col,
 if(data.sort_col = 'Total' , 'Total', data.open) as open,
 if(data.sort_col = 'Total' , data.symbol, if(data.is_open_position is null,data.symbol ,if(data.is_open_position = 1, data.symbol,  if(data.trade_position_id is null,data.symbol, null))))   as symbol,

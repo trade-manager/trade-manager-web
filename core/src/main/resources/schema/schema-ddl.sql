@@ -196,13 +196,13 @@ name VARCHAR(45) NOT NULL ,
 description VARCHAR(240) NULL ,
 market_data SMALLINT(1)  NULL ,
 class_Name VARCHAR(100) NOT NULL ,
-strategy_id_manager INT NULL ,
+strategy_manager_id INT NULL ,
 version INT NULL,
 PRIMARY KEY (id) ,
 UNIQUE INDEX strategy_name_uq (name ASC) ,
-INDEX strategy_strategy_idx (strategy_id_manager ASC) ,
+INDEX strategy_strategy_idx (strategy_manager_id ASC) ,
 CONSTRAINT strategy_strategy_fk
-FOREIGN KEY (strategy_id_manager )
+FOREIGN KEY (strategy_manager_id )
 REFERENCES strategy (id )
   ON DELETE NO ACTION
   ON UPDATE NO ACTION)

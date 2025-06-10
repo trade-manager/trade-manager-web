@@ -53,7 +53,7 @@ import org.trade.core.persistent.dao.PortfolioRepository;
 import org.trade.core.persistent.dao.Rule;
 import org.trade.core.persistent.dao.RuleRepository;
 import org.trade.core.persistent.dao.Strategy;
-import org.trade.core.persistent.dao.StrategyHome;
+import org.trade.core.persistent.dao.StrategyRepository;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradeOrderHome;
 import org.trade.core.persistent.dao.TradeOrderfill;
@@ -112,7 +112,9 @@ public class TradeServiceImpl implements TradeService {
     @Autowired
     private RuleRepository ruleRepository;
 
-    private final StrategyHome m_strategyHome;
+    @Autowired
+    private StrategyRepository strategyRepository;
+
     private final TradingdayHome m_tradingdayHome;
     private final TradeOrderHome m_tradeOrderHome;
     private final TradeOrderfillHome m_tradeOrderfillHome;
@@ -124,7 +126,6 @@ public class TradeServiceImpl implements TradeService {
     private static final int SCALE_2 = 2;
 
     public TradeServiceImpl() {
-        m_strategyHome = new StrategyHome();
         m_tradingdayHome = new TradingdayHome();
         m_tradeOrderHome = new TradeOrderHome();
         m_tradeOrderfillHome = new TradeOrderfillHome();
@@ -738,16 +739,16 @@ public class TradeServiceImpl implements TradeService {
     }
 
     public Strategy findStrategyById(final Integer id) throws ServiceException {
-        Strategy instance = m_strategyHome.findById(id);
-        return instance;
+        return strategyRepository.findById(id).isPresent() ? strategyRepository.findById(id).get() : null;
+
     }
 
     public Strategy findStrategyByName(String name) {
-        return m_strategyHome.findByName(name);
+        return strategyRepository.findByName(name);
     }
 
     public List<Strategy> findStrategies() {
-        return m_strategyHome.findAll();
+        return strategyRepository.findAll();
     }
 
     public Aspects findAspectsByClassName(String aspectClassName) throws ServiceException {
@@ -758,7 +759,7 @@ public class TradeServiceImpl implements TradeService {
                  * Relationship Strategy -> IndicatorSeries is LAZY so we need
                  * to call size() on Rule/IndicatorSeries.
                  */
-                List<Strategy> items = m_strategyHome.findAll();
+                List<Strategy> items = strategyRepository.findAll();
                 Aspects aspects = new Aspects();
                 for (Aspect item : items) {
                     aspects.add(item);

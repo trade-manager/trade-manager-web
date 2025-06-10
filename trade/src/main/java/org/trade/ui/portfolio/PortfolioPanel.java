@@ -209,7 +209,7 @@ public class PortfolioPanel extends BasePanel implements ChangeListener, ItemLis
                 public void mouseClicked(MouseEvent e) {
                     if (e.getClickCount() == 2) {
                         if (null != selectedTradelogDetail) {
-                            transferButton.setTransferObject(selectedTradelogDetail.getIdTradestrategy());
+                            transferButton.setTransferObject(selectedTradelogDetail.getTradestrategyId());
                             transferButton.doClick();
                         }
                     }
@@ -294,8 +294,10 @@ public class PortfolioPanel extends BasePanel implements ChangeListener, ItemLis
      * Action menu.
      */
     public void doProperties() {
+
         if (null != selectedTradelogDetail) {
-            transferButton.setTransferObject(selectedTradelogDetail.getIdTradestrategy());
+
+            transferButton.setTransferObject(selectedTradelogDetail.getTradestrategyId());
             transferButton.doClick();
         }
     }

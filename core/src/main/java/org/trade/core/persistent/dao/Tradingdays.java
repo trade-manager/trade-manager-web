@@ -76,6 +76,7 @@ public class Tradingdays extends Aspect implements java.io.Serializable {
     // private ConcurrentHashMap<Date, Tradingday> tradingdays = new
     // ConcurrentHashMap<Date, Tradingday>(
     // 0);
+
     private List<Tradingday> tradingdays = Collections.synchronizedList(new ArrayList<>(0));
 
     public Tradingdays() {
@@ -134,10 +135,14 @@ public class Tradingdays extends Aspect implements java.io.Serializable {
      * @param tradingday Tradingday
      */
     public void remove(Tradingday tradingday) {
+
         synchronized (this.tradingdays) {
+
             for (ListIterator<Tradingday> itemIter = this.tradingdays.listIterator(); itemIter.hasNext(); ) {
+
                 Tradingday item = itemIter.next();
                 if (item.equals(tradingday)) {
+
                     itemIter.remove();
                     break;
                 }
