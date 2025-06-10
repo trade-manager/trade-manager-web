@@ -35,20 +35,19 @@
  */
 package org.trade.ui.persistent;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.trade.core.dao.Aspect;
-import org.trade.core.dao.AspectHome;
+import org.trade.core.dao.AspectRepository;
 import org.trade.core.dao.Aspects;
+import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.Account;
 import org.trade.core.persistent.dao.Contract;
-import org.trade.core.persistent.dao.ContractHome;
 import org.trade.core.persistent.dao.Portfolio;
 import org.trade.core.persistent.dao.PortfolioAccount;
-import org.trade.core.persistent.dao.PortfolioHome;
 import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradePosition;
 import org.trade.core.persistent.dao.Tradestrategy;
-import org.trade.core.persistent.dao.TradestrategyHome;
 import org.trade.core.persistent.dao.Tradingday;
 import org.trade.core.persistent.dao.TradingdayHome;
 import org.trade.core.persistent.dao.series.indicator.StrategyData;
@@ -72,6 +71,18 @@ import java.util.Objects;
  */
 public class TradestrategyBase {
 
+
+    private static AspectRepository aspectRepository;
+
+    private static TradeService tradeService;
+
+    @Autowired
+    public TradestrategyBase(AspectRepository aspectRepository, TradeService tradeService) {
+
+        TradestrategyBase.tradeService = tradeService;
+        TradestrategyBase.aspectRepository = aspectRepository;
+    }
+
     /**
      * Method getTestTradestrategy.
      *
@@ -79,15 +90,11 @@ public class TradestrategyBase {
      */
     public static Tradestrategy getTestTradestrategy(String symbol) throws Exception {
 
-        ContractHome contractHome = new ContractHome();
-        PortfolioHome portfolioHome = new PortfolioHome();
-        TradestrategyHome tradestrategyHome = new TradestrategyHome();
-        AspectHome aspectHome = new AspectHome();
 
         Tradestrategy tradestrategy;
         Strategy strategy = (Strategy) DAOStrategy.newInstance().getObject();
         Portfolio portfolio = (Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
-        portfolio = portfolioHome.findByName(portfolio.getName());
+        portfolio = tradeService.findPortfolioByName(portfolio.getName());
 
         if (portfolio.getPortfolioAccounts().isEmpty()) {
 
@@ -97,29 +104,29 @@ public class TradestrategyBase {
             account.setCashBalance(new BigDecimal(25000));
             PortfolioAccount portfolioAccount = new PortfolioAccount(portfolio, account);
             portfolio.getPortfolioAccounts().add(portfolioAccount);
-            portfolio = aspectHome.persist(portfolio);
+            portfolio = aspectRepository.save(portfolio);
         }
 
         ZonedDateTime open = TradingCalendar
                 .getTradingDayStart(TradingCalendar.getPrevTradingDay(TradingCalendar.getDateTimeNowMarketTimeZone()));
 
-        Contract contract = contractHome.findByUniqueKey(SECType.STOCK, symbol, Exchange.SMART, Currency.USD, null);
+        Contract contract = tradeService.findContractByUniqueKey(SECType.STOCK, symbol, Exchange.SMART, Currency.USD, null);
 
         if (null == contract) {
 
             contract = new Contract(SECType.STOCK, symbol, Exchange.SMART, Currency.USD, null, null);
-            contract = aspectHome.persist(contract);
+            contract = aspectRepository.save(contract);
 
         } else {
 
-            tradestrategy = tradestrategyHome.findTradestrategyByUniqueKeys(open, strategy.getName(),
+            tradestrategy = tradeService.findTradestrategyByUniqueKeys(open, strategy.getName(),
                     contract.getId(), portfolio.getName());
 
             if (null != tradestrategy) {
 
-                Tradestrategy transientInstance = tradestrategyHome.findById(tradestrategy.getId());
+                Tradestrategy transientInstance = tradeService.findTradestrategyById(tradestrategy.getId());
                 transientInstance.setStatus(null);
-                aspectHome.persist(transientInstance);
+                aspectRepository.save(transientInstance);
                 Hashtable<Integer, TradePosition> tradePositions = new Hashtable<>();
 
                 for (TradeOrder tradeOrder : transientInstance.getTradeOrders()) {
@@ -132,13 +139,13 @@ public class TradestrategyBase {
 
                     if (null != tradeOrder.getId()) {
 
-                        aspectHome.remove(tradeOrder);
+                        aspectRepository.delete(tradeOrder);
                     }
                 }
 
                 for (TradePosition tradePosition : tradePositions.values()) {
 
-                    tradePosition = (TradePosition) aspectHome.findById(tradePosition);
+                    tradePosition = (TradePosition) aspectRepository.findById(tradePosition.getId()).get();
                     /*
                      * Remove the open trade position from contract if this is a
                      * tradePosition to be deleted.
@@ -146,9 +153,9 @@ public class TradestrategyBase {
                     if (tradePosition.equals(transientInstance.getContract().getTradePosition())) {
 
                         transientInstance.getContract().setTradePosition(null);
-                        aspectHome.persist(transientInstance.getContract());
+                        aspectRepository.save(transientInstance.getContract());
                     }
-                    aspectHome.remove(tradePosition);
+                    aspectRepository.delete(tradePosition);
                 }
 
                 transientInstance.getTradeOrders().clear();
@@ -169,7 +176,7 @@ public class TradestrategyBase {
                 true, ChartDays.TWO_DAYS, BarSize.FIVE_MIN);
         tradingday.addTradestrategy(tradestrategy);
         tradingdayHome.persist(tradingday);
-        Tradestrategy instance = tradestrategyHome.findById(tradestrategy.getId());
+        Tradestrategy instance = tradeService.findTradestrategyById(tradestrategy.getId());
         instance.setStrategyData(StrategyData.create(instance));
         return instance;
     }
@@ -179,43 +186,40 @@ public class TradestrategyBase {
      */
     public static void clearDBData() throws Exception {
 
-        AspectHome aspectHome = new AspectHome();
-        Aspects contracts = aspectHome.findByClassName(Contract.class.getName());
+        Aspects contracts = aspectRepository.findByClassName(Contract.class.getName());
         for (Aspect aspect : contracts.getAspect()) {
             ((Contract) aspect).setTradePosition(null);
-            aspectHome.persist(aspect);
+            aspectRepository.save(aspect);
         }
 
-        Aspects tradeOrders = aspectHome.findByClassName(TradeOrder.class.getName());
+        Aspects tradeOrders = aspectRepository.findByClassName(TradeOrder.class.getName());
         for (Aspect aspect : tradeOrders.getAspect()) {
-            aspectHome.remove(aspect);
+            aspectRepository.delete(aspect);
         }
 
-        Aspects tradePositions = aspectHome.findByClassName(TradePosition.class.getName());
+        Aspects tradePositions = aspectRepository.findByClassName(TradePosition.class.getName());
         for (Aspect aspect : tradePositions.getAspect()) {
-            aspectHome.remove(aspect);
+            aspectRepository.delete(aspect);
         }
-        Aspects portfolioAccounts = aspectHome.findByClassName(PortfolioAccount.class.getName());
+        Aspects portfolioAccounts = aspectRepository.findByClassName(PortfolioAccount.class.getName());
         for (Aspect aspect : portfolioAccounts.getAspect()) {
-            aspectHome.remove(aspect);
+            aspectRepository.delete(aspect);
         }
-        Aspects accounts = aspectHome.findByClassName(Account.class.getName());
+        Aspects accounts = aspectRepository.findByClassName(Account.class.getName());
         for (Aspect aspect : accounts.getAspect()) {
-            aspectHome.remove(aspect);
+            aspectRepository.delete(aspect);
         }
-        Aspects tradestrategies = aspectHome.findByClassName(Tradestrategy.class.getName());
+        Aspects tradestrategies = aspectRepository.findByClassName(Tradestrategy.class.getName());
         for (Aspect aspect : tradestrategies.getAspect()) {
-            aspectHome.remove(aspect);
+            aspectRepository.delete(aspect);
         }
-        contracts = aspectHome.findByClassName(Contract.class.getName());
+        contracts = aspectRepository.findByClassName(Contract.class.getName());
         for (Aspect aspect : contracts.getAspect()) {
-            aspectHome.remove(aspect);
+            aspectRepository.delete(aspect);
         }
-        Aspects tradingdays = aspectHome.findByClassName(Tradingday.class.getName());
+        Aspects tradingdays = aspectRepository.findByClassName(Tradingday.class.getName());
         for (Aspect aspect : tradingdays.getAspect()) {
-            aspectHome.remove(aspect);
+            aspectRepository.delete(aspect);
         }
     }
-
-
 }

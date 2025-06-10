@@ -38,12 +38,12 @@ package org.trade.core.broker;
 import com.ib.client.ContractDetails;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.trade.core.broker.client.Broker;
 import org.trade.core.broker.client.ClientSocket;
 import org.trade.core.broker.client.IClientWrapper;
 import org.trade.core.broker.client.OrderState;
-import org.trade.core.factory.ClassFactory;
-import org.trade.core.persistent.IPersistentModel;
+import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.Contract;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradeOrderfill;
@@ -77,11 +77,13 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
 
     private final static Logger _log = LoggerFactory.getLogger(BackTestBrokerModel.class);
 
+    @Autowired
+    private TradeService tradeService;
+
     // Use getId as key
     private static final ConcurrentHashMap<Integer, Tradestrategy> m_historyDataRequests = new ConcurrentHashMap<>();
     private static final ConcurrentHashMap<Integer, Contract> m_realTimeBarsRequests = new ConcurrentHashMap<>();
     private static final ConcurrentHashMap<Integer, Contract> m_contractRequests = new ConcurrentHashMap<>();
-    private final IPersistentModel m_tradePersistentModel;
 
     private final ClientSocket m_client;
 
@@ -110,9 +112,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
         try {
 
             m_client = new ClientSocket(this);
-            m_tradePersistentModel = (IPersistentModel) ClassFactory
-                    .getServiceForInterface(IPersistentModel._persistentModel, this);
-            int maxKey = m_tradePersistentModel.findTradeOrderByMaxKey();
+            int maxKey = tradeService.findTradeOrderByMaxKey();
 
             if (maxKey < 100000) {
 
@@ -208,7 +208,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
 
         try {
 
-            int maxKey = m_tradePersistentModel.findTradeOrderByMaxKey();
+            int maxKey = tradeService.findTradeOrderByMaxKey();
 
             if (maxKey < minOrderId) {
                 maxKey = minOrderId;
@@ -624,7 +624,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
                 if (null == tradeOrder.getClientId()) {
                     tradeOrder.setClientId(999);
                 }
-                TradeOrder transientInstance = m_tradePersistentModel.persistTradeOrder(tradeOrder);
+                TradeOrder transientInstance = tradeService.persistTradeOrder(tradeOrder);
                 // Debug logging
                 _log.debug("Order Placed Key: {}", transientInstance.getOrderKey());
                 TWSBrokerModel.logContract(TWSBrokerModel.getIBContract(contract));
@@ -675,7 +675,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
 
             BackTestBrokerModel.logExecution(execution);
 
-            TradeOrder transientInstance = m_tradePersistentModel
+            TradeOrder transientInstance = tradeService
                     .findTradeOrderByKey(execution.getTradeOrder().getOrderKey());
 
             if (null == transientInstance) {
@@ -700,7 +700,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
             transientInstance.setFilledQuantity(tradeOrderfill.getCumulativeQuantity());
             transientInstance.setFilledDate(tradeOrderfill.getTime());
             boolean isFilled = transientInstance.getIsFilled();
-            TradeOrder updatedOrder = m_tradePersistentModel.persistTradeOrderfill(transientInstance);
+            TradeOrder updatedOrder = tradeService.persistTradeOrderfill(transientInstance);
 
             // Let the controller know an order was filled
             if (updatedOrder.getIsFilled() && !isFilled)
@@ -735,7 +735,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
 
         try {
 
-            TradeOrder transientInstance = m_tradePersistentModel.findTradeOrderByKey(tradeOrder.getOrderKey());
+            TradeOrder transientInstance = tradeService.findTradeOrderByKey(tradeOrder.getOrderKey());
             if (null == transientInstance) {
                 error(orderId, 3170, "Warning Order not found for Order Key: " + orderId + " make sure Client ID: " + 0
                         + " is not the master in TWS. On openOrder update.");
@@ -755,7 +755,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
                     BackTestBrokerModel.logOrderState(orderState);
                     BackTestBrokerModel.logTradeOrder(tradeOrder);
 
-                    TradeOrder updatedOrder = m_tradePersistentModel.persistTradeOrder(transientInstance);
+                    TradeOrder updatedOrder = tradeService.persistTradeOrder(transientInstance);
 
                     if (updatedOrder.hasTradePosition() && !updatedOrder.getTradePosition().isOpen()) {
                         // Let the controller know a position was closed
@@ -765,7 +765,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
                     _log.debug("Order key: {} state changed. Status:{}", transientInstance.getOrderKey(), orderState.m_status);
                     BackTestBrokerModel.logOrderState(orderState);
                     BackTestBrokerModel.logTradeOrder(tradeOrder);
-                    TradeOrder updatedOrder = m_tradePersistentModel.persistTradeOrder(transientInstance);
+                    TradeOrder updatedOrder = tradeService.persistTradeOrder(transientInstance);
                     if (OrderStatus.CANCELLED.equals(updatedOrder.getStatus())) {
                         // Let the controller know a position was closed
                         this.fireTradeOrderCancelled(updatedOrder);
@@ -802,7 +802,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
 
         try {
 
-            TradeOrder transientInstance = m_tradePersistentModel.findTradeOrderByKey(orderId);
+            TradeOrder transientInstance = tradeService.findTradeOrderByKey(orderId);
 
             if (null == transientInstance) {
                 error(orderId, 3170, "Warning Order not found for Order Key: " + orderId + " make sure Client ID: " + 0
@@ -849,7 +849,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
                         lastFillPrice, clientId, whyHeld);
 
                 boolean isFilled = transientInstance.getIsFilled();
-                TradeOrder updatedOrder = m_tradePersistentModel.persistTradeOrder(transientInstance);
+                TradeOrder updatedOrder = tradeService.persistTradeOrder(transientInstance);
 
                 if (OrderStatus.CANCELLED.equals(updatedOrder.getStatus())) {
 
@@ -986,7 +986,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
 
                 if (BackTestBrokerModel.populateContract(contractDetails, contract)) {
 
-                    m_tradePersistentModel.persistContract(contract);
+                    tradeService.persistContract(contract);
                     synchronized (m_contractRequests) {
                         m_contractRequests.remove(reqId);
                     }
@@ -1104,7 +1104,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
                 Tradestrategy tradestrategy = m_historyDataRequests.get(reqId);
 
                 CandleSeries candleSeries = tradestrategy.getStrategyData().getBaseCandleSeries();
-                m_tradePersistentModel.persistCandleSeries(candleSeries);
+                tradeService.persistCandleSeries(candleSeries);
 
                 _log.debug("HistoricalData complete Req Id: {}, Symbol: {}, Tradingday: {}, candles to saved: {}, Contract Tradestrategies size:: {}", reqId, tradestrategy.getContract().getSymbol(), tradestrategy.getTradingday().getOpen(), candleSeries.getItemCount(), tradestrategy.getContract().getTradestrategies().size());
 

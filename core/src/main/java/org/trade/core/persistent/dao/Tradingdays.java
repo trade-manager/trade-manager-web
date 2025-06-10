@@ -37,7 +37,7 @@ package org.trade.core.persistent.dao;
 
 import org.trade.core.dao.Aspect;
 import org.trade.core.lookup.DBTableLookupServiceProvider;
-import org.trade.core.persistent.PersistentModelException;
+import org.trade.core.persistent.ServiceException;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.BarSize;
@@ -87,7 +87,7 @@ public class Tradingdays extends Aspect implements java.io.Serializable {
      * @param idTradingdays Integer
      */
     public Tradingdays(Integer idTradingdays) {
-        this.id = idTradingdays;
+        setId(idTradingdays);
     }
 
     /**
@@ -97,7 +97,7 @@ public class Tradingdays extends Aspect implements java.io.Serializable {
      * @param tradingdays   List<Tradingday>
      */
     public Tradingdays(Integer idTradingdays, List<Tradingday> tradingdays) {
-        this.id = idTradingdays;
+        setId(idTradingdays);
         this.tradingdays.addAll(tradingdays);
     }
 
@@ -107,7 +107,7 @@ public class Tradingdays extends Aspect implements java.io.Serializable {
      * @return Integer
      */
     public Integer getIdTradingdays() {
-        return this.id;
+        return this.getId();
     }
 
     /**
@@ -116,7 +116,7 @@ public class Tradingdays extends Aspect implements java.io.Serializable {
      * @param idTradingdays Integer
      */
     public void setIdTradingdays(Integer idTradingdays) {
-        this.id = idTradingdays;
+        this.setId(idTradingdays);
     }
 
     /**
@@ -430,7 +430,7 @@ public class Tradingdays extends Aspect implements java.io.Serializable {
 
                         if (null == tradingday) {
 
-                            throw new PersistentModelException("Please select a Tradingday");
+                            throw new ServiceException("Please select a Tradingday");
                         }
                         tradestrategy.setTradingday(tradingday);
                     } else {
@@ -489,7 +489,7 @@ public class Tradingdays extends Aspect implements java.io.Serializable {
             }
 
         } catch (Exception ex) {
-            throw new PersistentModelException(1, 200, ex.getMessage());
+            throw new ServiceException(1, 200, ex.getMessage());
         }
     }
 
@@ -499,7 +499,7 @@ public class Tradingdays extends Aspect implements java.io.Serializable {
      * @param csvLine String
      * @return Tradestrategy
      */
-    public static Tradestrategy parseContractLine(String csvLine) throws PersistentModelException {
+    public static Tradestrategy parseContractLine(String csvLine) throws ServiceException {
         Tradestrategy tradestrategy = null;
         Contract contract = null;
         Tradingday tradingday = null;
@@ -524,7 +524,7 @@ public class Tradingdays extends Aspect implements java.io.Serializable {
                         contract.setCurrency(Currency.USD);
                         tradestrategy.setContract(contract);
                     } else {
-                        throw new PersistentModelException(1, 200,
+                        throw new ServiceException(1, 200,
                                 "Incorrect file format! CSV file format is: DES, Underlying, Sec Type, Exchange, Expiration (yyyyMM, or yyyyMMdd opt),Strike Price(opt),PUT/CALL(opt),Multiplier(opt),BOT/SLD(opt)|DATE(MM/dd/yyyy) (opt)| Tier(Opt)| Mkt Bias(opt)| Mkt Bar(opt)| Mkt Gap(opt)");
                     }
                     break;

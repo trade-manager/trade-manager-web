@@ -62,11 +62,11 @@ public class TradelogReport extends Aspect implements java.io.Serializable {
      * Constructor for TradelogReport.
      *
      * @param idTradelogDetail Integer
-     */
-    public TradelogReport(Integer idTradelogDetail) {
-        this.id = idTradelogDetail;
-    }
 
+    public TradelogReport(Integer idTradelogDetail) {
+    this.id = idTradelogDetail;
+    }
+     */
     /**
      * Constructor for TradelogReport.
      *
@@ -74,7 +74,7 @@ public class TradelogReport extends Aspect implements java.io.Serializable {
      * @param tradelogDetail   List<TradelogDetail>
      */
     public TradelogReport(Integer idTradelogDetail, List<TradelogDetail> tradelogDetail) {
-        this.id = idTradelogDetail;
+        this.setId(idTradelogDetail);
         this.tradelogDetail = tradelogDetail;
 
     }
@@ -85,7 +85,7 @@ public class TradelogReport extends Aspect implements java.io.Serializable {
      * @return Integer
      */
     public Integer getIdTradingdays() {
-        return this.id;
+        return this.getId();
     }
 
     /**
@@ -94,7 +94,7 @@ public class TradelogReport extends Aspect implements java.io.Serializable {
      * @param idTradelogDetail Integer
      */
     public void setIdTradingdays(Integer idTradelogDetail) {
-        this.id = idTradelogDetail;
+        this.setId(idTradelogDetail);
     }
 
     /**

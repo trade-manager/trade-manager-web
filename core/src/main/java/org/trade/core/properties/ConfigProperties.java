@@ -292,6 +292,7 @@ public class ConfigProperties {
         ret = m_properties.getProperty(key);
 
         if (null == ret) {
+
             throw new PropertyNotFoundException("The property \"" + key + "\" was not found in the property file \""
                     + getDeploymentPropertyFileName() + "\". \n Check the file is in the applications root dir.");
         }

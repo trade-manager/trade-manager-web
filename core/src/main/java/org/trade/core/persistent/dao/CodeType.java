@@ -42,22 +42,16 @@ import jakarta.persistence.DiscriminatorType;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
-import jakarta.persistence.Version;
-import jakarta.validation.constraints.NotNull;
 import org.trade.core.dao.Aspect;
 
 import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
-
-import static jakarta.persistence.GenerationType.IDENTITY;
 
 
 /**
@@ -73,11 +67,16 @@ public class CodeType extends Aspect implements java.io.Serializable {
     @Serial
     private static final long serialVersionUID = 2273276207080568947L;
 
-    @NotNull
+    @Column(name = "name", nullable = false, length = 45)
     private String name;
-    @NotNull
+
+    @Column(name = "type", length = 45, insertable = false, updatable = false, unique = true, nullable = false)
     private String type;
+
+    @Column(name = "description", nullable = false, length = 100)
     private String description;
+
+    @OneToMany(mappedBy = "codeType", fetch = FetchType.EAGER, orphanRemoval = true, cascade = {CascadeType.ALL})
     private List<CodeAttribute> codeAttributes = new ArrayList<>(0);
 
     public static final String IndicatorParameters = "IndicatorParameters";
@@ -106,21 +105,10 @@ public class CodeType extends Aspect implements java.io.Serializable {
      * @param description String
      */
     public CodeType(String name, String type, String description) {
+
         this.name = name;
         this.type = type;
         this.description = description;
-    }
-
-    /**
-     * Method getId.
-     *
-     * @return Integer
-     */
-    @Id
-    @GeneratedValue(strategy = IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
-    public Integer getId() {
-        return this.id;
     }
 
     /**
@@ -128,7 +116,6 @@ public class CodeType extends Aspect implements java.io.Serializable {
      *
      * @return String
      */
-    @Column(name = "name", nullable = false, length = 45)
     public String getName() {
         return this.name;
     }
@@ -147,7 +134,6 @@ public class CodeType extends Aspect implements java.io.Serializable {
      *
      * @return String
      */
-    @Column(name = "type", length = 45, insertable = false, updatable = false, unique = true, nullable = false)
     public String getType() {
         return this.type;
     }
@@ -166,7 +152,6 @@ public class CodeType extends Aspect implements java.io.Serializable {
      *
      * @return String
      */
-    @Column(name = "description", nullable = false, length = 100)
     public String getDescription() {
         return this.description;
     }
@@ -181,22 +166,10 @@ public class CodeType extends Aspect implements java.io.Serializable {
     }
 
     /**
-     * Method getVersion.
-     *
-     * @return Integer
-     */
-    @Version
-    @Column(name = "version")
-    public Integer getVersion() {
-        return this.version;
-    }
-
-    /**
      * Method getCodeAttribute.
      *
      * @return List<CodeAttribute>
      */
-    @OneToMany(mappedBy = "codeType", fetch = FetchType.EAGER, orphanRemoval = true, cascade = {CascadeType.ALL})
     public List<CodeAttribute> getCodeAttribute() {
         return this.codeAttributes;
     }
@@ -217,9 +190,12 @@ public class CodeType extends Aspect implements java.io.Serializable {
      */
     @Transient
     public boolean isDirty() {
+
         for (CodeAttribute item : this.getCodeAttribute()) {
-            if (item.isDirty())
+
+            if (item.isDirty()) {
                 return true;
+            }
         }
         return super.isDirty();
     }

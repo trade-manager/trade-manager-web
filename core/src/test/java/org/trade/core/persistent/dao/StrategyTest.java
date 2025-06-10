@@ -40,9 +40,13 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.trade.core.dao.AspectHome;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.trade.core.dao.AspectRepository;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -52,9 +56,14 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class StrategyTest {
 
     private final static Logger _log = LoggerFactory.getLogger(StrategyTest.class);
+
+    @Autowired
+    private AspectRepository aspectRepository;
 
     /**
      * Method setUpBeforeClass.
@@ -90,16 +99,15 @@ public class StrategyTest {
         // Create new instance of Strategy and set
         // values in it by reading them from form object
         _log.debug("Adding Strategy");
-        AspectHome aspectHome = new AspectHome();
         StrategyHome strategyHome = new StrategyHome();
         String name = "TestStrategy";
         Strategy transientInstance = strategyHome.findByName(name);
         if (null == transientInstance) {
             transientInstance = new Strategy(name);
         }
-        transientInstance = aspectHome.persist(transientInstance);
+        transientInstance = aspectRepository.save(transientInstance);
         _log.info("Strategy added Id = {}", transientInstance.getId());
         assertNotNull(transientInstance.getId());
-        aspectHome.remove(transientInstance);
+        aspectRepository.delete(transientInstance);
     }
 }

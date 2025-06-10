@@ -44,8 +44,8 @@ import org.trade.base.Table;
 import org.trade.base.TextDialog;
 import org.trade.base.Tree;
 import org.trade.core.dao.Aspects;
-import org.trade.core.persistent.IPersistentModel;
-import org.trade.core.persistent.PersistentModelException;
+import org.trade.core.persistent.ServiceException;
+import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.Candle;
 import org.trade.core.persistent.dao.Contract;
 import org.trade.core.persistent.dao.Portfolio;
@@ -115,7 +115,7 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
     private static final long serialVersionUID = 4026209743607182423L;
 
     private Tradingdays m_tradingdays = null;
-    private IPersistentModel m_tradePersistentModel = null;
+    private TradeService tradeService;
     private final JTabbedPane m_jTabbedPaneContract = new JTabbedPane();
     private TradingdayTreeModel m_treeModel = null;
     private Tree m_tree = null;
@@ -148,18 +148,18 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
     /**
      * Constructor for ContractPanel.
      *
-     * @param tradingdays          Tradingdays
-     * @param controller           TabbedAppPanel
-     * @param tradePersistentModel IPersistentModel
+     * @param tradingdays  Tradingdays
+     * @param controller   TabbedAppPanel
+     * @param tradeService TradeService
      */
 
-    public ContractPanel(Tradingdays tradingdays, TabbedAppPanel controller, IPersistentModel tradePersistentModel) {
+    public ContractPanel(Tradingdays tradingdays, TabbedAppPanel controller, TradeService tradeService) {
 
         try {
             if (null != getMenu())
                 getMenu().addMessageListener(this);
             this.setLayout(new BorderLayout());
-            m_tradePersistentModel = tradePersistentModel;
+            tradeService = tradeService;
             m_tradingdays = tradingdays;
 
             currencyFormater.setMinimumFractionDigits(2);
@@ -506,7 +506,7 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
                 }
                 m_jTabbedPaneContract.setSelectedIndex(currentTabIndex);
             }
-        } catch (PersistentModelException ex) {
+        } catch (ServiceException ex) {
             setErrorMessage("Error refreshing Tradestrategy.", ex.getMessage(), ex);
         } catch (Exception ex) {
             setErrorMessage("Error enabling chart.", ex.getMessage(), ex);
@@ -570,7 +570,7 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
                     if (newPeriod.compareTo(currentTab.getTradestrategy().getBarSize()) > -1) {
                         try {
                             currentTab.getTradestrategy().getStrategyData().changeCandleSeriesPeriod(newPeriod);
-                        } catch (PersistentModelException ex) {
+                        } catch (ServiceException ex) {
                             throw new RuntimeException(ex);
                         }
                         this.clearStatusBarMessage();
@@ -597,7 +597,7 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
      * @param tradestrategy Tradestrategy
      * @return ChartPanel
      */
-    private ChartPanel createChartPanel(Tradestrategy tradestrategy) throws PersistentModelException {
+    private ChartPanel createChartPanel(Tradestrategy tradestrategy) throws ServiceException {
 
         ZonedDateTime startDate;
         ZonedDateTime endDate;
@@ -625,7 +625,7 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
             startDate = endDate.minusDays((tradestrategy.getChartDays() - 1));
             startDate = TradingCalendar.getPrevTradingDay(startDate);
             startDate = TradingCalendar.getDateAtTime(startDate, tradestrategy.getTradingday().getOpen());
-            List<Candle> candles = m_tradePersistentModel.findCandlesByContractDateRangeBarSize(
+            List<Candle> candles = tradeService.findCandlesByContractDateRangeBarSize(
                     tradestrategy.getContract().getId(), startDate, endDate, tradestrategy.getBarSize());
 
             if (candles.isEmpty()) {
@@ -657,7 +657,7 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
      * @param endDate       Date
      */
     private void populateIndicatorCandleSeries(Tradestrategy tradestrategy, ZonedDateTime startDate,
-                                               ZonedDateTime endDate) throws PersistentModelException {
+                                               ZonedDateTime endDate) throws ServiceException {
 
         org.trade.core.persistent.dao.series.indicator.CandleDataset candleDataset = (org.trade.core.persistent.dao.series.indicator.CandleDataset) tradestrategy.getStrategyData()
                 .getIndicatorByType(org.trade.core.persistent.dao.series.indicator.IndicatorSeries.CandleSeries);
@@ -668,7 +668,7 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
 
                 org.trade.core.persistent.dao.series.indicator.CandleSeries series = candleDataset.getSeries(seriesIndex);
 
-                Contract contract = m_tradePersistentModel.findContractByUniqueKey(series.getSecType(),
+                Contract contract = tradeService.findContractByUniqueKey(series.getSecType(),
                         series.getSymbol(), series.getExchange(), series.getCurrency(), null);
                 if (null != contract) {
                     Tradestrategy childTradestrategy = new Tradestrategy(contract, tradestrategy.getTradingday(),
@@ -676,7 +676,7 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
                             tradestrategy.getChartDays(), tradestrategy.getBarSize());
                     childTradestrategy.setDirty(false);
 
-                    List<Candle> indicatorCandles = m_tradePersistentModel.findCandlesByContractDateRangeBarSize(
+                    List<Candle> indicatorCandles = tradeService.findCandlesByContractDateRangeBarSize(
                             childTradestrategy.getContract().getId(), startDate, endDate,
                             childTradestrategy.getBarSize());
                     if (indicatorCandles.isEmpty()) {
@@ -715,7 +715,7 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
      * @param endDate        Date
      */
     private void populateIndicatorCandleSeries(Tradestrategy tradestrategy, StrategyDataUI strategyDataUI, ZonedDateTime startDate,
-                                               ZonedDateTime endDate) throws PersistentModelException {
+                                               ZonedDateTime endDate) throws ServiceException {
 
         CandleDataset candleDatasetUI = (CandleDataset) strategyDataUI
                 .getIndicatorByType(IndicatorSeries.CandleSeries);
@@ -726,7 +726,7 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
 
                 CandleSeries series = candleDatasetUI.getSeries(seriesIndex);
 
-                Contract contract = m_tradePersistentModel.findContractByUniqueKey(series.getSecType(),
+                Contract contract = tradeService.findContractByUniqueKey(series.getSecType(),
                         series.getSymbol(), series.getExchange(), series.getCurrency(), null);
 
                 if (null != contract) {
@@ -736,7 +736,7 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
                             tradestrategy.getChartDays(), tradestrategy.getBarSize());
                     childTradestrategy.setDirty(false);
 
-                    List<Candle> indicatorCandles = m_tradePersistentModel.findCandlesByContractDateRangeBarSize(
+                    List<Candle> indicatorCandles = tradeService.findCandlesByContractDateRangeBarSize(
                             childTradestrategy.getContract().getId(), startDate, endDate,
                             childTradestrategy.getBarSize());
 
@@ -860,8 +860,8 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
                 /*
                  * Refresh the Tradestrategy this will get the latest orders.
                  */
-                tradestrategy = m_tradePersistentModel.findTradestrategyById(currentTab.getTradestrategy());
-                tradestrategyOrders = m_tradePersistentModel
+                tradestrategy = tradeService.findTradestrategyById(currentTab.getTradestrategy());
+                tradestrategyOrders = tradeService
                         .findPositionOrdersByTradestrategyId(currentTab.getTradestrategy().getId());
                 currentTab.setTradestrategy(tradestrategy);
                 m_tradeOrderModel.setData(tradestrategy);
@@ -933,7 +933,7 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
                     prevTradeOrder = order;
                 }
                 if (null != prevIdTradePosition) {
-                    TradePosition tradePosition = m_tradePersistentModel.findTradePositionById(prevIdTradePosition);
+                    TradePosition tradePosition = tradeService.findTradePositionById(prevIdTradePosition);
 
                     unRealizedPL = tradePosition
                             .getUnRealizedProfit(

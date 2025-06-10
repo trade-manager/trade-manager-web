@@ -158,7 +158,7 @@ public class TradelogDetail extends Aspect implements java.io.Serializable {
      *
      * @return Integer
      */
-    @Column(name = "id_tradestrategy")
+    @Column(name = "tradestrategy_id")
     public Integer getIdTradestrategy() {
         return this.idTradestrategy;
     }

@@ -53,11 +53,16 @@ public class AppMain {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         double appWidth = screenSize.getWidth() * 0.9;
         double appHieght = screenSize.getHeight() * 0.9;
-        if (appHieght > 900)
-            appHieght = 900;
 
-        if (appWidth > 1200)
+        if (appHieght > 900) {
+
+            appHieght = 900;
+        }
+
+        if (appWidth > 1200) {
+
             appWidth = 1200;
+        }
         AppFrame frame = new AppFrame();
         frame.setIconImage(ImageBuilder.getImage("trade.gif"));
         frame.setSize((int) appWidth, (int) appHieght);

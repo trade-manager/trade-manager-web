@@ -83,7 +83,7 @@ public class TradingdayHome {
                 if (null == tradingday) {
                     entityManager.persist(detachedInstance);
                 } else {
-                    detachedInstance.setId(tradingday.getId());
+                    // detachedInstance.setId(tradingday.getId());
                     detachedInstance.setVersion(tradingday.getVersion());
                     tradingday = entityManager.merge(detachedInstance);
                 }

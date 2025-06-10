@@ -37,8 +37,6 @@ package org.trade.core.persistent.dao;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
 import org.trade.core.dao.Aspect;
@@ -46,8 +44,6 @@ import org.trade.core.dao.Aspect;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
-
-import static jakarta.persistence.GenerationType.IDENTITY;
 
 
 /**
@@ -78,20 +74,8 @@ public class TradestrategyLite extends Aspect implements Serializable {
      */
 
     public TradestrategyLite(Integer id, Integer version) {
-        this.id = id;
+        setId(id);
         this.version = version;
-    }
-
-    /**
-     * Method getId.
-     *
-     * @return Integer
-     */
-    @Id
-    @GeneratedValue(strategy = IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
-    public Integer getId() {
-        return this.id;
     }
 
     /**

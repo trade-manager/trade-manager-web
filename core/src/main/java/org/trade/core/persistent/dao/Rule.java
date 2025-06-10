@@ -40,14 +40,11 @@ package org.trade.core.persistent.dao;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
-import jakarta.validation.constraints.NotNull;
 import org.trade.core.dao.Aspect;
 import org.trade.core.util.CoreUtils;
 import org.trade.core.util.time.TradingCalendar;
@@ -55,8 +52,6 @@ import org.trade.core.util.time.TradingCalendar;
 import java.io.Serial;
 import java.time.ZonedDateTime;
 import java.util.Comparator;
-
-import static jakarta.persistence.GenerationType.IDENTITY;
 
 
 /**
@@ -74,15 +69,28 @@ public class Rule extends Aspect implements java.io.Serializable {
      */
     @Serial
     private static final long serialVersionUID = 2273276207080568947L;
-    private Strategy strategy;
+
+    @Column(name = "comment", nullable = false, length = 200)
     private String comment;
-    @NotNull
+
+    @Column(name = "create_date", nullable = false)
     private ZonedDateTime createDate;
+
+    @Column(name = "last_update_date", nullable = false)
     private ZonedDateTime lastUpdateDate;
+
+    @Lob
+    @Column(name = "rule")
     private byte[] rule;
+
     private boolean dirty = false;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "strategy_id", nullable = false)
+    private Strategy strategy;
+
     public Rule() {
+
         this.createDate = TradingCalendar.getDateTimeNowMarketTimeZone();
         this.lastUpdateDate = this.createDate;
     }
@@ -98,6 +106,7 @@ public class Rule extends Aspect implements java.io.Serializable {
      */
     public Rule(Strategy strategy, Integer version, String comment, ZonedDateTime createDate,
                 ZonedDateTime lastUpdateDate) {
+
         this.strategy = strategy;
         this.version = version;
         this.comment = comment;
@@ -117,6 +126,7 @@ public class Rule extends Aspect implements java.io.Serializable {
      */
     public Rule(Strategy strategy, Integer version, String comment, ZonedDateTime createDate, byte[] rule,
                 ZonedDateTime lastUpdateDate) {
+
         this.strategy = strategy;
         this.version = version;
         this.comment = comment;
@@ -126,24 +136,10 @@ public class Rule extends Aspect implements java.io.Serializable {
     }
 
     /**
-     * Method getId.
-     *
-     * @return Integer
-     */
-    @Id
-    @GeneratedValue(strategy = IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
-    public Integer getId() {
-        return this.id;
-    }
-
-    /**
      * Method getStrategy.
      *
      * @return Strategy
      */
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_strategy", nullable = false)
     public Strategy getStrategy() {
         return this.strategy;
     }
@@ -162,7 +158,6 @@ public class Rule extends Aspect implements java.io.Serializable {
      *
      * @return String
      */
-    @Column(name = "comment", nullable = false, length = 200)
     public String getComment() {
         return this.comment;
     }
@@ -181,7 +176,6 @@ public class Rule extends Aspect implements java.io.Serializable {
      *
      * @return ZonedDateTime
      */
-    @Column(name = "create_date", nullable = false)
     public ZonedDateTime getCreateDate() {
         return this.createDate;
     }
@@ -201,7 +195,6 @@ public class Rule extends Aspect implements java.io.Serializable {
      * @return ZonedDateTime
      */
 
-    @Column(name = "last_update_date", nullable = false)
     public ZonedDateTime getLastUpdateDate() {
         return this.lastUpdateDate;
     }
@@ -220,8 +213,6 @@ public class Rule extends Aspect implements java.io.Serializable {
      *
      * @return byte[]
      */
-    @Lob
-    @Column(name = "rule")
     public byte[] getRule() {
         return this.rule;
     }
@@ -233,16 +224,6 @@ public class Rule extends Aspect implements java.io.Serializable {
      */
     public void setRule(byte[] rule) {
         this.rule = rule;
-    }
-
-    /**
-     * Method getVersion.
-     *
-     * @return Integer
-     */
-    @Column(name = "version", nullable = false)
-    public Integer getVersion() {
-        return this.version;
     }
 
     /**

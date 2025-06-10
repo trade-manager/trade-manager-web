@@ -3,7 +3,7 @@
 
 USE tradeprod;
 
-UPDATE contract SET id_trade_position = NULL WHERE id > 0;
+UPDATE contract SET trade_position_id = NULL WHERE id > 0;
 COMMIT;
 DELETE FROM tradeorderfill WHERE id >= '0';
 COMMIT;

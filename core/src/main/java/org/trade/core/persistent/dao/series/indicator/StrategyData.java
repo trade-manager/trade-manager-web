@@ -38,7 +38,7 @@ package org.trade.core.persistent.dao.series.indicator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trade.core.factory.ClassFactory;
-import org.trade.core.persistent.PersistentModelException;
+import org.trade.core.persistent.ServiceException;
 import org.trade.core.persistent.dao.Candle;
 import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.Tradestrategy;
@@ -85,7 +85,7 @@ public class StrategyData extends Worker {
      * @param strategy          Strategy
      * @param baseCandleDataset CandleDataset
      */
-    public StrategyData(Strategy strategy, CandleDataset baseCandleDataset) throws PersistentModelException {
+    public StrategyData(Strategy strategy, CandleDataset baseCandleDataset) throws ServiceException {
 
         this.baseCandleDataset = baseCandleDataset;
         candleDataset = new CandleDataset();
@@ -219,7 +219,7 @@ public class StrategyData extends Worker {
      *
      * @param newPeriod int
      */
-    public void changeCandleSeriesPeriod(int newPeriod) throws PersistentModelException {
+    public void changeCandleSeriesPeriod(int newPeriod) throws ServiceException {
         /*
          * Clear down the dependent data sets and re populate from the base
          * candle series.
@@ -257,7 +257,7 @@ public class StrategyData extends Worker {
      * @return boolean
      */
     public boolean buildCandle(ZonedDateTime time, double open, double high, double low, double close, long volume,
-                               double vwap, int tradeCount, int rollupInterval, ZonedDateTime lastUpdateDate) throws PersistentModelException {
+                               double vwap, int tradeCount, int rollupInterval, ZonedDateTime lastUpdateDate) throws ServiceException {
 
         boolean newBar = this.getBaseCandleSeries().buildCandle(time, open, high, low, close, volume, vwap, tradeCount,
                 rollupInterval, lastUpdateDate);
@@ -307,7 +307,7 @@ public class StrategyData extends Worker {
      * @param source CandleDataset
      * @param newBar boolean
      */
-    private void updateIndicators(CandleDataset source, boolean newBar) throws PersistentModelException {
+    private void updateIndicators(CandleDataset source, boolean newBar) throws ServiceException {
 
         for (IIndicatorDataset indicator : indicators) {
             /*
@@ -326,7 +326,7 @@ public class StrategyData extends Worker {
      *
      * @param source CandleDataset
      */
-    public void createIndicators(CandleDataset source) throws PersistentModelException {
+    public void createIndicators(CandleDataset source) throws ServiceException {
 
         for (IIndicatorDataset indicator : indicators) {
 
@@ -450,7 +450,7 @@ public class StrategyData extends Worker {
      * @param tradestrategy Tradestrategy
      * @return StrategyData
      */
-    public static StrategyData create(final Tradestrategy tradestrategy) throws PersistentModelException {
+    public static StrategyData create(final Tradestrategy tradestrategy) throws ServiceException {
 
         CandleDataset candleDataset = new CandleDataset();
         CandleSeries candleSeries = new CandleSeries(tradestrategy.getContract().getSymbol(),
@@ -471,7 +471,7 @@ public class StrategyData extends Worker {
      * @param milliSecondsDeplay int
      */
     public static void doDummyData(CandleSeries series, Tradingday start, int noDays, int barSize, boolean longTrade,
-                                   int milliSecondsDeplay) throws PersistentModelException {
+                                   int milliSecondsDeplay) throws ServiceException {
 
         double high = 33.98;
         double low = 33.84;

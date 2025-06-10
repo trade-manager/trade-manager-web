@@ -39,6 +39,16 @@
                     <mainClass>org.trade.ui.TradeAppMain</mainClass>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <systemPropertyVariables>
+                        <user.timezone>America/New_York</user.timezone>
+                        <trade.config>file:../config.properties</trade.config>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>

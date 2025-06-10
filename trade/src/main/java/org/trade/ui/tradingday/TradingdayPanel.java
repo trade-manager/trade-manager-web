@@ -40,8 +40,8 @@ import org.trade.base.BasePanel;
 import org.trade.base.BaseUIPropertyCodes;
 import org.trade.base.Table;
 import org.trade.base.UIPropertyCodes;
-import org.trade.core.persistent.IPersistentModel;
-import org.trade.core.persistent.PersistentModelException;
+import org.trade.core.persistent.ServiceException;
+import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.CodeType;
 import org.trade.core.persistent.dao.Portfolio;
 import org.trade.core.persistent.dao.PortfolioAccount;
@@ -95,7 +95,7 @@ public class TradingdayPanel extends BasePanel {
     @Serial
     private static final long serialVersionUID = 8543984162821384818L;
 
-    private IPersistentModel m_tradePersistentModel = null;
+    private TradeService tradeService;
     private TradingdayTableModel m_tradingdayModel = null;
     private Table m_tradestrategyTable = null;
     private TradestrategyTableModel m_tradestrategyModel = null;
@@ -136,12 +136,12 @@ public class TradingdayPanel extends BasePanel {
     /**
      * Constructor
      *
-     * @param tradingdays          Tradingdays
-     * @param controller           BasePanel
-     * @param tradePersistentModel IPersistentModel
+     * @param tradingdays  Tradingdays
+     * @param controller   BasePanel
+     * @param tradeService TradeService
      */
 
-    public TradingdayPanel(Tradingdays tradingdays, BasePanel controller, IPersistentModel tradePersistentModel) {
+    public TradingdayPanel(Tradingdays tradingdays, BasePanel controller, TradeService tradeService) {
         try {
             if (null != getMenu()) {
                 getMenu().addMessageListener(this);
@@ -149,7 +149,7 @@ public class TradingdayPanel extends BasePanel {
             this.setLayout(new BorderLayout());
 
             m_tradingdays = tradingdays;
-            m_tradePersistentModel = tradePersistentModel;
+            this.tradeService = tradeService;
             m_defaultDir = ConfigProperties.getPropAsString("trade.csv.default.dir");
             currencyFormater.setMinimumFractionDigits(2);
 
@@ -286,7 +286,7 @@ public class TradingdayPanel extends BasePanel {
             jSplitPane1.setOneTouchExpandable(true);
             this.add(jSplitPane1);
             DAOPortfolio code = DAOPortfolio.newInstance();
-            Portfolio portfolio = tradePersistentModel.findPortfolioByName(((Portfolio) Objects.requireNonNull(code).getObject()).getName());
+            Portfolio portfolio = tradeService.findPortfolioByName(((Portfolio) Objects.requireNonNull(code).getObject()).getName());
             this.setPortfolioLabel(portfolio);
             enableTradestrategyButtons(null);
         } catch (Exception ex) {
@@ -415,20 +415,20 @@ public class TradingdayPanel extends BasePanel {
 
                             String msg = "Tradingday Open " + tradingday.getOpen()
                                     + " cannot be after trading day close " + tradingday.getClose();
-                            setErrorMessage("Error Tradingday", msg, new PersistentModelException(msg));
+                            setErrorMessage("Error Tradingday", msg, new ServiceException(msg));
                         }
 
                         if (tradingday.isDirty()) {
 
                             dirty = true;
-                            m_tradePersistentModel.persistTradingday(tradingday);
+                            tradeService.persistTradingday(tradingday);
                         }
                     }
                     if (dirty)
                         doRefresh();
                     clearStatusBarMessage();
                     getFrame().setCursor(Cursor.getDefaultCursor());
-                } catch (PersistentModelException ex) {
+                } catch (ServiceException ex) {
                     setErrorMessage("Error saving Trade Strategies.", ex.getMessage(), ex);
                 }
             });
@@ -470,7 +470,7 @@ public class TradingdayPanel extends BasePanel {
              * search hand over the DatasetContainers. We do this as these
              * Datasets may have live data running into them.
              */
-            Tradingdays tradingdays = m_tradePersistentModel.findTradingdaysByDateRange(startDate, endDate);
+            Tradingdays tradingdays = tradeService.findTradingdaysByDateRange(startDate, endDate);
             Tradingday todayTradingday = tradingdays.getTradingday(
                     TradingCalendar.getTradingDayStart(TradingCalendar.getDateTimeNowMarketTimeZone()),
                     TradingCalendar.getTradingDayEnd(TradingCalendar.getDateTimeNowMarketTimeZone()));
@@ -564,7 +564,7 @@ public class TradingdayPanel extends BasePanel {
                         .getObject());
 
                 final ReAssignProgressMonitor reAssignProgressMonitor = new ReAssignProgressMonitor(
-                        m_tradePersistentModel, m_tradingdays, fromStrategy, toStrategy);
+                        tradeService, m_tradingdays, fromStrategy, toStrategy);
                 reAssignProgressMonitor.addPropertyChangeListener(evt -> {
                     if ("progress".equals(evt.getPropertyName())) {
                         int progress = (Integer) evt.getNewValue();
@@ -589,7 +589,7 @@ public class TradingdayPanel extends BasePanel {
             this.clearStatusBarMessage();
             Tradingday currentTradingday = m_tradingdays.getTradingday(tradingday.getOpen(), tradingday.getClose());
             if (null != currentTradingday && null != currentTradingday.getId()) {
-                Tradingday instance = m_tradePersistentModel.findTradingdayById(currentTradingday.getId());
+                Tradingday instance = tradeService.findTradingdayById(currentTradingday.getId());
                 instance.populateStrategyData(currentTradingday);
                 m_tradingdays.replaceTradingday(instance);
             }
@@ -997,7 +997,7 @@ public class TradingdayPanel extends BasePanel {
         this.killAllStrategyWorker();
 
         this.setStatusBarMessage("Delete in progress ...\n", BasePanel.INFORMATION);
-        deleteProgressMonitor = new DeleteProgressMonitor(m_tradePersistentModel, tradingdays);
+        deleteProgressMonitor = new DeleteProgressMonitor(tradeService, tradingdays);
         deleteProgressMonitor.addPropertyChangeListener(evt -> {
             if ("progress".equals(evt.getPropertyName())) {
                 int progress = (Integer) evt.getNewValue();
@@ -1044,7 +1044,7 @@ public class TradingdayPanel extends BasePanel {
             enable = true;
             transferButton.setTransferObject(tradestrategy.getId());
             try {
-                CodeType codeType = m_tradePersistentModel.findCodeTypeByNameType(tradestrategy.getStrategy().getName(),
+                CodeType codeType = tradeService.findCodeTypeByNameType(tradestrategy.getStrategy().getName(),
                         CodeType.StrategyParameters);
                 if (null != codeType) {
                     strategyParmButton.setEnabled(true);
@@ -1227,7 +1227,7 @@ public class TradingdayPanel extends BasePanel {
      */
     private class DeleteProgressMonitor extends SwingWorker<Void, String> {
 
-        private final IPersistentModel tradeManagerModel;
+        private final TradeService tradeService;
         private final Tradingdays tradingdays;
         private int grandtotal = 0;
         private long startTime = 0;
@@ -1235,12 +1235,12 @@ public class TradingdayPanel extends BasePanel {
         /**
          * Constructor for DeleteProgressMonitor.
          *
-         * @param tradeManagerModel IPersistentModel
-         * @param tradingdays       Tradingdays
+         * @param tradeService IPersistentModel
+         * @param tradingdays  Tradingdays
          */
-        public DeleteProgressMonitor(IPersistentModel tradeManagerModel, Tradingdays tradingdays) {
+        public DeleteProgressMonitor(TradeService tradeService, Tradingdays tradingdays) {
             this.tradingdays = tradingdays;
-            this.tradeManagerModel = tradeManagerModel;
+            this.tradeService = tradeService;
         }
 
         /**
@@ -1260,7 +1260,7 @@ public class TradingdayPanel extends BasePanel {
                 String message;
                 tradingdays.getTradingdays().sort(Tradingday.DATE_ORDER_ASC);
                 for (Tradingday tradingday : tradingdays.getTradingdays()) {
-                    this.tradeManagerModel.removeTradingdayTradeOrders(tradingday);
+                    this.tradeService.removeTradingdayTradeOrders(tradingday);
                     totalComplete++;
                     int percent = (int) (((double) (totalComplete) / grandtotal) * 100d);
                     setProgress(percent);
@@ -1304,7 +1304,7 @@ public class TradingdayPanel extends BasePanel {
      */
     private class ReAssignProgressMonitor extends SwingWorker<Void, String> {
 
-        private final IPersistentModel tradeManagerModel;
+        private final TradeService tradeService;
         private final Tradingdays tradingdays;
         private int grandtotal = 0;
         private long startTime = 0;
@@ -1314,15 +1314,15 @@ public class TradingdayPanel extends BasePanel {
         /**
          * Constructor for ReAssignProgressMonitor.
          *
-         * @param tradeManagerModel IPersistentModel
-         * @param tradingdays       Tradingdays
-         * @param fromStrategy      Strategy
-         * @param toStrategy        Strategy
+         * @param tradeService TradeService
+         * @param tradingdays  Tradingdays
+         * @param fromStrategy Strategy
+         * @param toStrategy   Strategy
          */
-        public ReAssignProgressMonitor(IPersistentModel tradeManagerModel, Tradingdays tradingdays,
+        public ReAssignProgressMonitor(TradeService tradeService, Tradingdays tradingdays,
                                        Strategy fromStrategy, Strategy toStrategy) {
             this.tradingdays = tradingdays;
-            this.tradeManagerModel = tradeManagerModel;
+            this.tradeService = tradeService;
             this.fromStrategy = fromStrategy;
             this.toStrategy = toStrategy;
         }
@@ -1342,10 +1342,10 @@ public class TradingdayPanel extends BasePanel {
                 getProgressBar().setMaximum(100);
                 setProgress(0);
                 String message;
-                this.toStrategy = this.tradeManagerModel.findStrategyById(this.toStrategy.getId());
+                this.toStrategy = this.tradeService.findStrategyById(this.toStrategy.getId());
                 tradingdays.getTradingdays().sort(Tradingday.DATE_ORDER_ASC);
                 for (Tradingday tradingday : tradingdays.getTradingdays()) {
-                    this.tradeManagerModel.reassignStrategy(this.fromStrategy, this.toStrategy, tradingday);
+                    this.tradeService.reassignStrategy(this.fromStrategy, this.toStrategy, tradingday);
 
                     totalComplete++;
                     int percent = (int) (((double) (totalComplete) / this.grandtotal) * 100d);

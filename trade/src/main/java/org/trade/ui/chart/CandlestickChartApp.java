@@ -2,6 +2,7 @@ package org.trade.ui.chart;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.trade.base.BasePanel;
 import org.trade.base.BasePanelMenu;
 import org.trade.base.ComponentPrintService;
@@ -12,7 +13,7 @@ import org.trade.core.broker.BrokerModelException;
 import org.trade.core.broker.IBrokerChangeListener;
 import org.trade.core.broker.IBrokerModel;
 import org.trade.core.factory.ClassFactory;
-import org.trade.core.persistent.IPersistentModel;
+import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.Candle;
 import org.trade.core.persistent.dao.Contract;
 import org.trade.core.persistent.dao.Portfolio;
@@ -59,13 +60,12 @@ public class CandlestickChartApp extends BasePanel implements IBrokerChangeListe
      */
     @Serial
     private static final long serialVersionUID = -4275291770705110409L;
-    /**
-     *
-     */
+
+    @Autowired
+    private TradeService tradeService;
 
     private final static Logger _log = LoggerFactory.getLogger(CandlestickChartApp.class);
     private final JPanel m_menuPanel;
-    private static IPersistentModel m_tradePersistentModel = null;
     private static IBrokerModel m_brokerModel = null;
     private static BrokerDataRequestMonitor m_brokerDataRequestProgressMonitor = null;
     private static JFrame m_frame = null;
@@ -88,10 +88,9 @@ public class CandlestickChartApp extends BasePanel implements IBrokerChangeListe
                 String symbol = "MSFT";
 
                 m_brokerModel = (IBrokerModel) ClassFactory.getServiceForInterface(IBrokerModel._brokerTest, CandlestickChartApp.class);
-                m_tradePersistentModel = (IPersistentModel) ClassFactory
-                        .getServiceForInterface(IPersistentModel._persistentModel, CandlestickChartApp.class);
+
                 Contract contract = new Contract(SECType.STOCK, symbol, Exchange.SMART, Currency.USD, null, null);
-                contract.setId(Integer.MAX_VALUE);
+                // contract.setId(Integer.MAX_VALUE);
                 ZonedDateTime endDate = TradingCalendar.getDateTimeNowMarketTimeZone();
                 endDate = TradingCalendar.getTradingDayEnd(TradingCalendar.getPrevTradingDay(endDate));
                 ZonedDateTime startDate = TradingCalendar.getTradingDayStart(endDate);
@@ -101,8 +100,8 @@ public class CandlestickChartApp extends BasePanel implements IBrokerChangeListe
                 String name = daoStrategy.getName();
                 Strategy strategy = home.findByName(name);
                 Tradestrategy tradestrategy = getTradestrategy(contract, strategy, ChartDays.TWO_DAYS, BarSize.FIVE_MIN, startDate, endDate);
-                tradestrategy.setId(Integer.MAX_VALUE);
-                runStrategy(tradestrategy, true);
+                //   tradestrategy.setId(Integer.MAX_VALUE);
+                //runStrategy(tradeService, tradestrategy, true);
 
             } catch (Exception ex) {
                 _log.error("Error getting broker data msg: {}", ex.getMessage(), ex);
@@ -349,7 +348,7 @@ public class CandlestickChartApp extends BasePanel implements IBrokerChangeListe
     private static Tradestrategy getTradestrategy(Contract contract, Strategy strategy, Integer chartDays, Integer barSize, ZonedDateTime open, ZonedDateTime close) {
 
         Tradingday tradingday = new Tradingday(open, close);
-        tradingday.setId(Integer.MAX_VALUE);
+        //  tradingday.setId(Integer.MAX_VALUE);
         Tradestrategy tradestrategy;
         Portfolio portfolio = (Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
         int riskAmount = 0;
@@ -398,7 +397,7 @@ public class CandlestickChartApp extends BasePanel implements IBrokerChangeListe
      * @param tradestrategy  Tradestrategy
      * @param brokerDataOnly boolean
      */
-    private static void runStrategy(Tradestrategy tradestrategy, boolean brokerDataOnly) {
+    private static void runStrategy(TradeService tradeService, Tradestrategy tradestrategy, boolean brokerDataOnly) {
 
         try {
 
@@ -415,7 +414,7 @@ public class CandlestickChartApp extends BasePanel implements IBrokerChangeListe
 
                 if (result == JOptionPane.YES_OPTION) {
 
-                    m_tradePersistentModel.removeTradingdayTradeOrders(tradingday);
+                    tradeService.removeTradingdayTradeOrders(tradingday);
                 }
             }
 
@@ -441,7 +440,7 @@ public class CandlestickChartApp extends BasePanel implements IBrokerChangeListe
                 ZonedDateTime startDate = endDate.minusDays((tradestrategy.getChartDays() - 1));
                 startDate = TradingCalendar.getPrevTradingDay(startDate);
 
-                List<Candle> candles = m_tradePersistentModel.findCandlesByContractDateRangeBarSize(
+                List<Candle> candles = tradeService.findCandlesByContractDateRangeBarSize(
                         tradestrategy.getContract().getId(), startDate, endDate,
                         tradestrategy.getBarSize());
 
@@ -456,7 +455,7 @@ public class CandlestickChartApp extends BasePanel implements IBrokerChangeListe
 
                         for (Candle item : candles) {
 
-                            m_tradePersistentModel.removeAspect(item);
+                            tradeService.removeAspect(item);
                         }
                     } else {
                         return;
@@ -466,7 +465,7 @@ public class CandlestickChartApp extends BasePanel implements IBrokerChangeListe
 
             Tradingdays tradingdays = new Tradingdays();
             tradingdays.add(tradingday);
-            m_brokerDataRequestProgressMonitor = new BrokerDataRequestMonitor(m_brokerModel, m_tradePersistentModel,
+            m_brokerDataRequestProgressMonitor = new BrokerDataRequestMonitor(m_brokerModel, tradeService,
                     tradingdays);
             m_brokerDataRequestProgressMonitor.addPropertyChangeListener(evt -> SwingUtilities.invokeLater(() -> {
 

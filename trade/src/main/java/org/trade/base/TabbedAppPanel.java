@@ -72,40 +72,45 @@ public abstract class TabbedAppPanel extends BasePanel implements ChangeListener
      */
     public TabbedAppPanel(Frame frame) {
 
-        this.setLayout(new BorderLayout());
+        try {
 
-        JPanel jPanel1 = new JPanel(new BorderLayout());
-        JPanel jPanelProgressBar = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        JProgressBar progressBar = new JProgressBar(0, 0);
-        jPanelProgressBar.add(progressBar);
+            this.setLayout(new BorderLayout());
+            JPanel jPanel1 = new JPanel(new BorderLayout());
+            JPanel jPanelProgressBar = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+            JProgressBar progressBar = new JProgressBar(0, 0);
+            jPanelProgressBar.add(progressBar);
 
-        JPanel jPanelClock = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        Clock clock = new Clock();
-        jPanelClock.add(clock);
+            JPanel jPanelClock = new JPanel(new FlowLayout(FlowLayout.LEFT));
+            Clock clock = new Clock();
+            jPanelClock.add(clock);
 
-        JPanel jPanelStatus = new JPanel(new GridLayout());
-        JTextField jTextFieldStatus = new JTextField();
-        jTextFieldStatus.setRequestFocusEnabled(false);
-        jTextFieldStatus.setMargin(new Insets(5, 5, 5, 5));
-        jTextFieldStatus.setBackground(Color.white);
-        jTextFieldStatus.setBorder(BorderFactory.createLoweredBevelBorder());
-        jPanelStatus.add(jTextFieldStatus);
+            JPanel jPanelStatus = new JPanel(new GridLayout());
+            JTextField jTextFieldStatus = new JTextField();
+            jTextFieldStatus.setRequestFocusEnabled(false);
+            jTextFieldStatus.setMargin(new Insets(5, 5, 5, 5));
+            jTextFieldStatus.setBackground(Color.white);
+            jTextFieldStatus.setBorder(BorderFactory.createLoweredBevelBorder());
+            jPanelStatus.add(jTextFieldStatus);
 
-        JPanel jPanel3 = new JPanel(new BorderLayout());
-        jPanel3.add(jPanelClock, BorderLayout.WEST);
-        jPanel3.add(jPanelProgressBar, BorderLayout.EAST);
-        jPanel3.add(jPanelStatus, BorderLayout.CENTER);
+            JPanel jPanel3 = new JPanel(new BorderLayout());
+            jPanel3.add(jPanelClock, BorderLayout.WEST);
+            jPanel3.add(jPanelProgressBar, BorderLayout.EAST);
+            jPanel3.add(jPanelStatus, BorderLayout.CENTER);
 
-        JPanel jPanel2 = new JPanel(new BorderLayout());
-        jPanel2.add(m_tabbedPane, BorderLayout.CENTER);
-        jPanel1.add(jPanel2, BorderLayout.CENTER);
-        jPanel1.add(jPanel3, BorderLayout.SOUTH);
-        m_menuPanel.setLayout(new BorderLayout());
-        jPanel1.add(m_menuPanel, BorderLayout.NORTH);
-        this.add(jPanel1, BorderLayout.CENTER);
-        this.setStatusBar(jTextFieldStatus);
-        this.setProgressBar(progressBar);
-        m_tabbedPane.addChangeListener(this);
+            JPanel jPanel2 = new JPanel(new BorderLayout());
+            jPanel2.add(m_tabbedPane, BorderLayout.CENTER);
+            jPanel1.add(jPanel2, BorderLayout.CENTER);
+            jPanel1.add(jPanel3, BorderLayout.SOUTH);
+            m_menuPanel.setLayout(new BorderLayout());
+            jPanel1.add(m_menuPanel, BorderLayout.NORTH);
+            this.add(jPanel1, BorderLayout.CENTER);
+            this.setStatusBar(jTextFieldStatus);
+            this.setProgressBar(progressBar);
+            m_tabbedPane.addChangeListener(this);
+        } catch (Exception e) {
+
+            this.setErrorMessage("Error During Initialization.", e.getMessage(), e);
+        }
     }
 
     /**
@@ -114,6 +119,7 @@ public abstract class TabbedAppPanel extends BasePanel implements ChangeListener
      * @param menu BasePanelMenu
      */
     public void setMenu(BasePanelMenu menu) {
+
         m_menuPanel.removeAll();
         m_menuPanel.add(menu, BorderLayout.NORTH);
         super.setMenu(menu);

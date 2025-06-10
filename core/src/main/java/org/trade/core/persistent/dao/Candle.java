@@ -40,14 +40,10 @@ package org.trade.core.persistent.dao;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
-import jakarta.persistence.Version;
-import jakarta.validation.constraints.NotNull;
 import org.trade.core.dao.Aspect;
 import org.trade.core.util.time.RegularTimePeriod;
 import org.trade.core.util.time.TradingCalendar;
@@ -56,8 +52,6 @@ import java.io.Serial;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.ZonedDateTime;
-
-import static jakarta.persistence.GenerationType.IDENTITY;
 
 
 /**
@@ -76,22 +70,49 @@ public class Candle extends Aspect implements java.io.Serializable {
     @Serial
     private static final long serialVersionUID = 7644763985378994305L;
 
-    @NotNull
-    private Tradingday tradingday;
-    @NotNull
-    private Contract contract;
-    private BigDecimal close;
-    private BigDecimal high;
-    private BigDecimal low;
+    @Column(name = "open", precision = 10)
     private BigDecimal open;
+
+    @Column(name = "close", precision = 10)
+    private BigDecimal close;
+
+    @Column(name = "high", precision = 10)
+    private BigDecimal high;
+
+    @Column(name = "low", precision = 10)
+    private BigDecimal low;
+
+    @Column(name = "period", length = 45)
     private String period;
+
+    @Column(name = "end_period")
     private ZonedDateTime endPeriod;
+
+    @Column(name = "start_period")
     private ZonedDateTime startPeriod;
+
+    @Column(name = "trade_count")
     private Integer tradeCount;
+
+    @Column(name = "volume")
     private Long volume;
+
+    @Column(name = "vwap", precision = 10)
     private BigDecimal vwap;
+
+    @Column(name = "bar_size")
     private Integer barSize;
+
+    @Column(name = "last_update_date", nullable = false)
     private ZonedDateTime lastUpdateDate;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "trading_day_id", nullable = false)
+    private Tradingday tradingday;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "contract_id", nullable = false)
+    private Contract contract;
 
     public Candle() {
     }
@@ -103,6 +124,7 @@ public class Candle extends Aspect implements java.io.Serializable {
      * @param contract   Contract
      */
     public Candle(Contract contract, Tradingday tradingday, RegularTimePeriod period, ZonedDateTime lastUpdateDate) {
+
         this.setTradingday(tradingday);
         this.setContract(contract);
         this.setPeriod(period.toString());
@@ -125,6 +147,7 @@ public class Candle extends Aspect implements java.io.Serializable {
      */
     public Candle(Contract contract, RegularTimePeriod period, double open, double high, double low, double close,
                   ZonedDateTime lastUpdateDate) {
+
         this.setContract(contract);
         this.setPeriod(period.toString());
         this.setStartPeriod(period.getStart());
@@ -154,6 +177,7 @@ public class Candle extends Aspect implements java.io.Serializable {
      */
     public Candle(Contract contract, RegularTimePeriod period, double open, double high, double low, double close,
                   long volume, double vwap, int tradeCount, ZonedDateTime lastUpdateDate) {
+
         this(contract, period, open, high, low, close, lastUpdateDate);
         this.setVolume(volume);
         this.setVwap(new BigDecimal(vwap));
@@ -176,6 +200,7 @@ public class Candle extends Aspect implements java.io.Serializable {
      */
     public Candle(Contract contract, Tradingday tradingday, RegularTimePeriod period, double open, double high,
                   double low, double close, long volume, double vwap, int tradeCount, ZonedDateTime lastUpdateDate) {
+
         this(contract, tradingday, period, lastUpdateDate);
         this.setOpen(new BigDecimal(open));
         this.setClose(new BigDecimal(close));
@@ -188,24 +213,10 @@ public class Candle extends Aspect implements java.io.Serializable {
     }
 
     /**
-     * Method getId.
-     *
-     * @return Integer
-     */
-    @Id
-    @GeneratedValue(strategy = IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
-    public Integer getId() {
-        return this.id;
-    }
-
-    /**
      * Method getTradingday.
      *
      * @return Tradingday
      */
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_trading_day", nullable = false)
     public Tradingday getTradingday() {
         return this.tradingday;
     }
@@ -224,8 +235,6 @@ public class Candle extends Aspect implements java.io.Serializable {
      *
      * @return Contract
      */
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_contract", nullable = false)
     public Contract getContract() {
         return this.contract;
     }
@@ -244,7 +253,6 @@ public class Candle extends Aspect implements java.io.Serializable {
      *
      * @return BigDecimal
      */
-    @Column(name = "close", precision = 10)
     public BigDecimal getClose() {
         return this.close;
     }
@@ -263,7 +271,6 @@ public class Candle extends Aspect implements java.io.Serializable {
      *
      * @return BigDecimal
      */
-    @Column(name = "high", precision = 10)
     public BigDecimal getHigh() {
         return this.high;
     }
@@ -282,7 +289,6 @@ public class Candle extends Aspect implements java.io.Serializable {
      *
      * @return BigDecimal
      */
-    @Column(name = "low", precision = 10)
     public BigDecimal getLow() {
         return this.low;
     }
@@ -301,7 +307,6 @@ public class Candle extends Aspect implements java.io.Serializable {
      *
      * @return BigDecimal
      */
-    @Column(name = "open", precision = 10)
     public BigDecimal getOpen() {
         return this.open;
     }
@@ -320,7 +325,6 @@ public class Candle extends Aspect implements java.io.Serializable {
      *
      * @return String
      */
-    @Column(name = "period", length = 45)
     public String getPeriod() {
         return this.period;
     }
@@ -339,8 +343,6 @@ public class Candle extends Aspect implements java.io.Serializable {
      *
      * @return Date
      */
-
-    @Column(name = "end_period")
     public ZonedDateTime getEndPeriod() {
         return this.endPeriod;
     }
@@ -359,7 +361,6 @@ public class Candle extends Aspect implements java.io.Serializable {
      *
      * @return Date
      */
-    @Column(name = "start_period")
     public ZonedDateTime getStartPeriod() {
         return this.startPeriod;
     }
@@ -378,7 +379,6 @@ public class Candle extends Aspect implements java.io.Serializable {
      *
      * @return Integer
      */
-    @Column(name = "trade_count")
     public Integer getTradeCount() {
         return this.tradeCount;
     }
@@ -397,7 +397,6 @@ public class Candle extends Aspect implements java.io.Serializable {
      *
      * @return Long
      */
-    @Column(name = "volume")
     public Long getVolume() {
         return this.volume;
     }
@@ -416,7 +415,6 @@ public class Candle extends Aspect implements java.io.Serializable {
      *
      * @return BigDecimal
      */
-    @Column(name = "vwap", precision = 10)
     public BigDecimal getVwap() {
         return this.vwap;
     }
@@ -435,9 +433,10 @@ public class Candle extends Aspect implements java.io.Serializable {
      *
      * @return Integer
      */
-    @Column(name = "bar_size")
     public Integer getBarSize() {
+
         if (null == this.barSize) {
+
             Duration duration = Duration.between(getStartPeriod(), getEndPeriod());
             this.barSize = (int) (duration.getSeconds() + 1);
         }
@@ -458,8 +457,6 @@ public class Candle extends Aspect implements java.io.Serializable {
      *
      * @return ZonedDateTime
      */
-
-    @Column(name = "last_update_date", nullable = false)
     public ZonedDateTime getLastUpdateDate() {
         return this.lastUpdateDate;
     }
@@ -471,17 +468,6 @@ public class Candle extends Aspect implements java.io.Serializable {
      */
     public void setLastUpdateDate(ZonedDateTime lastUpdateDate) {
         this.lastUpdateDate = lastUpdateDate;
-    }
-
-    /**
-     * Method getVersion.
-     *
-     * @return Integer
-     */
-    @Version
-    @Column(name = "version")
-    public Integer getVersion() {
-        return this.version;
     }
 
     /**

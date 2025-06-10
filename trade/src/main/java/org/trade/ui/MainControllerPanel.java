@@ -51,12 +51,9 @@ public class MainControllerPanel extends TabbedAppPanel {
     @Serial
     private static final long serialVersionUID = -7717664255656430982L;
 
-    public final static String PROPERTIES_PROPERTY_FILE = "core.properties";
-
     public static String title = null;
     public static String version = null;
     public static String date = null;
-    protected static MainControllerPanel m_instance = null;
 
     /**
      * The main application controller which interacts between the view and the
@@ -68,15 +65,20 @@ public class MainControllerPanel extends TabbedAppPanel {
      */
 
     public MainControllerPanel(Frame frame) {
+
         super(frame);
+
         try {
+
             setMenu(new MainPanelMenu(this));
             /* This is always true as main panel needs to receive all events */
             setSelected(true);
             title = ConfigProperties.getPropAsString("component.name.base");
             version = ConfigProperties.getPropAsString("component.name.version");
             date = ConfigProperties.getPropAsString("component.name.date");
+
         } catch (Exception e) {
+
             this.setErrorMessage("Error During Initialization.", e.getMessage(), e);
         }
     }

@@ -463,7 +463,7 @@ public class TradeOrderTableModel extends TableModel {
         newRow.addElement(new Quantity(element.getFilledQuantity()));
         newRow.addElement(new Money(element.getStopPrice()));
         TradeOrder tradeOrder = new TradeOrder();
-        tradeOrder.setId(1);
+        // tradeOrder.setId(1);
         if (null == element.getFAProfile()) {
             newRow.addElement(tradeOrder);
         } else {

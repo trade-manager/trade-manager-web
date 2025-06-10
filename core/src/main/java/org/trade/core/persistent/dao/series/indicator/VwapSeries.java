@@ -38,7 +38,7 @@ package org.trade.core.persistent.dao.series.indicator;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Transient;
-import org.trade.core.persistent.PersistentModelException;
+import org.trade.core.persistent.ServiceException;
 import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.series.indicator.vwap.VwapItem;
 import org.trade.core.util.time.RegularTimePeriod;
@@ -106,7 +106,7 @@ public class VwapSeries extends IndicatorSeries {
      * @param period    the period.
      * @param vwapPrice BigDecimal
      */
-    public void add(RegularTimePeriod period, BigDecimal vwapPrice) throws PersistentModelException {
+    public void add(RegularTimePeriod period, BigDecimal vwapPrice) throws ServiceException {
         if (!this.isEmpty()) {
             VwapItem item0 = (VwapItem) this.getDataItem(0);
             if (!period.getClass().equals(item0.getPeriod().getClass())) {
@@ -122,7 +122,7 @@ public class VwapSeries extends IndicatorSeries {
      * @param notify   the notify listeners.
      * @param dataItem VwapItem
      */
-    public void add(VwapItem dataItem, boolean notify) throws PersistentModelException {
+    public void add(VwapItem dataItem, boolean notify) throws ServiceException {
         if (!this.isEmpty()) {
             VwapItem item0 = (VwapItem) this.getDataItem(0);
             if (!dataItem.getPeriod().getClass().equals(item0.getPeriod().getClass())) {
@@ -138,7 +138,7 @@ public class VwapSeries extends IndicatorSeries {
      * @param source      CandleDataset
      * @param seriesIndex int
      */
-    public void createSeries(CandleDataset source, int seriesIndex) throws PersistentModelException {
+    public void createSeries(CandleDataset source, int seriesIndex) throws ServiceException {
 
         if (source.getSeries(seriesIndex) == null) {
             throw new IllegalArgumentException("Null source (XYDataset).");
@@ -156,7 +156,7 @@ public class VwapSeries extends IndicatorSeries {
      * @param skip   int
      * @param newBar boolean
      */
-    public void updateSeries(CandleSeries source, int skip, boolean newBar) throws PersistentModelException {
+    public void updateSeries(CandleSeries source, int skip, boolean newBar) throws ServiceException {
 
         if (source == null) {
             throw new IllegalArgumentException("Null source (CandleSeries).");

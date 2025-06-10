@@ -48,7 +48,7 @@ ev_multiplier DECIMAL(10,2) NULL ,
 ev_rule VARCHAR(80) NULL ,
 EXCHANGE VARCHAR(30) NOT NULL ,
 expiry DATETIME NULL ,
-id_contract_IB INT NULL ,
+contract_id_IB INT NULL ,
 include_expired  SMALLINT(1)  NULL ,
 industry VARCHAR(120) NULL ,
 local_symbol VARCHAR(20) NULL ,
@@ -73,12 +73,12 @@ trading_hours VARCHAR(100) NULL ,
 under_con_id INT NULL ,
 valid_exchanges VARCHAR(200) NULL ,
 version INT NULL,
-id_trade_position INT NULL,
+trade_position_id INT NULL,
 PRIMARY KEY (id) ,
-UNIQUE INDEX contract_tradePosition_uq (id_trade_position ASC),
+UNIQUE INDEX contract_tradePosition_uq (trade_position_id ASC),
 UNIQUE INDEX contract_uq (sec_type ASC, symbol ASC, EXCHANGE ASC, currency ASC, expiry ASC),
 CONSTRAINT contract_trade_position_fk
-FOREIGN KEY (id_trade_position )
+FOREIGN KEY (trade_position_id )
 REFERENCES tradeposition (id )
   ON DELETE NO ACTION
   ON UPDATE NO ACTION)
@@ -144,19 +144,19 @@ SHOW WARNINGS//
 CREATE  TABLE IF NOT EXISTS portfolioaccount (
 id INT NOT NULL AUTO_INCREMENT ,
 version INT NULL,
-id_portfolio INT NOT NULL ,
-id_account INT NOT NULL ,
+portfolio_id INT NOT NULL ,
+account_id INT NOT NULL ,
 PRIMARY KEY (id) ,
-INDEX portfolioaccount_account_idx  (id_account ASC) ,
-INDEX portfolioaccount_portfolio_idx  (id_portfolio ASC) ,
-UNIQUE INDEX portfolioaccount_uq (id_portfolio ASC, id_account ASC),
+INDEX portfolioaccount_account_idx  (account_id ASC) ,
+INDEX portfolioaccount_portfolio_idx  (portfolio_id ASC) ,
+UNIQUE INDEX portfolioaccount_uq (portfolio_id ASC, account_id ASC),
 CONSTRAINT portfolioaccount_portfolio_fk
-FOREIGN KEY (id_portfolio )
+FOREIGN KEY (portfolio_id )
 REFERENCES portfolio (id)
   ON DELETE NO ACTION
   ON UPDATE NO ACTION,
 CONSTRAINT portfolioaccount_account_fk
-FOREIGN KEY (id_account)
+FOREIGN KEY (account_id)
 REFERENCES account (id)
   ON DELETE NO ACTION
   ON UPDATE NO ACTION )
@@ -196,13 +196,13 @@ name VARCHAR(45) NOT NULL ,
 description VARCHAR(240) NULL ,
 market_data SMALLINT(1)  NULL ,
 class_Name VARCHAR(100) NOT NULL ,
-id_strategy_manager INT NULL ,
+strategy_id_manager INT NULL ,
 version INT NULL,
 PRIMARY KEY (id) ,
 UNIQUE INDEX strategy_name_uq (name ASC) ,
-INDEX strategy_strategy_idx (id_strategy_manager ASC) ,
+INDEX strategy_strategy_idx (strategy_id_manager ASC) ,
 CONSTRAINT strategy_strategy_fk
-FOREIGN KEY (id_strategy_manager )
+FOREIGN KEY (strategy_id_manager )
 REFERENCES strategy (id )
   ON DELETE NO ACTION
   ON UPDATE NO ACTION)
@@ -227,33 +227,33 @@ tier VARCHAR(1) NULL ,
 trade SMALLINT(1)  NULL ,
 last_update_date DATETIME(3) NOT NULL ,
 version INT NULL,
-id_trading_day INT NOT NULL ,
-id_contract INT NOT NULL ,
-id_strategy INT NOT NULL ,
-id_portfolio INT NOT NULL ,
+trading_day_id INT NOT NULL ,
+contract_id INT NOT NULL ,
+strategy_id INT NOT NULL ,
+portfolio_id INT NOT NULL ,
 PRIMARY KEY (id) ,
-INDEX tradeStrategy_tradingDay_idx (id_trading_day ASC) ,
-INDEX tradeStrategy_contract_idx  (id_contract ASC) ,
-INDEX tradeStrategy_stategy_idx  (id_strategy ASC) ,
-INDEX tradeStrategy_portfolio_idx  (id_portfolio ASC) ,
-UNIQUE INDEX tradestrategy_uq (id_trading_day ASC, id_contract ASC, id_strategy ASC, id_portfolio ASC, bar_size ASC),
+INDEX tradeStrategy_tradingDay_idx (trading_day_id ASC) ,
+INDEX tradeStrategy_contract_idx  (contract_id ASC) ,
+INDEX tradeStrategy_stategy_idx  (strategy_id ASC) ,
+INDEX tradeStrategy_portfolio_idx  (portfolio_id ASC) ,
+UNIQUE INDEX tradestrategy_uq (trading_day_id ASC, contract_id ASC, strategy_id ASC, portfolio_id ASC, bar_size ASC),
 CONSTRAINT tradestrategy_tradingday_fk
-FOREIGN KEY (id_trading_day )
+FOREIGN KEY (trading_day_id )
 REFERENCES tradingday (id )
   ON DELETE NO ACTION
   ON UPDATE NO ACTION,
 CONSTRAINT tradestrategy_contract_fk
-FOREIGN KEY (id_contract )
+FOREIGN KEY (contract_id )
 REFERENCES contract (id )
   ON DELETE NO ACTION
   ON UPDATE NO ACTION,
 CONSTRAINT tradestrategy_stategy_fk
-FOREIGN KEY (id_strategy )
+FOREIGN KEY (strategy_id )
 REFERENCES strategy (id )
   ON DELETE NO ACTION
   ON UPDATE NO ACTION,
 CONSTRAINT tradestrategy_portfolio_fk
-FOREIGN KEY (id_portfolio)
+FOREIGN KEY (portfolio_id)
 REFERENCES portfolio (id)
   ON DELETE NO ACTION
   ON UPDATE NO ACTION)
@@ -281,11 +281,11 @@ total_sell_value DECIMAL(10,2) NULL ,
 total_net_value DECIMAL(10,2) NULL ,
 last_update_date DATETIME(3) NOT NULL ,
 version INT NULL,
-id_contract INT NOT NULL ,
+contract_id INT NOT NULL ,
 PRIMARY KEY (id) ,
-INDEX tradeposition_contract_idx (id_contract ASC) ,
+INDEX tradeposition_contract_idx (contract_id ASC) ,
 CONSTRAINT tradeposition_contract_fk
-FOREIGN KEY (id_contract )
+FOREIGN KEY (contract_id )
 REFERENCES contract (id )
   ON DELETE CASCADE
   ON UPDATE NO ACTION)
@@ -343,19 +343,19 @@ warning_message VARCHAR(200) NULL ,
 why_held VARCHAR(45) NULL ,
 last_update_date DATETIME(3) NOT NULL ,
 version INT NULL,
-id_tradestrategy INT NOT NULL ,
-id_trade_position INT NULL ,
+tradestrategy_id INT NOT NULL ,
+trade_position_id INT NULL ,
 PRIMARY KEY (id) ,
-INDEX tradeorder_tradestrategy_idx (id_tradestrategy ASC) ,
-INDEX tradeorder_tradeposition_idx (id_trade_position ASC) ,
+INDEX tradeorder_tradestrategy_idx (tradestrategy_id ASC) ,
+INDEX tradeorder_tradeposition_idx (trade_position_id ASC) ,
 UNIQUE INDEX tradeorderkey_uq (order_Key ASC) ,
 CONSTRAINT tradeorder_tradestrategy_fk
-FOREIGN KEY (id_tradestrategy )
+FOREIGN KEY (tradestrategy_id )
 REFERENCES tradestrategy (id )
   ON DELETE CASCADE
   ON UPDATE NO ACTION,
 CONSTRAINT tradeorder_tradeposition_fk
-FOREIGN KEY (id_trade_position )
+FOREIGN KEY (trade_position_id )
 REFERENCES tradeposition (id )
   ON DELETE CASCADE
   ON UPDATE NO ACTION)
@@ -420,20 +420,20 @@ volume INT NULL ,
 vwap DECIMAL(10,2) NULL ,
 last_update_date DATETIME(3) NOT NULL ,
 version INT NULL,
-id_contract INT NOT NULL ,
-id_trading_day INT NOT NULL ,
+contract_id INT NOT NULL ,
+trading_day_id INT NOT NULL ,
 PRIMARY KEY (id) ,
-INDEX candle_contract_idx (id_contract ASC) ,
-INDEX candle_tradingday_idx (id_trading_day ASC) ,
-INDEX candle_condaybar_idx (id_contract ASC, id_trading_day ASC, bar_size ASC) ,
-UNIQUE INDEX candle_uq (id_contract ASC, id_trading_day ASC,  start_period ASC, end_period ASC) ,
+INDEX candle_contract_idx (contract_id ASC) ,
+INDEX candle_tradingday_idx (trading_day_id ASC) ,
+INDEX candle_condaybar_idx (contract_id ASC, trading_day_id ASC, bar_size ASC) ,
+UNIQUE INDEX candle_uq (contract_id ASC, trading_day_id ASC,  start_period ASC, end_period ASC) ,
 CONSTRAINT candle_contract_fk
-FOREIGN KEY (id_contract )
+FOREIGN KEY (contract_id )
 REFERENCES contract (id )
   ON DELETE CASCADE
   ON UPDATE NO ACTION,
 CONSTRAINT candle_tradingday_fk
-FOREIGN KEY (id_trading_day )
+FOREIGN KEY (trading_day_id )
 REFERENCES tradingday (id )
   ON DELETE CASCADE
   ON UPDATE NO ACTION)
@@ -454,12 +454,12 @@ create_date DATETIME(3) NOT NULL,
 rule BLOB NULL,
 last_update_date DATETIME(3) NOT NULL,
 version INT NOT NULL,
-id_strategy INT NOT NULL,
+strategy_id INT NOT NULL,
 PRIMARY KEY (id),
-INDEX rule_stategy_idx (id_strategy ASC),
-UNIQUE INDEX idstrategy_version_uq (id_strategy ASC, version ASC),
+INDEX rule_stategy_idx (strategy_id ASC),
+UNIQUE INDEX idstrategy_version_uq (strategy_id ASC, version ASC),
 CONSTRAINT rule_stategy_fk
-FOREIGN KEY (id_strategy )
+FOREIGN KEY (strategy_id )
 REFERENCES strategy (id )
   ON DELETE NO ACTION
   ON UPDATE NO ACTION)
@@ -482,12 +482,12 @@ display_series SMALLINT(1) NULL ,
 series_RGB_color INT NULL ,
 sub_chart SMALLINT(1) NULL ,
 version INT NULL,
-id_strategy INT NULL ,
+strategy_id INT NULL ,
 PRIMARY KEY (id) ,
-INDEX indicator_strategy_idx (id_strategy ASC) ,
-UNIQUE INDEX indicatorseries_uq (id_strategy ASC, TYPE ASC, name ASC),
+INDEX indicator_strategy_idx (strategy_id ASC) ,
+UNIQUE INDEX indicatorseries_uq (strategy_id ASC, TYPE ASC, name ASC),
 CONSTRAINT indicator_strategy_fk
-FOREIGN KEY (id_strategy )
+FOREIGN KEY (strategy_id )
 REFERENCES strategy (id )
   ON DELETE NO ACTION
   ON UPDATE NO ACTION)
@@ -528,11 +528,11 @@ default_value VARCHAR(45) NULL ,
 class_name VARCHAR(100) NOT NULL ,
 class_editor_Name VARCHAR(100) NULL ,
 version INT NULL,
-id_code_type INT NOT NULL ,
+code_type_id INT NOT NULL ,
 PRIMARY KEY (id) ,
-INDEX codeAttribute_codetype_idx (id_code_type ASC) ,
+INDEX codeAttribute_codetype_idx (code_type_id ASC) ,
 CONSTRAINT codeattribute_codetype_fk
-FOREIGN KEY (id_code_type )
+FOREIGN KEY (code_type_id )
 REFERENCES codetype (id )
   ON DELETE NO ACTION
   ON UPDATE NO ACTION)
@@ -550,27 +550,27 @@ CREATE  TABLE IF NOT EXISTS codevalue (
 id INT NOT NULL AUTO_INCREMENT ,
 code_value VARCHAR(45) NOT NULL ,
 version INT NULL,
-id_code_attribute INT NOT NULL ,
-id_indicator_series INT NULL ,
-id_tradestrategy INT NULL ,
+code_attribute_id INT NOT NULL ,
+indicator_series_id INT NULL ,
+tradestrategy_id INT NULL ,
 PRIMARY KEY (id) ,
-INDEX codeValue_codeattribute_idx (id_code_attribute ASC) ,
-INDEX codeValue_indicatorseries_idx (id_indicator_series ASC) ,
-INDEX codeValue_tradestrategy_idx (id_tradestrategy ASC) ,
-UNIQUE INDEX codeValue_tradestrategy_codeattribute_uq (id_code_attribute ASC, id_tradestrategy ASC),
-UNIQUE INDEX codeValue_indicatorseries_codeattribute_uq (id_indicator_series ASC, id_code_attribute ASC),
+INDEX codeValue_codeattribute_idx (code_attribute_id ASC) ,
+INDEX codeValue_indicatorseries_idx (indicator_series_id ASC) ,
+INDEX codeValue_tradestrategy_idx (tradestrategy_id ASC) ,
+UNIQUE INDEX codeValue_tradestrategy_codeattribute_uq (code_attribute_id ASC, tradestrategy_id ASC),
+UNIQUE INDEX codeValue_indicatorseries_codeattribute_uq (indicator_series_id ASC, code_attribute_id ASC),
 CONSTRAINT codeValue_codeattribute_fk
-FOREIGN KEY (id_code_attribute )
+FOREIGN KEY (code_attribute_id )
 REFERENCES codeattribute (id )
   ON DELETE NO ACTION
   ON UPDATE NO ACTION,
 CONSTRAINT codeValue_indicatorseries_fk
-FOREIGN KEY (id_indicator_series )
+FOREIGN KEY (indicator_series_id )
 REFERENCES indicatorseries (id )
   ON DELETE NO ACTION
   ON UPDATE NO ACTION,
 CONSTRAINT codevalue_tradestrategy_fk
-FOREIGN KEY (id_tradestrategy )
+FOREIGN KEY (tradestrategy_id )
 REFERENCES tradestrategy (id )
   ON DELETE NO ACTION
   ON UPDATE NO ACTION)

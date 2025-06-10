@@ -35,7 +35,7 @@
  */
 package org.trade.core.persistent.dao.series.indicator;
 
-import org.trade.core.persistent.PersistentModelException;
+import org.trade.core.persistent.ServiceException;
 import org.trade.core.persistent.dao.Candle;
 import org.trade.core.persistent.dao.Contract;
 import org.trade.core.persistent.dao.series.AbstractXYDataset;
@@ -487,7 +487,7 @@ public class CandleDataset extends AbstractXYDataset implements OHLCVwapDataset,
      * @return CandleSeries
      */
     public static CandleSeries createSeries(CandleDataset source, int seriesIndex, Contract contract, int bars,
-                                            ZonedDateTime startTime, ZonedDateTime endTime) throws PersistentModelException {
+                                            ZonedDateTime startTime, ZonedDateTime endTime) throws ServiceException {
 
         if (source.getSeries(seriesIndex) == null) {
             throw new IllegalArgumentException("Null source (CandleDataset).");
@@ -508,7 +508,7 @@ public class CandleDataset extends AbstractXYDataset implements OHLCVwapDataset,
      * @param strategyData StrategyData
      * @param candles      List<Candle>
      */
-    public static void populateSeries(StrategyData strategyData, List<Candle> candles) throws PersistentModelException {
+    public static void populateSeries(StrategyData strategyData, List<Candle> candles) throws ServiceException {
 
         strategyData.clearBaseCandleDataset();
 
@@ -530,7 +530,7 @@ public class CandleDataset extends AbstractXYDataset implements OHLCVwapDataset,
      * @param seriesIndex int
      * @param newBar      boolean
      */
-    public void updateDataset(CandleDataset source, int seriesIndex, boolean newBar) throws PersistentModelException {
+    public void updateDataset(CandleDataset source, int seriesIndex, boolean newBar) throws ServiceException {
         if (source == null) {
             throw new IllegalArgumentException("Null source (CandleDataset).");
         }

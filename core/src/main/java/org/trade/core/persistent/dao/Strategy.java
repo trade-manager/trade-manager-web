@@ -41,8 +41,6 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -57,8 +55,6 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
-import static jakarta.persistence.GenerationType.IDENTITY;
 
 
 /**
@@ -133,18 +129,6 @@ public class Strategy extends Aspect implements Serializable, Cloneable {
         this.rules = rules;
         this.strategies = strategies;
         this.className = className;
-    }
-
-    /**
-     * Method getId.
-     *
-     * @return Integer
-     */
-    @Id
-    @GeneratedValue(strategy = IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
-    public Integer getId() {
-        return this.id;
     }
 
     /**
@@ -306,7 +290,7 @@ public class Strategy extends Aspect implements Serializable, Cloneable {
      * @return List<Strategy>
      */
     @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_strategy_manager")
+    @JoinColumn(name = "strategy_id_manager")
     public List<Strategy> getStrategies() {
         return this.strategies;
     }
@@ -326,7 +310,7 @@ public class Strategy extends Aspect implements Serializable, Cloneable {
      * @return Strategy
      */
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_strategy_manager")
+    @JoinColumn(name = "strategy_id_manager")
     public Strategy getStrategyManager() {
         return this.strategy;
     }

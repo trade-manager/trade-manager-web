@@ -39,13 +39,9 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
-import jakarta.persistence.Version;
-import jakarta.validation.constraints.NotNull;
 import org.trade.core.dao.Aspect;
 import org.trade.core.util.time.TradingCalendar;
 
@@ -54,8 +50,6 @@ import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
-import static jakarta.persistence.GenerationType.IDENTITY;
 
 
 /**
@@ -68,14 +62,28 @@ public class Portfolio extends Aspect implements Serializable, Cloneable {
     @Serial
     private static final long serialVersionUID = 2273276207080568947L;
 
-    @NotNull
+    @Column(name = "name", nullable = false, length = 45)
     private String name;
+
+    @Column(name = "alias", unique = true, length = 45)
     private String alias;
+
+    @Column(name = "allocation_method", nullable = false, length = 20)
     private String allocationMethod;
+
+    @Column(name = "description", nullable = false, length = 240)
     private String description;
+
+    @Column(name = "is_default", nullable = false)
     private Boolean isDefault = false;
+
+    @Column(name = "last_update_date", nullable = false)
     private ZonedDateTime lastUpdateDate;
+
+    @OneToMany(mappedBy = "portfolio", fetch = FetchType.LAZY)
     private List<Tradestrategy> tradestrategies = new ArrayList<>(0);
+
+    @OneToMany(mappedBy = "portfolio", fetch = FetchType.LAZY, orphanRemoval = true, cascade = {CascadeType.ALL})
     private List<PortfolioAccount> portfolioAccounts = new ArrayList<>(0);
 
     public Portfolio() {
@@ -89,21 +97,10 @@ public class Portfolio extends Aspect implements Serializable, Cloneable {
      * @param description String
      */
     public Portfolio(String name, String description) {
+
         this.name = name;
         this.description = description;
         this.lastUpdateDate = TradingCalendar.getDateTimeNowMarketTimeZone();
-    }
-
-    /**
-     * Method getId.
-     *
-     * @return Integer
-     */
-    @Id
-    @GeneratedValue(strategy = IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
-    public Integer getId() {
-        return this.id;
     }
 
     /**
@@ -111,7 +108,6 @@ public class Portfolio extends Aspect implements Serializable, Cloneable {
      *
      * @return String
      */
-    @Column(name = "name", nullable = false, length = 45)
     public String getName() {
         return this.name;
     }
@@ -130,7 +126,6 @@ public class Portfolio extends Aspect implements Serializable, Cloneable {
      *
      * @return String
      */
-    @Column(name = "alias", unique = true, length = 45)
     public String getAlias() {
         return this.alias;
     }
@@ -149,7 +144,6 @@ public class Portfolio extends Aspect implements Serializable, Cloneable {
      *
      * @return String
      */
-    @Column(name = "allocation_method", nullable = false, length = 20)
     public String getAllocationMethod() {
         return this.allocationMethod;
     }
@@ -168,7 +162,6 @@ public class Portfolio extends Aspect implements Serializable, Cloneable {
      *
      * @return String
      */
-    @Column(name = "description", nullable = false, length = 240)
     public String getDescription() {
         return this.description;
     }
@@ -187,7 +180,6 @@ public class Portfolio extends Aspect implements Serializable, Cloneable {
      *
      * @return Boolean
      */
-    @Column(name = "is_default", nullable = false)
     public Boolean getIsDefault() {
         return this.isDefault;
     }
@@ -206,7 +198,6 @@ public class Portfolio extends Aspect implements Serializable, Cloneable {
      *
      * @return ZonedDateTime
      */
-    @Column(name = "last_update_date", nullable = false)
     public ZonedDateTime getLastUpdateDate() {
         return this.lastUpdateDate;
     }
@@ -221,22 +212,10 @@ public class Portfolio extends Aspect implements Serializable, Cloneable {
     }
 
     /**
-     * Method getVersion.
-     *
-     * @return Integer
-     */
-    @Version
-    @Column(name = "version")
-    public Integer getVersion() {
-        return this.version;
-    }
-
-    /**
      * Method getTradestrategies.
      *
      * @return List<Tradestrategy>
      */
-    @OneToMany(mappedBy = "portfolio", fetch = FetchType.LAZY)
     public List<Tradestrategy> getTradestrategies() {
         return this.tradestrategies;
     }
@@ -255,7 +234,6 @@ public class Portfolio extends Aspect implements Serializable, Cloneable {
      *
      * @return List<PortfolioAccounts>
      */
-    @OneToMany(mappedBy = "portfolio", fetch = FetchType.LAZY, orphanRemoval = true, cascade = {CascadeType.ALL})
     public List<PortfolioAccount> getPortfolioAccounts() {
         return this.portfolioAccounts;
     }
@@ -276,6 +254,7 @@ public class Portfolio extends Aspect implements Serializable, Cloneable {
      */
     @Transient
     public Account getIndividualAccount() {
+
         if (this.getPortfolioAccounts().size() == 1) {
             return this.getPortfolioAccounts().getFirst().getAccount();
         }
@@ -289,7 +268,9 @@ public class Portfolio extends Aspect implements Serializable, Cloneable {
      */
     @Transient
     public boolean isDirty() {
+
         for (PortfolioAccount item : this.getPortfolioAccounts()) {
+
             if (item.isDirty())
                 return true;
         }

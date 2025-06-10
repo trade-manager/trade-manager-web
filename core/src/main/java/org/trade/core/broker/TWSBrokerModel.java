@@ -13,14 +13,14 @@ import com.ib.client.TagValue;
 import com.ib.client.TickType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.trade.core.broker.client.Broker;
 import org.trade.core.broker.request.TWSAccountAliasRequest;
 import org.trade.core.broker.request.TWSAllocationRequest;
 import org.trade.core.broker.request.TWSGroupRequest;
 import org.trade.core.dao.Aspect;
 import org.trade.core.dao.Aspects;
-import org.trade.core.factory.ClassFactory;
-import org.trade.core.persistent.IPersistentModel;
+import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.Account;
 import org.trade.core.persistent.dao.Contract;
 import org.trade.core.persistent.dao.Portfolio;
@@ -77,6 +77,9 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
 
     private final static Logger _log = LoggerFactory.getLogger(TWSBrokerModel.class);
 
+    @Autowired
+    private TradeService tradeService;
+
     // Use getId as key
     private static final ConcurrentHashMap<Integer, Tradestrategy> m_historyDataRequests = new ConcurrentHashMap<>();
     private static final ConcurrentHashMap<Integer, Contract> m_realTimeBarsRequests = new ConcurrentHashMap<>();
@@ -94,7 +97,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
     private static final ConcurrentHashMap<String, CommissionReport> commissionDetails = new ConcurrentHashMap<>();
 
     private final EClientSocket m_client;
-    private final IPersistentModel m_tradePersistentModel;
+
     private final AtomicInteger reqId;
     private AtomicInteger orderKey = null;
     private Integer m_clientId = null;
@@ -152,8 +155,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
         try {
 
             m_client = new EClientSocket(this, this);
-            m_tradePersistentModel = (IPersistentModel) ClassFactory
-                    .getServiceForInterface(IPersistentModel._persistentModel, this);
+
             reqId = new AtomicInteger((int) (System.currentTimeMillis() / 1000d));
 
         } catch (Exception ex) {
@@ -248,7 +250,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
 
         try {
 
-            Account account = m_tradePersistentModel.findAccountByNumber(accountNumber);
+            Account account = tradeService.findAccountByNumber(accountNumber);
             m_accountRequests.put(accountNumber, account);
 
             if (m_client.isConnected()) {
@@ -712,7 +714,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
 
                         tradeOrder.setClientId(this.m_clientId);
                     }
-                    tradeOrder = m_tradePersistentModel.persistTradeOrder(tradeOrder);
+                    tradeOrder = tradeService.persistTradeOrder(tradeOrder);
 
                     _log.debug("Order Placed Key: {}", tradeOrder.getOrderKey());
                     com.ib.client.Contract IBContract = TWSBrokerModel.getIBContract(contract);
@@ -757,7 +759,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
         try {
 
             TWSBrokerModel.logExecution(execution);
-            TradeOrder transientInstance = m_tradePersistentModel
+            TradeOrder transientInstance = tradeService
                     .findTradeOrderByKey(Math.abs(execution.orderId()));
 
             if (null == transientInstance) {
@@ -767,7 +769,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
                  * then we have made a request for order executions with a
                  * different clientId than the one which created this order.
                  */
-                if (null == m_tradePersistentModel.findTradeOrderfillByExecId(execution.execId())) {
+                if (null == tradeService.findTradeOrderfillByExecId(execution.execId())) {
 
                     executionDetails.put(execution.execId(), execution);
                 }
@@ -790,7 +792,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
             transientInstance.setFilledQuantity(tradeOrderfill.getCumulativeQuantity());
             transientInstance.setFilledDate(tradeOrderfill.getTime());
             boolean isFilled = transientInstance.getIsFilled();
-            transientInstance = m_tradePersistentModel.persistTradeOrderfill(transientInstance);
+            transientInstance = tradeService.persistTradeOrderfill(transientInstance);
 
             // Let the controller know an order was filled
             if (transientInstance.getIsFilled() && !isFilled) {
@@ -832,9 +834,9 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
                  * only contains executions for tradeOrders that do not exist.
                  */
 
-                if (m_tradePersistentModel.existTradestrategyById(reqId)) {
+                if (tradeService.existTradestrategyById(reqId)) {
 
-                    Tradestrategy tradestrategy = m_tradePersistentModel.findTradestrategyById(reqId);
+                    Tradestrategy tradestrategy = tradeService.findTradestrategyById(reqId);
                     /*
                      * Internal created order have Integer.MAX_VALUE or are
                      * negative as their value, so change the m_orderId to
@@ -960,8 +962,8 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
                             }
                         }
                         tradeOrder.setCommission(new BigDecimal(totalComms));
-                        tradeOrder = m_tradePersistentModel.persistTradeOrderfill(tradeOrder);
-                        TradeOrder transientInstance = m_tradePersistentModel
+                        tradeOrder = tradeService.persistTradeOrderfill(tradeOrder);
+                        TradeOrder transientInstance = tradeService
                                 .findTradeOrderByKey(tradeOrder.getOrderKey());
 
                         // Let the controller know an order was filled
@@ -989,7 +991,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
             TWSBrokerModel.logOrderState(orderState);
             TWSBrokerModel.logTradeOrder(order);
 
-            TradeOrder transientInstance = m_tradePersistentModel.findTradeOrderByKey(order.orderId());
+            TradeOrder transientInstance = tradeService.findTradeOrderByKey(order.orderId());
 
             if (null == transientInstance) {
 
@@ -1013,7 +1015,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
 
                 if (OrderStatus.FILLED.equals(transientInstance.getStatus())) {
                     _log.debug("Open order filled Order Key:{}", transientInstance.getOrderKey());
-                    transientInstance = m_tradePersistentModel.persistTradeOrder(transientInstance);
+                    transientInstance = tradeService.persistTradeOrder(transientInstance);
 
                     if (transientInstance.hasTradePosition() && !transientInstance.getTradePosition().isOpen()) {
 
@@ -1023,7 +1025,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
                 } else {
 
                     _log.debug("Open order state changed. Status:{}", orderState.status());
-                    transientInstance = m_tradePersistentModel.persistTradeOrder(transientInstance);
+                    transientInstance = tradeService.persistTradeOrder(transientInstance);
 
                     if (OrderStatus.CANCELLED.equals(transientInstance.getStatus())) {
 
@@ -1059,7 +1061,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
 
         try {
 
-            TradeOrder transientInstance = m_tradePersistentModel.findTradeOrderByKey(orderId);
+            TradeOrder transientInstance = tradeService.findTradeOrderByKey(orderId);
 
             if (null == transientInstance) {
 
@@ -1109,7 +1111,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
                         lastFillPrice, clientId, whyHeld);
 
                 boolean isFilled = transientInstance.getIsFilled();
-                transientInstance = m_tradePersistentModel.persistTradeOrder(transientInstance);
+                transientInstance = tradeService.persistTradeOrder(transientInstance);
 
                 if (OrderStatus.CANCELLED.equals(transientInstance.getStatus())) {
 
@@ -1594,7 +1596,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
                     if (account.isDirty()) {
 
                         account.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
-                        account = m_tradePersistentModel.persistAspect(account, true);
+                        account = tradeService.persistAspect(account, true);
                         m_accountRequests.replace(accountNumber, account);
                         this.fireUpdateAccountTime(accountNumber);
                     }
@@ -1621,7 +1623,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
         try {
 
             _log.debug("nextValidId: {}", orderId);
-            int maxKey = m_tradePersistentModel.findTradeOrderByMaxKey();
+            int maxKey = tradeService.findTradeOrderByMaxKey();
 
             if (maxKey < minOrderId) {
 
@@ -1654,7 +1656,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
 
                 if (TWSBrokerModel.populateContract(contractDetails, contract)) {
 
-                    m_tradePersistentModel.persistContract(contract);
+                    tradeService.persistContract(contract);
                 }
             } else {
 
@@ -1732,14 +1734,14 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
                     for (Aspect aspect : aspects.getAspect()) {
 
                         Account item = (Account) aspect;
-                        Account account = m_tradePersistentModel.findAccountByNumber(item.getAccountNumber());
+                        Account account = tradeService.findAccountByNumber(item.getAccountNumber());
                         if (null == account) {
                             account = new Account(item.getAccountNumber(), item.getAccountNumber(), Currency.USD,
                                     AccountType.INDIVIDUAL);
                         }
                         account.setAlias(item.getAlias());
                         account.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
-                        m_tradePersistentModel.persistAspect(account);
+                        tradeService.persistAspect(account);
                     }
                     m_client.requestFA(EClientSocket.GROUPS);
                     break;
@@ -1750,7 +1752,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
                     final TWSAllocationRequest request = new TWSAllocationRequest();
                     final Aspects aspects = (Aspects) request.fromXML(inputSource);
                     for (Aspect aspect : aspects.getAspect()) {
-                        m_tradePersistentModel.persistPortfolio((Portfolio) aspect);
+                        tradeService.persistPortfolio((Portfolio) aspect);
                     }
                     this.fireFAAccountsCompleted();
                     break;
@@ -1763,7 +1765,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
 
                     for (Aspect aspect : aspects.getAspect()) {
 
-                        m_tradePersistentModel.persistPortfolio((Portfolio) aspect);
+                        tradeService.persistPortfolio((Portfolio) aspect);
                     }
                     m_client.requestFA(EClientSocket.PROFILES);
                     break;
@@ -1858,7 +1860,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
                 Tradestrategy tradestrategy = m_historyDataRequests.get(reqId);
 
                 CandleSeries candleSeries = tradestrategy.getStrategyData().getBaseCandleSeries();
-                m_tradePersistentModel.persistCandleSeries(candleSeries);
+                tradeService.persistCandleSeries(candleSeries);
 
                 _log.debug("HistoricalDataComplete complete Req Id: {} Symbol: {} Tradingday: {} candles to saved: {} Contract Tradestrategies size:: {}", reqId, tradestrategy.getContract().getSymbol(), tradestrategy.getTradingday().getOpen(), candleSeries.getItemCount(), tradestrategy.getContract().getTradestrategies().size());
 
@@ -1948,7 +1950,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
 
                                 if (updateCandleDB) {
 
-                                    m_tradePersistentModel.persistCandle(candleItem.getCandle());
+                                    tradeService.persistCandle(candleItem.getCandle());
                                     updateCandleDB = false;
                                 }
                             }
@@ -1965,11 +1967,11 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
 
         try {
             TWSBrokerModel.logCommissionReport(commsReport);
-            TradeOrderfill transientInstance = m_tradePersistentModel.findTradeOrderfillByExecId(commsReport.m_execId);
+            TradeOrderfill transientInstance = tradeService.findTradeOrderfillByExecId(commsReport.m_execId);
 
             if (null != transientInstance) {
 
-                TradeOrder tradeOrder = m_tradePersistentModel
+                TradeOrder tradeOrder = tradeService
                         .findTradeOrderByKey(transientInstance.getTradeOrder().getOrderKey());
 
                 for (TradeOrderfill tradeOrderfill : tradeOrder.getTradeOrderfills()) {
@@ -1977,7 +1979,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
                     if (tradeOrderfill.getExecId().equals(commsReport.m_execId)) {
 
                         tradeOrderfill.setCommission(new BigDecimal(commsReport.m_commission));
-                        m_tradePersistentModel.persistTradeOrderfill(tradeOrderfill.getTradeOrder());
+                        tradeService.persistTradeOrderfill(tradeOrderfill.getTradeOrder());
                         return;
                     }
                 }

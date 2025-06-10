@@ -37,10 +37,10 @@ package org.trade.core.persistent.dao.strategy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.trade.core.broker.BrokerModelException;
 import org.trade.core.broker.IBrokerModel;
-import org.trade.core.factory.ClassFactory;
-import org.trade.core.persistent.IPersistentModel;
+import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.Account;
 import org.trade.core.persistent.dao.Candle;
 import org.trade.core.persistent.dao.Contract;
@@ -87,6 +87,9 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
 
     private final static Logger _log = LoggerFactory.getLogger(AbstractStrategyRule.class);
 
+    @Autowired
+    private TradeService tradeService;
+
     /*
      * Message handler that allows the main controller to listen for errors.
      * Storage for registered change listeners.
@@ -94,7 +97,6 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
     private final transient EventListenerList listenerList;
 
     private final IBrokerModel brokerModel;
-    private IPersistentModel tradePersistentModel;
     private final DAOEntryLimit entryLimits = new DAOEntryLimit();
     private final StrategyData strategyData;
     private Tradestrategy tradestrategy = null;
@@ -246,10 +248,8 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
          */
         try {
 
-            this.tradePersistentModel = (IPersistentModel) ClassFactory
-                    .getServiceForInterface(IPersistentModel._persistentModel, this);
             // Get an instances for this thread.
-            this.tradestrategy = this.tradePersistentModel.findTradestrategyById(this.idTradestrategy);
+            this.tradestrategy = tradeService.findTradestrategyById(this.idTradestrategy);
             this.tradestrategy.setStrategyData(this.strategyData);
             this.symbol = this.tradestrategy.getContract().getSymbol();
 
@@ -576,7 +576,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
             if (null == orderKey)
                 throw new StrategyRuleException(1, 200, "Order Key cannot be null");
 
-            TradeOrder tradeOrder = tradePersistentModel.findTradeOrderByKey(orderKey);
+            TradeOrder tradeOrder = tradeService.findTradeOrderByKey(orderKey);
 
             if (null == action)
                 throw new StrategyRuleException(1, 201, "Action cannot be null");
@@ -1087,7 +1087,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
         try {
             this.getTradestrategyOrders().setStatus(status);
             this.getTradestrategyOrders().setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
-            this.tradestrategyOrders = this.tradePersistentModel.persistAspect(this.getTradestrategyOrders());
+            this.tradestrategyOrders = tradeService.persistAspect(this.getTradestrategyOrders());
         } catch (Exception ex) {
             throw new StrategyRuleException(1, 400, "Error updating tradestrategy status: " + ex.getMessage());
         }
@@ -1144,7 +1144,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
 
     public void reFreshPositionOrders() throws StrategyRuleException {
         try {
-            this.tradestrategyOrders = this.tradePersistentModel
+            this.tradestrategyOrders = tradeService
                     .findPositionOrdersByTradestrategyId(this.idTradestrategy);
         } catch (Exception ex) {
             throw new StrategyRuleException(1, 410, "Error position orders: " + ex.getMessage());
@@ -1160,7 +1160,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
     public Account getIndividualAccount() throws StrategyRuleException {
         try {
             if (null != getTradestrategy().getPortfolio().getIndividualAccount()) {
-                return this.tradePersistentModel.findAccountByNumber(
+                return tradeService.findAccountByNumber(
                         getTradestrategy().getPortfolio().getIndividualAccount().getAccountNumber());
             }
             return null;

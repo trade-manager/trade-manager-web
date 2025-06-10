@@ -36,20 +36,14 @@
 package org.trade.core.persistent.dao;
 
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.Version;
 import org.trade.core.dao.Aspect;
 
 import java.io.Serial;
-
-import static jakarta.persistence.GenerationType.IDENTITY;
 
 /**
  *
@@ -61,27 +55,21 @@ public class PortfolioAccount extends Aspect implements java.io.Serializable {
     @Serial
     private static final long serialVersionUID = 2273276207080568947L;
 
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @JoinColumn(name = "portfolio_id", nullable = false)
     private Portfolio portfolio;
+
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @JoinColumn(name = "account_id", nullable = false)
     private Account account;
 
     public PortfolioAccount() {
     }
 
     public PortfolioAccount(Portfolio portfolio, Account account) {
+
         this.portfolio = portfolio;
         this.account = account;
-    }
-
-    /**
-     * Method getId.
-     *
-     * @return Integer
-     */
-    @Id
-    @GeneratedValue(strategy = IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
-    public Integer getId() {
-        return this.id;
     }
 
     /**
@@ -89,8 +77,6 @@ public class PortfolioAccount extends Aspect implements java.io.Serializable {
      *
      * @return Portfolio
      */
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    @JoinColumn(name = "id_portfolio", nullable = false)
     public Portfolio getPortfolio() {
         return this.portfolio;
     }
@@ -109,8 +95,6 @@ public class PortfolioAccount extends Aspect implements java.io.Serializable {
      *
      * @return Account
      */
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    @JoinColumn(name = "id_account", nullable = false)
     public Account getAccount() {
         return this.account;
     }
@@ -122,17 +106,6 @@ public class PortfolioAccount extends Aspect implements java.io.Serializable {
      */
     public void setAccount(Account account) {
         this.account = account;
-    }
-
-    /**
-     * Method getVersion.
-     *
-     * @return Integer
-     */
-    @Version
-    @Column(name = "version")
-    public Integer getVersion() {
-        return this.version;
     }
 
     /**

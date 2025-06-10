@@ -38,14 +38,10 @@ package org.trade.core.persistent.dao;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
-import jakarta.persistence.Version;
-import jakarta.validation.constraints.NotNull;
 import org.trade.core.dao.Aspect;
 import org.trade.core.factory.ClassFactory;
 import org.trade.core.persistent.dao.series.indicator.IndicatorSeries;
@@ -53,8 +49,6 @@ import org.trade.core.persistent.dao.series.indicator.IndicatorSeries;
 import java.io.Serial;
 import java.util.List;
 import java.util.Vector;
-
-import static jakarta.persistence.GenerationType.IDENTITY;
 
 
 /**
@@ -67,10 +61,19 @@ public class CodeValue extends Aspect implements java.io.Serializable {
     @Serial
     private static final long serialVersionUID = 2273276207080568947L;
 
+    @Column(name = "code_value", nullable = false, length = 45)
     private String codeValue;
-    @NotNull
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "code_attribute_id", nullable = false)
     private CodeAttribute codeAttribute;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "indicator_series_id")
     private IndicatorSeries indicatorSeries;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "tradestrategy_id")
     private Tradestrategy tradestrategy;
 
     public CodeValue() {
@@ -83,6 +86,7 @@ public class CodeValue extends Aspect implements java.io.Serializable {
      * @param codeValue     String
      */
     public CodeValue(CodeAttribute codeAttribute, String codeValue) {
+
         this.codeValue = codeValue;
         this.codeAttribute = codeAttribute;
     }
@@ -95,6 +99,7 @@ public class CodeValue extends Aspect implements java.io.Serializable {
      * @param indicatorSeries IndicatorSeries
      */
     public CodeValue(CodeAttribute codeAttribute, String codeValue, IndicatorSeries indicatorSeries) {
+
         this.codeValue = codeValue;
         this.codeAttribute = codeAttribute;
         this.indicatorSeries = indicatorSeries;
@@ -108,21 +113,10 @@ public class CodeValue extends Aspect implements java.io.Serializable {
      * @param tradestrategy Tradestrategy
      */
     public CodeValue(CodeAttribute codeAttribute, String codeValue, Tradestrategy tradestrategy) {
+
         this.codeValue = codeValue;
         this.codeAttribute = codeAttribute;
         this.tradestrategy = tradestrategy;
-    }
-
-    /**
-     * Method getId.
-     *
-     * @return Integer
-     */
-    @Id
-    @GeneratedValue(strategy = IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
-    public Integer getId() {
-        return this.id;
     }
 
     /**
@@ -130,7 +124,6 @@ public class CodeValue extends Aspect implements java.io.Serializable {
      *
      * @return String
      */
-    @Column(name = "code_value", nullable = false, length = 45)
     public String getCodeValue() {
         return this.codeValue;
     }
@@ -149,8 +142,6 @@ public class CodeValue extends Aspect implements java.io.Serializable {
      *
      * @return CodeAttribute
      */
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_code_attribute", nullable = false)
     public CodeAttribute getCodeAttribute() {
         return this.codeAttribute;
     }
@@ -169,8 +160,6 @@ public class CodeValue extends Aspect implements java.io.Serializable {
      *
      * @return IndicatorSeries
      */
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_indicator_series")
     public IndicatorSeries getIndicatorSeries() {
         return this.indicatorSeries;
     }
@@ -189,8 +178,6 @@ public class CodeValue extends Aspect implements java.io.Serializable {
      *
      * @return Tradestrategy
      */
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_tradestrategy")
     public Tradestrategy getTradestrategy() {
         return this.tradestrategy;
     }
@@ -202,17 +189,6 @@ public class CodeValue extends Aspect implements java.io.Serializable {
      */
     public void setTradestrategy(Tradestrategy tradestrategy) {
         this.tradestrategy = tradestrategy;
-    }
-
-    /**
-     * Method getVersion.
-     *
-     * @return Integer
-     */
-    @Version
-    @Column(name = "version")
-    public Integer getVersion() {
-        return this.version;
     }
 
     /**
@@ -228,9 +204,12 @@ public class CodeValue extends Aspect implements java.io.Serializable {
      */
     @Transient
     public static Object getValueCode(final String name, final List<CodeValue> codeValues) throws Exception {
+
         Object codeValue = null;
         for (CodeValue value : codeValues) {
+
             if (name.equals(value.getCodeAttribute().getName())) {
+
                 Vector<Object> parm = new Vector<>();
                 parm.add(value.getCodeValue());
                 // codeValue = ClassFactory.getCreateClass(value.getCodeAttribute().getClassName(), parm, CodeAttributePanel.class);

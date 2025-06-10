@@ -20,10 +20,10 @@ import com.ib.controller.Group;
 import com.ib.controller.Position;
 import com.ib.controller.Profile;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.trade.core.broker.client.Broker;
-import org.trade.core.factory.ClassFactory;
-import org.trade.core.persistent.IPersistentModel;
-import org.trade.core.persistent.PersistentModelException;
+import org.trade.core.persistent.ServiceException;
+import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.Account;
 import org.trade.core.persistent.dao.Contract;
 import org.trade.core.persistent.dao.Portfolio;
@@ -68,6 +68,9 @@ import java.util.logging.Logger;
 public class TWSBrokerService extends AbstractBrokerModel {
 
     private final static org.slf4j.Logger _log = LoggerFactory.getLogger(TWSBrokerModel.class);
+
+    @Autowired
+    private TradeService tradeService;
 
     // Use getId as key
     private static final ConcurrentHashMap<Integer, Tradestrategy> m_historyDataRequests = new ConcurrentHashMap<>();
@@ -124,14 +127,11 @@ public class TWSBrokerService extends AbstractBrokerModel {
     private Integer m_clientId = null;
     private AtomicInteger reqId = null;
     private AtomicInteger orderKey = null;
-    private IPersistentModel m_tradePersistentModel = null;
     private ApiController m_controller;
 
     public TWSBrokerService() {
         try {
 
-            m_tradePersistentModel = (IPersistentModel) ClassFactory
-                    .getServiceForInterface(IPersistentModel._persistentModel, this);
             reqId = new AtomicInteger((int) (System.currentTimeMillis() / 1000d));
 
         } catch (Exception ex) {
@@ -267,7 +267,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
     @Override
     public void onSubscribeAccountUpdates(boolean subscribe, String accountNumber) throws BrokerModelException {
         try {
-            Account account = m_tradePersistentModel.findAccountByNumber(accountNumber);
+            Account account = tradeService.findAccountByNumber(accountNumber);
             m_accountRequests.put(accountNumber, account);
             if (controller().client().isConnected()) {
                 controller().reqAccountUpdates(subscribe, accountNumber, new AccountHandler(this, accountNumber));
@@ -759,7 +759,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
                     if (null == tradeOrder.getClientId()) {
                         tradeOrder.setClientId(this.m_clientId);
                     }
-                    tradeOrder = m_tradePersistentModel.persistTradeOrder(tradeOrder);
+                    tradeOrder = tradeService.persistTradeOrder(tradeOrder);
 
                     _log.debug("Order Placed Key: " + tradeOrder.getOrderKey());
                     com.ib.client.Contract IBContract = TWSBrokerModel.getIBContract(contract);
@@ -906,25 +906,18 @@ public class TWSBrokerService extends AbstractBrokerModel {
     public class AdvisorHandler implements ApiController.IAdvisorHandler {
 
         private AbstractBrokerModel m_brokerModel;
-        private IPersistentModel m_tradePersistentModel;
+
 
         AdvisorHandler(AbstractBrokerModel brokerModel) {
             this.m_brokerModel = brokerModel;
-            try {
-                m_tradePersistentModel = (IPersistentModel) ClassFactory
-                        .getServiceForInterface(IPersistentModel._persistentModel, this);
-
-            } catch (Exception ex) {
-                throw new IllegalArgumentException("Error initializing IBrokerModel Msg: " + ex.getMessage());
-            }
         }
 
         private AbstractBrokerModel getBrokerModel() {
             return this.m_brokerModel;
         }
 
-        private IPersistentModel getPersistentModel() {
-            return this.m_tradePersistentModel;
+        private TradeService getPersistentModel() {
+            return tradeService;
         }
 
         public void groups(ArrayList<Group> groups) {
@@ -935,7 +928,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
                     Portfolio portfolio = new Portfolio(group.name(), group.name());
                     getPersistentModel().persistPortfolio(portfolio);
                 }
-            } catch (PersistentModelException ex) {
+            } catch (ServiceException ex) {
                 error(Types.FADataType.ALIASES.ordinal(), 3235, ex.getMessage());
             }
         }
@@ -948,7 +941,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
                     getPersistentModel().persistPortfolio(portfolio);
                 }
                 getBrokerModel().fireFAAccountsCompleted();
-            } catch (PersistentModelException ex) {
+            } catch (ServiceException ex) {
                 error(Types.FADataType.ALIASES.ordinal(), 3235, ex.getMessage());
             }
         }
@@ -967,7 +960,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
                     account.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
                     getPersistentModel().persistAspect(account);
                 }
-            } catch (PersistentModelException ex) {
+            } catch (ServiceException ex) {
                 error(Types.FADataType.ALIASES.ordinal(), 3235, ex.getMessage());
             }
         }
@@ -977,26 +970,18 @@ public class TWSBrokerService extends AbstractBrokerModel {
 
         private AbstractBrokerModel m_brokerModel;
         private String m_accountNumber;
-        private IPersistentModel m_tradePersistentModel;
 
         AccountHandler(AbstractBrokerModel brokerModel, String accountNumber) {
             this.m_brokerModel = brokerModel;
             m_accountNumber = accountNumber;
-            try {
-                m_tradePersistentModel = (IPersistentModel) ClassFactory
-                        .getServiceForInterface(IPersistentModel._persistentModel, this);
-
-            } catch (Exception ex) {
-                throw new IllegalArgumentException("Error initializing IBrokerModel Msg: " + ex.getMessage());
-            }
         }
 
         private AbstractBrokerModel getBrokerModel() {
             return this.m_brokerModel;
         }
 
-        private IPersistentModel getPersistentModel() {
-            return this.m_tradePersistentModel;
+        private TradeService getPersistentModel() {
+            return tradeService;
         }
 
         private String getAccountNumber() {
@@ -1020,26 +1005,18 @@ public class TWSBrokerService extends AbstractBrokerModel {
     public class LiveOrderHandler implements ApiController.ILiveOrderHandler {
 
         private AbstractBrokerModel m_brokerModel;
-        private IPersistentModel m_tradePersistentModel;
 
         LiveOrderHandler(AbstractBrokerModel brokerModel) {
             this.m_brokerModel = brokerModel;
 
-            try {
-                m_tradePersistentModel = (IPersistentModel) ClassFactory
-                        .getServiceForInterface(IPersistentModel._persistentModel, this);
-
-            } catch (Exception ex) {
-                throw new IllegalArgumentException("Error initializing IBrokerModel Msg: " + ex.getMessage());
-            }
         }
 
         private AbstractBrokerModel getBrokerModel() {
             return this.m_brokerModel;
         }
 
-        private IPersistentModel getPersistentModel() {
-            return this.m_tradePersistentModel;
+        private TradeService getPersistentModel() {
+            return tradeService;
         }
 
         public void openOrder(com.ib.client.Contract contract, Order order, OrderState orderState) {
@@ -1059,26 +1036,18 @@ public class TWSBrokerService extends AbstractBrokerModel {
 
         private AbstractBrokerModel m_brokerModel;
         private Integer m_orderKey;
-        private IPersistentModel m_tradePersistentModel;
 
         OrderHandler(AbstractBrokerModel brokerModel, Integer orderKey) {
             this.m_brokerModel = brokerModel;
             m_orderKey = orderKey;
-            try {
-                m_tradePersistentModel = (IPersistentModel) ClassFactory
-                        .getServiceForInterface(IPersistentModel._persistentModel, this);
-
-            } catch (Exception ex) {
-                throw new IllegalArgumentException("Error initializing IBrokerModel Msg: " + ex.getMessage());
-            }
         }
 
         private AbstractBrokerModel getBrokerModel() {
             return this.m_brokerModel;
         }
 
-        private IPersistentModel getPersistentModel() {
-            return this.m_tradePersistentModel;
+        private TradeService getPersistentModel() {
+            return tradeService;
         }
 
         private Integer getOrderKey() {
@@ -1156,26 +1125,18 @@ public class TWSBrokerService extends AbstractBrokerModel {
 
         private AbstractBrokerModel m_brokerModel;
         private Integer m_reqId;
-        private IPersistentModel m_tradePersistentModel;
 
         HistoricalDataHandler(AbstractBrokerModel brokerModel, Integer reqId) {
             this.m_brokerModel = brokerModel;
             this.m_reqId = reqId;
-            try {
-                m_tradePersistentModel = (IPersistentModel) ClassFactory
-                        .getServiceForInterface(IPersistentModel._persistentModel, this);
-
-            } catch (Exception ex) {
-                throw new IllegalArgumentException("Error initializing IBrokerModel Msg: " + ex.getMessage());
-            }
         }
 
         private AbstractBrokerModel getBrokerModel() {
             return this.m_brokerModel;
         }
 
-        private IPersistentModel getPersistentModel() {
-            return this.m_tradePersistentModel;
+        private TradeService getPersistentModel() {
+            return tradeService;
         }
 
         private Integer getReqId() {
@@ -1233,7 +1194,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
                 Tradestrategy tradestrategy = m_historyDataRequests.get(getReqId());
 
                 CandleSeries candleSeries = tradestrategy.getStrategyData().getBaseCandleSeries();
-                m_tradePersistentModel.persistCandleSeries(candleSeries);
+                tradeService.persistCandleSeries(candleSeries);
 
                 _log.debug("HistoricalData complete Req Id: " + getReqId() + " Symbol: "
                         + tradestrategy.getContract().getSymbol() + " Tradingday: "
@@ -1283,26 +1244,18 @@ public class TWSBrokerService extends AbstractBrokerModel {
 
         private AbstractBrokerModel m_brokerModel;
         private Integer m_reqId;
-        private IPersistentModel m_tradePersistentModel;
 
         RealTimeBarHandler(AbstractBrokerModel brokerModel, Integer reqId) {
             this.m_brokerModel = brokerModel;
             this.m_reqId = reqId;
-            try {
-                m_tradePersistentModel = (IPersistentModel) ClassFactory
-                        .getServiceForInterface(IPersistentModel._persistentModel, this);
-
-            } catch (Exception ex) {
-                throw new IllegalArgumentException("Error initializing IBrokerModel Msg: " + ex.getMessage());
-            }
         }
 
         private AbstractBrokerModel getBrokerModel() {
             return this.m_brokerModel;
         }
 
-        private IPersistentModel getPersistentModel() {
-            return this.m_tradePersistentModel;
+        private TradeService getPersistentModel() {
+            return tradeService;
         }
 
         private Integer getReqId() {
@@ -1363,26 +1316,18 @@ public class TWSBrokerService extends AbstractBrokerModel {
 
         private AbstractBrokerModel m_brokerModel;
         private Integer m_reqId;
-        private IPersistentModel m_tradePersistentModel;
 
         TopMktDataHandler(AbstractBrokerModel brokerModel, Integer reqId) {
             this.m_brokerModel = brokerModel;
             this.m_reqId = reqId;
-            try {
-                m_tradePersistentModel = (IPersistentModel) ClassFactory
-                        .getServiceForInterface(IPersistentModel._persistentModel, this);
-
-            } catch (Exception ex) {
-                throw new IllegalArgumentException("Error initializing IBrokerModel Msg: " + ex.getMessage());
-            }
         }
 
         private AbstractBrokerModel getBrokerModel() {
             return this.m_brokerModel;
         }
 
-        private IPersistentModel getPersistentModel() {
-            return this.m_tradePersistentModel;
+        private TradeService getPersistentModel() {
+            return tradeService;
         }
 
         private Integer getReqId() {
@@ -1650,26 +1595,18 @@ public class TWSBrokerService extends AbstractBrokerModel {
 
         private AbstractBrokerModel m_brokerModel;
         private Integer m_reqId;
-        private IPersistentModel m_tradePersistentModel;
 
         TradeReportHandler(AbstractBrokerModel brokerModel, Integer reqId) {
             this.m_brokerModel = brokerModel;
             this.m_reqId = reqId;
-            try {
-                m_tradePersistentModel = (IPersistentModel) ClassFactory
-                        .getServiceForInterface(IPersistentModel._persistentModel, this);
-
-            } catch (Exception ex) {
-                throw new IllegalArgumentException("Error initializing IBrokerModel Msg: " + ex.getMessage());
-            }
         }
 
         private AbstractBrokerModel getBrokerModel() {
             return this.m_brokerModel;
         }
 
-        private IPersistentModel getPersistentModel() {
-            return this.m_tradePersistentModel;
+        private TradeService getPersistentModel() {
+            return tradeService;
         }
 
         private Integer getReqId() {
@@ -1823,7 +1760,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
 
                         for (TradeOrder tradeOrder : orders) {
                             // tradeOrder =
-                            // m_tradePersistentModel.persistTradeOrder(tradeOrder);
+                            // tradeService.persistTradeOrder(tradeOrder);
                             double totalComms = 0;
                             for (String key : executionDetails.keySet()) {
                                 Execution execution = executionDetails.get(key);

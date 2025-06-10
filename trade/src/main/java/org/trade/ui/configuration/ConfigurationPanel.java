@@ -35,6 +35,8 @@
  */
 package org.trade.ui.configuration;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.trade.base.BaseButton;
 import org.trade.base.BasePanel;
 import org.trade.base.BaseUIPropertyCodes;
@@ -44,7 +46,7 @@ import org.trade.core.dao.Aspect;
 import org.trade.core.dao.Aspects;
 import org.trade.core.factory.ClassFactory;
 import org.trade.core.lookup.DBTableLookupServiceProvider;
-import org.trade.core.persistent.IPersistentModel;
+import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.CodeType;
 import org.trade.core.persistent.dao.CodeValue;
 import org.trade.core.persistent.dao.Portfolio;
@@ -81,9 +83,10 @@ public class ConfigurationPanel extends BasePanel {
     @Serial
     private static final long serialVersionUID = 8543984162821384818L;
 
+    private TradeService tradeService;
+    private final static Logger _log = LoggerFactory.getLogger(ConfigurationPanel.class);
     private JScrollPane m_jScrollPane = null;
     private final JScrollPane m_jScrollPane1 = new JScrollPane();
-    private IPersistentModel m_tradePersistentModel = null;
     private ConfigurationTable m_table = null;
     private AspectTableModel m_tableModel = null;
     private Aspects m_aspects = null;
@@ -96,10 +99,10 @@ public class ConfigurationPanel extends BasePanel {
     /**
      * Constructor
      *
-     * @param tradePersistentModel IPersistentModel
+     * @param tradeService TradeService
      */
 
-    public ConfigurationPanel(IPersistentModel tradePersistentModel) {
+    public ConfigurationPanel(TradeService tradeService) {
         try {
 
             if (null != getMenu()) {
@@ -113,7 +116,7 @@ public class ConfigurationPanel extends BasePanel {
              */
 
             DAOEntryLimit.newInstance();
-            m_tradePersistentModel = tradePersistentModel;
+            this.tradeService = tradeService;
             m_jScrollPane = new JScrollPane();
             propertiesButton = new BaseButton(this, BaseUIPropertyCodes.PROPERTIES, 0);
             propertiesButton.setEnabled(false);
@@ -209,7 +212,7 @@ public class ConfigurationPanel extends BasePanel {
             for (ListIterator<Aspect> itemIter = m_aspects.getAspect().listIterator(); itemIter.hasNext(); ) {
                 Aspect item = itemIter.next();
                 if (item.isDirty()) {
-                    item = m_tradePersistentModel.persistAspect(item);
+                    item = tradeService.persistAspect(item);
                 }
 
                 /*
@@ -219,7 +222,7 @@ public class ConfigurationPanel extends BasePanel {
                 itemIter.set(item);
             }
             m_aspects.setDirty(false);
-            Aspects aspects = m_tradePersistentModel.findAspectsByClassName(className);
+            Aspects aspects = tradeService.findAspectsByClassName(className);
             for (Aspect currAspect : aspects.getAspect()) {
                 boolean exists = false;
                 for (Aspect aspect : m_aspects.getAspect()) {
@@ -229,7 +232,7 @@ public class ConfigurationPanel extends BasePanel {
                     }
                 }
                 if (!exists)
-                    m_tradePersistentModel.removeAspect(currAspect);
+                    tradeService.removeAspect(currAspect);
             }
             DBTableLookupServiceProvider.clearLookup();
             doRefresh();
@@ -280,7 +283,7 @@ public class ConfigurationPanel extends BasePanel {
         try {
             this.clearStatusBarMessage();
             String indicatorName = series.getType().substring(0, series.getType().indexOf("Series"));
-            CodeType codeType = m_tradePersistentModel.findCodeTypeByNameType(indicatorName,
+            CodeType codeType = tradeService.findCodeTypeByNameType(indicatorName,
                     CodeType.IndicatorParameters);
             if (null == codeType) {
                 this.setStatusBarMessage("There are no properties for this Indicator ...", BasePanel.INFORMATION);
@@ -345,11 +348,11 @@ public class ConfigurationPanel extends BasePanel {
     private void addReferenceTablePanel(String refTableClass) {
 
         try {
-            m_aspects = m_tradePersistentModel.findAspectsByClassName("org.trade.persistent.dao." + refTableClass);
+
+            m_aspects = tradeService.findAspectsByClassName("org.trade.persistent.dao." + refTableClass);
             Vector<Object> parm = new Vector<>();
             m_tableModel = (AspectTableModel) ClassFactory
                     .getCreateClass("org.trade.ui.models." + refTableClass + "TableModel", parm, this);
-
             m_tableModel.setData(m_aspects);
             m_table = new ConfigurationTable(m_tableModel);
             m_table.setFont(new Font("Monospaced", Font.PLAIN, 12));
@@ -360,7 +363,9 @@ public class ConfigurationPanel extends BasePanel {
             m_jScrollPane.getViewport().add(m_table, BorderLayout.CENTER);
             m_jScrollPane.setBorder(new BevelBorder(BevelBorder.LOWERED));
             m_jScrollPane.addMouseListener(m_table);
+
             if (!m_aspects.getAspect().isEmpty()) {
+
                 m_table.setRowSelectionInterval(0, 0);
             }
 

@@ -38,7 +38,6 @@ package org.trade.core.persistent.dao;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityResult;
-import jakarta.persistence.Id;
 import jakarta.persistence.SqlResultSetMapping;
 import jakarta.persistence.SqlResultSetMappings;
 import org.trade.core.dao.Aspect;
@@ -100,7 +99,7 @@ public class TradelogSummary extends Aspect implements java.io.Serializable {
                            BigDecimal simpleSharpeRatio, BigDecimal grossProfitLoss, Integer quantity, BigDecimal commission,
                            BigDecimal netProfitLoss, BigDecimal profitAmount, BigDecimal lossAmount, Integer winCount,
                            Integer lossCount, Integer positionCount, Integer tradestrategyCount) {
-        this.id = idTradelogSummary;
+        this.setId(idTradelogSummary);
         this.period = period;
         this.battingAverage = battingAverage;
         this.simpleSharpeRatio = simpleSharpeRatio;
@@ -120,20 +119,20 @@ public class TradelogSummary extends Aspect implements java.io.Serializable {
      * Method getIdTradelogSummary.
      *
      * @return Integer
-     */
-    @Id
-    @Column(name = "id_tradelog_summary")
-    public Integer getIdTradelogSummary() {
-        return this.id;
-    }
 
+     @Id
+     @Column(name = "id_tradelog_summary")
+     public Integer getIdTradelogSummary() {
+     return this.id;
+     }
+     */
     /**
      * Method setIdTradelogSummary.
      *
      * @param idTradelogSummary Integer
      */
     public void setIdTradelogSummary(Integer idTradelogSummary) {
-        this.id = idTradelogSummary;
+        this.setId(idTradelogSummary);
     }
 
     /**

@@ -42,7 +42,7 @@ import org.trade.base.ExampleFileChooser;
 import org.trade.base.ExampleFileFilter;
 import org.trade.base.FilePreviewer;
 import org.trade.base.Table;
-import org.trade.core.persistent.IPersistentModel;
+import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.Portfolio;
 import org.trade.core.persistent.dao.TradelogDetail;
 import org.trade.core.persistent.dao.TradelogReport;
@@ -90,7 +90,7 @@ public class PortfolioPanel extends BasePanel implements ChangeListener, ItemLis
     @Serial
     private static final long serialVersionUID = 98016024273398947L;
 
-    private IPersistentModel m_tradePersistentModel = null;
+    private TradeService tradeService;
     private TradelogReport m_tradelogReport = new TradelogReport();
     private String m_csvDefaultDir = null;
     private Table m_tableTradelogSummary = null;
@@ -115,17 +115,17 @@ public class PortfolioPanel extends BasePanel implements ChangeListener, ItemLis
     /**
      * Constructor for PortfolioPanel.
      *
-     * @param controller           BasePanel
-     * @param tradePersistentModel IPersistentModel
+     * @param controller   BasePanel
+     * @param tradeService TradeService
      */
 
-    public PortfolioPanel(BasePanel controller, IPersistentModel tradePersistentModel) {
+    public PortfolioPanel(BasePanel controller, TradeService tradeService) {
         try {
             if (null != getMenu())
                 getMenu().addMessageListener(this);
             this.setLayout(new BorderLayout());
 
-            m_tradePersistentModel = tradePersistentModel;
+            tradeService = tradeService;
             m_csvDefaultDir = ConfigProperties.getPropAsString("trade.csv.default.dir");
             transferButton = new BaseButton(controller, BaseUIPropertyCodes.TRANSFER);
             JLabel portfolioLabel = new JLabel("Portfolio:");
@@ -241,7 +241,7 @@ public class PortfolioPanel extends BasePanel implements ChangeListener, ItemLis
             if (symbol.isEmpty())
                 symbol = null;
 
-            m_tradelogReport = m_tradePersistentModel.findTradelogReport(this.portfolio, startDate, endDate,
+            m_tradelogReport = tradeService.findTradelogReport(this.portfolio, startDate, endDate,
                     filterButton.isSelected(), symbol, m_lossGainAmt.getMoney().getBigDecimalValue());
             this.clearStatusBarMessage();
             if (m_tradelogReport.getTradelogDetail().isEmpty()) {

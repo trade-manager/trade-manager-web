@@ -40,17 +40,26 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  *
  */
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class CodeTypeTest {
 
     private final static Logger _log = LoggerFactory.getLogger(CodeTypeTest.class);
+
+    @Autowired
+    CodeTypeRepository codeTypeRepository;
 
     /**
      * Method setUpBeforeClass.
@@ -83,12 +92,10 @@ public class CodeTypeTest {
     @Test
     public void testFindCodeValueByName() {
 
-
-        CodeTypeHome codeTypeHome = new CodeTypeHome();
-        CodeType codeType = codeTypeHome.findByName("MovingAverage");
+        CodeType codeType = codeTypeRepository.findByName("MovingAverage");
         assertNotNull(codeType);
         _log.info("CodeType id: {}", codeType.getId());
-        CodeValue codeValue = codeTypeHome.findByAttributeName(codeType.getName(), "Length");
+        CodeValue codeValue = codeTypeRepository.findByAttributeName(codeType.getName(), "Length");
         assertNotNull(codeValue);
         _log.info("CodeValue id: {}", codeValue.getId());
 

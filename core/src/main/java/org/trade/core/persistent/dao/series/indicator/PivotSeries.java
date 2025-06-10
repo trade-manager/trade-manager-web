@@ -38,7 +38,7 @@ package org.trade.core.persistent.dao.series.indicator;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Transient;
-import org.trade.core.persistent.PersistentModelException;
+import org.trade.core.persistent.ServiceException;
 import org.trade.core.persistent.dao.CodeValue;
 import org.trade.core.persistent.dao.Entrylimit;
 import org.trade.core.persistent.dao.Strategy;
@@ -144,7 +144,7 @@ public class PivotSeries extends IndicatorSeries {
      * @param pivotPrice the pivotPrice-value.
      * @param pivotSide  the pivotSide-value.
      */
-    public void add(RegularTimePeriod period, BigDecimal pivotPrice, String pivotSide) throws PersistentModelException {
+    public void add(RegularTimePeriod period, BigDecimal pivotPrice, String pivotSide) throws ServiceException {
         if (!this.isEmpty()) {
             PivotItem item0 = (PivotItem) this.getDataItem(0);
             if (!period.getClass().equals(item0.getPeriod().getClass())) {
@@ -160,7 +160,7 @@ public class PivotSeries extends IndicatorSeries {
      * @param notify   the notify listeners.
      * @param dataItem PivotItem
      */
-    public void add(PivotItem dataItem, boolean notify) throws PersistentModelException {
+    public void add(PivotItem dataItem, boolean notify) throws ServiceException {
         if (!this.isEmpty()) {
             PivotItem item0 = (PivotItem) this.getDataItem(0);
             if (!dataItem.getPeriod().getClass().equals(item0.getPeriod().getClass())) {
@@ -251,7 +251,7 @@ public class PivotSeries extends IndicatorSeries {
      * @param candleDataset CandleDataset
      * @param seriesIndex   int
      */
-    public void createSeries(CandleDataset candleDataset, int seriesIndex) throws PersistentModelException {
+    public void createSeries(CandleDataset candleDataset, int seriesIndex) throws ServiceException {
 
         if (candleDataset.getSeries(seriesIndex) == null) {
             throw new IllegalArgumentException("Null source (XYDataset).");
@@ -275,7 +275,7 @@ public class PivotSeries extends IndicatorSeries {
      * @param newBar boolean
      */
 
-    public void updateSeries(CandleSeries source, int skip, boolean newBar) throws PersistentModelException {
+    public void updateSeries(CandleSeries source, int skip, boolean newBar) throws ServiceException {
 
         if (source == null) {
             throw new IllegalArgumentException("Null source (CandleSeries).");

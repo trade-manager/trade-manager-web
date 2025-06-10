@@ -2,8 +2,8 @@ package org.trade.core.broker;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.trade.core.persistent.IPersistentModel;
-import org.trade.core.persistent.PersistentModelException;
+import org.trade.core.persistent.ServiceException;
+import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.Contract;
 import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.Tradestrategy;
@@ -33,7 +33,7 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
     private static final String durationFormat = "%s hr %s min %s sec";
 
     private final IBrokerModel brokerModel;
-    private final IPersistentModel tradePersistentModel;
+    private final TradeService tradeService;
     private final Tradingdays tradingdays;
     private int grandTotal = 0;
     private long startTime = 0;
@@ -51,10 +51,10 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
      * @param brokerModel IBrokerModel
      * @param tradingdays Tradingdays
      */
-    public BrokerDataRequestMonitor(IBrokerModel brokerModel, IPersistentModel tradePersistentModel,
+    public BrokerDataRequestMonitor(IBrokerModel brokerModel, TradeService tradeService,
                                     Tradingdays tradingdays) throws IOException {
         this.brokerModel = brokerModel;
-        this.tradePersistentModel = tradePersistentModel;
+        this.tradeService = tradeService;
         this.tradingdays = tradingdays;
         this.backTestBarSize = ConfigProperties.getPropAsInt("trade.backtest.barSize");
 
@@ -144,7 +144,7 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
                                 Tradestrategy tradestrategy = (Tradestrategy) itemTradestrategy.clone();
                                 tradestrategy.setBarSize(getBarSize(tradingday));
                                 tradestrategy.setChartDays(1);
-                                tradestrategy.setId(this.brokerModel.getNextRequestId());
+                                // tradestrategy.setId(this.brokerModel.getNextRequestId());
                                 tradestrategy.setStrategyData(null);
                                 tradestrategy.setStrategyData(StrategyData.create(tradestrategy));
 
@@ -341,7 +341,7 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
      * @return boolean
      */
     private boolean addIndicatorTradestrategyToTradingday(Tradingday tradingday, Tradestrategy tradestrategy)
-            throws BrokerModelException, PersistentModelException {
+            throws BrokerModelException, ServiceException {
 
         boolean addedIndicator = false;
 
@@ -491,7 +491,7 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
      * @return Tradestrategy
      */
     private Tradestrategy getIndicatorTradestrategy(Tradestrategy tradestrategy, CandleSeries series)
-            throws PersistentModelException {
+            throws ServiceException {
 
         Tradestrategy indicatorTradestrategy = null;
 
@@ -513,19 +513,19 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
 
             if (null == series.getContract().getId()) {
 
-                contract = this.tradePersistentModel.findContractByUniqueKey(series.getContract().getSecType(),
+                contract = this.tradeService.findContractByUniqueKey(series.getContract().getSecType(),
                         series.getContract().getSymbol(), series.getContract().getExchange(),
                         series.getContract().getCurrency(), series.getContract().getExpiry());
 
                 if (null == contract) {
 
-                    contract = this.tradePersistentModel.persistAspect(series.getContract());
+                    contract = this.tradeService.persistAspect(series.getContract());
                 }
             }
             indicatorTradestrategy = new Tradestrategy(contract, tradestrategy.getTradingday(),
                     new Strategy("Indicator"), tradestrategy.getPortfolio(), new BigDecimal(0), null, null, false,
                     tradestrategy.getChartDays(), tradestrategy.getBarSize());
-            indicatorTradestrategy.setId(this.brokerModel.getNextRequestId());
+            // indicatorTradestrategy.setId(this.brokerModel.getNextRequestId());
             indicatorTradestrategy.setDirty(false);
         }
         if (null == indicatorTradestrategy.getStrategyData()) {
@@ -673,7 +673,7 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
      * @param startTime long
      * @return Integer The total number of tradestrategies to process.
      */
-    private Integer calculateTotalTradestrategiesToProcess(long startTime) throws PersistentModelException {
+    private Integer calculateTotalTradestrategiesToProcess(long startTime) throws ServiceException {
 
         int total = 0;
         ConcurrentHashMap<String, Contract> contracts = new ConcurrentHashMap<>();

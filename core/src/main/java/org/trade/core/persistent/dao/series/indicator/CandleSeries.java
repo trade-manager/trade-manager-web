@@ -38,7 +38,7 @@ package org.trade.core.persistent.dao.series.indicator;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Transient;
-import org.trade.core.persistent.PersistentModelException;
+import org.trade.core.persistent.ServiceException;
 import org.trade.core.persistent.dao.Candle;
 import org.trade.core.persistent.dao.CodeValue;
 import org.trade.core.persistent.dao.Contract;
@@ -412,7 +412,7 @@ public class CandleSeries extends IndicatorSeries {
      * @param lastUpdateDate Date
      */
     public void add(Contract contract, Tradingday tradingday, RegularTimePeriod period, double open, double high,
-                    double low, double close, long volume, double vwap, int tradeCount, ZonedDateTime lastUpdateDate) throws PersistentModelException {
+                    double low, double close, long volume, double vwap, int tradeCount, ZonedDateTime lastUpdateDate) throws ServiceException {
         if (!this.isEmpty()) {
             CandleItem item0 = (CandleItem) this.getDataItem(0);
             if (!period.getClass().equals(item0.getPeriod().getClass())) {
@@ -429,7 +429,7 @@ public class CandleSeries extends IndicatorSeries {
      * @param candleItem CandleItem
      * @param notify     boolean
      */
-    public void add(CandleItem candleItem, boolean notify) throws PersistentModelException {
+    public void add(CandleItem candleItem, boolean notify) throws ServiceException {
         if (!this.isEmpty()) {
             CandleItem item0 = (CandleItem) this.getDataItem(0);
             if (!candleItem.getPeriod().getClass().equals(item0.getPeriod().getClass())) {
@@ -476,7 +476,7 @@ public class CandleSeries extends IndicatorSeries {
      * @return completedCandle the last completed candle or -1 if still building
      */
     boolean buildCandle(ZonedDateTime time, double open, double high, double low, double close, long volume,
-                        double vwap, int tradeCount, int rollupInterval, ZonedDateTime lastUpdateDate) throws PersistentModelException {
+                        double vwap, int tradeCount, int rollupInterval, ZonedDateTime lastUpdateDate) throws ServiceException {
 
         int index = this.indexOf(time);
         // _log.error("Symbol :" + this.getSymbol() + " Bar Time: " + time
@@ -647,7 +647,7 @@ public class CandleSeries extends IndicatorSeries {
      * @param skip   int
      * @param newBar boolean
      */
-    public void updateSeries(CandleSeries source, int skip, boolean newBar) throws PersistentModelException {
+    public void updateSeries(CandleSeries source, int skip, boolean newBar) throws ServiceException {
 
         if (source == null) {
             throw new IllegalArgumentException("Null source (CandleSeries).");

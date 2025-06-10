@@ -102,7 +102,9 @@ public class ValueTypeDAOTest {
         Vector<Decode> decodes = strategies.getCodesDecodes();
         Enumeration<Decode> eDecodes = decodes.elements();
         assertFalse(decodes.isEmpty());
+
         while (eDecodes.hasMoreElements()) {
+
             Decode decode = eDecodes.nextElement();
             _log.info("TYPE:{}", decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._TYPE));
             _log.info("CODE:{}", decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._CODE));
@@ -114,7 +116,9 @@ public class ValueTypeDAOTest {
         decodes = strategyManagers.getCodesDecodes();
         assertFalse(decodes.isEmpty());
         eDecodes = decodes.elements();
+
         while (eDecodes.hasMoreElements()) {
+
             Decode decode = eDecodes.nextElement();
             _log.info("TYPE:{}", decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._TYPE));
             _log.info("CODE:{}", decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._CODE));
@@ -130,12 +134,13 @@ public class ValueTypeDAOTest {
         Vector<Decode> decodes = entryLimits.getCodesDecodes();
         assertFalse(decodes.isEmpty());
         Enumeration<Decode> eDecodes = decodes.elements();
+
         while (eDecodes.hasMoreElements()) {
+
             Decode decode = eDecodes.nextElement();
             _log.info("TYPE:{}", decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._TYPE));
             _log.info("CODE:{}", decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._CODE));
             _log.info("DISPLAY_NAME:{}", decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._DISPLAY_NAME));
-
         }
         Money price = new Money(20.22);
         Entrylimit entrylimit = entryLimits.getValue(price);
@@ -149,7 +154,9 @@ public class ValueTypeDAOTest {
         Vector<Decode> decodes = DAOValues.getCodesDecodes();
         assertFalse(decodes.isEmpty());
         Enumeration<Decode> eDecodes = decodes.elements();
+
         while (eDecodes.hasMoreElements()) {
+
             Decode decode = eDecodes.nextElement();
             _log.info("TYPE:{}", decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._TYPE));
             _log.info("CODE:{}", decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._CODE));
