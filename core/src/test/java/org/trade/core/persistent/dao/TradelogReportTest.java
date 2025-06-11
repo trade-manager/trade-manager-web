@@ -40,8 +40,12 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.trade.core.properties.TradeAppLoadConfig;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.DAOPortfolio;
@@ -57,9 +61,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class TradelogReportTest {
 
     private final static Logger _log = LoggerFactory.getLogger(TradelogReportTest.class);
+
+    @Autowired
+    private TradelogReportRepository tradelogReportRepository;
 
     /**
      * Method setUpBeforeClass.
@@ -93,9 +102,8 @@ public class TradelogReportTest {
     @Test
     public void testTradelogDetails() {
 
-        TradelogHome tradelogHome = new TradelogHome();
         Portfolio portfolio = (Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
-        TradelogReport tradelogReport = tradelogHome.findByTradelogDetail(portfolio, TradingCalendar.getYearStart(),
+        TradelogReport tradelogReport = tradelogReportRepository.findByTradelogDetail(portfolio, TradingCalendar.getYearStart(),
                 TradingCalendar.getTradingDayEnd(TradingCalendar.getDateTimeNowMarketTimeZone()), false, null);
         assertTrue(tradelogReport.getTradelogDetail().isEmpty());
 
@@ -108,10 +116,8 @@ public class TradelogReportTest {
     @Test
     public void testTradelogSummary() {
 
-
-        TradelogHome tradelogHome = new TradelogHome();
         Portfolio portfolio = (Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
-        TradelogReport tradelogReport = tradelogHome.findByTradelogSummary(portfolio,
+        TradelogReport tradelogReport = tradelogReportRepository.findByTradelogSummary(portfolio,
                 TradingCalendar.getYearStart(),
                 TradingCalendar.getTradingDayEnd(TradingCalendar.getDateTimeNowMarketTimeZone()), null,
                 new BigDecimal(0));

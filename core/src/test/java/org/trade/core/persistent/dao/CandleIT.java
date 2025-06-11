@@ -77,8 +77,12 @@ public class CandleIT {
 
     @Autowired
     private AspectRepository aspectRepository;
+
     @Autowired
     private TradeService tradeService;
+
+    @Autowired
+    private TradestrategyRepository tradestrategyRepository;
 
     private Tradestrategy tradestrategy = null;
 
@@ -97,7 +101,8 @@ public class CandleIT {
 
         TradeAppLoadConfig.loadAppProperties();
         String symbol = "TEST";
-        this.tradestrategy = new TradestrategyBase(aspectRepository, tradeService).getTestTradestrategy(symbol);
+        TradestrategyBase.setTradestrategyBase(aspectRepository, tradeService);
+        this.tradestrategy = TradestrategyBase.getTestTradestrategy(symbol);
         assertNotNull(this.tradestrategy);
     }
 
@@ -106,7 +111,8 @@ public class CandleIT {
      */
     @AfterEach
     public void tearDown() throws Exception {
-        new TradestrategyBase(aspectRepository, tradeService).clearDBData();
+
+        TradestrategyBase.clearDBData();
     }
 
     /**
@@ -140,11 +146,10 @@ public class CandleIT {
     @Test
     public void testAddCandleSeries() throws Exception {
 
-        TradestrategyHome tradestrategyHome = new TradestrategyHome();
 
-        for (Tradestrategy tradestrategy : tradestrategyHome.findAll()) {
+        for (Tradestrategy tradestrategy : tradestrategyRepository.findAll()) {
 
-            tradestrategy = tradestrategyHome.findById(tradestrategy.getId());
+            tradestrategy = tradestrategyRepository.findById(tradestrategy.getId()).get();
             tradestrategy.setStrategyData(StrategyData.create(tradestrategy));
             ZonedDateTime prevTradingday = TradingCalendar.addTradingDays(tradestrategy.getTradingday().getOpen(),
                     (-1 * (tradestrategy.getChartDays() - 1)));

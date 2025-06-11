@@ -69,7 +69,6 @@ public class TradePositionIT {
     @Autowired
     private TradeService tradeService;
 
-    private TradePositionHome tradePositionHome = null;
     private Tradestrategy tradestrategy = null;
 
     /**
@@ -77,6 +76,7 @@ public class TradePositionIT {
      */
     @BeforeAll
     public static void setUpBeforeClass() throws Exception {
+
     }
 
     /**
@@ -84,10 +84,11 @@ public class TradePositionIT {
      */
     @BeforeEach
     public void setUp() throws Exception {
+
         TradeAppLoadConfig.loadAppProperties();
-        tradePositionHome = new TradePositionHome();
         String symbol = "TEST";
-        this.tradestrategy = new TradestrategyBase(aspectRepository, tradeService).getTestTradestrategy(symbol);
+        TradestrategyBase.setTradestrategyBase(aspectRepository, tradeService);
+        this.tradestrategy = TradestrategyBase.getTestTradestrategy(symbol);
         assertNotNull(this.tradestrategy);
     }
 
@@ -96,7 +97,8 @@ public class TradePositionIT {
      */
     @AfterEach
     public void tearDown() throws Exception {
-        new TradestrategyBase(aspectRepository, tradeService).clearDBData();
+
+        TradestrategyBase.clearDBData();
     }
 
     /**
@@ -118,9 +120,9 @@ public class TradePositionIT {
         assertNotNull(tradePosition.getId());
         _log.info("testAddTradePosition IdTradeStrategy: {}IdTradePosition: {}", this.tradestrategy.getId(), tradePosition.getId());
 
-        tradePositionHome.remove(tradePosition);
+        tradeService.delete(tradePosition);
         _log.info("testDeleteTradePosition IdTradeStrategy: {}", tradestrategy.getId());
-        tradePosition = tradePositionHome.findById(tradePosition.getId());
+        tradePosition = tradeService.findTradePositionById(tradePosition.getId());
         assertNull(tradePosition);
     }
 }

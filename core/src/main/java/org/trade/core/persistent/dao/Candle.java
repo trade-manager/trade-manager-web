@@ -107,7 +107,7 @@ public class Candle extends Aspect implements java.io.Serializable {
     private ZonedDateTime lastUpdateDate;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "trading_day_id", nullable = false)
+    @JoinColumn(name = "tradingday_id", nullable = false)
     private Tradingday tradingday;
 
     @ManyToOne(fetch = FetchType.EAGER)

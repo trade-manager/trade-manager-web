@@ -74,6 +74,12 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
     @Serial
     private static final long serialVersionUID = -2181676329258092177L;
 
+    @Column(name = "risk_amount", nullable = false, precision = 10)
+    private BigDecimal riskAmount;
+
+    @Column(name = "last_update_date", nullable = false)
+    private ZonedDateTime lastUpdateDate;
+
     @Column(name = "chart_days")
     private Integer chartDays;
 
@@ -89,21 +95,15 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
     @Column(name = "side", length = 3)
     private String side;
 
-    @Column(name = "risk_amount", nullable = false, precision = 10)
-    private BigDecimal riskAmount;
-
     @Column(name = "trade", length = 1)
     private Boolean trade = false;
-
-    @Column(name = "last_update_date", nullable = false)
-    private ZonedDateTime lastUpdateDate;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "contract_id", nullable = false)
     private Contract contract;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    @JoinColumn(name = "trading_day_id", nullable = false)
+    @JoinColumn(name = "tradingday_id", nullable = false)
     private Tradingday tradingday;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -135,6 +135,7 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
      * @param strategy  Strategy
      */
     public Tradestrategy(Integer barSize, Integer chartDays, Strategy strategy) {
+
         this.setBarSize(barSize);
         this.chartDays = chartDays;
         this.strategy = strategy;
@@ -147,6 +148,7 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
      * @param contract Contract
      */
     public Tradestrategy(Contract contract) {
+
         this.contract = contract;
         super.setDirty(true);
     }
@@ -167,6 +169,7 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
      */
     public Tradestrategy(Contract contract, Tradingday tradingday, Strategy strategy, Portfolio portfolio,
                          BigDecimal riskAmount, String side, String tier, Boolean trade, Integer chartDays, Integer barSize) {
+
         this.setBarSize(barSize);
         this.chartDays = chartDays;
         this.contract = contract;
@@ -197,8 +200,11 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
      * @param barSize Integer
      */
     public void setBarSize(Integer barSize) {
+
         this.barSize = barSize;
+
         if (barSize == 1) {
+
             Duration duration = Duration.between(this.getTradingday().getOpen(), this.getTradingday().getClose());
             long daySeconds = duration.getSeconds();
             this.barSize = ((int) daySeconds) * barSize;
@@ -210,7 +216,6 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
      *
      * @return Integer
      */
-
     public Integer getChartDays() {
         return this.chartDays;
     }
@@ -229,7 +234,6 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
      *
      * @return String
      */
-
     public String getStatus() {
         return this.status;
     }
@@ -240,6 +244,7 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
      * @param status String
      */
     public void setStatus(String status) {
+
         this.status = status;
         tradestrategyStatus.setValue(this.status);
     }
@@ -259,7 +264,6 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
      *
      * @return BigDecimal
      */
-
     public BigDecimal getRiskAmount() {
         return this.riskAmount;
     }
@@ -278,7 +282,6 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
      *
      * @return String
      */
-
     public String getSide() {
         return this.side;
     }
@@ -297,7 +300,6 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
      *
      * @return String
      */
-
     public String getTier() {
         return this.tier;
     }
@@ -334,7 +336,6 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
      *
      * @return Tradingday
      */
-
     public Tradingday getTradingday() {
         return this.tradingday;
     }
@@ -353,7 +354,6 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
      *
      * @return Strategy
      */
-
     public Strategy getStrategy() {
         return this.strategy;
     }
@@ -372,7 +372,6 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
      *
      * @return Portfolio
      */
-
     public Portfolio getPortfolio() {
         return this.portfolio;
     }
@@ -391,7 +390,6 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
      *
      * @return Boolean
      */
-
     public Boolean getTrade() {
 
         return this.trade;
@@ -411,7 +409,6 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
      *
      * @return ZonedDateTime
      */
-
     public ZonedDateTime getLastUpdateDate() {
         return this.lastUpdateDate;
     }
@@ -425,13 +422,11 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
         this.lastUpdateDate = lastUpdateDate;
     }
 
-
     /**
      * Method getTradeOrders.
      *
      * @return List<Trade>
      */
-
     public List<TradeOrder> getTradeOrders() {
         return this.tradeOrders;
     }
@@ -450,7 +445,6 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
      *
      * @return List<CodeValue>
      */
-
     public List<CodeValue> getCodeValues() {
         return this.codeValues;
     }
@@ -483,6 +477,7 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
         for (CodeValue value : this.getCodeValues()) {
 
             if (name.equals(value.getCodeAttribute().getName())) {
+
                 Vector<Object> parm = new Vector<>();
                 parm.add(value.getCodeValue());
                 codeValue = ClassFactory.getCreateClass(value.getCodeAttribute().getClassName(), parm, this);
@@ -498,16 +493,22 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
      * @param tradeOrder TradeOrder
      */
     public void addTradeOrder(TradeOrder tradeOrder) {
+
         int index = 0;
+
         for (TradeOrder currTradeOrder : this.tradeOrders) {
+
             if (CoreUtils.nullSafeComparator(currTradeOrder.getId(), tradeOrder.getId()) == 0) {
+
                 index = this.tradeOrders.indexOf(currTradeOrder);
                 break;
             }
         }
-        if (index > 0)
-            this.tradeOrders.remove(index);
 
+        if (index > 0) {
+
+            this.tradeOrders.remove(index);
+        }
         this.tradeOrders.add(tradeOrder);
     }
 
@@ -527,6 +528,7 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
      * @param strategyData StrategyData
      */
     public void setStrategyData(StrategyData strategyData) {
+
         if (null != this.strategyData) {
             this.strategyData.clearBaseCandleDataset();
         }
@@ -539,8 +541,11 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
      * @param dirty boolean
      */
     public void setDirty(boolean dirty) {
+
         super.setDirty(dirty);
+
         if (dirty) {
+
             this.getTradingday().setDirty(true);
         }
     }
@@ -550,44 +555,55 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
         int returnVal;
 
         if (CoreUtils.nullSafeComparator(o1.getTradingday().getOpen(), o2.getTradingday().getOpen()) == 0) {
+
             if (CoreUtils.nullSafeComparator(o1.getSide(), o2.getSide()) == 0) {
+
                 returnVal = CoreUtils.nullSafeComparator(o1.getTier(), o2.getTier());
             } else {
+
                 returnVal = CoreUtils.nullSafeComparator(o1.getSide(), o2.getSide());
             }
 
         } else {
-            returnVal = CoreUtils.nullSafeComparator(o1.getTradingday().getOpen(), o2.getTradingday().getOpen());
 
+            returnVal = CoreUtils.nullSafeComparator(o1.getTradingday().getOpen(), o2.getTradingday().getOpen());
         }
 
         if (m_ascending.equals(Boolean.FALSE)) {
+
             returnVal = returnVal * -1;
         }
         return returnVal;
     };
 
     public static final Comparator<Tradestrategy> TRADINGDAY_CONTRACT = (o1, o2) -> {
+
         m_ascending = true;
         int returnVal;
 
         if (CoreUtils.nullSafeComparator(o1.getTradingday().getOpen(), o2.getTradingday().getOpen()) == 0) {
+
             if (o1.getContract().equals(o2.getContract())) {
+
                 if (CoreUtils.nullSafeComparator(o1.getBarSize(), o2.getBarSize()) == 0) {
+
                     returnVal = CoreUtils.nullSafeComparator(o1.getChartDays(), o2.getChartDays());
                 } else {
+
                     returnVal = CoreUtils.nullSafeComparator(o1.getBarSize(), o2.getBarSize());
                 }
             } else {
+
                 returnVal = o1.getContract().getSymbol().compareTo(o2.getContract().getSymbol());
             }
 
         } else {
-            returnVal = CoreUtils.nullSafeComparator(o1.getTradingday().getOpen(), o2.getTradingday().getOpen());
 
+            returnVal = CoreUtils.nullSafeComparator(o1.getTradingday().getOpen(), o2.getTradingday().getOpen());
         }
 
         if (m_ascending.equals(Boolean.FALSE)) {
+
             returnVal = returnVal * -1;
         }
         return returnVal;
@@ -599,6 +615,7 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
      * @return String
      */
     public String toString() {
+
         return this.getContract().getSymbol().toUpperCase();
     }
 
@@ -628,6 +645,7 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
      * @return int
      */
     public int hashCode() {
+
         int hash = super.hashCode();
         hash = hash + this.getContract().hashCode();
         hash = hash + this.getStrategy().hashCode();
@@ -646,14 +664,20 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
      */
     public boolean equals(Object objectToCompare) {
 
-        if (super.equals(objectToCompare))
+        if (super.equals(objectToCompare)) {
             return true;
+        }
 
         if (objectToCompare instanceof Tradestrategy tradestrategy) {
+
             if (this.getContract().equals(tradestrategy.getContract())) {
+
                 if (this.getTradingday().getOpen().compareTo(tradestrategy.getTradingday().getOpen()) == 0) {
+
                     if (this.getStrategy().getName().equals(tradestrategy.getStrategy().getName())) {
+
                         if (this.getPortfolio().getName().equals(tradestrategy.getPortfolio().getName())) {
+
                             return this.getBarSize().equals(tradestrategy.getBarSize());
                         }
                     }
@@ -670,9 +694,12 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
      */
     @Transient
     public boolean isThereOpenTradePosition() {
+
         for (TradeOrder tradeOrder : this.getTradeOrders()) {
+
             if (tradeOrder.getIsFilled() && tradeOrder.getTradePosition()
                     .equals(tradeOrder.getTradePosition().getContract().getTradePosition())) {
+
                 return true;
             }
         }
@@ -699,5 +726,4 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
         tradestrategy.setTradeOrders(tradeOrders);
         return tradestrategy;
     }
-
 }

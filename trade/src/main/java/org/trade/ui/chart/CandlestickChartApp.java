@@ -96,7 +96,7 @@ public class CandlestickChartApp extends BasePanel implements IBrokerChangeListe
 
                 Strategy daoStrategy = (Strategy) DAOStrategy.newInstance().getObject();
                 String name = daoStrategy.getName();
-               // Strategy strategy = tradeService.findStrategyByName(name);
+                // Strategy strategy = tradeService.findStrategyByName(name);
                 //Tradestrategy tradestrategy = getTradestrategy(contract, strategy, ChartDays.TWO_DAYS, BarSize.FIVE_MIN, startDate, endDate);
                 //   tradestrategy.setId(Integer.MAX_VALUE);
                 //runStrategy(tradeService, tradestrategy, true);

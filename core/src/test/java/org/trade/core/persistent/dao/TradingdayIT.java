@@ -70,6 +70,9 @@ public class TradingdayIT {
     @Autowired
     private AspectRepository aspectRepository;
 
+    @Autowired
+    private TradingdayRepository tradingdayRepository;
+
     /**
      * Method setUpBeforeClass.
      */
@@ -106,16 +109,14 @@ public class TradingdayIT {
         // values in it by reading them from form object
         _log.debug("Adding Tradingday");
 
-        TradingdayHome tradingdayHome = new TradingdayHome();
-
         ZonedDateTime open = TradingCalendar.getTradingDayStart(
                 TradingCalendar.getPrevTradingDay(TradingCalendar.getDateTimeNowMarketTimeZone()));
-        Tradingday transientInstance = tradingdayHome.findByOpenCloseDate(open,
+        Tradingday transientInstance = tradingdayRepository.findByOpenCloseDate(open,
                 TradingCalendar.getTradingDayEnd(open));
         if (null == transientInstance) {
             transientInstance = Tradingday.newInstance(open);
         }
-        tradingdayHome.persist(transientInstance);
+        tradingdayRepository.persist(transientInstance);
         _log.info("Tradingday added Id = {}", transientInstance.getId());
         assertNotNull(transientInstance.getId());
         aspectRepository.delete(transientInstance);
@@ -128,16 +129,15 @@ public class TradingdayIT {
         // values in it by reading them from form object
         _log.debug("Updating Tradingday");
 
-        TradingdayHome tradingdayHome = new TradingdayHome();
         ZonedDateTime open = TradingCalendar.getTradingDayStart(
                 TradingCalendar.getPrevTradingDay(TradingCalendar.getDateTimeNowMarketTimeZone()));
-        Tradingday transientInstance = tradingdayHome.findByOpenCloseDate(open,
+        Tradingday transientInstance = tradingdayRepository.findByOpenCloseDate(open,
                 TradingCalendar.getTradingDayEnd(open));
         if (null == transientInstance) {
             transientInstance = Tradingday.newInstance(open);
         }
         transientInstance.setMarketBar(MarketBar.newInstance("+WRB").getCode());
-        tradingdayHome.persist(transientInstance);
+        tradingdayRepository.persist(transientInstance);
         _log.info("Tradingday Update Id = {}", transientInstance.getId());
         assertNotNull(transientInstance.getId());
         aspectRepository.delete(transientInstance);

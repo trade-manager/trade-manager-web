@@ -66,8 +66,9 @@ public class TradestrategyBase {
 
     private static TradeService tradeService;
 
+
     @Autowired
-    public TradestrategyBase(AspectRepository aspectRepository, TradeService tradeService) {
+    public static void setTradestrategyBase(AspectRepository aspectRepository, TradeService tradeService) {
 
         TradestrategyBase.tradeService = tradeService;
         TradestrategyBase.aspectRepository = aspectRepository;
@@ -139,9 +140,9 @@ public class TradestrategyBase {
                 return transientInstance;
             }
         }
-        TradingdayHome tradingdayHome = new TradingdayHome();
+
         Tradingday tradingday = Tradingday.newInstance(open);
-        Tradingday instanceTradingDay = tradingdayHome.findByOpenCloseDate(tradingday.getOpen(), tradingday.getClose());
+        Tradingday instanceTradingDay = tradeService.findTradingdayByOpenCloseDate(tradingday.getOpen(), tradingday.getClose());
         if (null != instanceTradingDay) {
             tradingday.getTradestrategies().clear();
             tradingday = instanceTradingDay;
@@ -149,7 +150,7 @@ public class TradestrategyBase {
         tradestrategy = new Tradestrategy(contract, tradingday, strategy, portfolio, new BigDecimal(100), "BUY", "0",
                 true, ChartDays.TWO_DAYS, BarSize.FIVE_MIN);
         tradingday.addTradestrategy(tradestrategy);
-        tradingdayHome.persist(tradingday);
+        tradeService.persistTradingday(tradingday);
         Tradestrategy instance = tradeService.findTradestrategyById(tradestrategy.getId());
         instance.setStrategyData(StrategyData.create(instance));
         return instance;

@@ -87,7 +87,7 @@ contract.symbol,
 if(ifnull(tradestrategy.id,0),1, 0)  as tradestrategy_count
 from tradestrategy
 inner join contract  on contract.id = tradestrategy.contract_id
-inner join tradingday  on tradingday.id = tradestrategy.trading_day_id
+inner join tradingday  on tradingday.id = tradestrategy.tradingday_id
 inner join portfolio on tradestrategy.portfolio_id = portfolio.id
 where 
 tradingday.open between :start and :end
@@ -164,7 +164,7 @@ contract.symbol,
 if(ifnull(tradestrategy.id,0),1, 0)  as tradestrategy_count
 from tradestrategy
 inner join contract  on contract.id = tradestrategy.contract_id
-inner join tradingday  on tradingday.id = tradestrategy.trading_day_id
+inner join tradingday  on tradingday.id = tradestrategy.tradingday_id
 inner join portfolio on tradestrategy.portfolio_id = portfolio.id
 where 
 tradingday.open between :start and :end

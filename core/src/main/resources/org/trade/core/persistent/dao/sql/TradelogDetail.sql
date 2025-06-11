@@ -47,7 +47,7 @@ contract
 left outer join tradeposition  on contract.id = tradeposition.contract_id
 left outer join tradeorder  on tradeposition.id = tradeorder.trade_position_id
 inner join tradestrategy on tradestrategy.id = tradeorder.tradestrategy_id
-inner join tradingday on tradestrategy.trading_day_id = tradingday.id
+inner join tradingday on tradestrategy.tradingday_id = tradingday.id
 inner join strategy on tradestrategy.strategy_id = strategy.id
 inner join portfolio on tradestrategy.portfolio_id = portfolio.id
 where tradestrategy.trade = 1
@@ -84,7 +84,7 @@ contract
 left outer join tradeposition  on contract.id = tradeposition.contract_id
 left outer join tradeorder  on tradeposition.id = tradeorder.trade_position_id
 inner join tradestrategy on tradestrategy.id = tradeorder.tradestrategy_id
-inner join tradingday on tradestrategy.trading_day_id = tradingday.id
+inner join tradingday on tradestrategy.tradingday_id = tradingday.id
 inner join strategy on tradestrategy.strategy_id = strategy.id
 inner join portfolio on tradestrategy.portfolio_id = portfolio.id
 where tradestrategy.trade = 1
@@ -122,7 +122,7 @@ null as filled_date,
 from
 tradestrategy
 inner join contract on contract.id = tradestrategy.contract_id
-inner join tradingday on tradestrategy.trading_day_id = tradingday.id
+inner join tradingday on tradestrategy.tradingday_id = tradingday.id
 inner join strategy on tradestrategy.strategy_id = strategy.id
 inner join portfolio on tradestrategy.portfolio_id = portfolio.id
 where tradestrategy.trade = 1

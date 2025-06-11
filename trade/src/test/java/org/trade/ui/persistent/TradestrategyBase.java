@@ -49,7 +49,6 @@ import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradePosition;
 import org.trade.core.persistent.dao.Tradestrategy;
 import org.trade.core.persistent.dao.Tradingday;
-import org.trade.core.persistent.dao.TradingdayHome;
 import org.trade.core.persistent.dao.series.indicator.StrategyData;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.AccountType;
@@ -163,9 +162,8 @@ public class TradestrategyBase {
             }
         }
 
-        TradingdayHome tradingdayHome = new TradingdayHome();
         Tradingday tradingday = Tradingday.newInstance(open);
-        Tradingday instanceTradingDay = tradingdayHome.findByOpenCloseDate(tradingday.getOpen(), tradingday.getClose());
+        Tradingday instanceTradingDay = tradeService.findTradingdayByOpenCloseDate(tradingday.getOpen(), tradingday.getClose());
 
         if (null != instanceTradingDay) {
 
@@ -175,7 +173,7 @@ public class TradestrategyBase {
         tradestrategy = new Tradestrategy(contract, tradingday, strategy, portfolio, new BigDecimal(100), "BUY", "0",
                 true, ChartDays.TWO_DAYS, BarSize.FIVE_MIN);
         tradingday.addTradestrategy(tradestrategy);
-        tradingdayHome.persist(tradingday);
+        tradeService.persistTradingday(tradingday);
         Tradestrategy instance = tradeService.findTradestrategyById(tradestrategy.getId());
         instance.setStrategyData(StrategyData.create(instance));
         return instance;

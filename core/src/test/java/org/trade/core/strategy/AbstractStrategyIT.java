@@ -135,7 +135,8 @@ public class AbstractStrategyIT {
         String host = ConfigProperties.getPropAsString("trade.tws.host");
         m_brokerModel.onConnect(host, port, clientId);
         String symbol = "TEST";
-        this.tradestrategy = new TradestrategyBase(aspectRepository, tradeService).getTestTradestrategy(symbol);
+        TradestrategyBase.setTradestrategyBase(aspectRepository, tradeService);
+        this.tradestrategy = TradestrategyBase.getTestTradestrategy(symbol);
         assertNotNull(this.tradestrategy);
 
         this.strategyProxy = new StrategyRuleTest(m_brokerModel, this.tradestrategy.getStrategyData(),
@@ -157,7 +158,7 @@ public class AbstractStrategyIT {
 
         m_brokerModel.onDisconnect();
         strategyProxy.cancel();
-        new TradestrategyBase(aspectRepository, tradeService).clearDBData();
+        TradestrategyBase.clearDBData();
     }
 
     /**

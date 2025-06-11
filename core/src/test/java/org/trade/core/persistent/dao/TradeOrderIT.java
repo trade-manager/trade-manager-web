@@ -81,7 +81,9 @@ public class TradeOrderIT {
     @Autowired
     private AspectRepository aspectRepository;
 
-    private TradeOrderHome tradeOrderHome = null;
+    @Autowired
+    private TradeOrderRepository tradeOrderRepository;
+
     private Tradestrategy tradestrategy = null;
     private Integer clientId = null;
 
@@ -100,10 +102,10 @@ public class TradeOrderIT {
 
         TradeAppLoadConfig.loadAppProperties();
         clientId = ConfigProperties.getPropAsInt("trade.tws.clientId");
-        tradeOrderHome = new TradeOrderHome();
 
         String symbol = "TEST";
-        this.tradestrategy = new TradestrategyBase(aspectRepository, tradeService).getTestTradestrategy(symbol);
+        TradestrategyBase.setTradestrategyBase(aspectRepository, tradeService);
+        this.tradestrategy = TradestrategyBase.getTestTradestrategy(symbol);
         assertNotNull(this.tradestrategy);
     }
 
@@ -112,7 +114,9 @@ public class TradeOrderIT {
      */
     @AfterEach
     public void tearDown() throws Exception {
-        new TradestrategyBase(aspectRepository, tradeService).clearDBData();
+
+        TradestrategyBase.setTradestrategyBase(aspectRepository, tradeService);
+        TradestrategyBase.clearDBData();
     }
 
     /**
@@ -145,7 +149,7 @@ public class TradeOrderIT {
         tradeOrder.setTransmit(true);
         tradeOrder.setStatus("SUBMITTED");
         tradeOrder.validate();
-        tradeOrder = tradeOrderHome.persist(tradeOrder);
+        tradeOrder = tradeOrderRepository.persist(tradeOrder);
         assertNotNull(tradeOrder);
         _log.info("IdOrder: {}", tradeOrder.getId());
 
@@ -158,7 +162,7 @@ public class TradeOrderIT {
         tradeOrder1.setTransmit(true);
         tradeOrder1.setStatus("SUBMITTED");
         tradeOrder1.validate();
-        tradeOrder1 = tradeOrderHome.persist(tradeOrder1);
+        tradeOrder1 = tradeOrderRepository.persist(tradeOrder1);
         assertNotNull(tradeOrder1);
     }
 
@@ -186,7 +190,7 @@ public class TradeOrderIT {
         tradeOrder1.setTransmit(true);
         tradeOrder1.setStatus("SUBMITTED");
         tradeOrder1.validate();
-        tradeOrder1 = tradeOrderHome.persist(tradeOrder1);
+        tradeOrder1 = tradeOrderRepository.persist(tradeOrder1);
         int buySellMultiplier = 1;
         if (action.equals(Action.BUY)) {
             action = Action.SELL;
@@ -206,7 +210,7 @@ public class TradeOrderIT {
         tradeOrder2.setTransmit(true);
         tradeOrder2.setStatus("SUBMITTED");
         tradeOrder2.validate();
-        tradeOrder2 = tradeOrderHome.persist(tradeOrder2);
+        tradeOrder2 = tradeOrderRepository.persist(tradeOrder2);
         assertNotNull(tradeOrder2);
 
         TradeOrder tradeOrder3 = new TradeOrder(this.tradestrategy, action, OrderType.LMT, quantity / 2, null,
@@ -219,7 +223,7 @@ public class TradeOrderIT {
         tradeOrder3.setTransmit(true);
         tradeOrder3.setStatus("SUBMITTED");
         tradeOrder3.validate();
-        tradeOrder3 = tradeOrderHome.persist(tradeOrder3);
+        tradeOrder3 = tradeOrderRepository.persist(tradeOrder3);
         assertNotNull(tradeOrder3);
 
         TradeOrder tradeOrder4 = new TradeOrder(this.tradestrategy, action, OrderType.STP, quantity,
@@ -233,7 +237,7 @@ public class TradeOrderIT {
         tradeOrder4.setTransmit(true);
         tradeOrder4.setStatus("SUBMITTED");
         tradeOrder4.validate();
-        tradeOrder4 = tradeOrderHome.persist(tradeOrder4);
+        tradeOrder4 = tradeOrderRepository.persist(tradeOrder4);
         assertNotNull(tradeOrder4);
 
         _log.info("IdOrder: {}", tradeOrder1.getId());
@@ -247,7 +251,7 @@ public class TradeOrderIT {
 
         for (TradeOrder tradeOrder : this.tradestrategy.getTradeOrders()) {
 
-            tradeOrder = tradeOrderHome.findTradeOrderByKey(tradeOrder.getOrderKey());
+            tradeOrder = tradeOrderRepository.findByOrderKey(tradeOrder.getOrderKey());
             minute = minute + 3;
             ZonedDateTime filledDate = this.tradestrategy.getTradingday().getOpen().plusMinutes(minute);
             if (tradeOrder.getIsOpenPosition()) {
@@ -288,7 +292,7 @@ public class TradeOrderIT {
                 }
             }
 
-            tradeOrder = tradeOrderHome.persist(tradeOrder);
+            tradeOrder = tradeOrderRepository.persist(tradeOrder);
             _log.info("IdOrder: {} Action:{} OrderType:{} Status:{} filledDate:{}", tradeOrder.getId(), tradeOrder.getAction(), tradeOrder.getOrderType(), tradeOrder.getStatus(), filledDate);
         }
     }
@@ -306,7 +310,7 @@ public class TradeOrderIT {
                 new BigDecimal("20.20"), new BigDecimal("20.23"), TradingCalendar.getDateTimeNowMarketTimeZone());
         tradeOrder.setOrderKey((BigDecimal.valueOf(Math.random() * 1000000)).intValue());
         // Save new order with detached trade
-        tradeOrder = tradeOrderHome.persist(tradeOrder);
+        tradeOrder = tradeOrderRepository.persist(tradeOrder);
         Execution execution = new Execution();
         execution.side(side);
         execution.time(TradingCalendar.getFormattedDate(TradingCalendar.getDateTimeNowMarketTimeZone(),
@@ -322,7 +326,7 @@ public class TradeOrderIT {
         orderfill.setTradeOrder(tradeOrder);
         tradeOrder.addTradeOrderfill(orderfill);
         // Save a detached order with a new order fill
-        tradeOrder = tradeOrderHome.persist(tradeOrder);
+        tradeOrder = tradeOrderRepository.persist(tradeOrder);
         assertNotNull(tradeOrder);
 
         if (action.equals(Action.BUY)) {
@@ -334,7 +338,7 @@ public class TradeOrderIT {
         TradeOrder tradeOrder1 = new TradeOrder(this.tradestrategy, action, OrderType.LMT, 300, null,
                 new BigDecimal("23.41"), TradingCalendar.getDateTimeNowMarketTimeZone());
         tradeOrder1.setOrderKey((BigDecimal.valueOf(Math.random() * 1000000)).intValue());
-        tradeOrder1 = tradeOrderHome.persist(tradeOrder1);
+        tradeOrder1 = tradeOrderRepository.persist(tradeOrder1);
 
         Execution execution1 = new Execution();
         execution1.side(side);
@@ -350,7 +354,7 @@ public class TradeOrderIT {
         TWSBrokerModel.populateTradeOrderfill(execution1, orderfill1);
         orderfill1.setTradeOrder(tradeOrder1);
         tradeOrder1.addTradeOrderfill(orderfill1);
-        tradeOrder1 = tradeOrderHome.persist(tradeOrder1);
+        tradeOrder1 = tradeOrderRepository.persist(tradeOrder1);
         assertNotNull(tradeOrder1);
     }
 

@@ -101,7 +101,8 @@ public class CandlePeriodIT {
         TradeAppLoadConfig.loadAppProperties();
 
         String symbol = "TEST";
-        this.tradestrategy = new TradestrategyBase(aspectRepository, tradeService).getTestTradestrategy(symbol);
+        TradestrategyBase.setTradestrategyBase(aspectRepository, tradeService);
+        this.tradestrategy = TradestrategyBase.getTestTradestrategy(symbol);
         assertNotNull(this.tradestrategy);
     }
 
@@ -110,7 +111,7 @@ public class CandlePeriodIT {
      */
     @AfterEach
     public void tearDown() throws Exception {
-        new TradestrategyBase(aspectRepository, tradeService).clearDBData();
+        TradestrategyBase.clearDBData();
     }
 
     /**

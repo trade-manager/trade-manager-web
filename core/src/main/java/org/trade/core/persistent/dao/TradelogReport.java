@@ -38,13 +38,14 @@ package org.trade.core.persistent.dao;
 import org.trade.core.dao.Aspect;
 
 import java.io.Serial;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  *
  */
-public class TradelogReport extends Aspect implements java.io.Serializable {
+public class TradelogReport extends Aspect implements Serializable {
 
     /**
      *

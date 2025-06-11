@@ -74,8 +74,11 @@ public class TradestrategyIT {
     @Autowired
     private TradeService tradeService;
 
+    @Autowired
+    private TradestrategyRepository tradestrategyRepository;
+
+
     private final String symbol = "TEST";
-    private TradestrategyHome tradestrategyHome = null;
 
     /**
      * Method setUpBeforeClass.
@@ -89,8 +92,9 @@ public class TradestrategyIT {
      */
     @BeforeEach
     public void setUp() throws Exception {
+
+        TradestrategyBase.setTradestrategyBase(aspectRepository, tradeService);
         TradeAppLoadConfig.loadAppProperties();
-        tradestrategyHome = new TradestrategyHome();
     }
 
     /**
@@ -98,7 +102,8 @@ public class TradestrategyIT {
      */
     @AfterEach
     public void tearDown() throws Exception {
-        new TradestrategyBase(aspectRepository, tradeService).clearDBData();
+
+        TradestrategyBase.clearDBData();
     }
 
     /**
@@ -111,10 +116,11 @@ public class TradestrategyIT {
     @Test
     public void testFindVersionById() throws Exception {
 
-        Tradestrategy tradestrategy = new TradestrategyBase(aspectRepository, tradeService).getTestTradestrategy(symbol);
+        TradestrategyBase.setTradestrategyBase(aspectRepository, tradeService);
+        Tradestrategy tradestrategy = TradestrategyBase.getTestTradestrategy(symbol);
         assertNotNull(tradestrategy);
 
-        Integer version = tradestrategyHome.findVersionById(tradestrategy.getId());
+        Integer version = tradestrategyRepository.findVersionById(tradestrategy.getId());
         assertNotNull(version);
         _log.info("testFindVersionById IdTradeStrategy:{} version: {}", tradestrategy.getId(), version);
     }
@@ -122,11 +128,11 @@ public class TradestrategyIT {
     @Test
     public void testFindPositionOrdersById() throws Exception {
 
-        Tradestrategy tradestrategy = new TradestrategyBase(aspectRepository, tradeService).getTestTradestrategy(symbol);
+        Tradestrategy tradestrategy = TradestrategyBase.getTestTradestrategy(symbol);
         assertNotNull(tradestrategy);
         _log.info("testTradingdaysSave IdTradeStrategy:{}", tradestrategy.getId());
 
-        TradestrategyOrders positionOrders = tradestrategyHome
+        TradestrategyOrders positionOrders = tradestrategyRepository
                 .findPositionOrdersByTradestrategyId(tradestrategy.getId());
         assertNotNull(positionOrders);
         _log.info("testTradingdaysSave PositionOrders IdTradeStrategy:{}found.", positionOrders.getId());
@@ -134,7 +140,7 @@ public class TradestrategyIT {
 
         positionOrders = aspectRepository.save(positionOrders);
         assertNotNull(positionOrders);
-        positionOrders = tradestrategyHome.findPositionOrdersByTradestrategyId(tradestrategy.getId());
+        positionOrders = tradestrategyRepository.findPositionOrdersByTradestrategyId(tradestrategy.getId());
         _log.info("testTradingdaysSave PositionOrders IdTradeStrategy:{}found Status: {}", positionOrders.getId(), positionOrders.getStatus());
         assertEquals(TradestrategyStatus.CANCELLED, positionOrders.getStatus());
     }
@@ -142,10 +148,10 @@ public class TradestrategyIT {
     @Test
     public void testAddTradestrategy() throws Exception {
 
-        Tradestrategy tradestrategy = new TradestrategyBase(aspectRepository, tradeService).getTestTradestrategy(symbol);
+        Tradestrategy tradestrategy = TradestrategyBase.getTestTradestrategy(symbol);
         assertNotNull(tradestrategy);
         _log.info("testTradingdaysSave IdTradeStrategy:{}", tradestrategy.getId());
-        tradestrategy = tradestrategyHome.findById(tradestrategy.getId());
+        tradestrategy = tradestrategyRepository.findById(tradestrategy.getId()).get();
         assertNotNull(tradestrategy);
         _log.info("testTradingdaysSave IdTradeStrategy:{}found.", tradestrategy.getId());
     }
@@ -155,13 +161,12 @@ public class TradestrategyIT {
 
         ZonedDateTime open = TradingCalendar.getTradingDayStart(
                 TradingCalendar.getPrevTradingDay(TradingCalendar.getDateTimeNowMarketTimeZone()));
-        TradingdayHome tradingdayHome = new TradingdayHome();
-        Tradingdays tradingdays = tradingdayHome.findTradingdaysByDateRange(open, open);
+        Tradingdays tradingdays = tradeService.findTradingdaysByDateRange(open, open);
         for (Tradingday tradingday : tradingdays.getTradingdays()) {
             for (Tradestrategy tradestrategy : tradingday.getTradestrategies()) {
                 tradestrategy.setStatus(TradestrategyStatus.OPEN);
             }
-            tradingdayHome.persist(tradingday);
+            tradeService.persistTradingday(tradingday);
 
             for (Tradestrategy tradestrategy : tradingday.getTradestrategies()) {
 
@@ -174,7 +179,6 @@ public class TradestrategyIT {
     @Test
     public void testReadAndSavefileMultipleDayTradestrategy() throws Exception {
 
-        TradingdayHome tradingdayHome = new TradingdayHome();
         Tradingdays tradingdays = new Tradingdays();
         Tradingday instance = Tradingday
                 .newInstance(TradingCalendar.getPrevTradingDay(TradingCalendar.getDateTimeNowMarketTimeZone()));
@@ -184,7 +188,7 @@ public class TradestrategyIT {
         tradingdays.populateDataFromFile(TEST_FILE, instance);
         assertFalse(tradingdays.getTradingdays().isEmpty());
         for (Tradingday tradingday : tradingdays.getTradingdays()) {
-            tradingdayHome.persist(tradingday);
+            tradeService.persistTradingday(tradingday);
             for (Tradestrategy tradestrategy : tradingday.getTradestrategies()) {
                 _log.info("testTradingdaysUpdate IdTradeStrategy:{}", tradestrategy.getId());
                 aspectRepository.delete(tradestrategy);
@@ -198,7 +202,6 @@ public class TradestrategyIT {
     @Test
     public void testReadAndSavefileOneDayTradestrategy() throws Exception {
 
-        TradingdayHome tradingdayHome = new TradingdayHome();
         Tradingdays tradingdays = new Tradingdays();
         Tradingday instance = Tradingday
                 .newInstance(TradingCalendar.getPrevTradingDay(TradingCalendar.getDateTimeNowMarketTimeZone()));
@@ -208,7 +211,7 @@ public class TradestrategyIT {
         tradingdays.populateDataFromFile(TEST_FILE, instance);
         assertFalse(tradingdays.getTradingdays().isEmpty());
         for (Tradingday tradingday : tradingdays.getTradingdays()) {
-            tradingdayHome.persist(tradingday);
+            tradeService.persistTradingday(tradingday);
             for (Tradestrategy tradestrategy : tradingday.getTradestrategies()) {
 
                 _log.info("testTradingdaysUpdate IdTradeStrategy:{}", tradestrategy.getId());
@@ -222,10 +225,10 @@ public class TradestrategyIT {
     @Test
     public void testFindTradestrategyDistinctByDateRange() throws Exception {
 
-        Tradestrategy tradestrategy = new TradestrategyBase(aspectRepository, tradeService).getTestTradestrategy(symbol);
+        Tradestrategy tradestrategy = TradestrategyBase.getTestTradestrategy(symbol);
         assertNotNull(tradestrategy);
         _log.info("testTradingdaysSave IdTradeStrategy:{}", tradestrategy.getId());
-        List<Tradestrategy> results = tradestrategyHome.findTradestrategyDistinctByDateRange(
+        List<Tradestrategy> results = tradestrategyRepository.findTradestrategyDistinctByDateRange(
                 tradestrategy.getTradingday().getOpen(), tradestrategy.getTradingday().getOpen());
         for (Tradestrategy value : results) {
             _log.info("BarSize: {} ChartDays: {} Strategy: {}", value.getBarSize(), value.getChartDays(), value.getStrategy().getName());
@@ -236,10 +239,10 @@ public class TradestrategyIT {
     @Test
     public void testFindTradestrategyContractDistinctByDateRange() throws Exception {
 
-        Tradestrategy tradestrategy = new TradestrategyBase(aspectRepository, tradeService).getTestTradestrategy(symbol);
+        Tradestrategy tradestrategy = TradestrategyBase.getTestTradestrategy(symbol);
         assertNotNull(tradestrategy);
         _log.info("testTradingdaysSave IdTradeStrategy:{}", tradestrategy.getId());
-        List<Tradestrategy> results = tradestrategyHome.findTradestrategyContractDistinctByDateRange(
+        List<Tradestrategy> results = tradestrategyRepository.findTradestrategyContractDistinctByDateRange(
                 tradestrategy.getTradingday().getOpen(), tradestrategy.getTradingday().getOpen());
         for (Tradestrategy value : results) {
             _log.info("Contract: {}", value.getContract().getSymbol());

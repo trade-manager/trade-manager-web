@@ -45,8 +45,6 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
-import jakarta.persistence.Version;
-import jakarta.validation.constraints.NotNull;
 import org.trade.core.dao.Aspect;
 import org.trade.core.util.CoreUtils;
 import org.trade.core.util.time.TradingCalendar;
@@ -76,14 +74,26 @@ public class Tradingday extends Aspect implements Serializable, Cloneable {
     @Serial
     private static final long serialVersionUID = 3388042483785305102L;
 
-    @NotNull
+    @Column(name = "open", unique = true, nullable = false)
     private ZonedDateTime open;
-    @NotNull
+
+    @Column(name = "close", unique = true, nullable = false)
     private ZonedDateTime close;
+
+    @Column(name = "market_bias", length = 10)
     private String marketBias;
+
+    @Column(name = "market_gap", length = 10)
     private String marketGap;
+
+    @Column(name = "market_bar", length = 10)
     private String marketBar;
+
+    @OneToMany(mappedBy = "tradingday", fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH})
+    @OrderBy("side ASC, id ASC")
     private List<Tradestrategy> tradestrategies = new ArrayList<>(0);
+
+    @OneToMany(mappedBy = "tradingday", fetch = FetchType.LAZY)
     private List<Candle> candles = new ArrayList<>(0);
 
     public Tradingday() {
@@ -96,6 +106,7 @@ public class Tradingday extends Aspect implements Serializable, Cloneable {
      * @param close ZonedDateTime
      */
     public Tradingday(ZonedDateTime open, ZonedDateTime close) {
+
         this.open = open;
         this.close = close;
     }
@@ -113,6 +124,7 @@ public class Tradingday extends Aspect implements Serializable, Cloneable {
      */
     public Tradingday(ZonedDateTime open, ZonedDateTime close, String marketBias, String marketGap, String marketBar,
                       List<Tradestrategy> tradestrategies, List<Candle> candles) {
+
         this.open = open;
         this.close = close;
         this.marketBias = marketBias;
@@ -127,7 +139,6 @@ public class Tradingday extends Aspect implements Serializable, Cloneable {
      *
      * @return ZonedDateTime
      */
-    @Column(name = "open", unique = true, nullable = false)
     public ZonedDateTime getOpen() {
         return this.open;
     }
@@ -146,7 +157,6 @@ public class Tradingday extends Aspect implements Serializable, Cloneable {
      *
      * @return ZonedDateTime
      */
-    @Column(name = "close", unique = true, nullable = false)
     public ZonedDateTime getClose() {
         return this.close;
     }
@@ -165,7 +175,6 @@ public class Tradingday extends Aspect implements Serializable, Cloneable {
      *
      * @return String
      */
-    @Column(name = "market_bias", length = 10)
     public String getMarketBias() {
         return this.marketBias;
     }
@@ -184,7 +193,6 @@ public class Tradingday extends Aspect implements Serializable, Cloneable {
      *
      * @return String
      */
-    @Column(name = "market_gap", length = 10)
     public String getMarketGap() {
         return this.marketGap;
     }
@@ -203,7 +211,6 @@ public class Tradingday extends Aspect implements Serializable, Cloneable {
      *
      * @return String
      */
-    @Column(name = "market_bar", length = 10)
     public String getMarketBar() {
         return this.marketBar;
     }
@@ -218,23 +225,10 @@ public class Tradingday extends Aspect implements Serializable, Cloneable {
     }
 
     /**
-     * Method getVersion.
-     *
-     * @return Integer
-     */
-    @Version
-    @Column(name = "version")
-    public Integer getVersion() {
-        return this.version;
-    }
-
-    /**
      * Method getTradestrategies.
      *
      * @return List<Tradestrategy>
      */
-    @OneToMany(mappedBy = "tradingday", fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH})
-    @OrderBy("side ASC, id ASC")
     public List<Tradestrategy> getTradestrategies() {
         return this.tradestrategies;
     }
@@ -263,9 +257,13 @@ public class Tradingday extends Aspect implements Serializable, Cloneable {
      * @param tradestrategy Tradestrategy
      */
     public boolean removeTradestrategy(Tradestrategy tradestrategy) {
+
         for (ListIterator<Tradestrategy> itemIter = this.tradestrategies.listIterator(); itemIter.hasNext(); ) {
+
             Tradestrategy item = itemIter.next();
+
             if (item.equals(tradestrategy)) {
+
                 itemIter.remove();
                 return true;
             }
@@ -278,7 +276,6 @@ public class Tradingday extends Aspect implements Serializable, Cloneable {
      *
      * @return List<Candle>
      */
-    @OneToMany(mappedBy = "tradingday", fetch = FetchType.LAZY)
     public List<Candle> getCandles() {
         return this.candles;
     }
@@ -302,20 +299,26 @@ public class Tradingday extends Aspect implements Serializable, Cloneable {
     }
 
     public static final Comparator<Tradingday> DATE_ORDER_ASC = (o1, o2) -> {
+
         int returnVal;
         m_ascending = true;
         returnVal = CoreUtils.nullSafeComparator(o1.getOpen(), o2.getOpen());
+
         if (m_ascending.equals(Boolean.FALSE)) {
+
             returnVal = returnVal * -1;
         }
         return returnVal;
     };
 
     public static final Comparator<Tradingday> DATE_ORDER_DESC = (o1, o2) -> {
+
         int returnVal;
         m_ascending = false;
         returnVal = CoreUtils.nullSafeComparator(o1.getOpen(), o2.getOpen());
+
         if (m_ascending.equals(Boolean.FALSE)) {
+
             returnVal = returnVal * -1;
         }
         return returnVal;
@@ -356,6 +359,7 @@ public class Tradingday extends Aspect implements Serializable, Cloneable {
      * @return int
      */
     public int hashCode() {
+
         int hash = super.hashCode();
         hash = hash + (this.getOpen() == null ? 0 : this.getOpen().hashCode());
         hash = hash + (this.getClose() == null ? 0 : this.getClose().hashCode());
@@ -370,11 +374,14 @@ public class Tradingday extends Aspect implements Serializable, Cloneable {
      */
     public boolean equals(Object objectToCompare) {
 
-        if (super.equals(objectToCompare))
+        if (super.equals(objectToCompare)) {
             return true;
+        }
 
         if (objectToCompare instanceof Tradingday tradingday) {
+
             if (tradingday.getOpen().compareTo(this.getOpen()) == 0) {
+
                 return tradingday.getClose().compareTo(this.getClose()) == 0;
             }
         }
@@ -388,6 +395,7 @@ public class Tradingday extends Aspect implements Serializable, Cloneable {
      * @return Tradingday
      */
     public static Tradingday newInstance(ZonedDateTime date) {
+
         return new Tradingday(TradingCalendar.getTradingDayStart(date),
                 TradingCalendar.getTradingDayEnd(date));
 
@@ -400,8 +408,11 @@ public class Tradingday extends Aspect implements Serializable, Cloneable {
      * @return boolean
      */
     public boolean existTradestrategy(Tradestrategy tradestrategy) {
+
         if (null != this.getTradestrategies()) {
+
             for (Tradestrategy currTradestrategy : this.getTradestrategies()) {
+
                 if (currTradestrategy.equals(tradestrategy)) {
                     return true;
                 }
@@ -418,9 +429,13 @@ public class Tradingday extends Aspect implements Serializable, Cloneable {
     public void populateStrategyData(Tradingday tradingday) {
 
         if (null != tradingday.getTradestrategies()) {
+
             for (Tradestrategy currTradestrategy : tradingday.getTradestrategies()) {
+
                 for (Tradestrategy tradestrategy : this.getTradestrategies()) {
+
                     if (currTradestrategy.equals(tradestrategy)) {
+
                         tradestrategy.setStrategyData(currTradestrategy.getStrategyData());
                         break;
                     }
@@ -436,9 +451,12 @@ public class Tradingday extends Aspect implements Serializable, Cloneable {
      */
     @Transient
     public boolean isDirty() {
+
         for (Tradestrategy item : this.getTradestrategies()) {
-            if (item.isDirty())
+
+            if (item.isDirty()) {
                 return true;
+            }
         }
         return super.isDirty();
     }

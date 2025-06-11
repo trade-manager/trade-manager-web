@@ -126,7 +126,8 @@ public class BrokerModelIT implements IBrokerChangeListener {
     public void setUp() throws Exception {
 
         String symbol = "NVDA";
-        this.tradestrategy = new TradestrategyBase(aspectRepository, tradeService).getTestTradestrategy(symbol);
+        TradestrategyBase.setTradestrategyBase(aspectRepository, tradeService);
+        this.tradestrategy = TradestrategyBase.getTestTradestrategy(symbol);
         backTestbrokerModel = (IBrokerModel) ClassFactory.getServiceForInterface(_broker, BrokerModelIT.class);
         backTestbrokerModel.onConnect(host, port, clientId);
         assertNotNull(this.tradestrategy);
@@ -172,10 +173,10 @@ public class BrokerModelIT implements IBrokerChangeListener {
             timer.stop();
         }
 
-        if (backTestbrokerModel.isConnected())
+        if (backTestbrokerModel.isConnected()) {
             backTestbrokerModel.onDisconnect();
-
-        new TradestrategyBase(aspectRepository, tradeService).clearDBData();
+        }
+        TradestrategyBase.clearDBData();
     }
 
     /**

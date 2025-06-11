@@ -44,7 +44,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
-import jakarta.persistence.Version;
 import org.trade.core.dao.Aspect;
 
 import java.io.Serial;
@@ -66,9 +65,17 @@ public class TradestrategyOrders extends Aspect implements Serializable {
     @Serial
     private static final long serialVersionUID = -2181676329258092177L;
 
-    private ContractLite contract;
+    @Column(name = "status", length = 20)
     private String status;
+
+    @Column(name = "last_update_date", nullable = false)
     private ZonedDateTime lastUpdateDate;
+
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH})
+    @JoinColumn(name = "contract_id", insertable = false, updatable = false, nullable = false)
+    private ContractLite contract;
+
+    @OneToMany(mappedBy = "tradestrategy", fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH})
     private List<TradeOrder> tradeOrders = new ArrayList<>(0);
 
     public TradestrategyOrders() {
@@ -79,8 +86,6 @@ public class TradestrategyOrders extends Aspect implements Serializable {
      *
      * @return ContractLite
      */
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH})
-    @JoinColumn(name = "contract_id", insertable = false, updatable = false, nullable = false)
     public ContractLite getContract() {
         return this.contract;
     }
@@ -99,7 +104,6 @@ public class TradestrategyOrders extends Aspect implements Serializable {
      *
      * @return String
      */
-    @Column(name = "status", length = 20)
     public String getStatus() {
         return this.status;
     }
@@ -118,7 +122,6 @@ public class TradestrategyOrders extends Aspect implements Serializable {
      *
      * @return ZonedDateTime
      */
-    @Column(name = "last_update_date", nullable = false)
     public ZonedDateTime getLastUpdateDate() {
         return this.lastUpdateDate;
     }
@@ -137,7 +140,6 @@ public class TradestrategyOrders extends Aspect implements Serializable {
      *
      * @return List<Trade>
      */
-    @OneToMany(mappedBy = "tradestrategy", fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH})
     public List<TradeOrder> getTradeOrders() {
         return this.tradeOrders;
     }
@@ -178,16 +180,4 @@ public class TradestrategyOrders extends Aspect implements Serializable {
     public boolean hasOpenTradePosition() {
         return null != getOpenTradePosition();
     }
-
-    /**
-     * Method getVersion.
-     *
-     * @return Integer
-     */
-    @Version
-    @Column(name = "version")
-    public Integer getVersion() {
-        return this.version;
-    }
-
 }

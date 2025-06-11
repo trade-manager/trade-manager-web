@@ -43,8 +43,6 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.Version;
-import jakarta.validation.constraints.NotNull;
 import org.trade.core.dao.Aspect;
 import org.trade.core.valuetype.Money;
 
@@ -66,19 +64,44 @@ public class TradeOrderfill extends Aspect implements java.io.Serializable, Clon
     @Serial
     private static final long serialVersionUID = -4345234694835258864L;
 
+    @Column(name = "account_number", length = 20)
     private String accountNumber;
-    private BigDecimal averagePrice;
-    private BigDecimal commission;
-    private Integer cumulativeQuantity;
-    private String execId;
-    private String orderReference;
-    private Integer permId;
-    @NotNull
-    private BigDecimal price;
+
+    @Column(name = "quantity", nullable = false)
     private Integer quantity;
+
+    @Column(name = "side", nullable = false, length = 3)
     private String side;
+
+    @Column(name = "exchange", nullable = false, length = 10)
     private String exchange;
+
+    @Column(name = "price", nullable = false, precision = 10)
+    private BigDecimal price;
+
+    @Column(name = "time", nullable = false)
     private ZonedDateTime time;
+
+    @Column(name = "average_price", nullable = false, precision = 11)
+    private BigDecimal averagePrice;
+
+    @Column(name = "cumulative_quantity", nullable = false)
+    private Integer cumulativeQuantity;
+
+    @Column(name = "exec_id", nullable = false, length = 45)
+    private String execId;
+
+    @Column(name = "commission", precision = 11)
+    private BigDecimal commission;
+
+    @Column(name = "order_reference", length = 45)
+    private String orderReference;
+
+    @Column(name = "perm_id")
+    private Integer permId;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "trade_order_id", nullable = false)
     private TradeOrder tradeOrder;
 
     public TradeOrderfill() {
@@ -101,6 +124,7 @@ public class TradeOrderfill extends Aspect implements java.io.Serializable, Clon
     public TradeOrderfill(TradeOrder tradeOrder, String accountNumber, BigDecimal averagePrice,
                           Integer cumulativeQuantity, String exchange, String execId, BigDecimal price, Integer quantity, String side,
                           ZonedDateTime time) {
+
         this.tradeOrder = tradeOrder;
         this.accountNumber = accountNumber;
         this.averagePrice = averagePrice;
@@ -118,8 +142,6 @@ public class TradeOrderfill extends Aspect implements java.io.Serializable, Clon
      *
      * @return TradeOrder
      */
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_trade_order", nullable = false)
     public TradeOrder getTradeOrder() {
         return this.tradeOrder;
     }
@@ -138,7 +160,6 @@ public class TradeOrderfill extends Aspect implements java.io.Serializable, Clon
      *
      * @return String
      */
-    @Column(name = "account_number", length = 20)
     public String getAccountNumber() {
         return this.accountNumber;
     }
@@ -157,7 +178,6 @@ public class TradeOrderfill extends Aspect implements java.io.Serializable, Clon
      *
      * @return BigDecimal
      */
-    @Column(name = "average_price", nullable = false, precision = 11)
     public BigDecimal getAveragePrice() {
         return this.averagePrice;
     }
@@ -176,7 +196,6 @@ public class TradeOrderfill extends Aspect implements java.io.Serializable, Clon
      *
      * @return BigDecimal
      */
-    @Column(name = "commission", precision = 11)
     public BigDecimal getCommission() {
         return this.commission;
     }
@@ -195,7 +214,6 @@ public class TradeOrderfill extends Aspect implements java.io.Serializable, Clon
      *
      * @return Integer
      */
-    @Column(name = "cumulative_quantity", nullable = false)
     public Integer getCumulativeQuantity() {
         return this.cumulativeQuantity;
     }
@@ -214,7 +232,6 @@ public class TradeOrderfill extends Aspect implements java.io.Serializable, Clon
      *
      * @return String
      */
-    @Column(name = "exec_id", nullable = false, length = 45)
     public String getExecId() {
         return this.execId;
     }
@@ -233,7 +250,6 @@ public class TradeOrderfill extends Aspect implements java.io.Serializable, Clon
      *
      * @return String
      */
-    @Column(name = "order_reference", length = 45)
     public String getOrderReference() {
         return this.orderReference;
     }
@@ -252,7 +268,6 @@ public class TradeOrderfill extends Aspect implements java.io.Serializable, Clon
      *
      * @return String
      */
-    @Column(name = "exchange", nullable = false, length = 10)
     public String getExchange() {
         return this.exchange;
     }
@@ -271,7 +286,6 @@ public class TradeOrderfill extends Aspect implements java.io.Serializable, Clon
      *
      * @return Integer
      */
-    @Column(name = "perm_id")
     public Integer getPermId() {
         return this.permId;
     }
@@ -290,7 +304,6 @@ public class TradeOrderfill extends Aspect implements java.io.Serializable, Clon
      *
      * @return BigDecimal
      */
-    @Column(name = "price", nullable = false, precision = 10)
     public BigDecimal getPrice() {
         return this.price;
     }
@@ -309,7 +322,6 @@ public class TradeOrderfill extends Aspect implements java.io.Serializable, Clon
      *
      * @return Integer
      */
-    @Column(name = "quantity", nullable = false)
     public Integer getQuantity() {
         return this.quantity;
     }
@@ -328,7 +340,6 @@ public class TradeOrderfill extends Aspect implements java.io.Serializable, Clon
      *
      * @return String
      */
-    @Column(name = "side", nullable = false, length = 3)
     public String getSide() {
         return this.side;
     }
@@ -347,7 +358,6 @@ public class TradeOrderfill extends Aspect implements java.io.Serializable, Clon
      *
      * @return ZonedDateTime
      */
-    @Column(name = "time", nullable = false)
     public ZonedDateTime getTime() {
         return this.time;
     }
@@ -362,22 +372,12 @@ public class TradeOrderfill extends Aspect implements java.io.Serializable, Clon
     }
 
     /**
-     * Method getVersion.
-     *
-     * @return Integer
-     */
-    @Version
-    @Column(name = "version")
-    public Integer getVersion() {
-        return this.version;
-    }
-
-    /**
      * Method clone.
      *
      * @return TradeOrderfill
      */
     public TradeOrderfill clone() {
+
         try {
 
             return (TradeOrderfill) super.clone();
@@ -393,6 +393,7 @@ public class TradeOrderfill extends Aspect implements java.io.Serializable, Clon
      * @return String
      */
     public String toString() {
+
         return "Order Id: " + this.getTradeOrder().getId() + " OrderKey: "
                 + this.getTradeOrder().getOrderKey() + " Trade Order Version: " + this.getTradeOrder().getVersion()
                 + " Order Fill Id: " + this.getId() + " Order Fill Version: " + this.getVersion()

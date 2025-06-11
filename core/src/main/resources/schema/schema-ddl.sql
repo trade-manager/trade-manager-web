@@ -227,18 +227,18 @@ tier VARCHAR(1) NULL ,
 trade SMALLINT(1)  NULL ,
 last_update_date DATETIME(3) NOT NULL ,
 version INT NULL,
-trading_day_id INT NOT NULL ,
+tradingday_id INT NOT NULL ,
 contract_id INT NOT NULL ,
 strategy_id INT NOT NULL ,
 portfolio_id INT NOT NULL ,
 PRIMARY KEY (id) ,
-INDEX tradeStrategy_tradingDay_idx (trading_day_id ASC) ,
+INDEX tradeStrategy_tradingDay_idx (tradingday_id ASC) ,
 INDEX tradeStrategy_contract_idx  (contract_id ASC) ,
 INDEX tradeStrategy_stategy_idx  (strategy_id ASC) ,
 INDEX tradeStrategy_portfolio_idx  (portfolio_id ASC) ,
-UNIQUE INDEX tradestrategy_uq (trading_day_id ASC, contract_id ASC, strategy_id ASC, portfolio_id ASC, bar_size ASC),
+UNIQUE INDEX tradestrategy_uq (tradingday_id ASC, contract_id ASC, strategy_id ASC, portfolio_id ASC, bar_size ASC),
 CONSTRAINT tradestrategy_tradingday_fk
-FOREIGN KEY (trading_day_id )
+FOREIGN KEY (tradingday_id )
 REFERENCES tradingday (id )
   ON DELETE NO ACTION
   ON UPDATE NO ACTION,
@@ -385,12 +385,12 @@ quantity INT NOT NULL ,
 side VARCHAR(3) NOT NULL ,
 time DATETIME(3) NOT NULL ,
 version INT NULL,
-id_trade_order INT NOT NULL ,
+trade_order_id INT NOT NULL ,
 PRIMARY KEY (id) ,
-INDEX tradeorderfill_order_idx (id_trade_order ASC) ,
-UNIQUE INDEX execid_uq (exec_Id ASC, id_trade_order ASC) ,
+INDEX tradeorderfill_order_idx (trade_order_id ASC) ,
+UNIQUE INDEX execid_uq (exec_Id ASC, trade_order_id ASC) ,
 CONSTRAINT tradeorderfill_order_fk
-FOREIGN KEY (id_trade_order )
+FOREIGN KEY (trade_order_id )
 REFERENCES tradeorder (id )
   ON DELETE CASCADE
   ON UPDATE NO ACTION)
@@ -421,19 +421,19 @@ vwap DECIMAL(10,2) NULL ,
 last_update_date DATETIME(3) NOT NULL ,
 version INT NULL,
 contract_id INT NOT NULL ,
-trading_day_id INT NOT NULL ,
+tradingday_id INT NOT NULL ,
 PRIMARY KEY (id) ,
 INDEX candle_contract_idx (contract_id ASC) ,
-INDEX candle_tradingday_idx (trading_day_id ASC) ,
-INDEX candle_condaybar_idx (contract_id ASC, trading_day_id ASC, bar_size ASC) ,
-UNIQUE INDEX candle_uq (contract_id ASC, trading_day_id ASC,  start_period ASC, end_period ASC) ,
+INDEX candle_tradingday_idx (tradingday_id ASC) ,
+INDEX candle_condaybar_idx (contract_id ASC, tradingday_id ASC, bar_size ASC) ,
+UNIQUE INDEX candle_uq (contract_id ASC, tradingday_id ASC,  start_period ASC, end_period ASC) ,
 CONSTRAINT candle_contract_fk
 FOREIGN KEY (contract_id )
 REFERENCES contract (id )
   ON DELETE CASCADE
   ON UPDATE NO ACTION,
 CONSTRAINT candle_tradingday_fk
-FOREIGN KEY (trading_day_id )
+FOREIGN KEY (tradingday_id )
 REFERENCES tradingday (id )
   ON DELETE CASCADE
   ON UPDATE NO ACTION)

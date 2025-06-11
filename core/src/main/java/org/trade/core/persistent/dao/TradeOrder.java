@@ -47,8 +47,6 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
-import jakarta.persistence.Version;
-import jakarta.validation.constraints.NotNull;
 import org.trade.core.dao.Aspect;
 import org.trade.core.util.CoreUtils;
 import org.trade.core.valuetype.Action;
@@ -81,54 +79,141 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
     @Serial
     private static final long serialVersionUID = -832064631322873796L;
 
-    private TradePosition tradePosition;
-    private Tradestrategy tradestrategy;
-    private TradestrategyLite tradestrategyLite;
-    @NotNull
-    private String action;
+    @Column(name = "account_number", unique = true, nullable = false, length = 20)
     private String accountNumber;
-    private BigDecimal averageFilledPrice;
-    private Boolean allOrNothing = false;
-    private BigDecimal auxPrice;
-    private Integer clientId;
-    private BigDecimal commission;
-    private ZonedDateTime createDate;
-    private Integer displayQuantity;
-    private String FAGroup;
-    private String FAProfile;
-    private String FAMethod;
-    private BigDecimal FAPercent;
-    private Integer filledQuantity;
-    private ZonedDateTime filledDate;
-    private ZonedDateTime goodAfterTime;
-    private ZonedDateTime goodTillTime;
-    private Boolean hidden = false;
-    private Boolean isOpenPosition = false;
-    private Boolean isFilled = false;
-    private BigDecimal limitPrice;
-    private String ocaGroupName;
-    private Integer ocaType;
-    // @Min(1)
-    private Integer orderKey;
-    private String orderReference;
-    @NotNull
+
+    @Column(name = "action", nullable = false, length = 6)
+    private String action;
+
+    @Column(name = "order_type", nullable = false, length = 10)
     private String orderType;
-    private Integer overrideConstraints;
-    private Integer permId;
-    private Integer parentId;
-    // @Min(0)
+
+    @Column(name = "quantity", nullable = false)
     private Integer quantity;
+
+    @Column(name = "time_in_force", nullable = false, length = 3)
     private String timeInForce;
-    private String status;
-    private BigDecimal stopPrice;
-    private Boolean transmit = false;
-    private BigDecimal trailStopPrice;
-    private BigDecimal trailingPercent;
-    private Integer triggerMethod;
-    private String warningMessage;
-    private String whyHeld;
+
+    @Column(name = "create_date", nullable = false)
+    private ZonedDateTime createDate;
+
+    @Column(name = "last_update_date", nullable = false)
     private ZonedDateTime lastUpdateDate;
+
+    @Column(name = "trigger_method", nullable = false)
+    private Integer triggerMethod;
+
+    @Column(name = "override_constraints", nullable = false)
+    private Integer overrideConstraints;
+
+    @Column(name = "status", length = 45)
+    private String status;
+
+    @Column(name = "stop_price", precision = 10)
+    private BigDecimal stopPrice;
+
+    @Column(name = "aux_price", precision = 10)
+    private BigDecimal auxPrice;
+
+    @Column(name = "transmit", length = 1)
+    private Boolean transmit = false;
+
+    @Column(name = "trail_stop_price", precision = 10)
+    private BigDecimal trailStopPrice;
+
+    @Column(name = "trailing_percent", precision = 10)
+    private BigDecimal trailingPercent;
+
+    @Column(name = "warning_message", length = 200)
+    private String warningMessage;
+
+    @Column(name = "why_held", length = 45)
+    private String whyHeld;
+
+    @Column(name = "average_filled_price", precision = 11)
+    private BigDecimal averageFilledPrice;
+
+    @Column(name = "all_or_nothing")
+    private Boolean allOrNothing = false;
+
+    @Column(name = "client_id")
+    private Integer clientId;
+
+    @Column(name = "commission", precision = 10)
+    private BigDecimal commission;
+
+    @Column(name = "display_quantity")
+    private Integer displayQuantity;
+
+    @Column(name = "FA_group", length = 45)
+    private String FAGroup;
+
+    @Column(name = "FA_profile", length = 45)
+    private String FAProfile;
+
+    @Column(name = "FA_method", length = 20)
+    private String FAMethod;
+
+    @Column(name = "FA_percent", precision = 10)
+    private BigDecimal FAPercent;
+
+    @Column(name = "filled_quantity")
+    private Integer filledQuantity;
+
+    @Column(name = "filled_date")
+    private ZonedDateTime filledDate;
+
+    @Column(name = "good_after_time")
+    private ZonedDateTime goodAfterTime;
+
+    @Column(name = "good_till_time")
+    private ZonedDateTime goodTillTime;
+
+    @Column(name = "hidden")
+    private Boolean hidden = false;
+
+    @Column(name = "is_open_position")
+    private Boolean isOpenPosition = false;
+
+    @Column(name = "is_filled")
+    private Boolean isFilled = false;
+
+    @Column(name = "limit_price", precision = 10)
+    private BigDecimal limitPrice;
+
+    @Column(name = "oca_group_name", length = 45)
+    private String ocaGroupName;
+
+    @Column(name = "oca_type")
+    private Integer ocaType;
+
+    @Column(name = "order_key")
+    private Integer orderKey;
+
+    @Column(name = "order_reference", length = 45)
+    private String orderReference;
+
+    @Column(name = "perm_id")
+    private Integer permId;
+
+    @Column(name = "parent_id")
+    private Integer parentId;
+
+    @OneToMany(mappedBy = "tradeOrder", fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
+    @OrderBy("time ASC")
     private List<TradeOrderfill> tradeOrderfills = new ArrayList<>(0);
+
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH})
+    @JoinColumn(name = "trade_position_id")
+    private TradePosition tradePosition;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH})
+    @JoinColumn(name = "tradestrategy_id", nullable = false)
+    private Tradestrategy tradestrategy;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "tradestrategy_id", insertable = false, updatable = false, nullable = false)
+    private TradestrategyLite tradestrategyLite;
 
     public TradeOrder() {
     }
@@ -146,6 +231,7 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
      */
     public TradeOrder(Tradestrategy tradestrategy, String action, String orderType, Integer quantity,
                       BigDecimal auxPrice, BigDecimal limitPrice, ZonedDateTime createDate) {
+
         this(tradestrategy, action, createDate, orderType, quantity, auxPrice, limitPrice, OverrideConstraints.YES,
                 TimeInForce.DAY, TriggerMethod.DEFAULT);
     }
@@ -167,6 +253,7 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
     public TradeOrder(Tradestrategy tradestrategy, String action, ZonedDateTime createDate, String orderType,
                       Integer quantity, BigDecimal auxPrice, BigDecimal limitPrice, Integer overrideConstraints,
                       String timeInForce, Integer triggerMethod) {
+
         this.tradestrategy = tradestrategy;
         this.action = action;
         this.auxPrice = auxPrice;
@@ -204,12 +291,12 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
      * @param FAMethod            String
      * @param FAPercent           BigDecimal
      */
-
     public TradeOrder(Tradestrategy tradestrategy, String action, ZonedDateTime createDate, String orderType,
                       Money limitPrice, Money auxPrice, Integer quantity, String ocaGroupName, Integer parentId,
                       Integer triggerMethod, Integer overrideConstraints, String timeInForce, Boolean transmit,
                       Money trailStopPrice, Percent trailingPercent, String FAProfile, String FAGroup, String FAMethod,
                       BigDecimal FAPercent) {
+
         this.tradestrategy = tradestrategy;
         this.action = action;
         this.createDate = createDate;
@@ -282,6 +369,7 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
                       String status, BigDecimal stopPrice, Boolean transmit, BigDecimal trailStopPrice,
                       BigDecimal trailingPercent, Integer triggerMethod, String warningMessage, String whyHeld,
                       ZonedDateTime lastUpdateDate, List<TradeOrderfill> tradeOrderfills) {
+
         this.tradePosition = tradePosition;
         this.action = action;
         this.allOrNothing = allOrNothing;
@@ -326,8 +414,6 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
      *
      * @return TradePosition
      */
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH})
-    @JoinColumn(name = "trade_position_id")
     public TradePosition getTradePosition() {
         return this.tradePosition;
     }
@@ -355,8 +441,6 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
      *
      * @return Tradestrategy
      */
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH})
-    @JoinColumn(name = "tradestrategy_id", nullable = false)
     public Tradestrategy getTradestrategy() {
         return this.tradestrategy;
     }
@@ -375,8 +459,6 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
      *
      * @return tradestrategyId
      */
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "tradestrategy_id", insertable = false, updatable = false, nullable = false)
     public TradestrategyLite getTradestrategyId() {
         return this.tradestrategyLite;
     }
@@ -395,7 +477,6 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
      *
      * @return String
      */
-    @Column(name = "action", nullable = false, length = 6)
     public String getAction() {
         return this.action;
     }
@@ -414,7 +495,6 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
      *
      * @return String
      */
-    @Column(name = "account_number", unique = true, nullable = false, length = 20)
     public String getAccountNumber() {
         return this.accountNumber;
     }
@@ -433,7 +513,6 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
      *
      * @return Boolean
      */
-    @Column(name = "all_or_nothing")
     public Boolean getAllOrNothing() {
         return this.allOrNothing;
     }
@@ -452,7 +531,6 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
      *
      * @return BigDecimal
      */
-    @Column(name = "aux_price", precision = 10)
     public BigDecimal getAuxPrice() {
         return this.auxPrice;
     }
@@ -471,7 +549,6 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
      *
      * @return BigDecimal
      */
-    @Column(name = "average_filled_price", precision = 11)
     public BigDecimal getAverageFilledPrice() {
         return this.averageFilledPrice;
     }
@@ -490,7 +567,6 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
      *
      * @return Integer
      */
-    @Column(name = "client_id")
     public Integer getClientId() {
         return this.clientId;
     }
@@ -509,7 +585,6 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
      *
      * @return BigDecimal
      */
-    @Column(name = "commission", precision = 10)
     public BigDecimal getCommission() {
         return this.commission;
     }
@@ -528,7 +603,6 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
      *
      * @return ZonedDateTime
      */
-    @Column(name = "create_date", nullable = false)
     public ZonedDateTime getCreateDate() {
         return this.createDate;
     }
@@ -547,7 +621,6 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
      *
      * @return Integer
      */
-    @Column(name = "display_quantity")
     public Integer getDisplayQuantity() {
         return this.displayQuantity;
     }
@@ -566,7 +639,6 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
      *
      * @return String
      */
-    @Column(name = "FA_group", length = 45)
     public String getFAGroup() {
         return this.FAGroup;
     }
@@ -585,7 +657,6 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
      *
      * @return String
      */
-    @Column(name = "FA_profile", length = 45)
     public String getFAProfile() {
         return this.FAProfile;
     }
@@ -604,7 +675,6 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
      *
      * @return String
      */
-    @Column(name = "FA_method", length = 20)
     public String getFAMethod() {
         return this.FAMethod;
     }
@@ -623,7 +693,6 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
      *
      * @return BigDecimal
      */
-    @Column(name = "FA_percent", precision = 10)
     public BigDecimal getFAPercent() {
         return this.FAPercent;
     }
@@ -642,8 +711,6 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
      *
      * @return ZonedDateTime
      */
-
-    @Column(name = "filled_date")
     public ZonedDateTime getFilledDate() {
         return this.filledDate;
     }
@@ -662,7 +729,6 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
      *
      * @return Integer
      */
-    @Column(name = "filled_quantity")
     public Integer getFilledQuantity() {
         return this.filledQuantity;
     }
@@ -681,7 +747,6 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
      *
      * @return ZonedDateTime
      */
-    @Column(name = "good_after_time")
     public ZonedDateTime getGoodAfterTime() {
         return this.goodAfterTime;
     }
@@ -700,7 +765,6 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
      *
      * @return ZonedDateTime
      */
-    @Column(name = "good_till_time")
     public ZonedDateTime getGoodTillTime() {
         return this.goodTillTime;
     }
@@ -719,7 +783,6 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
      *
      * @return Boolean
      */
-    @Column(name = "hidden")
     public Boolean getHidden() {
         return this.hidden;
     }
@@ -738,7 +801,6 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
      *
      * @return Boolean
      */
-    @Column(name = "is_open_position")
     public Boolean getIsOpenPosition() {
         return this.isOpenPosition;
     }
@@ -757,7 +819,6 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
      *
      * @return Boolean
      */
-    @Column(name = "is_filled")
     public Boolean getIsFilled() {
         return this.isFilled;
     }
@@ -776,7 +837,6 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
      *
      * @return BigDecimal
      */
-    @Column(name = "limit_price", precision = 10)
     public BigDecimal getLimitPrice() {
         return this.limitPrice;
     }
@@ -795,7 +855,6 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
      *
      * @return String
      */
-    @Column(name = "oca_group_name", length = 45)
     public String getOcaGroupName() {
         return this.ocaGroupName;
     }
@@ -814,7 +873,7 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
      *
      * @return Integer
      */
-    @Column(name = "oca_type")
+
     public Integer getOcaType() {
         return this.ocaType;
     }
@@ -833,7 +892,6 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
      *
      * @return Integer
      */
-    @Column(name = "order_key")
     public Integer getOrderKey() {
         return this.orderKey;
     }
@@ -852,7 +910,6 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
      *
      * @return String
      */
-    @Column(name = "order_reference", length = 45)
     public String getOrderReference() {
         return this.orderReference;
     }
@@ -871,7 +928,6 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
      *
      * @return String
      */
-    @Column(name = "order_type", nullable = false, length = 10)
     public String getOrderType() {
         return this.orderType;
     }
@@ -890,7 +946,6 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
      *
      * @return Integer
      */
-    @Column(name = "override_constraints", nullable = false)
     public Integer getOverrideConstraints() {
         return this.overrideConstraints;
     }
@@ -909,7 +964,6 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
      *
      * @return Integer
      */
-    @Column(name = "parent_id")
     public Integer getParentId() {
         return this.parentId;
     }
@@ -928,7 +982,6 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
      *
      * @return Integer
      */
-    @Column(name = "perm_id")
     public Integer getPermId() {
         return this.permId;
     }
@@ -947,7 +1000,6 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
      *
      * @return Integer
      */
-    @Column(name = "quantity", nullable = false)
     public Integer getQuantity() {
         return this.quantity;
     }
@@ -966,7 +1018,6 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
      *
      * @return String
      */
-    @Column(name = "time_in_force", nullable = false, length = 3)
     public String getTimeInForce() {
         return this.timeInForce;
     }
@@ -1017,9 +1068,17 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
      *
      * @return String
      */
-    @Column(name = "status", length = 45)
     public String getStatus() {
         return this.status;
+    }
+
+    /**
+     * Method setStatus.
+     *
+     * @param status String
+     */
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     /**
@@ -1035,20 +1094,10 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
     }
 
     /**
-     * Method setStatus.
-     *
-     * @param status String
-     */
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    /**
      * Method getStopPrice.
      *
      * @return BigDecimal
      */
-    @Column(name = "stop_price", precision = 10)
     public BigDecimal getStopPrice() {
         return this.stopPrice;
     }
@@ -1067,7 +1116,6 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
      *
      * @return Boolean
      */
-    @Column(name = "transmit", length = 1)
     public Boolean getTransmit() {
         return this.transmit;
     }
@@ -1086,7 +1134,7 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
      *
      * @return BigDecimal
      */
-    @Column(name = "trail_stop_price", precision = 10)
+
     public BigDecimal getTrailStopPrice() {
         return this.trailStopPrice;
     }
@@ -1105,7 +1153,6 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
      *
      * @return BigDecimal
      */
-    @Column(name = "trailing_percent", precision = 10)
     public BigDecimal getTrailingPercent() {
         return this.trailingPercent;
     }
@@ -1124,7 +1171,6 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
      *
      * @return Integer
      */
-    @Column(name = "trigger_method", nullable = false)
     public Integer getTriggerMethod() {
         return this.triggerMethod;
     }
@@ -1143,7 +1189,6 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
      *
      * @return ZonedDateTime
      */
-    @Column(name = "last_update_date", nullable = false)
     public ZonedDateTime getLastUpdateDate() {
         return this.lastUpdateDate;
     }
@@ -1158,22 +1203,10 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
     }
 
     /**
-     * Method getVersion.
-     *
-     * @return Integer
-     */
-    @Version
-    @Column(name = "version")
-    public Integer getVersion() {
-        return this.version;
-    }
-
-    /**
      * Method getWarningMessage.
      *
      * @return String
      */
-    @Column(name = "warning_message", length = 200)
     public String getWarningMessage() {
         return this.warningMessage;
     }
@@ -1192,7 +1225,6 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
      *
      * @return String
      */
-    @Column(name = "why_held", length = 45)
     public String getWhyHeld() {
         return this.whyHeld;
     }
@@ -1211,8 +1243,6 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
      *
      * @return List<TradeOrderfill>
      */
-    @OneToMany(mappedBy = "tradeOrder", fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
-    @OrderBy("time ASC")
     public List<TradeOrderfill> getTradeOrderfills() {
         return this.tradeOrderfills;
     }
@@ -1243,7 +1273,9 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
      */
     @Transient
     public boolean existTradeOrderfill(String execId) {
+
         for (TradeOrderfill tradeOrderfill : this.getTradeOrderfills()) {
+
             if (tradeOrderfill.getExecId().equals(execId)) {
                 return true;
             }
@@ -1258,37 +1290,37 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
     @Transient
     public void validate() throws Exception {
 
-        if (null == this.getOrderType())
+        if (null == this.getOrderType()) {
             throw new Exception("Order Type cannot be null");
-
-        if (null == this.getAction())
+        }
+        if (null == this.getAction()) {
             throw new Exception("Action cannot be null");
-
-        if (0 == this.getQuantity())
+        }
+        if (0 == this.getQuantity()) {
             throw new Exception("Quantity cannot be zero");
-
-        if (OrderType.LMT.equals(this.getOrderType()) && null == this.getLimitPrice())
+        }
+        if (OrderType.LMT.equals(this.getOrderType()) && null == this.getLimitPrice()) {
             throw new Exception("Limit price cannot be null");
-
+        }
         if (OrderType.STPLMT.equals(this.getOrderType())
-                && (null == this.getLimitPrice() || null == this.getAuxPrice()))
+                && (null == this.getLimitPrice() || null == this.getAuxPrice())) {
             throw new Exception("Limit/Aux price cannot be null");
-
+        }
         if (OrderType.STPLMT.equals(this.getOrderType()) && Action.BUY.equals(this.getAction())
-                && (-1 == CoreUtils.nullSafeComparator(this.getLimitPrice(), this.getAuxPrice())))
+                && (-1 == CoreUtils.nullSafeComparator(this.getLimitPrice(), this.getAuxPrice()))) {
             throw new Exception("Limit Price must be greater than Stop Price for Buy order");
-
+        }
         if (OrderType.STPLMT.equals(this.getOrderType()) && Action.SELL.equals(this.getAction())
-                && (-1 == CoreUtils.nullSafeComparator(this.getAuxPrice(), this.getLimitPrice())))
+                && (-1 == CoreUtils.nullSafeComparator(this.getAuxPrice(), this.getLimitPrice()))) {
             throw new Exception("Limit Price must be less than Stop Price for Sell order");
-
+        }
         if (((OrderType.TRAIL.equals(this.getOrderType()) || (OrderType.TRAILLIMIT.equals(this.getOrderType())))
-                && null == this.getAuxPrice() && null == this.getTrailingPercent()))
+                && null == this.getAuxPrice() && null == this.getTrailingPercent())) {
             throw new Exception("Trail orders must have either AuxPrice or Trailing Percent set");
-
-        if ((OrderType.TRAILLIMIT.equals(this.getOrderType())) && null == this.getLimitPrice())
+        }
+        if ((OrderType.TRAILLIMIT.equals(this.getOrderType())) && null == this.getLimitPrice()) {
             throw new Exception("Limit Price cannot be null for a TrailLimit order");
-
+        }
         if (null == this.getFAProfile()) {
             if (null == this.getFAGroup()) {
                 if (null != this.getTradestrategy().getPortfolio().getIndividualAccount()) {
@@ -1302,22 +1334,27 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
                 }
             }
         } else {
+
             this.setFAGroup(null);
             this.setFAMethod(null);
             this.setFAPercent(null);
         }
 
         if (OrderType.MKT.equals(this.getOrderType())) {
+
             this.setLimitPrice((new Money(0)).getBigDecimalValue());
             this.setAuxPrice((new Money(0)).getBigDecimalValue());
             this.setTrailingPercent((new Money(0)).getBigDecimalValue());
             this.setTrailStopPrice((new Money(0)).getBigDecimalValue());
         } else if (OrderType.TRAIL.equals(this.getOrderType())) {
+
             if (null != this.getTrailingPercent()) {
+
                 this.setAuxPrice(null);
                 this.setLimitPrice(null);
             }
         } else if (OrderType.TRAILLIMIT.equals(this.getOrderType())) {
+
             this.setTrailingPercent((new Money(0)).getBigDecimalValue());
         }
 
@@ -1329,12 +1366,15 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
      * @return TradeOrder
      */
     public TradeOrder clone() {
+
         try {
+
             TradeOrder order = (TradeOrder) super.clone();
             List<TradeOrderfill> tradeOrderfills = new ArrayList<>(0);
             order.setTradeOrderfills(tradeOrderfills);
             return order;
-        } catch (CloneNotSupportedException e) {
+        } catch (CloneNotSupportedException ex) {
+
             // will never happen
             return null;
         }
@@ -1348,12 +1388,12 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
      */
     public boolean equals(Object objectToCompare) {
 
-        if (super.equals(objectToCompare))
+        if (super.equals(objectToCompare)) {
             return true;
-
-        if (!(objectToCompare instanceof TradeOrder theOtherOrder))
+        }
+        if (!(objectToCompare instanceof TradeOrder theOtherOrder)) {
             return false;
-
+        }
         if (!theOtherOrder.getAction().equals((this.getAction()))) {
             return false;
         }
@@ -1451,42 +1491,54 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
     }
 
     public static final Comparator<TradeOrder> FILLDATE_ORDER = (o1, o2) -> {
+
         m_ascending = true;
         int returnVal;
+
         if (CoreUtils.nullSafeComparator(o1.getFilledDate(), o2.getFilledDate()) == 0) {
+
             returnVal = CoreUtils.nullSafeComparator(o1.getAction(), o2.getAction());
         } else {
+
             returnVal = CoreUtils.nullSafeComparator(o1.getFilledDate(), o2.getFilledDate());
         }
 
         if (m_ascending.equals(Boolean.FALSE)) {
+
             returnVal = returnVal * -1;
         }
         return returnVal;
     };
 
     public static final Comparator<TradeOrder> CREATE_ORDER = (o1, o2) -> {
+
         m_ascending = true;
         int returnVal;
+
         if (CoreUtils.nullSafeComparator(o1.getCreateDate(), o2.getCreateDate()) == 0) {
+
             returnVal = CoreUtils.nullSafeComparator(o1.getAction(), o2.getAction());
         } else {
+
             returnVal = CoreUtils.nullSafeComparator(o1.getCreateDate(), o2.getCreateDate());
         }
 
         if (m_ascending.equals(Boolean.FALSE)) {
+
             returnVal = returnVal * -1;
         }
         return returnVal;
     };
 
     public static final Comparator<TradeOrder> ORDER_KEY = (o1, o2) -> {
+
         m_ascending = true;
         int returnVal;
 
         returnVal = CoreUtils.nullSafeComparator(o1.getOrderKey(), o2.getOrderKey());
 
         if (m_ascending.equals(Boolean.FALSE)) {
+
             returnVal = returnVal * -1;
         }
         return returnVal;
@@ -1498,6 +1550,7 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
      * @return String
      */
     public String toString() {
+
         return "OrderKey: " + this.getOrderKey() + " Id: " + this.getId() + " Version: " + this.getVersion()
                 + " Action: " + this.getAction() + " Quantity: " + this.getQuantity() + " Status: " + this.getStatus()
                 + " OrderType: " + this.getOrderType() + " AuxPrice: " + new Money(this.getAuxPrice()) + " LmtPrice: "

@@ -55,19 +55,19 @@ import org.trade.core.persistent.dao.RuleRepository;
 import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.StrategyRepository;
 import org.trade.core.persistent.dao.TradeOrder;
-import org.trade.core.persistent.dao.TradeOrderHome;
+import org.trade.core.persistent.dao.TradeOrderRepository;
 import org.trade.core.persistent.dao.TradeOrderfill;
-import org.trade.core.persistent.dao.TradeOrderfillHome;
+import org.trade.core.persistent.dao.TradeOrderfillRepository;
 import org.trade.core.persistent.dao.TradePosition;
-import org.trade.core.persistent.dao.TradePositionHome;
-import org.trade.core.persistent.dao.TradelogHome;
+import org.trade.core.persistent.dao.TradePositionRepository;
 import org.trade.core.persistent.dao.TradelogReport;
+import org.trade.core.persistent.dao.TradelogReportRepository;
 import org.trade.core.persistent.dao.Tradestrategy;
-import org.trade.core.persistent.dao.TradestrategyHome;
 import org.trade.core.persistent.dao.TradestrategyLite;
 import org.trade.core.persistent.dao.TradestrategyOrders;
+import org.trade.core.persistent.dao.TradestrategyRepository;
 import org.trade.core.persistent.dao.Tradingday;
-import org.trade.core.persistent.dao.TradingdayHome;
+import org.trade.core.persistent.dao.TradingdayRepository;
 import org.trade.core.persistent.dao.Tradingdays;
 import org.trade.core.persistent.dao.series.indicator.CandleSeries;
 import org.trade.core.util.CoreUtils;
@@ -115,23 +115,29 @@ public class TradeServiceImpl implements TradeService {
     @Autowired
     private StrategyRepository strategyRepository;
 
-    private final TradingdayHome m_tradingdayHome;
-    private final TradeOrderHome m_tradeOrderHome;
-    private final TradeOrderfillHome m_tradeOrderfillHome;
-    private final TradePositionHome m_tradePositionHome;
-    private final TradelogHome m_tradelogHome;
-    private final TradestrategyHome m_tradestrategyHome;
+    @Autowired
+    private TradelogReportRepository tradelogReportRepository;
+
+    @Autowired
+    private TradeOrderfillRepository tradeOrderfillRepository;
+
+    @Autowired
+    private TradeOrderRepository tradeOrderRepository;
+
+    @Autowired
+    private TradePositionRepository tradePositionRepository;
+
+    @Autowired
+    private TradestrategyRepository tradestrategyRepository;
+
+    @Autowired
+    private TradingdayRepository tradingdayRepository;
 
     private static final int SCALE_5 = 5;
     private static final int SCALE_2 = 2;
 
     public TradeServiceImpl() {
-        m_tradingdayHome = new TradingdayHome();
-        m_tradeOrderHome = new TradeOrderHome();
-        m_tradeOrderfillHome = new TradeOrderfillHome();
-        m_tradePositionHome = new TradePositionHome();
-        m_tradelogHome = new TradelogHome();
-        m_tradestrategyHome = new TradestrategyHome();
+
     }
 
     public Aspect save(Aspect instance) {
@@ -142,6 +148,11 @@ public class TradeServiceImpl implements TradeService {
     public void deleteById(Integer id) {
 
         aspectRepository.deleteById(id);
+    }
+
+    public void delete(Aspect instace) {
+
+        aspectRepository.delete(instace);
     }
 
     public void deleteAll(Iterable<? extends Aspect> entities) {
@@ -161,7 +172,7 @@ public class TradeServiceImpl implements TradeService {
 
     public TradelogReport findTradelogReport(final Portfolio portfolio, ZonedDateTime start, ZonedDateTime end,
                                              boolean filter, String symbol, BigDecimal winLossAmount) {
-        return m_tradelogHome.findByTradelogReport(portfolio, start, end, filter, symbol, winLossAmount);
+        return tradelogReportRepository.findByTradelogReport(portfolio, start, end, filter, symbol, winLossAmount);
     }
 
 
@@ -176,11 +187,11 @@ public class TradeServiceImpl implements TradeService {
 
 
     public Tradingday findTradingdayById(final Integer id) {
-        return m_tradingdayHome.findTradingdayById(id);
+        return tradingdayRepository.findById(id).isPresent() ? tradingdayRepository.findById(id).get() : null;
     }
 
     public Tradingday findTradingdayByOpenCloseDate(final ZonedDateTime openDate, final ZonedDateTime closeDate) {
-        return m_tradingdayHome.findByOpenCloseDate(openDate, closeDate);
+        return tradingdayRepository.findByOpenCloseDate(openDate, closeDate);
     }
 
     public Contract findContractById(final Integer id) {
@@ -188,7 +199,7 @@ public class TradeServiceImpl implements TradeService {
     }
 
     public TradeOrder findTradeOrderById(final Integer id) {
-        return m_tradeOrderHome.findById(id);
+        return tradeOrderRepository.findById(id).isPresent() ? tradeOrderRepository.findById(id).get() : null;
     }
 
     public Contract findContractByUniqueKey(String SECType, String symbol, String exchange, String currency,
@@ -204,7 +215,7 @@ public class TradeServiceImpl implements TradeService {
                     "Please save Tradestrategy for symbol: " + tradestrategy.getContract().getSymbol());
         }
 
-        Tradestrategy instance = m_tradestrategyHome.findById(tradestrategy.getId());
+        Tradestrategy instance = tradestrategyRepository.findById(tradestrategy.getId()).get();
 
         instance.setStrategyData(tradestrategy.getStrategyData());
         return instance;
@@ -212,36 +223,36 @@ public class TradeServiceImpl implements TradeService {
 
     public TradestrategyOrders refreshPositionOrdersByTradestrategyId(final TradestrategyOrders positionOrders) {
 
-        Integer version = m_tradestrategyHome.findVersionById(Objects.requireNonNull(positionOrders.getId()));
+        Integer version = tradestrategyRepository.findVersionById(Objects.requireNonNull(positionOrders.getId()));
 
         if (positionOrders.getVersion().equals(version)) {
             return positionOrders;
         } else {
-            return m_tradestrategyHome
+            return tradestrategyRepository
                     .findPositionOrdersByTradestrategyId(positionOrders.getId());
         }
     }
 
     public TradestrategyOrders findPositionOrdersByTradestrategyId(final Integer idTradestrategy) {
 
-        return m_tradestrategyHome.findPositionOrdersByTradestrategyId(idTradestrategy);
+        return tradestrategyRepository.findPositionOrdersByTradestrategyId(idTradestrategy);
     }
 
     public Tradestrategy findTradestrategyById(final Integer id) throws ServiceException {
-        return m_tradestrategyHome.findById(id);
+        return tradestrategyRepository.findById(id).get();
     }
 
     public boolean existTradestrategyById(final Integer id) {
 
-        return null != m_tradestrategyHome.findById(id);
+        return null != tradestrategyRepository.findById(id);
     }
 
     public TradestrategyLite findTradestrategyLiteById(final Integer id) {
-        return m_tradestrategyHome.findTradestrategyLiteById(id);
+        return tradestrategyRepository.findTradestrategyLiteById(id);
     }
 
     public TradePosition findTradePositionById(final Integer id) {
-        return m_tradePositionHome.findById(id);
+        return tradePositionRepository.findById(id).isPresent() ? tradePositionRepository.findById(id).get() : null;
     }
 
     public Portfolio findPortfolioById(final Integer id) {
@@ -277,23 +288,23 @@ public class TradeServiceImpl implements TradeService {
     }
 
     public List<Tradestrategy> findAllTradestrategies() {
-        return m_tradestrategyHome.findAll();
+        return tradestrategyRepository.findAll();
 
     }
 
     public Tradestrategy findTradestrategyByUniqueKeys(final ZonedDateTime open, final String strategy,
                                                        final Integer idContract, final String portfolioName) {
-        return m_tradestrategyHome.findTradestrategyByUniqueKeys(open, strategy, idContract, portfolioName);
+        return tradestrategyRepository.findTradestrategyByUniqueKeys(open, strategy, idContract, portfolioName);
     }
 
     public List<Tradestrategy> findTradestrategyDistinctByDateRange(final ZonedDateTime fromOpen,
                                                                     final ZonedDateTime toOpen) {
-        return m_tradestrategyHome.findTradestrategyDistinctByDateRange(fromOpen, toOpen);
+        return tradestrategyRepository.findTradestrategyDistinctByDateRange(fromOpen, toOpen);
     }
 
     public List<Tradestrategy> findTradestrategyContractDistinctByDateRange(final ZonedDateTime fromOpen,
                                                                             final ZonedDateTime toOpen) {
-        return m_tradestrategyHome.findTradestrategyContractDistinctByDateRange(fromOpen, toOpen);
+        return tradestrategyRepository.findTradestrategyContractDistinctByDateRange(fromOpen, toOpen);
     }
 
     public void removeTradingdayTradeOrders(final Tradingday transientInstance) throws ServiceException {
@@ -309,7 +320,7 @@ public class TradeServiceImpl implements TradeService {
              * Refresh the trade strategy as orders across tradePosition could
              * have been deleted if this is a bulk delete of tradestrategies.
              */
-            Tradestrategy transientInstance = m_tradestrategyHome.findById(Objects.requireNonNull(tradestrategy.getId()));
+            Tradestrategy transientInstance = tradestrategyRepository.findById(Objects.requireNonNull(tradestrategy.getId())).get();
             transientInstance.setStatus(null);
             aspectRepository.save(transientInstance);
 
@@ -348,19 +359,19 @@ public class TradeServiceImpl implements TradeService {
     }
 
     public TradeOrder findTradeOrderByKey(final Integer orderKey) {
-        return m_tradeOrderHome.findTradeOrderByKey(orderKey);
+        return tradeOrderRepository.findByOrderKey(orderKey);
     }
 
     public TradeOrderfill findTradeOrderfillByExecId(String execId) {
-        return m_tradeOrderfillHome.findOrderFillByExecId(execId);
+        return tradeOrderfillRepository.findByExecId(execId);
     }
 
     public Integer findTradeOrderByMaxKey() {
-        return m_tradeOrderHome.findTradeOrderByMaxKey();
+        return tradeOrderRepository.findByMaxKey();
     }
 
     public Tradingdays findTradingdaysByDateRange(final ZonedDateTime startDate, final ZonedDateTime endDate) {
-        return m_tradingdayHome.findTradingdaysByDateRange(startDate, endDate);
+        return tradingdayRepository.findTradingdaysByDateRange(startDate, endDate);
     }
 
     public List<Candle> findCandlesByContractDateRangeBarSize(final Integer idContract, final ZonedDateTime startDate,
@@ -439,10 +450,14 @@ public class TradeServiceImpl implements TradeService {
     public void persistTradingday(final Tradingday transientInstance) throws ServiceException {
 
         try {
-            m_tradingdayHome.persist(transientInstance);
+
+            tradingdayRepository.persist(transientInstance);
+
         } catch (OptimisticLockException ex1) {
+
             throw new ServiceException("Error saving Tradingday please refresh before save.");
         } catch (Exception e) {
+
             throw new ServiceException(
                     "Error saving Tradingday: " + transientInstance.getOpen() + "\n Msg: " + e.getMessage());
         }
