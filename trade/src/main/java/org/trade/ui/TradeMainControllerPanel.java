@@ -559,7 +559,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                                 "Information", JOptionPane.YES_NO_OPTION);
                         if (result == JOptionPane.YES_OPTION) {
                             openOrder.setTradestrategy(tradestrategy);
-                            openOrder = tradeService.persistTradeOrder(openOrder);
+                            openOrder = tradeService.saveTradeOrder(openOrder);
                         }
                     }
                 }
@@ -574,7 +574,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                             if (!openTradeOrders.containsKey(todayTradeOrder.getOrderKey())) {
                                 todayTradeOrder.setStatus(OrderStatus.CANCELLED);
                                 todayTradeOrder.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
-                                tradeService.persistTradeOrder(todayTradeOrder);
+                                tradeService.saveTradeOrder(todayTradeOrder);
                             }
                         }
                     }
@@ -924,7 +924,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                                             + " do you want to delete all Orders?",
                                     "Information", JOptionPane.YES_NO_OPTION);
                             if (result1 == JOptionPane.YES_OPTION) {
-                                tradeService.removeTradestrategyTradeOrders(tradestrategy);
+                                tradeService.deleteTradestrategyTradeOrders(tradestrategy);
                             }
                         }
 
@@ -1191,7 +1191,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                     if (defaultPortfolio.getPortfolioAccounts().isEmpty() && tokens == 0) {
                         PortfolioAccount portfolioAccount = new PortfolioAccount(defaultPortfolio, account);
                         defaultPortfolio.getPortfolioAccounts().add(portfolioAccount);
-                        defaultPortfolio = tradeService.persistPortfolio(defaultPortfolio);
+                        defaultPortfolio = tradeService.savePortfolio(defaultPortfolio);
                         /*
                          * Update the account (key) to the current account only
                          * when the default Portfolio has no accounts.
@@ -1203,7 +1203,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                         Portfolio portfolio = new Portfolio(account.getAccountNumber(), account.getAccountNumber());
                         PortfolioAccount portfolioAccount = new PortfolioAccount(portfolio, account);
                         portfolio.getPortfolioAccounts().add(portfolioAccount);
-                        portfolio = tradeService.persistPortfolio(portfolio);
+                        portfolio = tradeService.savePortfolio(portfolio);
                         if (tokens == 0) {
                             /*
                              * Update the default portfolio.
@@ -1635,7 +1635,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
 
                         if (result == JOptionPane.YES_OPTION) {
 
-                            tradeService.removeTradingdayTradeOrders(tradingday);
+                            tradeService.deleteTradingdayTradeOrders(tradingday);
                         }
                     }
 
@@ -1695,7 +1695,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
 
                                     for (Candle item : candles) {
 
-                                        tradeService.removeAspect(item);
+                                        tradeService.deleteAspect(item);
                                     }
                                 } else {
                                     return;

@@ -156,7 +156,7 @@ public class CandleIT {
             StrategyData.doDummyData(tradestrategy.getStrategyData().getBaseCandleSeries(),
                     Tradingday.newInstance(prevTradingday), 2, BarSize.FIVE_MIN, true, 0);
             assertFalse(tradestrategy.getStrategyData().getBaseCandleSeries().isEmpty());
-            tradeService.persistCandleSeries(tradestrategy.getStrategyData().getBaseCandleSeries());
+            tradeService.saveCandleSeries(tradestrategy.getStrategyData().getBaseCandleSeries());
 
             _log.info("testAddCandle IdTradeStrategy: {}", tradestrategy.getId());
             assertNotNull(((CandleItem) tradestrategy.getStrategyData().getBaseCandleSeries().getDataItem(0))

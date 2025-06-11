@@ -420,7 +420,7 @@ public class AbstractStrategyIT {
                 TradingCalendar.getDateTimeNowMarketTimeZone());
         openOrder.addTradeOrderfill(orderFill);
         openOrder.setStatus(OrderStatus.FILLED);
-        openOrder = tradeService.persistTradeOrderfill(openOrder);
+        openOrder = tradeService.saveTradeOrderfill(openOrder);
         assertNotNull(openOrder);
 
         reFreshPositionOrders();
@@ -626,7 +626,7 @@ public class AbstractStrategyIT {
     private void createOpenBuyPosition(Money price, String action, boolean fillOpenPosition)
             throws Exception {
         if (!strategyProxy.getTradestrategy().getTradeOrders().isEmpty()) {
-            tradeService.removeTradestrategyTradeOrders(strategyProxy.getTradestrategy());
+            tradeService.deleteTradestrategyTradeOrders(strategyProxy.getTradestrategy());
         }
         TradeOrder tradeOrder = this.strategyProxy.createOrder(tradestrategy.getContract(), action, OrderType.STPLMT,
                 price, price.subtract(new Money(0.2)), 1000, null, null, TriggerMethod.DEFAULT,

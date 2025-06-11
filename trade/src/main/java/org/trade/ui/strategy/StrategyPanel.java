@@ -475,7 +475,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
                 for (Strategy strategy : this.strategies) {
                     if (strategy.getId().equals(this.currentRule.getStrategy().getId())) {
                         strategy.getRules().remove(this.currentRule);
-                        this.tradeService.removeAspect(this.currentRule);
+                        this.tradeService.deleteAspect(this.currentRule);
                     }
                 }
                 Integer version = this.tradeService.findRuleByMaxVersion(this.currentRule.getStrategy());

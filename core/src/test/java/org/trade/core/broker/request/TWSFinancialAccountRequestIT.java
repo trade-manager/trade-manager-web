@@ -93,12 +93,12 @@ public class TWSFinancialAccountRequestIT {
 
         Aspects portfolioAccounts = tradeService.findAspectsByClassName(PortfolioAccount.class.getName());
         for (Aspect aspect : portfolioAccounts.getAspect()) {
-            tradeService.removeAspect(aspect);
+            tradeService.deleteAspect(aspect);
         }
 
         Aspects accounts = tradeService.findAspectsByClassName(Account.class.getName());
         for (Aspect aspect : accounts.getAspect()) {
-            tradeService.removeAspect(aspect);
+            tradeService.deleteAspect(aspect);
         }
     }
 
@@ -176,7 +176,7 @@ public class TWSFinancialAccountRequestIT {
                 .getResourceAsStream("broker/request/allocationEmpty.xml"));
 
         for (Aspect aspect : aspects.getAspect()) {
-            tradeService.persistPortfolio((Portfolio) aspect);
+            tradeService.savePortfolio((Portfolio) aspect);
         }
     }
 
@@ -187,7 +187,7 @@ public class TWSFinancialAccountRequestIT {
         final Aspects aspects = (Aspects) request.fromXML(Thread.currentThread().getContextClassLoader()
                 .getResourceAsStream("broker/request/allocation.xml"));
         for (Aspect aspect : aspects.getAspect()) {
-            tradeService.persistPortfolio((Portfolio) aspect);
+            tradeService.savePortfolio((Portfolio) aspect);
         }
     }
 
@@ -198,7 +198,7 @@ public class TWSFinancialAccountRequestIT {
         final Aspects aspects = (Aspects) request.fromXML(Thread.currentThread().getContextClassLoader()
                 .getResourceAsStream("broker/request/allocation1.xml"));
         for (Aspect aspect : aspects.getAspect()) {
-            tradeService.persistPortfolio((Portfolio) aspect);
+            tradeService.savePortfolio((Portfolio) aspect);
         }
     }
 
@@ -213,7 +213,7 @@ public class TWSFinancialAccountRequestIT {
         aspects.add(portfolio);
 
         for (Aspect aspect : aspects.getAspect()) {
-            tradeService.persistPortfolio((Portfolio) aspect);
+            tradeService.savePortfolio((Portfolio) aspect);
         }
     }
 
@@ -224,7 +224,7 @@ public class TWSFinancialAccountRequestIT {
         final Aspects aspects = (Aspects) request.fromXML(Thread.currentThread().getContextClassLoader()
                 .getResourceAsStream("broker/request/groupsEmpty.xml"));
         for (Aspect aspect : aspects.getAspect()) {
-            tradeService.persistPortfolio((Portfolio) aspect);
+            tradeService.savePortfolio((Portfolio) aspect);
         }
     }
 
@@ -235,7 +235,7 @@ public class TWSFinancialAccountRequestIT {
         final Aspects aspects = (Aspects) request.fromXML(Thread.currentThread().getContextClassLoader()
                 .getResourceAsStream("broker/request/groups.xml"));
         for (Aspect aspect : aspects.getAspect()) {
-            tradeService.persistPortfolio((Portfolio) aspect);
+            tradeService.savePortfolio((Portfolio) aspect);
         }
     }
 
@@ -246,7 +246,7 @@ public class TWSFinancialAccountRequestIT {
         final Aspects aspects = (Aspects) request.fromXML(Thread.currentThread().getContextClassLoader()
                 .getResourceAsStream("broker/request/groups1.xml"));
         for (Aspect aspect : aspects.getAspect()) {
-            tradeService.persistPortfolio((Portfolio) aspect);
+            tradeService.savePortfolio((Portfolio) aspect);
         }
     }
 }

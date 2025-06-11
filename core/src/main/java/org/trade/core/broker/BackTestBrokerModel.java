@@ -624,7 +624,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
                 if (null == tradeOrder.getClientId()) {
                     tradeOrder.setClientId(999);
                 }
-                TradeOrder transientInstance = tradeService.persistTradeOrder(tradeOrder);
+                TradeOrder transientInstance = tradeService.saveTradeOrder(tradeOrder);
                 // Debug logging
                 _log.debug("Order Placed Key: {}", transientInstance.getOrderKey());
                 TWSBrokerModel.logContract(TWSBrokerModel.getIBContract(contract));
@@ -700,7 +700,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
             transientInstance.setFilledQuantity(tradeOrderfill.getCumulativeQuantity());
             transientInstance.setFilledDate(tradeOrderfill.getTime());
             boolean isFilled = transientInstance.getIsFilled();
-            TradeOrder updatedOrder = tradeService.persistTradeOrderfill(transientInstance);
+            TradeOrder updatedOrder = tradeService.saveTradeOrderfill(transientInstance);
 
             // Let the controller know an order was filled
             if (updatedOrder.getIsFilled() && !isFilled)
@@ -755,7 +755,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
                     BackTestBrokerModel.logOrderState(orderState);
                     BackTestBrokerModel.logTradeOrder(tradeOrder);
 
-                    TradeOrder updatedOrder = tradeService.persistTradeOrder(transientInstance);
+                    TradeOrder updatedOrder = tradeService.saveTradeOrder(transientInstance);
 
                     if (updatedOrder.hasTradePosition() && !updatedOrder.getTradePosition().isOpen()) {
                         // Let the controller know a position was closed
@@ -765,7 +765,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
                     _log.debug("Order key: {} state changed. Status:{}", transientInstance.getOrderKey(), orderState.m_status);
                     BackTestBrokerModel.logOrderState(orderState);
                     BackTestBrokerModel.logTradeOrder(tradeOrder);
-                    TradeOrder updatedOrder = tradeService.persistTradeOrder(transientInstance);
+                    TradeOrder updatedOrder = tradeService.saveTradeOrder(transientInstance);
                     if (OrderStatus.CANCELLED.equals(updatedOrder.getStatus())) {
                         // Let the controller know a position was closed
                         this.fireTradeOrderCancelled(updatedOrder);
@@ -849,7 +849,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
                         lastFillPrice, clientId, whyHeld);
 
                 boolean isFilled = transientInstance.getIsFilled();
-                TradeOrder updatedOrder = tradeService.persistTradeOrder(transientInstance);
+                TradeOrder updatedOrder = tradeService.saveTradeOrder(transientInstance);
 
                 if (OrderStatus.CANCELLED.equals(updatedOrder.getStatus())) {
 
@@ -986,7 +986,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
 
                 if (BackTestBrokerModel.populateContract(contractDetails, contract)) {
 
-                    tradeService.persistContract(contract);
+                    tradeService.saveContract(contract);
                     synchronized (m_contractRequests) {
                         m_contractRequests.remove(reqId);
                     }
@@ -1104,7 +1104,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
                 Tradestrategy tradestrategy = m_historyDataRequests.get(reqId);
 
                 CandleSeries candleSeries = tradestrategy.getStrategyData().getBaseCandleSeries();
-                tradeService.persistCandleSeries(candleSeries);
+                tradeService.saveCandleSeries(candleSeries);
 
                 _log.debug("HistoricalData complete Req Id: {}, Symbol: {}, Tradingday: {}, candles to saved: {}, Contract Tradestrategies size:: {}", reqId, tradestrategy.getContract().getSymbol(), tradestrategy.getTradingday().getOpen(), candleSeries.getItemCount(), tradestrategy.getContract().getTradestrategies().size());
 

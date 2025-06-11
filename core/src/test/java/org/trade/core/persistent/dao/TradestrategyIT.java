@@ -166,7 +166,7 @@ public class TradestrategyIT {
             for (Tradestrategy tradestrategy : tradingday.getTradestrategies()) {
                 tradestrategy.setStatus(TradestrategyStatus.OPEN);
             }
-            tradeService.persistTradingday(tradingday);
+            tradeService.saveTradingday(tradingday);
 
             for (Tradestrategy tradestrategy : tradingday.getTradestrategies()) {
 
@@ -188,7 +188,7 @@ public class TradestrategyIT {
         tradingdays.populateDataFromFile(TEST_FILE, instance);
         assertFalse(tradingdays.getTradingdays().isEmpty());
         for (Tradingday tradingday : tradingdays.getTradingdays()) {
-            tradeService.persistTradingday(tradingday);
+            tradeService.saveTradingday(tradingday);
             for (Tradestrategy tradestrategy : tradingday.getTradestrategies()) {
                 _log.info("testTradingdaysUpdate IdTradeStrategy:{}", tradestrategy.getId());
                 aspectRepository.delete(tradestrategy);
@@ -211,7 +211,7 @@ public class TradestrategyIT {
         tradingdays.populateDataFromFile(TEST_FILE, instance);
         assertFalse(tradingdays.getTradingdays().isEmpty());
         for (Tradingday tradingday : tradingdays.getTradingdays()) {
-            tradeService.persistTradingday(tradingday);
+            tradeService.saveTradingday(tradingday);
             for (Tradestrategy tradestrategy : tradingday.getTradestrategies()) {
 
                 _log.info("testTradingdaysUpdate IdTradeStrategy:{}", tradestrategy.getId());

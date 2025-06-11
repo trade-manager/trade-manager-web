@@ -421,7 +421,7 @@ public class TradingdayPanel extends BasePanel {
                         if (tradingday.isDirty()) {
 
                             dirty = true;
-                            tradeService.persistTradingday(tradingday);
+                            tradeService.saveTradingday(tradingday);
                         }
                     }
                     if (dirty)
@@ -1260,7 +1260,7 @@ public class TradingdayPanel extends BasePanel {
                 String message;
                 tradingdays.getTradingdays().sort(Tradingday.DATE_ORDER_ASC);
                 for (Tradingday tradingday : tradingdays.getTradingdays()) {
-                    this.tradeService.removeTradingdayTradeOrders(tradingday);
+                    this.tradeService.deleteTradingdayTradeOrders(tradingday);
                     totalComplete++;
                     int percent = (int) (((double) (totalComplete) / grandtotal) * 100d);
                     setProgress(percent);

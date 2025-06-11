@@ -279,7 +279,7 @@ public class TradeServiceImpl implements TradeService {
 
     }
 
-    public Portfolio persistPortfolio(final Portfolio instance) throws ServiceException {
+    public Portfolio savePortfolio(final Portfolio instance) throws ServiceException {
         try {
             return portfolioRepository.persistPortfolio(instance);
         } catch (Exception ex) {
@@ -307,13 +307,13 @@ public class TradeServiceImpl implements TradeService {
         return tradestrategyRepository.findTradestrategyContractDistinctByDateRange(fromOpen, toOpen);
     }
 
-    public void removeTradingdayTradeOrders(final Tradingday transientInstance) throws ServiceException {
+    public void deleteTradingdayTradeOrders(final Tradingday transientInstance) throws ServiceException {
         for (Tradestrategy tradestrategy : transientInstance.getTradestrategies()) {
-            this.removeTradestrategyTradeOrders(tradestrategy);
+            this.deleteTradestrategyTradeOrders(tradestrategy);
         }
     }
 
-    public void removeTradestrategyTradeOrders(final Tradestrategy tradestrategy) throws ServiceException {
+    public void deleteTradestrategyTradeOrders(final Tradestrategy tradestrategy) throws ServiceException {
 
         try {
             /*
@@ -383,19 +383,19 @@ public class TradeServiceImpl implements TradeService {
         return candleRepository.findCandleCount(idTradingday, idContract);
     }
 
-    public Contract persistContract(final Contract transientInstance) {
+    public Contract saveContract(final Contract transientInstance) {
 
         return aspectRepository.save(transientInstance);
     }
 
-    public void persistCandleSeries(final CandleSeries candleSeries) throws ServiceException {
+    public void saveCandleSeries(final CandleSeries candleSeries) throws ServiceException {
         try {
             /*
              * This can happen when an indicator is a contract that has never
              * been used.
              */
             if (null == candleSeries.getContract().getId()) {
-                Contract contract = this.persistContract(candleSeries.getContract());
+                Contract contract = this.saveContract(candleSeries.getContract());
                 // candleSeries.getContract().setId(contract.getId());
                 candleSeries.getContract().setVersion(contract.getVersion());
             }
@@ -408,7 +408,7 @@ public class TradeServiceImpl implements TradeService {
         }
     }
 
-    public Candle persistCandle(final Candle candle) throws ServiceException {
+    public Candle saveCandle(final Candle candle) throws ServiceException {
 
         try {
 
@@ -447,7 +447,7 @@ public class TradeServiceImpl implements TradeService {
         }
     }
 
-    public void persistTradingday(final Tradingday transientInstance) throws ServiceException {
+    public void saveTradingday(final Tradingday transientInstance) throws ServiceException {
 
         try {
 
@@ -463,7 +463,7 @@ public class TradeServiceImpl implements TradeService {
         }
     }
 
-    public synchronized TradeOrder persistTradeOrder(final TradeOrder tradeOrder) throws ServiceException {
+    public synchronized TradeOrder saveTradeOrder(final TradeOrder tradeOrder) throws ServiceException {
         try {
 
             /*
@@ -687,7 +687,7 @@ public class TradeServiceImpl implements TradeService {
         }
     }
 
-    public synchronized TradeOrder persistTradeOrderfill(final TradeOrder tradeOrder) throws ServiceException {
+    public synchronized TradeOrder saveTradeOrderfill(final TradeOrder tradeOrder) throws ServiceException {
         try {
 
             ZonedDateTime filledDate = null;
@@ -735,7 +735,7 @@ public class TradeServiceImpl implements TradeService {
                     tradeOrder.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
                 }
             }
-            return persistTradeOrder(tradeOrder);
+            return saveTradeOrder(tradeOrder);
 
         } catch (OptimisticLockException ex1) {
             throw new ServiceException("Error saving TradeOrderfill please refresh before save.");
@@ -846,7 +846,7 @@ public class TradeServiceImpl implements TradeService {
         }
     }
 
-    public void removeAspect(final Aspect transientInstance) throws ServiceException {
+    public void deleteAspect(final Aspect transientInstance) throws ServiceException {
 
         try {
 

@@ -412,7 +412,7 @@ public class CandlestickChartApp extends BasePanel implements IBrokerChangeListe
 
                 if (result == JOptionPane.YES_OPTION) {
 
-                    tradeService.removeTradingdayTradeOrders(tradingday);
+                    tradeService.deleteTradingdayTradeOrders(tradingday);
                 }
             }
 
@@ -453,7 +453,7 @@ public class CandlestickChartApp extends BasePanel implements IBrokerChangeListe
 
                         for (Candle item : candles) {
 
-                            tradeService.removeAspect(item);
+                            tradeService.deleteAspect(item);
                         }
                     } else {
                         return;

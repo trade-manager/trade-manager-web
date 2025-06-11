@@ -714,7 +714,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
 
                         tradeOrder.setClientId(this.m_clientId);
                     }
-                    tradeOrder = tradeService.persistTradeOrder(tradeOrder);
+                    tradeOrder = tradeService.saveTradeOrder(tradeOrder);
 
                     _log.debug("Order Placed Key: {}", tradeOrder.getOrderKey());
                     com.ib.client.Contract IBContract = TWSBrokerModel.getIBContract(contract);
@@ -792,7 +792,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
             transientInstance.setFilledQuantity(tradeOrderfill.getCumulativeQuantity());
             transientInstance.setFilledDate(tradeOrderfill.getTime());
             boolean isFilled = transientInstance.getIsFilled();
-            transientInstance = tradeService.persistTradeOrderfill(transientInstance);
+            transientInstance = tradeService.saveTradeOrderfill(transientInstance);
 
             // Let the controller know an order was filled
             if (transientInstance.getIsFilled() && !isFilled) {
@@ -962,7 +962,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
                             }
                         }
                         tradeOrder.setCommission(new BigDecimal(totalComms));
-                        tradeOrder = tradeService.persistTradeOrderfill(tradeOrder);
+                        tradeOrder = tradeService.saveTradeOrderfill(tradeOrder);
                         TradeOrder transientInstance = tradeService
                                 .findTradeOrderByKey(tradeOrder.getOrderKey());
 
@@ -1015,7 +1015,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
 
                 if (OrderStatus.FILLED.equals(transientInstance.getStatus())) {
                     _log.debug("Open order filled Order Key:{}", transientInstance.getOrderKey());
-                    transientInstance = tradeService.persistTradeOrder(transientInstance);
+                    transientInstance = tradeService.saveTradeOrder(transientInstance);
 
                     if (transientInstance.hasTradePosition() && !transientInstance.getTradePosition().isOpen()) {
 
@@ -1025,7 +1025,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
                 } else {
 
                     _log.debug("Open order state changed. Status:{}", orderState.status());
-                    transientInstance = tradeService.persistTradeOrder(transientInstance);
+                    transientInstance = tradeService.saveTradeOrder(transientInstance);
 
                     if (OrderStatus.CANCELLED.equals(transientInstance.getStatus())) {
 
@@ -1111,7 +1111,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
                         lastFillPrice, clientId, whyHeld);
 
                 boolean isFilled = transientInstance.getIsFilled();
-                transientInstance = tradeService.persistTradeOrder(transientInstance);
+                transientInstance = tradeService.saveTradeOrder(transientInstance);
 
                 if (OrderStatus.CANCELLED.equals(transientInstance.getStatus())) {
 
@@ -1656,7 +1656,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
 
                 if (TWSBrokerModel.populateContract(contractDetails, contract)) {
 
-                    tradeService.persistContract(contract);
+                    tradeService.saveContract(contract);
                 }
             } else {
 
@@ -1752,7 +1752,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
                     final TWSAllocationRequest request = new TWSAllocationRequest();
                     final Aspects aspects = (Aspects) request.fromXML(inputSource);
                     for (Aspect aspect : aspects.getAspect()) {
-                        tradeService.persistPortfolio((Portfolio) aspect);
+                        tradeService.savePortfolio((Portfolio) aspect);
                     }
                     this.fireFAAccountsCompleted();
                     break;
@@ -1765,7 +1765,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
 
                     for (Aspect aspect : aspects.getAspect()) {
 
-                        tradeService.persistPortfolio((Portfolio) aspect);
+                        tradeService.savePortfolio((Portfolio) aspect);
                     }
                     m_client.requestFA(EClientSocket.PROFILES);
                     break;
@@ -1860,7 +1860,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
                 Tradestrategy tradestrategy = m_historyDataRequests.get(reqId);
 
                 CandleSeries candleSeries = tradestrategy.getStrategyData().getBaseCandleSeries();
-                tradeService.persistCandleSeries(candleSeries);
+                tradeService.saveCandleSeries(candleSeries);
 
                 _log.debug("HistoricalDataComplete complete Req Id: {} Symbol: {} Tradingday: {} candles to saved: {} Contract Tradestrategies size:: {}", reqId, tradestrategy.getContract().getSymbol(), tradestrategy.getTradingday().getOpen(), candleSeries.getItemCount(), tradestrategy.getContract().getTradestrategies().size());
 
@@ -1950,7 +1950,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
 
                                 if (updateCandleDB) {
 
-                                    tradeService.persistCandle(candleItem.getCandle());
+                                    tradeService.saveCandle(candleItem.getCandle());
                                     updateCandleDB = false;
                                 }
                             }
@@ -1979,7 +1979,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
                     if (tradeOrderfill.getExecId().equals(commsReport.m_execId)) {
 
                         tradeOrderfill.setCommission(new BigDecimal(commsReport.m_commission));
-                        tradeService.persistTradeOrderfill(tradeOrderfill.getTradeOrder());
+                        tradeService.saveTradeOrderfill(tradeOrderfill.getTradeOrder());
                         return;
                     }
                 }

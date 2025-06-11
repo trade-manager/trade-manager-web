@@ -150,7 +150,7 @@ public class TradestrategyBase {
         tradestrategy = new Tradestrategy(contract, tradingday, strategy, portfolio, new BigDecimal(100), "BUY", "0",
                 true, ChartDays.TWO_DAYS, BarSize.FIVE_MIN);
         tradingday.addTradestrategy(tradestrategy);
-        tradeService.persistTradingday(tradingday);
+        tradeService.saveTradingday(tradingday);
         Tradestrategy instance = tradeService.findTradestrategyById(tradestrategy.getId());
         instance.setStrategyData(StrategyData.create(instance));
         return instance;

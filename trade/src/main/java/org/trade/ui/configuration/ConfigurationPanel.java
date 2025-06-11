@@ -232,7 +232,7 @@ public class ConfigurationPanel extends BasePanel {
                     }
                 }
                 if (!exists)
-                    tradeService.removeAspect(currAspect);
+                    tradeService.deleteAspect(currAspect);
             }
             DBTableLookupServiceProvider.clearLookup();
             doRefresh();

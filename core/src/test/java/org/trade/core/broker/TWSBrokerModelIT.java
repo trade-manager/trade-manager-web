@@ -193,7 +193,7 @@ public class TWSBrokerModelIT implements IBrokerChangeListener {
             tradingdays.populateDataFromFile(fileName, tradingday);
 
             for (Tradingday item : tradingdays.getTradingdays()) {
-                tradeService.persistTradingday(item);
+                tradeService.saveTradingday(item);
             }
             brokerDataRequestProgressMonitor = new BrokerDataRequestMonitor(tWSBrokerModel, tradeService,
                     tradingdays);
@@ -240,7 +240,7 @@ public class TWSBrokerModelIT implements IBrokerChangeListener {
             tradingdays.populateDataFromFile(fileName, tradingday);
 
             for (Tradingday item : tradingdays.getTradingdays()) {
-                tradeService.persistTradingday(item);
+                tradeService.saveTradingday(item);
             }
             brokerDataRequestProgressMonitor = new BrokerDataRequestMonitor(tWSBrokerModel, tradeService,
                     tradingdays);
@@ -295,7 +295,7 @@ public class TWSBrokerModelIT implements IBrokerChangeListener {
             }
 
             for (Tradingday item : tradingdays.getTradingdays()) {
-                tradeService.persistTradingday(item);
+                tradeService.saveTradingday(item);
             }
 
             brokerDataRequestProgressMonitor = new BrokerDataRequestMonitor(tWSBrokerModel, tradeService,
@@ -351,7 +351,7 @@ public class TWSBrokerModelIT implements IBrokerChangeListener {
             }
 
             for (Tradingday item : tradingdays.getTradingdays()) {
-                tradeService.persistTradingday(item);
+                tradeService.saveTradingday(item);
             }
 
             brokerDataRequestProgressMonitor = new BrokerDataRequestMonitor(tWSBrokerModel, tradeService,
@@ -390,22 +390,22 @@ public class TWSBrokerModelIT implements IBrokerChangeListener {
 
         Aspects candles = tradeService.findAspectsByClassName(Candle.class.getName());
         for (Aspect item : candles.getAspect()) {
-            tradeService.removeAspect(item);
+            tradeService.deleteAspect(item);
         }
 
         Aspects tradestrategies = tradeService.findAspectsByClassName(Tradestrategy.class.getName());
         for (Aspect item : tradestrategies.getAspect()) {
-            tradeService.removeAspect(item);
+            tradeService.deleteAspect(item);
         }
 
         Aspects contracts = tradeService.findAspectsByClassName(Contract.class.getName());
         for (Aspect item : contracts.getAspect()) {
-            tradeService.removeAspect(item);
+            tradeService.deleteAspect(item);
         }
 
         Aspects tradingdays = tradeService.findAspectsByClassName(Tradingday.class.getName());
         for (Aspect item : tradingdays.getAspect()) {
-            tradeService.removeAspect(item);
+            tradeService.deleteAspect(item);
         }
 
     }
