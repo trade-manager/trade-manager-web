@@ -1596,7 +1596,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
                     if (account.isDirty()) {
 
                         account.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
-                        account = tradeService.persistAspect(account, true);
+                        account = tradeService.saveAspect(account, true);
                         m_accountRequests.replace(accountNumber, account);
                         this.fireUpdateAccountTime(accountNumber);
                     }
@@ -1741,7 +1741,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
                         }
                         account.setAlias(item.getAlias());
                         account.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
-                        tradeService.persistAspect(account);
+                        tradeService.saveAspect(account);
                     }
                     m_client.requestFA(EClientSocket.GROUPS);
                     break;

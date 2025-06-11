@@ -135,7 +135,7 @@ public class AbstractStrategyIT {
         String host = ConfigProperties.getPropAsString("trade.tws.host");
         m_brokerModel.onConnect(host, port, clientId);
         String symbol = "TEST";
-        TradestrategyBase.setTradestrategyBase(aspectRepository, tradeService);
+        TradestrategyBase.setTradeService(tradeService);
         this.tradestrategy = TradestrategyBase.getTestTradestrategy(symbol);
         assertNotNull(this.tradestrategy);
 
@@ -382,14 +382,14 @@ public class AbstractStrategyIT {
         DAOEntryLimit entryLimits = new DAOEntryLimit();
         Entrylimit entryLimit = entryLimits.getValue(price);
         entryLimit.setPercentOfMargin(new BigDecimal("0.5"));
-        entryLimit = tradeService.persistAspect(entryLimit);
+        entryLimit = tradeService.saveAspect(entryLimit);
 
         TradeOrder result = this.strategyProxy.createRiskOpenPosition(Action.BUY, new Money(20.00),
                 new Money(19.98), true, null, null, null, null);
 
         assertEquals(2500, result.getQuantity(), 0);
         entryLimit.setPercentOfMargin(new BigDecimal(0));
-        entryLimit = tradeService.persistAspect(entryLimit);
+        entryLimit = tradeService.saveAspect(entryLimit);
         assertEquals(new BigDecimal(0), entryLimit.getPercentOfMargin());
     }
 
@@ -407,7 +407,7 @@ public class AbstractStrategyIT {
         DAOEntryLimit entryLimits = new DAOEntryLimit();
         Entrylimit entryLimit = entryLimits.getValue(price);
         entryLimit.setPercentOfMargin(new BigDecimal("0.5"));
-        entryLimit = tradeService.persistAspect(entryLimit);
+        entryLimit = tradeService.saveAspect(entryLimit);
 
         TradeOrder openOrder = this.strategyProxy.createRiskOpenPosition(Action.SELL, new Money(45.75),
                 new Money(46.00), true, null, null, null, null);
@@ -443,7 +443,7 @@ public class AbstractStrategyIT {
         }
         this.strategyProxy.isPositionCovered();
         entryLimit.setPercentOfMargin(new BigDecimal(0));
-        tradeService.persistAspect(entryLimit);
+        tradeService.saveAspect(entryLimit);
     }
 
     @Test

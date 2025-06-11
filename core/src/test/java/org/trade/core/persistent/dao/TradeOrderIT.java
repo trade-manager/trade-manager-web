@@ -79,9 +79,6 @@ public class TradeOrderIT {
     private TradeService tradeService;
 
     @Autowired
-    private AspectRepository aspectRepository;
-
-    @Autowired
     private TradeOrderRepository tradeOrderRepository;
 
     private Tradestrategy tradestrategy = null;
@@ -104,7 +101,7 @@ public class TradeOrderIT {
         clientId = ConfigProperties.getPropAsInt("trade.tws.clientId");
 
         String symbol = "TEST";
-        TradestrategyBase.setTradestrategyBase(aspectRepository, tradeService);
+        TradestrategyBase.setTradeService(tradeService);
         this.tradestrategy = TradestrategyBase.getTestTradestrategy(symbol);
         assertNotNull(this.tradestrategy);
     }
@@ -115,7 +112,6 @@ public class TradeOrderIT {
     @AfterEach
     public void tearDown() throws Exception {
 
-        TradestrategyBase.setTradestrategyBase(aspectRepository, tradeService);
         TradestrategyBase.clearDBData();
     }
 

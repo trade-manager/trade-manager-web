@@ -60,9 +60,6 @@ public class StrategyPanelIT {
     @Autowired
     private TradeService tradeService;
 
-    @Autowired
-    private AspectRepository aspectRepository;
-
     private Tradestrategy tradestrategy = null;
     private String m_templateName = null;
     private String m_strategyDir = null;
@@ -87,7 +84,8 @@ public class StrategyPanelIT {
         m_strategyDir = ConfigProperties.getPropAsString("trade.strategy.default.dir");
         assertNotNull(m_strategyDir);
         String symbol = "TEST";
-        this.tradestrategy = new TradestrategyBase(aspectRepository, tradeService).getTestTradestrategy(symbol);
+        TradestrategyBase.setTradeService( tradeService);
+        this.tradestrategy =  TradestrategyBase.getTestTradestrategy(symbol);
         assertNotNull(this.tradestrategy);
         List<Strategy> strategies = this.tradeService.findStrategies();
         assertNotNull(strategies);
@@ -100,7 +98,7 @@ public class StrategyPanelIT {
                 Rule nextRule = new Rule(strategy, 1, null, TradingCalendar.getDateTimeNowMarketTimeZone(),
                         content.getBytes(), TradingCalendar.getDateTimeNowMarketTimeZone());
                 strategy.add(nextRule);
-                this.tradeService.persistAspect(nextRule);
+                this.tradeService.saveAspect(nextRule);
             }
         }
     }
@@ -113,7 +111,7 @@ public class StrategyPanelIT {
 
         File dir = new File(m_tmpDir);
         StrategyPanel.deleteDir(dir);
-        new TradestrategyBase(aspectRepository, tradeService).clearDBData();
+        TradestrategyBase.clearDBData();
     }
 
     /**
@@ -289,7 +287,7 @@ public class StrategyPanelIT {
         String content = strategyPanel.readFile(fileName);
         textArea.setText(content);
         myrule.setRule(textArea.getText().getBytes());
-        myrule = this.tradeService.persistAspect(myrule);
+        myrule = this.tradeService.saveAspect(myrule);
         assertNotNull(myrule.getId());
         Rule ruleSaved = this.tradeService.findRuleById(myrule.getId());
         assertNotNull(ruleSaved.getId());

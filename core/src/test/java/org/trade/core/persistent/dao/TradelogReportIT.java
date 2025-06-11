@@ -63,9 +63,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class TradelogReportTest {
+public class TradelogReportIT {
 
-    private final static Logger _log = LoggerFactory.getLogger(TradelogReportTest.class);
+    private final static Logger _log = LoggerFactory.getLogger(TradelogReportIT.class);
 
     @Autowired
     private TradelogReportRepository tradelogReportRepository;

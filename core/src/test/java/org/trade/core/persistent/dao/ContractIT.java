@@ -47,6 +47,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.trade.core.dao.AspectRepository;
+import org.trade.core.persistent.TradeService;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.Currency;
 import org.trade.core.valuetype.Exchange;
@@ -69,7 +70,7 @@ public class ContractIT {
     private final static Logger _log = LoggerFactory.getLogger(ContractIT.class);
 
     @Autowired
-    private AspectRepository aspectRepository;
+    private TradeService tradeService;
 
     @Autowired
     private ContractRepository contractRepository;
@@ -113,7 +114,7 @@ public class ContractIT {
         // values in it by reading them from form object
         Contract transientInstance = new Contract(SECType.STOCK, "QQQ", Exchange.SMART, Currency.USD, expiry, new BigDecimal(1));
 
-        transientInstance = aspectRepository.save(transientInstance);
+        transientInstance = (Contract) tradeService.save(transientInstance);
         _log.info("Contract added Id:{}", transientInstance.getId());
 
         Contract contract = contractRepository.findContractByUniqueKey(transientInstance.getSecType(),
@@ -121,7 +122,7 @@ public class ContractIT {
                 expiry);
         assertNotNull(contract);
 
-        aspectRepository.delete(contract);
+        tradeService.delete(contract);
         _log.info("Contract deleted Id:{}", transientInstance.getId());
     }
 
@@ -137,7 +138,7 @@ public class ContractIT {
         _log.info("Expiry Date: {}", expiry);
         Contract transientInstance = new Contract(SECType.FUTURE, "ES", Exchange.SMART, Currency.USD, expiry,
                 new BigDecimal(50));
-        transientInstance = aspectRepository.save(transientInstance);
+        transientInstance = (Contract) tradeService.save(transientInstance);
         _log.info("Contract added Id:{}", transientInstance.getId());
 
         expiry = expiry.plusDays(1);
@@ -147,7 +148,7 @@ public class ContractIT {
                 expiry);
         assertNotNull(contract);
 
-        aspectRepository.delete(contract);
+        tradeService.delete(contract);
         _log.info("Contract deleted Id:{}", transientInstance.getId());
         _log.info("Contract added Id:{}", transientInstance.getId());
     }

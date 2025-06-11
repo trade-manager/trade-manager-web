@@ -958,7 +958,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
                     }
                     account.setAlias(alias.alias());
                     account.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
-                    getPersistentModel().persistAspect(account);
+                    getPersistentModel().saveAspect(account);
                 }
             } catch (ServiceException ex) {
                 error(Types.FADataType.ALIASES.ordinal(), 3235, ex.getMessage());

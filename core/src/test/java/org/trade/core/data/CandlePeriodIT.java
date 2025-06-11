@@ -81,9 +81,6 @@ public class CandlePeriodIT {
     @Autowired
     private TradeService tradeService;
 
-    @Autowired
-    private AspectRepository aspectRepository;
-
     private Tradestrategy tradestrategy = null;
 
     /**
@@ -101,7 +98,7 @@ public class CandlePeriodIT {
         TradeAppLoadConfig.loadAppProperties();
 
         String symbol = "TEST";
-        TradestrategyBase.setTradestrategyBase(aspectRepository, tradeService);
+        TradestrategyBase.setTradeService(tradeService);
         this.tradestrategy = TradestrategyBase.getTestTradestrategy(symbol);
         assertNotNull(this.tradestrategy);
     }

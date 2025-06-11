@@ -46,27 +46,20 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.trade.core.dao.AspectRepository;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
- * Some tests for the DataUtilities class.
  *
- * @author Simon Allen
- * @version $Revision: 1.0 $
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class StrategyTest {
+public class CodeTypeIT {
 
-    private final static Logger _log = LoggerFactory.getLogger(StrategyTest.class);
-
-    @Autowired
-    private AspectRepository aspectRepository;
+    private final static Logger _log = LoggerFactory.getLogger(CodeTypeIT.class);
 
     @Autowired
-    private StrategyRepository strategyRepository;
+    CodeTypeRepository codeTypeRepository;
 
     /**
      * Method setUpBeforeClass.
@@ -97,19 +90,14 @@ public class StrategyTest {
     }
 
     @Test
-    public void testStrategyHome() throws Exception {
+    public void testFindCodeValueByName() {
 
-        // Create new instance of Strategy and set
-        // values in it by reading them from form object
-        _log.debug("Adding Strategy");
-        String name = "TestStrategy";
-        Strategy transientInstance = strategyRepository.findByName(name);
-        if (null == transientInstance) {
-            transientInstance = new Strategy(name);
-        }
-        transientInstance = aspectRepository.save(transientInstance);
-        _log.info("Strategy added Id = {}", transientInstance.getId());
-        assertNotNull(transientInstance.getId());
-        aspectRepository.delete(transientInstance);
+        CodeType codeType = codeTypeRepository.findByName("MovingAverage");
+        assertNotNull(codeType);
+        _log.info("CodeType id: {}", codeType.getId());
+        CodeValue codeValue = codeTypeRepository.findByAttributeName(codeType.getName(), "Length");
+        assertNotNull(codeValue);
+        _log.info("CodeValue id: {}", codeValue.getId());
+
     }
 }

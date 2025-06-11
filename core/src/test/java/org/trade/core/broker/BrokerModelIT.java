@@ -84,8 +84,6 @@ public class BrokerModelIT implements IBrokerChangeListener {
     private final static Logger _log = LoggerFactory.getLogger(BrokerModelIT.class);
 
     @Autowired
-    private AspectRepository aspectRepository;
-    @Autowired
     private TradeService tradeService;
 
     private IBrokerModel backTestbrokerModel;
@@ -126,7 +124,7 @@ public class BrokerModelIT implements IBrokerChangeListener {
     public void setUp() throws Exception {
 
         String symbol = "NVDA";
-        TradestrategyBase.setTradestrategyBase(aspectRepository, tradeService);
+        TradestrategyBase.setTradeService(tradeService);
         this.tradestrategy = TradestrategyBase.getTestTradestrategy(symbol);
         backTestbrokerModel = (IBrokerModel) ClassFactory.getServiceForInterface(_broker, BrokerModelIT.class);
         backTestbrokerModel.onConnect(host, port, clientId);

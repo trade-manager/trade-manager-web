@@ -37,7 +37,6 @@ package org.trade.ui.persistent;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.trade.core.dao.Aspect;
-import org.trade.core.dao.AspectRepository;
 import org.trade.core.dao.Aspects;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.Account;
@@ -70,16 +69,12 @@ import java.util.Objects;
  */
 public class TradestrategyBase {
 
-
-    private static AspectRepository aspectRepository;
-
     private static TradeService tradeService;
 
     @Autowired
-    public TradestrategyBase(AspectRepository aspectRepository, TradeService tradeService) {
+    public static void setTradeService(TradeService tradeService) {
 
         TradestrategyBase.tradeService = tradeService;
-        TradestrategyBase.aspectRepository = aspectRepository;
     }
 
     /**
@@ -103,7 +98,7 @@ public class TradestrategyBase {
             account.setCashBalance(new BigDecimal(25000));
             PortfolioAccount portfolioAccount = new PortfolioAccount(portfolio, account);
             portfolio.getPortfolioAccounts().add(portfolioAccount);
-            portfolio = aspectRepository.save(portfolio);
+            portfolio = tradeService.savePortfolio(portfolio);
         }
 
         ZonedDateTime open = TradingCalendar
@@ -114,7 +109,7 @@ public class TradestrategyBase {
         if (null == contract) {
 
             contract = new Contract(SECType.STOCK, symbol, Exchange.SMART, Currency.USD, null, null);
-            contract = aspectRepository.save(contract);
+            contract = tradeService.saveContract(contract);
 
         } else {
 
@@ -125,7 +120,7 @@ public class TradestrategyBase {
 
                 Tradestrategy transientInstance = tradeService.findTradestrategyById(tradestrategy.getId());
                 transientInstance.setStatus(null);
-                aspectRepository.save(transientInstance);
+                tradeService.save(transientInstance);
                 Hashtable<Integer, TradePosition> tradePositions = new Hashtable<>();
 
                 for (TradeOrder tradeOrder : transientInstance.getTradeOrders()) {
@@ -138,13 +133,13 @@ public class TradestrategyBase {
 
                     if (null != tradeOrder.getId()) {
 
-                        aspectRepository.delete(tradeOrder);
+                        tradeService.delete(tradeOrder);
                     }
                 }
 
                 for (TradePosition tradePosition : tradePositions.values()) {
 
-                    tradePosition = (TradePosition) aspectRepository.findById(tradePosition.getId()).get();
+                    tradePosition = (TradePosition) tradeService.findTradePositionById(tradePosition.getId());
                     /*
                      * Remove the open trade position from contract if this is a
                      * tradePosition to be deleted.
@@ -152,9 +147,9 @@ public class TradestrategyBase {
                     if (tradePosition.equals(transientInstance.getContract().getTradePosition())) {
 
                         transientInstance.getContract().setTradePosition(null);
-                        aspectRepository.save(transientInstance.getContract());
+                        tradeService.save(transientInstance.getContract());
                     }
-                    aspectRepository.delete(tradePosition);
+                    tradeService.delete(tradePosition);
                 }
 
                 transientInstance.getTradeOrders().clear();
@@ -184,40 +179,40 @@ public class TradestrategyBase {
      */
     public static void clearDBData() throws Exception {
 
-        Aspects contracts = aspectRepository.findByClassName(Contract.class.getName());
+        Aspects contracts = tradeService.findByClassName(Contract.class.getName());
         for (Aspect aspect : contracts.getAspect()) {
             ((Contract) aspect).setTradePosition(null);
-            aspectRepository.save(aspect);
+            tradeService.save(aspect);
         }
 
-        Aspects tradeOrders = aspectRepository.findByClassName(TradeOrder.class.getName());
+        Aspects tradeOrders = tradeService.findByClassName(TradeOrder.class.getName());
         for (Aspect aspect : tradeOrders.getAspect()) {
-            aspectRepository.delete(aspect);
+            tradeService.delete(aspect);
         }
 
-        Aspects tradePositions = aspectRepository.findByClassName(TradePosition.class.getName());
+        Aspects tradePositions = tradeService.findByClassName(TradePosition.class.getName());
         for (Aspect aspect : tradePositions.getAspect()) {
-            aspectRepository.delete(aspect);
+            tradeService.delete(aspect);
         }
-        Aspects portfolioAccounts = aspectRepository.findByClassName(PortfolioAccount.class.getName());
+        Aspects portfolioAccounts = tradeService.findByClassName(PortfolioAccount.class.getName());
         for (Aspect aspect : portfolioAccounts.getAspect()) {
-            aspectRepository.delete(aspect);
+            tradeService.delete(aspect);
         }
-        Aspects accounts = aspectRepository.findByClassName(Account.class.getName());
+        Aspects accounts = tradeService.findByClassName(Account.class.getName());
         for (Aspect aspect : accounts.getAspect()) {
-            aspectRepository.delete(aspect);
+            tradeService.delete(aspect);
         }
-        Aspects tradestrategies = aspectRepository.findByClassName(Tradestrategy.class.getName());
+        Aspects tradestrategies = tradeService.findByClassName(Tradestrategy.class.getName());
         for (Aspect aspect : tradestrategies.getAspect()) {
-            aspectRepository.delete(aspect);
+            tradeService.delete(aspect);
         }
-        contracts = aspectRepository.findByClassName(Contract.class.getName());
+        contracts = tradeService.findByClassName(Contract.class.getName());
         for (Aspect aspect : contracts.getAspect()) {
-            aspectRepository.delete(aspect);
+            tradeService.delete(aspect);
         }
-        Aspects tradingdays = aspectRepository.findByClassName(Tradingday.class.getName());
+        Aspects tradingdays = tradeService.findByClassName(Tradingday.class.getName());
         for (Aspect aspect : tradingdays.getAspect()) {
-            aspectRepository.delete(aspect);
+            tradeService.delete(aspect);
         }
     }
 }

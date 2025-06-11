@@ -76,9 +76,6 @@ public class CandleIT {
     private final static Logger _log = LoggerFactory.getLogger(CandleIT.class);
 
     @Autowired
-    private AspectRepository aspectRepository;
-
-    @Autowired
     private TradeService tradeService;
 
     @Autowired
@@ -101,7 +98,7 @@ public class CandleIT {
 
         TradeAppLoadConfig.loadAppProperties();
         String symbol = "TEST";
-        TradestrategyBase.setTradestrategyBase(aspectRepository, tradeService);
+        TradestrategyBase.setTradeService(tradeService);
         this.tradestrategy = TradestrategyBase.getTestTradestrategy(symbol);
         assertNotNull(this.tradestrategy);
     }
@@ -138,7 +135,7 @@ public class CandleIT {
         transientInstance.setVwap(new BigDecimal("20.1"));
         transientInstance.setTradeCount(10);
 
-        transientInstance = aspectRepository.save(transientInstance);
+        transientInstance = tradeService.saveCandle(transientInstance);
         assertNotNull(transientInstance.getId());
         _log.info("testAddCandle IdCandle: {}", transientInstance.getId());
     }

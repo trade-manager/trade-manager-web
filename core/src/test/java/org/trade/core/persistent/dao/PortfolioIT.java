@@ -49,6 +49,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.trade.core.dao.Aspect;
 import org.trade.core.dao.AspectRepository;
 import org.trade.core.dao.Aspects;
+import org.trade.core.persistent.TradeService;
 import org.trade.core.properties.TradeAppLoadConfig;
 import org.trade.core.valuetype.AccountType;
 import org.trade.core.valuetype.Currency;
@@ -68,7 +69,7 @@ public class PortfolioIT {
     private final static Logger _log = LoggerFactory.getLogger(PortfolioIT.class);
 
     @Autowired
-    private AspectRepository aspectRepository;
+    private TradeService tradeService;
 
     @Autowired
     private PortfolioRepository portfolioRepository;
@@ -93,9 +94,10 @@ public class PortfolioIT {
      */
     @AfterEach
     public void tearDown() throws Exception {
-        Aspects accounts = aspectRepository.findByClassName(Account.class.getName());
+
+        Aspects accounts = tradeService.findByClassName(Account.class.getName());
         for (Aspect aspect : accounts.getAspect()) {
-            aspectRepository.delete(aspect);
+            tradeService.delete(aspect);
         }
     }
 
@@ -114,7 +116,7 @@ public class PortfolioIT {
         Account account = new Account("Test", "T123456", Currency.USD, AccountType.INDIVIDUAL);
         PortfolioAccount portfolioAccount = new PortfolioAccount(portfolio, account);
         portfolio.getPortfolioAccounts().add(portfolioAccount);
-        portfolio = aspectRepository.save(portfolio);
+        portfolio = portfolioRepository.save(portfolio);
         assertNotNull(portfolio.getIndividualAccount());
     }
 }

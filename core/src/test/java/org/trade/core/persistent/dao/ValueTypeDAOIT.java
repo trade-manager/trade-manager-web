@@ -62,9 +62,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-public class ValueTypeDAOTest {
+public class ValueTypeDAOIT {
 
-    private final static Logger _log = LoggerFactory.getLogger(ValueTypeDAOTest.class);
+    private final static Logger _log = LoggerFactory.getLogger(ValueTypeDAOIT.class);
 
     /**
      * Method setUpBeforeClass.

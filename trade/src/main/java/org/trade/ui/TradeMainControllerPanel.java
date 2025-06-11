@@ -1197,7 +1197,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                          * when the default Portfolio has no accounts.
                          */
                         defaultPortfolio.setName(account.getAccountNumber());
-                        defaultPortfolio = tradeService.persistAspect(defaultPortfolio);
+                        defaultPortfolio = tradeService.saveAspect(defaultPortfolio);
 
                     } else {
                         Portfolio portfolio = new Portfolio(account.getAccountNumber(), account.getAccountNumber());
@@ -1314,7 +1314,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                         for (CodeValue value : codeAttributePanel.getCodeValues()) {
                             if (null == value.getTradestrategy())
                                 value.setTradestrategy(instance);
-                            tradeService.persistAspect(value);
+                            tradeService.saveAspect(value);
                         }
                     }
                 }

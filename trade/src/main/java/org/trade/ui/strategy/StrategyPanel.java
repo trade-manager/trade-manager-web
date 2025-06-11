@@ -410,7 +410,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
                         TradingCalendar.getDateTimeNowMarketTimeZone(), getContent().getBytes(),
                         TradingCalendar.getDateTimeNowMarketTimeZone());
                 this.currentRule.getStrategy().add(nextRule);
-                this.tradeService.persistAspect(nextRule);
+                this.tradeService.saveAspect(nextRule);
                 doSaveFile(fileNameSource, getContent());
                 doSaveFile(fileNameComments, getComments());
                 /*
@@ -433,7 +433,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
                 }
                 this.currentRule.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
                 this.currentRule.setRule(getContent().getBytes());
-                this.tradeService.persistAspect(this.currentRule);
+                this.tradeService.saveAspect(this.currentRule);
                 doSaveFile(fileNameSource, getContent());
                 doSaveFile(fileNameComments, getComments());
             }
@@ -543,7 +543,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
                         Rule nextRule = new Rule(strategy, 1, comments, TradingCalendar.getDateTimeNowMarketTimeZone(),
                                 content.getBytes(), TradingCalendar.getDateTimeNowMarketTimeZone());
                         strategy.add(nextRule);
-                        this.tradeService.persistAspect(nextRule);
+                        this.tradeService.saveAspect(nextRule);
                     } else {
                         Integer version = this.tradeService.findRuleByMaxVersion(strategy);
                         for (Rule rule : strategy.getRules()) {
@@ -556,7 +556,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
                                  */
                                 if (null == rule.getRule() && null != content) {
                                     rule.setRule(content.getBytes());
-                                    this.tradeService.persistAspect(rule);
+                                    this.tradeService.saveAspect(rule);
                                 } else {
                                     String ruleDB = new String(rule.getRule());
                                     if (!ruleDB.equals(content)) {
@@ -569,7 +569,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
                                 }
                                 if (null == rule.getComment() && null != comments) {
                                     rule.setComment(comments);
-                                    this.tradeService.persistAspect(rule);
+                                    this.tradeService.saveAspect(rule);
                                 } else {
                                     String commentsDB = rule.getComment();
                                     if (!commentsDB.equals(comments)) {

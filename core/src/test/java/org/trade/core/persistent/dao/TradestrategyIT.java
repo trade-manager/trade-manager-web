@@ -69,9 +69,6 @@ public class TradestrategyIT {
     private final static Logger _log = LoggerFactory.getLogger(TradestrategyIT.class);
 
     @Autowired
-    private AspectRepository aspectRepository;
-
-    @Autowired
     private TradeService tradeService;
 
     @Autowired
@@ -93,7 +90,7 @@ public class TradestrategyIT {
     @BeforeEach
     public void setUp() throws Exception {
 
-        TradestrategyBase.setTradestrategyBase(aspectRepository, tradeService);
+        TradestrategyBase.setTradeService(tradeService);
         TradeAppLoadConfig.loadAppProperties();
     }
 
@@ -116,7 +113,6 @@ public class TradestrategyIT {
     @Test
     public void testFindVersionById() throws Exception {
 
-        TradestrategyBase.setTradestrategyBase(aspectRepository, tradeService);
         Tradestrategy tradestrategy = TradestrategyBase.getTestTradestrategy(symbol);
         assertNotNull(tradestrategy);
 
@@ -138,7 +134,7 @@ public class TradestrategyIT {
         _log.info("testTradingdaysSave PositionOrders IdTradeStrategy:{}found.", positionOrders.getId());
         positionOrders.setStatus(TradestrategyStatus.CANCELLED);
 
-        positionOrders = aspectRepository.save(positionOrders);
+        positionOrders = (TradestrategyOrders) tradeService.save(positionOrders);
         assertNotNull(positionOrders);
         positionOrders = tradestrategyRepository.findPositionOrdersByTradestrategyId(tradestrategy.getId());
         _log.info("testTradingdaysSave PositionOrders IdTradeStrategy:{}found Status: {}", positionOrders.getId(), positionOrders.getStatus());
@@ -191,11 +187,11 @@ public class TradestrategyIT {
             tradeService.saveTradingday(tradingday);
             for (Tradestrategy tradestrategy : tradingday.getTradestrategies()) {
                 _log.info("testTradingdaysUpdate IdTradeStrategy:{}", tradestrategy.getId());
-                aspectRepository.delete(tradestrategy);
-                aspectRepository.delete(tradestrategy.getContract());
+                tradeService.delete(tradestrategy);
+                tradeService.delete(tradestrategy.getContract());
 
             }
-            aspectRepository.delete(tradingday);
+            tradeService.delete(tradingday);
         }
     }
 
@@ -215,10 +211,10 @@ public class TradestrategyIT {
             for (Tradestrategy tradestrategy : tradingday.getTradestrategies()) {
 
                 _log.info("testTradingdaysUpdate IdTradeStrategy:{}", tradestrategy.getId());
-                aspectRepository.delete(tradestrategy);
-                aspectRepository.delete(tradestrategy.getContract());
+                tradeService.delete(tradestrategy);
+                tradeService.delete(tradestrategy.getContract());
             }
-            aspectRepository.delete(tradingday);
+            tradeService.delete(tradingday);
         }
     }
 

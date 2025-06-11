@@ -28,9 +28,6 @@ public class CandleSeriesIT {
     private final static Logger _log = LoggerFactory.getLogger(CandleSeriesIT.class);
 
     @Autowired
-    private AspectRepository aspectRepository;
-
-    @Autowired
     private TradeService tradeService;
 
     private Tradestrategy tradestrategy = null;
@@ -50,7 +47,7 @@ public class CandleSeriesIT {
 
         TradeAppLoadConfig.loadAppProperties();
         String symbol = "TEST";
-        TradestrategyBase.setTradestrategyBase(aspectRepository, tradeService);
+        TradestrategyBase.setTradeService(tradeService);
         this.tradestrategy = TradestrategyBase.getTestTradestrategy(symbol);
         assertNotNull(this.tradestrategy);
     }

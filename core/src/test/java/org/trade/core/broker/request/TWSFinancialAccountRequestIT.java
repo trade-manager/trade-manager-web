@@ -126,7 +126,7 @@ public class TWSFinancialAccountRequestIT {
             Account item = (Account) aspect;
             Account account = tradeService.findAccountByNumber(item.getAccountNumber());
             account.setAlias(item.getAlias());
-            tradeService.persistAspect(account);
+            tradeService.saveAspect(account);
         }
     }
 
@@ -145,7 +145,7 @@ public class TWSFinancialAccountRequestIT {
             }
             account.setAlias(item.getAlias());
             account.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
-            tradeService.persistAspect(account);
+            tradeService.saveAspect(account);
         }
     }
 
@@ -164,7 +164,7 @@ public class TWSFinancialAccountRequestIT {
             }
             account.setAlias(item.getAlias());
             account.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
-            tradeService.persistAspect(account);
+            tradeService.saveAspect(account);
         }
     }
 

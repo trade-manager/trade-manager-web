@@ -47,6 +47,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.trade.core.dao.AspectRepository;
+import org.trade.core.persistent.TradeService;
 import org.trade.core.properties.TradeAppLoadConfig;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.MarketBar;
@@ -68,7 +69,7 @@ public class TradingdayIT {
     private final static Logger _log = LoggerFactory.getLogger(TradingdayIT.class);
 
     @Autowired
-    private AspectRepository aspectRepository;
+    private TradeService tradeService;
 
     @Autowired
     private TradingdayRepository tradingdayRepository;
@@ -119,7 +120,7 @@ public class TradingdayIT {
         tradingdayRepository.persist(transientInstance);
         _log.info("Tradingday added Id = {}", transientInstance.getId());
         assertNotNull(transientInstance.getId());
-        aspectRepository.delete(transientInstance);
+        tradeService.delete(transientInstance);
     }
 
     @Test
@@ -140,6 +141,6 @@ public class TradingdayIT {
         tradingdayRepository.persist(transientInstance);
         _log.info("Tradingday Update Id = {}", transientInstance.getId());
         assertNotNull(transientInstance.getId());
-        aspectRepository.delete(transientInstance);
+        tradeService.delete(transientInstance);
     }
 }

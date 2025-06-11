@@ -521,9 +521,9 @@ public class TradeServiceImpl implements TradeService {
                         tradeOrder.setIsOpenPosition(true);
                         tradestrategyOrders.setStatus(TradestrategyStatus.OPEN);
                         tradestrategyOrders.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
-                        this.persistAspect(tradestrategyOrders);
+                        this.saveAspect(tradestrategyOrders);
                         tradePosition.addTradeOrder(tradeOrder);
-                        tradePosition = this.persistAspect(tradePosition);
+                        tradePosition = this.saveAspect(tradePosition);
                     }
                     tradeOrder.setTradePosition(tradePosition);
                 } else {
@@ -532,7 +532,7 @@ public class TradeServiceImpl implements TradeService {
                      * TradePosition this is the first order that has just been
                      * update.
                      */
-                    return this.persistAspect(tradeOrder);
+                    return this.saveAspect(tradeOrder);
                 }
             } else {
                 tradePosition = this.findTradePositionById(tradeOrder.getTradePosition().getId());
@@ -610,12 +610,12 @@ public class TradeServiceImpl implements TradeService {
 
                         tradePosition.setPositionCloseDate(tradeOrder.getFilledDate());
                         tradePosition.getContract().setTradePosition(null);
-                        this.persistAspect(tradePosition.getContract());
+                        this.saveAspect(tradePosition.getContract());
                     }
                 } else {
 
                     tradePosition.getContract().setTradePosition(tradePosition);
-                    this.persistAspect(tradePosition.getContract());
+                    this.saveAspect(tradePosition.getContract());
                 }
 
                 // Partial fills case.
@@ -635,16 +635,16 @@ public class TradeServiceImpl implements TradeService {
 
                             item.getTradestrategyId().setStatus(TradestrategyStatus.CLOSED);
                             item.getTradestrategyId().setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
-                            this.persistAspect(item.getTradestrategyId());
+                            this.saveAspect(item.getTradestrategyId());
                         }
                     }
                     tradestrategyOrders.setStatus(TradestrategyStatus.CLOSED);
                     tradestrategyOrders.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
-                    this.persistAspect(tradestrategyOrders);
+                    this.saveAspect(tradestrategyOrders);
                 }
 
                 tradePosition.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
-                this.persistAspect(tradePosition);
+                this.saveAspect(tradePosition);
 
             } else {
                 if (allOrdersCancelled) {
@@ -660,7 +660,7 @@ public class TradeServiceImpl implements TradeService {
 
                             tradestrategyOrders.setStatus(TradestrategyStatus.CANCELLED);
                             tradestrategyOrders.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
-                            this.persistAspect(tradestrategyOrders);
+                            this.saveAspect(tradestrategyOrders);
                         }
                     }
                 }
@@ -673,11 +673,11 @@ public class TradeServiceImpl implements TradeService {
 
                     tradePosition.setTotalCommission(comms.getBigDecimalValue());
                     tradePosition.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
-                    this.persistAspect(tradePosition);
+                    this.saveAspect(tradePosition);
                 }
             }
 
-            return this.persistAspect(tradeOrder);
+            return this.saveAspect(tradeOrder);
 
         } catch (OptimisticLockException ex1) {
             throw new ServiceException("Error saving TradeOrder please refresh before save.");
@@ -821,7 +821,12 @@ public class TradeServiceImpl implements TradeService {
         return instance.get();
     }
 
-    public <T extends Aspect> T persistAspect(final T transientInstance) throws ServiceException {
+    public Aspects findByClassName(String className) throws ClassNotFoundException{
+
+        return aspectRepository.findByClassName(className);
+    }
+
+    public <T extends Aspect> T saveAspect(final T transientInstance) throws ServiceException {
         try {
             return aspectRepository.save(transientInstance);
         } catch (OptimisticLockException ex1) {
@@ -833,7 +838,7 @@ public class TradeServiceImpl implements TradeService {
         }
     }
 
-    public <T extends Aspect> T persistAspect(final T transientInstance, boolean overrideVersion)
+    public <T extends Aspect> T saveAspect(final T transientInstance, boolean overrideVersion)
             throws ServiceException {
         try {
             return aspectRepository.save(transientInstance);

@@ -519,7 +519,7 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
 
                 if (null == contract) {
 
-                    contract = this.tradeService.persistAspect(series.getContract());
+                    contract = this.tradeService.saveAspect(series.getContract());
                 }
             }
             indicatorTradestrategy = new Tradestrategy(contract, tradestrategy.getTradingday(),
