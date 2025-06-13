@@ -46,7 +46,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.trade.core.dao.AspectRepository;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.properties.TradeAppLoadConfig;
 import org.trade.core.util.time.TradingCalendar;
@@ -134,7 +133,7 @@ public class TradestrategyIT {
         _log.info("testTradingdaysSave PositionOrders IdTradeStrategy:{}found.", positionOrders.getId());
         positionOrders.setStatus(TradestrategyStatus.CANCELLED);
 
-        positionOrders = (TradestrategyOrders) tradeService.save(positionOrders);
+        positionOrders = tradeService.saveAspect(positionOrders);
         assertNotNull(positionOrders);
         positionOrders = tradestrategyRepository.findPositionOrdersByTradestrategyId(tradestrategy.getId());
         _log.info("testTradingdaysSave PositionOrders IdTradeStrategy:{}found Status: {}", positionOrders.getId(), positionOrders.getStatus());

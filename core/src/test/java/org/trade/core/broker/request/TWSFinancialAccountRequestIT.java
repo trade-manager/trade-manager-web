@@ -124,7 +124,7 @@ public class TWSFinancialAccountRequestIT {
                 .getResourceAsStream("broker/request/aliasesEmpty.xml"));
         for (Aspect aspect : aspects.getAspect()) {
             Account item = (Account) aspect;
-            Account account = tradeService.findAccountByNumber(item.getAccountNumber());
+            Account account = tradeService.findAccountByAccountNumber(item.getAccountNumber());
             account.setAlias(item.getAlias());
             tradeService.saveAspect(account);
         }
@@ -138,7 +138,7 @@ public class TWSFinancialAccountRequestIT {
                 .getResourceAsStream("broker/request/aliases.xml"));
         for (Aspect aspect : aspects.getAspect()) {
             Account item = (Account) aspect;
-            Account account = tradeService.findAccountByNumber(item.getAccountNumber());
+            Account account = tradeService.findAccountByAccountNumber(item.getAccountNumber());
             if (null == account) {
                 account = new Account(item.getAccountNumber(), item.getAccountNumber(), Currency.USD,
                         AccountType.INDIVIDUAL);
@@ -157,7 +157,7 @@ public class TWSFinancialAccountRequestIT {
                 .getResourceAsStream("broker/request/aliases1.xml"));
         for (Aspect aspect : aspects.getAspect()) {
             Account item = (Account) aspect;
-            Account account = tradeService.findAccountByNumber(item.getAccountNumber());
+            Account account = tradeService.findAccountByAccountNumber(item.getAccountNumber());
             if (null == account) {
                 account = new Account(item.getAccountNumber(), item.getAccountNumber(), Currency.USD,
                         AccountType.INDIVIDUAL);

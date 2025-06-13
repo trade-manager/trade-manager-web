@@ -1,9 +1,11 @@
 package org.trade.core.persistent.dao;
 
 
+import java.util.List;
+
 public interface CodeTypeRepositoryCustom {
 
-    CodeType findByNameAndType(String codeName, String codeType);
+    List<CodeType> findByNameAndType(String codeName, String codeType);
 
-    CodeValue findByAttributeName(String codeTypeName, String codeAttributeName);
+    List<CodeValue> findByAttributeName(String codeTypeName, String codeAttributeName);
 }

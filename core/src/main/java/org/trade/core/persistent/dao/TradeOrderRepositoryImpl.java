@@ -8,7 +8,6 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Expression;
 import jakarta.persistence.criteria.Root;
 import org.springframework.stereotype.Repository;
-import org.trade.core.util.time.TradingCalendar;
 
 
 @Repository
@@ -16,39 +15,6 @@ public class TradeOrderRepositoryImpl implements TradeOrderRepositoryCustom {
 
     @PersistenceContext
     private EntityManager entityManager;
-
-    /**
-     * Method persist.
-     *
-     * @param transientInstance TradeOrder
-     * @return TradeOrder
-     */
-    public TradeOrder persist(final TradeOrder transientInstance) {
-
-        transientInstance.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
-
-        if (null == transientInstance.getId()) {
-
-            if (null != transientInstance.getTradePosition()) {
-
-                if (null != transientInstance.getTradePosition().getId()) {
-
-                    entityManager.find(TradePosition.class,
-                            transientInstance.getTradePosition().getId());
-
-                    TradePosition instance = entityManager.merge(transientInstance.getTradePosition());
-                    transientInstance.setTradePosition(instance);
-                }
-            }
-            entityManager.persist(transientInstance);
-            return transientInstance;
-        } else {
-
-            TradeOrder instance = entityManager.merge(transientInstance);
-            transientInstance.setVersion(instance.getVersion());
-            return instance;
-        }
-    }
 
     /**
      * Method findByMaxKey.

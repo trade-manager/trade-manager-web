@@ -6,6 +6,7 @@ import jakarta.persistence.Query;
 import org.springframework.stereotype.Repository;
 import org.trade.core.util.time.TradingCalendar;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 
@@ -29,7 +30,7 @@ public class TradelogReportRepositoryImpl implements TradelogReportRepositoryCus
      * @return TradelogReport
      */
     public TradelogReport findByTradelogReport(Portfolio portfolio, ZonedDateTime start, ZonedDateTime end,
-                                               boolean filter, String symbol, BigDecimal winLossAmount) {
+                                               boolean filter, String symbol, BigDecimal winLossAmount) throws IOException {
 
         Query queryDetail = entityManager.createNativeQuery(TradelogDetail.getSQLString(),
                 TradelogDetail.class);
@@ -73,7 +74,7 @@ public class TradelogReportRepositoryImpl implements TradelogReportRepositoryCus
      * @return TradelogReport
      */
     public TradelogReport findByTradelogDetail(Portfolio portfolio, ZonedDateTime start, ZonedDateTime end,
-                                               boolean filter, String symbol) {
+                                               boolean filter, String symbol) throws IOException {
 
         Query queryDetail = entityManager.createNativeQuery(TradelogDetail.getSQLString(),
                 "TradelogDetailMapping");
@@ -102,7 +103,7 @@ public class TradelogReportRepositoryImpl implements TradelogReportRepositoryCus
      * @return TradelogReport
      */
     public TradelogReport findByTradelogSummary(Portfolio portfolio, ZonedDateTime start, ZonedDateTime end,
-                                                String symbol, BigDecimal winLossAmount) {
+                                                String symbol, BigDecimal winLossAmount) throws IOException {
 
         Query querySummary = entityManager.createNativeQuery(TradelogSummary.getSQLString(),
                 TradelogSummary.class);

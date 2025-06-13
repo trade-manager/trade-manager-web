@@ -118,20 +118,9 @@ public class Entrylimit extends Aspect implements java.io.Serializable {
         this.percentOfMargin = percentOfMargin;
         this.pivotRange = pivotRange;
         this.priceRound = priceRound;
+        this.shareRound = shareRound;
     }
 
-    /**
-     * Method getId.
-     *
-     * @return Integer
-
-     @Id
-     @GeneratedValue(strategy = IDENTITY)
-     @Column(name = "id", unique = true, nullable = false)
-     public Integer getId() {
-     return this.id;
-     }
-     */
     /**
      * Method getStartPrice.
      *

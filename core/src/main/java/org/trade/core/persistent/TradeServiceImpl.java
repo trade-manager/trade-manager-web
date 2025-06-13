@@ -37,6 +37,7 @@ package org.trade.core.persistent;
 
 import jakarta.persistence.OptimisticLockException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.trade.core.dao.Aspect;
 import org.trade.core.dao.AspectRepository;
 import org.trade.core.dao.Aspects;
@@ -49,6 +50,7 @@ import org.trade.core.persistent.dao.CodeTypeRepository;
 import org.trade.core.persistent.dao.Contract;
 import org.trade.core.persistent.dao.ContractRepository;
 import org.trade.core.persistent.dao.Portfolio;
+import org.trade.core.persistent.dao.PortfolioAccount;
 import org.trade.core.persistent.dao.PortfolioRepository;
 import org.trade.core.persistent.dao.Rule;
 import org.trade.core.persistent.dao.RuleRepository;
@@ -70,14 +72,17 @@ import org.trade.core.persistent.dao.Tradingday;
 import org.trade.core.persistent.dao.TradingdayRepository;
 import org.trade.core.persistent.dao.Tradingdays;
 import org.trade.core.persistent.dao.series.indicator.CandleSeries;
+import org.trade.core.persistent.dao.series.indicator.candle.CandleItem;
 import org.trade.core.util.CoreUtils;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.Action;
+import org.trade.core.valuetype.Currency;
 import org.trade.core.valuetype.Money;
 import org.trade.core.valuetype.OrderStatus;
 import org.trade.core.valuetype.Side;
 import org.trade.core.valuetype.TradestrategyStatus;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.ZonedDateTime;
@@ -89,6 +94,7 @@ import java.util.Optional;
 /**
  *
  */
+@Service
 public class TradeServiceImpl implements TradeService {
 
     @Autowired
@@ -140,11 +146,6 @@ public class TradeServiceImpl implements TradeService {
 
     }
 
-    public Aspect save(Aspect instance) {
-
-        return aspectRepository.save(instance);
-    }
-
     public void deleteById(Integer id) {
 
         aspectRepository.deleteById(id);
@@ -171,7 +172,7 @@ public class TradeServiceImpl implements TradeService {
     }
 
     public TradelogReport findTradelogReport(final Portfolio portfolio, ZonedDateTime start, ZonedDateTime end,
-                                             boolean filter, String symbol, BigDecimal winLossAmount) {
+                                             boolean filter, String symbol, BigDecimal winLossAmount) throws IOException {
         return tradelogReportRepository.findByTradelogReport(portfolio, start, end, filter, symbol, winLossAmount);
     }
 
@@ -180,7 +181,7 @@ public class TradeServiceImpl implements TradeService {
         return accountRepository.findById(id).isPresent() ? accountRepository.findById(id).get() : null;
     }
 
-    public Account findAccountByNumber(String accountNumber) {
+    public Account findAccountByAccountNumber(String accountNumber) {
 
         return accountRepository.findByAccountNumber(accountNumber);
     }
@@ -204,7 +205,9 @@ public class TradeServiceImpl implements TradeService {
 
     public Contract findContractByUniqueKey(String SECType, String symbol, String exchange, String currency,
                                             ZonedDateTime expiry) {
-        return contractRepository.findContractByUniqueKey(SECType, symbol, exchange, currency, expiry);
+
+        List<Contract> contracts = contractRepository.findContractByUniqueKey(SECType, symbol, exchange, currency, expiry);
+        return contracts.isEmpty() ? null : contracts.getFirst();
     }
 
     public Tradestrategy findTradestrategyById(final Tradestrategy tradestrategy) throws ServiceException {
@@ -267,24 +270,71 @@ public class TradeServiceImpl implements TradeService {
         return portfolioRepository.findDefault();
     }
 
-    public void resetDefaultPortfolio(final Portfolio transientInstance) throws ServiceException {
-        try {
-            portfolioRepository.resetDefaultPortfolio(transientInstance);
-        } catch (OptimisticLockException ex1) {
-            throw new ServiceException("Error setting default portfolio. Please refresh before save.");
-        } catch (Exception e) {
-            throw new ServiceException(
-                    "Error saving Portfolio: " + transientInstance.getName() + "\n Msg: " + e.getMessage());
-        }
+    public void resetDefaultPortfolio(final Portfolio transientInstance) {
 
+        portfolioRepository.resetDefaultPortfolio(transientInstance);
     }
 
-    public Portfolio savePortfolio(final Portfolio instance) throws ServiceException {
-        try {
-            return portfolioRepository.persistPortfolio(instance);
-        } catch (Exception ex) {
-            throw new ServiceException("Error saving PortfolioAccount: " + ex.getMessage());
+    public Portfolio savePortfolio(Portfolio instance) {
+
+        Portfolio portfolio = this.findPortfolioByName(instance.getName());
+
+        if (null == portfolio) {
+
+            instance.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
+
+            for (PortfolioAccount item : instance.getPortfolioAccounts()) {
+
+                Account account = this.findAccountByAccountNumber(item.getAccount().getAccountNumber());
+
+                if (null == account) {
+
+                    item.getAccount().setCurrency(Currency.USD);
+                    item.getAccount().setName(item.getAccount().getAccountNumber());
+                    item.getAccount().setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
+                } else {
+
+                    item.setAccount(account);
+                }
+            }
+
+            portfolio = this.saveAspect(instance);
+        } else {
+
+            if (0 != CoreUtils.nullSafeComparator(portfolio.getAllocationMethod(),
+                    instance.getAllocationMethod())) {
+
+                portfolio.setAllocationMethod(instance.getAllocationMethod());
+                portfolio.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
+            }
+
+            for (PortfolioAccount item : instance.getPortfolioAccounts()) {
+
+                Account account = this.findAccountByAccountNumber(item.getAccount().getAccountNumber());
+
+                if (null == account) {
+
+                    item.getAccount().setCurrency(Currency.USD);
+                    item.getAccount().setName(item.getAccount().getAccountNumber());
+                    item.getAccount().setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
+                } else {
+
+                    item.setAccount(account);
+                }
+
+                PortfolioAccount portfolioAccount = portfolioRepository.findByPortfolioNameAndAccountNumber(portfolio.getName(),
+                        item.getAccount().getAccountNumber());
+
+                if (null == portfolioAccount) {
+
+                    item.setPortfolio(portfolio);
+                    portfolio.getPortfolioAccounts().add(item);
+                }
+            }
+            portfolio = portfolioRepository.save(portfolio);
         }
+
+        return portfolio;
     }
 
     public List<Tradestrategy> findAllTradestrategies() {
@@ -379,312 +429,433 @@ public class TradeServiceImpl implements TradeService {
         return candleRepository.findCandlesByContractDateRangeBarSize(idContract, startDate, endDate, barSize);
     }
 
+
     public Long findCandleCount(final Integer idTradingday, final Integer idContract) {
+
         return candleRepository.findCandleCount(idTradingday, idContract);
     }
 
-    public Contract saveContract(final Contract transientInstance) {
-
-        return aspectRepository.save(transientInstance);
-    }
-
     public void saveCandleSeries(final CandleSeries candleSeries) throws ServiceException {
-        try {
-            /*
-             * This can happen when an indicator is a contract that has never
-             * been used.
-             */
-            if (null == candleSeries.getContract().getId()) {
-                Contract contract = this.saveContract(candleSeries.getContract());
-                // candleSeries.getContract().setId(contract.getId());
-                candleSeries.getContract().setVersion(contract.getVersion());
+
+
+        /*
+         * This can happen when an indicator is a contract that has never
+         * been used.
+         */
+        if (null == candleSeries.getContract().getId()) {
+
+            Contract contract = this.saveAspect(candleSeries.getContract());
+            // candleSeries.getContract().setId(contract.getId());
+            candleSeries.getContract().setVersion(contract.getVersion());
+        }
+
+        Candle transientInstance;
+
+        if (candleSeries.isEmpty()) {
+
+            return;
+        }
+
+        Tradingday tradingday = null;
+        Contract contract = findContractById(candleSeries.getContract().getId());
+
+        for (int i = 0; i < candleSeries.getItemCount(); i++) {
+
+            CandleItem candleItem = (CandleItem) candleSeries.getDataItem(i);
+
+            if (null != candleItem.getCandle().getId()) {
+
+                Candle instance = candleRepository.findById(candleItem.getCandle().getId()).get();
+
+                if (instance.equals(candleItem.getCandle())) {
+
+                    continue;
+                } else {
+
+                    // This should never happen.
+                    throw new ServiceException("Count: " + i + " Symbol: " + candleSeries.getSymbol() + "candleid: "
+                            + candleItem.getCandle().getId() + " open: "
+                            + candleItem.getCandle().getStartPeriod());
+                }
             }
-            candleRepository.persistCandleSeries(candleSeries);
-        } catch (OptimisticLockException ex1) {
-            throw new ServiceException("Error saving CandleSeries please refresh before save.");
-        } catch (Exception e) {
-            throw new ServiceException(
-                    "Error saving CandleSeries: " + candleSeries.getDescription() + "\n Msg: " + e.getMessage());
+
+            if (!candleItem.getCandle().getTradingday().equals(tradingday)) {
+
+                if (null == candleItem.getCandle().getTradingday().getId()) {
+
+                    tradingday = this.findTradingdayByOpenCloseDate(candleItem.getCandle().getTradingday().getOpen(),
+                            candleItem.getCandle().getTradingday().getClose());
+                } else {
+
+                    tradingday = this.findTradingdayById(candleItem.getCandle().getTradingday().getId());
+                }
+
+                if (null == tradingday) {
+
+                    tradingday = this.saveTradingday(candleItem.getCandle().getTradingday());
+                } else {
+
+                    Integer barSize = candleSeries.getBarSize();
+                    String hqlDelete = "delete Candle where contract = :contract and tradingday = :tradingday and barSize = :barSize";
+                    List<Candle> candles = candleRepository.findByContractAndBarSize(tradingday, contract, barSize);
+                    candleRepository.deleteAll(candles);
+                }
+            }
+
+            transientInstance = candleItem.getCandle();
+            transientInstance.setTradingday(tradingday);
+            transientInstance.setContract(contract);
+            candleRepository.save(transientInstance);
         }
     }
 
-    public Candle saveCandle(final Candle candle) throws ServiceException {
+    public Candle saveCandle(final Candle candle) {
 
-        try {
+        if (null == candle.getTradingday().getId()) {
 
-            synchronized (candle) {
+            Tradingday tradingday = this.findTradingdayByOpenCloseDate(candle.getTradingday().getOpen(),
+                    candle.getTradingday().getClose());
 
-                if (null == candle.getTradingday().getId()) {
+            if (null == tradingday) {
 
-                    Tradingday tradingday = this.findTradingdayByOpenCloseDate(candle.getTradingday().getOpen(),
-                            candle.getTradingday().getClose());
+                tradingday = this.saveTradingday(candle.getTradingday());
+            }
+            candle.setTradingday(tradingday);
+        }
 
-                    if (null == tradingday) {
-                        tradingday = aspectRepository.save(candle.getTradingday());
+        if (null == candle.getId()) {
+
+            List<Candle> currCandle = candleRepository.findByUniqueKey(candle.getTradingday().getId(),
+                    candle.getContract().getId(), candle.getStartPeriod(), candle.getEndPeriod(),
+                    candle.getBarSize());
+            /*
+             * Candle exists set the id and version so we can merge the
+             * incoming candle.
+             */
+            if (!currCandle.isEmpty()) {
+
+                // candle.setId(currCandle.getId());
+                candle.setVersion(currCandle.getFirst().getVersion());
+            }
+        }
+
+        return aspectRepository.save(candle);
+    }
+
+    public Tradingday saveTradingday(Tradingday transientInstance) {
+
+        /*
+         * Check the incoming tradingday to see if it exists if it does
+         * merge with the persisted one if not persist.
+         */
+
+        transientInstance = this.saveAspect(transientInstance);
+
+        for (Tradestrategy tradestrategy : transientInstance.getTradestrategies()) {
+
+            // If it has trades do nothing
+            if (tradestrategy.getTradeOrders().isEmpty() && tradestrategy.isDirty()) {
+
+                /*
+                 * If the tradingday existed use the persisted version.
+                 */
+                tradestrategy.setTradingday(transientInstance);
+
+                /*
+                 * The strategy will always exist as these cannot be created
+                 * via this tab, as they are a drop down list. So find the
+                 * persisted one and set this.
+                 */
+                Strategy strategy = this.findStrategyByName(tradestrategy.getStrategy().getName());
+
+                if (null != strategy) {
+
+                    tradestrategy.setStrategy(strategy);
+                }
+                /*
+                 * Check to see if the contract exists if it does merge and
+                 * set the new persisted one. If no persist the contract.
+                 */
+                Contract contract = this.findContractByUniqueKey(tradestrategy.getContract().getSecType(),
+                        tradestrategy.getContract().getSymbol(), tradestrategy.getContract().getExchange(),
+                        tradestrategy.getContract().getCurrency(), tradestrategy.getContract().getExpiry());
+
+                if (null != contract) {
+
+                    tradestrategy.setContract(contract);
+                }
+
+                /*
+                 * Persist or merge the tradestrategy.
+                 */
+                tradestrategy = this.saveAspect(tradestrategy);
+                tradestrategy.setDirty(false);
+            }
+        }
+
+        List<Tradestrategy> tradestrategies = tradingdayRepository.findTradestrategyByTradingdayId(transientInstance.getId());
+
+        for (Tradestrategy tradestrategy : tradestrategies) {
+
+            boolean exists = false;
+
+            for (Tradestrategy newTradestrategy : transientInstance.getTradestrategies()) {
+
+                if (newTradestrategy.equals(tradestrategy)) {
+
+                    exists = true;
+                    break;
+                }
+            }
+
+            if (!exists) {
+
+                if (tradestrategy.getTradeOrders().isEmpty()) {
+
+                    this.deleteAspect(tradestrategy);
+                } else {
+
+                    for (TradeOrder tradeOrder : tradestrategy.getTradeOrders()) {
+
+                        this.deleteAspect(tradeOrder);
                     }
-                    candle.setTradingday(tradingday);
+                    //    throw new ServiceException("The following Contract:" + tradestrategy.getContract().getSymbol()
+                    //            + " Strategy:" + tradestrategy.getStrategy().getName()
+                    //            + " already exists with trades. \n Please delete orders before removing.");
                 }
-                if (null == candle.getId()) {
-                    Candle currCandle = candleRepository.findByUniqueKey(candle.getTradingday().getId(),
-                            candle.getContract().getId(), candle.getStartPeriod(), candle.getEndPeriod(),
-                            candle.getBarSize());
-                    /*
-                     * Candle exists set the id and version so we can merge the
-                     * incoming candle.
-                     */
-                    // candle.setId(currCandle.getId());
-                    candle.setVersion(currCandle.getVersion());
-                }
-                Candle item = aspectRepository.save(candle);
-                candle.setVersion(item.getVersion());
-                return item;
             }
-        } catch (OptimisticLockException ex1) {
-            throw new ServiceException("Error saving Candle please refresh before save.");
-        } catch (Exception e) {
-            throw new ServiceException(
-                    "Error saving CandleItem: " + candle.getOpen() + "\n Msg: " + e.getMessage());
         }
+
+        transientInstance.setDirty(false);
+        return transientInstance;
     }
 
-    public void saveTradingday(final Tradingday transientInstance) throws ServiceException {
+    public TradeOrder saveTradeOrder(final TradeOrder tradeOrder) {
 
-        try {
+        /*
+         * This is a new order set the status to UNSUBMIT
+         */
 
-            tradingdayRepository.persist(transientInstance);
+        if (!tradeOrder.getIsFilled()
+                && CoreUtils.nullSafeComparator(tradeOrder.getQuantity(), tradeOrder.getFilledQuantity()) == 0) {
 
-        } catch (OptimisticLockException ex1) {
-
-            throw new ServiceException("Error saving Tradingday please refresh before save.");
-        } catch (Exception e) {
-
-            throw new ServiceException(
-                    "Error saving Tradingday: " + transientInstance.getOpen() + "\n Msg: " + e.getMessage());
+            tradeOrder.setIsFilled(true);
+            tradeOrder.setStatus(OrderStatus.FILLED);
         }
-    }
 
-    public synchronized TradeOrder saveTradeOrder(final TradeOrder tradeOrder) throws ServiceException {
-        try {
+        /*
+         * If a partial filled order is cancelled mark the order as filled.
+         */
+        if (OrderStatus.CANCELLED.equals(tradeOrder.getStatus()) && !tradeOrder.getIsFilled()
+                && CoreUtils.nullSafeComparator(tradeOrder.getFilledQuantity(), 0) == 1) {
 
-            /*
-             * This is a new order set the status to UNSUBMIT
-             */
+            tradeOrder.setIsFilled(true);
+            tradeOrder.setStatus(OrderStatus.FILLED);
+        }
 
-            if (!tradeOrder.getIsFilled()
-                    && CoreUtils.nullSafeComparator(tradeOrder.getQuantity(), tradeOrder.getFilledQuantity()) == 0) {
-                tradeOrder.setIsFilled(true);
-                tradeOrder.setStatus(OrderStatus.FILLED);
-            }
+        Integer tradestrategyId = tradeOrder.getTradestrategyId().getId();
 
-            /*
-             * If a partial filled order is cancelled mark the order as filled.
-             */
-            if (OrderStatus.CANCELLED.equals(tradeOrder.getStatus()) && !tradeOrder.getIsFilled()
-                    && CoreUtils.nullSafeComparator(tradeOrder.getFilledQuantity(), 0) == 1) {
-                tradeOrder.setIsFilled(true);
-                tradeOrder.setStatus(OrderStatus.FILLED);
-            }
+        /*
+         * If the filled qty is > 0 and we have no TradePosition then create
+         * one.
+         */
+        TradePosition tradePosition;
+        TradestrategyOrders tradestrategyOrders = null;
 
-            Integer tradestrategyId;
-            tradestrategyId = tradeOrder.getTradestrategyId().getId();
+        if (!tradeOrder.hasTradePosition()) {
 
-            /*
-             * If the filled qty is > 0 and we have no TradePosition then create
-             * one.
-             */
-            TradePosition tradePosition;
-            TradestrategyOrders tradestrategyOrders = null;
+            if (CoreUtils.nullSafeComparator(tradeOrder.getFilledQuantity(), 0) == 1) {
 
-            if (!tradeOrder.hasTradePosition()) {
-                if (CoreUtils.nullSafeComparator(tradeOrder.getFilledQuantity(), 0) == 1) {
+                tradestrategyOrders = this.findPositionOrdersByTradestrategyId(tradestrategyId);
 
-                    tradestrategyOrders = this.findPositionOrdersByTradestrategyId(tradestrategyId);
+                if (tradestrategyOrders.hasOpenTradePosition()) {
 
-                    if (tradestrategyOrders.hasOpenTradePosition()) {
-                        tradePosition = this.findTradePositionById(
-                                tradestrategyOrders.getContract().getTradePosition().getId());
-                        if (!tradePosition.containsTradeOrder(tradeOrder)) {
-                            tradePosition.addTradeOrder(tradeOrder);
-                        }
+                    tradePosition = this.findTradePositionById(
+                            tradestrategyOrders.getContract().getTradePosition().getId());
 
-                    } else {
-                        /*
-                         * Note Order status can be fired before execDetails
-                         * this could result in a new tradeposition. OrderStatus
-                         * does not contain the filled date so we must set it
-                         * here.
-                         */
-                        ZonedDateTime positionOpenDate = tradeOrder.getFilledDate();
+                    if (!tradePosition.containsTradeOrder(tradeOrder)) {
 
-                        tradePosition = new TradePosition(tradestrategyOrders.getContract(), positionOpenDate,
-                                (Action.BUY.equals(tradeOrder.getAction()) ? Side.BOT : Side.SLD));
-                        tradeOrder.setIsOpenPosition(true);
-                        tradestrategyOrders.setStatus(TradestrategyStatus.OPEN);
-                        tradestrategyOrders.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
-                        this.saveAspect(tradestrategyOrders);
                         tradePosition.addTradeOrder(tradeOrder);
-                        tradePosition = this.saveAspect(tradePosition);
                     }
-                    tradeOrder.setTradePosition(tradePosition);
                 } else {
                     /*
-                     * If the order has not been filled and it has no
-                     * TradePosition this is the first order that has just been
-                     * update.
+                     * Note Order status can be fired before execDetails
+                     * this could result in a new tradeposition. OrderStatus
+                     * does not contain the filled date so we must set it
+                     * here.
                      */
-                    return this.saveAspect(tradeOrder);
+                    ZonedDateTime positionOpenDate = tradeOrder.getFilledDate();
+                    tradePosition = new TradePosition(tradestrategyOrders.getContract(), positionOpenDate,
+                            (Action.BUY.equals(tradeOrder.getAction()) ? Side.BOT : Side.SLD));
+                    tradeOrder.setIsOpenPosition(true);
+                    tradestrategyOrders.setStatus(TradestrategyStatus.OPEN);
+                    tradestrategyOrders.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
+                    tradestrategyOrders = this.saveAspect(tradestrategyOrders);
+                    tradePosition.addTradeOrder(tradeOrder);
+                    tradePosition = this.saveAspect(tradePosition);
+                }
+                tradeOrder.setTradePosition(tradePosition);
+            } else {
+                /*
+                 * If the order has not been filled, and it has no
+                 * TradePosition this is the first order that has just been
+                 * update.
+                 */
+                return this.saveAspect(tradeOrder);
+            }
+        } else {
+            tradePosition = this.findTradePositionById(tradeOrder.getTradePosition().getId());
+            tradeOrder.setTradePosition(tradePosition);
+        }
+
+        boolean allOrdersCancelled = true;
+        int totalBuyQuantity = 0;
+        int totalSellQuantity = 0;
+        double totalCommission = 0;
+        double totalBuyValue = 0;
+        double totalSellValue = 0;
+
+        for (TradeOrder order : tradePosition.getTradeOrders()) {
+
+            if (order.getOrderKey().equals(tradeOrder.getOrderKey())) {
+
+                order = tradeOrder;
+            }
+
+            /*
+             * If all orders are cancelled and not filled then we need to
+             * update the tradestrategy status to cancelled.
+             */
+            if (!OrderStatus.CANCELLED.equals(order.getStatus())) {
+
+                allOrdersCancelled = false;
+            }
+
+            if (Action.BUY.equals(order.getAction())) {
+
+                totalBuyQuantity = totalBuyQuantity + order.getFilledQuantity();
+                totalBuyValue = totalBuyValue + (order.getAverageFilledPrice().doubleValue()
+                        * order.getFilledQuantity().doubleValue());
+            } else {
+
+                totalSellQuantity = totalSellQuantity + order.getFilledQuantity();
+                totalSellValue = totalSellValue + (order.getAverageFilledPrice().doubleValue()
+                        * order.getFilledQuantity().doubleValue());
+            }
+            totalCommission = totalCommission + order.getCommission().doubleValue();
+        }
+        /*
+         * totalFilledQuantity has changed for the trade update the trade
+         * values.
+         */
+        Money comms = new Money(totalCommission);
+
+        if (CoreUtils.nullSafeComparator(totalBuyQuantity, tradePosition.getTotalBuyQuantity()) != 0
+                || CoreUtils.nullSafeComparator(totalSellQuantity,
+                tradePosition.getTotalSellQuantity()) != 0) {
+
+            int openQuantity = totalBuyQuantity - totalSellQuantity;
+            tradePosition.setOpenQuantity(openQuantity);
+            tradePosition.setTotalBuyQuantity(totalBuyQuantity);
+            tradePosition.setTotalBuyValue(
+                    (new BigDecimal(totalBuyValue)).setScale(SCALE_5, RoundingMode.HALF_EVEN));
+            tradePosition.setTotalSellQuantity(totalSellQuantity);
+            tradePosition.setTotalSellValue(
+                    (new BigDecimal(totalSellValue)).setScale(SCALE_5, RoundingMode.HALF_EVEN));
+            tradePosition.setTotalNetValue(
+                    (new BigDecimal(totalSellValue - totalBuyValue)).setScale(SCALE_5, RoundingMode.HALF_EVEN));
+            tradePosition.setTotalCommission(comms.getBigDecimalValue());
+
+            if (openQuantity > 0) {
+
+                tradePosition.setSide(Side.BOT);
+            }
+
+            if (openQuantity < 0) {
+
+                tradePosition.setSide(Side.SLD);
+            }
+
+            /*
+             * Position should be closed if openQuantity = 0
+             */
+            if (tradePosition.equals(tradePosition.getContract().getTradePosition())) {
+
+                if (openQuantity == 0) {
+
+                    tradePosition.setPositionCloseDate(tradeOrder.getFilledDate());
+                    tradePosition.getContract().setTradePosition(null);
+                    tradePosition.setContract(this.saveAspect(tradePosition.getContract()));
                 }
             } else {
-                tradePosition = this.findTradePositionById(tradeOrder.getTradePosition().getId());
-                tradeOrder.setTradePosition(tradePosition);
+
+                tradePosition.getContract().setTradePosition(tradePosition);
+                tradePosition.setContract(this.saveAspect(tradePosition.getContract()));
             }
 
-            boolean allOrdersCancelled = true;
-            int totalBuyQuantity = 0;
-            int totalSellQuantity = 0;
-            double totalCommission = 0;
-            double totalBuyValue = 0;
-            double totalSellValue = 0;
+            // Partial fills case.
+            if (null == tradestrategyOrders) {
 
-            for (TradeOrder order : tradePosition.getTradeOrders()) {
-
-                if (order.getOrderKey().equals(tradeOrder.getOrderKey())) {
-                    order = tradeOrder;
-                }
-
-                /*
-                 * If all orders are cancelled and not filled then we need to
-                 * update the tradestrategy status to cancelled.
-                 */
-                if (!OrderStatus.CANCELLED.equals(order.getStatus())) {
-                    allOrdersCancelled = false;
-                }
-
-                if (Action.BUY.equals(order.getAction())) {
-                    totalBuyQuantity = totalBuyQuantity + order.getFilledQuantity();
-                    totalBuyValue = totalBuyValue + (order.getAverageFilledPrice().doubleValue()
-                            * order.getFilledQuantity().doubleValue());
-                } else {
-                    totalSellQuantity = totalSellQuantity + order.getFilledQuantity();
-                    totalSellValue = totalSellValue + (order.getAverageFilledPrice().doubleValue()
-                            * order.getFilledQuantity().doubleValue());
-                }
-                totalCommission = totalCommission + order.getCommission().doubleValue();
+                tradestrategyOrders = this.findPositionOrdersByTradestrategyId(tradestrategyId);
             }
-            /*
-             * totalFilledQuantity has changed for the trade update the trade
-             * values.
-             */
-            Money comms = new Money(totalCommission);
-            if (CoreUtils.nullSafeComparator(totalBuyQuantity, tradePosition.getTotalBuyQuantity()) != 0
-                    || CoreUtils.nullSafeComparator(totalSellQuantity,
-                    tradePosition.getTotalSellQuantity()) != 0) {
 
-                int openQuantity = totalBuyQuantity - totalSellQuantity;
-                tradePosition.setOpenQuantity(openQuantity);
-                tradePosition.setTotalBuyQuantity(totalBuyQuantity);
-                tradePosition.setTotalBuyValue(
-                        (new BigDecimal(totalBuyValue)).setScale(SCALE_5, RoundingMode.HALF_EVEN));
-                tradePosition.setTotalSellQuantity(totalSellQuantity);
-                tradePosition.setTotalSellValue(
-                        (new BigDecimal(totalSellValue)).setScale(SCALE_5, RoundingMode.HALF_EVEN));
-                tradePosition.setTotalNetValue(
-                        (new BigDecimal(totalSellValue - totalBuyValue)).setScale(SCALE_5, RoundingMode.HALF_EVEN));
-                tradePosition.setTotalCommission(comms.getBigDecimalValue());
-
-                if (openQuantity > 0) {
-
-                    tradePosition.setSide(Side.BOT);
-                }
-                if (openQuantity < 0) {
-
-                    tradePosition.setSide(Side.SLD);
-                }
+            if (!tradePosition.isOpen() && !TradestrategyStatus.CLOSED.equals(tradestrategyOrders.getStatus())) {
 
                 /*
-                 * Position should be closed if openQuantity = 0
+                 * Now update all the tradestrategies as there could be many
+                 * if the position is across multiple days.
                  */
-                if (tradePosition.equals(tradePosition.getContract().getTradePosition())) {
+                for (TradeOrder item : tradePosition.getTradeOrders()) {
 
-                    if (openQuantity == 0) {
+                    if (!Objects.equals(item.getTradestrategyId().getId(), tradestrategyOrders.getId())) {
 
-                        tradePosition.setPositionCloseDate(tradeOrder.getFilledDate());
-                        tradePosition.getContract().setTradePosition(null);
-                        this.saveAspect(tradePosition.getContract());
+                        item.getTradestrategyId().setStatus(TradestrategyStatus.CLOSED);
+                        item.getTradestrategyId().setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
+                        this.saveAspect(item.getTradestrategyId());
                     }
-                } else {
-
-                    tradePosition.getContract().setTradePosition(tradePosition);
-                    this.saveAspect(tradePosition.getContract());
                 }
 
-                // Partial fills case.
+                tradestrategyOrders.setStatus(TradestrategyStatus.CLOSED);
+                tradestrategyOrders.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
+                this.saveAspect(tradestrategyOrders);
+            }
+
+            tradePosition.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
+            this.saveAspect(tradePosition);
+
+        } else {
+
+            if (allOrdersCancelled) {
+
                 if (null == tradestrategyOrders) {
 
                     tradestrategyOrders = this.findPositionOrdersByTradestrategyId(tradestrategyId);
                 }
 
-                if (!tradePosition.isOpen() && !TradestrategyStatus.CLOSED.equals(tradestrategyOrders.getStatus())) {
-                    /*
-                     * Now update all the tradestrategies as there could be many
-                     * if the position is across multiple days.
-                     */
-                    for (TradeOrder item : tradePosition.getTradeOrders()) {
+                if (!TradestrategyStatus.CANCELLED.equals(tradestrategyOrders.getStatus())) {
 
-                        if (!Objects.equals(item.getTradestrategyId().getId(), tradestrategyOrders.getId())) {
+                    if (null == tradestrategyOrders.getStatus()) {
 
-                            item.getTradestrategyId().setStatus(TradestrategyStatus.CLOSED);
-                            item.getTradestrategyId().setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
-                            this.saveAspect(item.getTradestrategyId());
-                        }
+                        tradestrategyOrders.setStatus(TradestrategyStatus.CANCELLED);
+                        tradestrategyOrders.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
+                        this.saveAspect(tradestrategyOrders);
                     }
-                    tradestrategyOrders.setStatus(TradestrategyStatus.CLOSED);
-                    tradestrategyOrders.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
-                    this.saveAspect(tradestrategyOrders);
-                }
-
-                tradePosition.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
-                this.saveAspect(tradePosition);
-
-            } else {
-                if (allOrdersCancelled) {
-
-                    if (null == tradestrategyOrders) {
-
-                        tradestrategyOrders = this.findPositionOrdersByTradestrategyId(tradestrategyId);
-                    }
-
-                    if (!TradestrategyStatus.CANCELLED.equals(tradestrategyOrders.getStatus())) {
-
-                        if (null == tradestrategyOrders.getStatus()) {
-
-                            tradestrategyOrders.setStatus(TradestrategyStatus.CANCELLED);
-                            tradestrategyOrders.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
-                            this.saveAspect(tradestrategyOrders);
-                        }
-                    }
-                }
-                /*
-                 * If the commissions (note these are updated by the orderState
-                 * event after the order may have been filled) have changed
-                 * update the trade.
-                 */
-                if (CoreUtils.nullSafeComparator(comms.getBigDecimalValue(), tradePosition.getTotalCommission()) == 1) {
-
-                    tradePosition.setTotalCommission(comms.getBigDecimalValue());
-                    tradePosition.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
-                    this.saveAspect(tradePosition);
                 }
             }
+            /*
+             * If the commissions (note these are updated by the orderState
+             * event after the order may have been filled) have changed
+             * update the trade.
+             */
+            if (CoreUtils.nullSafeComparator(comms.getBigDecimalValue(), tradePosition.getTotalCommission()) == 1) {
 
-            return this.saveAspect(tradeOrder);
-
-        } catch (OptimisticLockException ex1) {
-            throw new ServiceException("Error saving TradeOrder please refresh before save.");
-        } catch (Exception e) {
-            throw new ServiceException(
-                    "Error saving TradeOrder: " + tradeOrder.getOrderKey() + "\n Msg: " + e.getMessage());
+                tradePosition.setTotalCommission(comms.getBigDecimalValue());
+                tradePosition.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
+                this.saveAspect(tradePosition);
+            }
         }
+
+        return this.saveAspect(tradeOrder);
     }
 
     public synchronized TradeOrder saveTradeOrderfill(final TradeOrder tradeOrder) throws ServiceException {
@@ -821,50 +992,24 @@ public class TradeServiceImpl implements TradeService {
         return instance.get();
     }
 
-    public Aspects findByClassName(String className) throws ClassNotFoundException{
+    public Aspects findByClassName(String className) throws ClassNotFoundException {
 
         return aspectRepository.findByClassName(className);
     }
 
-    public <T extends Aspect> T saveAspect(final T transientInstance) throws ServiceException {
-        try {
-            return aspectRepository.save(transientInstance);
-        } catch (OptimisticLockException ex1) {
-            throw new ServiceException(
-                    "Error saving " + transientInstance.getClass().getSimpleName() + " please refresh before save.");
-        } catch (Exception ex) {
-            throw new ServiceException(
-                    "Error saving  " + transientInstance.getClass().getSimpleName() + " : " + ex.getMessage());
-        }
+    public <T extends Aspect> T saveAspect(final T transientInstance) {
+
+        return aspectRepository.save(transientInstance);
     }
 
-    public <T extends Aspect> T saveAspect(final T transientInstance, boolean overrideVersion)
-            throws ServiceException {
-        try {
-            return aspectRepository.save(transientInstance);
-        } catch (OptimisticLockException ex1) {
-            throw new ServiceException(
-                    "Error saving " + transientInstance.getClass().getSimpleName() + " please refresh before save.");
-        } catch (Exception e) {
-            throw new ServiceException(
-                    "Error saving  " + transientInstance.getClass().getSimpleName() + " : " + e.getMessage());
-        }
+    public <T extends Aspect> T saveAspect(final T transientInstance, boolean overrideVersion) {
+
+        return aspectRepository.save(transientInstance);
     }
 
-    public void deleteAspect(final Aspect transientInstance) throws ServiceException {
+    public void deleteAspect(final Aspect transientInstance) {
 
-        try {
-
-            aspectRepository.delete(transientInstance);
-        } catch (OptimisticLockException ex1) {
-
-            throw new ServiceException(
-                    "Error removing " + transientInstance.getClass().getSimpleName() + " please refresh before save.");
-        } catch (Exception ex) {
-
-            throw new ServiceException(
-                    "Error removing  " + transientInstance.getClass().getSimpleName() + " : " + ex.getMessage());
-        }
+        aspectRepository.delete(transientInstance);
     }
 
     public void reassignStrategy(final Strategy fromStrategy, final Strategy toStrategy, final Tradingday tradingday)
@@ -887,6 +1032,7 @@ public class TradeServiceImpl implements TradeService {
 
     public CodeType findCodeTypeByNameType(String name, String type) {
 
-        return codeTypeRepository.findByNameAndType(name, type);
+        List<CodeType> codeTypes = codeTypeRepository.findByNameAndType(name, type);
+        return codeTypes.isEmpty() ? null : codeTypes.getFirst();
     }
 }

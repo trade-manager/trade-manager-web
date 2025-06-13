@@ -59,9 +59,9 @@ import java.util.Objects;
  *
  */
 public class TradestrategyBase {
-    
+
     private static TradeService tradeService;
-    
+
     @Autowired
     public static void setTradeService(TradeService tradeService) {
 
@@ -96,7 +96,7 @@ public class TradestrategyBase {
         Contract contract = tradeService.findContractByUniqueKey(SECType.STOCK, symbol, Exchange.SMART, Currency.USD, null);
         if (null == contract) {
             contract = new Contract(SECType.STOCK, symbol, Exchange.SMART, Currency.USD, null, null);
-            contract = tradeService.saveContract(contract);
+            contract = tradeService.saveAspect(contract);
 
         } else {
             tradestrategy = tradeService.findTradestrategyByUniqueKeys(open, strategy.getName(),
@@ -104,7 +104,7 @@ public class TradestrategyBase {
             if (null != tradestrategy) {
                 Tradestrategy transientInstance = tradeService.findTradestrategyById(tradestrategy.getId());
                 transientInstance.setStatus(null);
-                tradeService.save(transientInstance);
+                transientInstance = tradeService.saveAspect(transientInstance);
 
                 Hashtable<Integer, TradePosition> tradePositions = new Hashtable<>();
                 for (TradeOrder tradeOrder : transientInstance.getTradeOrders()) {
@@ -125,7 +125,7 @@ public class TradestrategyBase {
                      */
                     if (tradePosition.equals(transientInstance.getContract().getTradePosition())) {
                         transientInstance.getContract().setTradePosition(null);
-                        tradeService.save(transientInstance.getContract());
+                        transientInstance.setContract(tradeService.saveAspect(transientInstance.getContract()));
                     }
                     tradeService.delete(tradePosition);
                 }
@@ -158,8 +158,9 @@ public class TradestrategyBase {
 
         Aspects contracts = tradeService.findByClassName(Contract.class.getName());
         for (Aspect aspect : contracts.getAspect()) {
+
             ((Contract) aspect).setTradePosition(null);
-            tradeService.save(aspect);
+            tradeService.saveAspect(aspect);
         }
 
         Aspects tradeOrders = tradeService.findByClassName(TradeOrder.class.getName());

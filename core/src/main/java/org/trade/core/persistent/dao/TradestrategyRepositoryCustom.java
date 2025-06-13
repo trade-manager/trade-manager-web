@@ -10,11 +10,11 @@ public interface TradestrategyRepositoryCustom {
 
     Integer findVersionById(Integer id);
 
-    TradestrategyOrders findPositionOrdersByTradestrategyId(Integer idTradestrategy);
+    TradestrategyOrders findPositionOrdersByTradestrategyId(Integer tradestrategyId);
 
-    Tradestrategy findByTradeOrderId(Integer idTradeOrder);
+    Tradestrategy findByTradeOrderId(Integer tradeOrderId);
 
-    Tradestrategy findTradestrategyByUniqueKeys(ZonedDateTime open, String strategyName, Integer idContract,
+    Tradestrategy findTradestrategyByUniqueKeys(ZonedDateTime open, String strategyName, Integer contractId,
                                                 String portfolioName);
 
     List<Tradestrategy> findTradestrategyDistinctByDateRange(ZonedDateTime fromOpen, ZonedDateTime toOpen);

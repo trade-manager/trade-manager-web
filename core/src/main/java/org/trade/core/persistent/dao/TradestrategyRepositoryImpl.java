@@ -39,7 +39,7 @@ public class TradestrategyRepositoryImpl implements TradestrategyRepositoryCusto
      * @param id Integer
      * @return Integer
      */
-    public synchronized Integer findVersionById(Integer id) {
+    public Integer findVersionById(Integer id) {
 
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<TradestrategyLite> query = builder.createQuery(TradestrategyLite.class);
@@ -86,7 +86,7 @@ public class TradestrategyRepositoryImpl implements TradestrategyRepositoryCusto
      * @param idTradeOrder Integer
      * @return Tradestrategy
      */
-    public synchronized Tradestrategy findByTradeOrderId(Integer idTradeOrder) {
+    public Tradestrategy findByTradeOrderId(Integer idTradeOrder) {
 
         Tradestrategy tradestrategy = null;
         TradeOrder instance = entityManager.find(TradeOrder.class, idTradeOrder);
@@ -109,7 +109,6 @@ public class TradestrategyRepositoryImpl implements TradestrategyRepositoryCusto
      */
     public Tradestrategy findTradestrategyByUniqueKeys(ZonedDateTime open, String strategyName, Integer idContract,
                                                        String portfolioName) {
-
 
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Tradestrategy> query = builder.createQuery(Tradestrategy.class);

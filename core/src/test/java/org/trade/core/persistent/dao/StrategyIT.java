@@ -46,7 +46,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.trade.core.dao.AspectRepository;
 import org.trade.core.persistent.TradeService;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -108,7 +107,7 @@ public class StrategyIT {
         if (null == transientInstance) {
             transientInstance = new Strategy(name);
         }
-        transientInstance = (Strategy) tradeService.save(transientInstance);
+        transientInstance = tradeService.saveAspect(transientInstance);
         _log.info("Strategy added Id = {}", transientInstance.getId());
         assertNotNull(transientInstance.getId());
         tradeService.delete(transientInstance);

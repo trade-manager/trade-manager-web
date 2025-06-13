@@ -46,7 +46,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.trade.core.dao.AspectRepository;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.Currency;
@@ -57,8 +56,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.Assert.assertFalse;
 
 /**
  *
@@ -114,15 +114,15 @@ public class ContractIT {
         // values in it by reading them from form object
         Contract transientInstance = new Contract(SECType.STOCK, "QQQ", Exchange.SMART, Currency.USD, expiry, new BigDecimal(1));
 
-        transientInstance = (Contract) tradeService.save(transientInstance);
+        transientInstance = tradeService.saveAspect(transientInstance);
         _log.info("Contract added Id:{}", transientInstance.getId());
 
-        Contract contract = contractRepository.findContractByUniqueKey(transientInstance.getSecType(),
+        List<Contract> contracts = contractRepository.findContractByUniqueKey(transientInstance.getSecType(),
                 transientInstance.getSymbol(), transientInstance.getExchange(), transientInstance.getCurrency(),
                 expiry);
-        assertNotNull(contract);
+        assertFalse(contracts.isEmpty());
 
-        tradeService.delete(contract);
+        tradeService.delete(contracts.getFirst());
         _log.info("Contract deleted Id:{}", transientInstance.getId());
     }
 
@@ -138,18 +138,18 @@ public class ContractIT {
         _log.info("Expiry Date: {}", expiry);
         Contract transientInstance = new Contract(SECType.FUTURE, "ES", Exchange.SMART, Currency.USD, expiry,
                 new BigDecimal(50));
-        transientInstance = (Contract) tradeService.save(transientInstance);
+        transientInstance = tradeService.saveAspect(transientInstance);
         _log.info("Contract added Id:{}", transientInstance.getId());
 
         expiry = expiry.plusDays(1);
         _log.info("Expiry Date: {}", expiry);
-        Contract contract = contractRepository.findContractByUniqueKey(transientInstance.getSecType(),
+        List<Contract> contracts = contractRepository.findContractByUniqueKey(transientInstance.getSecType(),
                 transientInstance.getSymbol(), transientInstance.getExchange(), transientInstance.getCurrency(),
                 expiry);
-        assertNotNull(contract);
-
-        tradeService.delete(contract);
-        _log.info("Contract deleted Id:{}", transientInstance.getId());
+        assertFalse(contracts.isEmpty());
         _log.info("Contract added Id:{}", transientInstance.getId());
+
+        tradeService.delete(contracts.getFirst());
+        _log.info("Contract deleted Id:{}", transientInstance.getId());
     }
 }

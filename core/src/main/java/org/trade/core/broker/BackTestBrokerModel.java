@@ -986,10 +986,8 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
 
                 if (BackTestBrokerModel.populateContract(contractDetails, contract)) {
 
-                    tradeService.saveContract(contract);
-                    synchronized (m_contractRequests) {
-                        m_contractRequests.remove(reqId);
-                    }
+                    contract = tradeService.saveAspect(contract);
+                    m_contractRequests.remove(reqId);
                 }
             }
         } catch (Exception ex) {

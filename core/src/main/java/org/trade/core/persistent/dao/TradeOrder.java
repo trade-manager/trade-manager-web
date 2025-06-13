@@ -64,6 +64,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 
 /**
@@ -265,7 +266,7 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
         this.timeInForce = timeInForce;
         this.triggerMethod = triggerMethod;
         this.lastUpdateDate = createDate;
-        this.orderReference = this.tradestrategy.getId().toString();
+        this.orderReference = Objects.requireNonNull(this.tradestrategy.getId()).toString();
     }
 
     /**

@@ -43,8 +43,8 @@ public class TradeServiceIT {
         //save user, verify has ID value after save
         assertNull(contract1.getId());
         assertNull(contract2.getId());//null before save
-        contract1 = (Contract) tradeService.save(contract1);
-        contract2 = (Contract) tradeService.save(contract2);
+        contract1 = tradeService.saveAspect(contract1);
+        contract2 = tradeService.saveAspect(contract2);
         assertNotNull(contract1.getId());
         assertNotNull(contract2.getId());
     }
@@ -71,7 +71,7 @@ public class TradeServiceIT {
         LocalDateTime now = LocalDateTime.now();
         ZonedDateTime expiry = now.atZone(ZoneId.systemDefault());
         Contract contract = new Contract("STK", "Test3", "SMART", "USD", expiry, new BigDecimal(1));
-        tradeService.save(contract);
+        contract = tradeService.saveAspect(contract);
 
         Optional<Contract> contract1 = tradeService.findBySymbol(contract.getSymbol());
         assertThat(contract1.get()).extracting(Contract::getSymbol).isEqualTo(contract.getSymbol());

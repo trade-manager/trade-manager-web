@@ -211,7 +211,9 @@ public class ConfigurationPanel extends BasePanel {
 
             for (ListIterator<Aspect> itemIter = m_aspects.getAspect().listIterator(); itemIter.hasNext(); ) {
                 Aspect item = itemIter.next();
+
                 if (item.isDirty()) {
+
                     item = tradeService.saveAspect(item);
                 }
 

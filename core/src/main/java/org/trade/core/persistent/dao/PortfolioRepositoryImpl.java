@@ -9,12 +9,10 @@ import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import org.springframework.stereotype.Repository;
-import org.trade.core.util.CoreUtils;
-import org.trade.core.util.time.TradingCalendar;
-import org.trade.core.valuetype.Currency;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 @Repository
@@ -40,6 +38,7 @@ public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
         for (Portfolio item : items) {
 
             if (item.getIsDefault()) {
+
                 item.getPortfolioAccounts().size();
                 portfolio = item;
                 break;
@@ -47,8 +46,6 @@ public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
         }
 
         return portfolio;
-
-
     }
 
     /**
@@ -66,132 +63,19 @@ public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
 
         for (Portfolio item : items) {
 
-            item.setIsDefault(item.getId().equals(defaultPortfolio.getId()));
+            item.setIsDefault(Objects.equals(item.getId(), defaultPortfolio.getId()));
             entityManager.persist(item);
         }
-
     }
 
     /**
-     * Method persistPortfolio.
-     *
-     * @param instance Portfolio
-     * @return Portfolio
-     */
-    public synchronized Portfolio persistPortfolio(final Portfolio instance) {
-
-        Portfolio portfolio = findPortfolioByName(instance.getName());
-
-        if (null == portfolio) {
-
-            instance.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
-
-            for (PortfolioAccount item : instance.getPortfolioAccounts()) {
-
-                Account account = findByAccountNumber(item.getAccount().getAccountNumber());
-
-                if (null == account) {
-
-                    item.getAccount().setCurrency(Currency.USD);
-                    item.getAccount().setName(item.getAccount().getAccountNumber());
-                    item.getAccount().setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
-                } else {
-
-                    item.setAccount(account);
-                }
-            }
-            entityManager.persist(instance);
-
-        } else {
-
-            if (0 != CoreUtils.nullSafeComparator(portfolio.getAllocationMethod(),
-                    instance.getAllocationMethod())) {
-
-                portfolio.setAllocationMethod(instance.getAllocationMethod());
-                portfolio.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
-            }
-
-            for (PortfolioAccount item : instance.getPortfolioAccounts()) {
-
-                Account account = findByAccountNumber(item.getAccount().getAccountNumber());
-                if (null == account) {
-
-                    item.getAccount().setCurrency(Currency.USD);
-                    item.getAccount().setName(item.getAccount().getAccountNumber());
-                    item.getAccount().setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
-                } else {
-
-                    item.setAccount(account);
-                }
-
-                PortfolioAccount portfolioAccount = findByNameAndAccountNumber(portfolio.getName(),
-                        item.getAccount().getAccountNumber());
-
-                if (null == portfolioAccount) {
-
-                    item.setPortfolio(portfolio);
-                    portfolio.getPortfolioAccounts().add(item);
-                }
-            }
-            entityManager.persist(portfolio);
-        }
-
-        return (portfolio == null ? instance : portfolio);
-    }
-
-    /**
-     * Method findByAccountNumber.
-     *
-     * @param accountNumber String
-     * @return Account
-     */
-    private Account findByAccountNumber(String accountNumber) {
-
-        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Account> query = builder.createQuery(Account.class);
-        Root<Account> from = query.from(Account.class);
-        query.select(from);
-        query.where(builder.equal(from.get("accountNumber"), accountNumber));
-        List<Account> items = entityManager.createQuery(query).getResultList();
-
-        if (!items.isEmpty()) {
-
-            return items.getFirst();
-        }
-        return null;
-    }
-
-    /**
-     * Method findPortfolioByName.
-     *
-     * @param name String
-     * @return Portfolio
-     */
-    private Portfolio findPortfolioByName(String name) {
-
-        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Portfolio> query = builder.createQuery(Portfolio.class);
-        Root<Portfolio> from = query.from(Portfolio.class);
-        query.select(from);
-        query.where(builder.equal(from.get("name"), name));
-        List<Portfolio> items = entityManager.createQuery(query).getResultList();
-
-        if (!items.isEmpty()) {
-
-            return items.getFirst();
-        }
-        return null;
-
-    }
-
-    /**
-     * Method findByNameAndAccountNumber.
+     * Method findByPortfolioNameAndAccountNumber.
      *
      * @param portfolioName String
      * @param accountNumber String
      * @return Portfolio
      */
-    private PortfolioAccount findByNameAndAccountNumber(String portfolioName, String accountNumber) {
+    public PortfolioAccount findByPortfolioNameAndAccountNumber(String portfolioName, String accountNumber) {
 
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<PortfolioAccount> query = builder.createQuery(PortfolioAccount.class);

@@ -250,7 +250,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
 
         try {
 
-            Account account = tradeService.findAccountByNumber(accountNumber);
+            Account account = tradeService.findAccountByAccountNumber(accountNumber);
             m_accountRequests.put(accountNumber, account);
 
             if (m_client.isConnected()) {
@@ -1656,7 +1656,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
 
                 if (TWSBrokerModel.populateContract(contractDetails, contract)) {
 
-                    tradeService.saveContract(contract);
+                    contract = tradeService.saveAspect(contract);
                 }
             } else {
 
@@ -1734,14 +1734,14 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
                     for (Aspect aspect : aspects.getAspect()) {
 
                         Account item = (Account) aspect;
-                        Account account = tradeService.findAccountByNumber(item.getAccountNumber());
+                        Account account = tradeService.findAccountByAccountNumber(item.getAccountNumber());
                         if (null == account) {
                             account = new Account(item.getAccountNumber(), item.getAccountNumber(), Currency.USD,
                                     AccountType.INDIVIDUAL);
                         }
                         account.setAlias(item.getAlias());
                         account.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
-                        tradeService.saveAspect(account);
+                        account = tradeService.saveAspect(account);
                     }
                     m_client.requestFA(EClientSocket.GROUPS);
                     break;

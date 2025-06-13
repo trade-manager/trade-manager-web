@@ -205,7 +205,6 @@ public class CodeValue extends Aspect implements java.io.Serializable {
     @Transient
     public static Object getValueCode(final String name, final List<CodeValue> codeValues) throws Exception {
 
-        Object codeValue = null;
         for (CodeValue value : codeValues) {
 
             if (name.equals(value.getCodeAttribute().getName())) {
@@ -213,11 +212,10 @@ public class CodeValue extends Aspect implements java.io.Serializable {
                 Vector<Object> parm = new Vector<>();
                 parm.add(value.getCodeValue());
                 // codeValue = ClassFactory.getCreateClass(value.getCodeAttribute().getClassName(), parm, CodeAttributePanel.class);
-                codeValue = ClassFactory.getCreateClass(value.getCodeAttribute().getClassName(), parm,
+                return ClassFactory.getCreateClass(value.getCodeAttribute().getClassName(), parm,
                         CodeValue.class);
-                return codeValue;
             }
         }
-        return codeValue;
+        return null;
     }
 }

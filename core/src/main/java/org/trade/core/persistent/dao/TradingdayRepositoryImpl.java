@@ -23,122 +23,6 @@ public class TradingdayRepositoryImpl implements TradingdayRepositoryCustom {
     private EntityManager entityManager;
 
     /**
-     * Method persist. This method saves all the trade-strategies for all the
-     * tradingdays from the Trading Tab.
-     *
-     * @param detachedInstance Tradingday as set of tradingdays with associated
-     *                         tradestrategies.
-     */
-    public void persist(final Tradingday detachedInstance) throws Exception {
-
-        /*
-         * Check the incoming tradingday to see if it exists if it does
-         * merge with the persisted one if not persist.
-         */
-        Tradingday tradingday;
-        if (null == detachedInstance.getId()) {
-
-            tradingday = this.findTradingdayByOpenCloseDate(detachedInstance.getOpen(),
-                    detachedInstance.getClose());
-
-            if (null == tradingday) {
-                entityManager.persist(detachedInstance);
-            } else {
-                // detachedInstance.setId(tradingday.getId());
-                detachedInstance.setVersion(tradingday.getVersion());
-                tradingday = entityManager.merge(detachedInstance);
-            }
-        } else {
-
-            tradingday = entityManager.merge(detachedInstance);
-            detachedInstance.setVersion(tradingday.getVersion());
-        }
-
-        for (Tradestrategy tradestrategy : detachedInstance.getTradestrategies()) {
-
-            // If it has trades do nothing
-            if (tradestrategy.getTradeOrders().isEmpty() && tradestrategy.isDirty()) {
-
-
-                /*
-                 * If the tradingday existed use the persisted version.
-                 */
-                if (null != tradingday) {
-
-                    tradestrategy.setTradingday(tradingday);
-                }
-                /*
-                 * The strategy will always exist as these cannot be created
-                 * via this tab, as they are a drop down list. So find the
-                 * persisted one and set this.
-                 */
-                Strategy strategy = this.findStrategyByName(tradestrategy.getStrategy().getName());
-
-                if (null != strategy) {
-
-                    tradestrategy.setStrategy(strategy);
-                }
-                /*
-                 * Check to see if the contract exists if it does merge and
-                 * set the new persisted one. If no persist the contract.
-                 */
-                Contract contract = this.findContractByUniqueKey(tradestrategy.getContract().getSecType(),
-                        tradestrategy.getContract().getSymbol(), tradestrategy.getContract().getExchange(),
-                        tradestrategy.getContract().getCurrency(), tradestrategy.getContract().getExpiry());
-
-                if (null != contract) {
-
-                    tradestrategy.setContract(contract);
-                }
-
-                /*
-                 * Persist or merge the tradestrategy.
-                 */
-                if (null == tradestrategy.getId()) {
-
-                    entityManager.persist(tradestrategy);
-
-                } else {
-
-                    Tradestrategy instance = entityManager.merge(tradestrategy);
-                    tradestrategy.setVersion(instance.getVersion());
-                }
-                tradestrategy.setDirty(false);
-            }
-        }
-        entityManager.getTransaction().begin();
-        List<Tradestrategy> tradestrategies = findTradestrategyByIdTradingday(detachedInstance.getId());
-
-        for (Tradestrategy tradestrategy : tradestrategies) {
-
-            boolean exists = false;
-
-            for (Tradestrategy newTradestrategy : detachedInstance.getTradestrategies()) {
-
-                if (newTradestrategy.equals(tradestrategy)) {
-
-                    exists = true;
-                    break;
-                }
-            }
-
-            if (!exists) {
-
-                if (tradestrategy.getTradeOrders().isEmpty()) {
-
-                    entityManager.remove(tradestrategy);
-                } else {
-                    throw new Exception("The following Contract:" + tradestrategy.getContract().getSymbol()
-                            + " Strategy:" + tradestrategy.getStrategy().getName()
-                            + " already exists with trades. \n Please delete orders before removing.");
-                }
-            }
-        }
-        detachedInstance.setDirty(false);
-
-    }
-
-    /**
      * Method findTradingdaysByDateRange.
      *
      * @param startDate ZonedDateTime
@@ -290,7 +174,7 @@ public class TradingdayRepositoryImpl implements TradingdayRepositoryCustom {
      * @param idTradingday Integer
      * @return List<Tradestrategy>
      */
-    private List<Tradestrategy> findTradestrategyByIdTradingday(Integer idTradingday) {
+    public List<Tradestrategy> findTradestrategyByTradingdayId(Integer idTradingday) {
 
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Tradestrategy> query = builder.createQuery(Tradestrategy.class);

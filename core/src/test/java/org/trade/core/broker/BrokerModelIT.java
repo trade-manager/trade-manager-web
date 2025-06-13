@@ -44,7 +44,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.trade.core.broker.client.Broker;
-import org.trade.core.dao.AspectRepository;
 import org.trade.core.factory.ClassFactory;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.TradeOrder;

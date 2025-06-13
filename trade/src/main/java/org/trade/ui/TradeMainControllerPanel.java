@@ -1176,9 +1176,10 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
             Portfolio defaultPortfolio = tradeService.findPortfolioDefault();
 
             while (scanLine.hasNext()) {
+
                 String accountNumber = scanLine.next().trim();
                 if (!accountNumber.isEmpty()) {
-                    Account account = tradeService.findAccountByNumber(accountNumber);
+                    Account account = tradeService.findAccountByAccountNumber(accountNumber);
 
                     if (null == account) {
                         account = new Account(accountNumber, accountNumber, Currency.USD, AccountType.INDIVIDUAL);
@@ -1241,7 +1242,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
 
         SwingUtilities.invokeLater(() -> {
             try {
-                Account account = tradeService.findAccountByNumber(accountNumber);
+                Account account = tradeService.findAccountByAccountNumber(accountNumber);
                 Portfolio portfolio = account.getDefaultPortfolio();
                 if (null != portfolio) {
                     portfolio = tradeService.findPortfolioById(portfolio.getId());
@@ -1312,8 +1313,11 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                          * Populate the code values from the fields.
                          */
                         for (CodeValue value : codeAttributePanel.getCodeValues()) {
-                            if (null == value.getTradestrategy())
+
+                            if (null == value.getTradestrategy()) {
+
                                 value.setTradestrategy(instance);
+                            }
                             tradeService.saveAspect(value);
                         }
                     }

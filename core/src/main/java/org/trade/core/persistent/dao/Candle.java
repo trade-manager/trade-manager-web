@@ -488,8 +488,9 @@ public class Candle extends Aspect implements java.io.Serializable {
      */
     public boolean equals(Object objectToCompare) {
 
-        if (super.equals(objectToCompare))
+        if (super.equals(objectToCompare)) {
             return true;
+        }
 
         if (objectToCompare instanceof Candle candle) {
 

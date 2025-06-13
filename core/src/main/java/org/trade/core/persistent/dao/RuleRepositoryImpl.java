@@ -51,9 +51,8 @@ public class RuleRepositoryImpl implements RuleRepositoryCustom {
         Object item = typedQuery.getSingleResult();
 
         if (null == item) {
-            item = 0;
+            return 0;
         }
-
         return (Integer) item;
     }
 }

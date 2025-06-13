@@ -81,10 +81,6 @@ public class Contract extends Aspect implements Serializable, Cloneable {
     @Serial
     private static final long serialVersionUID = 5691902477608387034L;
 
-    /*
-     * Contract
-     */
-
     @Column(name = "symbol", unique = true, nullable = false, length = 20)
     private String symbol;
 

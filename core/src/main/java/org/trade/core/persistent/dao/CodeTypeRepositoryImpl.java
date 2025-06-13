@@ -25,9 +25,9 @@ public class CodeTypeRepositoryImpl implements CodeTypeRepositoryCustom {
      *
      * @param codeName String
      * @param codeType String
-     * @return CodeType
+     * @return List<CodeType>
      */
-    public CodeType findByNameAndType(String codeName, String codeType) {
+    public List<CodeType> findByNameAndType(String codeName, String codeType) {
 
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<CodeType> query = builder.createQuery(CodeType.class);
@@ -49,14 +49,7 @@ public class CodeTypeRepositoryImpl implements CodeTypeRepositoryCustom {
 
         query.where(predicates.toArray(new Predicate[]{}));
         TypedQuery<CodeType> typedQuery = entityManager.createQuery(query);
-        List<CodeType> items = typedQuery.getResultList();
-
-        if (!items.isEmpty()) {
-
-            return items.getFirst();
-        }
-
-        return null;
+        return typedQuery.getResultList();
     }
 
     /**
@@ -64,10 +57,9 @@ public class CodeTypeRepositoryImpl implements CodeTypeRepositoryCustom {
      *
      * @param codeTypeName      String
      * @param codeAttributeName String
-     * @return CodeValue
+     * @return List<CodeValue>
      */
-    public CodeValue findByAttributeName(String codeTypeName, String codeAttributeName) {
-
+    public List<CodeValue> findByAttributeName(String codeTypeName, String codeAttributeName) {
 
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<CodeValue> query = builder.createQuery(CodeValue.class);
@@ -87,12 +79,6 @@ public class CodeTypeRepositoryImpl implements CodeTypeRepositoryCustom {
 
         query.where(predicates.toArray(new Predicate[]{}));
         TypedQuery<CodeValue> typedQuery = entityManager.createQuery(query);
-        List<CodeValue> items = typedQuery.getResultList();
-
-        if (!items.isEmpty()) {
-
-            return items.getFirst();
-        }
-        return null;
+        return typedQuery.getResultList();
     }
 }

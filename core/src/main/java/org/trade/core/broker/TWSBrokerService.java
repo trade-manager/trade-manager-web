@@ -267,7 +267,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
     @Override
     public void onSubscribeAccountUpdates(boolean subscribe, String accountNumber) throws BrokerModelException {
         try {
-            Account account = tradeService.findAccountByNumber(accountNumber);
+            Account account = tradeService.findAccountByAccountNumber(accountNumber);
             m_accountRequests.put(accountNumber, account);
             if (controller().client().isConnected()) {
                 controller().reqAccountUpdates(subscribe, accountNumber, new AccountHandler(this, accountNumber));
@@ -921,29 +921,23 @@ public class TWSBrokerService extends AbstractBrokerModel {
         }
 
         public void groups(ArrayList<Group> groups) {
-            try {
 
-                for (Group group : groups) {
-                    _log.debug("Group: " + group.name() + "/n");
-                    Portfolio portfolio = new Portfolio(group.name(), group.name());
-                    getPersistentModel().savePortfolio(portfolio);
-                }
-            } catch (ServiceException ex) {
-                error(Types.FADataType.ALIASES.ordinal(), 3235, ex.getMessage());
+            for (Group group : groups) {
+                _log.debug("Group: " + group.name() + "/n");
+                Portfolio portfolio = new Portfolio(group.name(), group.name());
+                getPersistentModel().savePortfolio(portfolio);
             }
+
         }
 
         public void profiles(ArrayList<Profile> profiles) {
-            try {
-                for (Profile profile : profiles) {
-                    _log.debug("Profiles: " + profile.name() + "/n");
-                    Portfolio portfolio = new Portfolio(profile.name(), profile.name());
-                    getPersistentModel().savePortfolio(portfolio);
-                }
-                getBrokerModel().fireFAAccountsCompleted();
-            } catch (ServiceException ex) {
-                error(Types.FADataType.ALIASES.ordinal(), 3235, ex.getMessage());
+
+            for (Profile profile : profiles) {
+                _log.debug("Profiles: " + profile.name() + "/n");
+                Portfolio portfolio = new Portfolio(profile.name(), profile.name());
+                getPersistentModel().savePortfolio(portfolio);
             }
+            getBrokerModel().fireFAAccountsCompleted();
         }
 
         public void aliases(ArrayList<Alias> aliases) {
@@ -951,14 +945,14 @@ public class TWSBrokerService extends AbstractBrokerModel {
                 for (Alias alias : aliases) {
                     _log.debug("Aliases: " + alias.alias() + "/n");
 
-                    Account account = getPersistentModel().findAccountByNumber(alias.account());
+                    Account account = getPersistentModel().findAccountByAccountNumber(alias.account());
                     if (null == account) {
                         account = new Account(alias.account(), alias.account(), Currency.USD,
                                 AccountType.INDIVIDUAL);
                     }
                     account.setAlias(alias.alias());
                     account.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
-                    getPersistentModel().saveAspect(account);
+                    account = getPersistentModel().saveAspect(account);
                 }
             } catch (ServiceException ex) {
                 error(Types.FADataType.ALIASES.ordinal(), 3235, ex.getMessage());

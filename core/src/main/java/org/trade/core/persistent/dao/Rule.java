@@ -52,6 +52,7 @@ import org.trade.core.util.time.TradingCalendar;
 import java.io.Serial;
 import java.time.ZonedDateTime;
 import java.util.Comparator;
+import java.util.Objects;
 
 
 /**
@@ -272,7 +273,7 @@ public class Rule extends Aspect implements java.io.Serializable {
                 return false;
             }
 
-            return this.getStrategy().getId().equals(((Rule) objectToCompare).getStrategy().getId())
+            return Objects.equals(this.getStrategy().getId(), ((Rule) objectToCompare).getStrategy().getId())
                     && this.getVersion().equals(((Rule) objectToCompare).getVersion());
 
         }

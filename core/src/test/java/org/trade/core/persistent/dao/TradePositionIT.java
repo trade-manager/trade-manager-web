@@ -46,7 +46,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.trade.core.dao.AspectRepository;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.properties.TradeAppLoadConfig;
 import org.trade.core.util.time.TradingCalendar;
@@ -113,7 +112,7 @@ public class TradePositionIT {
         TradePosition instance = new TradePosition(this.tradestrategy.getContract(),
                 TradingCalendar.getDateTimeNowMarketTimeZone(), Side.BOT);
 
-        TradePosition tradePosition = (TradePosition) tradeService.save(instance);
+        TradePosition tradePosition = tradeService.saveAspect(instance);
 
         assertNotNull(tradePosition.getId());
         _log.info("testAddTradePosition IdTradeStrategy: {}IdTradePosition: {}", this.tradestrategy.getId(), tradePosition.getId());

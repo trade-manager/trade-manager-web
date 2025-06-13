@@ -50,6 +50,7 @@ import org.trade.core.properties.TradeAppLoadConfig;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.DAOPortfolio;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Objects;
 
@@ -100,7 +101,7 @@ public class TradelogReportIT {
     }
 
     @Test
-    public void testTradelogDetails() {
+    public void testTradelogDetails() throws IOException {
 
         Portfolio portfolio = (Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
         TradelogReport tradelogReport = tradelogReportRepository.findByTradelogDetail(portfolio, TradingCalendar.getYearStart(),
@@ -114,7 +115,7 @@ public class TradelogReportIT {
     }
 
     @Test
-    public void testTradelogSummary() {
+    public void testTradelogSummary() throws IOException {
 
         Portfolio portfolio = (Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
         TradelogReport tradelogReport = tradelogReportRepository.findByTradelogSummary(portfolio,

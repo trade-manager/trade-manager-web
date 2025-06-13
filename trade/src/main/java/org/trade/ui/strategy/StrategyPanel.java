@@ -433,7 +433,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
                 }
                 this.currentRule.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
                 this.currentRule.setRule(getContent().getBytes());
-                this.tradeService.saveAspect(this.currentRule);
+                this.currentRule = this.tradeService.saveAspect(this.currentRule);
                 doSaveFile(fileNameSource, getContent());
                 doSaveFile(fileNameComments, getComments());
             }
@@ -556,7 +556,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
                                  */
                                 if (null == rule.getRule() && null != content) {
                                     rule.setRule(content.getBytes());
-                                    this.tradeService.saveAspect(rule);
+                                    rule = this.tradeService.saveAspect(rule);
                                 } else {
                                     String ruleDB = new String(rule.getRule());
                                     if (!ruleDB.equals(content)) {
@@ -568,11 +568,15 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
                                     }
                                 }
                                 if (null == rule.getComment() && null != comments) {
+
                                     rule.setComment(comments);
                                     this.tradeService.saveAspect(rule);
+
                                 } else {
+
                                     String commentsDB = rule.getComment();
                                     if (!commentsDB.equals(comments)) {
+
                                         setMessageText("DB strategy not in sync with file system strategy: "
                                                         + fileNameComments + " file length: " + Objects.requireNonNull(comments).length() + " Strategy "
                                                         + rule.getStrategy().getName() + " length: " + commentsDB.length(),

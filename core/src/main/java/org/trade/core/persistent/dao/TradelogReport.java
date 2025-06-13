@@ -63,15 +63,6 @@ public class TradelogReport extends Aspect implements Serializable {
      * Constructor for TradelogReport.
      *
      * @param idTradelogDetail Integer
-
-    public TradelogReport(Integer idTradelogDetail) {
-    this.id = idTradelogDetail;
-    }
-     */
-    /**
-     * Constructor for TradelogReport.
-     *
-     * @param idTradelogDetail Integer
      * @param tradelogDetail   List<TradelogDetail>
      */
     public TradelogReport(Integer idTradelogDetail, List<TradelogDetail> tradelogDetail) {

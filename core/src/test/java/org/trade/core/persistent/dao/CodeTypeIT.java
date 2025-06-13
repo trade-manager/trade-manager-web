@@ -47,6 +47,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.List;
+
+import static org.junit.Assert.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
@@ -95,9 +98,9 @@ public class CodeTypeIT {
         CodeType codeType = codeTypeRepository.findByName("MovingAverage");
         assertNotNull(codeType);
         _log.info("CodeType id: {}", codeType.getId());
-        CodeValue codeValue = codeTypeRepository.findByAttributeName(codeType.getName(), "Length");
-        assertNotNull(codeValue);
-        _log.info("CodeValue id: {}", codeValue.getId());
+        List<CodeValue> codeValues = codeTypeRepository.findByAttributeName(codeType.getName(), "Length");
+        assertFalse(codeValues.isEmpty());
+        _log.info("CodeValue id: {}", codeValues.getFirst().getId());
 
     }
 }

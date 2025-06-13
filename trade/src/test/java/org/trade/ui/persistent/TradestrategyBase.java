@@ -109,7 +109,7 @@ public class TradestrategyBase {
         if (null == contract) {
 
             contract = new Contract(SECType.STOCK, symbol, Exchange.SMART, Currency.USD, null, null);
-            contract = tradeService.saveContract(contract);
+            contract = tradeService.saveAspect(contract);
 
         } else {
 
@@ -120,7 +120,7 @@ public class TradestrategyBase {
 
                 Tradestrategy transientInstance = tradeService.findTradestrategyById(tradestrategy.getId());
                 transientInstance.setStatus(null);
-                tradeService.save(transientInstance);
+                transientInstance = tradeService.saveAspect(transientInstance);
                 Hashtable<Integer, TradePosition> tradePositions = new Hashtable<>();
 
                 for (TradeOrder tradeOrder : transientInstance.getTradeOrders()) {
@@ -147,7 +147,7 @@ public class TradestrategyBase {
                     if (tradePosition.equals(transientInstance.getContract().getTradePosition())) {
 
                         transientInstance.getContract().setTradePosition(null);
-                        tradeService.save(transientInstance.getContract());
+                        transientInstance.setContract(tradeService.saveAspect(transientInstance.getContract()));
                     }
                     tradeService.delete(tradePosition);
                 }
@@ -180,38 +180,60 @@ public class TradestrategyBase {
     public static void clearDBData() throws Exception {
 
         Aspects contracts = tradeService.findByClassName(Contract.class.getName());
+
         for (Aspect aspect : contracts.getAspect()) {
+
             ((Contract) aspect).setTradePosition(null);
-            tradeService.save(aspect);
+            tradeService.saveAspect(aspect);
         }
 
         Aspects tradeOrders = tradeService.findByClassName(TradeOrder.class.getName());
+
         for (Aspect aspect : tradeOrders.getAspect()) {
+
             tradeService.delete(aspect);
         }
 
         Aspects tradePositions = tradeService.findByClassName(TradePosition.class.getName());
+
         for (Aspect aspect : tradePositions.getAspect()) {
+
             tradeService.delete(aspect);
         }
+
         Aspects portfolioAccounts = tradeService.findByClassName(PortfolioAccount.class.getName());
+
         for (Aspect aspect : portfolioAccounts.getAspect()) {
+
             tradeService.delete(aspect);
         }
+
         Aspects accounts = tradeService.findByClassName(Account.class.getName());
+
         for (Aspect aspect : accounts.getAspect()) {
+
             tradeService.delete(aspect);
         }
+
         Aspects tradestrategies = tradeService.findByClassName(Tradestrategy.class.getName());
+
         for (Aspect aspect : tradestrategies.getAspect()) {
+
             tradeService.delete(aspect);
         }
+
+
         contracts = tradeService.findByClassName(Contract.class.getName());
+
         for (Aspect aspect : contracts.getAspect()) {
+
             tradeService.delete(aspect);
         }
+
         Aspects tradingdays = tradeService.findByClassName(Tradingday.class.getName());
+
         for (Aspect aspect : tradingdays.getAspect()) {
+
             tradeService.delete(aspect);
         }
     }

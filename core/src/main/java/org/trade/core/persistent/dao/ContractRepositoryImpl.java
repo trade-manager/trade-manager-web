@@ -13,7 +13,6 @@ import org.springframework.stereotype.Repository;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public class ContractRepositoryImpl implements ContractRepositoryCustom {
@@ -29,10 +28,10 @@ public class ContractRepositoryImpl implements ContractRepositoryCustom {
      * @param exchange   String
      * @param currency   String
      * @param expiryDate ZonedDateTime
-     * @return Contract
+     * @return List<Contract>
      */
-    public Contract findContractByUniqueKey(String SECType, String symbol, String exchange, String currency,
-                                            ZonedDateTime expiryDate) {
+    public List<Contract> findContractByUniqueKey(String SECType, String symbol, String exchange, String currency,
+                                                  ZonedDateTime expiryDate) {
 
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Contract> query = builder.createQuery(Contract.class);
@@ -68,14 +67,7 @@ public class ContractRepositoryImpl implements ContractRepositoryCustom {
 
         query.where(predicates.toArray(new Predicate[]{}));
         TypedQuery<Contract> typedQuery = entityManager.createQuery(query);
-        List<Contract> items = typedQuery.getResultList();
-
-        if (!items.isEmpty()) {
-
-            return items.getFirst();
-        }
-
-        return null;
+        return typedQuery.getResultList();
     }
 
     /**
@@ -89,10 +81,4 @@ public class ContractRepositoryImpl implements ContractRepositoryCustom {
         return entityManager.find(ContractLite.class, id);
     }
 
-
-    public Optional<Contract> findById(Integer id) {
-
-        Contract instance = entityManager.find(Contract.class, id);
-        return Optional.ofNullable(instance);
-    }
 }

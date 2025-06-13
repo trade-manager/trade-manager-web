@@ -403,34 +403,29 @@ public class TradingdayPanel extends BasePanel {
             // Save the Trading days
             SwingUtilities.invokeLater(() -> {
 
-                try {
+                getFrame().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+                boolean dirty = false;
 
-                    getFrame().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-                    boolean dirty = false;
+                for (Tradingday tradingday : m_tradingdays.getTradingdays()) {
 
-                    for (Tradingday tradingday : m_tradingdays.getTradingdays()) {
+                    if (tradingday.getClose().isBefore(tradingday.getOpen())
+                            || tradingday.getClose().equals(tradingday.getOpen())) {
 
-                        if (tradingday.getClose().isBefore(tradingday.getOpen())
-                                || tradingday.getClose().equals(tradingday.getOpen())) {
-
-                            String msg = "Tradingday Open " + tradingday.getOpen()
-                                    + " cannot be after trading day close " + tradingday.getClose();
-                            setErrorMessage("Error Tradingday", msg, new ServiceException(msg));
-                        }
-
-                        if (tradingday.isDirty()) {
-
-                            dirty = true;
-                            tradeService.saveTradingday(tradingday);
-                        }
+                        String msg = "Tradingday Open " + tradingday.getOpen()
+                                + " cannot be after trading day close " + tradingday.getClose();
+                        setErrorMessage("Error Tradingday", msg, new ServiceException(msg));
                     }
-                    if (dirty)
-                        doRefresh();
-                    clearStatusBarMessage();
-                    getFrame().setCursor(Cursor.getDefaultCursor());
-                } catch (ServiceException ex) {
-                    setErrorMessage("Error saving Trade Strategies.", ex.getMessage(), ex);
+
+                    if (tradingday.isDirty()) {
+
+                        dirty = true;
+                        tradeService.saveTradingday(tradingday);
+                    }
                 }
+                if (dirty)
+                    doRefresh();
+                clearStatusBarMessage();
+                getFrame().setCursor(Cursor.getDefaultCursor());
             });
 
         } catch (Exception ex) {

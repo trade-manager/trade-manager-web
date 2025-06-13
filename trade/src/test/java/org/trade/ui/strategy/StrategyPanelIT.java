@@ -14,7 +14,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.trade.base.StreamEditorPane;
 import org.trade.core.broker.IBrokerModel;
-import org.trade.core.dao.AspectRepository;
 import org.trade.core.factory.ClassFactory;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.Rule;
@@ -84,8 +83,8 @@ public class StrategyPanelIT {
         m_strategyDir = ConfigProperties.getPropAsString("trade.strategy.default.dir");
         assertNotNull(m_strategyDir);
         String symbol = "TEST";
-        TradestrategyBase.setTradeService( tradeService);
-        this.tradestrategy =  TradestrategyBase.getTestTradestrategy(symbol);
+        TradestrategyBase.setTradeService(tradeService);
+        this.tradestrategy = TradestrategyBase.getTestTradestrategy(symbol);
         assertNotNull(this.tradestrategy);
         List<Strategy> strategies = this.tradeService.findStrategies();
         assertNotNull(strategies);
@@ -98,7 +97,7 @@ public class StrategyPanelIT {
                 Rule nextRule = new Rule(strategy, 1, null, TradingCalendar.getDateTimeNowMarketTimeZone(),
                         content.getBytes(), TradingCalendar.getDateTimeNowMarketTimeZone());
                 strategy.add(nextRule);
-                this.tradeService.saveAspect(nextRule);
+                nextRule = this.tradeService.saveAspect(nextRule);
             }
         }
     }

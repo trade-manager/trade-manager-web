@@ -10,8 +10,6 @@ import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import org.springframework.stereotype.Repository;
-import org.trade.core.persistent.dao.series.indicator.CandleSeries;
-import org.trade.core.persistent.dao.series.indicator.candle.CandleItem;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -25,94 +23,14 @@ public class CandleRepositoryImpl implements CandleRepositoryCustom {
     private EntityManager entityManager;
 
     /**
-     * Method persistCandleSeries.
-     *
-     * @param candleSeries CandleSeries
-     */
-    public void persistCandleSeries(final CandleSeries candleSeries) throws Exception {
-
-        Candle transientInstance;
-
-        if (candleSeries.isEmpty()) {
-            return;
-        }
-
-        entityManager.getTransaction().begin();
-        Tradingday tradingday = null;
-        Contract contract = findContractById(candleSeries.getContract().getId());
-
-
-        for (int i = 0; i < candleSeries.getItemCount(); i++) {
-
-            CandleItem candleItem = (CandleItem) candleSeries.getDataItem(i);
-
-            if (null != candleItem.getCandle().getId()) {
-
-                Candle instance = entityManager.find(Candle.class, candleItem.getCandle().getId());
-
-                if (instance.equals(candleItem.getCandle())) {
-
-                    continue;
-                } else {
-
-                    // This should never happen.
-                    throw new Exception("Count: " + i + " Symbol: " + candleSeries.getSymbol() + "candleid: "
-                            + candleItem.getCandle().getId() + " open: "
-                            + candleItem.getCandle().getStartPeriod());
-                }
-            }
-
-            if (!candleItem.getCandle().getTradingday().equals(tradingday)) {
-
-                if (null == candleItem.getCandle().getTradingday().getId()) {
-
-                    tradingday = findTradingdayByDate(candleItem.getCandle().getTradingday().getOpen(),
-                            candleItem.getCandle().getTradingday().getClose());
-                } else {
-
-                    tradingday = findTradingdayById(candleItem.getCandle().getTradingday().getId());
-                }
-
-                if (null == tradingday) {
-
-                    entityManager.persist(candleItem.getCandle().getTradingday());
-                    entityManager.getTransaction().commit();
-                    entityManager.getTransaction().begin();
-                    tradingday = candleItem.getCandle().getTradingday();
-                } else {
-
-                    Integer barSize = candleSeries.getBarSize();
-                    String hqlDelete = "delete Candle where contract = :contract and tradingday = :tradingday and barSize = :barSize";
-                    entityManager.createQuery(hqlDelete).setParameter("contract", contract)
-                            .setParameter("tradingday", tradingday).setParameter("barSize", barSize)
-                            .executeUpdate();
-                    entityManager.getTransaction().commit();
-                    entityManager.getTransaction().begin();
-                }
-            }
-
-            transientInstance = candleItem.getCandle();
-            transientInstance.setTradingday(tradingday);
-            transientInstance.setContract(contract);
-            entityManager.persist(transientInstance);
-
-            // Commit every 50 rows
-            if ((Math.floor(i / 50d) == (i / 50d)) && (i > 0)) {
-                entityManager.getTransaction().commit();
-                entityManager.getTransaction().begin();
-            }
-        }
-    }
-
-    /**
      * Method findByContractAndDateRange.
      *
-     * @param idContract  Integer
+     * @param contractId  Integer
      * @param startPeriod Date
      * @param endPeriod   Date
      * @return List<Candle>
      */
-    public List<Candle> findByContractAndDateRange(Integer idContract, ZonedDateTime startPeriod,
+    public List<Candle> findByContractAndDateRange(Integer contractId, ZonedDateTime startPeriod,
                                                    ZonedDateTime endPeriod, Integer barSize) {
 
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
@@ -121,10 +39,10 @@ public class CandleRepositoryImpl implements CandleRepositoryCustom {
         query.select(from);
         List<Predicate> predicates = new ArrayList<>();
 
-        if (null != idContract) {
+        if (null != contractId) {
 
             Join<Candle, Contract> contract = from.join("contract");
-            Predicate predicate = builder.equal(contract.get("idContract"), idContract);
+            Predicate predicate = builder.equal(contract.get("idContract"), contractId);
             predicates.add(predicate);
         }
 
@@ -149,20 +67,19 @@ public class CandleRepositoryImpl implements CandleRepositoryCustom {
         }
         query.where(predicates.toArray(new Predicate[]{}));
         TypedQuery<Candle> typedQuery = entityManager.createQuery(query);
-        List<Candle> items = typedQuery.getResultList();
-        return items;
+        return typedQuery.getResultList();
     }
 
     /**
      * Method findCandlesByContractDateRangeBarSize.
      *
-     * @param idContract    Integer
+     * @param contractId    Integer
      * @param startOpenDate ZonedDateTime
      * @param endOpenDate   ZonedDateTime
      * @param barSize       Integer
      * @return List<Candle>
      */
-    public List<Candle> findCandlesByContractDateRangeBarSize(Integer idContract, ZonedDateTime startOpenDate,
+    public List<Candle> findCandlesByContractDateRangeBarSize(Integer contractId, ZonedDateTime startOpenDate,
                                                               ZonedDateTime endOpenDate, Integer barSize) {
 
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
@@ -172,10 +89,10 @@ public class CandleRepositoryImpl implements CandleRepositoryCustom {
         query.orderBy(builder.asc(from.get("startPeriod")));
         List<Predicate> predicates = new ArrayList<>();
 
-        if (null != idContract) {
+        if (null != contractId) {
 
             Join<Candle, Contract> contract = from.join("contract");
-            Predicate predicateContract = builder.equal(contract.get("id"), idContract);
+            Predicate predicateContract = builder.equal(contract.get("id"), contractId);
             predicates.add(predicateContract);
         }
 
@@ -198,21 +115,20 @@ public class CandleRepositoryImpl implements CandleRepositoryCustom {
 
         query.where(predicates.toArray(new Predicate[]{}));
         TypedQuery<Candle> typedQuery = entityManager.createQuery(query);
-        List<Candle> items = typedQuery.getResultList();
-        return items;
+        return typedQuery.getResultList();
     }
 
     /**
      * Method findByUniqueKey.
      *
-     * @param idTradingday Integer
-     * @param idContract   Integer
+     * @param tradingdayId Integer
+     * @param contractId   Integer
      * @param startPeriod  ZonedDateTime
      * @param endPeriod    ZonedDateTime
      * @return Candle
      */
-    public Candle findByUniqueKey(Integer idTradingday, Integer idContract, ZonedDateTime startPeriod,
-                                  ZonedDateTime endPeriod, Integer barSize) {
+    public List<Candle> findByUniqueKey(Integer tradingdayId, Integer contractId, ZonedDateTime startPeriod,
+                                        ZonedDateTime endPeriod, Integer barSize) {
 
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Candle> query = builder.createQuery(Candle.class);
@@ -220,17 +136,17 @@ public class CandleRepositoryImpl implements CandleRepositoryCustom {
         query.select(from);
         List<Predicate> predicates = new ArrayList<>();
 
-        if (null != idTradingday) {
+        if (null != tradingdayId) {
 
             Join<Candle, Tradingday> tradingday = from.join("tradingday");
-            Predicate predicate = builder.equal(tradingday.get("id"), idTradingday);
+            Predicate predicate = builder.equal(tradingday.get("id"), tradingdayId);
             predicates.add(predicate);
         }
 
-        if (null != idContract) {
+        if (null != contractId) {
 
             Join<Candle, Contract> contract = from.join("contract");
-            Predicate predicate = builder.equal(contract.get("id"), idContract);
+            Predicate predicate = builder.equal(contract.get("id"), contractId);
             predicates.add(predicate);
         }
 
@@ -252,22 +168,17 @@ public class CandleRepositoryImpl implements CandleRepositoryCustom {
 
         query.where(predicates.toArray(new Predicate[]{}));
         TypedQuery<Candle> typedQuery = entityManager.createQuery(query);
-        List<Candle> items = typedQuery.getResultList();
-
-        if (!items.isEmpty()) {
-            return items.getFirst();
-        }
-        return null;
+        return typedQuery.getResultList();
     }
 
     /**
      * Method findCandleCount.
      *
-     * @param idTradingday Integer
-     * @param idContract   Integer
+     * @param tradingdayId Integer
+     * @param contractId   Integer
      * @return Long
      */
-    public Long findCandleCount(Integer idTradingday, Integer idContract) {
+    public Long findCandleCount(Integer tradingdayId, Integer contractId) {
 
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Object> query = builder.createQuery();
@@ -277,17 +188,17 @@ public class CandleRepositoryImpl implements CandleRepositoryCustom {
 
         List<Predicate> predicates = new ArrayList<>();
 
-        if (null != idTradingday) {
+        if (null != tradingdayId) {
 
             Join<Candle, Tradingday> tradingday = from.join("tradingday");
-            Predicate predicate = builder.equal(tradingday.get("id"), idTradingday);
+            Predicate predicate = builder.equal(tradingday.get("id"), tradingdayId);
             predicates.add(predicate);
         }
 
-        if (null != idContract) {
+        if (null != contractId) {
 
             Join<Candle, Contract> contract = from.join("contract");
-            Predicate predicate = builder.equal(contract.get("id"), idContract);
+            Predicate predicate = builder.equal(contract.get("id"), contractId);
             predicates.add(predicate);
         }
 
@@ -301,61 +212,5 @@ public class CandleRepositoryImpl implements CandleRepositoryCustom {
         }
 
         return (Long) item;
-    }
-
-    /**
-     * Method findContractById.
-     *
-     * @param id Integer
-     * @return Contract
-     */
-    private Contract findContractById(Integer id) {
-
-        return entityManager.find(Contract.class, id);
-    }
-
-    /**
-     * Method findContractById.
-     *
-     * @param id Integer
-     * @return Contract
-     */
-    private Tradingday findTradingdayById(Integer id) {
-
-        return entityManager.find(Tradingday.class, id);
-    }
-
-    /**
-     * Method findTradingdayByDate.
-     *
-     * @param open  ZonedDateTime
-     * @param close ZonedDateTime
-     * @return Tradingday
-     */
-    private Tradingday findTradingdayByDate(ZonedDateTime open, ZonedDateTime close) {
-
-        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Tradingday> query = builder.createQuery(Tradingday.class);
-        Root<Tradingday> from = query.from(Tradingday.class);
-        query.select(from);
-
-        if (null != open) {
-
-            query.where(builder.equal(from.get("open"), open));
-        }
-
-        if (null != close) {
-
-            query.where(builder.equal(from.get("close"), close));
-        }
-
-        List<Tradingday> items = entityManager.createQuery(query).getResultList();
-
-        if (!items.isEmpty()) {
-
-            return items.getFirst();
-        }
-        return null;
-
     }
 }

@@ -67,6 +67,9 @@ import java.util.List;
 @Table(name = "account")
 public class Account extends Aspect implements Serializable, Cloneable {
 
+    /**
+     *
+     */
     @Serial
     private static final long serialVersionUID = 5891080561163346464L;
 
@@ -367,8 +370,11 @@ public class Account extends Aspect implements Serializable, Cloneable {
      */
     @Transient
     public Portfolio getDefaultPortfolio() {
+
         for (PortfolioAccount item : this.portfolioAccounts) {
+
             if (item.getPortfolio().getIsDefault()) {
+
                 return item.getPortfolio();
             }
         }
@@ -419,9 +425,12 @@ public class Account extends Aspect implements Serializable, Cloneable {
      */
     @Transient
     public boolean isDirty() {
+
         for (PortfolioAccount item : this.getPortfolioAccounts()) {
-            if (item.isDirty())
+
+            if (item.isDirty()) {
                 return true;
+            }
         }
         return super.isDirty();
     }
@@ -444,5 +453,4 @@ public class Account extends Aspect implements Serializable, Cloneable {
     public String toString() {
         return this.getAccountNumber() + "-" + this.getName();
     }
-
 }

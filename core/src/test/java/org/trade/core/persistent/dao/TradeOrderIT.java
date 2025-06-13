@@ -48,7 +48,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.trade.core.broker.TWSBrokerModel;
-import org.trade.core.dao.AspectRepository;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.properties.TradeAppLoadConfig;
@@ -123,7 +122,7 @@ public class TradeOrderIT {
     }
 
     @Test
-    public void testAddTradeOrder() throws Exception {
+    public void addTradeOrder() throws Exception {
 
         String side = this.tradestrategy.getSide();
         String action = Action.BUY;
@@ -145,7 +144,7 @@ public class TradeOrderIT {
         tradeOrder.setTransmit(true);
         tradeOrder.setStatus("SUBMITTED");
         tradeOrder.validate();
-        tradeOrder = tradeOrderRepository.persist(tradeOrder);
+        tradeOrder = tradeService.saveTradeOrder(tradeOrder);
         assertNotNull(tradeOrder);
         _log.info("IdOrder: {}", tradeOrder.getId());
 
@@ -158,12 +157,12 @@ public class TradeOrderIT {
         tradeOrder1.setTransmit(true);
         tradeOrder1.setStatus("SUBMITTED");
         tradeOrder1.validate();
-        tradeOrder1 = tradeOrderRepository.persist(tradeOrder1);
+        tradeOrder1 = tradeService.saveTradeOrder(tradeOrder1);
         assertNotNull(tradeOrder1);
     }
 
     @Test
-    public void testAddOpenStopTargetTradeOrder() throws Exception {
+    public void addOpenStopTargetTradeOrder() throws Exception {
 
         String side = this.tradestrategy.getSide();
         String action = Action.BUY;
@@ -186,7 +185,7 @@ public class TradeOrderIT {
         tradeOrder1.setTransmit(true);
         tradeOrder1.setStatus("SUBMITTED");
         tradeOrder1.validate();
-        tradeOrder1 = tradeOrderRepository.persist(tradeOrder1);
+        tradeOrder1 = tradeService.saveTradeOrder(tradeOrder1);
         int buySellMultiplier = 1;
         if (action.equals(Action.BUY)) {
             action = Action.SELL;
@@ -206,7 +205,7 @@ public class TradeOrderIT {
         tradeOrder2.setTransmit(true);
         tradeOrder2.setStatus("SUBMITTED");
         tradeOrder2.validate();
-        tradeOrder2 = tradeOrderRepository.persist(tradeOrder2);
+        tradeOrder2 = tradeService.saveTradeOrder(tradeOrder2);
         assertNotNull(tradeOrder2);
 
         TradeOrder tradeOrder3 = new TradeOrder(this.tradestrategy, action, OrderType.LMT, quantity / 2, null,
@@ -219,7 +218,7 @@ public class TradeOrderIT {
         tradeOrder3.setTransmit(true);
         tradeOrder3.setStatus("SUBMITTED");
         tradeOrder3.validate();
-        tradeOrder3 = tradeOrderRepository.persist(tradeOrder3);
+        tradeOrder3 = tradeService.saveTradeOrder(tradeOrder3);
         assertNotNull(tradeOrder3);
 
         TradeOrder tradeOrder4 = new TradeOrder(this.tradestrategy, action, OrderType.STP, quantity,
@@ -233,16 +232,16 @@ public class TradeOrderIT {
         tradeOrder4.setTransmit(true);
         tradeOrder4.setStatus("SUBMITTED");
         tradeOrder4.validate();
-        tradeOrder4 = tradeOrderRepository.persist(tradeOrder4);
+        tradeOrder4 = tradeService.saveTradeOrder(tradeOrder4);
         assertNotNull(tradeOrder4);
 
         _log.info("IdOrder: {}", tradeOrder1.getId());
     }
 
     @Test
-    public void testAddTradeOrderFill() throws Exception {
+    public void addTradeOrderFill() throws Exception {
 
-        testAddTradeOrder();
+        addTradeOrder();
         int minute = 25;
 
         for (TradeOrder tradeOrder : this.tradestrategy.getTradeOrders()) {
@@ -288,13 +287,13 @@ public class TradeOrderIT {
                 }
             }
 
-            tradeOrder = tradeOrderRepository.persist(tradeOrder);
+            tradeOrder = tradeService.saveTradeOrder(tradeOrder);
             _log.info("IdOrder: {} Action:{} OrderType:{} Status:{} filledDate:{}", tradeOrder.getId(), tradeOrder.getAction(), tradeOrder.getOrderType(), tradeOrder.getStatus(), filledDate);
         }
     }
 
     @Test
-    public void testAddDetachedTradeOrder() {
+    public void addDetachedTradeOrder() {
 
         String side = this.tradestrategy.getSide();
         String action = Action.BUY;
@@ -306,7 +305,7 @@ public class TradeOrderIT {
                 new BigDecimal("20.20"), new BigDecimal("20.23"), TradingCalendar.getDateTimeNowMarketTimeZone());
         tradeOrder.setOrderKey((BigDecimal.valueOf(Math.random() * 1000000)).intValue());
         // Save new order with detached trade
-        tradeOrder = tradeOrderRepository.persist(tradeOrder);
+        tradeOrder = tradeService.saveTradeOrder(tradeOrder);
         Execution execution = new Execution();
         execution.side(side);
         execution.time(TradingCalendar.getFormattedDate(TradingCalendar.getDateTimeNowMarketTimeZone(),
@@ -322,7 +321,7 @@ public class TradeOrderIT {
         orderfill.setTradeOrder(tradeOrder);
         tradeOrder.addTradeOrderfill(orderfill);
         // Save a detached order with a new order fill
-        tradeOrder = tradeOrderRepository.persist(tradeOrder);
+        tradeOrder = tradeService.saveTradeOrder(tradeOrder);
         assertNotNull(tradeOrder);
 
         if (action.equals(Action.BUY)) {
@@ -334,7 +333,7 @@ public class TradeOrderIT {
         TradeOrder tradeOrder1 = new TradeOrder(this.tradestrategy, action, OrderType.LMT, 300, null,
                 new BigDecimal("23.41"), TradingCalendar.getDateTimeNowMarketTimeZone());
         tradeOrder1.setOrderKey((BigDecimal.valueOf(Math.random() * 1000000)).intValue());
-        tradeOrder1 = tradeOrderRepository.persist(tradeOrder1);
+        tradeOrder1 = tradeService.saveTradeOrder(tradeOrder1);
 
         Execution execution1 = new Execution();
         execution1.side(side);
@@ -350,12 +349,12 @@ public class TradeOrderIT {
         TWSBrokerModel.populateTradeOrderfill(execution1, orderfill1);
         orderfill1.setTradeOrder(tradeOrder1);
         tradeOrder1.addTradeOrderfill(orderfill1);
-        tradeOrder1 = tradeOrderRepository.persist(tradeOrder1);
+        tradeOrder1 = tradeService.saveTradeOrder(tradeOrder1);
         assertNotNull(tradeOrder1);
     }
 
     @Test
-    public void testFindTradeOrderByMaxKey() throws Exception {
+    public void findTradeOrderByMaxKey() throws Exception {
 
         Integer orderKey = tradeService.findTradeOrderByMaxKey();
         _log.info("Max Order key: {}", orderKey);
