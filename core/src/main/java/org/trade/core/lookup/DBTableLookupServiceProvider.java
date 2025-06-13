@@ -35,18 +35,13 @@
  */
 package org.trade.core.lookup;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.TypedQuery;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Root;
-import org.trade.core.dao.EntityManagerHelper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.trade.core.dao.AspectRepository;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.Reflector;
 import org.trade.core.valuetype.Decode;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
@@ -59,6 +54,9 @@ import java.util.Vector;
  * @author Simon Allen
  */
 public class DBTableLookupServiceProvider implements ILookupServiceProvider {
+
+    @Autowired
+    private AspectRepository aspectRepository;
     /*
      * This will be a hashtable of hashtables of ILookup objects. The first key
      * is the lookup name and the second key is the LookupQualifier.
@@ -69,6 +67,7 @@ public class DBTableLookupServiceProvider implements ILookupServiceProvider {
      * Default Constructor
      */
     public DBTableLookupServiceProvider() {
+
     }
 
     public static void clearLookup() {
@@ -84,6 +83,7 @@ public class DBTableLookupServiceProvider implements ILookupServiceProvider {
      * @return ILookup
      */
     public synchronized ILookup getLookup(String lookupName, LookupQualifier qualifier, boolean optional) {
+
         ILookup lookup = getCachedLookup(lookupName, qualifier);
 
         if (null == lookup) {
@@ -166,11 +166,14 @@ public class DBTableLookupServiceProvider implements ILookupServiceProvider {
                     for (int y = 0; y < rowSize; y++) {
 
                         if ("DAO_DECODE_TYPE".equals(colNames.elementAt(y))) {
+
                             type = (String) row.elementAt(y);
 
                         } else if ("DAO_DECODE_CODE".equals(colNames.elementAt(y))) {
+
                             dao = (String) row.elementAt(y);
                         } else if ("DAO_DECODE_DISPLAY_NAME".equals(colNames.elementAt(y))) {
+
                             methodName = (String) row.elementAt(y);
                         }
                     }
@@ -181,6 +184,7 @@ public class DBTableLookupServiceProvider implements ILookupServiceProvider {
                      * Add the None selected row.
                      */
                     if (optional) {
+
                         Vector<Object> newRowNone = new Vector<>();
                         Class<?> clazz = Class.forName(dao);
                         Object daoObjectNone = clazz.getDeclaredConstructor().newInstance();
@@ -190,7 +194,7 @@ public class DBTableLookupServiceProvider implements ILookupServiceProvider {
                         rows.add(newRowNone);
                     }
 
-                    List<?> codes = getCodes(dao);
+                    List<?> codes = aspectRepository.getCodes(dao);
                     for (Object daoObject : codes) {
 
                         Method method = Reflector.findMethod(daoObject.getClass(), methodName, null);
@@ -259,40 +263,8 @@ public class DBTableLookupServiceProvider implements ILookupServiceProvider {
      * @param lookup     ILookup
      */
     private synchronized void addLookupToCache(String lookupName, LookupQualifier qualifier, ILookup lookup) {
-        Hashtable<String, ILookup> lookupsByQualifier = _lookups.computeIfAbsent(lookupName, k -> new Hashtable<>());
 
+        Hashtable<String, ILookup> lookupsByQualifier = _lookups.computeIfAbsent(lookupName, _ -> new Hashtable<>());
         lookupsByQualifier.put(qualifier.toString(), lookup);
-    }
-
-    /**
-     * Method getCodes.
-     *
-     * @param className String
-     * @return List<?>
-     */
-    private synchronized List<?> getCodes(String className) throws ClassNotFoundException {
-
-        try {
-            EntityManager entityManager = EntityManagerHelper.getEntityManager();
-            entityManager.getTransaction().begin();
-            Class<?> c = Class.forName(className);
-            CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-            CriteriaQuery<Object> criteriaQuery = criteriaBuilder.createQuery();
-            Root<?> from = criteriaQuery.from(c);
-            CriteriaQuery<Object> select = criteriaQuery.select(from);
-            TypedQuery<Object> typedQuery = entityManager.createQuery(select);
-            List<Object> items = typedQuery.getResultList();
-            entityManager.getTransaction().commit();
-            if (!items.isEmpty()) {
-                return items;
-            }
-
-        } catch (Exception re) {
-            EntityManagerHelper.rollback();
-            throw re;
-        } finally {
-            EntityManagerHelper.close();
-        }
-        return new ArrayList<>(0);
     }
 }

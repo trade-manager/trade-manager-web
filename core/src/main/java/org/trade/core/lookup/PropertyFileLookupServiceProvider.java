@@ -72,6 +72,7 @@ public class PropertyFileLookupServiceProvider implements ILookupServiceProvider
      * @return ILookup
      */
     public ILookup getLookup(String lookupName, LookupQualifier qualifier, boolean optional) {
+
         ILookup lookup = getCachedLookup(lookupName, qualifier);
 
         if (null == lookup) {
@@ -176,6 +177,7 @@ public class PropertyFileLookupServiceProvider implements ILookupServiceProvider
      * @return ILookup
      */
     private ILookup getCachedLookup(String lookupName, LookupQualifier qualifier) {
+
         ILookup lookup = null;
         Hashtable<?, ?> lookupsByQualifier = _lookups.get(lookupName);
 
@@ -200,8 +202,8 @@ public class PropertyFileLookupServiceProvider implements ILookupServiceProvider
      * @param lookup     ILookup
      */
     private synchronized void addLookupToCache(String lookupName, LookupQualifier qualifier, ILookup lookup) {
-        Hashtable<String, ILookup> lookupsByQualifier = _lookups.computeIfAbsent(lookupName, k -> new Hashtable<>());
 
+        Hashtable<String, ILookup> lookupsByQualifier = _lookups.computeIfAbsent(lookupName, k -> new Hashtable<>());
         lookupsByQualifier.put(qualifier.toString(), lookup);
     }
 }

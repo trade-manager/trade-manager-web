@@ -40,12 +40,11 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 import org.trade.core.dao.Aspect;
 import org.trade.core.dao.AspectRepository;
 import org.trade.core.dao.Aspects;
@@ -59,11 +58,14 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-@RunWith(SpringRunner.class)
+//@DataJpaTest
+//@EnableAutoConfiguration
+//@RunWith(SpringRunner.class)
+@Transactional
 @SpringBootTest
-public class AspectIT {
+public class AspectServiceIT {
 
-    private final static Logger _log = LoggerFactory.getLogger(AspectIT.class);
+    private final static Logger _log = LoggerFactory.getLogger(AspectServiceIT.class);
 
     @Autowired
     private AspectRepository aspectRepository;

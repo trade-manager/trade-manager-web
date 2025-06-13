@@ -35,12 +35,18 @@
  */
 package org.trade.core.lookup;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.trade.core.dao.AspectRepository;
+
 import java.util.Vector;
 
 /**
  * @author Simon Allen
  */
+@Service
 public class LookupService {
+
     //
     // Private Attributes
     //
@@ -61,6 +67,7 @@ public class LookupService {
      */
     public static ILookup getLookup(String lookupName, LookupQualifier qualifier, boolean optional)
             throws LookupException {
+
         ILookup lookup = null;
         // Loop through the registered providers and find and try to find one
         // that can provide the lookup
@@ -84,6 +91,7 @@ public class LookupService {
      * @param provider ILookupServiceProvider
      */
     public static void addLookupServiceProvider(ILookupServiceProvider provider) {
+
         if (!_providers.contains(provider)) {
             _providers.addElement(provider);
         }
@@ -95,6 +103,7 @@ public class LookupService {
      * @param provider ILookupServiceProvider
      */
     public static void removeLookupServiceProvider(ILookupServiceProvider provider) {
+
         _providers.removeElement(provider);
     }
 }

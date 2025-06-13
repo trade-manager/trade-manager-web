@@ -6,9 +6,12 @@ import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
+import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class AspectRepositoryImpl implements AspectRepositoryCustom {
 
     @PersistenceContext
@@ -63,5 +66,28 @@ public class AspectRepositoryImpl implements AspectRepositoryCustom {
         }
 
         return aspects;
+    }
+
+    /**
+     * @param className
+     * @return
+     * @throws ClassNotFoundException
+     */
+    public List<?> getCodes(String className) throws ClassNotFoundException {
+
+        Class<?> c = Class.forName(className);
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Object> criteriaQuery = criteriaBuilder.createQuery();
+        Root<?> from = criteriaQuery.from(c);
+        CriteriaQuery<Object> select = criteriaQuery.select(from);
+        TypedQuery<Object> typedQuery = entityManager.createQuery(select);
+        List<Object> items = typedQuery.getResultList();
+        entityManager.getTransaction().commit();
+
+        if (!items.isEmpty()) {
+            return items;
+        }
+
+        return new ArrayList<>(0);
     }
 }
