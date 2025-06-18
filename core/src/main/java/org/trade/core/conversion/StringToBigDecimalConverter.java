@@ -67,7 +67,7 @@ public class StringToBigDecimalConverter extends StringToObjectConverter {
      * org.trade.core.conversion.IJavaTypeConverter#getTargetType()
      */
     public Class<?> getTargetType() {
-        return java.math.BigDecimal.class;
+        return BigDecimal.class;
     }
 
     //

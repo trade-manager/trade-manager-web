@@ -6,7 +6,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +49,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 /**
  *
  */
-@RunWith(SpringRunner.class)
 @SpringBootTest
 public class StrategyPanelIT {
 
@@ -83,8 +81,7 @@ public class StrategyPanelIT {
         m_strategyDir = ConfigProperties.getPropAsString("trade.strategy.default.dir");
         assertNotNull(m_strategyDir);
         String symbol = "TEST";
-        TradestrategyBase.setTradeService(tradeService);
-        this.tradestrategy = TradestrategyBase.getTestTradestrategy(symbol);
+        this.tradestrategy = TradestrategyBase.getTestTradestrategy(tradeService, symbol);
         assertNotNull(this.tradestrategy);
         List<Strategy> strategies = this.tradeService.findStrategies();
         assertNotNull(strategies);
@@ -94,8 +91,8 @@ public class StrategyPanelIT {
             String content = readFile(fileName);
             assertNotNull("setUp: Strategy java file should be not null", content);
             if (strategy.getRules().isEmpty()) {
-                Rule nextRule = new Rule(strategy, 1, null, TradingCalendar.getDateTimeNowMarketTimeZone(),
-                        content.getBytes(), TradingCalendar.getDateTimeNowMarketTimeZone());
+                Rule nextRule = new Rule(strategy, 1, null,
+                        content.getBytes());
                 strategy.add(nextRule);
                 nextRule = this.tradeService.saveAspect(nextRule);
             }
@@ -110,7 +107,7 @@ public class StrategyPanelIT {
 
         File dir = new File(m_tmpDir);
         StrategyPanel.deleteDir(dir);
-        TradestrategyBase.clearDBData();
+        TradestrategyBase.clearDBData(tradeService);
     }
 
     /**
@@ -277,7 +274,6 @@ public class StrategyPanelIT {
             //   myrule.setId(myrule.getId());
         }
         myrule.setComment("Test Ver: " + myrule.getVersion());
-        myrule.setCreateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
         StreamEditorPane textArea = new StreamEditorPane("text/rtf");
         new JScrollPane(textArea);
         String fileDir = m_strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/');

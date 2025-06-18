@@ -175,7 +175,7 @@ public class Date extends ValueType implements Comparator<Date>, Comparable<Date
      *
      * @param objectToCompare Object
      * @return boolean
-     * @see java.util.Comparator#equals(Object)
+     * @see Comparator#equals(Object)
      */
     public boolean equals(Object objectToCompare) {
 
@@ -190,12 +190,12 @@ public class Date extends ValueType implements Comparator<Date>, Comparable<Date
 
         // Do not compare on nulls
         if (m_date != null) {
-            java.time.ZonedDateTime cmpTo = null;
+            ZonedDateTime cmpTo = null;
 
-            if (objectToCompare instanceof org.trade.core.valuetype.Date) {
-                cmpTo = ((org.trade.core.valuetype.Date) objectToCompare).m_date;
+            if (objectToCompare instanceof Date) {
+                cmpTo = ((Date) objectToCompare).m_date;
             } else if (objectToCompare instanceof java.util.Date) {
-                cmpTo = (java.time.ZonedDateTime) objectToCompare;
+                cmpTo = (ZonedDateTime) objectToCompare;
             }
 
             // Do not compare on nulls
@@ -272,7 +272,7 @@ public class Date extends ValueType implements Comparator<Date>, Comparable<Date
      * less than 0 if the argument is a Date after this Date; and a
      * value greater than 0 if the argument is a Date before this Date.
      */
-    public int compareDates(org.trade.core.valuetype.Date otherDate) {
+    public int compareDates(Date otherDate) {
         return compareDates(otherDate.getZonedDateTime());
     }
 
@@ -292,11 +292,11 @@ public class Date extends ValueType implements Comparator<Date>, Comparable<Date
      * @param value Object
      */
     public void setValue(Object value) throws ValueTypeException {
-        if (value instanceof org.trade.core.valuetype.Date) {
-            setDate(((org.trade.core.valuetype.Date) value).m_date);
+        if (value instanceof Date) {
+            setDate(((Date) value).m_date);
         } else {
             try {
-                setValue(JavaTypeTranslator.convert(org.trade.core.valuetype.Date.class, value));
+                setValue(JavaTypeTranslator.convert(Date.class, value));
             } catch (Exception ex) {
                 throw new ValueTypeException(ex);
             }
@@ -372,7 +372,7 @@ public class Date extends ValueType implements Comparator<Date>, Comparable<Date
      *
      * @return Object
      */
-    public Object clone() throws java.lang.CloneNotSupportedException {
+    public Object clone() throws CloneNotSupportedException {
         return (super.clone());
     }
 
@@ -381,7 +381,7 @@ public class Date extends ValueType implements Comparator<Date>, Comparable<Date
      *
      * @param date java.time.ZonedDateTime
      */
-    private void setDate(java.time.ZonedDateTime date) {
+    private void setDate(ZonedDateTime date) {
         m_date = date;
     }
 }

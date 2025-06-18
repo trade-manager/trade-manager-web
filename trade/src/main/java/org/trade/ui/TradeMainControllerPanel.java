@@ -573,7 +573,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                         if (todayTradeOrder.isActive()) {
                             if (!openTradeOrders.containsKey(todayTradeOrder.getOrderKey())) {
                                 todayTradeOrder.setStatus(OrderStatus.CANCELLED);
-                                todayTradeOrder.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
+                                todayTradeOrder.setOrderUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
                                 tradeService.saveTradeOrder(todayTradeOrder);
                             }
                         }

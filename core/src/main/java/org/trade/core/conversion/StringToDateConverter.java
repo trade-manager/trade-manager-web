@@ -48,7 +48,7 @@ import java.util.Date;
  * JavaTypeTranslator class.
  *
  * @author Simon Allen
- * @see java.text.DateFormat
+ * @see DateFormat
  */
 public class StringToDateConverter extends StringToObjectConverter {
     /**

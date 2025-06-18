@@ -40,12 +40,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.trade.core.broker.BackTestBrokerModel;
 import org.trade.core.broker.IBrokerModel;
 import org.trade.core.dao.AspectRepository;
@@ -92,7 +90,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  *
  */
-@RunWith(SpringRunner.class)
 @SpringBootTest
 public class AbstractStrategyIT {
 
@@ -104,6 +101,7 @@ public class AbstractStrategyIT {
     @Autowired
     private AspectRepository aspectRepository;
 
+    private static final TradestrategyBase tradestrategyBase = new TradestrategyBase();
     private IBrokerModel m_brokerModel = null;
     private Tradestrategy tradestrategy = null;
     private String m_templateName = null;
@@ -135,8 +133,8 @@ public class AbstractStrategyIT {
         String host = ConfigProperties.getPropAsString("trade.tws.host");
         m_brokerModel.onConnect(host, port, clientId);
         String symbol = "TEST";
-        TradestrategyBase.setTradeService(tradeService);
-        this.tradestrategy = TradestrategyBase.getTestTradestrategy(symbol);
+
+        this.tradestrategy = tradestrategyBase.getTestTradestrategy(tradeService, symbol);
         assertNotNull(this.tradestrategy);
 
         this.strategyProxy = new StrategyRuleTest(m_brokerModel, this.tradestrategy.getStrategyData(),
@@ -158,7 +156,7 @@ public class AbstractStrategyIT {
 
         m_brokerModel.onDisconnect();
         strategyProxy.cancel();
-        TradestrategyBase.clearDBData();
+        tradestrategyBase.clearDBData(tradeService);
     }
 
     /**

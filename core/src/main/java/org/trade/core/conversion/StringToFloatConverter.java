@@ -44,7 +44,7 @@ package org.trade.core.conversion;
  * JavaTypeTranslator class.
  *
  * @author Simon Allen
- * @see java.lang.Float
+ * @see Float
  */
 public class StringToFloatConverter extends StringToObjectConverter {
     /**
@@ -65,7 +65,7 @@ public class StringToFloatConverter extends StringToObjectConverter {
      * org.trade.core.conversion.IJavaTypeConverter#getTargetType()
      */
     public Class<?> getTargetType() {
-        return java.lang.Float.class;
+        return Float.class;
     }
 
     //

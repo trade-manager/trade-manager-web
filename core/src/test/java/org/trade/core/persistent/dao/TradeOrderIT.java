@@ -41,12 +41,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.trade.core.broker.TWSBrokerModel;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.properties.ConfigProperties;
@@ -68,7 +66,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-@RunWith(SpringRunner.class)
 @SpringBootTest
 public class TradeOrderIT {
 
@@ -100,8 +97,7 @@ public class TradeOrderIT {
         clientId = ConfigProperties.getPropAsInt("trade.tws.clientId");
 
         String symbol = "TEST";
-        TradestrategyBase.setTradeService(tradeService);
-        this.tradestrategy = TradestrategyBase.getTestTradestrategy(symbol);
+        this.tradestrategy = TradestrategyBase.getTestTradestrategy(tradeService, symbol);
         assertNotNull(this.tradestrategy);
     }
 
@@ -111,7 +107,7 @@ public class TradeOrderIT {
     @AfterEach
     public void tearDown() throws Exception {
 
-        TradestrategyBase.clearDBData();
+        TradestrategyBase.clearDBData(tradeService);
     }
 
     /**

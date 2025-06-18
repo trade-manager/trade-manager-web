@@ -325,7 +325,7 @@ public class ConfigProperties {
      * @param loader   ClassLoader
      * @return String
      */
-    public static String readFileAsString(String filePath, ClassLoader loader) throws java.io.IOException {
+    public static String readFileAsString(String filePath, ClassLoader loader) throws IOException {
 
         StringBuilder fileData = new StringBuilder(1000);
         InputStream inputStream = loader.getResourceAsStream(filePath);

@@ -1,8 +1,8 @@
 package org.trade.core.persistent.dao;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.trade.core.dao.AspectRepository;
 
-public interface AccountRepository extends JpaRepository<Account, Integer>, AccountRepositoryCustom {
+public interface AccountRepository extends AspectRepository<Account, Integer>, AccountRepositoryCustom {
 
     Account findByAccountNumber(String accountNumber);
 }

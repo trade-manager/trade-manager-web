@@ -68,7 +68,7 @@ public abstract class StringToObjectConverter implements IJavaTypeConverter {
      * org.trade.core.conversion.IJavaTypeConverter#convert(Object)
      */
     public Object convert(Object valueToConvert) throws IllegalArgumentException {
-        if (valueToConvert instanceof java.lang.String) {
+        if (valueToConvert instanceof String) {
             return getConvertedString(((String) valueToConvert).trim());
         }
 
@@ -84,7 +84,7 @@ public abstract class StringToObjectConverter implements IJavaTypeConverter {
      * org.trade.core.conversion.IJavaTypeConverter#getSourceType()
      */
     public Class<?> getSourceType() {
-        return java.lang.String.class;
+        return String.class;
     }
 
     //

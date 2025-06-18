@@ -155,6 +155,7 @@ public class StrategyData extends Worker {
                  * until a new candle arrives.
                  */
                 synchronized (lockStrategyWorker) {
+
                     while ((!this.seriesChanged && currentBaseCandleCount == lastBaseCandleProcessed)
                             || this.getBaseCandleSeries().isEmpty()) {
                         lockStrategyWorker.wait();

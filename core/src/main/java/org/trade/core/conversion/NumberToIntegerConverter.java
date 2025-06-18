@@ -44,7 +44,7 @@ package org.trade.core.conversion;
  * JavaTypeTranslator class.
  *
  * @author Simon Allen
- * @see java.lang.Number
+ * @see Number
  */
 public class NumberToIntegerConverter extends NumberToNumberConverter {
     /**
@@ -65,7 +65,7 @@ public class NumberToIntegerConverter extends NumberToNumberConverter {
      * org.trade.core.conversion.IJavaTypeConverter#getTargetType()
      */
     public Class<?> getTargetType() {
-        return java.lang.Integer.class;
+        return Integer.class;
     }
 
     //

@@ -33,7 +33,8 @@
  * -------
  *
  */
-package org.trade.core.persistent.dao;
+package org.trade.core.dao;
+
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -44,10 +45,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
-import org.trade.core.dao.Aspect;
-import org.trade.core.dao.AspectRepository;
-import org.trade.core.dao.Aspects;
+import org.trade.core.persistent.TradeService;
+import org.trade.core.persistent.dao.Tradestrategy;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -60,21 +59,22 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  */
 //@DataJpaTest
 //@EnableAutoConfiguration
-//@RunWith(SpringRunner.class)
-@Transactional
 @SpringBootTest
 public class AspectServiceIT {
 
     private final static Logger _log = LoggerFactory.getLogger(AspectServiceIT.class);
 
     @Autowired
-    private AspectRepository aspectRepository;
+    private TradeService tradeService;
+
+    private Tradestrategy tradestrategy = null;
 
     /**
      * Method setUpBeforeClass.
      */
     @BeforeAll
     public static void setUpBeforeClass() throws Exception {
+        _log.info("BeforeAll");
     }
 
     /**
@@ -82,7 +82,7 @@ public class AspectServiceIT {
      */
     @BeforeEach
     public void setUp() throws Exception {
-
+        _log.info("BeforeEach");
     }
 
     /**
@@ -90,6 +90,7 @@ public class AspectServiceIT {
      */
     @AfterEach
     public void tearDown() throws Exception {
+        _log.info("AfterEach");
     }
 
     /**
@@ -97,6 +98,7 @@ public class AspectServiceIT {
      */
     @AfterAll
     public static void tearDownAfterClass() throws Exception {
+        _log.info("AfterAll");
     }
 
     @Test
@@ -107,9 +109,11 @@ public class AspectServiceIT {
         String className = "org.trade.core.persistent.dao.Strategy";
         _log.info("Find Aspects by className: {}", className);
 
-        Aspects transientInstance = aspectRepository.findByClassName(className);
+        Aspects transientInstance = tradeService.findAspectByClassName(className);
         assertNotNull(transientInstance);
+
         for (Aspect aspect : transientInstance.getAspect()) {
+
             _log.info("Aspect added Id = {}", aspect.getId());
         }
     }

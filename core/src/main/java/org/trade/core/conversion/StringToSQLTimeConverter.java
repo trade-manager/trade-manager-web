@@ -46,7 +46,7 @@ import java.sql.Time;
  * JavaTypeTranslator class.
  *
  * @author Simon Allen
- * @see java.sql.Time
+ * @see Time
  */
 public class StringToSQLTimeConverter extends StringToObjectConverter {
     /**
@@ -67,7 +67,7 @@ public class StringToSQLTimeConverter extends StringToObjectConverter {
      * org.trade.core.conversion.IJavaTypeConverter#getTargetType()
      */
     public Class<?> getTargetType() {
-        return java.sql.Time.class;
+        return Time.class;
     }
 
     //

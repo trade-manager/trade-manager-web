@@ -44,7 +44,7 @@ package org.trade.core.conversion;
  * JavaTypeTranslator class.
  *
  * @author Simon Allen
- * @see java.lang.Object
+ * @see Object
  */
 public class ObjectToStringConverter implements IJavaTypeConverter {
     /**
@@ -87,7 +87,7 @@ public class ObjectToStringConverter implements IJavaTypeConverter {
      * org.trade.core.conversion.IJavaTypeConverter#getSourceType()
      */
     public Class<?> getSourceType() {
-        return java.lang.Object.class;
+        return Object.class;
     }
 
     /**
@@ -98,6 +98,6 @@ public class ObjectToStringConverter implements IJavaTypeConverter {
      * org.trade.core.conversion.IJavaTypeConverter#getTargetType()
      */
     public Class<?> getTargetType() {
-        return java.lang.String.class;
+        return String.class;
     }
 }

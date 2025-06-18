@@ -40,12 +40,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.properties.TradeAppLoadConfig;
 import org.trade.core.util.time.TradingCalendar;
@@ -61,7 +59,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-@RunWith(SpringRunner.class)
 @SpringBootTest
 public class TradingdayIT {
 
@@ -119,7 +116,7 @@ public class TradingdayIT {
         tradeService.saveTradingday(transientInstance);
         _log.info("Tradingday added Id = {}", transientInstance.getId());
         assertNotNull(transientInstance.getId());
-        tradeService.delete(transientInstance);
+        tradeService.deleteAspect(transientInstance);
     }
 
     @Test
@@ -140,6 +137,6 @@ public class TradingdayIT {
         tradeService.saveTradingday(transientInstance);
         _log.info("Tradingday Update Id = {}", transientInstance.getId());
         assertNotNull(transientInstance.getId());
-        tradeService.delete(transientInstance);
+        tradeService.deleteAspect(transientInstance);
     }
 }

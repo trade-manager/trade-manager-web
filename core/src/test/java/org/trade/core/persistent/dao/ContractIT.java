@@ -40,12 +40,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.Currency;
@@ -58,16 +56,15 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
 
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
  *
  */
-@RunWith(SpringRunner.class)
 @SpringBootTest
 public class ContractIT {
 
-    private final static Logger _log = LoggerFactory.getLogger(ContractIT.class);
+    private final static Logger _log = LoggerFactory.getLogger(TradingdayIT.class);
 
     @Autowired
     private TradeService tradeService;
@@ -122,7 +119,7 @@ public class ContractIT {
                 expiry);
         assertFalse(contracts.isEmpty());
 
-        tradeService.delete(contracts.getFirst());
+        tradeService.deleteAspect(contracts.getFirst());
         _log.info("Contract deleted Id:{}", transientInstance.getId());
     }
 
@@ -149,7 +146,7 @@ public class ContractIT {
         assertFalse(contracts.isEmpty());
         _log.info("Contract added Id:{}", transientInstance.getId());
 
-        tradeService.delete(contracts.getFirst());
+        tradeService.deleteAspect(contracts.getFirst());
         _log.info("Contract deleted Id:{}", transientInstance.getId());
     }
 }

@@ -45,6 +45,7 @@ import java.util.List;
 /**
  *
  */
+
 public class TradelogReport extends Aspect implements Serializable {
 
     /**

@@ -40,12 +40,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.properties.TradeAppLoadConfig;
 import org.trade.core.util.time.TradingCalendar;
@@ -57,7 +55,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 /**
  *
  */
-@RunWith(SpringRunner.class)
 @SpringBootTest
 public class TradePositionIT {
 
@@ -84,8 +81,8 @@ public class TradePositionIT {
 
         TradeAppLoadConfig.loadAppProperties();
         String symbol = "TEST";
-        TradestrategyBase.setTradeService(tradeService);
-        this.tradestrategy = TradestrategyBase.getTestTradestrategy(symbol);
+
+        this.tradestrategy = TradestrategyBase.getTestTradestrategy(tradeService, symbol);
         assertNotNull(this.tradestrategy);
     }
 
@@ -95,7 +92,7 @@ public class TradePositionIT {
     @AfterEach
     public void tearDown() throws Exception {
 
-        TradestrategyBase.clearDBData();
+        TradestrategyBase.clearDBData(tradeService);
     }
 
     /**
@@ -117,7 +114,7 @@ public class TradePositionIT {
         assertNotNull(tradePosition.getId());
         _log.info("testAddTradePosition IdTradeStrategy: {}IdTradePosition: {}", this.tradestrategy.getId(), tradePosition.getId());
 
-        tradeService.delete(tradePosition);
+        tradeService.deleteAspect(tradePosition);
         _log.info("testDeleteTradePosition IdTradeStrategy: {}", tradestrategy.getId());
         tradePosition = tradeService.findTradePositionById(tradePosition.getId());
         assertNull(tradePosition);

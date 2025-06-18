@@ -1,12 +1,10 @@
 package org.trade.core.persistent.dao;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.trade.core.dao.Aspect;
 import org.trade.core.persistent.TradeService;
 
@@ -23,7 +21,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest
 public class TradeServiceIT {
 
@@ -32,7 +29,7 @@ public class TradeServiceIT {
 
     List<Aspect> entities = new ArrayList<>(0);
 
-    @Before
+    @BeforeEach
     public void setUp() {
 
         LocalDateTime now = LocalDateTime.now();
@@ -49,19 +46,19 @@ public class TradeServiceIT {
         assertNotNull(contract2.getId());
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
 
-        tradeService.deleteAll(entities);
+        tradeService.deleteAllAspects(entities);
     }
 
     @Test
     public void testFetchData() {
 
         /*Test data retrieval*/
-        Optional<Contract> contract = tradeService.findBySymbol("Test2");
+        Optional<Contract> contract = tradeService.findContractBySymbol("Test2");
         assertNotNull(contract);
-        Iterable<Contract> item = tradeService.findAll();
+        Iterable<Contract> item = tradeService.findAllContracts();
         assertTrue(item.iterator().hasNext());
     }
 
@@ -73,7 +70,7 @@ public class TradeServiceIT {
         Contract contract = new Contract("STK", "Test3", "SMART", "USD", expiry, new BigDecimal(1));
         contract = tradeService.saveAspect(contract);
 
-        Optional<Contract> contract1 = tradeService.findBySymbol(contract.getSymbol());
+        Optional<Contract> contract1 = tradeService.findContractBySymbol(contract.getSymbol());
         assertThat(contract1.get()).extracting(Contract::getSymbol).isEqualTo(contract.getSymbol());
     }
 }

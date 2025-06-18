@@ -43,11 +43,9 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import org.trade.core.dao.Aspect;
-import org.trade.core.util.time.TradingCalendar;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,9 +75,6 @@ public class Portfolio extends Aspect implements Serializable, Cloneable {
     @Column(name = "is_default", nullable = false)
     private Boolean isDefault = false;
 
-    @Column(name = "last_update_date", nullable = false)
-    private ZonedDateTime lastUpdateDate;
-
     @OneToMany(mappedBy = "portfolio", fetch = FetchType.LAZY)
     private List<Tradestrategy> tradestrategies = new ArrayList<>(0);
 
@@ -87,7 +82,7 @@ public class Portfolio extends Aspect implements Serializable, Cloneable {
     private List<PortfolioAccount> portfolioAccounts = new ArrayList<>(0);
 
     public Portfolio() {
-        this.lastUpdateDate = TradingCalendar.getDateTimeNowMarketTimeZone();
+
     }
 
     /**
@@ -100,7 +95,6 @@ public class Portfolio extends Aspect implements Serializable, Cloneable {
 
         this.name = name;
         this.description = description;
-        this.lastUpdateDate = TradingCalendar.getDateTimeNowMarketTimeZone();
     }
 
     /**
@@ -191,24 +185,6 @@ public class Portfolio extends Aspect implements Serializable, Cloneable {
      */
     public void setIsDefault(Boolean isDefault) {
         this.isDefault = isDefault;
-    }
-
-    /**
-     * Method getLastUpdateDate.
-     *
-     * @return ZonedDateTime
-     */
-    public ZonedDateTime getLastUpdateDate() {
-        return this.lastUpdateDate;
-    }
-
-    /**
-     * Method setLastUpdateDate.
-     *
-     * @param lastUpdateDate ZonedDateTime
-     */
-    public void setLastUpdateDate(ZonedDateTime lastUpdateDate) {
-        this.lastUpdateDate = lastUpdateDate;
     }
 
     /**

@@ -44,7 +44,7 @@ package org.trade.core.conversion;
  * JavaTypeTranslator class.
  *
  * @author Simon Allen
- * @see java.lang.Double
+ * @see Double
  */
 public class StringToDoubleConverter extends StringToObjectConverter {
     /**
@@ -65,7 +65,7 @@ public class StringToDoubleConverter extends StringToObjectConverter {
      * org.trade.core.conversion.IJavaTypeConverter#getTargetType()
      */
     public Class<?> getTargetType() {
-        return java.lang.Double.class;
+        return Double.class;
     }
 
     //

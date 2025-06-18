@@ -59,7 +59,7 @@ public class ExceptionResourceBundle extends PropertyResourceBundle implements S
      * are stored
      *
      * @param resourceStream the input stream to the resource
-     * @throws java.io.IOException : thrown when the input stream doesn't find the resource
+     * @throws IOException : thrown when the input stream doesn't find the resource
      */
     public ExceptionResourceBundle(InputStream resourceStream) throws IOException {
         super(resourceStream);

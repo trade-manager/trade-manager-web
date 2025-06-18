@@ -1,8 +1,11 @@
 package org.trade.ui;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.stereotype.Component;
 import org.trade.base.ImageBuilder;
 import org.trade.base.WaitCursorEventQueue;
@@ -10,7 +13,16 @@ import org.trade.base.WaitCursorEventQueue;
 import java.awt.*;
 
 
-@SpringBootApplication
+/**
+ * Sample configuration to bootstrap Spring Data JPA through JavaConfig
+ *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
+ */
+@SpringBootApplication(scanBasePackages = {"org.trade.core"})
+@ComponentScan({"org.trade.core"})
+@EntityScan("org.trade.core")
+@EnableJpaRepositories("org.trade.core")
 public class TradeApplication {
 
     public static void main(String[] args) {

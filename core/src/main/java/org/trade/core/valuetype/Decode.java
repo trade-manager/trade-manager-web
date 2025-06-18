@@ -343,7 +343,7 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
      *
      * @param objectToCompare Object
      * @return boolean
-     * @see java.util.Comparator#equals(Object)
+     * @see Comparator#equals(Object)
      */
     public boolean equals(Object objectToCompare) {
 
@@ -379,7 +379,7 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
      *
      * @return Object
      */
-    public Object clone() throws java.lang.CloneNotSupportedException {
+    public Object clone() throws CloneNotSupportedException {
         return (super.clone());
     }
 

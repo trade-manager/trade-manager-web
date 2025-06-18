@@ -78,7 +78,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-public class BrokerModelIT implements IBrokerChangeListener {
+public class BrokerModelIT extends TradestrategyBase implements IBrokerChangeListener {
 
     private final static Logger _log = LoggerFactory.getLogger(BrokerModelIT.class);
 
@@ -123,8 +123,7 @@ public class BrokerModelIT implements IBrokerChangeListener {
     public void setUp() throws Exception {
 
         String symbol = "NVDA";
-        TradestrategyBase.setTradeService(tradeService);
-        this.tradestrategy = TradestrategyBase.getTestTradestrategy(symbol);
+        this.tradestrategy = this.getTestTradestrategy(tradeService, symbol);
         backTestbrokerModel = (IBrokerModel) ClassFactory.getServiceForInterface(_broker, BrokerModelIT.class);
         backTestbrokerModel.onConnect(host, port, clientId);
         assertNotNull(this.tradestrategy);
@@ -173,7 +172,7 @@ public class BrokerModelIT implements IBrokerChangeListener {
         if (backTestbrokerModel.isConnected()) {
             backTestbrokerModel.onDisconnect();
         }
-        TradestrategyBase.clearDBData();
+        this.clearDBData(tradeService);
     }
 
     /**

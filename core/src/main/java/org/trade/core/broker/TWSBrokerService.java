@@ -73,12 +73,12 @@ public class TWSBrokerService extends AbstractBrokerModel {
     private TradeService tradeService;
 
     // Use getId as key
-    private static final ConcurrentHashMap<Integer, Tradestrategy> m_historyDataRequests = new ConcurrentHashMap<>();
-    private static final ConcurrentHashMap<Integer, Contract> m_realTimeBarsRequests = new ConcurrentHashMap<>();
-    private static final ConcurrentHashMap<Integer, Contract> m_marketDataRequests = new ConcurrentHashMap<>();
-    private static final ConcurrentHashMap<Integer, Contract> m_contractRequests = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<Integer, Tradestrategy> fHistoryDataRequests = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<Integer, Contract> fRealTimeBarsRequests = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<Integer, Contract> fMarketDataRequests = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<Integer, Contract> fContractRequests = new ConcurrentHashMap<>();
     // Use account number as key
-    private static final ConcurrentHashMap<String, Account> m_accountRequests = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, Account> fAccountRequests = new ConcurrentHashMap<>();
 
     // All Use orderKey as key
     private static final ConcurrentHashMap<Integer, TradeOrder> openOrders = new ConcurrentHashMap<>();
@@ -153,9 +153,13 @@ public class TWSBrokerService extends AbstractBrokerModel {
 
     @Override
     public void onDisconnect() {
+
         onCancelAllRealtimeData();
+
         if (isConnected()) {
-            for (String accountNumber : m_accountRequests.keySet()) {
+
+            for (String accountNumber : fAccountRequests.keySet()) {
+
                 this.onCancelAccountUpdates(accountNumber);
             }
             controller().disconnect();
@@ -165,15 +169,22 @@ public class TWSBrokerService extends AbstractBrokerModel {
 
     @Override
     public void error(int id, int code, String msg) {
+
         String symbol = "N/A";
         BrokerModelException brokerModelException = null;
-        if (m_contractRequests.containsKey(id)) {
-            symbol = m_contractRequests.get(id).getSymbol();
+
+        if (fContractRequests.containsKey(id)) {
+
+            symbol = fContractRequests.get(id).getSymbol();
         }
-        if (m_historyDataRequests.containsKey(id)) {
-            Tradestrategy tradestrategy = m_historyDataRequests.get(id);
+
+        if (fHistoryDataRequests.containsKey(id)) {
+
+            Tradestrategy tradestrategy = fHistoryDataRequests.get(id);
             symbol = tradestrategy.getContract().getSymbol();
+
             if (code == 162) {
+
                 symbol = tradestrategy.getContract().getSymbol() + " pacing violation Tradingday: "
                         + tradestrategy.getTradingday().getOpen() + " BarSize: " + tradestrategy.getBarSize()
                         + " ChartDays: " + tradestrategy.getChartDays() + "  \n"
@@ -182,16 +193,20 @@ public class TWSBrokerService extends AbstractBrokerModel {
                         + "2/ Making six or more historical data requests for the same Contract, Exchange and Tick Type within two seconds. \n"
                         + "3/ Making more than 60 historical data requests in any ten-minute period.  \n";
             }
-            synchronized (m_historyDataRequests) {
-                m_historyDataRequests.remove(id);
-                m_historyDataRequests.notify();
+            synchronized (fHistoryDataRequests) {
+                fHistoryDataRequests.remove(id);
+                fHistoryDataRequests.notify();
             }
         }
-        if (m_realTimeBarsRequests.containsKey(id)) {
-            symbol = m_realTimeBarsRequests.get(id).getSymbol();
+
+        if (fRealTimeBarsRequests.containsKey(id)) {
+
+            symbol = fRealTimeBarsRequests.get(id).getSymbol();
         }
-        if (m_marketDataRequests.containsKey(id)) {
-            symbol = m_marketDataRequests.get(id).getSymbol();
+
+        if (fMarketDataRequests.containsKey(id)) {
+
+            symbol = fMarketDataRequests.get(id).getSymbol();
         }
 
         /*
@@ -227,14 +242,16 @@ public class TWSBrokerService extends AbstractBrokerModel {
             }
 
         } else {
-            if (m_realTimeBarsRequests.containsKey(id)) {
-                synchronized (m_realTimeBarsRequests) {
-                    m_realTimeBarsRequests.remove(id);
+
+            if (fRealTimeBarsRequests.containsKey(id)) {
+                synchronized (fRealTimeBarsRequests) {
+                    fRealTimeBarsRequests.remove(id);
                 }
             }
-            if (m_marketDataRequests.containsKey(id)) {
-                synchronized (m_marketDataRequests) {
-                    m_marketDataRequests.remove(id);
+
+            if (fMarketDataRequests.containsKey(id)) {
+                synchronized (fMarketDataRequests) {
+                    fMarketDataRequests.remove(id);
                 }
             }
 
@@ -268,7 +285,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
     public void onSubscribeAccountUpdates(boolean subscribe, String accountNumber) throws BrokerModelException {
         try {
             Account account = tradeService.findAccountByAccountNumber(accountNumber);
-            m_accountRequests.put(accountNumber, account);
+            fAccountRequests.put(accountNumber, account);
             if (controller().client().isConnected()) {
                 controller().reqAccountUpdates(subscribe, accountNumber, new AccountHandler(this, accountNumber));
 //               controller().client().reqAccountUpdates(subscribe, accountNumber);
@@ -284,13 +301,13 @@ public class TWSBrokerService extends AbstractBrokerModel {
 
     @Override
     public void onCancelAccountUpdates(String accountNumber) {
-        synchronized (m_accountRequests) {
-            if (m_accountRequests.containsKey(accountNumber)) {
+        synchronized (fAccountRequests) {
+            if (fAccountRequests.containsKey(accountNumber)) {
                 if (controller().client().isConnected()) {
                     controller().reqAccountUpdates(false, accountNumber, new AccountHandler(this, accountNumber));
 //                    controller().client().reqAccountUpdates(false, accountNumber);
                 }
-                m_accountRequests.remove(accountNumber);
+                fAccountRequests.remove(accountNumber);
             }
         }
     }
@@ -364,7 +381,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
                 if (!tradestrategy.getStrategyData().isRunning())
                     tradestrategy.getStrategyData().execute();
 
-                m_historyDataRequests.put(tradestrategy.getId(), tradestrategy);
+                fHistoryDataRequests.put(tradestrategy.getId(), tradestrategy);
 
                 endDate = TradingCalendar.getDateAtTime(TradingCalendar.addTradingDays(endDate, backfillOffsetDays),
                         endDate);
@@ -419,7 +436,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
                             "RealtimeBars request is already in progress for: " + contract.getSymbol()
                                     + " Please wait or cancel.");
                 }
-                m_realTimeBarsRequests.put(contract.getId(), contract);
+                fRealTimeBarsRequests.put(contract.getId(), contract);
 
                 /*
                  * Bar interval is set to 5= 5sec this is the only thing
@@ -455,7 +472,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
                                     + " Please wait or cancel.");
                 }
                 List<TagValue> mktDataOptions = new ArrayList<TagValue>();
-                m_marketDataRequests.put(contract.getId(), contract);
+                fMarketDataRequests.put(contract.getId(), contract);
                 controller().reqTopMktData(TWSBrokerModel.getIBContract(contract), genericTicklist, snapshot, new TopMktDataHandler(this, contract.getId()));
 
 //                controller().client().reqMktData(contract.getId(), TWSBrokerModel.getIBContract(contract), genericTicklist, snapshot,
@@ -535,7 +552,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
 
     @Override
     public boolean isHistoricalDataRunning(Contract contract) {
-        for (Tradestrategy item : m_historyDataRequests.values()) {
+        for (Tradestrategy item : fHistoryDataRequests.values()) {
             if (contract.equals(item.getContract())) {
                 return true;
             }
@@ -545,8 +562,8 @@ public class TWSBrokerService extends AbstractBrokerModel {
 
     @Override
     public boolean isRealtimeBarsRunning(Tradestrategy tradestrategy) {
-        if (m_realTimeBarsRequests.containsKey(tradestrategy.getContract().getId())) {
-            Contract contract = m_realTimeBarsRequests.get(tradestrategy.getContract().getId());
+        if (fRealTimeBarsRequests.containsKey(tradestrategy.getContract().getId())) {
+            Contract contract = fRealTimeBarsRequests.get(tradestrategy.getContract().getId());
             for (Tradestrategy item : contract.getTradestrategies()) {
                 if (item.equals(tradestrategy)) {
                     return true;
@@ -559,7 +576,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
     @Override
     public boolean isRealtimeBarsRunning(Contract contract) {
         if (controller().client().isConnected()) {
-            if (m_realTimeBarsRequests.containsKey(contract.getId())) {
+            if (fRealTimeBarsRequests.containsKey(contract.getId())) {
                 return true;
             }
         }
@@ -568,8 +585,8 @@ public class TWSBrokerService extends AbstractBrokerModel {
 
     @Override
     public boolean isMarketDataRunning(Tradestrategy tradestrategy) {
-        if (m_marketDataRequests.containsKey(tradestrategy.getContract().getId())) {
-            Contract contract = m_marketDataRequests.get(tradestrategy.getContract().getId());
+        if (fMarketDataRequests.containsKey(tradestrategy.getContract().getId())) {
+            Contract contract = fMarketDataRequests.get(tradestrategy.getContract().getId());
             for (Tradestrategy item : contract.getTradestrategies()) {
                 if (item.equals(tradestrategy)) {
                     return true;
@@ -582,7 +599,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
     @Override
     public boolean isMarketDataRunning(Contract contract) {
         if (controller().client().isConnected()) {
-            if (m_marketDataRequests.containsKey(contract.getId())) {
+            if (fMarketDataRequests.containsKey(contract.getId())) {
                 return true;
             }
         }
@@ -591,7 +608,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
 
     @Override
     public boolean isHistoricalDataRunning(Tradestrategy tradestrategy) {
-        if (m_historyDataRequests.containsKey(tradestrategy.getId())) {
+        if (fHistoryDataRequests.containsKey(tradestrategy.getId())) {
             return true;
         }
         return false;
@@ -599,7 +616,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
 
     @Override
     public boolean isAccountUpdatesRunning(String accountNumber) {
-        if (m_accountRequests.containsKey(accountNumber)) {
+        if (fAccountRequests.containsKey(accountNumber)) {
             return true;
         }
         return false;
@@ -608,40 +625,40 @@ public class TWSBrokerService extends AbstractBrokerModel {
     @Override
     public void onCancelAllRealtimeData() {
         if (controller().client().isConnected()) {
-            for (Tradestrategy tradestrategy : m_historyDataRequests.values()) {
+            for (Tradestrategy tradestrategy : fHistoryDataRequests.values()) {
                 this.onCancelBrokerData(tradestrategy);
             }
-            for (Contract contract : m_realTimeBarsRequests.values()) {
+            for (Contract contract : fRealTimeBarsRequests.values()) {
                 this.onCancelRealtimeBars(contract);
             }
-            for (Contract contract : m_marketDataRequests.values()) {
+            for (Contract contract : fMarketDataRequests.values()) {
                 this.onCancelMarketData(contract);
             }
-            for (Contract contract : m_contractRequests.values()) {
+            for (Contract contract : fContractRequests.values()) {
                 this.onCancelContractDetails(contract);
             }
         }
-        m_contractRequests.clear();
-        m_historyDataRequests.clear();
-        m_realTimeBarsRequests.clear();
-        m_marketDataRequests.clear();
+        fContractRequests.clear();
+        fHistoryDataRequests.clear();
+        fRealTimeBarsRequests.clear();
+        fMarketDataRequests.clear();
     }
 
     @Override
     public void onCancelRealtimeBars(Contract contract) {
-        if (m_realTimeBarsRequests.containsKey(contract.getId())) {
+        if (fRealTimeBarsRequests.containsKey(contract.getId())) {
             if (controller().client().isConnected())
                 controller().client().cancelRealTimeBars(contract.getId());
-            synchronized (m_realTimeBarsRequests) {
-                m_realTimeBarsRequests.remove(contract.getId());
+            synchronized (fRealTimeBarsRequests) {
+                fRealTimeBarsRequests.remove(contract.getId());
             }
         }
     }
 
     @Override
     public void onCancelRealtimeBars(Tradestrategy tradestrategy) {
-        if (m_realTimeBarsRequests.containsKey(tradestrategy.getContract().getId())) {
-            Contract contract = m_realTimeBarsRequests.get(tradestrategy.getContract().getId());
+        if (fRealTimeBarsRequests.containsKey(tradestrategy.getContract().getId())) {
+            Contract contract = fRealTimeBarsRequests.get(tradestrategy.getContract().getId());
             for (Tradestrategy item : contract.getTradestrategies()) {
                 if (item.equals(tradestrategy)) {
                     contract.removeTradestrategy(tradestrategy);
@@ -657,19 +674,19 @@ public class TWSBrokerService extends AbstractBrokerModel {
 
     @Override
     public void onCancelMarketData(Contract contract) {
-        if (m_marketDataRequests.containsKey(contract.getId())) {
+        if (fMarketDataRequests.containsKey(contract.getId())) {
             if (controller().client().isConnected())
                 controller().client().cancelMktData(contract.getId());
-            synchronized (m_marketDataRequests) {
-                m_marketDataRequests.remove(contract.getId());
+            synchronized (fMarketDataRequests) {
+                fMarketDataRequests.remove(contract.getId());
             }
         }
     }
 
     @Override
     public void onCancelMarketData(Tradestrategy tradestrategy) {
-        if (m_marketDataRequests.containsKey(tradestrategy.getContract().getId())) {
-            Contract contract = m_marketDataRequests.get(tradestrategy.getContract().getId());
+        if (fMarketDataRequests.containsKey(tradestrategy.getContract().getId())) {
+            Contract contract = fMarketDataRequests.get(tradestrategy.getContract().getId());
             for (Tradestrategy item : contract.getTradestrategies()) {
                 if (item.equals(tradestrategy)) {
                     contract.removeTradestrategy(tradestrategy);
@@ -684,25 +701,25 @@ public class TWSBrokerService extends AbstractBrokerModel {
 
     @Override
     public void onCancelBrokerData(Tradestrategy tradestrategy) {
-        if (m_historyDataRequests.containsKey(tradestrategy.getId())) {
+        if (fHistoryDataRequests.containsKey(tradestrategy.getId())) {
             if (controller().client().isConnected())
                 controller().client().cancelHistoricalData(tradestrategy.getId());
-            synchronized (m_historyDataRequests) {
-                m_historyDataRequests.remove(tradestrategy.getId());
-                m_historyDataRequests.notify();
+            synchronized (fHistoryDataRequests) {
+                fHistoryDataRequests.remove(tradestrategy.getId());
+                fHistoryDataRequests.notify();
             }
         }
     }
 
     @Override
     public void onCancelBrokerData(Contract contract) {
-        for (Tradestrategy tradestrategy : m_historyDataRequests.values()) {
+        for (Tradestrategy tradestrategy : fHistoryDataRequests.values()) {
             if (contract.equals(tradestrategy.getContract())) {
                 if (controller().client().isConnected())
                     controller().client().cancelHistoricalData(tradestrategy.getId());
-                synchronized (m_historyDataRequests) {
-                    m_historyDataRequests.remove(tradestrategy.getId());
-                    m_historyDataRequests.notify();
+                synchronized (fHistoryDataRequests) {
+                    fHistoryDataRequests.remove(tradestrategy.getId());
+                    fHistoryDataRequests.notify();
                 }
             }
         }
@@ -711,9 +728,9 @@ public class TWSBrokerService extends AbstractBrokerModel {
     @Override
     public void onCancelContractDetails(Contract contract) {
         if (controller().client().isConnected()) {
-            if (m_contractRequests.contains(contract.getId()))
-                synchronized (m_contractRequests) {
-                    m_contractRequests.remove(contract.getId());
+            if (fContractRequests.contains(contract.getId()))
+                synchronized (fContractRequests) {
+                    fContractRequests.remove(contract.getId());
                 }
         }
     }
@@ -722,14 +739,14 @@ public class TWSBrokerService extends AbstractBrokerModel {
     public void onContractDetails(Contract contract) throws BrokerModelException {
         try {
             if (controller().client().isConnected()) {
-                if (!m_contractRequests.containsKey(contract.getId())) {
+                if (!fContractRequests.containsKey(contract.getId())) {
                     /*
                      * Null the IB Contract Id as these sometimes change. This
                      * will force a get of the IB data via the
                      * Exchange/Symbol/Currency.
                      */
-                    contract.setIdContractIB(null);
-                    m_contractRequests.put(contract.getId(), contract);
+                    contract.setContractIBId(null);
+                    fContractRequests.put(contract.getId(), contract);
                     logContract(TWSBrokerModel.getIBContract(contract));
                     controller().client().reqContractDetails(contract.getId(), TWSBrokerModel.getIBContract(contract));
                 }
@@ -745,7 +762,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
 
     @Override
     public ConcurrentHashMap<Integer, Tradestrategy> getHistoricalData() {
-        return m_historyDataRequests;
+        return fHistoryDataRequests;
     }
 
     @Override
@@ -951,7 +968,6 @@ public class TWSBrokerService extends AbstractBrokerModel {
                                 AccountType.INDIVIDUAL);
                     }
                     account.setAlias(alias.alias());
-                    account.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
                     account = getPersistentModel().saveAspect(account);
                 }
             } catch (ServiceException ex) {
@@ -1085,7 +1101,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
                 }
 
                 if (changed) {
-                    transientInstance.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
+                    transientInstance.setOrderUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
                     transientInstance.setStatus(status.name().toUpperCase());
                     transientInstance.setWhyHeld(whyHeld);
                     _log.debug("Order Status changed. Status: " + status);
@@ -1141,8 +1157,8 @@ public class TWSBrokerService extends AbstractBrokerModel {
             try {
                 long volume = bar.volume() * 100;
 
-                if (m_historyDataRequests.containsKey(getReqId())) {
-                    Tradestrategy tradestrategy = m_historyDataRequests.get(getReqId());
+                if (fHistoryDataRequests.containsKey(getReqId())) {
+                    Tradestrategy tradestrategy = fHistoryDataRequests.get(getReqId());
 
                     ZonedDateTime date;
                     /*
@@ -1185,7 +1201,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
         public void historicalDataEnd() {
 
             try {
-                Tradestrategy tradestrategy = m_historyDataRequests.get(getReqId());
+                Tradestrategy tradestrategy = fHistoryDataRequests.get(getReqId());
 
                 CandleSeries candleSeries = tradestrategy.getStrategyData().getBaseCandleSeries();
                 tradeService.saveCandleSeries(candleSeries);
@@ -1201,9 +1217,9 @@ public class TWSBrokerService extends AbstractBrokerModel {
                  * tradeStrategyId. Remove this from the processing vector.
                  */
 
-                synchronized (m_historyDataRequests) {
-                    m_historyDataRequests.remove(getReqId());
-                    m_historyDataRequests.notify();
+                synchronized (fHistoryDataRequests) {
+                    fHistoryDataRequests.remove(getReqId());
+                    fHistoryDataRequests.notify();
                 }
 
                 /*
@@ -1220,7 +1236,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
                             getBrokerModel().onReqRealTimeBars(tradestrategy.getContract(),
                                     tradestrategy.getStrategy().getMarketData());
                         } else {
-                            Contract contract = m_realTimeBarsRequests.get(tradestrategy.getContract().getId());
+                            Contract contract = fRealTimeBarsRequests.get(tradestrategy.getContract().getId());
                             contract.addTradestrategy(tradestrategy);
                         }
                     }
@@ -1265,8 +1281,8 @@ public class TWSBrokerService extends AbstractBrokerModel {
                 ZonedDateTime date = TradingCalendar.getZonedDateTimeFromMilli(bar.time() * 1000);
 
                 // Only store data that is during mkt hours
-                if (m_realTimeBarsRequests.containsKey(getReqId())) {
-                    Contract contract = m_realTimeBarsRequests.get(getReqId());
+                if (fRealTimeBarsRequests.containsKey(getReqId())) {
+                    Contract contract = fRealTimeBarsRequests.get(getReqId());
 
                     synchronized (contract) {
                         Collections.sort(contract.getTradestrategies(), Tradestrategy.TRADINGDAY_CONTRACT);
@@ -1335,9 +1351,9 @@ public class TWSBrokerService extends AbstractBrokerModel {
                 synchronized (price) {
                     // _log.warn("tickPrice Field: " + field + " value :" + value
                     // + " time: " + System.currentTimeMillis());
-                    if (!m_marketDataRequests.containsKey(getReqId()))
+                    if (!fMarketDataRequests.containsKey(getReqId()))
                         return;
-                    Contract contract = m_marketDataRequests.get(getReqId());
+                    Contract contract = fMarketDataRequests.get(getReqId());
 
                     /*
                      * Make sure the lastPrice is between the current Bid/Ask as
@@ -1378,8 +1394,8 @@ public class TWSBrokerService extends AbstractBrokerModel {
                 switch (tickType) {
                     case VOLUME: {
 
-                        if (m_realTimeBarsRequests.containsKey(getReqId())) {
-                            Contract contract = m_realTimeBarsRequests.get(getReqId());
+                        if (fRealTimeBarsRequests.containsKey(getReqId())) {
+                            Contract contract = fRealTimeBarsRequests.get(getReqId());
 
                             for (Tradestrategy tradestrategy : contract
                                     .getTradestrategies()) {
@@ -1432,7 +1448,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
 
                 synchronized (value) {
 
-                    if (!m_marketDataRequests.containsKey(getReqId()))
+                    if (!fMarketDataRequests.containsKey(getReqId()))
                         return;
 
                     switch (tickType) {
@@ -1483,7 +1499,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
 
                             if (price.doubleValue() > 0) {
 
-                                Contract contract = m_marketDataRequests.get(getReqId());
+                                Contract contract = fMarketDataRequests.get(getReqId());
                                 // _log.warn("TickString ReqId: " + reqId + " Field: "
                                 // + field + " String: " + value);
                                 for (Tradestrategy tradestrategy : contract.getTradestrategies()) {
@@ -1736,8 +1752,8 @@ public class TWSBrokerService extends AbstractBrokerModel {
                                      * Make sure the create date for the order is
                                      * the earliest time.
                                      */
-                                    if (tradeOrder.getCreateDate().isAfter(tradeOrderfill1.getTime())) {
-                                        tradeOrder.setCreateDate(tradeOrderfill1.getTime());
+                                    if (tradeOrder.getOrderCreateDate().isAfter(tradeOrderfill1.getTime())) {
+                                        tradeOrder.setOrderCreateDate(tradeOrderfill1.getTime());
                                     }
                                 }
                             }
@@ -1976,7 +1992,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
                 changed = true;
             }
             if (changed)
-                order.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
+                order.setOrderUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
         }
         return changed;
     }
@@ -2000,9 +2016,9 @@ public class TWSBrokerService extends AbstractBrokerModel {
                 transientContract.setLocalSymbol(contractDetails.contract().localSymbol());
                 changed = true;
             }
-            if (CoreUtils.nullSafeComparator(transientContract.getIdContractIB(),
+            if (CoreUtils.nullSafeComparator(transientContract.getContractIBId(),
                     contractDetails.contract().conid()) != 0) {
-                transientContract.setIdContractIB(contractDetails.contract().conid());
+                transientContract.setContractIBId(contractDetails.contract().conid());
                 changed = true;
             }
             if (CoreUtils.nullSafeComparator(transientContract.getPrimaryExchange(),

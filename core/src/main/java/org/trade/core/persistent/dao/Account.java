@@ -45,14 +45,12 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import org.trade.core.dao.Aspect;
-import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.AccountType;
 import org.trade.core.valuetype.Currency;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -106,9 +104,6 @@ public class Account extends Aspect implements Serializable, Cloneable {
     @Column(name = "unrealized_pn_l", precision = 10)
     private BigDecimal unrealizedPnL = new BigDecimal(0);
 
-    @Column(name = "last_update_date", nullable = false)
-    private ZonedDateTime lastUpdateDate;
-
     @OneToMany(mappedBy = "account", fetch = FetchType.LAZY, orphanRemoval = true, cascade = {CascadeType.REFRESH})
     private List<PortfolioAccount> portfolioAccounts = new ArrayList<>(0);
 
@@ -116,7 +111,6 @@ public class Account extends Aspect implements Serializable, Cloneable {
 
         this.accountType = AccountType.INDIVIDUAL;
         this.currency = Currency.USD;
-        this.lastUpdateDate = TradingCalendar.getDateTimeNowMarketTimeZone();
     }
 
     /**
@@ -128,11 +122,11 @@ public class Account extends Aspect implements Serializable, Cloneable {
      * @param accountType   String
      */
     public Account(String name, String accountNumber, String currency, String accountType) {
+
         this.accountNumber = accountNumber;
         this.accountType = accountType;
         this.name = name;
         this.currency = currency;
-        this.lastUpdateDate = TradingCalendar.getDateTimeNowMarketTimeZone();
     }
 
     /**
@@ -162,7 +156,6 @@ public class Account extends Aspect implements Serializable, Cloneable {
         this.grossPositionValue = grossPositionValue;
         this.realizedPnL = realizedPnL;
         this.unrealizedPnL = unrealizedPnL;
-        this.lastUpdateDate = TradingCalendar.getDateTimeNowMarketTimeZone();
     }
 
     /**
@@ -380,25 +373,6 @@ public class Account extends Aspect implements Serializable, Cloneable {
         }
         return null;
     }
-
-    /**
-     * Method getLastUpdateDate.
-     *
-     * @return ZonedDateTime
-     */
-    public ZonedDateTime getLastUpdateDate() {
-        return this.lastUpdateDate;
-    }
-
-    /**
-     * Method setLastUpdateDate.
-     *
-     * @param lastUpdateDate ZonedDateTime
-     */
-    public void setLastUpdateDate(ZonedDateTime lastUpdateDate) {
-        this.lastUpdateDate = lastUpdateDate;
-    }
-
 
     /**
      * Method getPortfolioAccounts.

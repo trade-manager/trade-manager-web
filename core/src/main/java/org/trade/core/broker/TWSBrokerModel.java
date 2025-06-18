@@ -411,7 +411,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
                      * will force a get of the IB data via the
                      * Exchange/Symbol/Currency.
                      */
-                    contract.setIdContractIB(null);
+                    contract.setContractIBId(null);
                     m_contractRequests.put(contract.getId(), contract);
                     TWSBrokerModel.logContract(TWSBrokerModel.getIBContract(contract));
                     m_client.reqContractDetails(contract.getId(), TWSBrokerModel.getIBContract(contract));
@@ -912,9 +912,9 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
                                  * Make sure the create date for the order is
                                  * the earliest time.
                                  */
-                                if (tradeOrder.getCreateDate().isAfter(tradeOrderfill1.getTime())) {
+                                if (tradeOrder.getOrderCreateDate().isAfter(tradeOrderfill1.getTime())) {
 
-                                    tradeOrder.setCreateDate(tradeOrderfill1.getTime());
+                                    tradeOrder.setOrderCreateDate(tradeOrderfill1.getTime());
                                 }
                             }
                         }
@@ -1000,7 +1000,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
                                 + this.m_clientId + " is not the master in TWS. On openOrder update.");
                 transientInstance = new TradeOrder();
                 transientInstance.setOrderKey(order.orderId());
-                transientInstance.setCreateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
+                transientInstance.setOrderCreateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
                 TWSBrokerModel.updateTradeOrder(order, orderState, transientInstance);
                 openOrders.put(transientInstance.getOrderKey(), transientInstance);
                 return;
@@ -1103,7 +1103,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
 
             if (changed) {
 
-                transientInstance.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
+                transientInstance.setOrderUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
                 transientInstance.setStatus(status.toUpperCase());
                 transientInstance.setWhyHeld(whyHeld);
                 _log.debug("Order Status changed. Status: {}", status);
@@ -1595,7 +1595,6 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
                      */
                     if (account.isDirty()) {
 
-                        account.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
                         account = tradeService.saveAspect(account, true);
                         m_accountRequests.replace(accountNumber, account);
                         this.fireUpdateAccountTime(accountNumber);
@@ -1740,7 +1739,6 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
                                     AccountType.INDIVIDUAL);
                         }
                         account.setAlias(item.getAlias());
-                        account.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
                         account = tradeService.saveAspect(account);
                     }
                     m_client.requestFA(EClientSocket.GROUPS);
@@ -2433,7 +2431,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
                 changed = true;
             }
             if (changed) {
-                order.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
+                order.setOrderUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
             }
         }
         return changed;
@@ -2461,10 +2459,10 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
                 transientContract.setDirty(true);
             }
 
-            if (CoreUtils.nullSafeComparator(transientContract.getIdContractIB(),
+            if (CoreUtils.nullSafeComparator(transientContract.getContractIBId(),
                     contractDetails.contract().conid()) != 0) {
 
-                transientContract.setIdContractIB(contractDetails.contract().conid());
+                transientContract.setContractIBId(contractDetails.contract().conid());
                 transientContract.setDirty(true);
             }
 

@@ -67,7 +67,7 @@ public abstract class NumberToNumberConverter implements IJavaTypeConverter {
      * org.trade.core.conversion.IJavaTypeConverter#convert(Object)
      */
     public Object convert(Object valueToConvert) throws IllegalArgumentException {
-        if (valueToConvert instanceof java.lang.Number) {
+        if (valueToConvert instanceof Number) {
             return getConvertedNumber((Number) valueToConvert);
         }
 
@@ -83,7 +83,7 @@ public abstract class NumberToNumberConverter implements IJavaTypeConverter {
      * org.trade.core.conversion.IJavaTypeConverter#getSourceType()
      */
     public Class<?> getSourceType() {
-        return java.lang.Number.class;
+        return Number.class;
     }
 
     //

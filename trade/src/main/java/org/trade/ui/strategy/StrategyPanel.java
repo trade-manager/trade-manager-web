@@ -406,9 +406,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
             if (result == JOptionPane.YES_OPTION) {
 
                 Integer version = this.tradeService.findRuleByMaxVersion(this.currentRule.getStrategy());
-                Rule nextRule = new Rule(this.currentRule.getStrategy(), (version + 1), commentText.getText(),
-                        TradingCalendar.getDateTimeNowMarketTimeZone(), getContent().getBytes(),
-                        TradingCalendar.getDateTimeNowMarketTimeZone());
+                Rule nextRule = new Rule(this.currentRule.getStrategy(), (version + 1), commentText.getText(), getContent().getBytes());
                 this.currentRule.getStrategy().add(nextRule);
                 this.tradeService.saveAspect(nextRule);
                 doSaveFile(fileNameSource, getContent());
@@ -420,7 +418,6 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
 
                 Rule orginalRule = tradeService.findRuleById(this.currentRule.getId());
                 this.currentRule.setComment(orginalRule.getComment());
-                this.currentRule.setCreateDate(orginalRule.getCreateDate());
                 this.currentRule.setRule(orginalRule.getRule());
 
                 this.setContent(new String(this.currentRule.getRule()));
@@ -431,7 +428,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
 
                     this.currentRule.setComment(getComments());
                 }
-                this.currentRule.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
+
                 this.currentRule.setRule(getContent().getBytes());
                 this.currentRule = this.tradeService.saveAspect(this.currentRule);
                 doSaveFile(fileNameSource, getContent());
@@ -540,8 +537,8 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
                     String content = readFile(fileNameCode);
                     String comments = readFile(fileNameComments);
                     if (strategy.getRules().isEmpty()) {
-                        Rule nextRule = new Rule(strategy, 1, comments, TradingCalendar.getDateTimeNowMarketTimeZone(),
-                                content.getBytes(), TradingCalendar.getDateTimeNowMarketTimeZone());
+                        Rule nextRule = new Rule(strategy, 1, comments,
+                                content.getBytes());
                         strategy.add(nextRule);
                         this.tradeService.saveAspect(nextRule);
                     } else {
@@ -739,8 +736,8 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
 
         Integer version = this.tradeService.findRuleByMaxVersion(strategy);
         Rule nextRule = new Rule(strategy, (version + 1), commentText.getText(),
-                TradingCalendar.getDateTimeNowMarketTimeZone(), getContent().getBytes(),
-                TradingCalendar.getDateTimeNowMarketTimeZone());
+                getContent().getBytes()
+        );
         strategy.add(nextRule);
         refreshTree();
         TreePath path = m_tree.findTreePathByObject(nextRule);

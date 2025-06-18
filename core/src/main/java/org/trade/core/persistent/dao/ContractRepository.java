@@ -1,10 +1,10 @@
 package org.trade.core.persistent.dao;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.trade.core.dao.AspectRepository;
 
 import java.util.Optional;
 
-public interface ContractRepository extends JpaRepository<Contract, Integer>, ContractRepositoryCustom {
+public interface ContractRepository extends AspectRepository<Contract, Integer>, ContractRepositoryCustom {
 
     Optional<Contract> findBySymbol(String symbol);
 }

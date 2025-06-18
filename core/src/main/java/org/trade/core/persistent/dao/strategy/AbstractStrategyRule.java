@@ -601,7 +601,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
                     auxPrice = addPennyAndRoundStop(auxPrice.doubleValue(), side, action, 0.01);
                 }
             }
-            tradeOrder.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
+            tradeOrder.setOrderUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
             tradeOrder.setLimitPrice((null == limitPrice ? null : limitPrice.getBigDecimalValue()));
             tradeOrder.setAuxPrice((null == auxPrice ? null : auxPrice.getBigDecimalValue()));
 
@@ -977,7 +977,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
                         if (OrderType.STP.equals(tradeOrder.getOrderType()) && null != tradeOrder.getOcaGroupName()) {
                             if (!tradeOrder.getAuxPrice().equals(stopPrice.getBigDecimalValue())
                                     || !tradeOrder.getTransmit().equals(transmit)) {
-                                tradeOrder.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
+                                tradeOrder.setOrderUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
                                 tradeOrder.setAuxPrice(stopPrice.getBigDecimalValue());
                                 tradeOrder.setTransmit(transmit);
                                 TradeOrder tradeOrderBE = this.getBrokerManager()

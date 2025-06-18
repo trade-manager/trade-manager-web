@@ -89,9 +89,6 @@ public class TradePosition extends Aspect implements java.io.Serializable {
     @Column(name = "side", nullable = false, length = 3)
     private String side;
 
-    @Column(name = "last_update_date", nullable = false)
-    private ZonedDateTime lastUpdateDate;
-
     @Column(name = "open_quantity")
     private Integer openQuantity = 0;
 
@@ -139,7 +136,6 @@ public class TradePosition extends Aspect implements java.io.Serializable {
         this.contract = new ContractLite(contract.getId());
         this.positionOpenDate = positionOpenDate;
         this.side = side;
-        this.lastUpdateDate = positionOpenDate;
     }
 
     /**
@@ -154,15 +150,14 @@ public class TradePosition extends Aspect implements java.io.Serializable {
         this.contract = contract;
         this.positionOpenDate = positionOpenDate;
         this.side = side;
-        this.lastUpdateDate = positionOpenDate;
     }
 
     /**
      * Constructor for TradePosition.
      *
      * @param contract          Contract
-     * @param positionOpenDate  Date
-     * @param positionCloseDate Date
+     * @param positionOpenDate  ZonedDateTime
+     * @param positionCloseDate ZonedDateTime
      * @param openQuantity      Integer
      * @param side              String
      * @param totalBuyQuantity  Integer
@@ -189,7 +184,6 @@ public class TradePosition extends Aspect implements java.io.Serializable {
         this.totalSellValue = totalSellValue;
         this.totalNetValue = totalNetValue;
         this.tradeOrders = tradeOrders;
-        this.lastUpdateDate = positionOpenDate;
     }
 
     /**
@@ -391,24 +385,6 @@ public class TradePosition extends Aspect implements java.io.Serializable {
     }
 
     /**
-     * Method getLastUpdateDate.
-     *
-     * @return ZonedDateTime
-     */
-    public ZonedDateTime getLastUpdateDate() {
-        return this.lastUpdateDate;
-    }
-
-    /**
-     * Method setLastUpdateDate.
-     *
-     * @param lastUpdateDate ZonedDateTime
-     */
-    public void setLastUpdateDate(ZonedDateTime lastUpdateDate) {
-        this.lastUpdateDate = lastUpdateDate;
-    }
-
-    /**
      * Method getTradeOrders.
      *
      * @return List<TradeOrder>
@@ -557,6 +533,6 @@ public class TradePosition extends Aspect implements java.io.Serializable {
                 + " Total Buy qty: " + this.getTotalBuyQuantity() + " Total Buy Value: "
                 + new Money(this.getTotalBuyValue()) + " Total Sell qty: " + this.getTotalSellQuantity()
                 + " Total Sell Value: " + new Money(this.getTotalSellValue()) + " Total Comm: "
-                + new Money(this.getTotalCommission()) + " updateDate: " + this.getLastUpdateDate();
+                + new Money(this.getTotalCommission()) + " updateDate: " + this.getUpdateDate();
     }
 }

@@ -40,12 +40,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.trade.core.dao.Aspect;
 import org.trade.core.dao.Aspects;
 import org.trade.core.persistent.TradeService;
@@ -53,14 +51,12 @@ import org.trade.core.persistent.dao.Account;
 import org.trade.core.persistent.dao.Portfolio;
 import org.trade.core.persistent.dao.PortfolioAccount;
 import org.trade.core.properties.TradeAppLoadConfig;
-import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.AccountType;
 import org.trade.core.valuetype.Currency;
 
 /**
  *
  */
-@RunWith(SpringRunner.class)
 @SpringBootTest
 public class TWSFinancialAccountRequestIT {
 
@@ -144,7 +140,6 @@ public class TWSFinancialAccountRequestIT {
                         AccountType.INDIVIDUAL);
             }
             account.setAlias(item.getAlias());
-            account.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
             tradeService.saveAspect(account);
         }
     }
@@ -163,7 +158,6 @@ public class TWSFinancialAccountRequestIT {
                         AccountType.INDIVIDUAL);
             }
             account.setAlias(item.getAlias());
-            account.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
             tradeService.saveAspect(account);
         }
     }

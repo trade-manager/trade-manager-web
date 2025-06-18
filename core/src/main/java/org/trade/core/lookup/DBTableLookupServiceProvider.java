@@ -35,8 +35,9 @@
  */
 package org.trade.core.lookup;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.trade.core.dao.Aspect;
 import org.trade.core.dao.AspectRepository;
+import org.trade.core.dao.AspectServiceImpl;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.Reflector;
 import org.trade.core.valuetype.Decode;
@@ -53,10 +54,14 @@ import java.util.Vector;
  *
  * @author Simon Allen
  */
-public class DBTableLookupServiceProvider implements ILookupServiceProvider {
+public class DBTableLookupServiceProvider extends AspectServiceImpl implements ILookupServiceProvider {
 
-    @Autowired
-    private AspectRepository aspectRepository;
+
+    public AspectRepository<Aspect, Integer> getAspectRepository() {
+
+        return this.getAspectRepository();
+    }
+
     /*
      * This will be a hashtable of hashtables of ILookup objects. The first key
      * is the lookup name and the second key is the LookupQualifier.
@@ -87,12 +92,15 @@ public class DBTableLookupServiceProvider implements ILookupServiceProvider {
         ILookup lookup = getCachedLookup(lookupName, qualifier);
 
         if (null == lookup) {
+
             try {
+
                 Vector<Vector<Object>> rows = new Vector<>();
                 Vector<String> colNames = new Vector<>();
                 Enumeration<?> en = ConfigProperties.getPropAsEnumeration(lookupName + "_DBTable");
 
                 while (en.hasMoreElements()) {
+
                     colNames.addElement((String) en.nextElement());
                 }
 
@@ -103,6 +111,7 @@ public class DBTableLookupServiceProvider implements ILookupServiceProvider {
                 int colNamesSize = colNames.size();
 
                 for (i = 0; i < colNamesSize; i++) {
+
                     colRows.addElement(ConfigProperties.getPropAsEnumeration(colNames.elementAt(i)));
                 }
 
@@ -111,22 +120,24 @@ public class DBTableLookupServiceProvider implements ILookupServiceProvider {
                 boolean exit = false;
 
                 do {
+
                     Vector<Object> row = new Vector<>();
                     boolean foundOne = false;
                     boolean addIt = true;
                     int colRowsSize = colRows.size();
 
                     for (i = 0; i < colRowsSize; i++) {
-                        Object value = null;
 
+                        Object value = null;
                         en = colRows.elementAt(i);
 
                         if (en.hasMoreElements()) {
+
                             foundOne = true;
                             value = en.nextElement();
-
                             row.addElement(value);
                         } else {
+
                             // Represent an empty value
                             row.addElement("");
                         }
@@ -134,10 +145,13 @@ public class DBTableLookupServiceProvider implements ILookupServiceProvider {
                         // Check to see if the returned lookup is to be
                         // constrained
                         if (foundOne && (qualifier != null)) {
+
                             Object qualVal = qualifier.getValue(colNames.elementAt(i));
 
                             if (null != qualVal) {
+
                                 if (!qualVal.equals(value)) {
+
                                     addIt = false;
                                 }
                             }
@@ -145,10 +159,13 @@ public class DBTableLookupServiceProvider implements ILookupServiceProvider {
                     }
 
                     if (foundOne) {
+
                         if (addIt) {
+
                             rows.addElement(row);
                         }
                     } else {
+
                         exit = true;
                     }
                 } while (!exit);
@@ -159,7 +176,9 @@ public class DBTableLookupServiceProvider implements ILookupServiceProvider {
                 String type = null;
                 String methodName = null;
                 int rowsSize = rows.size();
+
                 for (i = 0; i < rowsSize; i++) {
+
                     Vector<Object> row = rows.elementAt(i);
                     int rowSize = row.size();
 
@@ -194,14 +213,18 @@ public class DBTableLookupServiceProvider implements ILookupServiceProvider {
                         rows.add(newRowNone);
                     }
 
-                    List<?> codes = aspectRepository.getCodes(dao);
+                    List<?> codes = this.findCodesByClassName(dao);
                     for (Object daoObject : codes) {
 
                         Method method = Reflector.findMethod(daoObject.getClass(), methodName, null);
+
                         if (null != method) {
+
                             Object[] o = new Object[0];
                             Object displayNameValue = method.invoke(daoObject, o);
+
                             if (null != displayNameValue) {
+
                                 Vector<Object> newRow = new Vector<>();
                                 newRow.add(type);
                                 newRow.add(daoObject);
@@ -214,6 +237,7 @@ public class DBTableLookupServiceProvider implements ILookupServiceProvider {
 
                 // If rows where found then I managed to provide the lookup
                 if (!rows.isEmpty()) {
+
                     lookup = new PropertiesLookup(colNames, rows);
                 }
             } catch (Throwable t) {
@@ -221,6 +245,7 @@ public class DBTableLookupServiceProvider implements ILookupServiceProvider {
                 // the lookup ignore the exception.
             }
             if (null != lookup) {
+
                 assert qualifier != null;
                 addLookupToCache(lookupName, qualifier, lookup);
             }
@@ -237,10 +262,12 @@ public class DBTableLookupServiceProvider implements ILookupServiceProvider {
      * @return ILookup
      */
     private ILookup getCachedLookup(String lookupName, LookupQualifier qualifier) {
+
         ILookup lookup = null;
         Hashtable<?, ?> lookupsByQualifier = _lookups.get(lookupName);
 
         if (null != lookupsByQualifier) {
+
             lookup = (ILookup) lookupsByQualifier.get(qualifier.toString());
         }
 
@@ -249,6 +276,7 @@ public class DBTableLookupServiceProvider implements ILookupServiceProvider {
          * returned would effect everyone using the object.
          */
         if (null != lookup) {
+
             lookup = (ILookup) lookup.clone();
         }
 

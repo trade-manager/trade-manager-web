@@ -1,13 +1,12 @@
 package org.trade.core.persistent.dao;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.trade.core.dao.AspectRepository;
 
 import java.util.List;
 
 
-public interface CandleRepository extends JpaRepository<Candle, Integer>, CandleRepositoryCustom {
+public interface CandleRepository extends AspectRepository<Candle, Integer>, CandleRepositoryCustom {
 
-    List<Candle> findByContractAndBarSize(Tradingday tradingday, Contract contract, Integer barSize);
+    List<Candle> findByTradingdayAndContractAndBarSize(Tradingday tradingday, Contract contract, Integer barSize);
 
-    void deleteAll(List<Candle> candles);
 }

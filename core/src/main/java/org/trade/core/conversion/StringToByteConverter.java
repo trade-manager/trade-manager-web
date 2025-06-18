@@ -44,7 +44,7 @@ package org.trade.core.conversion;
  * JavaTypeTranslator class.
  *
  * @author Simon Allen
- * @see java.lang.Byte
+ * @see Byte
  */
 public class StringToByteConverter extends StringToObjectConverter {
     /**
@@ -65,7 +65,7 @@ public class StringToByteConverter extends StringToObjectConverter {
      * org.trade.core.conversion.IJavaTypeConverter#getTargetType()
      */
     public Class<?> getTargetType() {
-        return java.lang.Byte.class;
+        return Byte.class;
     }
 
     //

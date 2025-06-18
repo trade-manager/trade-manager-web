@@ -40,6 +40,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.trade.core.dao.Aspect;
 import org.trade.core.dao.AspectRepository;
+import org.trade.core.dao.AspectServiceImpl;
 import org.trade.core.dao.Aspects;
 import org.trade.core.persistent.dao.Account;
 import org.trade.core.persistent.dao.AccountRepository;
@@ -62,8 +63,11 @@ import org.trade.core.persistent.dao.TradeOrderfill;
 import org.trade.core.persistent.dao.TradeOrderfillRepository;
 import org.trade.core.persistent.dao.TradePosition;
 import org.trade.core.persistent.dao.TradePositionRepository;
+import org.trade.core.persistent.dao.TradelogDetail;
+import org.trade.core.persistent.dao.TradelogDetailRepository;
 import org.trade.core.persistent.dao.TradelogReport;
-import org.trade.core.persistent.dao.TradelogReportRepository;
+import org.trade.core.persistent.dao.TradelogSummary;
+import org.trade.core.persistent.dao.TradelogSummaryRepository;
 import org.trade.core.persistent.dao.Tradestrategy;
 import org.trade.core.persistent.dao.TradestrategyLite;
 import org.trade.core.persistent.dao.TradestrategyOrders;
@@ -95,7 +99,7 @@ import java.util.Optional;
  *
  */
 @Service
-public class TradeServiceImpl implements TradeService {
+public class TradeServiceImpl extends AspectServiceImpl implements TradeService {
 
     @Autowired
     private AspectRepository aspectRepository;
@@ -122,7 +126,10 @@ public class TradeServiceImpl implements TradeService {
     private StrategyRepository strategyRepository;
 
     @Autowired
-    private TradelogReportRepository tradelogReportRepository;
+    private TradelogDetailRepository tradelogDetailRepository;
+
+    @Autowired
+    private TradelogSummaryRepository tradelogSummaryRepository;
 
     @Autowired
     private TradeOrderfillRepository tradeOrderfillRepository;
@@ -142,38 +149,39 @@ public class TradeServiceImpl implements TradeService {
     private static final int SCALE_5 = 5;
     private static final int SCALE_2 = 2;
 
-    public TradeServiceImpl() {
-
+    public AspectRepository<Aspect, Integer> getAspectRepository() {
+        return this.aspectRepository;
     }
 
-    public void deleteById(Integer id) {
+    public void deleteAspect(Aspect instance) {
 
-        aspectRepository.deleteById(id);
+        this.getAspectRepository().delete(instance);
     }
 
-    public void delete(Aspect instace) {
+    public void deleteAllAspects(Iterable<? extends Aspect> entities) {
 
-        aspectRepository.delete(instace);
+        this.getAspectRepository().deleteAll(entities);
     }
 
-    public void deleteAll(Iterable<? extends Aspect> entities) {
-
-        aspectRepository.deleteAll(entities);
-    }
-
-    public Optional<Contract> findBySymbol(String symbol) {
+    public Optional<Contract> findContractBySymbol(String symbol) {
 
         return contractRepository.findBySymbol(symbol);
     }
 
-    public Iterable<Contract> findAll() {
+    public Iterable<Contract> findAllContracts() {
 
         return contractRepository.findAll();
     }
 
     public TradelogReport findTradelogReport(final Portfolio portfolio, ZonedDateTime start, ZonedDateTime end,
                                              boolean filter, String symbol, BigDecimal winLossAmount) throws IOException {
-        return tradelogReportRepository.findByTradelogReport(portfolio, start, end, filter, symbol, winLossAmount);
+
+        TradelogReport tradelogReport = new TradelogReport();
+        List<TradelogDetail> reportDetails = tradelogDetailRepository.findByTradelogDetail(portfolio, start, end, filter, symbol, winLossAmount);
+        tradelogReport.setTradelogDetail(reportDetails);
+        List<TradelogSummary> reportSummary = tradelogSummaryRepository.findByTradelogSummary(portfolio, start, end, symbol, winLossAmount);
+        tradelogReport.setTradelogSummary(reportSummary);
+        return tradelogReport;
     }
 
 
@@ -187,8 +195,8 @@ public class TradeServiceImpl implements TradeService {
     }
 
 
-    public Tradingday findTradingdayById(final Integer id) {
-        return tradingdayRepository.findById(id).isPresent() ? tradingdayRepository.findById(id).get() : null;
+    public Tradingday findTradingdayById(final Integer tradingdayId) {
+        return tradingdayRepository.findById(tradingdayId).isPresent() ? tradingdayRepository.findById(tradingdayId).get() : null;
     }
 
     public Tradingday findTradingdayByOpenCloseDate(final ZonedDateTime openDate, final ZonedDateTime closeDate) {
@@ -236,9 +244,9 @@ public class TradeServiceImpl implements TradeService {
         }
     }
 
-    public TradestrategyOrders findPositionOrdersByTradestrategyId(final Integer idTradestrategy) {
+    public TradestrategyOrders findPositionOrdersByTradestrategyId(final Integer tradestrategyId) {
 
-        return tradestrategyRepository.findPositionOrdersByTradestrategyId(idTradestrategy);
+        return tradestrategyRepository.findPositionOrdersByTradestrategyId(tradestrategyId);
     }
 
     public Tradestrategy findTradestrategyById(final Integer id) throws ServiceException {
@@ -270,9 +278,9 @@ public class TradeServiceImpl implements TradeService {
         return portfolioRepository.findDefault();
     }
 
-    public void resetDefaultPortfolio(final Portfolio transientInstance) {
+    public void resetDefaultPortfolio(final Portfolio instance) {
 
-        portfolioRepository.resetDefaultPortfolio(transientInstance);
+        portfolioRepository.resetDefaultPortfolio(instance);
     }
 
     public Portfolio savePortfolio(Portfolio instance) {
@@ -280,8 +288,6 @@ public class TradeServiceImpl implements TradeService {
         Portfolio portfolio = this.findPortfolioByName(instance.getName());
 
         if (null == portfolio) {
-
-            instance.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
 
             for (PortfolioAccount item : instance.getPortfolioAccounts()) {
 
@@ -291,7 +297,6 @@ public class TradeServiceImpl implements TradeService {
 
                     item.getAccount().setCurrency(Currency.USD);
                     item.getAccount().setName(item.getAccount().getAccountNumber());
-                    item.getAccount().setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
                 } else {
 
                     item.setAccount(account);
@@ -305,7 +310,6 @@ public class TradeServiceImpl implements TradeService {
                     instance.getAllocationMethod())) {
 
                 portfolio.setAllocationMethod(instance.getAllocationMethod());
-                portfolio.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
             }
 
             for (PortfolioAccount item : instance.getPortfolioAccounts()) {
@@ -316,7 +320,6 @@ public class TradeServiceImpl implements TradeService {
 
                     item.getAccount().setCurrency(Currency.USD);
                     item.getAccount().setName(item.getAccount().getAccountNumber());
-                    item.getAccount().setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
                 } else {
 
                     item.setAccount(account);
@@ -357,22 +360,22 @@ public class TradeServiceImpl implements TradeService {
         return tradestrategyRepository.findTradestrategyContractDistinctByDateRange(fromOpen, toOpen);
     }
 
-    public void deleteTradingdayTradeOrders(final Tradingday transientInstance) throws ServiceException {
-        for (Tradestrategy tradestrategy : transientInstance.getTradestrategies()) {
+    public void deleteTradingdayTradeOrders(final Tradingday instance) throws ServiceException {
+        for (Tradestrategy tradestrategy : instance.getTradestrategies()) {
             this.deleteTradestrategyTradeOrders(tradestrategy);
         }
     }
 
-    public void deleteTradestrategyTradeOrders(final Tradestrategy tradestrategy) throws ServiceException {
+    public void deleteTradestrategyTradeOrders(final Tradestrategy instance) throws ServiceException {
 
         try {
             /*
              * Refresh the trade strategy as orders across tradePosition could
              * have been deleted if this is a bulk delete of tradestrategies.
              */
-            Tradestrategy transientInstance = tradestrategyRepository.findById(Objects.requireNonNull(tradestrategy.getId())).get();
+            Tradestrategy transientInstance = tradestrategyRepository.findById(Objects.requireNonNull(instance.getId())).get();
             transientInstance.setStatus(null);
-            aspectRepository.save(transientInstance);
+            getAspectRepository().save(transientInstance);
 
             Hashtable<Integer, TradePosition> tradePositions = new Hashtable<>();
             for (TradeOrder tradeOrder : transientInstance.getTradeOrders()) {
@@ -381,7 +384,7 @@ public class TradeServiceImpl implements TradeService {
                             tradeOrder.getTradePosition());
 
                 if (null != tradeOrder.getId()) {
-                    aspectRepository.delete(tradeOrder);
+                    this.deleteAspect(tradeOrder);
                 }
             }
             for (TradePosition tradePosition : tradePositions.values()) {
@@ -392,9 +395,9 @@ public class TradeServiceImpl implements TradeService {
                  */
                 if (tradePosition.equals(transientInstance.getContract().getTradePosition())) {
                     transientInstance.getContract().setTradePosition(null);
-                    aspectRepository.save(transientInstance.getContract());
+                    getAspectRepository().save(transientInstance.getContract());
                 }
-                aspectRepository.delete(tradePosition);
+                this.deleteAspect(tradePosition);
             }
 
             transientInstance.getTradeOrders().clear();
@@ -404,7 +407,7 @@ public class TradeServiceImpl implements TradeService {
 
         } catch (Exception ex) {
             throw new ServiceException("Error removing Tradestrategy TradePositions: "
-                    + tradestrategy.getContract().getSymbol() + "\n Msg: " + ex.getMessage());
+                    + instance.getContract().getSymbol() + "\n Msg: " + ex.getMessage());
         }
     }
 
@@ -424,15 +427,15 @@ public class TradeServiceImpl implements TradeService {
         return tradingdayRepository.findTradingdaysByDateRange(startDate, endDate);
     }
 
-    public List<Candle> findCandlesByContractDateRangeBarSize(final Integer idContract, final ZonedDateTime startDate,
+    public List<Candle> findCandlesByContractDateRangeBarSize(final Integer contractId, final ZonedDateTime startDate,
                                                               final ZonedDateTime endDate, final Integer barSize) {
-        return candleRepository.findCandlesByContractDateRangeBarSize(idContract, startDate, endDate, barSize);
+        return candleRepository.findCandlesByContractDateRangeBarSize(contractId, startDate, endDate, barSize);
     }
 
 
-    public Long findCandleCount(final Integer idTradingday, final Integer idContract) {
+    public Long findCandleCount(final Integer tradingdayId, final Integer contractId) {
 
-        return candleRepository.findCandleCount(idTradingday, idContract);
+        return candleRepository.findCandleCount(tradingdayId, contractId);
     }
 
     public void saveCandleSeries(final CandleSeries candleSeries) throws ServiceException {
@@ -497,7 +500,7 @@ public class TradeServiceImpl implements TradeService {
 
                     Integer barSize = candleSeries.getBarSize();
                     String hqlDelete = "delete Candle where contract = :contract and tradingday = :tradingday and barSize = :barSize";
-                    List<Candle> candles = candleRepository.findByContractAndBarSize(tradingday, contract, barSize);
+                    List<Candle> candles = candleRepository.findByTradingdayAndContractAndBarSize(tradingday, contract, barSize);
                     candleRepository.deleteAll(candles);
                 }
             }
@@ -539,19 +542,19 @@ public class TradeServiceImpl implements TradeService {
             }
         }
 
-        return aspectRepository.save(candle);
+        return getAspectRepository().save(candle);
     }
 
-    public Tradingday saveTradingday(Tradingday transientInstance) {
+    public Tradingday saveTradingday(Tradingday instance) {
 
         /*
          * Check the incoming tradingday to see if it exists if it does
          * merge with the persisted one if not persist.
          */
 
-        transientInstance = this.saveAspect(transientInstance);
+        instance = this.saveAspect(instance);
 
-        for (Tradestrategy tradestrategy : transientInstance.getTradestrategies()) {
+        for (Tradestrategy tradestrategy : instance.getTradestrategies()) {
 
             // If it has trades do nothing
             if (tradestrategy.getTradeOrders().isEmpty() && tradestrategy.isDirty()) {
@@ -559,7 +562,7 @@ public class TradeServiceImpl implements TradeService {
                 /*
                  * If the tradingday existed use the persisted version.
                  */
-                tradestrategy.setTradingday(transientInstance);
+                tradestrategy.setTradingday(instance);
 
                 /*
                  * The strategy will always exist as these cannot be created
@@ -593,13 +596,13 @@ public class TradeServiceImpl implements TradeService {
             }
         }
 
-        List<Tradestrategy> tradestrategies = tradingdayRepository.findTradestrategyByTradingdayId(transientInstance.getId());
+        List<Tradestrategy> tradestrategies = tradingdayRepository.findTradestrategyByTradingdayId(instance.getId());
 
         for (Tradestrategy tradestrategy : tradestrategies) {
 
             boolean exists = false;
 
-            for (Tradestrategy newTradestrategy : transientInstance.getTradestrategies()) {
+            for (Tradestrategy newTradestrategy : instance.getTradestrategies()) {
 
                 if (newTradestrategy.equals(tradestrategy)) {
 
@@ -626,8 +629,8 @@ public class TradeServiceImpl implements TradeService {
             }
         }
 
-        transientInstance.setDirty(false);
-        return transientInstance;
+        instance.setDirty(false);
+        return instance;
     }
 
     public TradeOrder saveTradeOrder(final TradeOrder tradeOrder) {
@@ -820,7 +823,6 @@ public class TradeServiceImpl implements TradeService {
                 this.saveAspect(tradestrategyOrders);
             }
 
-            tradePosition.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
             this.saveAspect(tradePosition);
 
         } else {
@@ -850,7 +852,6 @@ public class TradeServiceImpl implements TradeService {
             if (CoreUtils.nullSafeComparator(comms.getBigDecimalValue(), tradePosition.getTotalCommission()) == 1) {
 
                 tradePosition.setTotalCommission(comms.getBigDecimalValue());
-                tradePosition.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
                 this.saveAspect(tradePosition);
             }
         }
@@ -865,21 +866,26 @@ public class TradeServiceImpl implements TradeService {
             double filledValue = 0;
             double commission = 0;
             int filledQuantity = 0;
+
             for (TradeOrderfill tradeOrderfill : tradeOrder.getTradeOrderfills()) {
 
-                if (null != tradeOrderfill.getCommission())
+                if (null != tradeOrderfill.getCommission()) {
                     commission = commission + tradeOrderfill.getCommission().doubleValue();
+                }
 
                 filledQuantity = filledQuantity + tradeOrderfill.getQuantity();
                 filledValue = filledValue + (tradeOrderfill.getPrice().doubleValue() * tradeOrderfill.getQuantity());
-                if (null == filledDate)
+                if (null == filledDate) {
                     filledDate = tradeOrderfill.getTime();
+                }
 
-                if (filledDate.isBefore(tradeOrderfill.getTime()))
+                if (filledDate.isBefore(tradeOrderfill.getTime())) {
                     filledDate = tradeOrderfill.getTime();
+                }
             }
 
             if (filledQuantity > 0) {
+
                 BigDecimal avgFillPrice = (new BigDecimal(filledValue / filledQuantity)).setScale(SCALE_5,
                         RoundingMode.HALF_EVEN);
                 BigDecimal commissionAmount = (new BigDecimal(commission)).setScale(SCALE_2,
@@ -891,6 +897,7 @@ public class TradeServiceImpl implements TradeService {
                  * before the orderFills have arrived.
                  */
                 if (CoreUtils.nullSafeComparator(filledQuantity, tradeOrder.getFilledQuantity()) == 1) {
+
                     tradeOrder.setAverageFilledPrice(avgFillPrice);
                     tradeOrder.setFilledQuantity(filledQuantity);
                     tradeOrder.setFilledDate(filledDate);
@@ -900,10 +907,11 @@ public class TradeServiceImpl implements TradeService {
                      * can be set via the commissionReport event i.e each
                      * execution or by the openOrder event.
                      */
-                    if (CoreUtils.nullSafeComparator(commissionAmount, tradeOrder.getCommission()) == 1)
+                    if (CoreUtils.nullSafeComparator(commissionAmount, tradeOrder.getCommission()) == 1) {
                         tradeOrder.setCommission(commissionAmount);
+                    }
 
-                    tradeOrder.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
+                    tradeOrder.setOrderUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
                 }
             }
             return saveTradeOrder(tradeOrder);
@@ -916,8 +924,8 @@ public class TradeServiceImpl implements TradeService {
         }
     }
 
-    public Rule findRuleById(final Integer id) {
-        return ruleRepository.findById(id).isPresent() ? ruleRepository.findById(id).get() : null;
+    public Rule findRuleById(final Integer ruleId) {
+        return ruleRepository.findById(ruleId).isPresent() ? ruleRepository.findById(ruleId).get() : null;
     }
 
     public Integer findRuleByMaxVersion(final Strategy strategy) {
@@ -937,54 +945,46 @@ public class TradeServiceImpl implements TradeService {
         return strategyRepository.findAll();
     }
 
-    public Aspects findAspectsByClassName(String aspectClassName) throws ServiceException {
-        try {
+    public Aspects findAspectsByClassName(String aspectClassName) throws ClassNotFoundException {
 
-            if ("org.trade.persistent.dao.Strategy".equals(aspectClassName)) {
-                /*
-                 * Relationship Strategy -> IndicatorSeries is LAZY so we need
-                 * to call size() on Rule/IndicatorSeries.
-                 */
-                List<Strategy> items = strategyRepository.findAll();
-                Aspects aspects = new Aspects();
-                for (Aspect item : items) {
-                    aspects.add(item);
-                }
-                aspects.setDirty(false);
-                return aspects;
-            } else if ("org.trade.persistent.dao.Portfolio".equals(aspectClassName)) {
-                /*
-                 * Relationship Portfolio -> PortfilioAccount iis LAZY so we
-                 * need to call size() on PortfolioAccount.
-                 */
-                List<Portfolio> items = portfolioRepository.findAll();
-                Aspects aspects = new Aspects();
-                for (Aspect item : items) {
-                    aspects.add(item);
-                }
-                aspects.setDirty(false);
-                return aspects;
-            } else {
-                return aspectRepository.findByClassName(aspectClassName);
+        if ("org.trade.persistent.dao.Strategy".equals(aspectClassName)) {
+            /*
+             * Relationship Strategy -> IndicatorSeries is LAZY so we need
+             * to call size() on Rule/IndicatorSeries.
+             */
+            List<Strategy> items = strategyRepository.findAll();
+            Aspects aspects = new Aspects();
+            for (Aspect item : items) {
+                aspects.add(item);
             }
-
-        } catch (Exception ex) {
-            throw new ServiceException("Error finding Aspects: " + ex.getMessage());
+            aspects.setDirty(false);
+            return aspects;
+        } else if ("org.trade.persistent.dao.Portfolio".equals(aspectClassName)) {
+            /*
+             * Relationship Portfolio -> PortfilioAccount iis LAZY so we
+             * need to call size() on PortfolioAccount.
+             */
+            List<Portfolio> items = portfolioRepository.findAll();
+            Aspects aspects = new Aspects();
+            for (Aspect item : items) {
+                aspects.add(item);
+            }
+            aspects.setDirty(false);
+            return aspects;
+        } else {
+            return this.findAspectByClassName(aspectClassName);
         }
     }
 
-    public Aspects findAspectsByClassNameFieldName(String className, String fieldname, String value)
-            throws ServiceException {
-        try {
-            return aspectRepository.findByClassNameFieldName(className, fieldname, value);
-        } catch (Exception ex) {
-            throw new ServiceException("Error finding Aspects: " + ex.getMessage());
-        }
+    public Aspects findAspectsByClassNameFieldName(String className, String fieldName, String value)
+            throws ClassNotFoundException {
+
+        return this.findByClassNameAndFieldName(className, fieldName, value);
     }
 
     public Aspect findAspectById(final Aspect aspect) throws ServiceException {
 
-        Optional<Aspect> instance = aspectRepository.findById(aspect.getId());
+        Optional<Aspect> instance = getAspectRepository().findById(aspect.getId());
         if (instance.isEmpty()) {
             throw new ServiceException("Aspect not found for Id: " + aspect.getId());
         }
@@ -992,24 +992,19 @@ public class TradeServiceImpl implements TradeService {
         return instance.get();
     }
 
-    public Aspects findByClassName(String className) throws ClassNotFoundException {
+    public Aspects findAspectByClassName(String className) throws ClassNotFoundException {
 
-        return aspectRepository.findByClassName(className);
+        return this.findByClassName(className);
     }
 
-    public <T extends Aspect> T saveAspect(final T transientInstance) {
+    public <T extends Aspect> T saveAspect(final T instance) {
 
-        return aspectRepository.save(transientInstance);
+        return getAspectRepository().save(instance);
     }
 
-    public <T extends Aspect> T saveAspect(final T transientInstance, boolean overrideVersion) {
+    public <T extends Aspect> T saveAspect(final T instance, boolean overrideVersion) {
 
-        return aspectRepository.save(transientInstance);
-    }
-
-    public void deleteAspect(final Aspect transientInstance) {
-
-        aspectRepository.delete(transientInstance);
+        return getAspectRepository().save(instance);
     }
 
     public void reassignStrategy(final Strategy fromStrategy, final Strategy toStrategy, final Tradingday tradingday)
@@ -1020,8 +1015,8 @@ public class TradeServiceImpl implements TradeService {
                 if (item.getStrategy().getId().equals(fromStrategy.getId())) {
                     item.setStrategy(toStrategy);
                     item.setDirty(true);
-                    item.setStrategyData(null);
-                    aspectRepository.save(item);
+                    //  item.setStrategyData(null);
+                    getAspectRepository().save(item);
                 }
             }
 

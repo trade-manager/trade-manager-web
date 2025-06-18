@@ -48,14 +48,12 @@ import org.trade.core.dao.Aspect;
 import org.trade.core.factory.ClassFactory;
 import org.trade.core.persistent.dao.series.indicator.StrategyData;
 import org.trade.core.util.CoreUtils;
-import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.TradestrategyStatus;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Duration;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -76,9 +74,6 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
 
     @Column(name = "risk_amount", nullable = false, precision = 10)
     private BigDecimal riskAmount;
-
-    @Column(name = "last_update_date", nullable = false)
-    private ZonedDateTime lastUpdateDate;
 
     @Column(name = "chart_days")
     private Integer chartDays;
@@ -120,11 +115,13 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
     @OneToMany(mappedBy = "tradestrategy", fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     private List<CodeValue> codeValues = new ArrayList<>(0);
 
+    @Transient
     private StrategyData strategyData = null;
+
+    @Transient
     private final TradestrategyStatus tradestrategyStatus = new TradestrategyStatus();
 
     public Tradestrategy() {
-        this.lastUpdateDate = TradingCalendar.getDateTimeNowMarketTimeZone();
     }
 
     /**
@@ -180,7 +177,6 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
         this.side = side;
         this.tier = tier;
         this.trade = trade;
-        this.lastUpdateDate = TradingCalendar.getDateTimeNowMarketTimeZone();
         super.setDirty(true);
     }
 
@@ -254,7 +250,6 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
      *
      * @return TradestrategyStatus
      */
-    @Transient
     public TradestrategyStatus getTradestrategyStatus() {
         return tradestrategyStatus;
     }
@@ -405,24 +400,6 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
     }
 
     /**
-     * Method getLastUpdateDate.
-     *
-     * @return ZonedDateTime
-     */
-    public ZonedDateTime getLastUpdateDate() {
-        return this.lastUpdateDate;
-    }
-
-    /**
-     * Method setLastUpdateDate.
-     *
-     * @param lastUpdateDate ZonedDateTime
-     */
-    public void setLastUpdateDate(ZonedDateTime lastUpdateDate) {
-        this.lastUpdateDate = lastUpdateDate;
-    }
-
-    /**
      * Method getTradeOrders.
      *
      * @return List<Trade>
@@ -472,19 +449,17 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
     @Transient
     public Object getValueCode(String name) throws Exception {
 
-        Object codeValue = null;
-
         for (CodeValue value : this.getCodeValues()) {
 
             if (name.equals(value.getCodeAttribute().getName())) {
 
                 Vector<Object> parm = new Vector<>();
                 parm.add(value.getCodeValue());
-                codeValue = ClassFactory.getCreateClass(value.getCodeAttribute().getClassName(), parm, this);
+                Object codeValue = ClassFactory.getCreateClass(value.getCodeAttribute().getClassName(), parm, this);
                 return codeValue;
             }
         }
-        return codeValue;
+        return null;
     }
 
     /**
@@ -517,7 +492,6 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
      *
      * @return StrategyData
      */
-    @Transient
     public StrategyData getStrategyData() {
         return this.strategyData;
     }
@@ -551,7 +525,8 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
     }
 
     public static final Comparator<Tradestrategy> DATE_ORDER_ASC = (o1, o2) -> {
-        m_ascending = true;
+
+        setAscending(true);
         int returnVal;
 
         if (CoreUtils.nullSafeComparator(o1.getTradingday().getOpen(), o2.getTradingday().getOpen()) == 0) {
@@ -569,7 +544,7 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
             returnVal = CoreUtils.nullSafeComparator(o1.getTradingday().getOpen(), o2.getTradingday().getOpen());
         }
 
-        if (m_ascending.equals(Boolean.FALSE)) {
+        if (getAscending().equals(Boolean.FALSE)) {
 
             returnVal = returnVal * -1;
         }
@@ -578,7 +553,7 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
 
     public static final Comparator<Tradestrategy> TRADINGDAY_CONTRACT = (o1, o2) -> {
 
-        m_ascending = true;
+        setAscending(true);
         int returnVal;
 
         if (CoreUtils.nullSafeComparator(o1.getTradingday().getOpen(), o2.getTradingday().getOpen()) == 0) {
@@ -602,7 +577,7 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
             returnVal = CoreUtils.nullSafeComparator(o1.getTradingday().getOpen(), o2.getTradingday().getOpen());
         }
 
-        if (m_ascending.equals(Boolean.FALSE)) {
+        if (getAscending().equals(Boolean.FALSE)) {
 
             returnVal = returnVal * -1;
         }

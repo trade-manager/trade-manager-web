@@ -1,9 +1,9 @@
 package org.trade.core.persistent.dao;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.trade.core.dao.AspectRepository;
 
 
-public interface CodeTypeRepository extends JpaRepository<CodeType, Integer>, CodeTypeRepositoryCustom {
+public interface CodeTypeRepository extends AspectRepository<CodeType, Integer>, CodeTypeRepositoryCustom {
 
     CodeType findByName(String name);
 }

@@ -96,8 +96,8 @@ public class Contract extends Aspect implements Serializable, Cloneable {
     @Column(name = "sec_type", nullable = false, length = 4)
     private String secType;
 
-    @Column(name = "id_contract_IB")
-    private Integer idContractIB;
+    @Column(name = "contract_ib_id")
+    private Integer contractIBId;
 
     @Column(name = "combo_leg_description", length = 30)
     private String comboLegDescription;
@@ -182,9 +182,16 @@ public class Contract extends Aspect implements Serializable, Cloneable {
     @Column(name = "ev_multiplier", precision = 10)
     private BigDecimal evMultiplier;
 
+    @Transient
     private BigDecimal lastAskPrice = new BigDecimal(0);
+
+    @Transient
     private BigDecimal lastBidPrice = new BigDecimal(0);
+
+    @Transient
     private BigDecimal lastPrice = new BigDecimal(0);
+
+    @Transient
     private List<Tradestrategy> tradestrategies = Collections.synchronizedList(new ArrayList<>(0));
 
     @OneToOne(fetch = FetchType.EAGER)
@@ -387,17 +394,17 @@ public class Contract extends Aspect implements Serializable, Cloneable {
      *
      * @return Integer
      */
-    public Integer getIdContractIB() {
-        return this.idContractIB;
+    public Integer getContractIBId() {
+        return this.contractIBId;
     }
 
     /**
      * Method setIdContractIB.
      *
-     * @param idContractIB Integer
+     * @param contractIBId Integer
      */
-    public void setIdContractIB(Integer idContractIB) {
-        this.idContractIB = idContractIB;
+    public void setContractIBId(Integer contractIBId) {
+        this.contractIBId = contractIBId;
     }
 
     /**
@@ -459,7 +466,6 @@ public class Contract extends Aspect implements Serializable, Cloneable {
      *
      * @return BigDecimal
      */
-    @Transient
     public BigDecimal getLastPrice() {
         return this.lastPrice;
     }
@@ -478,7 +484,6 @@ public class Contract extends Aspect implements Serializable, Cloneable {
      *
      * @return BigDecimal
      */
-    @Transient
     public BigDecimal getLastAskPrice() {
         return this.lastAskPrice;
     }
@@ -497,7 +502,6 @@ public class Contract extends Aspect implements Serializable, Cloneable {
      *
      * @return BigDecimal
      */
-    @Transient
     public BigDecimal getLastBidPrice() {
         return this.lastBidPrice;
     }
@@ -888,7 +892,6 @@ public class Contract extends Aspect implements Serializable, Cloneable {
      * @return List<Tradestrategy>
      */
     // @OneToMany(mappedBy = "contract", fetch = FetchType.LAZY)
-    @Transient
     public List<Tradestrategy> getTradestrategies() {
         return this.tradestrategies;
     }

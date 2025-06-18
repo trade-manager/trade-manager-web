@@ -40,12 +40,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.trade.core.dao.Aspect;
 import org.trade.core.dao.Aspects;
 import org.trade.core.persistent.TradeService;
@@ -61,7 +59,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 /**
  *
  */
-@RunWith(SpringRunner.class)
 @SpringBootTest
 public class PortfolioIT {
 
@@ -94,9 +91,9 @@ public class PortfolioIT {
     @AfterEach
     public void tearDown() throws Exception {
 
-        Aspects accounts = tradeService.findByClassName(Account.class.getName());
+        Aspects accounts = tradeService.findAspectByClassName(Account.class.getName());
         for (Aspect aspect : accounts.getAspect()) {
-            tradeService.delete(aspect);
+            tradeService.deleteAspect(aspect);
         }
     }
 

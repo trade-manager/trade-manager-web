@@ -109,7 +109,7 @@ public class MessageFactory implements IMessageFactory {
      * Method create.
      *
      * @return ExceptionMessage
-     * @see org.trade.core.message.IMessageFactory#create()
+     * @see IMessageFactory#create()
      */
     public ExceptionMessage create() {
         return new ExceptionMessage(m_exceptionMessage);
@@ -120,7 +120,7 @@ public class MessageFactory implements IMessageFactory {
      *                      will cause a group number to be appended to each field
      *                      reference.
      * @return ExceptionMessage
-     * @see org.trade.core.message.IMessageFactory#create(int)
+     * @see IMessageFactory#create(int)
      */
     public ExceptionMessage create(int fieldSequence) {
         return new ExceptionMessage(m_exceptionMessage.getExceptionCode().createSequencedCode(fieldSequence),
@@ -132,7 +132,7 @@ public class MessageFactory implements IMessageFactory {
      *
      * @param exceptionContext ExceptionContext
      * @return ExceptionMessage
-     * @see org.trade.core.message.IMessageFactory#create(ExceptionContext)
+     * @see IMessageFactory#create(ExceptionContext)
      */
     public ExceptionMessage create(ExceptionContext exceptionContext) {
         ExceptionMessage returnValue;
@@ -149,7 +149,7 @@ public class MessageFactory implements IMessageFactory {
      * @param exceptionContext1 ExceptionContext
      * @param exceptionContext2 ExceptionContext
      * @return ExceptionMessage
-     * @see org.trade.core.message.IMessageFactory#create(ExceptionContext,
+     * @see IMessageFactory#create(ExceptionContext,
      * ExceptionContext)
      */
     public ExceptionMessage create(ExceptionContext exceptionContext1, ExceptionContext exceptionContext2) {

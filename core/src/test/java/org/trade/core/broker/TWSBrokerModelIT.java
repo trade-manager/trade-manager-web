@@ -40,12 +40,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.trade.core.dao.Aspect;
 import org.trade.core.dao.Aspects;
 import org.trade.core.factory.ClassFactory;
@@ -73,7 +71,6 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-@RunWith(SpringRunner.class)
 @SpringBootTest
 public class TWSBrokerModelIT implements IBrokerChangeListener {
 

@@ -777,7 +777,7 @@ public class TradingdayPanel extends BasePanel {
                         ? new BigDecimal(0) : portfolioAccount.getAccount().getRealizedPnL()));
                 unrealizedPnL = unrealizedPnL.add((portfolioAccount.getAccount().getUnrealizedPnL() == null
                         ? new BigDecimal(0) : portfolioAccount.getAccount().getUnrealizedPnL()));
-                updateDate = portfolioAccount.getAccount().getLastUpdateDate();
+                updateDate = portfolioAccount.getAccount().getUpdateDate();
             }
             portfolioLabel.setText(null);
             CoreUtils.setDocumentText(portfolioLabel.getDocument(), "Portfolio:", false, bold);

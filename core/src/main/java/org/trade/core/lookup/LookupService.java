@@ -35,9 +35,7 @@
  */
 package org.trade.core.lookup;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.trade.core.dao.AspectRepository;
 
 import java.util.Vector;
 

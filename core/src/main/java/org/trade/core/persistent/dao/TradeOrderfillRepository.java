@@ -1,9 +1,9 @@
 package org.trade.core.persistent.dao;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.trade.core.dao.AspectRepository;
 
 
-public interface TradeOrderfillRepository extends JpaRepository<TradeOrderfill, Integer>, TradeOrderfillRepositoryCustom {
+public interface TradeOrderfillRepository extends AspectRepository<TradeOrderfill, Integer>, TradeOrderfillRepositoryCustom {
 
     TradeOrderfill findByExecId(String execId);
 }

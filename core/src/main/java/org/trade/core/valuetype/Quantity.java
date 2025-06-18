@@ -262,7 +262,7 @@ public class Quantity extends ValueType implements Comparator<Quantity>, Compara
         if (null == m_value)
             return null;
 
-        return new java.math.BigInteger(m_value.toString());
+        return new BigInteger(m_value.toString());
     }
 
     /**

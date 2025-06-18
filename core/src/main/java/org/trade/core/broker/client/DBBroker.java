@@ -76,6 +76,7 @@ public class DBBroker extends Broker {
 
     @Autowired
     private TradeService tradeService;
+
     private final StrategyData strategyData;
     private Tradestrategy tradestrategy = null;
     private final Integer idTradestrategy;
@@ -438,7 +439,7 @@ public class DBBroker extends Broker {
      */
     private BigDecimal getFilledPrice(TradeOrder order, Candle candle) {
 
-        if (order.getCreateDate().isAfter(candle.getLastUpdateDate())) {
+        if (order.getOrderCreateDate().isAfter(candle.getLastUpdateDate())) {
             return null;
         }
 

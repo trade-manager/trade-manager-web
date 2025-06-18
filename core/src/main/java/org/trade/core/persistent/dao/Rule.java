@@ -47,7 +47,6 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import org.trade.core.dao.Aspect;
 import org.trade.core.util.CoreUtils;
-import org.trade.core.util.time.TradingCalendar;
 
 import java.io.Serial;
 import java.time.ZonedDateTime;
@@ -74,16 +73,11 @@ public class Rule extends Aspect implements java.io.Serializable {
     @Column(name = "comment", nullable = false, length = 200)
     private String comment;
 
-    @Column(name = "create_date", nullable = false)
-    private ZonedDateTime createDate;
-
-    @Column(name = "last_update_date", nullable = false)
-    private ZonedDateTime lastUpdateDate;
-
     @Lob
     @Column(name = "rule")
     private byte[] rule;
 
+    @Transient
     private boolean dirty = false;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -92,8 +86,6 @@ public class Rule extends Aspect implements java.io.Serializable {
 
     public Rule() {
 
-        this.createDate = TradingCalendar.getDateTimeNowMarketTimeZone();
-        this.lastUpdateDate = this.createDate;
     }
 
     /**
@@ -111,29 +103,23 @@ public class Rule extends Aspect implements java.io.Serializable {
         this.strategy = strategy;
         this.version = version;
         this.comment = comment;
-        this.createDate = createDate;
-        this.lastUpdateDate = lastUpdateDate;
     }
 
     /**
      * Constructor for Rule.
      *
-     * @param strategy       Strategy
-     * @param version        Integer
-     * @param comment        String
-     * @param createDate     Date
-     * @param rule           byte[]
-     * @param lastUpdateDate Date
+     * @param strategy Strategy
+     * @param version  Integer
+     * @param comment  String
+     * @param rule     byte[]
      */
-    public Rule(Strategy strategy, Integer version, String comment, ZonedDateTime createDate, byte[] rule,
-                ZonedDateTime lastUpdateDate) {
+    public Rule(Strategy strategy, Integer version, String comment, byte[] rule
+    ) {
 
         this.strategy = strategy;
         this.version = version;
         this.comment = comment;
-        this.createDate = createDate;
         this.rule = rule;
-        this.lastUpdateDate = lastUpdateDate;
     }
 
     /**
@@ -173,43 +159,6 @@ public class Rule extends Aspect implements java.io.Serializable {
     }
 
     /**
-     * Method getCreateDate.
-     *
-     * @return ZonedDateTime
-     */
-    public ZonedDateTime getCreateDate() {
-        return this.createDate;
-    }
-
-    /**
-     * Method setCreateDate.
-     *
-     * @param createDate ZonedDateTime
-     */
-    public void setCreateDate(ZonedDateTime createDate) {
-        this.createDate = createDate;
-    }
-
-    /**
-     * Method getLastUpdateDate.
-     *
-     * @return ZonedDateTime
-     */
-
-    public ZonedDateTime getLastUpdateDate() {
-        return this.lastUpdateDate;
-    }
-
-    /**
-     * Method setLastUpdateDate.
-     *
-     * @param lastUpdateDate ZonedDateTime
-     */
-    public void setLastUpdateDate(ZonedDateTime lastUpdateDate) {
-        this.lastUpdateDate = lastUpdateDate;
-    }
-
-    /**
      * Method getRule.
      *
      * @return byte[]
@@ -232,7 +181,6 @@ public class Rule extends Aspect implements java.io.Serializable {
      *
      * @return boolean
      */
-    @Transient
     public boolean isDirty() {
         return dirty;
     }

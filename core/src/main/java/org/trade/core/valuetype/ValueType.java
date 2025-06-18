@@ -78,7 +78,7 @@ public abstract class ValueType implements Cloneable, Serializable {
         return String.class;
     }
 
-    public Object clone() throws java.lang.CloneNotSupportedException {
+    public Object clone() throws CloneNotSupportedException {
         return (super.clone());
     }
 }

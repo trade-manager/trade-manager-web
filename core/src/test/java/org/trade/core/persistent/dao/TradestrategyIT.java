@@ -40,12 +40,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.properties.TradeAppLoadConfig;
 import org.trade.core.util.time.TradingCalendar;
@@ -61,7 +59,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 /**
  *
  */
-@RunWith(SpringRunner.class)
 @SpringBootTest
 public class TradestrategyIT {
 
@@ -72,7 +69,6 @@ public class TradestrategyIT {
 
     @Autowired
     private TradestrategyRepository tradestrategyRepository;
-
 
     private final String symbol = "TEST";
 
@@ -89,7 +85,6 @@ public class TradestrategyIT {
     @BeforeEach
     public void setUp() throws Exception {
 
-        TradestrategyBase.setTradeService(tradeService);
         TradeAppLoadConfig.loadAppProperties();
     }
 
@@ -99,7 +94,7 @@ public class TradestrategyIT {
     @AfterEach
     public void tearDown() throws Exception {
 
-        TradestrategyBase.clearDBData();
+        TradestrategyBase.clearDBData(tradeService);
     }
 
     /**
@@ -112,7 +107,7 @@ public class TradestrategyIT {
     @Test
     public void testFindVersionById() throws Exception {
 
-        Tradestrategy tradestrategy = TradestrategyBase.getTestTradestrategy(symbol);
+        Tradestrategy tradestrategy = TradestrategyBase.getTestTradestrategy(tradeService, symbol);
         assertNotNull(tradestrategy);
 
         Integer version = tradestrategyRepository.findVersionById(tradestrategy.getId());
@@ -123,7 +118,7 @@ public class TradestrategyIT {
     @Test
     public void testFindPositionOrdersById() throws Exception {
 
-        Tradestrategy tradestrategy = TradestrategyBase.getTestTradestrategy(symbol);
+        Tradestrategy tradestrategy = TradestrategyBase.getTestTradestrategy(tradeService, symbol);
         assertNotNull(tradestrategy);
         _log.info("testTradingdaysSave IdTradeStrategy:{}", tradestrategy.getId());
 
@@ -143,7 +138,7 @@ public class TradestrategyIT {
     @Test
     public void testAddTradestrategy() throws Exception {
 
-        Tradestrategy tradestrategy = TradestrategyBase.getTestTradestrategy(symbol);
+        Tradestrategy tradestrategy = TradestrategyBase.getTestTradestrategy(tradeService, symbol);
         assertNotNull(tradestrategy);
         _log.info("testTradingdaysSave IdTradeStrategy:{}", tradestrategy.getId());
         tradestrategy = tradestrategyRepository.findById(tradestrategy.getId()).get();
@@ -186,11 +181,11 @@ public class TradestrategyIT {
             tradeService.saveTradingday(tradingday);
             for (Tradestrategy tradestrategy : tradingday.getTradestrategies()) {
                 _log.info("testTradingdaysUpdate IdTradeStrategy:{}", tradestrategy.getId());
-                tradeService.delete(tradestrategy);
-                tradeService.delete(tradestrategy.getContract());
+                tradeService.deleteAspect(tradestrategy);
+                tradeService.deleteAspect(tradestrategy.getContract());
 
             }
-            tradeService.delete(tradingday);
+            tradeService.deleteAspect(tradingday);
         }
     }
 
@@ -210,17 +205,17 @@ public class TradestrategyIT {
             for (Tradestrategy tradestrategy : tradingday.getTradestrategies()) {
 
                 _log.info("testTradingdaysUpdate IdTradeStrategy:{}", tradestrategy.getId());
-                tradeService.delete(tradestrategy);
-                tradeService.delete(tradestrategy.getContract());
+                tradeService.deleteAspect(tradestrategy);
+                tradeService.deleteAspect(tradestrategy.getContract());
             }
-            tradeService.delete(tradingday);
+            tradeService.deleteAspect(tradingday);
         }
     }
 
     @Test
     public void testFindTradestrategyDistinctByDateRange() throws Exception {
 
-        Tradestrategy tradestrategy = TradestrategyBase.getTestTradestrategy(symbol);
+        Tradestrategy tradestrategy = TradestrategyBase.getTestTradestrategy(tradeService, symbol);
         assertNotNull(tradestrategy);
         _log.info("testTradingdaysSave IdTradeStrategy:{}", tradestrategy.getId());
         List<Tradestrategy> results = tradestrategyRepository.findTradestrategyDistinctByDateRange(
@@ -234,7 +229,7 @@ public class TradestrategyIT {
     @Test
     public void testFindTradestrategyContractDistinctByDateRange() throws Exception {
 
-        Tradestrategy tradestrategy = TradestrategyBase.getTestTradestrategy(symbol);
+        Tradestrategy tradestrategy = TradestrategyBase.getTestTradestrategy(tradeService, symbol);
         assertNotNull(tradestrategy);
         _log.info("testTradingdaysSave IdTradeStrategy:{}", tradestrategy.getId());
         List<Tradestrategy> results = tradestrategyRepository.findTradestrategyContractDistinctByDateRange(

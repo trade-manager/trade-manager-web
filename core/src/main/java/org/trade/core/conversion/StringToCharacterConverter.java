@@ -44,7 +44,7 @@ package org.trade.core.conversion;
  * JavaTypeTranslator class.
  *
  * @author Simon Allen
- * @see java.lang.Character
+ * @see Character
  */
 public class StringToCharacterConverter extends StringToObjectConverter {
     /**
@@ -65,7 +65,7 @@ public class StringToCharacterConverter extends StringToObjectConverter {
      * org.trade.core.conversion.IJavaTypeConverter#getTargetType()
      */
     public Class<?> getTargetType() {
-        return java.lang.Character.class;
+        return Character.class;
     }
 
     //

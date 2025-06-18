@@ -1,8 +1,8 @@
 package org.trade.core.persistent.dao;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.trade.core.dao.AspectRepository;
 
 
-public interface TradestrategyRepository extends JpaRepository<Tradestrategy, Integer>, TradestrategyRepositoryCustom {
+public interface TradestrategyRepository extends AspectRepository<Tradestrategy, Integer>, TradestrategyRepositoryCustom {
 
 }

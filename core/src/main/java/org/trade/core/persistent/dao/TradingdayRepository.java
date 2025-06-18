@@ -1,8 +1,8 @@
 package org.trade.core.persistent.dao;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.trade.core.dao.AspectRepository;
 
 
-public interface TradingdayRepository extends JpaRepository<Tradingday, Integer>, TradingdayRepositoryCustom {
+public interface TradingdayRepository extends AspectRepository<Tradingday, Integer>, TradingdayRepositoryCustom {
 
 }

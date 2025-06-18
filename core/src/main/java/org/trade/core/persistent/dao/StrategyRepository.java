@@ -1,9 +1,9 @@
 package org.trade.core.persistent.dao;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.trade.core.dao.AspectRepository;
 
 
-public interface StrategyRepository extends JpaRepository<Strategy, Integer>, StrategyRepositoryCustom {
+public interface StrategyRepository extends AspectRepository<Strategy, Integer>, StrategyRepositoryCustom {
 
     Strategy findByName(String name);
 }

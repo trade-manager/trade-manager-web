@@ -91,7 +91,7 @@ class Enumerator implements Enumeration<Object> {
      * Method nextElement.
      *
      * @return Object
-     * @see java.util.Enumeration#nextElement()
+     * @see Enumeration#nextElement()
      */
     public Object nextElement() {
         if (m_mine.hasMoreElements()) {
@@ -112,7 +112,7 @@ class Enumerator implements Enumeration<Object> {
      * Method hasMoreElements.
      *
      * @return boolean
-     * @see java.util.Enumeration#hasMoreElements()
+     * @see Enumeration#hasMoreElements()
      */
     public boolean hasMoreElements() {
         if (m_mine.hasMoreElements()) {

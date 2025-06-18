@@ -337,7 +337,6 @@ public class TradestrategyTableModel extends TableModel {
             default: {
             }
         }
-        element.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
         element.setDirty(true);
     }
 

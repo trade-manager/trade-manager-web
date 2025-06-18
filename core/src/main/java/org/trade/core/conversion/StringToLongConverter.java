@@ -44,7 +44,7 @@ package org.trade.core.conversion;
  * JavaTypeTranslator class.
  *
  * @author Simon Allen
- * @see java.lang.Long
+ * @see Long
  */
 public class StringToLongConverter extends StringToObjectConverter {
     /**
@@ -65,7 +65,7 @@ public class StringToLongConverter extends StringToObjectConverter {
      * org.trade.core.conversion.IJavaTypeConverter#getTargetType()
      */
     public Class<?> getTargetType() {
-        return java.lang.Long.class;
+        return Long.class;
     }
 
     //

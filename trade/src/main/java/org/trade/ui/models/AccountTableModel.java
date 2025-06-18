@@ -178,10 +178,6 @@ public class AccountTableModel extends TableModel {
                 element.getAccount().setUnrealizedPnL(((Money) value).getBigDecimalValue());
                 break;
             }
-            case 11: {
-                element.getAccount().setLastUpdateDate(((Date) value).getZonedDateTime());
-                break;
-            }
             default: {
             }
         }
@@ -268,10 +264,10 @@ public class AccountTableModel extends TableModel {
         } else {
             newRow.addElement(new Money(element.getAccount().getUnrealizedPnL()));
         }
-        if (null == element.getAccount().getLastUpdateDate()) {
+        if (null == element.getAccount().getUpdateDate()) {
             newRow.addElement(new Date());
         } else {
-            newRow.addElement(new Date(element.getAccount().getLastUpdateDate()));
+            newRow.addElement(new Date(element.getAccount().getUpdateDate()));
         }
     }
 }
