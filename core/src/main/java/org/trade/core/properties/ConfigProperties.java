@@ -71,8 +71,8 @@ public class ConfigProperties {
     private final static String ENVIRONMENT_VARIABLE_SYSTEM_PROPERTY_FILE = "config.properties";
     private final static String DEFAULT_PROPERTY_FILE = "config.properties";
     private final static String ENVIRONMENT_VARIABLE_PROPERTY_FILE = "trade.config";
-    private Properties m_properties = null;
-    private static final ConfigProperties m_theConfig = new ConfigProperties();
+    private Properties fProperties = null;
+    private static final ConfigProperties fConfigProperties = new ConfigProperties();
 
     /**
      * Returns a string for a key.
@@ -81,7 +81,7 @@ public class ConfigProperties {
      * @return String
      */
     public static String getPropAsString(String key) throws IOException {
-        return m_theConfig.retrieveProperty(key);
+        return fConfigProperties.retrieveProperty(key);
     }
 
     /**
@@ -113,7 +113,7 @@ public class ConfigProperties {
      * @return Properties
      */
     public static Properties getDeploymentProperties(Object context, String fileName) throws IOException {
-        return m_theConfig.getProperties(context, fileName);
+        return fConfigProperties.getProperties(context, fileName);
     }
 
     /**
@@ -123,7 +123,7 @@ public class ConfigProperties {
      * @param fileName String
      */
     public static void loadDeploymentProperties(Object context, String fileName) throws IOException {
-        m_theConfig.getProperties(context, fileName);
+        fConfigProperties.getProperties(context, fileName);
     }
 
     /**
@@ -142,7 +142,7 @@ public class ConfigProperties {
      * @return int
      */
     public static int getPropAsInt(String key) throws IOException {
-        return Integer.parseInt(m_theConfig.retrieveProperty(key));
+        return Integer.parseInt(fConfigProperties.retrieveProperty(key));
     }
 
     /**
@@ -153,7 +153,7 @@ public class ConfigProperties {
      * @return boolean
      */
     public static boolean getPropAsBoolean(String key) throws IOException {
-        return Boolean.parseBoolean(m_theConfig.retrieveProperty(key));
+        return Boolean.parseBoolean(fConfigProperties.retrieveProperty(key));
     }
 
     /**
@@ -208,13 +208,13 @@ public class ConfigProperties {
      * @return Properties
      */
     private Properties getProperties(Object context, String fileName) throws IOException {
-        Properties systemProperties = new Properties();
 
-        loadPropertiesAsResource(m_theConfig, getSystemPropertyFileName(), systemProperties);
+        Properties systemProperties = new Properties();
+        loadPropertiesAsResource(fConfigProperties, getSystemPropertyFileName(), systemProperties);
         loadPropertiesAsResource(context, fileName, systemProperties);
         Properties deploymentProperties = new Properties(systemProperties);
         loadPropertiesAsFile(getDeploymentPropertyFileName(), deploymentProperties);
-        m_properties = deploymentProperties;
+        fProperties = deploymentProperties;
 
         return deploymentProperties;
     }
@@ -276,20 +276,20 @@ public class ConfigProperties {
     private String retrieveProperty(String key) throws IOException {
         String ret;
 
-        if (null == m_properties) {
+        if (null == fProperties) {
 
             Properties systemProperties = new Properties();
 
-            loadPropertiesAsResource(m_theConfig, getSystemPropertyFileName(), systemProperties);
+            loadPropertiesAsResource(fConfigProperties, getSystemPropertyFileName(), systemProperties);
 
             Properties deploymentProperties = new Properties(systemProperties);
 
             loadPropertiesAsFile(getDeploymentPropertyFileName(), deploymentProperties);
 
-            m_properties = deploymentProperties;
+            fProperties = deploymentProperties;
         }
 
-        ret = m_properties.getProperty(key);
+        ret = fProperties.getProperty(key);
 
         if (null == ret) {
 
@@ -309,7 +309,7 @@ public class ConfigProperties {
     public static String getPropertyAfterEnvSubstitution(String key) throws IOException {
         String strRet;
 
-        strRet = m_theConfig.retrieveProperty(key);
+        strRet = fConfigProperties.retrieveProperty(key);
 
         // put env variables in the dictionary
         Dictionary<?, ?> toSubstitute = System.getProperties();

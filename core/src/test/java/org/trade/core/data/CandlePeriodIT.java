@@ -91,8 +91,8 @@ public class CandlePeriodIT extends TradestrategyBase {
      */
     @BeforeEach
     public void setUp() throws Exception {
-        TradeAppLoadConfig.loadAppProperties();
 
+        TradeAppLoadConfig.loadAppProperties();
         String symbol = "TEST";
         this.tradestrategy = this.getTestTradestrategy(tradeService, symbol);
         assertNotNull(this.tradestrategy);
@@ -114,7 +114,7 @@ public class CandlePeriodIT extends TradestrategyBase {
     }
 
     @Test
-    public void testGetCandleBar() throws Exception {
+    public void getCandleBar() throws Exception {
 
 
         ZonedDateTime startPeriod = this.tradestrategy.getTradingday().getOpen();
@@ -142,7 +142,7 @@ public class CandlePeriodIT extends TradestrategyBase {
     }
 
     @Test
-    public void testGetAvgCandleBar() throws Exception {
+    public void getAvgCandleBar() throws Exception {
 
 
         ZonedDateTime startPeriod = this.tradestrategy.getTradingday().getOpen();
@@ -179,7 +179,7 @@ public class CandlePeriodIT extends TradestrategyBase {
     }
 
     @Test
-    public void testDateConversion() {
+    public void dateConversion() {
 
         String dateString = "20151129 09:35:11";
 
@@ -202,7 +202,7 @@ public class CandlePeriodIT extends TradestrategyBase {
     }
 
     @Test
-    public void testSecondsNext() {
+    public void secondsNext() {
 
         int size = 100;
         int secondsLength = 3600;
@@ -218,7 +218,7 @@ public class CandlePeriodIT extends TradestrategyBase {
     }
 
     @Test
-    public void testSecondsPrev() {
+    public void secondsPrev() {
 
         int size = 100;
         int secondsLength = 3600;
@@ -234,7 +234,7 @@ public class CandlePeriodIT extends TradestrategyBase {
     }
 
     @Test
-    public void testFindCurrentTimePeriod() {
+    public void findCurrentTimePeriod() {
 
         int secondsLength = 300;
         ZonedDateTime now = TradingCalendar.getDateTimeNowMarketTimeZone();

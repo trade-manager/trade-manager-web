@@ -42,7 +42,7 @@ import java.io.IOException;
  */
 public class TradeAppLoadConfig {
     private final static String PROPERTIES_PROPERTY_FILE = "trade.properties";
-    private final static TradeAppLoadConfig m_AppConfigLoad = new TradeAppLoadConfig();
+    private final static TradeAppLoadConfig fAppConfigLoad = new TradeAppLoadConfig();
 
     TradeAppLoadConfig() {
     }
@@ -51,6 +51,6 @@ public class TradeAppLoadConfig {
      * Method loadAppProperties.
      */
     public static void loadAppProperties() throws IOException {
-        ConfigProperties.loadDeploymentProperties(m_AppConfigLoad, PROPERTIES_PROPERTY_FILE);
+        ConfigProperties.loadDeploymentProperties(fAppConfigLoad, PROPERTIES_PROPERTY_FILE);
     }
 }

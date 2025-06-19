@@ -10,5 +10,4 @@ public class AccountRepositoryImpl implements AccountRepositoryCustom {
     @PersistenceContext
     private EntityManager entityManager;
 
-
 }

@@ -46,17 +46,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.trade.core.persistent.TradeService;
-import org.trade.core.persistent.dao.CodeType;
 import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.Tradestrategy;
-import org.trade.core.persistent.dao.series.indicator.IndicatorSeries;
-import org.trade.core.properties.TradeAppLoadConfig;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 /**
@@ -140,7 +136,7 @@ public class AspectServiceIT {
         assertFalse(codes.isEmpty());
         for (Object daoObject : codes) {
 
-            _log.info("Found code name: {}", ((Strategy)daoObject).getName());
+            _log.info("Found code name: {}", ((Strategy) daoObject).getName());
         }
     }
 

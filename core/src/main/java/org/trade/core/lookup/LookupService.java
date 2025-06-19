@@ -35,14 +35,11 @@
  */
 package org.trade.core.lookup;
 
-import org.springframework.stereotype.Service;
-
 import java.util.Vector;
 
 /**
  * @author Simon Allen
  */
-@Service
 public class LookupService {
 
     //

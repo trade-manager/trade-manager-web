@@ -35,7 +35,10 @@
  */
 package org.trade.core.lookup;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.Reflector;
@@ -53,14 +56,15 @@ import java.util.Vector;
  *
  * @author Simon Allen
  */
+@Component
 public class DBTableLookupServiceProvider implements ILookupServiceProvider {
 
+    private final static Logger _log = LoggerFactory.getLogger(DBTableLookupServiceProvider.class);
 
     @Autowired
-    private TradeService tradeService;
-
+    TradeService tradeService;
     /*
-     * This will be a hashtable of hashtables of ILookup objects. The first key
+     * This will be a hashtable of hashtable's of ILookup objects. The first key
      * is the lookup name and the second key is the LookupQualifier.
      */
     private static final Hashtable<String, Hashtable<String, ILookup>> _lookups = new Hashtable<>();
@@ -84,7 +88,7 @@ public class DBTableLookupServiceProvider implements ILookupServiceProvider {
      * @param optional   boolean
      * @return ILookup
      */
-    public synchronized ILookup getLookup(String lookupName, LookupQualifier qualifier, boolean optional) {
+    public ILookup getLookup(String lookupName, LookupQualifier qualifier, boolean optional) {
 
         ILookup lookup = getCachedLookup(lookupName, qualifier);
 
@@ -237,10 +241,12 @@ public class DBTableLookupServiceProvider implements ILookupServiceProvider {
 
                     lookup = new PropertiesLookup(colNames, rows);
                 }
-            } catch (Throwable t) {
+            } catch (Exception ex) {
                 // If this occurs means this provider is unable to provide
                 // the lookup ignore the exception.
+                _log.info("Info: Failed to create lookup msg: {}", ex.getMessage());
             }
+
             if (null != lookup) {
 
                 assert qualifier != null;
@@ -287,9 +293,10 @@ public class DBTableLookupServiceProvider implements ILookupServiceProvider {
      * @param qualifier  LookupQualifier
      * @param lookup     ILookup
      */
-    private synchronized void addLookupToCache(String lookupName, LookupQualifier qualifier, ILookup lookup) {
+    private void addLookupToCache(String lookupName, LookupQualifier qualifier, ILookup lookup) {
 
         Hashtable<String, ILookup> lookupsByQualifier = _lookups.computeIfAbsent(lookupName, _ -> new Hashtable<>());
         lookupsByQualifier.put(qualifier.toString(), lookup);
     }
+
 }

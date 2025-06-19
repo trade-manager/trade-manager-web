@@ -31,4 +31,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EntityScan("org.trade.core")
 @EnableJpaRepositories("org.trade.core")
 class CustomRepositoryConfig {
+
+
 }
