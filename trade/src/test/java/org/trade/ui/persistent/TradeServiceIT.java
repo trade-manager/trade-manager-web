@@ -955,6 +955,7 @@ public class TradeServiceIT {
     public void testFindAspectsByClassNameFieldName() throws Exception {
 
         for (IIndicatorDataset indicator : this.tradestrategy.getStrategyData().getIndicators()) {
+
             org.trade.core.persistent.dao.series.indicator.IndicatorSeries series = indicator.getSeries(0);
             String indicatorName = series.getType().substring(0, series.getType().indexOf("Series"));
             Aspects result = this.tradeService.findByClassNameAndFieldName(CodeType.class.getName(),

@@ -46,9 +46,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.trade.core.persistent.TradeService;
+import org.trade.core.persistent.dao.CodeType;
+import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.Tradestrategy;
+import org.trade.core.persistent.dao.series.indicator.IndicatorSeries;
+import org.trade.core.properties.TradeAppLoadConfig;
 
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 /**
@@ -74,7 +82,8 @@ public class AspectServiceIT {
      */
     @BeforeAll
     public static void setUpBeforeClass() throws Exception {
-        _log.info("BeforeAll");
+
+        TradeAppLoadConfig.loadAppProperties();
     }
 
     /**
@@ -82,7 +91,7 @@ public class AspectServiceIT {
      */
     @BeforeEach
     public void setUp() throws Exception {
-        _log.info("BeforeEach");
+
     }
 
     /**
@@ -90,7 +99,7 @@ public class AspectServiceIT {
      */
     @AfterEach
     public void tearDown() throws Exception {
-        _log.info("AfterEach");
+
     }
 
     /**
@@ -98,21 +107,58 @@ public class AspectServiceIT {
      */
     @AfterAll
     public static void tearDownAfterClass() throws Exception {
-        _log.info("AfterAll");
+
     }
 
     @Test
-    public void testFindAspectByClassName() throws Exception {
+    public void findByClassName() throws Exception {
 
         // Create new instance of Strategy and set
         // values in it by reading them from form object
         String className = "org.trade.core.persistent.dao.Strategy";
         _log.info("Find Aspects by className: {}", className);
 
-        Aspects transientInstance = tradeService.findByClassName(className);
-        assertNotNull(transientInstance);
+        Aspects aspects = tradeService.findByClassName(className);
+        assertNotNull(aspects);
+        assertFalse(aspects.getAspect().isEmpty());
 
-        for (Aspect aspect : transientInstance.getAspect()) {
+        for (Aspect aspect : aspects.getAspect()) {
+
+            _log.info("Aspect added Id: {}", aspect.getId());
+        }
+    }
+
+    @Test
+    public void findCodesByClassName() throws Exception {
+
+        // Create new instance of Strategy and set
+        // values in it by reading them from form object
+        String className = "org.trade.core.persistent.dao.Strategy";
+        _log.info("Find Aspects by className: {}", className);
+
+        List<?> codes = tradeService.findCodesByClassName(className);
+        assertNotNull(codes);
+        assertFalse(codes.isEmpty());
+        for (Object daoObject : codes) {
+
+            _log.info("Found code name: {}", ((Strategy)daoObject).getName());
+        }
+    }
+
+    @Test
+    public void findByClassNameAndFieldName() throws Exception {
+
+        // Create new instance of Strategy and set
+        // values in it by reading them from form object
+        String className = "org.trade.core.persistent.dao.Strategy";
+        String fieldName = "name";
+        String indicatorName = "5minBarGap";
+        _log.info("Find Aspects by className: {}, fieldName: {}, value: {}", className, fieldName, indicatorName);
+
+        Aspects instance = tradeService.findByClassNameAndFieldName(className, fieldName, indicatorName);
+        assertNotNull(instance);
+
+        for (Aspect aspect : instance.getAspect()) {
 
             _log.info("Aspect added Id = {}", aspect.getId());
         }

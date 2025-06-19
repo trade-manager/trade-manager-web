@@ -36,9 +36,6 @@
 package org.trade.core.lookup;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.trade.core.dao.Aspect;
-import org.trade.core.dao.AspectRepository;
-import org.trade.core.dao.AspectServiceImpl;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.Reflector;
@@ -56,7 +53,7 @@ import java.util.Vector;
  *
  * @author Simon Allen
  */
-public class DBTableLookupServiceProvider  implements ILookupServiceProvider {
+public class DBTableLookupServiceProvider implements ILookupServiceProvider {
 
 
     @Autowired

@@ -37,7 +37,6 @@ package org.trade.core.persistent;
 
 import org.trade.core.dao.Aspect;
 import org.trade.core.dao.AspectService;
-import org.trade.core.dao.Aspects;
 import org.trade.core.persistent.dao.Account;
 import org.trade.core.persistent.dao.Candle;
 import org.trade.core.persistent.dao.CodeType;
@@ -68,20 +67,17 @@ import java.util.Optional;
 public interface TradeService extends AspectService {
 
     /**
-     *
      * @param entities
      */
     void deleteAllAspects(Iterable<? extends Aspect> entities);
 
     /**
-     *
      * @param symbol
      * @return
      */
     Optional<Contract> findContractBySymbol(String symbol);
 
     /**
-     *
      * @return
      */
     Iterable<Contract> findAllContracts();
