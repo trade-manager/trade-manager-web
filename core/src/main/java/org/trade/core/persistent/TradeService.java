@@ -36,6 +36,7 @@
 package org.trade.core.persistent;
 
 import org.trade.core.dao.Aspect;
+import org.trade.core.dao.AspectService;
 import org.trade.core.dao.Aspects;
 import org.trade.core.persistent.dao.Account;
 import org.trade.core.persistent.dao.Candle;
@@ -64,15 +65,26 @@ import java.util.Optional;
 /**
  *
  */
-public interface TradeService {
+public interface TradeService extends AspectService {
 
+    /**
+     *
+     * @param entities
+     */
     void deleteAllAspects(Iterable<? extends Aspect> entities);
 
+    /**
+     *
+     * @param symbol
+     * @return
+     */
     Optional<Contract> findContractBySymbol(String symbol);
 
+    /**
+     *
+     * @return
+     */
     Iterable<Contract> findAllContracts();
-
-    Aspects findAspectByClassName(String className) throws ClassNotFoundException;
 
     /**
      * Method persistTrading.
@@ -428,25 +440,6 @@ public interface TradeService {
      * @return List<Strategy>
      */
     List<Strategy> findStrategies() throws ServiceException;
-
-    /**
-     * Method findAspectsByClassName.
-     *
-     * @param aspectClassName String
-     * @return Aspects
-     */
-    Aspects findAspectsByClassName(String aspectClassName) throws ClassNotFoundException;
-
-    /**
-     * Method findAspectsByClassNameFieldName.
-     *
-     * @param className String
-     * @param fieldName String
-     * @param value     String
-     * @return Aspects
-     */
-    Aspects findAspectsByClassNameFieldName(String className, String fieldName, String value)
-            throws ServiceException, ClassNotFoundException;
 
     /**
      * Method findAspectById.

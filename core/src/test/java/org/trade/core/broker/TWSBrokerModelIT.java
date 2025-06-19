@@ -385,26 +385,25 @@ public class TWSBrokerModelIT implements IBrokerChangeListener {
     private void deleteData() throws Exception {
 
 
-        Aspects candles = tradeService.findAspectsByClassName(Candle.class.getName());
+        Aspects candles = tradeService.findByClassName(Candle.class.getName());
         for (Aspect item : candles.getAspect()) {
             tradeService.deleteAspect(item);
         }
 
-        Aspects tradestrategies = tradeService.findAspectsByClassName(Tradestrategy.class.getName());
+        Aspects tradestrategies = tradeService.findByClassName(Tradestrategy.class.getName());
         for (Aspect item : tradestrategies.getAspect()) {
             tradeService.deleteAspect(item);
         }
 
-        Aspects contracts = tradeService.findAspectsByClassName(Contract.class.getName());
+        Aspects contracts = tradeService.findByClassName(Contract.class.getName());
         for (Aspect item : contracts.getAspect()) {
             tradeService.deleteAspect(item);
         }
 
-        Aspects tradingdays = tradeService.findAspectsByClassName(Tradingday.class.getName());
+        Aspects tradingdays = tradeService.findByClassName(Tradingday.class.getName());
         for (Aspect item : tradingdays.getAspect()) {
             tradeService.deleteAspect(item);
         }
-
     }
 
     public void connectionOpened() {

@@ -945,7 +945,7 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
         return strategyRepository.findAll();
     }
 
-    public Aspects findAspectsByClassName(String aspectClassName) throws ClassNotFoundException {
+    public Aspects findByClassName(String aspectClassName) throws ClassNotFoundException {
 
         if ("org.trade.persistent.dao.Strategy".equals(aspectClassName)) {
             /*
@@ -961,7 +961,7 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
             return aspects;
         } else if ("org.trade.persistent.dao.Portfolio".equals(aspectClassName)) {
             /*
-             * Relationship Portfolio -> PortfilioAccount iis LAZY so we
+             * Relationship Portfolio -> PortfolioAccount is LAZY so we
              * need to call size() on PortfolioAccount.
              */
             List<Portfolio> items = portfolioRepository.findAll();
@@ -972,14 +972,8 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
             aspects.setDirty(false);
             return aspects;
         } else {
-            return this.findAspectByClassName(aspectClassName);
+            return super.findByClassName(aspectClassName);
         }
-    }
-
-    public Aspects findAspectsByClassNameFieldName(String className, String fieldName, String value)
-            throws ClassNotFoundException {
-
-        return this.findByClassNameAndFieldName(className, fieldName, value);
     }
 
     public Aspect findAspectById(final Aspect aspect) throws ServiceException {
@@ -990,11 +984,6 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
         }
 
         return instance.get();
-    }
-
-    public Aspects findAspectByClassName(String className) throws ClassNotFoundException {
-
-        return this.findByClassName(className);
     }
 
     public <T extends Aspect> T saveAspect(final T instance) {

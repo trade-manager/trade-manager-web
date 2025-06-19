@@ -35,9 +35,11 @@
  */
 package org.trade.core.lookup;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.trade.core.dao.Aspect;
 import org.trade.core.dao.AspectRepository;
 import org.trade.core.dao.AspectServiceImpl;
+import org.trade.core.persistent.TradeService;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.Reflector;
 import org.trade.core.valuetype.Decode;
@@ -54,13 +56,11 @@ import java.util.Vector;
  *
  * @author Simon Allen
  */
-public class DBTableLookupServiceProvider extends AspectServiceImpl implements ILookupServiceProvider {
+public class DBTableLookupServiceProvider  implements ILookupServiceProvider {
 
 
-    public AspectRepository<Aspect, Integer> getAspectRepository() {
-
-        return this.getAspectRepository();
-    }
+    @Autowired
+    private TradeService tradeService;
 
     /*
      * This will be a hashtable of hashtables of ILookup objects. The first key
@@ -213,7 +213,7 @@ public class DBTableLookupServiceProvider extends AspectServiceImpl implements I
                         rows.add(newRowNone);
                     }
 
-                    List<?> codes = this.findCodesByClassName(dao);
+                    List<?> codes = tradeService.findCodesByClassName(dao);
                     for (Object daoObject : codes) {
 
                         Method method = Reflector.findMethod(daoObject.getClass(), methodName, null);

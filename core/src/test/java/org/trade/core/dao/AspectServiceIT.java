@@ -109,7 +109,7 @@ public class AspectServiceIT {
         String className = "org.trade.core.persistent.dao.Strategy";
         _log.info("Find Aspects by className: {}", className);
 
-        Aspects transientInstance = tradeService.findAspectByClassName(className);
+        Aspects transientInstance = tradeService.findByClassName(className);
         assertNotNull(transientInstance);
 
         for (Aspect aspect : transientInstance.getAspect()) {

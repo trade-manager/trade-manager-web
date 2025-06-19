@@ -224,7 +224,7 @@ public class ConfigurationPanel extends BasePanel {
                 itemIter.set(item);
             }
             m_aspects.setDirty(false);
-            Aspects aspects = tradeService.findAspectsByClassName(className);
+            Aspects aspects = tradeService.findByClassName(className);
             for (Aspect currAspect : aspects.getAspect()) {
                 boolean exists = false;
                 for (Aspect aspect : m_aspects.getAspect()) {
@@ -351,7 +351,7 @@ public class ConfigurationPanel extends BasePanel {
 
         try {
 
-            m_aspects = tradeService.findAspectsByClassName("org.trade.persistent.dao." + refTableClass);
+            m_aspects = tradeService.findByClassName("org.trade.persistent.dao." + refTableClass);
             Vector<Object> parm = new Vector<>();
             m_tableModel = (AspectTableModel) ClassFactory
                     .getCreateClass("org.trade.ui.models." + refTableClass + "TableModel", parm, this);

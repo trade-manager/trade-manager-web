@@ -87,12 +87,12 @@ public class TWSFinancialAccountRequestIT {
     @AfterEach
     public void tearDown() throws Exception {
 
-        Aspects portfolioAccounts = tradeService.findAspectsByClassName(PortfolioAccount.class.getName());
+        Aspects portfolioAccounts = tradeService.findByClassName(PortfolioAccount.class.getName());
         for (Aspect aspect : portfolioAccounts.getAspect()) {
             tradeService.deleteAspect(aspect);
         }
 
-        Aspects accounts = tradeService.findAspectsByClassName(Account.class.getName());
+        Aspects accounts = tradeService.findByClassName(Account.class.getName());
         for (Aspect aspect : accounts.getAspect()) {
             tradeService.deleteAspect(aspect);
         }

@@ -63,22 +63,32 @@ public class DAOProfile extends DAODecode {
      */
 
     public Vector<Decode> getCodesDecodes() throws ValueTypeException {
+
         final Vector<Decode> decodes = new Vector<>();
         final Vector<Decode> decodesAll = super.getCodesDecodes();
+
         for (final Decode decode : decodesAll) {
+
             final Portfolio portfolio = (Portfolio) decode.getObject();
+
             if (null != portfolio.getAllocationMethod()) {
+
                 Integer value = null;
+
                 try {
+
                     value = Integer.parseInt(portfolio.getAllocationMethod());
                 } catch (NumberFormatException ex) {
                     // Do nothing
                 }
+
                 if (null != value) {
                     decodes.add(decode);
                 }
             } else {
+
                 if (Decode.NONE.equals(decode.getDisplayName())) {
+
                     decodes.add(decode);
                 }
             }

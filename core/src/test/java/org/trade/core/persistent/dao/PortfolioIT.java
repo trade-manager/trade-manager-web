@@ -91,7 +91,7 @@ public class PortfolioIT {
     @AfterEach
     public void tearDown() throws Exception {
 
-        Aspects accounts = tradeService.findAspectByClassName(Account.class.getName());
+        Aspects accounts = tradeService.findByClassName(Account.class.getName());
         for (Aspect aspect : accounts.getAspect()) {
             tradeService.deleteAspect(aspect);
         }

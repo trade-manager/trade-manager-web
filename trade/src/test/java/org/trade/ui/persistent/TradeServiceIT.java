@@ -947,7 +947,7 @@ public class TradeServiceIT {
     @Test
     public void testFindAspectsByClassName() throws Exception {
 
-        Aspects result = this.tradeService.findAspectsByClassName(this.tradestrategy.getClass().getName());
+        Aspects result = this.tradeService.findByClassName(this.tradestrategy.getClass().getName());
         assertNotNull(result);
     }
 
@@ -957,7 +957,7 @@ public class TradeServiceIT {
         for (IIndicatorDataset indicator : this.tradestrategy.getStrategyData().getIndicators()) {
             org.trade.core.persistent.dao.series.indicator.IndicatorSeries series = indicator.getSeries(0);
             String indicatorName = series.getType().substring(0, series.getType().indexOf("Series"));
-            Aspects result = this.tradeService.findAspectsByClassNameFieldName(CodeType.class.getName(),
+            Aspects result = this.tradeService.findByClassNameAndFieldName(CodeType.class.getName(),
                     "name", indicatorName);
             assertNotNull(result);
         }

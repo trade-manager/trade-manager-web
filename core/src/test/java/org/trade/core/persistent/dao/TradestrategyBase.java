@@ -151,39 +151,39 @@ public class TradestrategyBase {
     public static void clearDBData(TradeService tradeService) throws Exception {
 
 
-        Aspects contracts = tradeService.findAspectByClassName(Contract.class.getName());
+        Aspects contracts = tradeService.findByClassName(Contract.class.getName());
         for (Aspect aspect : contracts.getAspect()) {
 
             ((Contract) aspect).setTradePosition(null);
             tradeService.saveAspect(aspect);
         }
 
-        Aspects tradeOrders = tradeService.findAspectByClassName(TradeOrder.class.getName());
+        Aspects tradeOrders = tradeService.findByClassName(TradeOrder.class.getName());
         for (Aspect aspect : tradeOrders.getAspect()) {
             tradeService.deleteAspect(aspect);
         }
 
-        Aspects tradePositions = tradeService.findAspectByClassName(TradePosition.class.getName());
+        Aspects tradePositions = tradeService.findByClassName(TradePosition.class.getName());
         for (Aspect aspect : tradePositions.getAspect()) {
             tradeService.deleteAspect(aspect);
         }
-        Aspects portfolioAccounts = tradeService.findAspectByClassName(PortfolioAccount.class.getName());
+        Aspects portfolioAccounts = tradeService.findByClassName(PortfolioAccount.class.getName());
         for (Aspect aspect : portfolioAccounts.getAspect()) {
             tradeService.deleteAspect(aspect);
         }
-        Aspects accounts = tradeService.findAspectByClassName(Account.class.getName());
+        Aspects accounts = tradeService.findByClassName(Account.class.getName());
         for (Aspect aspect : accounts.getAspect()) {
             tradeService.deleteAspect(aspect);
         }
-        Aspects tradestrategies = tradeService.findAspectByClassName(Tradestrategy.class.getName());
+        Aspects tradestrategies = tradeService.findByClassName(Tradestrategy.class.getName());
         for (Aspect aspect : tradestrategies.getAspect()) {
             tradeService.deleteAspect(aspect);
         }
-        contracts = tradeService.findAspectByClassName(Contract.class.getName());
+        contracts = tradeService.findByClassName(Contract.class.getName());
         for (Aspect aspect : contracts.getAspect()) {
             tradeService.deleteAspect(aspect);
         }
-        Aspects tradingdays = tradeService.findAspectByClassName(Tradingday.class.getName());
+        Aspects tradingdays = tradeService.findByClassName(Tradingday.class.getName());
         for (Aspect aspect : tradingdays.getAspect()) {
             tradeService.deleteAspect(aspect);
         }
