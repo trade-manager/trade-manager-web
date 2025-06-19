@@ -83,7 +83,6 @@ public class AspectServiceIT {
     @BeforeAll
     public static void setUpBeforeClass() throws Exception {
 
-        TradeAppLoadConfig.loadAppProperties();
     }
 
     /**
