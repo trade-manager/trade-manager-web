@@ -35,7 +35,6 @@
  */
 package org.trade.ui.persistent;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.trade.core.dao.Aspect;
 import org.trade.core.dao.Aspects;
 import org.trade.core.persistent.TradeService;

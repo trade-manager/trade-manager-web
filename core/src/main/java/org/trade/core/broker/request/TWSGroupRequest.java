@@ -14,15 +14,15 @@ import java.util.Stack;
 
 public class TWSGroupRequest extends SaxMapper {
 
-    private Aspects fTarget = null;
-    private final Stack<Object> fStack = new Stack<>();
+    private Aspects target = null;
+    private final Stack<Object> stack = new Stack<>();
 
     public TWSGroupRequest() throws XMLModelException {
         super();
     }
 
     public Object getMappedObject() {
-        return fTarget;
+        return target;
     }
 
     public TagTracker createTagTrackerNetwork() {
@@ -35,10 +35,10 @@ public class TWSGroupRequest extends SaxMapper {
                  * The root will be deactivated when parsing a new document
                  * begins. clear the stack
                  */
-                fStack.removeAllElements();
+                stack.removeAllElements();
 
                 // create the root "dir" object.
-                fTarget = new Aspects();
+                target = new Aspects();
             }
         };
 
@@ -47,14 +47,14 @@ public class TWSGroupRequest extends SaxMapper {
             public void onStart(String namespaceURI, String localName, String qName, Attributes attr) {
 
                 Portfolio aspect = new Portfolio();
-                fTarget.add(aspect);
-                fStack.push(aspect);
+                target.add(aspect);
+                stack.push(aspect);
             }
 
             public void onEnd(String namespaceURI, String localName, String qName, CharArrayWriter contents) {
 
                 // Clean up the directory stack...
-                fStack.pop();
+                stack.pop();
             }
         };
 
@@ -66,7 +66,7 @@ public class TWSGroupRequest extends SaxMapper {
             public void onEnd(String namespaceURI, String localName, String qName, CharArrayWriter contents) {
 
                 final String value = contents.toString();
-                final Portfolio temp = (Portfolio) fStack.peek();
+                final Portfolio temp = (Portfolio) stack.peek();
                 temp.setName(value);
             }
         };
@@ -79,7 +79,7 @@ public class TWSGroupRequest extends SaxMapper {
             public void onEnd(String namespaceURI, String localName, String qName, CharArrayWriter contents) {
 
                 final String value = contents.toString();
-                final Portfolio temp = (Portfolio) fStack.peek();
+                final Portfolio temp = (Portfolio) stack.peek();
                 temp.setAllocationMethod(value);
             }
         };
@@ -91,14 +91,14 @@ public class TWSGroupRequest extends SaxMapper {
 
             public void onStart(String namespaceURI, String localName, String qName, Attributes attr) {
 
-                final Portfolio temp = (Portfolio) fStack.peek();
-                fStack.push(temp);
+                final Portfolio temp = (Portfolio) stack.peek();
+                stack.push(temp);
             }
 
             public void onEnd(String namespaceURI, String localName, String qName, CharArrayWriter contents) {
 
                 // Clean up the directory stack...
-                fStack.pop();
+                stack.pop();
             }
         };
 
@@ -110,7 +110,7 @@ public class TWSGroupRequest extends SaxMapper {
             public void onEnd(String namespaceURI, String localName, String qName, CharArrayWriter contents) {
 
                 final String value = contents.toString();
-                final Portfolio portfolio = (Portfolio) fStack.peek();
+                final Portfolio portfolio = (Portfolio) stack.peek();
                 PortfolioAccount temp = new PortfolioAccount(portfolio, new Account());
                 portfolio.getPortfolioAccounts().add(temp);
                 temp.getAccount().setAccountNumber(value);

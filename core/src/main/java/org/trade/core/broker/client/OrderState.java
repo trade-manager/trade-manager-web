@@ -43,15 +43,15 @@ import org.trade.core.valuetype.Money;
  */
 public class OrderState {
 
-    public String m_status;
-    public String m_initMargin;
-    public String m_maintMargin;
-    public String m_equityWithLoan;
-    public double m_commission;
-    public double m_minCommission;
-    public double m_maxCommission;
-    public String m_commissionCurrency;
-    public String m_warningText;
+    public String status;
+    public String initMargin;
+    public String maintMargin;
+    public String equityWithLoan;
+    public double commission;
+    public double minCommission;
+    public double maxCommission;
+    public String commissionCurrency;
+    public String warningText;
 
     public OrderState() {
         this(null, null, null, null, 0.0, 0.0, 0.0, null, null);
@@ -73,14 +73,14 @@ public class OrderState {
     public OrderState(String status, String initMargin, String maintMargin, String equityWithLoan, double commission,
                       double minCommission, double maxCommission, String commissionCurrency, String warningText) {
 
-        m_initMargin = initMargin;
-        m_maintMargin = maintMargin;
-        m_equityWithLoan = equityWithLoan;
-        m_commission = commission;
-        m_minCommission = minCommission;
-        m_maxCommission = maxCommission;
-        m_commissionCurrency = commissionCurrency;
-        m_warningText = warningText;
+        this.initMargin = initMargin;
+        this.maintMargin = maintMargin;
+        this.equityWithLoan = equityWithLoan;
+        this.commission = commission;
+        this.minCommission = minCommission;
+        this.maxCommission = maxCommission;
+        this.commissionCurrency = commissionCurrency;
+        this.warningText = warningText;
     }
 
     /**
@@ -103,16 +103,16 @@ public class OrderState {
             return false;
         }
 
-        if (CoreUtils.nullSafeComparator(new Money(m_commission), new Money(state.m_commission)) != 0
-                || (CoreUtils.nullSafeComparator(new Money(m_minCommission), new Money(state.m_minCommission)) != 0)
-                || (CoreUtils.nullSafeComparator(new Money(m_maxCommission), new Money(state.m_maxCommission)) != 0)) {
+        if (CoreUtils.nullSafeComparator(new Money(commission), new Money(state.commission)) != 0
+                || (CoreUtils.nullSafeComparator(new Money(minCommission), new Money(state.minCommission)) != 0)
+                || (CoreUtils.nullSafeComparator(new Money(maxCommission), new Money(state.maxCommission)) != 0)) {
             return false;
         }
 
-        return (CoreUtils.nullSafeComparator(m_status, state.m_status) == 0)
-                && (CoreUtils.nullSafeComparator(m_initMargin, state.m_initMargin) == 0)
-                && (CoreUtils.nullSafeComparator(m_maintMargin, state.m_maintMargin) == 0)
-                && (CoreUtils.nullSafeComparator(m_equityWithLoan, state.m_equityWithLoan) == 0)
-                && (CoreUtils.nullSafeComparator(m_commissionCurrency, state.m_commissionCurrency) == 0);
+        return (CoreUtils.nullSafeComparator(status, state.status) == 0)
+                && (CoreUtils.nullSafeComparator(initMargin, state.initMargin) == 0)
+                && (CoreUtils.nullSafeComparator(maintMargin, state.maintMargin) == 0)
+                && (CoreUtils.nullSafeComparator(equityWithLoan, state.equityWithLoan) == 0)
+                && (CoreUtils.nullSafeComparator(commissionCurrency, state.commissionCurrency) == 0);
     }
 }

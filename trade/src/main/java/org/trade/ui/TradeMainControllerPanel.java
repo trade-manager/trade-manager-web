@@ -48,7 +48,6 @@ import org.trade.core.broker.IBrokerChangeListener;
 import org.trade.core.broker.IBrokerModel;
 import org.trade.core.factory.ClassFactory;
 import org.trade.core.lookup.DBTableLookupServiceProvider;
-import org.trade.core.persistent.ServiceException;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.Account;
 import org.trade.core.persistent.dao.Candle;
@@ -1535,25 +1534,22 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
      * @param idTradestrategy Integer
      */
     public void doTransfer(Integer idTradestrategy) {
-        try {
-            Tradestrategy tradestrategy = m_tradingdays.getTradestrategy(idTradestrategy);
-            if (null == tradestrategy) {
-                tradestrategy = tradeService.findTradestrategyById(idTradestrategy);
-            }
-            if (null == m_tradingdays.getTradingday(tradestrategy.getTradingday().getOpen(),
-                    tradestrategy.getTradingday().getClose())) {
-                Tradingday tradingday = tradeService
-                        .findTradingdayById(tradestrategy.getTradingday().getId());
-                m_tradingdays.add(tradingday);
-            }
-            if (tradestrategy.isDirty()) {
-                setStatusBarMessage("Please save ...\n", BasePanel.WARNING);
-            } else {
-                contractPanel.doTransfer(tradestrategy);
-                this.setSelectPanel(contractPanel);
-            }
-        } catch (ServiceException ex) {
-            this.setErrorMessage("Error finding Tradingday.", ex.getMessage(), ex);
+
+        Tradestrategy tradestrategy = m_tradingdays.getTradestrategy(idTradestrategy);
+        if (null == tradestrategy) {
+            tradestrategy = tradeService.findTradestrategyById(idTradestrategy);
+        }
+        if (null == m_tradingdays.getTradingday(tradestrategy.getTradingday().getOpen(),
+                tradestrategy.getTradingday().getClose())) {
+            Tradingday tradingday = tradeService
+                    .findTradingdayById(tradestrategy.getTradingday().getId());
+            m_tradingdays.add(tradingday);
+        }
+        if (tradestrategy.isDirty()) {
+            setStatusBarMessage("Please save ...\n", BasePanel.WARNING);
+        } else {
+            contractPanel.doTransfer(tradestrategy);
+            this.setSelectPanel(contractPanel);
         }
     }
 

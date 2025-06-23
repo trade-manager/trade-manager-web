@@ -79,7 +79,7 @@ public class DBBroker extends Broker {
 
     private final StrategyData strategyData;
     private Tradestrategy tradestrategy = null;
-    private final Integer idTradestrategy;
+    private final Integer tradestrategyId;
     private final IClientWrapper brokerModel;
     private BigDecimal trailAmount = null;
     private BigDecimal trailLimitOffsetAmount = null;
@@ -101,12 +101,12 @@ public class DBBroker extends Broker {
      * Constructor for BackTestBroker.
      *
      * @param strategyData    StrategyData
-     * @param idTradestrategy Integer
+     * @param tradestrategyId Integer
      * @param brokerModel     IBrokerModel
      */
-    public DBBroker(StrategyData strategyData, Integer idTradestrategy, IClientWrapper brokerModel) {
+    public DBBroker(StrategyData strategyData, Integer tradestrategyId, IClientWrapper brokerModel) {
 
-        this.idTradestrategy = idTradestrategy;
+        this.tradestrategyId = tradestrategyId;
         this.brokerModel = brokerModel;
         this.strategyData = strategyData;
     }
@@ -120,7 +120,7 @@ public class DBBroker extends Broker {
 
         try {
 
-            this.tradestrategy = tradeService.findTradestrategyById(this.idTradestrategy);
+            this.tradestrategy = tradeService.findTradestrategyById(this.tradestrategyId);
             this.strategyData.clearBaseCandleDataset();
             this.tradestrategy.setStrategyData(this.strategyData);
 
@@ -229,7 +229,7 @@ public class DBBroker extends Broker {
                     continue;
                 }
 
-                positionOrders = tradeService.findPositionOrdersByTradestrategyId(this.idTradestrategy);
+                positionOrders = tradeService.findPositionOrdersByTradestrategyId(this.tradestrategyId);
 
                 /*
                  * The new candle may create an order so this call fills it and
@@ -257,7 +257,7 @@ public class DBBroker extends Broker {
                      * candle.
                      */
                     positionOrders = tradeService
-                            .findPositionOrdersByTradestrategyId(this.idTradestrategy);
+                            .findPositionOrdersByTradestrategyId(this.tradestrategyId);
 
                     if (this.tradestrategy.getStrategy().hasStrategyManager()) {
 
@@ -286,7 +286,7 @@ public class DBBroker extends Broker {
                                  * have added orders that need to be filled.
                                  */
                                 positionOrders = tradeService
-                                        .findPositionOrdersByTradestrategyId(this.idTradestrategy);
+                                        .findPositionOrdersByTradestrategyId(this.tradestrategyId);
                                 filledOrders(this.tradestrategy.getContract(), positionOrders, candle);
                             }
                         }
@@ -348,7 +348,7 @@ public class DBBroker extends Broker {
                  * visible.
                  */
                 OrderState orderState = new OrderState();
-                orderState.m_status = OrderStatus.SUBMITTED;
+                orderState.status = OrderStatus.SUBMITTED;
                 this.brokerModel.openOrder(order.getOrderKey(), contract, order, orderState);
                 /*
                  * TODO we should read the orders back after any call to the
@@ -696,8 +696,8 @@ public class DBBroker extends Broker {
         execution.setExecId(String.valueOf(execId++));
         this.brokerModel.execDetails(execution.getTradeOrder().getOrderKey(), contract, execution);
         OrderState orderState = new OrderState();
-        orderState.m_status = OrderStatus.FILLED;
-        orderState.m_commission = commission;
+        orderState.status = OrderStatus.FILLED;
+        orderState.commission = commission;
         this.brokerModel.openOrder(order.getOrderKey(), contract, order, orderState);
     }
 
@@ -710,7 +710,7 @@ public class DBBroker extends Broker {
     private void cancelOrder(Contract contract, TradeOrder order) {
 
         OrderState orderState = new OrderState();
-        orderState.m_status = OrderStatus.CANCELLED;
+        orderState.status = OrderStatus.CANCELLED;
         this.brokerModel.openOrder(order.getOrderKey(), contract, order, orderState);
         order.setStatus(OrderStatus.CANCELLED);
     }

@@ -43,7 +43,9 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
+import org.trade.core.ApplicationProfileInitializer;
+import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.series.indicator.StrategyData;
 import org.trade.core.persistent.dao.series.indicator.candle.CandleItem;
@@ -61,12 +63,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
 /**
- * Some tests for the DataUtilities class.
+ * Some tests for the CandleIT class.
  *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-@SpringBootTest
+@ContextConfiguration(classes = ApplicationRepositoryConfig.class,
+        initializers = ApplicationProfileInitializer.class)
 public class CandleIT {
 
     private final static Logger _log = LoggerFactory.getLogger(CandleIT.class);
@@ -113,7 +116,7 @@ public class CandleIT {
     }
 
     @Test
-    public void testAddCandle() throws Exception {
+    public void addCandle() throws Exception {
 
         RegularTimePeriod period = new CandlePeriod(
                 TradingCalendar.getTradingDayStart(TradingCalendar.getDateTimeNowMarketTimeZone()), 300);
@@ -134,7 +137,7 @@ public class CandleIT {
     }
 
     @Test
-    public void testAddCandleSeries() throws Exception {
+    public void addCandleSeries() throws Exception {
 
         for (Tradestrategy tradestrategy : tradeService.findAllTradestrategies()) {
 

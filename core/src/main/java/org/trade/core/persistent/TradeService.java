@@ -112,14 +112,14 @@ public interface TradeService extends AspectService {
      * @param tradeOrder TradeOrder
      * @return TradeOrder
      */
-    TradeOrder saveTradeOrderfill(TradeOrder tradeOrder) throws ServiceException;
+    TradeOrder saveTradeOrderfill(TradeOrder tradeOrder);
 
     /**
      * Method persistCandleSeries.
      *
      * @param candleSeries CandleSeries
      */
-    void saveCandleSeries(CandleSeries candleSeries) throws ServiceException;
+    void saveCandleSeries(CandleSeries candleSeries);
 
     /**
      * Method persistCandle.
@@ -135,7 +135,7 @@ public interface TradeService extends AspectService {
      * @param id Integer
      * @return Account
      */
-    Account findAccountById(Integer id) throws ServiceException;
+    Account findAccountById(Integer id);
 
     /**
      * Method findAccountByNumber.
@@ -143,7 +143,7 @@ public interface TradeService extends AspectService {
      * @param accountNumber String
      * @return Account
      */
-    Account findAccountByAccountNumber(String accountNumber) throws ServiceException;
+    Account findAccountByAccountNumber(String accountNumber);
 
     /**
      * Method findContractById.
@@ -151,7 +151,7 @@ public interface TradeService extends AspectService {
      * @param contractId Integer
      * @return Contract
      */
-    Contract findContractById(Integer contractId) throws ServiceException;
+    Contract findContractById(Integer contractId);
 
     /**
      * Method findTradeOrderById.
@@ -159,7 +159,7 @@ public interface TradeService extends AspectService {
      * @param tradeOrderId Integer
      * @return TradeOrder
      */
-    TradeOrder findTradeOrderById(Integer tradeOrderId) throws ServiceException;
+    TradeOrder findTradeOrderById(Integer tradeOrderId);
 
     /**
      * Method findContractByUniqueKey.
@@ -171,7 +171,7 @@ public interface TradeService extends AspectService {
      * @return Contract
      */
     Contract findContractByUniqueKey(String SECType, String symbol, String exchange, String currency,
-                                     ZonedDateTime expiry) throws ServiceException;
+                                     ZonedDateTime expiry);
 
     /**
      * Method findTradestrategyById.
@@ -179,7 +179,7 @@ public interface TradeService extends AspectService {
      * @param tradestrategy Tradestrategy
      * @return Tradestrategy
      */
-    Tradestrategy findTradestrategyById(Tradestrategy tradestrategy) throws ServiceException;
+    Tradestrategy findTradestrategyById(Tradestrategy tradestrategy);
 
     /**
      * Method findTradestrategyById.
@@ -187,7 +187,7 @@ public interface TradeService extends AspectService {
      * @param tradestrategyId Integer
      * @return Tradestrategy
      */
-    Tradestrategy findTradestrategyById(Integer tradestrategyId) throws ServiceException;
+    Tradestrategy findTradestrategyById(Integer tradestrategyId);
 
     /**
      * Method existTradestrategyById.
@@ -203,7 +203,7 @@ public interface TradeService extends AspectService {
      * @param id Integer
      * @return TradestrategyLite
      */
-    TradestrategyLite findTradestrategyLiteById(Integer id) throws ServiceException;
+    TradestrategyLite findTradestrategyLiteById(Integer id);
 
     /**
      * Method findPositionOrdersByTradestrategyId.
@@ -211,7 +211,7 @@ public interface TradeService extends AspectService {
      * @param tradestrategyId Integer
      * @return PositionOrders
      */
-    TradestrategyOrders findPositionOrdersByTradestrategyId(Integer tradestrategyId) throws ServiceException;
+    TradestrategyOrders findPositionOrdersByTradestrategyId(Integer tradestrategyId);
 
     /**
      * Method refreshPositionOrdersByTradestrategyId.
@@ -219,8 +219,7 @@ public interface TradeService extends AspectService {
      * @param positionOrders PositionOrders
      * @return PositionOrders
      */
-    TradestrategyOrders refreshPositionOrdersByTradestrategyId(TradestrategyOrders positionOrders)
-            throws ServiceException;
+    TradestrategyOrders refreshPositionOrdersByTradestrategyId(TradestrategyOrders positionOrders);
 
     /**
      * Method findTradestrategyByUniqueKeys.
@@ -232,7 +231,7 @@ public interface TradeService extends AspectService {
      * @return Tradestrategy
      */
     Tradestrategy findTradestrategyByUniqueKeys(ZonedDateTime open, String strategy, Integer idContract,
-                                                String portfolioName) throws ServiceException;
+                                                String portfolioName);
 
     /**
      * Method findTradestrategyDistinctByDateRange.
@@ -257,7 +256,7 @@ public interface TradeService extends AspectService {
      *
      * @return List<Tradestrategy>
      */
-    List<Tradestrategy> findAllTradestrategies() throws ServiceException;
+    List<Tradestrategy> findAllTradestrategies();
 
     /**
      * Method findTradePositionById.
@@ -265,7 +264,7 @@ public interface TradeService extends AspectService {
      * @param tradePositionId Integer
      * @return TradePosition
      */
-    TradePosition findTradePositionById(Integer tradePositionId) throws ServiceException;
+    TradePosition findTradePositionById(Integer tradePositionId);
 
     /**
      * Method findPortfolioById.
@@ -273,7 +272,7 @@ public interface TradeService extends AspectService {
      * @param id Integer
      * @return Portfolio
      */
-    Portfolio findPortfolioById(Integer id) throws ServiceException;
+    Portfolio findPortfolioById(Integer id);
 
     /**
      * Method findPortfolioByName.
@@ -282,14 +281,14 @@ public interface TradeService extends AspectService {
      * @return Portfolio
      */
 
-    Portfolio findPortfolioByName(String name) throws ServiceException;
+    Portfolio findPortfolioByName(String name);
 
     /**
      * Method findPortfolioDefault.
      *
      * @return Portfolio
      */
-    Portfolio findPortfolioDefault() throws ServiceException;
+    Portfolio findPortfolioDefault();
 
     /**
      * Method resetDefaultPortfolio.
@@ -303,14 +302,14 @@ public interface TradeService extends AspectService {
      *
      * @param instance Tradingday
      */
-    void deleteTradingdayTradeOrders(Tradingday instance) throws ServiceException;
+    void deleteTradingdayTradeOrders(Tradingday instance);
 
     /**
      * Method removeTradestrategyTradeOrders.
      *
      * @param instance Tradestrategy
      */
-    void deleteTradestrategyTradeOrders(Tradestrategy instance) throws ServiceException;
+    void deleteTradestrategyTradeOrders(Tradestrategy instance);
 
     /**
      * Method findTradeOrderByKey.
@@ -318,7 +317,7 @@ public interface TradeService extends AspectService {
      * @param orderKey Integer
      * @return TradeOrder
      */
-    TradeOrder findTradeOrderByKey(Integer orderKey) throws ServiceException;
+    TradeOrder findTradeOrderByKey(Integer orderKey);
 
     /**
      * Method findTradeOrderfillByExecId.
@@ -326,14 +325,14 @@ public interface TradeService extends AspectService {
      * @param execId String
      * @return TradeOrderfill
      */
-    TradeOrderfill findTradeOrderfillByExecId(String execId) throws ServiceException;
+    TradeOrderfill findTradeOrderfillByExecId(String execId);
 
     /**
      * Method findTradeOrderByMaxKey.
      *
      * @return Integer
      */
-    Integer findTradeOrderByMaxKey() throws ServiceException;
+    Integer findTradeOrderByMaxKey();
 
     /**
      * Method findTradingdayById.
@@ -341,7 +340,7 @@ public interface TradeService extends AspectService {
      * @param tradingdayId Integer
      * @return Tradingday
      */
-    Tradingday findTradingdayById(Integer tradingdayId) throws ServiceException;
+    Tradingday findTradingdayById(Integer tradingdayId);
 
     /**
      * Method findTradingdayByOpenDate.
@@ -350,8 +349,7 @@ public interface TradeService extends AspectService {
      * @param closeDate ZonedDateTime
      * @return Tradingday
      */
-    Tradingday findTradingdayByOpenCloseDate(ZonedDateTime openDate, ZonedDateTime closeDate)
-            throws ServiceException;
+    Tradingday findTradingdayByOpenCloseDate(ZonedDateTime openDate, ZonedDateTime closeDate);
 
     /**
      * Method findTradingdaysByDateRange.
@@ -360,8 +358,7 @@ public interface TradeService extends AspectService {
      * @param endDate   ZonedDateTime
      * @return Tradingdays
      */
-    Tradingdays findTradingdaysByDateRange(ZonedDateTime startDate, ZonedDateTime endDate)
-            throws ServiceException;
+    Tradingdays findTradingdaysByDateRange(ZonedDateTime startDate, ZonedDateTime endDate);
 
     /**
      * Method findTradelogReport.
@@ -387,7 +384,7 @@ public interface TradeService extends AspectService {
      * @return List<Candle>
      */
     List<Candle> findCandlesByContractDateRangeBarSize(Integer contractId, ZonedDateTime startDate,
-                                                       ZonedDateTime endDate, Integer barSize) throws ServiceException;
+                                                       ZonedDateTime endDate, Integer barSize);
 
     /**
      * Method findCandleCount.
@@ -396,7 +393,7 @@ public interface TradeService extends AspectService {
      * @param contractId   Integer
      * @return Long
      */
-    Long findCandleCount(Integer tradingdayId, Integer contractId) throws ServiceException;
+    Long findCandleCount(Integer tradingdayId, Integer contractId);
 
     /**
      * Method findRuleById.
@@ -404,7 +401,7 @@ public interface TradeService extends AspectService {
      * @param ruleId Integer
      * @return Rule
      */
-    Rule findRuleById(Integer ruleId) throws ServiceException;
+    Rule findRuleById(Integer ruleId);
 
     /**
      * Method findRuleByMaxVersion.
@@ -412,7 +409,7 @@ public interface TradeService extends AspectService {
      * @param strategy Strategy
      * @return Integer
      */
-    Integer findRuleByMaxVersion(Strategy strategy) throws ServiceException;
+    Integer findRuleByMaxVersion(Strategy strategy);
 
     /**
      * Method findStrategyById.
@@ -420,7 +417,7 @@ public interface TradeService extends AspectService {
      * @param id Integer
      * @return Strategy
      */
-    Strategy findStrategyById(Integer id) throws ServiceException;
+    Strategy findStrategyById(Integer id);
 
     /**
      * Method findStrategyByName.
@@ -428,14 +425,14 @@ public interface TradeService extends AspectService {
      * @param name String
      * @return Strategy
      */
-    Strategy findStrategyByName(String name) throws ServiceException;
+    Strategy findStrategyByName(String name);
 
     /**
      * Method findStrategies.
      *
      * @return List<Strategy>
      */
-    List<Strategy> findStrategies() throws ServiceException;
+    List<Strategy> findStrategies();
 
     /**
      * Method findAspectById.
@@ -443,7 +440,7 @@ public interface TradeService extends AspectService {
      * @param instance Aspect
      * @return Aspect
      */
-    Aspect findAspectById(Aspect instance) throws ServiceException;
+    Optional<Aspect> findAspectById(Aspect instance);
 
     /**
      * Method saveAspect.
@@ -476,8 +473,7 @@ public interface TradeService extends AspectService {
      * @param toStrategy   Strategy
      * @param tradingday   Tradingday
      */
-    void reassignStrategy(Strategy fromStrategy, Strategy toStrategy, Tradingday tradingday)
-            throws ServiceException;
+    void reassignStrategy(Strategy fromStrategy, Strategy toStrategy, Tradingday tradingday);
 
     /**
      * Method findCodeTypeByNameType.

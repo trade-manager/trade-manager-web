@@ -78,7 +78,7 @@ public class Portfolio extends Aspect implements Serializable, Cloneable {
     @OneToMany(mappedBy = "portfolio", fetch = FetchType.LAZY)
     private List<Tradestrategy> tradestrategies = new ArrayList<>(0);
 
-    @OneToMany(mappedBy = "portfolio", fetch = FetchType.LAZY, orphanRemoval = true, cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "portfolio", fetch = FetchType.EAGER, orphanRemoval = true, cascade = {CascadeType.ALL})
     private List<PortfolioAccount> portfolioAccounts = new ArrayList<>(0);
 
     public Portfolio() {

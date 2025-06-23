@@ -90,13 +90,13 @@ public class Strategy extends Aspect implements Serializable, Cloneable {
     @OneToMany(mappedBy = "strategy", fetch = FetchType.LAZY)
     private List<Tradestrategy> tradestrategies = new ArrayList<>(0);
 
-    @OneToMany(mappedBy = "strategy", fetch = FetchType.LAZY, orphanRemoval = true, cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "strategy", fetch = FetchType.EAGER, orphanRemoval = true, cascade = {CascadeType.ALL})
     private List<Rule> rules = new ArrayList<>(0);
 
-    @OneToMany(mappedBy = "strategy", fetch = FetchType.LAZY, orphanRemoval = true, cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "strategy", fetch = FetchType.EAGER, orphanRemoval = true, cascade = {CascadeType.ALL})
     private List<IndicatorSeries> indicators = new ArrayList<>(0);
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "strategy_manager_id")
     private List<Strategy> strategies = new ArrayList<>(0);
 

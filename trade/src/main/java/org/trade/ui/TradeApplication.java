@@ -1,14 +1,13 @@
 package org.trade.ui;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.stereotype.Component;
 import org.trade.base.ImageBuilder;
 import org.trade.base.WaitCursorEventQueue;
+import org.trade.core.ApplicationContextProvider;
+import org.trade.core.ApplicationProfileInitializer;
 
 import java.awt.*;
 
@@ -20,16 +19,16 @@ import java.awt.*;
  * @version $Revision: 1.0 $
  */
 @SpringBootApplication(scanBasePackages = {"org.trade.core"})
-@ComponentScan({"org.trade.core"})
-@EntityScan("org.trade.core")
-@EnableJpaRepositories("org.trade.core")
 public class TradeApplication {
 
     public static void main(String[] args) {
 
-        ConfigurableApplicationContext ctx = new SpringApplicationBuilder(TradeApplication.class)
-                .headless(false).run(args);
-        SwingApp frame = ctx.getBean(SwingApp.class);
+        ConfigurableApplicationContext applicationContext = new SpringApplicationBuilder(TradeApplication.class)
+                .initializers(new ApplicationProfileInitializer())
+                .run(args);
+
+        ApplicationContextProvider applicationContextProvider = applicationContext.getBean(ApplicationContextProvider.class);
+        SwingApp frame = applicationContext.getBean(SwingApp.class);
     }
 
     @Component

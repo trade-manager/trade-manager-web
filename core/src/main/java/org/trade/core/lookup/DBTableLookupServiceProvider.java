@@ -37,7 +37,6 @@ package org.trade.core.lookup;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.properties.ConfigProperties;
@@ -61,7 +60,6 @@ public class DBTableLookupServiceProvider implements ILookupServiceProvider {
 
     private final static Logger _log = LoggerFactory.getLogger(DBTableLookupServiceProvider.class);
 
-    @Autowired
     TradeService tradeService;
     /*
      * This will be a hashtable of hashtable's of ILookup objects. The first key
@@ -72,8 +70,8 @@ public class DBTableLookupServiceProvider implements ILookupServiceProvider {
     /**
      * Default Constructor
      */
-    public DBTableLookupServiceProvider() {
-
+    public DBTableLookupServiceProvider(TradeService tradeService) {
+        this.tradeService = tradeService;
     }
 
     public static void clearLookup() {

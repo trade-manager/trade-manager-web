@@ -47,7 +47,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.trade.core.dao.Aspect;
 import org.trade.core.dao.Aspects;
 import org.trade.core.factory.ClassFactory;
-import org.trade.core.persistent.ServiceException;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.Candle;
 import org.trade.core.persistent.dao.Contract;
@@ -430,14 +429,8 @@ public class TWSBrokerModelIT implements IBrokerChangeListener {
      * @param tradestrategy Tradestrategy
      */
     public void historicalDataComplete(Tradestrategy tradestrategy) {
-
-
-        try {
-            _log.info("Symbol: {} Candles  saved: {}", tradestrategy.getContract().getSymbol(), tradeService.findCandleCount(tradestrategy.getTradingday().getId(),
-                    tradestrategy.getContract().getId()));
-        } catch (ServiceException ex) {
-            _log.error("Error: Could not retrieve historical data: {}", ex.getMessage());
-        }
+        _log.info("Symbol: {} Candles  saved: {}", tradestrategy.getContract().getSymbol(), tradeService.findCandleCount(tradestrategy.getTradingday().getId(),
+                tradestrategy.getContract().getId()));
 
     }
 

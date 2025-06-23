@@ -44,7 +44,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.trade.core.broker.TWSBrokerModel;
 import org.trade.core.dao.Aspect;
 import org.trade.core.dao.Aspects;
@@ -93,6 +92,7 @@ import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -965,21 +965,21 @@ public class TradeServiceIT {
     }
 
     @Test
-    public void testFindAspectById() throws Exception {
+    public void testFindAspectById() {
 
-        Aspect result = this.tradeService.findAspectById(this.tradestrategy);
-        assertNotNull(result);
+        Optional<Aspect> result = this.tradeService.findAspectById(this.tradestrategy);
+        assertFalse(result.isEmpty());
     }
 
     @Test
-    public void testPersistAspect() throws Exception {
+    public void testPersistAspect()  {
 
         Aspect result = this.tradeService.saveAspect(this.tradestrategy);
         assertNotNull(result);
     }
 
     @Test
-    public void testRemoveAspect() throws Exception {
+    public void testRemoveAspect() {
 
         this.tradeService.deleteAspect(this.tradestrategy);
         assertThrows(ServiceException.class,

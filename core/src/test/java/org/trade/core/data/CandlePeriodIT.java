@@ -44,6 +44,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
+import org.trade.core.ApplicationProfileInitializer;
+import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.Candle;
 import org.trade.core.persistent.dao.Tradestrategy;
@@ -70,6 +73,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  *
  */
 @SpringBootTest
+@ContextConfiguration(classes = ApplicationRepositoryConfig.class,
+        initializers = ApplicationProfileInitializer.class)
 public class CandlePeriodIT extends TradestrategyBase {
 
     private final static Logger _log = LoggerFactory.getLogger(CandlePeriodIT.class);
@@ -124,21 +129,24 @@ public class CandlePeriodIT extends TradestrategyBase {
         List<Candle> candles = tradeService.findCandlesByContractDateRangeBarSize(
                 this.tradestrategy.getContract().getId(), prevTradingday,
                 this.tradestrategy.getTradingday().getOpen(), this.tradestrategy.getBarSize());
+
         if (candles.isEmpty()) {
+
             StrategyData.doDummyData(this.tradestrategy.getStrategyData().getBaseCandleSeries(),
                     Tradingday.newInstance(prevTradingday), 2, BarSize.FIVE_MIN, true, 0);
         } else {
+
             CandleDataset.populateSeries(this.tradestrategy.getStrategyData(), candles);
         }
+
         assertFalse(this.tradestrategy.getStrategyData().getBaseCandleSeries().isEmpty());
         Candle candle = this.tradestrategy.getStrategyData().getBaseCandleSeries()
                 .getBar(TradingCalendar.getDateAtTime(TradingCalendar.getPrevTradingDay(startPeriod),
                                 this.tradestrategy.getTradingday().getOpen()),
                         TradingCalendar.getDateAtTime(TradingCalendar.getPrevTradingDay(startPeriod),
                                 this.tradestrategy.getTradingday().getClose()));
+
         _log.info("Bar for Contract: {} Start Period: {} Open: {} High: {} Low: {} Close: {} Vwap: {} Volume: {}", candle.getContract().getSymbol(), candle.getPeriod(), candle.getOpen(), candle.getHigh(), candle.getLow(), candle.getClose(), candle.getVwap(), candle.getVolume());
-
-
     }
 
     @Test

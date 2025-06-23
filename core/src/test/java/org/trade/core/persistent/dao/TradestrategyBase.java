@@ -84,15 +84,18 @@ public class TradestrategyBase {
             portfolio.getPortfolioAccounts().add(portfolioAccount);
             portfolio = tradeService.savePortfolio(portfolio);
         }
+
         ZonedDateTime open = TradingCalendar
                 .getTradingDayStart(TradingCalendar.getPrevTradingDay(TradingCalendar.getDateTimeNowMarketTimeZone()));
 
         Contract contract = tradeService.findContractByUniqueKey(SECType.STOCK, symbol, Exchange.SMART, Currency.USD, null);
         if (null == contract) {
+
             contract = new Contract(SECType.STOCK, symbol, Exchange.SMART, Currency.USD, null, null);
             contract = tradeService.saveAspect(contract);
 
         } else {
+
             tradestrategy = tradeService.findTradestrategyByUniqueKeys(open, strategy.getName(),
                     contract.getId(), portfolio.getName());
             if (null != tradestrategy) {
@@ -131,10 +134,13 @@ public class TradestrategyBase {
 
         Tradingday tradingday = Tradingday.newInstance(open);
         Tradingday instanceTradingDay = tradeService.findTradingdayByOpenCloseDate(tradingday.getOpen(), tradingday.getClose());
+
         if (null != instanceTradingDay) {
+
             tradingday.getTradestrategies().clear();
             tradingday = instanceTradingDay;
         }
+
         tradestrategy = new Tradestrategy(contract, tradingday, strategy, portfolio, new BigDecimal(100), "BUY", "0",
                 true, ChartDays.TWO_DAYS, BarSize.FIVE_MIN);
         tradingday.addTradestrategy(tradestrategy);

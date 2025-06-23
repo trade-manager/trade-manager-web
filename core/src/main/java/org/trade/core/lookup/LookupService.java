@@ -35,6 +35,9 @@
  */
 package org.trade.core.lookup;
 
+import org.trade.core.ApplicationContextProvider;
+import org.trade.core.persistent.TradeService;
+
 import java.util.Vector;
 
 /**
@@ -48,8 +51,9 @@ public class LookupService {
     private static final Vector<ILookupServiceProvider> _providers = new Vector<>();
 
     static {
+
         addLookupServiceProvider(new PropertyFileLookupServiceProvider());
-        addLookupServiceProvider(new DBTableLookupServiceProvider());
+        addLookupServiceProvider(new DBTableLookupServiceProvider(ApplicationContextProvider.getBean(TradeService.class)));
     }
 
     /**

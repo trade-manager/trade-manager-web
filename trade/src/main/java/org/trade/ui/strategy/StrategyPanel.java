@@ -525,75 +525,85 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
     }
 
     private void loadStrategiesFromFileSystem(List<Strategy> strategies) {
-        try {
-            this.setMessageText(null, false, false, null);
-            for (Strategy strategy : strategies) {
-                String fileNameCode = m_strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/')
-                        + strategy.getClassName() + ".java";
-                String fileNameComments = m_strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/')
-                        + strategy.getClassName() + ".txt";
 
-                try {
-                    String content = readFile(fileNameCode);
-                    String comments = readFile(fileNameComments);
-                    if (strategy.getRules().isEmpty()) {
-                        Rule nextRule = new Rule(strategy, 1, comments,
-                                content.getBytes());
-                        strategy.add(nextRule);
-                        this.tradeService.saveAspect(nextRule);
-                    } else {
-                        Integer version = this.tradeService.findRuleByMaxVersion(strategy);
-                        for (Rule rule : strategy.getRules()) {
-                            if (rule.getVersion().equals(version)) {
-                                /*
-                                 * Load and save the file in the DB if there is
-                                 * no content for this rule. i.e. initial start
-                                 * up. Else make sure the rule in the DB is the
-                                 * same as the rule in the file system.
-                                 */
-                                if (null == rule.getRule() && null != content) {
-                                    rule.setRule(content.getBytes());
-                                    rule = this.tradeService.saveAspect(rule);
-                                } else {
-                                    String ruleDB = new String(rule.getRule());
-                                    if (!ruleDB.equals(content)) {
-                                        setMessageText(
-                                                "DB strategy not in sync with file system strategy: " + fileNameCode
-                                                        + " file length: " + Objects.requireNonNull(content).length() + " Strategy "
-                                                        + rule.getStrategy().getName() + " length: " + ruleDB.length(),
-                                                true, true, colorRedAttr);
-                                    }
+        this.setMessageText(null, false, false, null);
+
+        for (Strategy strategy : strategies) {
+
+            String fileNameCode = m_strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/')
+                    + strategy.getClassName() + ".java";
+            String fileNameComments = m_strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/')
+                    + strategy.getClassName() + ".txt";
+
+            try {
+
+                String content = readFile(fileNameCode);
+                String comments = readFile(fileNameComments);
+
+                if (strategy.getRules().isEmpty()) {
+
+                    Rule nextRule = new Rule(strategy, 1, comments,
+                            content.getBytes());
+                    strategy.add(nextRule);
+                    this.tradeService.saveAspect(nextRule);
+                } else {
+
+                    Integer version = this.tradeService.findRuleByMaxVersion(strategy);
+                    for (Rule rule : strategy.getRules()) {
+
+                        if (rule.getVersion().equals(version)) {
+
+                            /*
+                             * Load and save the file in the DB if there is
+                             * no content for this rule. i.e. initial start
+                             * up. Else make sure the rule in the DB is the
+                             * same as the rule in the file system.
+                             */
+                            if (null == rule.getRule() && null != content) {
+
+                                rule.setRule(content.getBytes());
+                                rule = this.tradeService.saveAspect(rule);
+                            } else {
+
+                                String ruleDB = new String(rule.getRule());
+
+                                if (!ruleDB.equals(content)) {
+
+                                    setMessageText(
+                                            "DB strategy not in sync with file system strategy: " + fileNameCode
+                                                    + " file length: " + Objects.requireNonNull(content).length() + " Strategy "
+                                                    + rule.getStrategy().getName() + " length: " + ruleDB.length(),
+                                            true, true, colorRedAttr);
                                 }
-                                if (null == rule.getComment() && null != comments) {
+                            }
+                            if (null == rule.getComment() && null != comments) {
 
-                                    rule.setComment(comments);
-                                    this.tradeService.saveAspect(rule);
+                                rule.setComment(comments);
+                                this.tradeService.saveAspect(rule);
 
-                                } else {
+                            } else {
 
-                                    String commentsDB = rule.getComment();
-                                    if (!commentsDB.equals(comments)) {
+                                String commentsDB = rule.getComment();
+                                if (!commentsDB.equals(comments)) {
 
-                                        setMessageText("DB strategy not in sync with file system strategy: "
-                                                        + fileNameComments + " file length: " + Objects.requireNonNull(comments).length() + " Strategy "
-                                                        + rule.getStrategy().getName() + " length: " + commentsDB.length(),
-                                                true, true, colorRedAttr);
-                                    }
+                                    setMessageText("DB strategy not in sync with file system strategy: "
+                                                    + fileNameComments + " file length: " + Objects.requireNonNull(comments).length() + " Strategy "
+                                                    + rule.getStrategy().getName() + " length: " + commentsDB.length(),
+                                            true, true, colorRedAttr);
                                 }
                             }
                         }
                     }
-                } catch (IOException e) {
-                    // Do nothing.
                 }
+            } catch (IOException e) {
+                // Do nothing.
             }
-            if (!getMessageText().isEmpty()) {
-                setMessageText("Re deploy rule to fix this problem.", true, true, colorRedAttr);
-            }
-
-        } catch (ServiceException ex) {
-            this.setErrorMessage("Error saving rule.", ex.getMessage(), ex);
         }
+        if (!getMessageText().isEmpty()) {
+            setMessageText("Re deploy rule to fix this problem.", true, true, colorRedAttr);
+        }
+
+
     }
 
     private void addClassDefinition(Class<?> theClass, String title, Document doc) {

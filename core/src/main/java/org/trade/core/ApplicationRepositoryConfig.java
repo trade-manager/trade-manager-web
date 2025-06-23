@@ -16,21 +16,21 @@
 package org.trade.core;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 
 /**
  * Sample configuration to bootstrap Spring Data JPA through JavaConfig
  *
  * @author Simon Allen
- * @version $Revision: 1.0 $
  */
 @SpringBootApplication(scanBasePackages = {"org.trade.core"})
-@ComponentScan({"org.trade.core"})
-@EntityScan("org.trade.core")
-@EnableJpaRepositories("org.trade.core")
-class CustomRepositoryConfig {
+public class ApplicationRepositoryConfig {
 
+    @Bean
+    @Profile("initializeConfig")
+    public String initializeConfig() {
 
+        return "";
+    }
 }

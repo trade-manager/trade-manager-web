@@ -119,7 +119,7 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
     private StrategyData strategyData = null;
 
     @Transient
-    private final TradestrategyStatus tradestrategyStatus = new TradestrategyStatus();
+    private TradestrategyStatus tradestrategyStatus = null;
 
     public Tradestrategy() {
     }
@@ -242,7 +242,7 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
     public void setStatus(String status) {
 
         this.status = status;
-        tradestrategyStatus.setValue(this.status);
+        tradestrategyStatus = TradestrategyStatus.newInstance(status);
     }
 
     /**
@@ -436,7 +436,7 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
     }
 
     /**
-     * Returns the value associated with for the this name attribute name. For
+     * Returns the value associated with for this name attribute name. For
      * String data types you should define an classEditorName in the
      * CodeAttribute table, this should be a
      * org.trade.dictionary.valuetype.Decode These are presented as a combo box

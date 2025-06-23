@@ -35,7 +35,7 @@
  */
 package org.trade.core.persistent;
 
-import jakarta.persistence.OptimisticLockException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.trade.core.dao.Aspect;
@@ -218,16 +218,9 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
         return contracts.isEmpty() ? null : contracts.getFirst();
     }
 
-    public Tradestrategy findTradestrategyById(final Tradestrategy tradestrategy) throws ServiceException {
-
-        if (null == tradestrategy.getId()) {
-
-            throw new ServiceException(
-                    "Please save Tradestrategy for symbol: " + tradestrategy.getContract().getSymbol());
-        }
+    public Tradestrategy findTradestrategyById(final Tradestrategy tradestrategy) {
 
         Tradestrategy instance = tradestrategyRepository.findById(tradestrategy.getId()).get();
-
         instance.setStrategyData(tradestrategy.getStrategyData());
         return instance;
     }
@@ -237,8 +230,10 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
         Integer version = tradestrategyRepository.findVersionById(Objects.requireNonNull(positionOrders.getId()));
 
         if (positionOrders.getVersion().equals(version)) {
+
             return positionOrders;
         } else {
+
             return tradestrategyRepository
                     .findPositionOrdersByTradestrategyId(positionOrders.getId());
         }
@@ -249,7 +244,8 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
         return tradestrategyRepository.findPositionOrdersByTradestrategyId(tradestrategyId);
     }
 
-    public Tradestrategy findTradestrategyById(final Integer id) throws ServiceException {
+    public Tradestrategy findTradestrategyById(final Integer id) {
+
         return tradestrategyRepository.findById(id).get();
     }
 
@@ -283,6 +279,7 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
         portfolioRepository.resetDefaultPortfolio(instance);
     }
 
+    @Transactional
     public Portfolio savePortfolio(Portfolio instance) {
 
         Portfolio portfolio = this.findPortfolioByName(instance.getName());
@@ -341,94 +338,105 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
     }
 
     public List<Tradestrategy> findAllTradestrategies() {
+
         return tradestrategyRepository.findAll();
 
     }
 
     public Tradestrategy findTradestrategyByUniqueKeys(final ZonedDateTime open, final String strategy,
                                                        final Integer idContract, final String portfolioName) {
+
         return tradestrategyRepository.findTradestrategyByUniqueKeys(open, strategy, idContract, portfolioName);
     }
 
     public List<Tradestrategy> findTradestrategyDistinctByDateRange(final ZonedDateTime fromOpen,
                                                                     final ZonedDateTime toOpen) {
+
         return tradestrategyRepository.findTradestrategyDistinctByDateRange(fromOpen, toOpen);
     }
 
     public List<Tradestrategy> findTradestrategyContractDistinctByDateRange(final ZonedDateTime fromOpen,
                                                                             final ZonedDateTime toOpen) {
+
         return tradestrategyRepository.findTradestrategyContractDistinctByDateRange(fromOpen, toOpen);
     }
 
-    public void deleteTradingdayTradeOrders(final Tradingday instance) throws ServiceException {
+    public void deleteTradingdayTradeOrders(final Tradingday instance) {
+
         for (Tradestrategy tradestrategy : instance.getTradestrategies()) {
+
             this.deleteTradestrategyTradeOrders(tradestrategy);
         }
     }
 
-    public void deleteTradestrategyTradeOrders(final Tradestrategy instance) throws ServiceException {
+    @Transactional
+    public void deleteTradestrategyTradeOrders(final Tradestrategy instance) {
 
-        try {
-            /*
-             * Refresh the trade strategy as orders across tradePosition could
-             * have been deleted if this is a bulk delete of tradestrategies.
-             */
-            Tradestrategy transientInstance = tradestrategyRepository.findById(Objects.requireNonNull(instance.getId())).get();
-            transientInstance.setStatus(null);
-            getAspectRepository().save(transientInstance);
+        /*
+         * Refresh the trade strategy as orders across tradePosition could
+         * have been deleted if this is a bulk delete of tradestrategies.
+         */
+        Tradestrategy transientInstance = tradestrategyRepository.findById(Objects.requireNonNull(instance.getId())).get();
+        transientInstance.setStatus(null);
+        getAspectRepository().save(transientInstance);
 
-            Hashtable<Integer, TradePosition> tradePositions = new Hashtable<>();
-            for (TradeOrder tradeOrder : transientInstance.getTradeOrders()) {
-                if (tradeOrder.hasTradePosition())
-                    tradePositions.put(tradeOrder.getTradePosition().getId(),
-                            tradeOrder.getTradePosition());
+        Hashtable<Integer, TradePosition> tradePositions = new Hashtable<>();
 
-                if (null != tradeOrder.getId()) {
-                    this.deleteAspect(tradeOrder);
-                }
-            }
-            for (TradePosition tradePosition : tradePositions.values()) {
-                tradePosition = this.findTradePositionById(tradePosition.getId());
-                /*
-                 * Remove the open trade position from contract if this is a
-                 * tradePosition to be deleted.
-                 */
-                if (tradePosition.equals(transientInstance.getContract().getTradePosition())) {
-                    transientInstance.getContract().setTradePosition(null);
-                    getAspectRepository().save(transientInstance.getContract());
-                }
-                this.deleteAspect(tradePosition);
+        for (TradeOrder tradeOrder : transientInstance.getTradeOrders()) {
+
+            if (tradeOrder.hasTradePosition()) {
+
+                tradePositions.put(tradeOrder.getTradePosition().getId(),
+                        tradeOrder.getTradePosition());
             }
 
-            transientInstance.getTradeOrders().clear();
-        } catch (OptimisticLockException ex1) {
-            throw new ServiceException(
-                    "Error removing Tradestrategy TradePositions. Please refresh before remove.");
+            if (null != tradeOrder.getId()) {
 
-        } catch (Exception ex) {
-            throw new ServiceException("Error removing Tradestrategy TradePositions: "
-                    + instance.getContract().getSymbol() + "\n Msg: " + ex.getMessage());
+                this.deleteAspect(tradeOrder);
+            }
         }
+
+        for (TradePosition tradePosition : tradePositions.values()) {
+
+            tradePosition = this.findTradePositionById(tradePosition.getId());
+            /*
+             * Remove the open trade position from contract if this is a
+             * tradePosition to be deleted.
+             */
+            if (tradePosition.equals(transientInstance.getContract().getTradePosition())) {
+
+                transientInstance.getContract().setTradePosition(null);
+                getAspectRepository().save(transientInstance.getContract());
+            }
+            this.deleteAspect(tradePosition);
+        }
+
+        transientInstance.getTradeOrders().clear();
     }
 
     public TradeOrder findTradeOrderByKey(final Integer orderKey) {
+
         return tradeOrderRepository.findByOrderKey(orderKey);
     }
 
     public TradeOrderfill findTradeOrderfillByExecId(String execId) {
+
         return tradeOrderfillRepository.findByExecId(execId);
     }
 
     public Integer findTradeOrderByMaxKey() {
+
         return tradeOrderRepository.findByMaxKey();
     }
 
     public Tradingdays findTradingdaysByDateRange(final ZonedDateTime startDate, final ZonedDateTime endDate) {
+
         return tradingdayRepository.findTradingdaysByDateRange(startDate, endDate);
     }
 
     public List<Candle> findCandlesByContractDateRangeBarSize(final Integer contractId, final ZonedDateTime startDate,
                                                               final ZonedDateTime endDate, final Integer barSize) {
+
         return candleRepository.findCandlesByContractDateRangeBarSize(contractId, startDate, endDate, barSize);
     }
 
@@ -438,19 +446,8 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
         return candleRepository.findCandleCount(tradingdayId, contractId);
     }
 
-    public void saveCandleSeries(final CandleSeries candleSeries) throws ServiceException {
-
-
-        /*
-         * This can happen when an indicator is a contract that has never
-         * been used.
-         */
-        if (null == candleSeries.getContract().getId()) {
-
-            Contract contract = this.saveAspect(candleSeries.getContract());
-            // candleSeries.getContract().setId(contract.getId());
-            candleSeries.getContract().setVersion(contract.getVersion());
-        }
+    @Transactional
+    public void saveCandleSeries(final CandleSeries candleSeries) {
 
         Candle transientInstance;
 
@@ -473,12 +470,6 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
                 if (instance.equals(candleItem.getCandle())) {
 
                     continue;
-                } else {
-
-                    // This should never happen.
-                    throw new ServiceException("Count: " + i + " Symbol: " + candleSeries.getSymbol() + "candleid: "
-                            + candleItem.getCandle().getId() + " open: "
-                            + candleItem.getCandle().getStartPeriod());
                 }
             }
 
@@ -531,20 +522,12 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
             List<Candle> currCandle = candleRepository.findByUniqueKey(candle.getTradingday().getId(),
                     candle.getContract().getId(), candle.getStartPeriod(), candle.getEndPeriod(),
                     candle.getBarSize());
-            /*
-             * Candle exists set the id and version so we can merge the
-             * incoming candle.
-             */
-            if (!currCandle.isEmpty()) {
-
-                // candle.setId(currCandle.getId());
-                candle.setVersion(currCandle.getFirst().getVersion());
-            }
         }
 
         return getAspectRepository().save(candle);
     }
 
+    @Transactional
     public Tradingday saveTradingday(Tradingday instance) {
 
         /*
@@ -633,12 +616,12 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
         return instance;
     }
 
+    @Transactional
     public TradeOrder saveTradeOrder(final TradeOrder tradeOrder) {
 
         /*
          * This is a new order set the status to UNSUBMIT
          */
-
         if (!tradeOrder.getIsFilled()
                 && CoreUtils.nullSafeComparator(tradeOrder.getQuantity(), tradeOrder.getFilledQuantity()) == 0) {
 
@@ -859,89 +842,92 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
         return this.saveAspect(tradeOrder);
     }
 
-    public synchronized TradeOrder saveTradeOrderfill(final TradeOrder tradeOrder) throws ServiceException {
-        try {
+    @Transactional
+    public TradeOrder saveTradeOrderfill(final TradeOrder tradeOrder) {
 
-            ZonedDateTime filledDate = null;
-            double filledValue = 0;
-            double commission = 0;
-            int filledQuantity = 0;
+        ZonedDateTime filledDate = null;
+        double filledValue = 0;
+        double commission = 0;
+        int filledQuantity = 0;
 
-            for (TradeOrderfill tradeOrderfill : tradeOrder.getTradeOrderfills()) {
+        for (TradeOrderfill tradeOrderfill : tradeOrder.getTradeOrderfills()) {
 
-                if (null != tradeOrderfill.getCommission()) {
-                    commission = commission + tradeOrderfill.getCommission().doubleValue();
-                }
+            if (null != tradeOrderfill.getCommission()) {
 
-                filledQuantity = filledQuantity + tradeOrderfill.getQuantity();
-                filledValue = filledValue + (tradeOrderfill.getPrice().doubleValue() * tradeOrderfill.getQuantity());
-                if (null == filledDate) {
-                    filledDate = tradeOrderfill.getTime();
-                }
-
-                if (filledDate.isBefore(tradeOrderfill.getTime())) {
-                    filledDate = tradeOrderfill.getTime();
-                }
+                commission = commission + tradeOrderfill.getCommission().doubleValue();
             }
 
-            if (filledQuantity > 0) {
+            filledQuantity = filledQuantity + tradeOrderfill.getQuantity();
+            filledValue = filledValue + (tradeOrderfill.getPrice().doubleValue() * tradeOrderfill.getQuantity());
 
-                BigDecimal avgFillPrice = (new BigDecimal(filledValue / filledQuantity)).setScale(SCALE_5,
-                        RoundingMode.HALF_EVEN);
-                BigDecimal commissionAmount = (new BigDecimal(commission)).setScale(SCALE_2,
-                        RoundingMode.HALF_EVEN);
+            if (null == filledDate) {
 
-                /*
-                 * If filled qty is greater than current filled qty set the new
-                 * value. Note openOrder can update the filled order quantity
-                 * before the orderFills have arrived.
-                 */
-                if (CoreUtils.nullSafeComparator(filledQuantity, tradeOrder.getFilledQuantity()) == 1) {
-
-                    tradeOrder.setAverageFilledPrice(avgFillPrice);
-                    tradeOrder.setFilledQuantity(filledQuantity);
-                    tradeOrder.setFilledDate(filledDate);
-                    /*
-                     * If the commission amount is greater than the TradeOrder
-                     * commission set this amount. Note tradeOrder commission
-                     * can be set via the commissionReport event i.e each
-                     * execution or by the openOrder event.
-                     */
-                    if (CoreUtils.nullSafeComparator(commissionAmount, tradeOrder.getCommission()) == 1) {
-                        tradeOrder.setCommission(commissionAmount);
-                    }
-
-                    tradeOrder.setOrderUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
-                }
+                filledDate = tradeOrderfill.getTime();
             }
-            return saveTradeOrder(tradeOrder);
 
-        } catch (OptimisticLockException ex1) {
-            throw new ServiceException("Error saving TradeOrderfill please refresh before save.");
-        } catch (Exception e) {
-            throw new ServiceException(
-                    "Error saving TradeOrderfill: " + tradeOrder.getOrderKey() + "\n Msg: " + e.getMessage());
+            if (filledDate.isBefore(tradeOrderfill.getTime())) {
+
+                filledDate = tradeOrderfill.getTime();
+            }
         }
+
+        if (filledQuantity > 0) {
+
+            BigDecimal avgFillPrice = (new BigDecimal(filledValue / filledQuantity)).setScale(SCALE_5,
+                    RoundingMode.HALF_EVEN);
+            BigDecimal commissionAmount = (new BigDecimal(commission)).setScale(SCALE_2,
+                    RoundingMode.HALF_EVEN);
+
+            /*
+             * If filled qty is greater than current filled qty set the new
+             * value. Note openOrder can update the filled order quantity
+             * before the orderFills have arrived.
+             */
+            if (CoreUtils.nullSafeComparator(filledQuantity, tradeOrder.getFilledQuantity()) == 1) {
+
+                tradeOrder.setAverageFilledPrice(avgFillPrice);
+                tradeOrder.setFilledQuantity(filledQuantity);
+                tradeOrder.setFilledDate(filledDate);
+                /*
+                 * If the commission amount is greater than the TradeOrder
+                 * commission set this amount. Note tradeOrder commission
+                 * can be set via the commissionReport event i.e each
+                 * execution or by the openOrder event.
+                 */
+                if (CoreUtils.nullSafeComparator(commissionAmount, tradeOrder.getCommission()) == 1) {
+
+                    tradeOrder.setCommission(commissionAmount);
+                }
+
+                tradeOrder.setOrderUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
+            }
+        }
+        return saveTradeOrder(tradeOrder);
     }
 
     public Rule findRuleById(final Integer ruleId) {
+
         return ruleRepository.findById(ruleId).isPresent() ? ruleRepository.findById(ruleId).get() : null;
     }
 
     public Integer findRuleByMaxVersion(final Strategy strategy) {
+
         return ruleRepository.findByMaxVersion(strategy);
     }
 
-    public Strategy findStrategyById(final Integer id) throws ServiceException {
+    public Strategy findStrategyById(final Integer id) {
+
         return strategyRepository.findById(id).isPresent() ? strategyRepository.findById(id).get() : null;
 
     }
 
     public Strategy findStrategyByName(String name) {
+
         return strategyRepository.findByName(name);
     }
 
     public List<Strategy> findStrategies() {
+
         return strategyRepository.findAll();
     }
 
@@ -954,7 +940,9 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
              */
             List<Strategy> items = strategyRepository.findAll();
             Aspects aspects = new Aspects();
+
             for (Aspect item : items) {
+
                 aspects.add(item);
             }
             aspects.setDirty(false);
@@ -966,7 +954,9 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
              */
             List<Portfolio> items = portfolioRepository.findAll();
             Aspects aspects = new Aspects();
+
             for (Aspect item : items) {
+
                 aspects.add(item);
             }
             aspects.setDirty(false);
@@ -976,14 +966,9 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
         }
     }
 
-    public Aspect findAspectById(final Aspect aspect) throws ServiceException {
+    public Optional<Aspect> findAspectById(final Aspect aspect) {
 
-        Optional<Aspect> instance = getAspectRepository().findById(aspect.getId());
-        if (instance.isEmpty()) {
-            throw new ServiceException("Aspect not found for Id: " + aspect.getId());
-        }
-
-        return instance.get();
+        return getAspectRepository().findById(aspect.getId());
     }
 
     public <T extends Aspect> T saveAspect(final T instance) {
@@ -996,22 +981,19 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
         return getAspectRepository().save(instance);
     }
 
-    public void reassignStrategy(final Strategy fromStrategy, final Strategy toStrategy, final Tradingday tradingday)
-            throws ServiceException {
+    public void reassignStrategy(final Strategy fromStrategy, final Strategy toStrategy, final Tradingday tradingday) {
 
-        try {
-            for (Tradestrategy item : tradingday.getTradestrategies()) {
-                if (item.getStrategy().getId().equals(fromStrategy.getId())) {
-                    item.setStrategy(toStrategy);
-                    item.setDirty(true);
-                    //  item.setStrategyData(null);
-                    getAspectRepository().save(item);
-                }
+        for (Tradestrategy item : tradingday.getTradestrategies()) {
+
+            if (item.getStrategy().getId().equals(fromStrategy.getId())) {
+
+                item.setStrategy(toStrategy);
+                item.setDirty(true);
+                item.setStrategyData(null);
+                getAspectRepository().save(item);
             }
-
-        } catch (Exception ex) {
-            throw new ServiceException("Error reassign Strategy: " + ex.getMessage());
         }
+
     }
 
     public CodeType findCodeTypeByNameType(String name, String type) {

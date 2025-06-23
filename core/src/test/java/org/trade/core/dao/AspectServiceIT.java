@@ -45,6 +45,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
+import org.trade.core.ApplicationProfileInitializer;
+import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.Tradestrategy;
@@ -61,9 +64,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-//@DataJpaTest
-//@EnableAutoConfiguration
 @SpringBootTest
+@ContextConfiguration(classes = ApplicationRepositoryConfig.class,
+        initializers = ApplicationProfileInitializer.class)
 public class AspectServiceIT {
 
     private final static Logger _log = LoggerFactory.getLogger(AspectServiceIT.class);
@@ -77,7 +80,7 @@ public class AspectServiceIT {
      * Method setUpBeforeClass.
      */
     @BeforeAll
-    public static void setUpBeforeClass() throws Exception {
+    public static void setUpBeforeClass() {
 
     }
 
@@ -85,7 +88,7 @@ public class AspectServiceIT {
      * Method setUp.
      */
     @BeforeEach
-    public void setUp() throws Exception {
+    public void setUp() {
 
     }
 
@@ -93,7 +96,7 @@ public class AspectServiceIT {
      * Method tearDown.
      */
     @AfterEach
-    public void tearDown() throws Exception {
+    public void tearDown() {
 
     }
 
@@ -101,7 +104,7 @@ public class AspectServiceIT {
      * Method tearDownAfterClass.
      */
     @AfterAll
-    public static void tearDownAfterClass() throws Exception {
+    public static void tearDownAfterClass() {
 
     }
 

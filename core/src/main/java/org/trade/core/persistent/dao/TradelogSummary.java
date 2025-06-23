@@ -61,7 +61,6 @@ public class TradelogSummary extends Aspect implements java.io.Serializable {
     @Serial
     private static final long serialVersionUID = -832064631322873796L;
 
-
     @Column(name = "period", length = 19)
     private String period;
 
