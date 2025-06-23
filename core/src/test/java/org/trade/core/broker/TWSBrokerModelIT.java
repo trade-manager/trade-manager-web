@@ -44,6 +44,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
+import org.trade.core.ApplicationProfileInitializer;
+import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.dao.Aspect;
 import org.trade.core.dao.Aspects;
 import org.trade.core.factory.ClassFactory;
@@ -71,6 +74,8 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @version $Revision: 1.0 $
  */
 @SpringBootTest
+@ContextConfiguration(classes = ApplicationRepositoryConfig.class,
+        initializers = ApplicationProfileInitializer.class)
 public class TWSBrokerModelIT implements IBrokerChangeListener {
 
     private final static Logger _log = LoggerFactory.getLogger(TWSBrokerModelIT.class);

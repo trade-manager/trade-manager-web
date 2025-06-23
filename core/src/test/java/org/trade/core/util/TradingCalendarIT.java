@@ -42,6 +42,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
+import org.trade.core.ApplicationProfileInitializer;
+import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.util.time.TradingCalendar;
 
 import java.time.DayOfWeek;
@@ -75,6 +79,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
+@SpringBootTest
+@ContextConfiguration(classes = ApplicationRepositoryConfig.class,
+        initializers = ApplicationProfileInitializer.class)
 public class TradingCalendarIT {
 
     private final static Logger _log = LoggerFactory.getLogger(TradingCalendarIT.class);
@@ -84,32 +91,32 @@ public class TradingCalendarIT {
      * Method setUpBeforeClass.
      */
     @BeforeAll
-    public static void setUpBeforeClass() throws Exception {
+    public static void setUpBeforeClass() {
     }
 
     /**
      * Method setUp.
      */
     @BeforeEach
-    public void setUp() throws Exception {
+    public void setUp() {
     }
 
     /**
      * Method tearDown.
      */
     @AfterEach
-    public void tearDown() throws Exception {
+    public void tearDown() {
     }
 
     /**
      * Method tearDownAfterClass.
      */
     @AfterAll
-    public static void tearDownAfterClass() throws Exception {
+    public static void tearDownAfterClass() {
     }
 
     @Test
-    public void testAddBusinessDays() {
+    public void addBusinessDays() {
 
         ZonedDateTime date = TradingCalendar.getDateTimeNowMarketTimeZone();
         assertTrue(TradingCalendar.isTradingDay(TradingCalendar.addTradingDays(date, -4)));
@@ -117,7 +124,7 @@ public class TradingCalendarIT {
     }
 
     @Test
-    public void testGetDateAtTime() {
+    public void getDateAtTime() {
 
         ZonedDateTime date = TradingCalendar.getDateTimeNowMarketTimeZone().minusDays(1);
         _log.debug("date: {}", date);
@@ -133,7 +140,7 @@ public class TradingCalendarIT {
     }
 
     @Test
-    public void testGetPrevTradingDay() {
+    public void getPrevTradingDay() {
 
         ZonedDateTime date = TradingCalendar.getDateTimeNowMarketTimeZone();
         date = TradingCalendar.getPrevTradingDay(date);
@@ -142,7 +149,7 @@ public class TradingCalendarIT {
     }
 
     @Test
-    public void testGetNextTradingDay() {
+    public void getNextTradingDay() {
 
         ZonedDateTime date = TradingCalendar.getDateTimeNowMarketTimeZone();
         date = TradingCalendar.getNextTradingDay(date);
@@ -151,7 +158,7 @@ public class TradingCalendarIT {
     }
 
     @Test
-    public void testCetCurrentTradingDay() {
+    public void getCurrentTradingDay() {
 
         ZonedDateTime date = TradingCalendar.getDateTimeNowMarketTimeZone();
         date = TradingCalendar.getCurrentTradingDay();
@@ -160,7 +167,7 @@ public class TradingCalendarIT {
     }
 
     @Test
-    public void testPrintTimeZones() {
+    public void printTimeZones() {
 
         String[] timeZones = TimeZone.getAvailableIDs();
 
@@ -170,7 +177,7 @@ public class TradingCalendarIT {
     }
 
     @Test
-    public void testIsMarketHours() {
+    public void isMarketHours() {
 
         // TradingCalendar.getFormattedDate("20150401 09:30",
         // "yyyyMMdd HH:mm");
@@ -203,7 +210,7 @@ public class TradingCalendarIT {
     }
 
     @Test
-    public void testIsTradingday() {
+    public void isTradingday() {
 
         ZonedDateTime date = TradingCalendar.getPrevTradingDay(TradingCalendar.getDateTimeNowMarketTimeZone());
         assertTrue(TradingCalendar.isTradingDay(date));
@@ -216,7 +223,7 @@ public class TradingCalendarIT {
     }
 
     @Test
-    public void testIsGreaterThan365() {
+    public void isGreaterThan365() {
 
         int chartDays = 365;
         ZonedDateTime endDate = TradingCalendar.getDateTimeNowMarketTimeZone();
@@ -230,7 +237,7 @@ public class TradingCalendarIT {
     }
 
     @Test
-    public void testNextRequestId() {
+    public void nextRequestId() {
 
         AtomicInteger reqId;
         ZonedDateTime date = TradingCalendar.getDateTimeNowMarketTimeZone();
@@ -242,7 +249,7 @@ public class TradingCalendarIT {
     }
 
     @Test
-    public void testCreateChartPanel() {
+    public void createChartPanel() {
 
         ZonedDateTime endDate = TradingCalendar.getDateTimeNowMarketTimeZone();
         ZonedDateTime close = TradingCalendar.getDateAtTime(TradingCalendar.getDateTimeNowMarketTimeZone(), 16, 0,
@@ -265,7 +272,7 @@ public class TradingCalendarIT {
     }
 
     @Test
-    public void testZonedDateTimeConverter() {
+    public void zonedDateTimeConverter() {
 
         ZonedDateTime mktDateTime = TradingCalendar.getDateTimeNowMarketTimeZone();
         _log.debug("mktDateTime: {}", mktDateTime);
@@ -291,7 +298,7 @@ public class TradingCalendarIT {
     }
 
     @Test
-    public void testZonedDateTimeSnippits() {
+    public void zonedDateTimeSnippits() {
 
         LocalDateTime specificTime = LocalDateTime.of(LocalDateTime.now().getYear(),
                 LocalDateTime.now().getMonthValue(), LocalDateTime.now().getDayOfMonth(), 9, 30, 0);
@@ -397,7 +404,7 @@ public class TradingCalendarIT {
     }
 
     @Test
-    public void testGetLocalDateFromDateString() {
+    public void getLocalDateFromDateString() {
 
         LocalDate date = LocalDate.of(2015, 3, 31);
         LocalDate formattedDate = TradingCalendar.getLocalDateFromDateString("03/31/2015", "MM/dd/yyyy");
@@ -420,7 +427,7 @@ public class TradingCalendarIT {
     }
 
     @Test
-    public void testGetLocalDateTimeFromDateTimeString() {
+    public void getLocalDateTimeFromDateTimeString() {
 
         LocalDateTime date = LocalDateTime.of(2015, 3, 31, 9, 59, 59);
         LocalDateTime formattedDate = TradingCalendar.getLocalDateTimeFromDateTimeString("20150331 09:59:59",
@@ -432,7 +439,7 @@ public class TradingCalendarIT {
     }
 
     @Test
-    public void testGetFormattedDate() {
+    public void getFormattedDate() {
 
         ZonedDateTime date = ZonedDateTime.of(2015, 3, 31, 9, 59, 59, 0, TimeZone.getDefault().toZoneId());
 
@@ -483,7 +490,7 @@ public class TradingCalendarIT {
     }
 
     @Test
-    public void testDurationDateTimeFromString() {
+    public void durationDateTimeFromString() {
 
         ZonedDateTime startOfPeriod = ZonedDateTime.now();
         _log.debug("endOfPeriod: {}", startOfPeriod);
@@ -502,7 +509,7 @@ public class TradingCalendarIT {
     }
 
     @Test
-    public void testCalendar() {
+    public void calendar() {
 
         // Date to Instant
         Instant timestamp = new java.util.Date().toInstant();

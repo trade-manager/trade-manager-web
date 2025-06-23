@@ -5,6 +5,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
+import org.trade.core.ApplicationProfileInitializer;
+import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.dao.Aspect;
 import org.trade.core.persistent.TradeService;
 
@@ -22,6 +25,8 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
+@ContextConfiguration(classes = ApplicationRepositoryConfig.class,
+        initializers = ApplicationProfileInitializer.class)
 public class TradeServiceIT {
 
     @Autowired
@@ -53,7 +58,7 @@ public class TradeServiceIT {
     }
 
     @Test
-    public void testFetchData() {
+    public void fetchData() {
 
         /*Test data retrieval*/
         Optional<Contract> contract = tradeService.findContractBySymbol("Test2");
@@ -63,7 +68,7 @@ public class TradeServiceIT {
     }
 
     @Test
-    public void testFindBySymbol() {
+    public void findBySymbol() {
 
         LocalDateTime now = LocalDateTime.now();
         ZonedDateTime expiry = now.atZone(ZoneId.systemDefault());

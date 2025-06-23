@@ -44,6 +44,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
+import org.trade.core.ApplicationProfileInitializer;
+import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.properties.TradeAppLoadConfig;
 import org.trade.core.util.time.TradingCalendar;
@@ -56,6 +59,8 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  *
  */
 @SpringBootTest
+@ContextConfiguration(classes = ApplicationRepositoryConfig.class,
+        initializers = ApplicationProfileInitializer.class)
 public class TradePositionIT {
 
     private final static Logger _log = LoggerFactory.getLogger(TradePositionIT.class);
@@ -69,7 +74,7 @@ public class TradePositionIT {
      * Method setUpBeforeClass.
      */
     @BeforeAll
-    public static void setUpBeforeClass() throws Exception {
+    public static void setUpBeforeClass() {
 
     }
 
@@ -99,11 +104,11 @@ public class TradePositionIT {
      * Method tearDownAfterClass.
      */
     @AfterAll
-    public static void tearDownAfterClass() throws Exception {
+    public static void tearDownAfterClass() {
     }
 
     @Test
-    public void testAddRemoveTradePosition() throws Exception {
+    public void addRemoveTradePosition() {
 
 
         TradePosition instance = new TradePosition(this.tradestrategy.getContract(),

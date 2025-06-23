@@ -42,6 +42,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
+import org.trade.core.ApplicationProfileInitializer;
+import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.properties.TradeAppLoadConfig;
 import org.trade.core.valuetype.ChartDays;
 import org.trade.core.valuetype.DAODecode;
@@ -62,6 +66,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
+@SpringBootTest
+@ContextConfiguration(classes = ApplicationRepositoryConfig.class,
+        initializers = ApplicationProfileInitializer.class)
 public class ValueTypeDAOIT {
 
     private final static Logger _log = LoggerFactory.getLogger(ValueTypeDAOIT.class);
@@ -70,7 +77,7 @@ public class ValueTypeDAOIT {
      * Method setUpBeforeClass.
      */
     @BeforeAll
-    public static void setUpBeforeClass() throws Exception {
+    public static void setUpBeforeClass() {
     }
 
     /**
@@ -85,18 +92,18 @@ public class ValueTypeDAOIT {
      * Method tearDown.
      */
     @AfterEach
-    public void tearDown() throws Exception {
+    public void tearDown() {
     }
 
     /**
      * Method tearDownAfterClass.
      */
     @AfterAll
-    public static void tearDownAfterClass() throws Exception {
+    public static void tearDownAfterClass() {
     }
 
     @Test
-    public void testDOAStrategies() throws Exception {
+    public void dOAStrategies() throws Exception {
 
         DAOStrategy strategies = new DAOStrategy();
         Vector<Decode> decodes = strategies.getCodesDecodes();
@@ -128,7 +135,7 @@ public class ValueTypeDAOIT {
     }
 
     @Test
-    public void testDOAEntryLimit() throws Exception {
+    public void dOAEntryLimit() throws Exception {
 
         DAOEntryLimit entryLimits = new DAOEntryLimit();
         Vector<Decode> decodes = entryLimits.getCodesDecodes();
@@ -148,7 +155,7 @@ public class ValueTypeDAOIT {
     }
 
     @Test
-    public void testChartDays() throws Exception {
+    public void chartDays() throws Exception {
 
         ChartDays DAOValues = new ChartDays();
         Vector<Decode> decodes = DAOValues.getCodesDecodes();

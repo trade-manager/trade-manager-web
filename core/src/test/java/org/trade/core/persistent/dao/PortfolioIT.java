@@ -44,6 +44,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
+import org.trade.core.ApplicationProfileInitializer;
+import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.dao.Aspect;
 import org.trade.core.dao.Aspects;
 import org.trade.core.persistent.TradeService;
@@ -60,6 +63,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  *
  */
 @SpringBootTest
+@ContextConfiguration(classes = ApplicationRepositoryConfig.class,
+        initializers = ApplicationProfileInitializer.class)
 public class PortfolioIT {
 
     private final static Logger _log = LoggerFactory.getLogger(PortfolioIT.class);
@@ -74,7 +79,7 @@ public class PortfolioIT {
      * Method setUpBeforeClass.
      */
     @BeforeAll
-    public static void setUpBeforeClass() throws Exception {
+    public static void setUpBeforeClass() {
     }
 
     /**
@@ -92,7 +97,9 @@ public class PortfolioIT {
     public void tearDown() throws Exception {
 
         Aspects accounts = tradeService.findByClassName(Account.class.getName());
+
         for (Aspect aspect : accounts.getAspect()) {
+
             tradeService.deleteAspect(aspect);
         }
     }
@@ -101,11 +108,11 @@ public class PortfolioIT {
      * Method tearDownAfterClass.
      */
     @AfterAll
-    public static void tearDownAfterClass() throws Exception {
+    public static void tearDownAfterClass() {
     }
 
     @Test
-    public void testCreateAccount() throws Exception {
+    public void createAccount() {
 
         Portfolio portfolio = (Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
         portfolio = portfolioRepository.findByName(portfolio.getName());

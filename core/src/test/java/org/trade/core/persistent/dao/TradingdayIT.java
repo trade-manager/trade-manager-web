@@ -44,6 +44,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
+import org.trade.core.ApplicationProfileInitializer;
+import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.properties.TradeAppLoadConfig;
 import org.trade.core.util.time.TradingCalendar;
@@ -60,6 +63,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * @version $Revision: 1.0 $
  */
 @SpringBootTest
+@ContextConfiguration(classes = ApplicationRepositoryConfig.class,
+        initializers = ApplicationProfileInitializer.class)
 public class TradingdayIT {
 
     private final static Logger _log = LoggerFactory.getLogger(TradingdayIT.class);
@@ -74,7 +79,7 @@ public class TradingdayIT {
      * Method setUpBeforeClass.
      */
     @BeforeAll
-    public static void setUpBeforeClass() throws Exception {
+    public static void setUpBeforeClass() {
     }
 
     /**
@@ -89,18 +94,18 @@ public class TradingdayIT {
      * Method tearDown.
      */
     @AfterEach
-    public void tearDown() throws Exception {
+    public void tearDown() {
     }
 
     /**
      * Method tearDownAfterClass.
      */
     @AfterAll
-    public static void tearDownAfterClass() throws Exception {
+    public static void tearDownAfterClass() {
     }
 
     @Test
-    public void testAddTradingday() throws Exception {
+    public void addTradingday() {
 
         // Create new instance of Strategy and set
         // values in it by reading them from form object
@@ -120,7 +125,7 @@ public class TradingdayIT {
     }
 
     @Test
-    public void testUpdateTradingday() throws Exception {
+    public void updateTradingday() {
 
         // Create new instance of Strategy and set
         // values in it by reading them from form object

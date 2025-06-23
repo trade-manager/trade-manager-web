@@ -44,6 +44,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
+import org.trade.core.ApplicationProfileInitializer;
+import org.trade.core.ApplicationRepositoryConfig;
 
 import java.util.List;
 
@@ -54,6 +57,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  *
  */
 @SpringBootTest
+@ContextConfiguration(classes = ApplicationRepositoryConfig.class,
+        initializers = ApplicationProfileInitializer.class)
 public class CodeTypeIT {
 
     private final static Logger _log = LoggerFactory.getLogger(CodeTypeIT.class);
@@ -65,32 +70,32 @@ public class CodeTypeIT {
      * Method setUpBeforeClass.
      */
     @BeforeAll
-    public static void setUpBeforeClass() throws Exception {
+    public static void setUpBeforeClass() {
     }
 
     /**
      * Method setUp.
      */
     @BeforeEach
-    public void setUp() throws Exception {
+    public void setUp() {
     }
 
     /**
      * Method tearDown.
      */
     @AfterEach
-    public void tearDown() throws Exception {
+    public void tearDown() {
     }
 
     /**
      * Method tearDownAfterClass.
      */
     @AfterAll
-    public static void tearDownAfterClass() throws Exception {
+    public static void tearDownAfterClass() {
     }
 
     @Test
-    public void testFindCodeValueByName() {
+    public void findCodeValueByName() {
 
         CodeType codeType = codeTypeRepository.findByName("MovingAverage");
         assertNotNull(codeType);
@@ -98,6 +103,5 @@ public class CodeTypeIT {
         List<CodeValue> codeValues = codeTypeRepository.findByAttributeName(codeType.getName(), "Length");
         assertFalse(codeValues.isEmpty());
         _log.info("CodeValue id: {}", codeValues.getFirst().getId());
-
     }
 }

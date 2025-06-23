@@ -44,6 +44,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
+import org.trade.core.ApplicationProfileInitializer;
+import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.properties.TradeAppLoadConfig;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.DAOPortfolio;
@@ -62,6 +65,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @version $Revision: 1.0 $
  */
 @SpringBootTest
+@ContextConfiguration(classes = ApplicationRepositoryConfig.class,
+        initializers = ApplicationProfileInitializer.class)
 public class TradelogReportIT {
 
     private final static Logger _log = LoggerFactory.getLogger(TradelogReportIT.class);
@@ -76,7 +81,7 @@ public class TradelogReportIT {
      * Method setUpBeforeClass.
      */
     @BeforeAll
-    public static void setUpBeforeClass() throws Exception {
+    public static void setUpBeforeClass() {
     }
 
     /**
@@ -91,18 +96,18 @@ public class TradelogReportIT {
      * Method tearDown.
      */
     @AfterEach
-    public void tearDown() throws Exception {
+    public void tearDown() {
     }
 
     /**
      * Method tearDownAfterClass.
      */
     @AfterAll
-    public static void tearDownAfterClass() throws Exception {
+    public static void tearDownAfterClass() {
     }
 
     @Test
-    public void testTradelogDetails() throws IOException {
+    public void tradelogDetails() throws IOException {
 
         Portfolio portfolio = (Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
         List<TradelogDetail> tradelogDetail = tradelogDetailRepository.findByTradelogDetail(portfolio, TradingCalendar.getYearStart(),
@@ -111,12 +116,12 @@ public class TradelogReportIT {
 
         for (TradelogDetail item : tradelogDetail) {
 
-            _log.info("testTradelogDetails tradelogDetail:  getOpen:{} getAction:{} getMarketBias:{} getName:{} getSymbol:{} getQuantity:{} getLongShort:{} getAverageFilledPrice:{} getFilledDate:{}", item.getOpen(), item.getAction(), item.getMarketBias(), item.getName(), item.getSymbol(), item.getQuantity(), item.getLongShort(), item.getAverageFilledPrice(), item.getFilledDate());
+            _log.info("tradelogDetails tradelogDetail:  getOpen:{} getAction:{} getMarketBias:{} getName:{} getSymbol:{} getQuantity:{} getLongShort:{} getAverageFilledPrice:{} getFilledDate:{}", item.getOpen(), item.getAction(), item.getMarketBias(), item.getName(), item.getSymbol(), item.getQuantity(), item.getLongShort(), item.getAverageFilledPrice(), item.getFilledDate());
         }
     }
 
     @Test
-    public void testTradelogSummary() throws IOException {
+    public void tradelogSummary() throws IOException {
 
         Portfolio portfolio = (Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
         List<TradelogSummary> tradelogSummary = tradelogSummaryRepository.findByTradelogSummary(portfolio,
@@ -127,7 +132,7 @@ public class TradelogReportIT {
 
         for (TradelogSummary item : tradelogSummary) {
 
-            _log.info("testTradelogSummary tradelogDetail: getPeriod:{}getBattingAverage:{}getSimpleSharpeRatio:{}getQuantity:{}getGrossProfitLoss:{}getQuantity:{}getNetProfitLoss:{}", item.getPeriod(), item.getBattingAverage(), item.getSimpleSharpeRatio(), item.getQuantity(), item.getGrossProfitLoss(), item.getQuantity(), item.getNetProfitLoss());
+            _log.info("tradelogSummary tradelogDetail: getPeriod:{}getBattingAverage:{}getSimpleSharpeRatio:{}getQuantity:{}getGrossProfitLoss:{}getQuantity:{}getNetProfitLoss:{}", item.getPeriod(), item.getBattingAverage(), item.getSimpleSharpeRatio(), item.getQuantity(), item.getGrossProfitLoss(), item.getQuantity(), item.getNetProfitLoss());
         }
     }
 }

@@ -44,6 +44,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
+import org.trade.core.ApplicationProfileInitializer;
+import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.properties.TradeAppLoadConfig;
 import org.trade.core.util.time.TradingCalendar;
@@ -60,6 +63,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  *
  */
 @SpringBootTest
+@ContextConfiguration(classes = ApplicationRepositoryConfig.class,
+        initializers = ApplicationProfileInitializer.class)
 public class TradestrategyIT {
 
     private final static Logger _log = LoggerFactory.getLogger(TradestrategyIT.class);
@@ -76,7 +81,7 @@ public class TradestrategyIT {
      * Method setUpBeforeClass.
      */
     @BeforeAll
-    public static void setUpBeforeClass() throws Exception {
+    public static void setUpBeforeClass() {
     }
 
     /**
@@ -105,7 +110,7 @@ public class TradestrategyIT {
     }
 
     @Test
-    public void testFindVersionById() throws Exception {
+    public void findVersionById() throws Exception {
 
         Tradestrategy tradestrategy = TradestrategyBase.getTestTradestrategy(tradeService, symbol);
         assertNotNull(tradestrategy);
@@ -116,7 +121,7 @@ public class TradestrategyIT {
     }
 
     @Test
-    public void testFindPositionOrdersById() throws Exception {
+    public void findPositionOrdersById() throws Exception {
 
         Tradestrategy tradestrategy = TradestrategyBase.getTestTradestrategy(tradeService, symbol);
         assertNotNull(tradestrategy);
@@ -136,7 +141,7 @@ public class TradestrategyIT {
     }
 
     @Test
-    public void testAddTradestrategy() throws Exception {
+    public void addTradestrategy() throws Exception {
 
         Tradestrategy tradestrategy = TradestrategyBase.getTestTradestrategy(tradeService, symbol);
         assertNotNull(tradestrategy);
@@ -147,7 +152,7 @@ public class TradestrategyIT {
     }
 
     @Test
-    public void testUpdateTradeStrategy() throws Exception {
+    public void updateTradeStrategy() throws Exception {
 
         ZonedDateTime open = TradingCalendar.getTradingDayStart(
                 TradingCalendar.getPrevTradingDay(TradingCalendar.getDateTimeNowMarketTimeZone()));
@@ -167,7 +172,7 @@ public class TradestrategyIT {
     }
 
     @Test
-    public void testReadAndSavefileMultipleDayTradestrategy() throws Exception {
+    public void findAndSavefileMultipleDayTradestrategy() throws Exception {
 
         Tradingdays tradingdays = new Tradingdays();
         Tradingday instance = Tradingday
@@ -190,7 +195,7 @@ public class TradestrategyIT {
     }
 
     @Test
-    public void testReadAndSavefileOneDayTradestrategy() throws Exception {
+    public void findAndSavefileOneDayTradestrategy() throws Exception {
 
         Tradingdays tradingdays = new Tradingdays();
         Tradingday instance = Tradingday
@@ -213,7 +218,7 @@ public class TradestrategyIT {
     }
 
     @Test
-    public void testFindTradestrategyDistinctByDateRange() throws Exception {
+    public void findTradestrategyDistinctByDateRange() throws Exception {
 
         Tradestrategy tradestrategy = TradestrategyBase.getTestTradestrategy(tradeService, symbol);
         assertNotNull(tradestrategy);
@@ -227,7 +232,7 @@ public class TradestrategyIT {
     }
 
     @Test
-    public void testFindTradestrategyContractDistinctByDateRange() throws Exception {
+    public void findTradestrategyContractDistinctByDateRange() throws Exception {
 
         Tradestrategy tradestrategy = TradestrategyBase.getTestTradestrategy(tradeService, symbol);
         assertNotNull(tradestrategy);

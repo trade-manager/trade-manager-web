@@ -45,6 +45,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
+import org.trade.core.ApplicationProfileInitializer;
+import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.broker.TWSBrokerModel;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.properties.ConfigProperties;
@@ -67,6 +70,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * @version $Revision: 1.0 $
  */
 @SpringBootTest
+@ContextConfiguration(classes = ApplicationRepositoryConfig.class,
+        initializers = ApplicationProfileInitializer.class)
 public class TradeOrderIT {
 
     private final static Logger _log = LoggerFactory.getLogger(TradeOrderIT.class);
@@ -84,7 +89,7 @@ public class TradeOrderIT {
      * Method setUpBeforeClass.
      */
     @BeforeAll
-    public static void setUpBeforeClass() throws Exception {
+    public static void setUpBeforeClass() {
     }
 
     /**
@@ -114,7 +119,7 @@ public class TradeOrderIT {
      * Method tearDownAfterClass.
      */
     @AfterAll
-    public static void tearDownAfterClass() throws Exception {
+    public static void tearDownAfterClass() {
     }
 
     @Test
@@ -350,7 +355,7 @@ public class TradeOrderIT {
     }
 
     @Test
-    public void findTradeOrderByMaxKey() throws Exception {
+    public void findTradeOrderByMaxKey() {
 
         Integer orderKey = tradeService.findTradeOrderByMaxKey();
         _log.info("Max Order key: {}", orderKey);

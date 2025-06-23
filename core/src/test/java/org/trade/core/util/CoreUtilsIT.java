@@ -43,6 +43,10 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
+import org.trade.core.ApplicationProfileInitializer;
+import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.Money;
 
@@ -71,6 +75,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
+@SpringBootTest
+@ContextConfiguration(classes = ApplicationRepositoryConfig.class,
+        initializers = ApplicationProfileInitializer.class)
 public class CoreUtilsIT {
 
     private final static Logger _log = LoggerFactory.getLogger(CoreUtilsIT.class);
@@ -84,32 +91,32 @@ public class CoreUtilsIT {
      * Method setUpBeforeClass.
      */
     @BeforeAll
-    public static void setUpBeforeClass() throws Exception {
+    public static void setUpBeforeClass() {
     }
 
     /**
      * Method setUp.
      */
     @BeforeEach
-    public void setUp() throws Exception {
+    public void setUp() {
     }
 
     /**
      * Method tearDown.
      */
     @AfterEach
-    public void tearDown() throws Exception {
+    public void tearDown() {
     }
 
     /**
      * Method tearDownAfterClass.
      */
     @AfterAll
-    public static void tearDownAfterClass() throws Exception {
+    public static void tearDownAfterClass() {
     }
 
     @Test
-    public void testIsBetween() {
+    public void isBetween() {
 
         assertTrue(CoreUtils.isBetween(BigDecimal.valueOf(12.20), BigDecimal.valueOf(12.24), BigDecimal.valueOf(12.23)));
 
@@ -137,7 +144,7 @@ public class CoreUtilsIT {
     }
 
     @Test
-    public void testNullSafe() {
+    public void nullSafe() {
 
         int returnVal = CoreUtils.nullSafeComparator(null, BigDecimal.valueOf(1.23));
         assertEquals(-1, returnVal);
@@ -223,7 +230,7 @@ public class CoreUtilsIT {
     }
 
     @Test
-    public void testBigDecimalRounding() {
+    public void bigDecimalRounding() {
 
         BigDecimal avgFillPrice = new BigDecimal("35.34567897").setScale(SCALE, RoundingMode.HALF_EVEN);
         assertEquals(new BigDecimal("35.34568"), avgFillPrice);
@@ -239,7 +246,7 @@ public class CoreUtilsIT {
     }
 
     @Test
-    public void test10MinTimer() throws Exception {
+    public void tenMinTimer() throws Exception {
 
         Timer timer = new Timer(250, _ -> {
             synchronized (lockCoreUtilsTest) {
@@ -262,7 +269,7 @@ public class CoreUtilsIT {
     }
 
     @Test
-    public void testIntRounding() {
+    public void intRounding() {
 
         int barSize = 900;
         int[] barSizes = {3600, 1800, 900, 300, 120, 60, 30};
@@ -346,6 +353,4 @@ public class CoreUtilsIT {
             System.err.println("Error processing file: " + ex.getMessage());
         }
     }
-
-
 }

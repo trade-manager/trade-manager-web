@@ -9,6 +9,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
+import org.trade.core.ApplicationProfileInitializer;
+import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.Tradestrategy;
 import org.trade.core.persistent.dao.TradestrategyBase;
@@ -19,6 +22,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
+@ContextConfiguration(classes = ApplicationRepositoryConfig.class,
+        initializers = ApplicationProfileInitializer.class)
 public class CandleSeriesIT extends TradestrategyBase {
 
     private final static Logger _log = LoggerFactory.getLogger(CandleSeriesIT.class);
@@ -32,7 +37,7 @@ public class CandleSeriesIT extends TradestrategyBase {
      * Method setUpBeforeClass.
      */
     @BeforeAll
-    public static void setUpBeforeClass() throws Exception {
+    public static void setUpBeforeClass() {
     }
 
     /**
@@ -60,18 +65,19 @@ public class CandleSeriesIT extends TradestrategyBase {
      * Method tearDownAfterClass.
      */
     @AfterAll
-    public static void tearDownAfterClass() throws Exception {
+    public static void tearDownAfterClass() {
     }
 
     @Test
-    public void testCandleSeriessClone() throws Exception {
+    public void candleSeriessClone() throws Exception {
 
         CandleSeries candleSeries = this.tradestrategy.getStrategyData().getBaseCandleSeries();
         CandleSeries series = (CandleSeries) this.tradestrategy.getStrategyData().getBaseCandleSeries().clone();
+
         if (candleSeries.equals(series)) {
+
             _log.info("CandleSeries: {}", series);
         }
         assertEquals(series, candleSeries);
-
     }
 }

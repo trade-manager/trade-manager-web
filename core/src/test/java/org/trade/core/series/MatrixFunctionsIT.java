@@ -42,6 +42,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
+import org.trade.core.ApplicationProfileInitializer;
+import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.persistent.dao.series.indicator.candle.CandlePeriod;
 import org.trade.core.util.MatrixFunctions;
 import org.trade.core.util.Pair;
@@ -60,22 +64,25 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-public class MatrixFunctionsTest {
+@SpringBootTest
+@ContextConfiguration(classes = ApplicationRepositoryConfig.class,
+        initializers = ApplicationProfileInitializer.class)
+public class MatrixFunctionsIT {
 
-    private final static Logger _log = LoggerFactory.getLogger(MatrixFunctionsTest.class);
+    private final static Logger _log = LoggerFactory.getLogger(MatrixFunctionsIT.class);
 
     /**
      * Method setUpBeforeClass.
      */
     @BeforeAll
-    public static void setUpBeforeClass() throws Exception {
+    public static void setUpBeforeClass() {
     }
 
     /**
      * Method setUp.
      */
     @BeforeEach
-    public void setUp() throws Exception {
+    public void setUp() {
 
     }
 
@@ -83,18 +90,18 @@ public class MatrixFunctionsTest {
      * Method tearDown.
      */
     @AfterEach
-    public void tearDown() throws Exception {
+    public void tearDown() {
     }
 
     /**
      * Method tearDownAfterClass.
      */
     @AfterAll
-    public static void tearDownAfterClass() throws Exception {
+    public static void tearDownAfterClass() {
     }
 
     @Test
-    public void testAngle() {
+    public void angle() {
 
         List<Pair> pairs = new ArrayList<>();
         int polyOrder = 2;
@@ -108,6 +115,7 @@ public class MatrixFunctionsTest {
         pairs.add(new Pair(0, vwap));
 
         for (int i = 0; i < 3; i++) {
+
             vwap = vwap + (0.1 * longShort) + (((double) i * longShort / 10));
             period = (CandlePeriod) period.next();
             endPeriod = TradingCalendar.geMillisFromZonedDateTime(period.getStart());
@@ -115,7 +123,9 @@ public class MatrixFunctionsTest {
         }
 
         pairs.sort(Pair.X_VALUE_ASC);
+
         for (Pair pair : pairs) {
+
             _log.info("x: {} y: {}", pair.x, pair.y);
         }
         Pair[] pairsArray = pairs.toArray(new Pair[]{});
@@ -127,10 +137,12 @@ public class MatrixFunctionsTest {
         _log.info("Pivot Calc: {}", output);
 
         for (Pair pair : pairs) {
+
             double y = MatrixFunctions.fx(pair.x, terms);
             pair.y = y;
             _log.info("x: {} y: {}", pair.x, pair.y);
         }
+
         Pair startXY = pairs.getFirst();
         Pair endXY = pairs.getLast();
         double atan = Math.atan((endXY.y - startXY.y) / ((endXY.x - startXY.x)));
@@ -138,6 +150,5 @@ public class MatrixFunctionsTest {
         _log.info("angle: {}", angle);
         assertEquals(new BigDecimal("67.38").setScale(2, RoundingMode.HALF_UP),
                 new BigDecimal(angle).setScale(2, RoundingMode.HALF_UP));
-
     }
 }

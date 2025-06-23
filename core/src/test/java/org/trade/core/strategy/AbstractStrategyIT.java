@@ -44,6 +44,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
+import org.trade.core.ApplicationProfileInitializer;
+import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.broker.BackTestBrokerModel;
 import org.trade.core.broker.IBrokerModel;
 import org.trade.core.dao.AspectRepository;
@@ -91,6 +94,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  */
 @SpringBootTest
+@ContextConfiguration(classes = ApplicationRepositoryConfig.class,
+        initializers = ApplicationProfileInitializer.class)
 public class AbstractStrategyIT {
 
     private final static Logger _log = LoggerFactory.getLogger(AbstractStrategyIT.class);
@@ -102,10 +107,10 @@ public class AbstractStrategyIT {
     private AspectRepository aspectRepository;
 
     private static final TradestrategyBase tradestrategyBase = new TradestrategyBase();
-    private IBrokerModel m_brokerModel = null;
+    private IBrokerModel brokerModel = null;
     private Tradestrategy tradestrategy = null;
-    private String m_templateName = null;
-    private String m_strategyDir = null;
+    private String templateName = null;
+    private String strategyDir = null;
     private StrategyRuleTest strategyProxy = null;
 
     /**
@@ -125,19 +130,19 @@ public class AbstractStrategyIT {
         // m_brokerModel = (IBrokerModel)
         // ClassFactory.getServiceForInterface(
         // IBrokerModel._brokerTest, this);
-        m_brokerModel = (IBrokerModel) ClassFactory.getServiceForInterface(IBrokerModel._brokerTest, this);
-        m_templateName = ConfigProperties.getPropAsString("trade.strategy.template");
-        m_strategyDir = ConfigProperties.getPropAsString("trade.strategy.default.dir");
+        brokerModel = (IBrokerModel) ClassFactory.getServiceForInterface(IBrokerModel._brokerTest, this);
+        templateName = ConfigProperties.getPropAsString("trade.strategy.template");
+        strategyDir = ConfigProperties.getPropAsString("trade.strategy.default.dir");
         Integer clientId = ConfigProperties.getPropAsInt("trade.tws.clientId");
         Integer port = Integer.valueOf(ConfigProperties.getPropAsString("trade.tws.port"));
         String host = ConfigProperties.getPropAsString("trade.tws.host");
-        m_brokerModel.onConnect(host, port, clientId);
+        brokerModel.onConnect(host, port, clientId);
         String symbol = "TEST";
 
         this.tradestrategy = tradestrategyBase.getTestTradestrategy(tradeService, symbol);
         assertNotNull(this.tradestrategy);
 
-        this.strategyProxy = new StrategyRuleTest(m_brokerModel, this.tradestrategy.getStrategyData(),
+        this.strategyProxy = new StrategyRuleTest(brokerModel, this.tradestrategy.getStrategyData(),
                 this.tradestrategy.getId());
         assertNotNull(this.strategyProxy);
         strategyProxy.execute();
@@ -154,7 +159,7 @@ public class AbstractStrategyIT {
     @AfterEach
     public void tearDown() throws Exception {
 
-        m_brokerModel.onDisconnect();
+        brokerModel.onDisconnect();
         strategyProxy.cancel();
         tradestrategyBase.clearDBData(tradeService);
     }
@@ -167,17 +172,17 @@ public class AbstractStrategyIT {
     }
 
     @Test
-    public void testEntryRuleNoEntryByRT() throws Exception {
+    public void entryRuleNoEntryByRT() throws Exception {
 
         tradestrategy.setTrade(true);
         Vector<Object> parm = new Vector<>(0);
-        parm.add(m_brokerModel);
+        parm.add(brokerModel);
         parm.add(this.tradestrategy.getStrategyData());
         parm.add(this.tradestrategy.getId());
         DynamicCode dynacode = new DynamicCode();
-        dynacode.addSourceDir(new File(m_strategyDir));
+        dynacode.addSourceDir(new File(strategyDir));
         IStrategyRule strategyProxy = (IStrategyRule) dynacode.newProxyInstance(IStrategyRule.class,
-                IStrategyRule.PACKAGE + m_templateName, parm);
+                IStrategyRule.PACKAGE + templateName, parm);
 
         strategyProxy.execute();
 
@@ -190,7 +195,7 @@ public class AbstractStrategyIT {
     }
 
     @Test
-    public void testEntryRuleMoveStopToBE() throws Exception {
+    public void entryRuleMoveStopToBE() throws Exception {
 
         Money price = new Money(37.99);
         TradeOrder openOrder = strategyProxy.createRiskOpenPosition(Action.BUY, price,
@@ -206,7 +211,7 @@ public class AbstractStrategyIT {
         execution.setPrice(price.getBigDecimalValue());
         execution.setCumulativeQuantity(openOrder.getQuantity());
 
-        ((BackTestBrokerModel) m_brokerModel).execDetails(openOrder.getOrderKey(), this.tradestrategy.getContract(),
+        ((BackTestBrokerModel) brokerModel).execDetails(openOrder.getOrderKey(), this.tradestrategy.getContract(),
                 execution);
         this.reFreshPositionOrders();
 
@@ -237,7 +242,7 @@ public class AbstractStrategyIT {
     }
 
     @Test
-    public void testAddPennyAndRoundStop() throws Exception {
+    public void addPennyAndRoundStop() throws Exception {
 
         // Buy entry Long position
         Money price = new Money(19.99);
@@ -331,7 +336,7 @@ public class AbstractStrategyIT {
     }
 
     @Test
-    public void testClosePosition() throws Exception {
+    public void closePosition() throws Exception {
 
         createOpenBuyPosition(new Money(100), Action.BUY, true);
         TradeOrder order = this.strategyProxy.closePosition(true);
@@ -339,7 +344,7 @@ public class AbstractStrategyIT {
     }
 
     @Test
-    public void testCreateOrder() throws Exception {
+    public void createOrder() throws Exception {
 
         TradeOrder result = this.strategyProxy.createOrder(tradestrategy.getContract(), Action.BUY,
                 OrderType.STPLMT, new Money(100.04), new Money(100.01), 1000, null, null, TriggerMethod.DEFAULT,
@@ -348,7 +353,7 @@ public class AbstractStrategyIT {
     }
 
     @Test
-    public void testTrailOrder() throws Exception {
+    public void trailOrder() throws Exception {
 
         TradeOrder orderTrail = this.strategyProxy.createOrder(tradestrategy.getContract(), Action.SELL,
                 OrderType.TRAIL, null, new Money(0.1), 100, null, null, TriggerMethod.DEFAULT,
@@ -359,7 +364,7 @@ public class AbstractStrategyIT {
     }
 
     @Test
-    public void testCreateRiskOpenPosition() throws Exception {
+    public void createRiskOpenPosition() throws Exception {
 
         TradeOrder result = this.strategyProxy.createRiskOpenPosition(Action.BUY, new Money(100.00),
                 new Money(99.00), true, null, null, null, null);
@@ -367,7 +372,7 @@ public class AbstractStrategyIT {
     }
 
     @Test
-    public void testCreateRiskOpenPositionMargin() throws Exception {
+    public void createRiskOpenPositionMargin() throws Exception {
 
         /*
          * Standard test account has $100,000 margin and % of Margin 50% i.e
@@ -392,7 +397,7 @@ public class AbstractStrategyIT {
     }
 
     @Test
-    public void testCreateRiskOpenPositionMargin1() throws Exception {
+    public void createRiskOpenPositionMargin1() throws Exception {
 
         /*
          * Standard test account has $100,000 margin and % of Margin 50% i.e
@@ -445,7 +450,7 @@ public class AbstractStrategyIT {
     }
 
     @Test
-    public void testCancelOrder() throws Exception {
+    public void cancelOrder() throws Exception {
 
         Money price = new Money(37.99);
         TradeOrder openOrder = strategyProxy.createRiskOpenPosition(Action.BUY, price,
@@ -458,14 +463,14 @@ public class AbstractStrategyIT {
     }
 
     @Test
-    public void testIsTradeConvered() throws Exception {
+    public void isTradeConvered() throws Exception {
 
         createOpenBuyPosition(new Money(100), Action.BUY, false);
         assertFalse(this.strategyProxy.isPositionCovered());
     }
 
     @Test
-    public void testCreateStopAndTargetOrder() throws Exception {
+    public void createStopAndTargetOrder() throws Exception {
 
         createOpenBuyPosition(new Money(100), Action.BUY, true);
         TradeOrder targetOne = this.strategyProxy.createStopAndTargetOrder(new Money(99.0), new Money(103.99), 100,
@@ -475,7 +480,7 @@ public class AbstractStrategyIT {
     }
 
     @Test
-    public void testCreateStopAndTargetOrderPercentQty() throws Exception {
+    public void createStopAndTargetOrderPercentQty() throws Exception {
 
         createOpenBuyPosition(new Money(100), Action.BUY, true);
         this.strategyProxy.createStopAndTargetOrder(this.strategyProxy.getOpenPositionOrder(), 2, new Money(0.01),
@@ -484,7 +489,7 @@ public class AbstractStrategyIT {
     }
 
     @Test
-    public void testGetStopPriceForPositionRisk() throws Exception {
+    public void getStopPriceForPositionRisk() throws Exception {
 
         createOpenBuyPosition(new Money(100), Action.BUY, true);
         Money price = this.strategyProxy.getStopPriceForPositionRisk(this.strategyProxy.getOpenPositionOrder(), 2);
@@ -492,7 +497,7 @@ public class AbstractStrategyIT {
     }
 
     @Test
-    public void testCancelOrdersClosePosition() throws Exception {
+    public void cancelOrdersClosePosition() throws Exception {
 
         createOpenBuyPosition(new Money(100), Action.BUY, true);
         this.strategyProxy.cancelOrdersClosePosition(true);
@@ -501,7 +506,7 @@ public class AbstractStrategyIT {
     }
 
     @Test
-    public void testMoveStopOCAPrice() throws Exception {
+    public void moveStopOCAPrice() throws Exception {
 
         this.createOpenBuyPosition(new Money(100), Action.BUY, true);
         TradeOrder targetOne = this.strategyProxy.createStopAndTargetOrder(new Money(99.0), new Money(103.99),
@@ -520,7 +525,7 @@ public class AbstractStrategyIT {
     }
 
     @Test
-    public void testCancelAllOrders() throws Exception {
+    public void cancelAllOrders() throws Exception {
 
         createOpenBuyPosition(new Money(100), Action.BUY, false);
         this.strategyProxy.cancelAllOrders();
@@ -528,14 +533,14 @@ public class AbstractStrategyIT {
     }
 
     @Test
-    public void testIsTradeOpen() throws Exception {
+    public void isTradeOpen() throws Exception {
 
         createOpenBuyPosition(new Money(100), Action.BUY, true);
         assertTrue(this.strategyProxy.isThereOpenPosition());
     }
 
     @Test
-    public void testGetCurrentCandleCount() throws ServiceException {
+    public void getCurrentCandleCount() throws ServiceException {
 
         if (Side.BOT.equals(this.tradestrategy.getSide())) {
             StrategyData.doDummyData(this.tradestrategy.getStrategyData().getBaseCandleSeries(),
@@ -551,7 +556,7 @@ public class AbstractStrategyIT {
     }
 
     @Test
-    public void testGetCandle() throws Exception {
+    public void getCandle() throws Exception {
 
         this.tradestrategy.getStrategyData().buildCandle(this.tradestrategy.getTradingday().getOpen(), 100d, 101d,
                 99d, 100d, 100000L, 100d, 100, 1, null);
@@ -560,56 +565,56 @@ public class AbstractStrategyIT {
     }
 
     @Test
-    public void testUpdateTradestrategyStatus() throws Exception {
+    public void updateTradestrategyStatus() throws Exception {
 
         createOpenBuyPosition(new Money(100), Action.BUY, false);
         this.strategyProxy.updateTradestrategyStatus(TradestrategyStatus.CLOSED);
     }
 
     @Test
-    public void testGetEntryLimit() {
+    public void getEntryLimit() {
 
         DAOEntryLimit result = this.strategyProxy.getEntryLimit();
         assertNotNull(result);
     }
 
     @Test
-    public void testGetTradestrategy() throws Exception {
+    public void getTradestrategy() throws Exception {
 
         createOpenBuyPosition(new Money(100), Action.BUY, false);
         assertNotNull(this.strategyProxy.getTradestrategy());
     }
 
     @Test
-    public void testGetTradeAccount() throws Exception {
+    public void getTradeAccount() throws Exception {
 
         createOpenBuyPosition(new Money(100), Action.BUY, false);
         assertNotNull(this.strategyProxy.getIndividualAccount());
     }
 
     @Test
-    public void testGetTradePosition() throws Exception {
+    public void getTradePosition() throws Exception {
 
         createOpenBuyPosition(new Money(100), Action.BUY, true);
         assertNotNull(this.strategyProxy.getOpenTradePosition());
     }
 
     @Test
-    public void testGetSymbol() throws Exception {
+    public void getSymbol() throws Exception {
 
         createOpenBuyPosition(new Money(100), Action.BUY, false);
         assertNotNull(this.strategyProxy.getSymbol());
     }
 
     @Test
-    public void testGetOpenPositionOrder() throws Exception {
+    public void getOpenPositionOrder() throws Exception {
 
         createOpenBuyPosition(new Money(100), Action.BUY, true);
         assertNotNull(this.strategyProxy.getOpenPositionOrder());
     }
 
     @Test
-    public void testHasActiveOrders() throws Exception {
+    public void hasActiveOrders() throws Exception {
 
         createOpenBuyPosition(new Money(100), Action.BUY, false);
         assertTrue(this.strategyProxy.hasActiveOrders());
@@ -623,16 +628,19 @@ public class AbstractStrategyIT {
      */
     private void createOpenBuyPosition(Money price, String action, boolean fillOpenPosition)
             throws Exception {
+
         if (!strategyProxy.getTradestrategy().getTradeOrders().isEmpty()) {
+
             tradeService.deleteTradestrategyTradeOrders(strategyProxy.getTradestrategy());
         }
+
         TradeOrder tradeOrder = this.strategyProxy.createOrder(tradestrategy.getContract(), action, OrderType.STPLMT,
                 price, price.subtract(new Money(0.2)), 1000, null, null, TriggerMethod.DEFAULT,
                 OverrideConstraints.YES, TimeInForce.DAY, true, true, null, null, null, null, null, null);
 
         if (fillOpenPosition) {
-            String side = (Action.BUY.equals(tradeOrder.getAction()) ? Side.BOT : Side.SLD);
 
+            String side = (Action.BUY.equals(tradeOrder.getAction()) ? Side.BOT : Side.SLD);
             assertNotNull(tradeOrder);
             TradeOrderfill execution = new TradeOrderfill();
             execution.setTradeOrder(tradeOrder);
@@ -643,14 +651,14 @@ public class AbstractStrategyIT {
             execution.setAveragePrice(price.getBigDecimalValue());
             execution.setPrice(price.getBigDecimalValue());
             execution.setCumulativeQuantity(tradeOrder.getQuantity());
-            ((BackTestBrokerModel) m_brokerModel).execDetails(tradeOrder.getOrderKey(),
+            ((BackTestBrokerModel) brokerModel).execDetails(tradeOrder.getOrderKey(),
                     this.tradestrategy.getContract(), execution);
             this.reFreshPositionOrders();
             assertNotNull(strategyProxy.getOpenPositionOrder());
 
         } else {
 
-            ((BackTestBrokerModel) m_brokerModel).orderStatus(tradeOrder.getOrderKey(), OrderStatus.SUBMITTED, 0, 0, 0,
+            ((BackTestBrokerModel) brokerModel).orderStatus(tradeOrder.getOrderKey(), OrderStatus.SUBMITTED, 0, 0, 0,
                     0, 0, 0, tradeOrder.getClientId(), tradeOrder.getWhyHeld());
         }
     }
