@@ -55,7 +55,6 @@ import org.trade.core.persistent.dao.Tradingday;
 import org.trade.core.persistent.dao.series.indicator.CandleDataset;
 import org.trade.core.persistent.dao.series.indicator.StrategyData;
 import org.trade.core.persistent.dao.series.indicator.candle.CandlePeriod;
-import org.trade.core.properties.TradeAppLoadConfig;
 import org.trade.core.util.time.RegularTimePeriod;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.BarSize;
@@ -97,7 +96,6 @@ public class CandlePeriodIT extends TradestrategyBase {
     @BeforeEach
     public void setUp() throws Exception {
 
-        TradeAppLoadConfig.loadAppProperties();
         String symbol = "TEST";
         this.tradestrategy = this.getTestTradestrategy(tradeService, symbol);
         assertNotNull(this.tradestrategy);

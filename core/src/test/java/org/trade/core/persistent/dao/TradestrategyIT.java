@@ -48,7 +48,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.persistent.TradeService;
-import org.trade.core.properties.TradeAppLoadConfig;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.TradestrategyStatus;
 
@@ -88,9 +87,7 @@ public class TradestrategyIT {
      * Method setUp.
      */
     @BeforeEach
-    public void setUp() throws Exception {
-
-        TradeAppLoadConfig.loadAppProperties();
+    public void setUp() {
     }
 
     /**

@@ -55,7 +55,7 @@ import java.util.Vector;
 import java.util.regex.Pattern;
 
 /**
- * Represents the applications configuration. This class is intended to be a bit
+ * Represents the application's configuration. This class is intended to be a bit
  * of a hack. I.e it wraps the apps property file, and provides a place to map
  * the keys in the file to constants.
  *
@@ -71,8 +71,8 @@ public class ConfigProperties {
     private final static String ENVIRONMENT_VARIABLE_SYSTEM_PROPERTY_FILE = "config.properties";
     private final static String DEFAULT_PROPERTY_FILE = "config.properties";
     private final static String ENVIRONMENT_VARIABLE_PROPERTY_FILE = "trade.config";
-    private Properties fProperties = null;
-    private static final ConfigProperties fConfigProperties = new ConfigProperties();
+    private static Properties deploymentProperties;
+    private static final ConfigProperties configProperties = new ConfigProperties();
 
     /**
      * Returns a string for a key.
@@ -81,7 +81,7 @@ public class ConfigProperties {
      * @return String
      */
     public static String getPropAsString(String key) throws IOException {
-        return fConfigProperties.retrieveProperty(key);
+        return configProperties.retrieveProperty(key);
     }
 
     /**
@@ -113,17 +113,7 @@ public class ConfigProperties {
      * @return Properties
      */
     public static Properties getDeploymentProperties(Object context, String fileName) throws IOException {
-        return fConfigProperties.getProperties(context, fileName);
-    }
-
-    /**
-     * Method loadDeploymentProperties.
-     *
-     * @param context  Object
-     * @param fileName String
-     */
-    public static void loadDeploymentProperties(Object context, String fileName) throws IOException {
-        fConfigProperties.getProperties(context, fileName);
+        return configProperties.getProperties(context, fileName);
     }
 
     /**
@@ -142,7 +132,7 @@ public class ConfigProperties {
      * @return int
      */
     public static int getPropAsInt(String key) throws IOException {
-        return Integer.parseInt(fConfigProperties.retrieveProperty(key));
+        return Integer.parseInt(configProperties.retrieveProperty(key));
     }
 
     /**
@@ -153,7 +143,7 @@ public class ConfigProperties {
      * @return boolean
      */
     public static boolean getPropAsBoolean(String key) throws IOException {
-        return Boolean.parseBoolean(fConfigProperties.retrieveProperty(key));
+        return Boolean.parseBoolean(configProperties.retrieveProperty(key));
     }
 
     /**
@@ -163,6 +153,7 @@ public class ConfigProperties {
      * @return Enumeration<String>
      */
     public static Enumeration<String> getPropAsEnumeration(String keyRoot) throws IOException {
+
         Vector<String> resVec;
         int iNumEntries = getPropAsInt(keyRoot + "_NumOfItems");
         StringBuilder key = new StringBuilder(keyRoot);
@@ -190,6 +181,7 @@ public class ConfigProperties {
      */
     public static Properties[] getPropertiesAsArrayOfProperties(String keyRoot, Dictionary<?, ?> keyNames)
             throws IOException {
+
         int iNumItems = getPropAsInt(keyRoot + "_NumOfItems");
         Properties[] propArray = new Properties[iNumItems];
 
@@ -209,12 +201,14 @@ public class ConfigProperties {
      */
     private Properties getProperties(Object context, String fileName) throws IOException {
 
-        Properties systemProperties = new Properties();
-        loadPropertiesAsResource(fConfigProperties, getSystemPropertyFileName(), systemProperties);
-        loadPropertiesAsResource(context, fileName, systemProperties);
-        Properties deploymentProperties = new Properties(systemProperties);
-        loadPropertiesAsFile(getDeploymentPropertyFileName(), deploymentProperties);
-        fProperties = deploymentProperties;
+        if (null == deploymentProperties) {
+
+            Properties systemProperties = new Properties();
+            loadPropertiesAsResource(configProperties, getSystemPropertyFileName(), systemProperties);
+            loadPropertiesAsResource(context, fileName, systemProperties);
+            deploymentProperties = new Properties(systemProperties);
+            loadPropertiesAsFile(getDeploymentPropertyFileName(), deploymentProperties);
+        }
 
         return deploymentProperties;
     }
@@ -274,22 +268,16 @@ public class ConfigProperties {
      * @return String
      */
     private String retrieveProperty(String key) throws IOException {
-        String ret;
 
-        if (null == fProperties) {
+        if (null == deploymentProperties) {
 
             Properties systemProperties = new Properties();
-
-            loadPropertiesAsResource(fConfigProperties, getSystemPropertyFileName(), systemProperties);
-
+            loadPropertiesAsResource(configProperties, getSystemPropertyFileName(), systemProperties);
             Properties deploymentProperties = new Properties(systemProperties);
-
             loadPropertiesAsFile(getDeploymentPropertyFileName(), deploymentProperties);
-
-            fProperties = deploymentProperties;
         }
 
-        ret = fProperties.getProperty(key);
+        String ret = deploymentProperties.getProperty(key);
 
         if (null == ret) {
 
@@ -309,7 +297,7 @@ public class ConfigProperties {
     public static String getPropertyAfterEnvSubstitution(String key) throws IOException {
         String strRet;
 
-        strRet = fConfigProperties.retrieveProperty(key);
+        strRet = configProperties.retrieveProperty(key);
 
         // put env variables in the dictionary
         Dictionary<?, ?> toSubstitute = System.getProperties();

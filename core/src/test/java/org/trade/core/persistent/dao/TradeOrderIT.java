@@ -51,7 +51,6 @@ import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.broker.TWSBrokerModel;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.properties.ConfigProperties;
-import org.trade.core.properties.TradeAppLoadConfig;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.Action;
 import org.trade.core.valuetype.OrderStatus;
@@ -98,7 +97,6 @@ public class TradeOrderIT {
     @BeforeEach
     public void setUp() throws Exception {
 
-        TradeAppLoadConfig.loadAppProperties();
         clientId = ConfigProperties.getPropAsInt("trade.tws.clientId");
 
         String symbol = "TEST";

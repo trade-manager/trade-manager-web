@@ -50,7 +50,6 @@ import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.dao.Aspect;
 import org.trade.core.dao.Aspects;
 import org.trade.core.persistent.TradeService;
-import org.trade.core.properties.TradeAppLoadConfig;
 import org.trade.core.valuetype.AccountType;
 import org.trade.core.valuetype.Currency;
 import org.trade.core.valuetype.DAOPortfolio;
@@ -87,7 +86,6 @@ public class PortfolioIT {
      */
     @BeforeEach
     public void setUp() throws Exception {
-        TradeAppLoadConfig.loadAppProperties();
     }
 
     /**

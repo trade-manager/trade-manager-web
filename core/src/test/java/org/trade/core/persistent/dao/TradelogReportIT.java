@@ -47,7 +47,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
-import org.trade.core.properties.TradeAppLoadConfig;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.DAOPortfolio;
 
@@ -89,7 +88,6 @@ public class TradelogReportIT {
      */
     @BeforeEach
     public void setUp() throws Exception {
-        TradeAppLoadConfig.loadAppProperties();
     }
 
     /**
