@@ -38,6 +38,7 @@ package org.trade.ui;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.trade.base.BasePanel;
 import org.trade.base.ComponentPrintService;
 import org.trade.base.TabbedAppPanel;
@@ -130,6 +131,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * display charts. Other series are used for indicators that have been setup for
  * the strategy.
  */
+@Component
 public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerChangeListener, IStrategyChangeListener {
 
     @Serial
@@ -157,7 +159,6 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
      *
      * @param frame the main application Frame.
      */
-
     public TradeMainControllerPanel(Frame frame) {
 
         super(frame);
