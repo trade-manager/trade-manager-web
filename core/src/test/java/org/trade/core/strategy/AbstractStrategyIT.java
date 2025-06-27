@@ -109,7 +109,6 @@ public class AbstractStrategyIT {
     private static String strategyDir;
     private static StrategyRuleTest strategyProxy;
 
-
     /**
      * Method setUpBeforeClass.
      */
@@ -123,11 +122,12 @@ public class AbstractStrategyIT {
     @BeforeEach
     public void setUp() throws Exception {
 
-
         // m_brokerModel = (IBrokerModel)
         // ClassFactory.getServiceForInterface(
         // IBrokerModel._brokerTest, this);
-        brokerModel = (IBrokerModel) ClassFactory.getServiceForInterface(IBrokerModel._brokerTest, this);
+        Vector<Object> param =  new Vector<>();
+        param.add(tradeService);
+        brokerModel = (IBrokerModel) ClassFactory.getServiceForInterface(IBrokerModel._brokerTest, param, this);
         templateName = ConfigProperties.getPropAsString("trade.strategy.template");
         strategyDir = ConfigProperties.getPropAsString("trade.strategy.default.dir");
         Integer clientId = ConfigProperties.getPropAsInt("trade.tws.clientId");

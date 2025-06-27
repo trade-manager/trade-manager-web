@@ -39,6 +39,7 @@ import com.ib.client.ContractDetails;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.trade.core.broker.client.Broker;
 import org.trade.core.broker.client.ClientSocket;
 import org.trade.core.broker.client.IClientWrapper;
@@ -77,8 +78,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
 
     private final static Logger _log = LoggerFactory.getLogger(BackTestBrokerModel.class);
 
-    @Autowired
-    private TradeService tradeService;
+    private static TradeService tradeService;
 
     // Use getId as key
     private static final ConcurrentHashMap<Integer, Tradestrategy> historyDataRequests = new ConcurrentHashMap<>();
@@ -107,10 +107,11 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
         }
     }
 
-    public BackTestBrokerModel() {
+    public BackTestBrokerModel(TradeService tradeService) {
 
         try {
 
+            tradeService = tradeService;
             client = new ClientSocket(this);
             int maxKey = tradeService.findTradeOrderByMaxKey();
 

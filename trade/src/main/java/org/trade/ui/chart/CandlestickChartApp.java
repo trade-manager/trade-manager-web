@@ -47,6 +47,7 @@ import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -62,6 +63,8 @@ public class CandlestickChartApp extends BasePanel implements IBrokerChangeListe
 
     @Autowired
     private TradeService tradeService;
+
+    private static TradeService _tradeService;
 
     private final static Logger _log = LoggerFactory.getLogger(CandlestickChartApp.class);
     private final JPanel m_menuPanel;
@@ -86,7 +89,9 @@ public class CandlestickChartApp extends BasePanel implements IBrokerChangeListe
                 m_frame = new JFrame();
                 String symbol = "MSFT";
 
-                m_brokerModel = (IBrokerModel) ClassFactory.getServiceForInterface(IBrokerModel._brokerTest, CandlestickChartApp.class);
+                Vector<Object> param = new Vector<>(0);
+                param.add(getTradeService());
+                m_brokerModel = (IBrokerModel) ClassFactory.getServiceForInterface(IBrokerModel._brokerTest, param, CandlestickChartApp.class);
 
                 Contract contract = new Contract(SECType.STOCK, symbol, Exchange.SMART, Currency.USD, null, null);
                 // contract.setId(Integer.MAX_VALUE);
@@ -107,13 +112,18 @@ public class CandlestickChartApp extends BasePanel implements IBrokerChangeListe
         });
     }
 
+    public static TradeService  getTradeService() {
+
+       return _tradeService;
+    }
     /**
      * Constructor for CandlestickChartApp.
      *
      * @param chart CandlestickChart
      */
-    public CandlestickChartApp(CandlestickChart chart) {
+    public CandlestickChartApp(CandlestickChart chart, TradeService tradeService) {
 
+        _tradeService = tradeService;
         this.setLayout(new BorderLayout());
 
         JPanel jPanel1 = new JPanel();
@@ -322,13 +332,13 @@ public class CandlestickChartApp extends BasePanel implements IBrokerChangeListe
 
     }
 
-    private static void createChart(Tradestrategy tradestrategy) {
+    private static void createChart(Tradestrategy tradestrategy, TradeService tradeService) {
 
-        StrategyDataUI strategyData = StrategyDataUI.create(tradestrategy);
+        StrategyDataUI strategyData = StrategyDataUI.create(tradestrategy );
 
         CandlestickChart chart = new CandlestickChart(tradestrategy.getContract().getSymbol(), strategyData,
                 Tradingday.newInstance(TradingCalendar.getDateTimeNowMarketTimeZone()));
-        CandlestickChartApp panel = new CandlestickChartApp(chart);
+        CandlestickChartApp panel = new CandlestickChartApp(chart, tradeService);
 
         m_frame.getContentPane().add(panel);
         m_frame.setSize(1200, 900);
@@ -474,7 +484,7 @@ public class CandlestickChartApp extends BasePanel implements IBrokerChangeListe
 
                     if (m_brokerDataRequestProgressMonitor.isDone()) {
 
-                        createChart(tradestrategy);
+                        createChart(tradestrategy, tradeService);
                     }
                 } else if ("error".equals(evt.getPropertyName())) {
 

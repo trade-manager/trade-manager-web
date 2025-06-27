@@ -93,6 +93,14 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
     @Column(name = "trade", length = 1)
     private Boolean trade = false;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "strategy_id", nullable = false)
+    private Strategy strategy;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "portfolio_id", nullable = false)
+    private Portfolio portfolio;
+
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "contract_id", nullable = false)
     private Contract contract;
@@ -104,14 +112,6 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "tradingday_id", nullable = false)
     private Tradingday tradingday;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "strategy_id", nullable = false)
-    private Strategy strategy;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "portfolio_id", nullable = false)
-    private Portfolio portfolio;
 
     @OneToMany(mappedBy = "tradestrategy", fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
     private List<TradeOrder> tradeOrders = new ArrayList<>(0);

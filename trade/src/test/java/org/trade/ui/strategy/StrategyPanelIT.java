@@ -147,8 +147,10 @@ public class StrategyPanelIT {
     @Test
     public void testDoCompileAndRunStrategy() throws Exception {
 
+        Vector<Object> param =  new Vector<>();
+        param.add(tradeService);
         IBrokerModel m_brokerManagerModel = (IBrokerModel) ClassFactory
-                .getServiceForInterface(IBrokerModel._brokerTest, this);
+                .getServiceForInterface(IBrokerModel._brokerTest, param,this);
 
         Vector<Object> parm = new Vector<>(0);
         parm.add(m_brokerManagerModel);
@@ -176,10 +178,12 @@ public class StrategyPanelIT {
 
     @Test
     public void testDoCompileRule() throws Exception {
-        File srcDirFile;
 
+        File srcDirFile;
+        Vector<Object> param =  new Vector<>();
+        param.add(tradeService);
         IBrokerModel m_brokerManagerModel = (IBrokerModel) ClassFactory
-                .getServiceForInterface(IBrokerModel._brokerTest, this);
+                .getServiceForInterface(IBrokerModel._brokerTest, param,this);
 
         Vector<Object> parm = new Vector<>(0);
         parm.add(m_brokerManagerModel);

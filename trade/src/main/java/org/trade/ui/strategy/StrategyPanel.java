@@ -119,6 +119,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
     public StrategyPanel(TradeService tradeService) {
         try {
 
+            this.tradeService = tradeService;
             if (null != getMenu()) {
                 getMenu().addMessageListener(this);
             }
@@ -305,22 +306,24 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
             fileName = fileName + rule.getStrategy().getClassName() + ".java";
             doSaveFile(fileName, this.getContent());
 
-            Vector<Object> parm = new Vector<>(0);
+            Vector<Object> param = new Vector<>(0);
+            param.add(this.tradeService);
             IBrokerModel brokerManagerModel = (IBrokerModel) ClassFactory.getServiceForInterface(IBrokerModel._brokerTest,
-                    this);
+                    param, this);
             CandleDataset candleDataset = new CandleDataset();
             CandleSeries candleSeries = new CandleSeries("Test",
                     new Contract(SECType.STOCK, "Test", Exchange.SMART, Currency.USD, null, null), BarSize.FIVE_MIN,
                     TradingCalendar.getDateTimeNowMarketTimeZone(), TradingCalendar.getDateTimeNowMarketTimeZone());
             candleDataset.addSeries(candleSeries);
             StrategyData strategyData = new StrategyData(rule.getStrategy(), candleDataset);
-            parm.add(brokerManagerModel);
-            parm.add(strategyData);
-            parm.add(0);
+            param.clear();
+            param.add(brokerManagerModel);
+            param.add(strategyData);
+            param.add(0);
             DynamicCode dynacode = new DynamicCode();
             dynacode.addSourceDir(new File(TEMP_DIR));
             dynacode.newProxyInstance(IStrategyRule.class, IStrategyRule.PACKAGE + rule.getStrategy().getClassName(),
-                    parm);
+                    param);
 
             this.setStatusBarMessage("File compiled.", BasePanel.INFORMATION);
         } catch (Exception ex) {

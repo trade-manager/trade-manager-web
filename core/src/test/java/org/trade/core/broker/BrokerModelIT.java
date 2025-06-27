@@ -70,6 +70,7 @@ import org.trade.core.valuetype.OrderType;
 
 import javax.swing.*;
 import java.math.BigDecimal;
+import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -131,11 +132,13 @@ public class BrokerModelIT extends TradestrategyBase implements IBrokerChangeLis
     public void setUp() throws Exception {
 
         tradestrategy = createTestTradestrategy(tradeService, symbol);
-        backTestbrokerModel = (IBrokerModel) ClassFactory.getServiceForInterface(_broker, BrokerModelIT.class);
+        Vector<Object> param =  new Vector<>();
+        param.add(tradeService);
+        backTestbrokerModel = (IBrokerModel) ClassFactory.getServiceForInterface(_broker, param, BrokerModelIT.class);
         backTestbrokerModel.onConnect(host, port, clientId);
         assertNotNull(tradestrategy);
 
-        backTestbrokerModel = (IBrokerModel) ClassFactory.getServiceForInterface(_broker, BrokerModelIT.class);
+        backTestbrokerModel = (IBrokerModel) ClassFactory.getServiceForInterface(_broker, param,BrokerModelIT.class);
         backTestbrokerModel.onConnect(host, port, clientId);
 
         timerRunning = new AtomicInteger(0);
