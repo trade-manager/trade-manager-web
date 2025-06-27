@@ -18,8 +18,8 @@ CREATE SEQUENCE entrylimit_seq start with 1 minvalue 1 maxvalue 9223372036854775
 DO SETVAL(entrylimit_seq, 101, 0) //
 
 DROP TABLE IF EXISTS entrylimit //
-
 SHOW WARNINGS//
+
 CREATE  TABLE IF NOT EXISTS entrylimit (
 id INT NOT NULL AUTO_INCREMENT ,
 start_price DECIMAL(10,2) NOT NULL ,
@@ -35,7 +35,6 @@ created_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 PRIMARY KEY (id) )
 ENGINE = InnoDB//
-
 SHOW WARNINGS//
 
 -- -----------------------------------------------------
@@ -46,8 +45,8 @@ CREATE SEQUENCE contract_seq start with 1 minvalue 1 maxvalue 922337203685477580
 DO SETVAL(contract_seq, 101, 0) //
 
 DROP TABLE IF EXISTS contract //
-
 SHOW WARNINGS//
+
 CREATE  TABLE IF NOT EXISTS contract (
 id INT NOT NULL AUTO_INCREMENT ,
 category VARCHAR(80) NULL ,
@@ -56,7 +55,7 @@ contract_month VARCHAR(6)  NULL ,
 currency VARCHAR(3) NOT NULL ,
 ev_multiplier DECIMAL(10,2) NULL ,
 ev_rule VARCHAR(80) NULL ,
-EXCHANGE VARCHAR(30) NOT NULL ,
+exchange VARCHAR(30) NOT NULL ,
 expiry DATETIME NULL ,
 contract_ib_id INT NULL ,
 include_expired  SMALLINT(1)  NULL ,
@@ -95,7 +94,6 @@ REFERENCES tradeposition (id )
   ON DELETE NO ACTION
   ON UPDATE NO ACTION)
 ENGINE = InnoDB//
-
 SHOW WARNINGS//
 
 -- -----------------------------------------------------
@@ -106,8 +104,8 @@ CREATE SEQUENCE portfolio_seq start with 1 minvalue 1 maxvalue 92233720368547758
 DO SETVAL(portfolio_seq, 101, 0) //
 
 DROP TABLE IF EXISTS portfolio //
-
 SHOW WARNINGS//
+
 CREATE  TABLE IF NOT EXISTS portfolio (
 id INT NOT NULL AUTO_INCREMENT ,
 name VARCHAR(45) NOT NULL ,
@@ -121,7 +119,6 @@ updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 PRIMARY KEY (id) ,
 UNIQUE INDEX portfolio_name_uq (name ASC))
 ENGINE = InnoDB//
-
 SHOW WARNINGS//
 
 -- -----------------------------------------------------
@@ -132,8 +129,8 @@ CREATE SEQUENCE account_seq start with 1 minvalue 1 maxvalue 9223372036854775806
 DO SETVAL(account_seq, 101, 0) //
 
 DROP TABLE IF EXISTS account //
-
 SHOW WARNINGS//
+
 CREATE  TABLE IF NOT EXISTS account (
 id INT NOT NULL AUTO_INCREMENT ,
 account_number VARCHAR(20) NOT NULL ,
@@ -154,7 +151,6 @@ PRIMARY KEY (id) ,
 UNIQUE INDEX account_name_uq (name ASC),
 UNIQUE INDEX account_number_uq (account_number ASC) )
 ENGINE = InnoDB//
-
 SHOW WARNINGS//
 
 -- -----------------------------------------------------
@@ -165,8 +161,8 @@ CREATE SEQUENCE portfolioaccount_seq start with 1 minvalue 1 maxvalue 9223372036
 DO SETVAL(portfolioaccount_seq, 101, 0) //
 
 DROP TABLE IF EXISTS portfolioaccount //
-
 SHOW WARNINGS//
+
 CREATE  TABLE IF NOT EXISTS portfolioaccount (
 id INT NOT NULL AUTO_INCREMENT ,
 version INT NULL,
@@ -181,15 +177,14 @@ UNIQUE INDEX portfolioaccount_uq (portfolio_id ASC, account_id ASC),
 CONSTRAINT portfolioaccount_portfolio_fk
 FOREIGN KEY (portfolio_id )
 REFERENCES portfolio (id)
-  ON DELETE NO ACTION
-  ON UPDATE NO ACTION,
+  ON DELETE CASCADE
+  ON UPDATE CASCADE,
 CONSTRAINT portfolioaccount_account_fk
 FOREIGN KEY (account_id)
 REFERENCES account (id)
-  ON DELETE NO ACTION
-  ON UPDATE NO ACTION )
+  ON DELETE CASCADE
+  ON UPDATE CASCADE )
 ENGINE = InnoDB//
-
 SHOW WARNINGS//
 
 -- -----------------------------------------------------
@@ -200,8 +195,8 @@ CREATE SEQUENCE tradingday_seq start with 1 minvalue 1 maxvalue 9223372036854775
 DO SETVAL(tradingday_seq, 101, 0) //
 
 DROP TABLE IF EXISTS tradingday //
-
 SHOW WARNINGS//
+
 CREATE  TABLE IF NOT EXISTS tradingday (
 id INT NOT NULL AUTO_INCREMENT ,
 open DATETIME NOT NULL ,
@@ -215,7 +210,6 @@ updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 PRIMARY KEY (id) ,
 UNIQUE INDEX open_close_uq (open ASC, close ASC))
 ENGINE = InnoDB//
-
 SHOW WARNINGS//
 
 -- -----------------------------------------------------
@@ -226,8 +220,8 @@ CREATE SEQUENCE strategy_seq start with 1 minvalue 1 maxvalue 922337203685477580
 DO SETVAL(strategy_seq, 101, 0) //
 
 DROP TABLE IF EXISTS strategy //
-
 SHOW WARNINGS//
+
 CREATE  TABLE IF NOT EXISTS strategy (
 id INT NOT NULL AUTO_INCREMENT ,
 name VARCHAR(45) NOT NULL ,
@@ -247,7 +241,6 @@ REFERENCES strategy (id )
   ON DELETE NO ACTION
   ON UPDATE NO ACTION)
 ENGINE = InnoDB//
-
 SHOW WARNINGS//
 
 -- -----------------------------------------------------
@@ -258,13 +251,13 @@ CREATE SEQUENCE tradestrategy_seq start with 1 minvalue 1 maxvalue 9223372036854
 DO SETVAL(tradestrategy_seq, 101, 0) //
 
 DROP TABLE IF EXISTS tradestrategy //
-
 SHOW WARNINGS//
+
 CREATE  TABLE IF NOT EXISTS tradestrategy (
 id INT NOT NULL AUTO_INCREMENT ,
 bar_Size  INT NULL ,
 chart_days INT NULL ,
-STATUS VARCHAR(20) NULL ,
+status VARCHAR(20) NULL ,
 risk_amount DECIMAL(10,2) NULL ,
 side VARCHAR(3) NULL ,
 tier VARCHAR(1) NULL ,
@@ -303,7 +296,6 @@ REFERENCES portfolio (id)
   ON DELETE NO ACTION
   ON UPDATE NO ACTION)
 ENGINE = InnoDB//
-
 SHOW WARNINGS//
 
 -- -----------------------------------------------------
@@ -314,8 +306,8 @@ CREATE SEQUENCE tradeposition_seq start with 1 minvalue 1 maxvalue 9223372036854
 DO SETVAL(tradeposition_seq, 101, 0) //
 
 DROP TABLE IF EXISTS tradeposition //
-
 SHOW WARNINGS//
+
 CREATE  TABLE IF NOT EXISTS tradeposition (
 id INT NOT NULL AUTO_INCREMENT ,
 open_quantity INT NULL ,
@@ -340,7 +332,6 @@ REFERENCES contract (id )
   ON DELETE CASCADE
   ON UPDATE NO ACTION)
 ENGINE = InnoDB//
-
 SHOW WARNINGS//
 
 -- -----------------------------------------------------
@@ -351,7 +342,6 @@ CREATE SEQUENCE tradeorder_seq start with 1 minvalue 1 maxvalue 9223372036854775
 DO SETVAL(tradeorder_seq, 101, 0) //
 
 DROP TABLE IF EXISTS tradeorder //
-
 SHOW WARNINGS//
 
 CREATE  TABLE IF NOT EXISTS tradeorder (
@@ -365,10 +355,10 @@ client_id INT NULL ,
 commission DECIMAL(10,2) NULL ,
 order_create_date DATETIME(6) NOT NULL ,
 display_quantity INT NULL ,
-FA_group  VARCHAR(45) NULL ,
-FA_method  VARCHAR(45) NULL ,
-FA_percent  DECIMAL(10,6) NULL ,
-FA_profile  VARCHAR(45) NULL ,
+fa_group  VARCHAR(45) NULL ,
+fa_method  VARCHAR(45) NULL ,
+fa_percent  DECIMAL(10,6) NULL ,
+fa_profile  VARCHAR(45) NULL ,
 filled_date DATETIME(6) NULL ,
 filled_quantity INT NULL ,
 good_after_time DATETIME NULL ,
@@ -387,7 +377,7 @@ perm_id INT NULL ,
 parent_id INT NULL ,
 quantity INT NOT NULL ,
 time_in_force VARCHAR(3) NOT NULL ,
-STATUS VARCHAR(45) NULL ,
+status VARCHAR(45) NULL ,
 stop_price DECIMAL(10,2) NULL ,
 transmit SMALLINT(1)  NULL ,
 trail_stop_price DECIMAL(10,2) NULL ,
@@ -416,7 +406,6 @@ REFERENCES tradeposition (id )
   ON DELETE CASCADE
   ON UPDATE NO ACTION)
 ENGINE = InnoDB//
-
 SHOW WARNINGS//
 
 -- -----------------------------------------------------
@@ -427,7 +416,6 @@ CREATE SEQUENCE tradeorderfill_seq start with 1 minvalue 1 maxvalue 922337203685
 DO SETVAL(tradeorderfill_seq, 101, 0) //
 
 DROP TABLE IF EXISTS tradeorderfill //
-
 SHOW WARNINGS//
 
 CREATE  TABLE IF NOT EXISTS tradeorderfill (
@@ -436,7 +424,7 @@ account_number VARCHAR(20) NULL ,
 average_price DECIMAL(11,3) NULL ,
 commission DECIMAL(11,3) NULL ,
 cumulative_quantity INT NULL ,
-EXCHANGE VARCHAR(10) NULL ,
+exchange VARCHAR(10) NULL ,
 exec_id VARCHAR(45) NULL ,
 order_reference VARCHAR(45) NULL ,
 perm_id INT NULL ,
@@ -457,7 +445,6 @@ REFERENCES tradeorder (id )
   ON DELETE CASCADE
   ON UPDATE NO ACTION)
 ENGINE = InnoDB//
-
 SHOW WARNINGS//
 
 -- -----------------------------------------------------
@@ -468,7 +455,6 @@ CREATE SEQUENCE candle_seq start with 1 minvalue 1 maxvalue 9223372036854775806 
 DO SETVAL(candle_seq, 101, 0) //
 
 DROP TABLE IF EXISTS candle //
-
 SHOW WARNINGS//
 
 CREATE  TABLE IF NOT EXISTS candle (
@@ -506,7 +492,6 @@ REFERENCES tradingday (id )
   ON DELETE CASCADE
   ON UPDATE NO ACTION)
 ENGINE = InnoDB//
-
 SHOW WARNINGS//
 
 -- -----------------------------------------------------
@@ -517,11 +502,11 @@ CREATE SEQUENCE rule_seq start with 1 minvalue 1 maxvalue 9223372036854775806 in
 DO SETVAL(rule_seq, 101, 0) //
 
 DROP TABLE IF EXISTS rule //
-
 SHOW WARNINGS//
+
 CREATE  TABLE IF NOT EXISTS rule (
 id INT NOT NULL AUTO_INCREMENT,
-COMMENT TEXT NULL,
+comment TEXT NULL,
 create_date DATETIME(6) NOT NULL,
 rule BLOB NULL,
 version INT NOT NULL,
@@ -537,7 +522,6 @@ REFERENCES strategy (id )
   ON DELETE NO ACTION
   ON UPDATE NO ACTION)
 ENGINE = InnoDB//
-
 SHOW WARNINGS//
 
 -- -----------------------------------------------------
@@ -548,8 +532,8 @@ CREATE SEQUENCE indicatorseries_seq start with 1 minvalue 1 maxvalue 92233720368
 DO SETVAL(indicatorseries_seq, 101, 0) //
 
 DROP TABLE IF EXISTS indicatorseries //
-
 SHOW WARNINGS//
+
 CREATE  TABLE IF NOT EXISTS indicatorseries (
 id INT NOT NULL AUTO_INCREMENT,
 name VARCHAR(45) NOT NULL ,
@@ -571,7 +555,6 @@ REFERENCES strategy (id )
   ON DELETE NO ACTION
   ON UPDATE NO ACTION)
 ENGINE = InnoDB//
-
 SHOW WARNINGS//
 
 -- -----------------------------------------------------
@@ -582,13 +565,12 @@ CREATE SEQUENCE codetype_seq start with 1 minvalue 1 maxvalue 922337203685477580
 DO SETVAL(codetype_seq, 101, 0) //
 
 DROP TABLE IF EXISTS codetype //
-
 SHOW WARNINGS//
 
 CREATE  TABLE IF NOT EXISTS codetype (
 id INT NOT NULL AUTO_INCREMENT ,
 name VARCHAR(45) NOT NULL ,
-TYPE VARCHAR(45) NOT NULL ,
+type VARCHAR(45) NOT NULL ,
 description VARCHAR(100) NULL ,
 version INT NULL,
 created_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
@@ -596,7 +578,6 @@ updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 PRIMARY KEY (id) ,
 UNIQUE INDEX codetype_name_type_uq (name ASC, TYPE ASC) )
 ENGINE = InnoDB//
-
 SHOW WARNINGS//
 
 -- -----------------------------------------------------
@@ -607,8 +588,8 @@ CREATE SEQUENCE codeattribute_seq start with 1 minvalue 1 maxvalue 9223372036854
 DO SETVAL(codeattribute_seq, 101, 0) //
 
 DROP TABLE IF EXISTS codeattribute //
-
 SHOW WARNINGS//
+
 CREATE  TABLE IF NOT EXISTS codeattribute (
 id INT NOT NULL AUTO_INCREMENT ,
 name VARCHAR(45) NOT NULL ,
@@ -628,7 +609,6 @@ REFERENCES codetype (id )
   ON DELETE NO ACTION
   ON UPDATE NO ACTION)
 ENGINE = InnoDB//
-
 SHOW WARNINGS//
 
 -- -----------------------------------------------------
@@ -639,8 +619,8 @@ CREATE SEQUENCE codevalue_seq start with 1 minvalue 1 maxvalue 92233720368547758
 DO SETVAL(codevalue_seq, 101, 0) //
 
 DROP TABLE IF EXISTS codevalue //
-
 SHOW WARNINGS//
+
 CREATE  TABLE IF NOT EXISTS codevalue (
 id INT NOT NULL AUTO_INCREMENT ,
 code_value VARCHAR(45) NOT NULL ,
@@ -672,7 +652,6 @@ REFERENCES tradestrategy (id )
   ON DELETE NO ACTION
   ON UPDATE NO ACTION)
 ENGINE = InnoDB//
-
 SHOW WARNINGS//
 
 -- -----------------------------------------------------
@@ -683,6 +662,7 @@ CREATE SEQUENCE domain_seq start with 1 minvalue 1 maxvalue 9223372036854775806 
 DO SETVAL(domain_seq, 101, 0) //
 
 DROP TABLE IF EXISTS domain //
+SHOW WARNINGS//
 
 CREATE  TABLE IF NOT EXISTS domain (
 id BIGINT NOT NULL AUTO_INCREMENT ,
@@ -694,7 +674,6 @@ updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 PRIMARY KEY (id) ,
 UNIQUE INDEX domain_name_uq (name ASC) )
 ENGINE = InnoDB//
-
 SHOW WARNINGS//
 
 -- -----------------------------------------------------
@@ -705,6 +684,7 @@ CREATE SEQUENCE user_seq start with 1 minvalue 1 maxvalue 9223372036854775806 in
 DO SETVAL(user_seq, 101, 0) //
 
 DROP TABLE IF EXISTS user //
+SHOW WARNINGS//
 
 CREATE  TABLE IF NOT EXISTS user (
 id BIGINT NOT NULL AUTO_INCREMENT ,
@@ -712,7 +692,7 @@ name VARCHAR(100) NOT NULL ,
 first_name VARCHAR(100)  NULL ,
 last_name VARCHAR(100)  NULL ,
 password VARCHAR(255) NOT NULL ,
-ROLES TINYBLOB NULL ,
+roles TINYBLOB NULL ,
 domain_id BIGINT NOT NULL ,
 version BIGINT NULL,
 created_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
@@ -726,7 +706,6 @@ REFERENCES domain (id )
   ON DELETE NO ACTION
   ON UPDATE NO ACTION)
 ENGINE = InnoDB//
-
 SHOW WARNINGS//
 
 -- -----------------------------------------------------
@@ -737,6 +716,7 @@ CREATE SEQUENCE role_seq start with 1 minvalue 1 maxvalue 9223372036854775806 in
 DO SETVAL(role_seq, 101, 0) //
 
 DROP TABLE IF EXISTS role //
+SHOW WARNINGS//
 
 CREATE  TABLE IF NOT EXISTS role (
 id BIGINT NOT NULL AUTO_INCREMENT ,
@@ -748,7 +728,6 @@ updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 PRIMARY KEY (id) ,
 UNIQUE INDEX role_name_uq (name ASC) )
 ENGINE = InnoDB//
-
 SHOW WARNINGS//
 
 -- -----------------------------------------------------
@@ -759,6 +738,7 @@ CREATE SEQUENCE userrole_seq start with 1 minvalue 1 maxvalue 922337203685477580
 DO SETVAL(userrole_seq, 101, 0) //
 
 DROP TABLE IF EXISTS userrole //
+SHOW WARNINGS//
 
 CREATE  TABLE IF NOT EXISTS userrole (
 id BIGINT NOT NULL AUTO_INCREMENT ,
@@ -780,9 +760,7 @@ FOREIGN KEY (user_id )
 REFERENCES user (id )
   ON DELETE NO ACTION
   ON UPDATE NO ACTION)
-
 ENGINE = InnoDB//
-
 SHOW WARNINGS//
 
 -- -----------------------------------------------------
@@ -793,6 +771,7 @@ CREATE SEQUENCE employee_seq start with 1 minvalue 1 maxvalue 922337203685477580
 DO SETVAL(employee_seq, 101, 0) //
 
 DROP TABLE IF EXISTS employee//
+SHOW WARNINGS//
 
 CREATE  TABLE IF NOT EXISTS employee (
 id BIGINT NOT NULL AUTO_INCREMENT ,
@@ -812,7 +791,6 @@ REFERENCES user (id )
   ON DELETE NO ACTION
   ON UPDATE NO ACTION)
 ENGINE = InnoDB//
-
 SHOW WARNINGS//
 
 SET SQL_MODE=@OLD_SQL_MODE//

@@ -146,16 +146,16 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
     @Column(name = "display_quantity")
     private Integer displayQuantity;
 
-    @Column(name = "FA_group", length = 45)
+    @Column(name = "fa_group", length = 45)
     private String FAGroup;
 
-    @Column(name = "FA_profile", length = 45)
+    @Column(name = "fa_profile", length = 45)
     private String FAProfile;
 
-    @Column(name = "FA_method", length = 20)
+    @Column(name = "fa_method", length = 20)
     private String FAMethod;
 
-    @Column(name = "FA_percent", precision = 10)
+    @Column(name = "fa_percent", precision = 10)
     private BigDecimal FAPercent;
 
     @Column(name = "filled_quantity")
@@ -456,21 +456,21 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
     }
 
     /**
-     * Method getTradestrategyId.
+     * Method getTradestrategyLite.
      *
-     * @return tradestrategyId
+     * @return tradestrategyLite
      */
-    public TradestrategyLite getTradestrategyId() {
+    public TradestrategyLite getTradestrategyLite() {
         return this.tradestrategyLite;
     }
 
     /**
-     * Method setTradestrategyId.
+     * Method setTradestrategyLite.
      *
-     * @param tradestrategyId TradestrategyId
+     * @param tradestrategyLite TradestrategyLite
      */
-    public void setTradestrategyId(TradestrategyLite tradestrategyId) {
-        this.tradestrategyLite = tradestrategyId;
+    public void setTradestrategyLite(TradestrategyLite tradestrategyLite) {
+        this.tradestrategyLite = tradestrategyLite;
     }
 
     /**
@@ -1323,8 +1323,11 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
             throw new Exception("Limit Price cannot be null for a TrailLimit order");
         }
         if (null == this.getFAProfile()) {
+
             if (null == this.getFAGroup()) {
+
                 if (null != this.getTradestrategy().getPortfolio().getIndividualAccount()) {
+
                     this.setAccountNumber(
                             this.getTradestrategy().getPortfolio().getIndividualAccount().getAccountNumber());
                 }
@@ -1358,7 +1361,6 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
 
             this.setTrailingPercent((new Money(0)).getBigDecimalValue());
         }
-
     }
 
     /**

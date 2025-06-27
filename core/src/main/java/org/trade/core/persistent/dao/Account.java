@@ -37,11 +37,9 @@ package org.trade.core.persistent.dao;
 
 // Generated Feb 21, 2011 2:18:03 PM by Hibernate Tools 3.4.0.CR1
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import org.trade.core.dao.Aspect;
@@ -104,8 +102,8 @@ public class Account extends Aspect implements Serializable, Cloneable {
     @Column(name = "unrealized_pn_l", precision = 10)
     private BigDecimal unrealizedPnL = new BigDecimal(0);
 
-    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY, orphanRemoval = true, cascade = {CascadeType.REFRESH})
-    private List<PortfolioAccount> portfolioAccounts = new ArrayList<>(0);
+    @ManyToMany(mappedBy = "accounts")
+    private List<Portfolio> portfolios = new ArrayList<>(0);
 
     public Account() {
 
@@ -364,33 +362,34 @@ public class Account extends Aspect implements Serializable, Cloneable {
     @Transient
     public Portfolio getDefaultPortfolio() {
 
-        for (PortfolioAccount item : this.portfolioAccounts) {
+        for (Portfolio item : this.portfolios) {
 
-            if (item.getPortfolio().getIsDefault()) {
+            if (item.getIsDefault()) {
 
-                return item.getPortfolio();
+                return item;
             }
         }
         return null;
     }
 
     /**
-     * Method getPortfolioAccounts.
+     * Method getPortfolios.
      *
-     * @return List<PortfolioAccounts>
+     * @return List<Portfolio>
      */
-    public List<PortfolioAccount> getPortfolioAccounts() {
-        return this.portfolioAccounts;
+    public List<Portfolio> getPortfolios() {
+        return this.portfolios;
     }
 
     /**
-     * Method setPortfolioAccounts.
+     * Method setPortfolios.
      *
-     * @param portfolioAccounts List<CodeAttribute>
+     * @param portfolios List<Portfolio>
      */
-    public void setPortfolioAccounts(List<PortfolioAccount> portfolioAccounts) {
-        this.portfolioAccounts = portfolioAccounts;
+    public void setPortfolios(List<Portfolio> portfolios) {
+        this.portfolios = portfolios;
     }
+
 
     /**
      * Method isDirty.
@@ -400,7 +399,7 @@ public class Account extends Aspect implements Serializable, Cloneable {
     @Transient
     public boolean isDirty() {
 
-        for (PortfolioAccount item : this.getPortfolioAccounts()) {
+        for (Portfolio item : this.getPortfolios()) {
 
             if (item.isDirty()) {
                 return true;

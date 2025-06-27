@@ -78,6 +78,7 @@ public abstract class Aspect extends AbstractPersistable<Integer> {
 
     @PrePersist
     protected void onCreate() {
+
         createdDate = TradingCalendar.getDateTimeNowMarketTimeZone();
         updatedDate = TradingCalendar.getDateTimeNowMarketTimeZone();
     }
@@ -97,12 +98,32 @@ public abstract class Aspect extends AbstractPersistable<Integer> {
     }
 
     /**
+     * Method setCreateDate.
+     *
+     * @param createdDate ZonedDateTime
+     */
+    public void setCreateDate(ZonedDateTime createdDate) {
+
+        this.createdDate = createdDate;
+    }
+
+    /**
      * Method getUpdateDate.
      *
      * @return ZonedDateTime
      */
     public ZonedDateTime getUpdateDate() {
         return this.updatedDate;
+    }
+
+    /**
+     * Method setUpdateDate.
+     *
+     * @param updatedDate ZonedDateTime
+     */
+    public void setUpdateDate(ZonedDateTime updatedDate) {
+
+        this.updatedDate = updatedDate;
     }
 
     /**

@@ -87,7 +87,7 @@ public class TradelogReportIT {
      * Method setUp.
      */
     @BeforeEach
-    public void setUp() throws Exception {
+    public void setUp() {
     }
 
     /**

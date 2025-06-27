@@ -56,7 +56,6 @@ import org.trade.core.persistent.dao.CodeType;
 import org.trade.core.persistent.dao.CodeValue;
 import org.trade.core.persistent.dao.Contract;
 import org.trade.core.persistent.dao.Portfolio;
-import org.trade.core.persistent.dao.PortfolioAccount;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradePosition;
 import org.trade.core.persistent.dao.Tradestrategy;
@@ -625,7 +624,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
 
         try {
             final Tradestrategy tradestrategy = m_tradingdays
-                    .getTradestrategy(tradeOrder.getTradestrategyId().getId());
+                    .getTradestrategy(tradeOrder.getTradestrategyLite().getId());
 
             if (null == tradestrategy) {
                 this.setStatusBarMessage("Warning position opened but Tradestrategy not found for Order Key: "
@@ -675,7 +674,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                     }
                 }
             }
-            tradestrategy.setStatus(tradeOrder.getTradestrategyId().getStatus());
+            tradestrategy.setStatus(tradeOrder.getTradestrategyLite().getStatus());
             contractPanel.doRefresh(tradestrategy);
 
         } catch (Exception ex) {
@@ -697,7 +696,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
             SwingUtilities.invokeLater(() -> {
                 try {
                     Tradestrategy tradestrategy = m_tradingdays
-                            .getTradestrategy(tradeOrder.getTradestrategyId().getId());
+                            .getTradestrategy(tradeOrder.getTradestrategyLite().getId());
                     if (null == tradestrategy) {
                         setStatusBarMessage(
                                 "Warning position cancelled but Tradestrategy not found for Order Key: "
@@ -727,7 +726,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
             SwingUtilities.invokeLater(() -> {
                 try {
                     Tradestrategy tradestrategy = m_tradingdays
-                            .getTradestrategy(tradeOrder.getTradestrategyId().getId());
+                            .getTradestrategy(tradeOrder.getTradestrategyLite().getId());
                     if (null == tradestrategy) {
                         setStatusBarMessage(
                                 "Warning position opened but Tradestrategy not found for Order Key: "
@@ -735,7 +734,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                                 BasePanel.WARNING);
                         return;
                     }
-                    tradestrategy.setStatus(tradeOrder.getTradestrategyId().getStatus());
+                    tradestrategy.setStatus(tradeOrder.getTradestrategyLite().getStatus());
                     contractPanel.doRefresh(tradestrategy);
 
                 } catch (Exception ex) {
@@ -764,7 +763,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                             .findTradePositionById(tradePosition.getId());
                     for (TradeOrder tradeOrder : currTradePosition.getTradeOrders()) {
                         Tradestrategy tradestrategy = tradeService
-                                .findTradestrategyById(tradeOrder.getTradestrategyId().getId());
+                                .findTradestrategyById(tradeOrder.getTradestrategyLite().getId());
                         m_tradingdays.getTradestrategy(tradestrategy.getId())
                                 .setStatus(tradestrategy.getStatus());
                         contractPanel.doRefresh(tradestrategy);
@@ -1189,9 +1188,8 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                      * the default portfolio has no accounts add this account to
                      * the default portfolio.
                      */
-                    if (defaultPortfolio.getPortfolioAccounts().isEmpty() && tokens == 0) {
-                        PortfolioAccount portfolioAccount = new PortfolioAccount(defaultPortfolio, account);
-                        defaultPortfolio.getPortfolioAccounts().add(portfolioAccount);
+                    if (defaultPortfolio.getAccounts().isEmpty() && tokens == 0) {
+                        defaultPortfolio.getAccounts().add(account);
                         defaultPortfolio = tradeService.savePortfolio(defaultPortfolio);
                         /*
                          * Update the account (key) to the current account only
@@ -1202,8 +1200,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
 
                     } else {
                         Portfolio portfolio = new Portfolio(account.getAccountNumber(), account.getAccountNumber());
-                        PortfolioAccount portfolioAccount = new PortfolioAccount(portfolio, account);
-                        portfolio.getPortfolioAccounts().add(portfolioAccount);
+                        portfolio.getAccounts().add(account);
                         portfolio = tradeService.savePortfolio(portfolio);
                         if (tokens == 0) {
                             /*
@@ -1219,9 +1216,9 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
             tradingdayPanel.doWindowActivated();
             defaultPortfolio = tradeService.findPortfolioByName(defaultPortfolio.getName());
 
-            for (PortfolioAccount item : defaultPortfolio.getPortfolioAccounts()) {
+            for (Account item : defaultPortfolio.getAccounts()) {
 
-                m_brokerModel.onSubscribeAccountUpdates(true, item.getAccount().getAccountNumber());
+                m_brokerModel.onSubscribeAccountUpdates(true, item.getAccountNumber());
             }
 
             this.setStatusBarMessage(

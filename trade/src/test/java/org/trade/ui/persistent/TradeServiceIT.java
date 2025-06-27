@@ -92,7 +92,6 @@ import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -728,8 +727,6 @@ public class TradeServiceIT {
                 .findPositionOrdersByTradestrategyId(this.tradestrategy.getId());
 
         _log.info("testFindVersionById IdTradeStrategy:{} version: {}", positionOrders.getId(), positionOrders.getVersion());
-
-        positionOrders.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
         TradestrategyOrders result = this.tradeService.saveAspect(positionOrders);
 
         _log.info("testFindVersionById IdTradeStrategy:{} version: {}", result.getId(), result.getVersion());
@@ -965,14 +962,14 @@ public class TradeServiceIT {
     }
 
     @Test
-    public void testFindAspectById() {
+    public void testFindAspectById() throws ClassNotFoundException {
 
-        Optional<Aspect> result = this.tradeService.findAspectById(this.tradestrategy);
-        assertFalse(result.isEmpty());
+        Aspect result = this.tradeService.findAspectById(this.tradestrategy);
+        assertNotNull(result);
     }
 
     @Test
-    public void testPersistAspect()  {
+    public void testPersistAspect() {
 
         Aspect result = this.tradeService.saveAspect(this.tradestrategy);
         assertNotNull(result);

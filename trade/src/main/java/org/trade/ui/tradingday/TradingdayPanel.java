@@ -42,9 +42,9 @@ import org.trade.base.Table;
 import org.trade.base.UIPropertyCodes;
 import org.trade.core.persistent.ServiceException;
 import org.trade.core.persistent.TradeService;
+import org.trade.core.persistent.dao.Account;
 import org.trade.core.persistent.dao.CodeType;
 import org.trade.core.persistent.dao.Portfolio;
-import org.trade.core.persistent.dao.PortfolioAccount;
 import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.Tradestrategy;
 import org.trade.core.persistent.dao.Tradingday;
@@ -765,19 +765,21 @@ public class TradingdayPanel extends BasePanel {
             BigDecimal realizedPnL = new BigDecimal(0);
             BigDecimal unrealizedPnL = new BigDecimal(0);
             ZonedDateTime updateDate = TradingCalendar.getDateTimeNowMarketTimeZone();
-            for (PortfolioAccount portfolioAccount : portfolio.getPortfolioAccounts()) {
-                availableFunds = availableFunds.add((portfolioAccount.getAccount().getAvailableFunds() == null
-                        ? new BigDecimal(0) : portfolioAccount.getAccount().getAvailableFunds()));
-                buyingPower = buyingPower.add((portfolioAccount.getAccount().getBuyingPower() == null
-                        ? new BigDecimal(0) : portfolioAccount.getAccount().getBuyingPower()));
+
+            for (Account account : portfolio.getAccounts()) {
+
+                availableFunds = availableFunds.add((account.getAvailableFunds() == null
+                        ? new BigDecimal(0) : account.getAvailableFunds()));
+                buyingPower = buyingPower.add((account.getBuyingPower() == null
+                        ? new BigDecimal(0) : account.getBuyingPower()));
                 grossPositionValue = grossPositionValue
-                        .add((portfolioAccount.getAccount().getGrossPositionValue() == null ? new BigDecimal(0)
-                                : portfolioAccount.getAccount().getGrossPositionValue()));
-                realizedPnL = realizedPnL.add((portfolioAccount.getAccount().getRealizedPnL() == null
-                        ? new BigDecimal(0) : portfolioAccount.getAccount().getRealizedPnL()));
-                unrealizedPnL = unrealizedPnL.add((portfolioAccount.getAccount().getUnrealizedPnL() == null
-                        ? new BigDecimal(0) : portfolioAccount.getAccount().getUnrealizedPnL()));
-                updateDate = portfolioAccount.getAccount().getUpdateDate();
+                        .add((account.getGrossPositionValue() == null ? new BigDecimal(0)
+                                : account.getGrossPositionValue()));
+                realizedPnL = realizedPnL.add((account.getRealizedPnL() == null
+                        ? new BigDecimal(0) : account.getRealizedPnL()));
+                unrealizedPnL = unrealizedPnL.add((account.getUnrealizedPnL() == null
+                        ? new BigDecimal(0) : account.getUnrealizedPnL()));
+                updateDate = account.getUpdateDate();
             }
             portfolioLabel.setText(null);
             CoreUtils.setDocumentText(portfolioLabel.getDocument(), "Portfolio:", false, bold);

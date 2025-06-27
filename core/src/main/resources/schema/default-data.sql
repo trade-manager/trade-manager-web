@@ -43,13 +43,13 @@ COMMIT//
 DELETE FROM codetype WHERE id >='0'//
 COMMIT//
 
-INSERT INTO strategy (id, name, description, market_data, class_name, version) VALUES (50, 'FHxRBHyR+Heikin', 'Sell front/back half at x/yR or trail BH with Heikin-Ashi bars over xR', 1, 'PosMgrFHXRBHHeikinStrategy',0)//
-INSERT INTO strategy (id, name, description, class_name, version) VALUES (51, 'AllOrNothing', 'Close open position at 15:58 with stop 1R', 'PosMgrAllOrNothingStrategy',0)//
-INSERT INTO strategy (id, name, description, class_name, version) VALUES (52, 'All5MinBar', 'Trails whole pos on 5min bars after 9:40', 'PosMgrAll5MinBarStrategy',0)//
-INSERT INTO strategy (id, name, description, class_name, version) VALUES (53, 'FHxRBHyR', 'Sell front half at xR and bacl half at yR', 'PosMgrFHXRBHYRStrategy',0)//
-INSERT INTO strategy (id, name, description, market_data, class_name, strategy_manager_id, version) VALUES (1, '5minBarGap', 'Enter a tier 1-3 gap in first 5min bar direction, and stop @ 5min high/low',1, 'FiveMinGapBarStrategy',53,0)//
-INSERT INTO strategy (id, name, description, market_data, class_name, strategy_manager_id, version) VALUES (2, '5minSideBarGap', 'Enter a tier 1-3 gap via expectd Side after first 5min bar and stop @ 5min high/low',1, 'FiveMinSideGapBarStrategy',53,0)//
-INSERT INTO strategy (id, name, description, market_data, class_name, strategy_manager_id, version) VALUES (3, '5minWRBBarGap', 'Enter a tier 1-3 gap in first 5min WRB bar direction, and stop @ 55% of high/low',1, 'FiveMinWRBGapBarStrategy',52,0)//
+INSERT INTO strategy (id, name, description, market_data, class_name, version) VALUES (20, 'FHxRBHyR+Heikin', 'Sell front/back half at x/yR or trail BH with Heikin-Ashi bars over xR', 1, 'PosMgrFHXRBHHeikinStrategy',0)//
+INSERT INTO strategy (id, name, description, class_name, version) VALUES (21, 'AllOrNothing', 'Close open position at 15:58 with stop 1R', 'PosMgrAllOrNothingStrategy',0)//
+INSERT INTO strategy (id, name, description, class_name, version) VALUES (22, 'All5MinBar', 'Trails whole pos on 5min bars after 9:40', 'PosMgrAll5MinBarStrategy',0)//
+INSERT INTO strategy (id, name, description, class_name, version) VALUES (23, 'FHxRBHyR', 'Sell front half at xR and bacl half at yR', 'PosMgrFHXRBHYRStrategy',0)//
+INSERT INTO strategy (id, name, description, market_data, class_name, strategy_manager_id, version) VALUES (1, '5minBarGap', 'Enter a tier 1-3 gap in first 5min bar direction, and stop @ 5min high/low',1, 'FiveMinGapBarStrategy',23,0)//
+INSERT INTO strategy (id, name, description, market_data, class_name, strategy_manager_id, version) VALUES (2, '5minSideBarGap', 'Enter a tier 1-3 gap via expectd Side after first 5min bar and stop @ 5min high/low',1, 'FiveMinSideGapBarStrategy',23,0)//
+INSERT INTO strategy (id, name, description, market_data, class_name, strategy_manager_id, version) VALUES (3, '5minWRBBarGap', 'Enter a tier 1-3 gap in first 5min WRB bar direction, and stop @ 55% of high/low',1, 'FiveMinWRBGapBarStrategy',22,0)//
 INSERT INTO strategy (id, name, description, market_data, class_name, strategy_manager_id, version) VALUES (4, 'PosMgrHeikinAshiTrail', 'Get and trail an open position on the current time frame using Hiekin-Ashi bars',1, 'PosMgrHeikinAshiTrailStrategy',null,0)//
 
 COMMIT//
@@ -132,12 +132,12 @@ INSERT INTO indicatorseries (id, name, type, description, display_series, series
 INSERT INTO indicatorseries (id, name, type, description, display_series, series_RGB_color, sub_chart, strategy_id, version) VALUES(23,'HeikinAshi','HeikinAshiSeries','HeikinAshi bars used for trail stops',0,0,0,4,0) //
 INSERT INTO indicatorseries (id, name, type, description, display_series, series_RGB_color, sub_chart, strategy_id, version) VALUES(24,'Volume','VolumeSeries','Volume',1,1,1,4,0) //
 
-INSERT INTO indicatorseries (id, name, type, description, display_series, series_RGB_color, sub_chart, strategy_id, version) VALUES(25,'SMA-20','MovingAverageSeries','Simple 20 period Moving Average',1,-52429,0,50,0) //
-INSERT INTO indicatorseries (id, name, type, description, display_series, series_RGB_color, sub_chart, strategy_id, version) VALUES(26,'SMA-8','MovingAverageSeries','Simple 8 Period Moving Average',1,-16711681,0,50,0) //
-INSERT INTO indicatorseries (id, name, type, description, display_series, series_RGB_color, sub_chart, strategy_id, version) VALUES(27,'Vwap','VwapSeries','Volume Weighted Moving Average',1,0,0,50,0) //
-INSERT INTO indicatorseries (id, name, type, description, display_series, series_RGB_color, sub_chart, strategy_id, version) VALUES(28,'Pivot','PivotSeries','5 Bar Pivots',1,0,0,50,0) //
-INSERT INTO indicatorseries (id, name, type, description, display_series, series_RGB_color, sub_chart, strategy_id, version) VALUES(29,'HeikinAshi','HeikinAshiSeries','HeikinAshi bars used for trail stops',0,0,0,50,0) //
-INSERT INTO indicatorseries (id, name, type, description, display_series, series_RGB_color, sub_chart, strategy_id, version) VALUES(30,'Volume','VolumeSeries','Volume',1,1,1,50,0) //
+INSERT INTO indicatorseries (id, name, type, description, display_series, series_RGB_color, sub_chart, strategy_id, version) VALUES(25,'SMA-20','MovingAverageSeries','Simple 20 period Moving Average',1,-52429,0,20,0) //
+INSERT INTO indicatorseries (id, name, type, description, display_series, series_RGB_color, sub_chart, strategy_id, version) VALUES(26,'SMA-8','MovingAverageSeries','Simple 8 Period Moving Average',1,-16711681,0,20,0) //
+INSERT INTO indicatorseries (id, name, type, description, display_series, series_RGB_color, sub_chart, strategy_id, version) VALUES(27,'Vwap','VwapSeries','Volume Weighted Moving Average',1,0,0,20,0) //
+INSERT INTO indicatorseries (id, name, type, description, display_series, series_RGB_color, sub_chart, strategy_id, version) VALUES(28,'Pivot','PivotSeries','5 Bar Pivots',1,0,0,20,0) //
+INSERT INTO indicatorseries (id, name, type, description, display_series, series_RGB_color, sub_chart, strategy_id, version) VALUES(29,'HeikinAshi','HeikinAshiSeries','HeikinAshi bars used for trail stops',0,0,0,20,0) //
+INSERT INTO indicatorseries (id, name, type, description, display_series, series_RGB_color, sub_chart, strategy_id, version) VALUES(30,'Volume','VolumeSeries','Volume',1,1,1,20,0) //
 
 COMMIT//
 

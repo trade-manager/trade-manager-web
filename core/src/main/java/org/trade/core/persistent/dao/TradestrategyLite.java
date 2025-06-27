@@ -42,7 +42,6 @@ import org.trade.core.dao.Aspect;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.ZonedDateTime;
 
 
 /**
@@ -60,9 +59,6 @@ public class TradestrategyLite extends Aspect implements Serializable {
 
     @Column(name = "status", length = 20)
     private String status;
-
-    @Column(name = "last_update_date", nullable = false)
-    private ZonedDateTime lastUpdateDate;
 
     public TradestrategyLite() {
     }
@@ -97,24 +93,6 @@ public class TradestrategyLite extends Aspect implements Serializable {
      */
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    /**
-     * Method getLastUpdateDate.
-     *
-     * @return ZonedDateTime
-     */
-    public ZonedDateTime getLastUpdateDate() {
-        return this.lastUpdateDate;
-    }
-
-    /**
-     * Method setLastUpdateDate.
-     *
-     * @param lastUpdateDate ZonedDateTime
-     */
-    public void setLastUpdateDate(ZonedDateTime lastUpdateDate) {
-        this.lastUpdateDate = lastUpdateDate;
     }
 
 }

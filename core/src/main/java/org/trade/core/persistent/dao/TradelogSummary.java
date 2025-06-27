@@ -38,8 +38,8 @@ package org.trade.core.persistent.dao;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityResult;
+import jakarta.persistence.FieldResult;
 import jakarta.persistence.SqlResultSetMapping;
-import jakarta.persistence.SqlResultSetMappings;
 import org.trade.core.dao.Aspect;
 import org.trade.core.properties.ConfigProperties;
 
@@ -51,8 +51,30 @@ import java.math.BigDecimal;
  *
  */
 @Entity
-@SqlResultSetMappings({
-        @SqlResultSetMapping(name = "TradelogSummaryMapping", entities = @EntityResult(entityClass = TradelogSummary.class))})
+//@SqlResultSetMappings({
+//@SqlResultSetMapping(name = "TradelogSummaryMapping", entities = @EntityResult(entityClass = TradelogSummary.class))})
+
+@SqlResultSetMapping(
+        name = "TradelogSummaryMapping",
+        entities = {
+                @EntityResult(
+                        entityClass = TradelogSummary.class,
+                        fields = {
+                                @FieldResult(name = "id", column = "id"),
+                                @FieldResult(name = "period", column = "period"),
+                                @FieldResult(name = "battingAverage", column = "batting_average"),
+                                @FieldResult(name = "simpleSharpeRatio", column = "simple_sharpe_ratio"),
+                                @FieldResult(name = "quantity", column = "quantity"),
+                                @FieldResult(name = "commission", column = "commission"),
+                                @FieldResult(name = "grossProfitLoss", column = "gross_profit_loss"),
+                                @FieldResult(name = "netProfitLoss", column = "net_profit_loss"),
+                                @FieldResult(name = "profitAmount", column = "profit_amount"),
+                                @FieldResult(name = "lossAmount", column = "loss_amount"),
+                                @FieldResult(name = "winCount", column = "win_count"),
+                                @FieldResult(name = "lossCount", column = "loss_count"),
+                                @FieldResult(name = "positionCount", column = "position_count"),
+                                @FieldResult(name = "tradestrategyCount", column = "tradestrategy_count")})})
+
 public class TradelogSummary extends Aspect implements java.io.Serializable {
 
     /**
@@ -106,13 +128,12 @@ public class TradelogSummary extends Aspect implements java.io.Serializable {
     /**
      * Constructor for TradelogSummary.
      *
-     * @param idTradelogSummary  Integer
      * @param period             String
      * @param battingAverage     BigDecimal
      * @param simpleSharpeRatio  BigDecimal
-     * @param grossProfitLoss    BigDecimal
      * @param quantity           Integer
      * @param commission         BigDecimal
+     * @param grossProfitLoss    BigDecimal
      * @param netProfitLoss      BigDecimal
      * @param profitAmount       BigDecimal
      * @param lossAmount         BigDecimal
@@ -121,18 +142,17 @@ public class TradelogSummary extends Aspect implements java.io.Serializable {
      * @param positionCount      Integer
      * @param tradestrategyCount Integer
      */
-    public TradelogSummary(Integer idTradelogSummary, String period, BigDecimal battingAverage,
-                           BigDecimal simpleSharpeRatio, BigDecimal grossProfitLoss, Integer quantity, BigDecimal commission,
+    public TradelogSummary(String period, BigDecimal battingAverage,
+                           BigDecimal simpleSharpeRatio, Integer quantity, BigDecimal commission, BigDecimal grossProfitLoss,
                            BigDecimal netProfitLoss, BigDecimal profitAmount, BigDecimal lossAmount, Integer winCount,
                            Integer lossCount, Integer positionCount, Integer tradestrategyCount) {
 
-        this.setId(idTradelogSummary);
         this.period = period;
         this.battingAverage = battingAverage;
         this.simpleSharpeRatio = simpleSharpeRatio;
-        this.grossProfitLoss = grossProfitLoss;
         this.quantity = quantity;
         this.commission = commission;
+        this.grossProfitLoss = grossProfitLoss;
         this.netProfitLoss = netProfitLoss;
         this.profitAmount = profitAmount;
         this.lossAmount = lossAmount;
@@ -140,26 +160,6 @@ public class TradelogSummary extends Aspect implements java.io.Serializable {
         this.lossCount = lossCount;
         this.positionCount = positionCount;
         this.tradestrategyCount = tradestrategyCount;
-    }
-
-    /**
-     * Method getIdTradelogSummary.
-     *
-     * @return Integer
-
-     @Id
-     @Column(name = "id_tradelog_summary")
-     public Integer getIdTradelogSummary() {
-     return this.id;
-     }
-     */
-    /**
-     * Method setIdTradelogSummary.
-     *
-     * @param idTradelogSummary Integer
-     */
-    public void setIdTradelogSummary(Integer idTradelogSummary) {
-        this.setId(idTradelogSummary);
     }
 
     /**

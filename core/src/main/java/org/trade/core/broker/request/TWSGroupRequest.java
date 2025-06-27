@@ -3,7 +3,6 @@ package org.trade.core.broker.request;
 import org.trade.core.dao.Aspects;
 import org.trade.core.persistent.dao.Account;
 import org.trade.core.persistent.dao.Portfolio;
-import org.trade.core.persistent.dao.PortfolioAccount;
 import org.trade.core.xml.SaxMapper;
 import org.trade.core.xml.TagTracker;
 import org.trade.core.xml.XMLModelException;
@@ -111,9 +110,9 @@ public class TWSGroupRequest extends SaxMapper {
 
                 final String value = contents.toString();
                 final Portfolio portfolio = (Portfolio) stack.peek();
-                PortfolioAccount temp = new PortfolioAccount(portfolio, new Account());
-                portfolio.getPortfolioAccounts().add(temp);
-                temp.getAccount().setAccountNumber(value);
+                Account account = new Account();
+                account.setAccountNumber(value);
+                portfolio.getAccounts().add(account);
             }
         };
 

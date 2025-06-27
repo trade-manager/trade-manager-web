@@ -31,7 +31,8 @@ public class CandleSeriesIT extends TradestrategyBase {
     @Autowired
     private TradeService tradeService;
 
-    private Tradestrategy tradestrategy = null;
+    private static final String symbol = "TEST-" + TradestrategyBase.getRandomNumber(4);
+    private static Tradestrategy tradestrategy;
 
     /**
      * Method setUpBeforeClass.
@@ -46,10 +47,8 @@ public class CandleSeriesIT extends TradestrategyBase {
     @BeforeEach
     public void setUp() throws Exception {
 
-        TradeAppLoadConfig.loadAppProperties();
-        String symbol = "TEST";
-        this.tradestrategy = this.getTestTradestrategy(tradeService, symbol);
-        assertNotNull(this.tradestrategy);
+        tradestrategy = this.createTestTradestrategy(tradeService, symbol);
+        assertNotNull(tradestrategy);
     }
 
     /**
@@ -58,7 +57,7 @@ public class CandleSeriesIT extends TradestrategyBase {
     @AfterEach
     public void tearDown() throws Exception {
 
-        this.clearDBData(tradeService);
+        clearDBData(tradeService, tradestrategy);
     }
 
     /**
@@ -71,8 +70,8 @@ public class CandleSeriesIT extends TradestrategyBase {
     @Test
     public void candleSeriessClone() throws Exception {
 
-        CandleSeries candleSeries = this.tradestrategy.getStrategyData().getBaseCandleSeries();
-        CandleSeries series = (CandleSeries) this.tradestrategy.getStrategyData().getBaseCandleSeries().clone();
+        CandleSeries candleSeries = tradestrategy.getStrategyData().getBaseCandleSeries();
+        CandleSeries series = (CandleSeries) tradestrategy.getStrategyData().getBaseCandleSeries().clone();
 
         if (candleSeries.equals(series)) {
 

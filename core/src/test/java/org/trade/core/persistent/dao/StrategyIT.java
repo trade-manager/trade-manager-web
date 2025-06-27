@@ -50,6 +50,7 @@ import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.persistent.TradeService;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * Some tests for the DataUtilities class.
@@ -66,6 +67,8 @@ public class StrategyIT {
 
     @Autowired
     private TradeService tradeService;
+
+    private static final String name = "TEST-" + TradestrategyBase.getRandomNumber(4);
 
     @Autowired
     private StrategyRepository strategyRepository;
@@ -99,19 +102,15 @@ public class StrategyIT {
     }
 
     @Test
-    public void strategyHome() {
+    public void addStrategy() {
 
         // Create new instance of Strategy and set
         // values in it by reading them from form object
-        _log.debug("Adding Strategy");
-        String name = "TestStrategy";
-        Strategy transientInstance = strategyRepository.findByName(name);
-        if (null == transientInstance) {
-            transientInstance = new Strategy(name);
-        }
-        transientInstance = tradeService.saveAspect(transientInstance);
-        _log.info("Strategy added Id = {}", transientInstance.getId());
-        assertNotNull(transientInstance.getId());
-        tradeService.deleteAspect(transientInstance);
+        Strategy strategy = strategyRepository.findByName(name);
+        assertNull(strategy);
+        strategy = tradeService.saveAspect(new Strategy(name));
+        _log.info("Strategy added Id = {}, name: {}", strategy.getId(), strategy.getName());
+        assertNotNull(strategy.getId());
+        tradeService.deleteAspect(strategy);
     }
 }

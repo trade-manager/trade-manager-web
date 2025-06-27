@@ -35,15 +35,11 @@ public class TradelogDetailRepositoryImpl implements TradelogDetailRepositoryCus
         Query queryDetail = entityManager.createNativeQuery(TradelogDetail.getSQLString(),
                 "TradelogDetailMapping");
 
-        queryDetail.setParameter("idPortfolio", portfolio.getId());
+        queryDetail.setParameter("portfolioId", portfolio.getId());
         queryDetail.setParameter("start", TradingCalendar.getFormattedDate(start, DATE_FORMAT));
         queryDetail.setParameter("end", TradingCalendar.getFormattedDate(end, DATE_FORMAT));
         queryDetail.setParameter("filter", filter);
         queryDetail.setParameter("symbol", symbol);
-
-        TradelogReport tradelogReport = new TradelogReport();
-
-        List<TradelogDetail> items = queryDetail.getResultList();
-        return items;
+        return queryDetail.getResultList();
     }
 }

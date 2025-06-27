@@ -98,6 +98,10 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
     private Contract contract;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @JoinColumn(name = "contract_id", insertable = false, updatable = false, nullable = false)
+    private ContractLite contractLite;
+
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "tradingday_id", nullable = false)
     private Tradingday tradingday;
 
@@ -109,7 +113,7 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
     @JoinColumn(name = "portfolio_id", nullable = false)
     private Portfolio portfolio;
 
-    @OneToMany(mappedBy = "tradestrategy", fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH})
+    @OneToMany(mappedBy = "tradestrategy", fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
     private List<TradeOrder> tradeOrders = new ArrayList<>(0);
 
     @OneToMany(mappedBy = "tradestrategy", fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
@@ -242,7 +246,7 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
     public void setStatus(String status) {
 
         this.status = status;
-        tradestrategyStatus = TradestrategyStatus.newInstance(status);
+        this.tradestrategyStatus = TradestrategyStatus.newInstance(status);
     }
 
     /**
@@ -251,7 +255,7 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
      * @return TradestrategyStatus
      */
     public TradestrategyStatus getTradestrategyStatus() {
-        return tradestrategyStatus;
+        return this.tradestrategyStatus;
     }
 
     /**
@@ -306,6 +310,24 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
      */
     public void setTier(String tier) {
         this.tier = tier;
+    }
+
+    /**
+     * Method getContract.
+     *
+     * @return contractLite
+     */
+    public ContractLite getContractLite() {
+        return this.contractLite;
+    }
+
+    /**
+     * Method setContractLite.
+     *
+     * @param contractLite ContractLite
+     */
+    public void setContractLite(ContractLite contractLite) {
+        this.contractLite = contractLite;
     }
 
     /**

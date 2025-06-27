@@ -52,8 +52,6 @@ import org.trade.core.dao.Aspects;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.Account;
 import org.trade.core.persistent.dao.Portfolio;
-import org.trade.core.persistent.dao.PortfolioAccount;
-import org.trade.core.properties.TradeAppLoadConfig;
 import org.trade.core.valuetype.AccountType;
 import org.trade.core.valuetype.Currency;
 
@@ -70,6 +68,8 @@ public class TWSFinancialAccountRequestIT {
     @Autowired
     private TradeService tradeService;
 
+    private static Account account = null;
+
     /**
      * Method setUpBeforeClass.
      */
@@ -83,7 +83,6 @@ public class TWSFinancialAccountRequestIT {
     @BeforeEach
     public void setUp() throws Exception {
 
-        TradeAppLoadConfig.loadAppProperties();
     }
 
     /**
@@ -92,15 +91,7 @@ public class TWSFinancialAccountRequestIT {
     @AfterEach
     public void tearDown() throws Exception {
 
-        Aspects portfolioAccounts = tradeService.findByClassName(PortfolioAccount.class.getName());
-        for (Aspect aspect : portfolioAccounts.getAspect()) {
-            tradeService.deleteAspect(aspect);
-        }
-
-        Aspects accounts = tradeService.findByClassName(Account.class.getName());
-        for (Aspect aspect : accounts.getAspect()) {
-            tradeService.deleteAspect(aspect);
-        }
+        tradeService.deleteAspect(this.account);
     }
 
     /**
@@ -123,11 +114,13 @@ public class TWSFinancialAccountRequestIT {
         // final Aspects aspects = (Aspects) request.fromXML(inputSource);
         final Aspects aspects = (Aspects) request.fromXML(Thread.currentThread().getContextClassLoader()
                 .getResourceAsStream("broker/request/aliasesEmpty.xml"));
+
         for (Aspect aspect : aspects.getAspect()) {
+
             Account item = (Account) aspect;
-            Account account = tradeService.findAccountByAccountNumber(item.getAccountNumber());
-            account.setAlias(item.getAlias());
-            tradeService.saveAspect(account);
+            this.account = tradeService.findAccountByAccountNumber(item.getAccountNumber());
+            this.account.setAlias(item.getAlias());
+            tradeService.saveAspect(this.account);
         }
     }
 
@@ -139,13 +132,15 @@ public class TWSFinancialAccountRequestIT {
                 .getResourceAsStream("broker/request/aliases.xml"));
         for (Aspect aspect : aspects.getAspect()) {
             Account item = (Account) aspect;
-            Account account = tradeService.findAccountByAccountNumber(item.getAccountNumber());
-            if (null == account) {
-                account = new Account(item.getAccountNumber(), item.getAccountNumber(), Currency.USD,
+            this.account = tradeService.findAccountByAccountNumber(item.getAccountNumber());
+
+            if (null == this.account) {
+
+                this.account = new Account(item.getAccountNumber(), item.getAccountNumber(), Currency.USD,
                         AccountType.INDIVIDUAL);
             }
-            account.setAlias(item.getAlias());
-            tradeService.saveAspect(account);
+            this.account.setAlias(item.getAlias());
+            tradeService.saveAspect(this.account);
         }
     }
 
@@ -155,15 +150,19 @@ public class TWSFinancialAccountRequestIT {
         final TWSAccountAliasRequest request = new TWSAccountAliasRequest();
         final Aspects aspects = (Aspects) request.fromXML(Thread.currentThread().getContextClassLoader()
                 .getResourceAsStream("broker/request/aliases1.xml"));
+
         for (Aspect aspect : aspects.getAspect()) {
+
             Account item = (Account) aspect;
-            Account account = tradeService.findAccountByAccountNumber(item.getAccountNumber());
-            if (null == account) {
-                account = new Account(item.getAccountNumber(), item.getAccountNumber(), Currency.USD,
+            this.account = tradeService.findAccountByAccountNumber(item.getAccountNumber());
+
+            if (null == this.account) {
+
+                this.account = new Account(item.getAccountNumber(), item.getAccountNumber(), Currency.USD,
                         AccountType.INDIVIDUAL);
             }
-            account.setAlias(item.getAlias());
-            tradeService.saveAspect(account);
+            this.account.setAlias(item.getAlias());
+            tradeService.saveAspect(this.account);
         }
     }
 
@@ -175,6 +174,7 @@ public class TWSFinancialAccountRequestIT {
                 .getResourceAsStream("broker/request/allocationEmpty.xml"));
 
         for (Aspect aspect : aspects.getAspect()) {
+
             tradeService.savePortfolio((Portfolio) aspect);
         }
     }
@@ -185,7 +185,9 @@ public class TWSFinancialAccountRequestIT {
         final TWSAllocationRequest request = new TWSAllocationRequest();
         final Aspects aspects = (Aspects) request.fromXML(Thread.currentThread().getContextClassLoader()
                 .getResourceAsStream("broker/request/allocation.xml"));
+
         for (Aspect aspect : aspects.getAspect()) {
+
             tradeService.savePortfolio((Portfolio) aspect);
         }
     }
@@ -196,7 +198,9 @@ public class TWSFinancialAccountRequestIT {
         final TWSAllocationRequest request = new TWSAllocationRequest();
         final Aspects aspects = (Aspects) request.fromXML(Thread.currentThread().getContextClassLoader()
                 .getResourceAsStream("broker/request/allocation1.xml"));
+
         for (Aspect aspect : aspects.getAspect()) {
+
             tradeService.savePortfolio((Portfolio) aspect);
         }
     }
@@ -206,12 +210,12 @@ public class TWSFinancialAccountRequestIT {
 
         Aspects aspects = new Aspects();
         Portfolio portfolio = new Portfolio("pf_eq_daily", "pf_eq_daily");
-        Account account = new Account("DU12345", "DU12345", Currency.USD, AccountType.INDIVIDUAL);
-        PortfolioAccount portfolioAccount = new PortfolioAccount(portfolio, account);
-        portfolio.getPortfolioAccounts().add(portfolioAccount);
+        this.account = new Account("DU12345", "DU12345", Currency.USD, AccountType.INDIVIDUAL);
+        portfolio.getAccounts().add(this.account);
         aspects.add(portfolio);
 
         for (Aspect aspect : aspects.getAspect()) {
+
             tradeService.savePortfolio((Portfolio) aspect);
         }
     }
@@ -222,7 +226,9 @@ public class TWSFinancialAccountRequestIT {
         final TWSGroupRequest request = new TWSGroupRequest();
         final Aspects aspects = (Aspects) request.fromXML(Thread.currentThread().getContextClassLoader()
                 .getResourceAsStream("broker/request/groupsEmpty.xml"));
+
         for (Aspect aspect : aspects.getAspect()) {
+
             tradeService.savePortfolio((Portfolio) aspect);
         }
     }
@@ -233,7 +239,9 @@ public class TWSFinancialAccountRequestIT {
         final TWSGroupRequest request = new TWSGroupRequest();
         final Aspects aspects = (Aspects) request.fromXML(Thread.currentThread().getContextClassLoader()
                 .getResourceAsStream("broker/request/groups.xml"));
+
         for (Aspect aspect : aspects.getAspect()) {
+
             tradeService.savePortfolio((Portfolio) aspect);
         }
     }
@@ -244,7 +252,9 @@ public class TWSFinancialAccountRequestIT {
         final TWSGroupRequest request = new TWSGroupRequest();
         final Aspects aspects = (Aspects) request.fromXML(Thread.currentThread().getContextClassLoader()
                 .getResourceAsStream("broker/request/groups1.xml"));
+
         for (Aspect aspect : aspects.getAspect()) {
+
             tradeService.savePortfolio((Portfolio) aspect);
         }
     }

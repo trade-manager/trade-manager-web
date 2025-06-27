@@ -7,13 +7,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.stereotype.Component;
-import org.trade.base.ImageBuilder;
-import org.trade.base.WaitCursorEventQueue;
 import org.trade.core.ApplicationProfileInitializer;
 
 import javax.swing.*;
-import java.awt.*;
 
 
 /**
@@ -39,7 +35,7 @@ public class TradeApplication implements CommandLineRunner {
 
     public void run(String... args) {
 
-         SwingUtilities.invokeLater(TradeAppFrame::new);
+        SwingUtilities.invokeLater(TradeAppFrame::new);
          /*
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         double appWidth = screenSize.getWidth() * 0.9;

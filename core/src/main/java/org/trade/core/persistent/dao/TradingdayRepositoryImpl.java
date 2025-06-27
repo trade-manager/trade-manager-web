@@ -62,7 +62,7 @@ public class TradingdayRepositoryImpl implements TradingdayRepositoryCustom {
             for (Tradestrategy tradestrategy : tradingday.getTradestrategies()) {
 
                 tradestrategy.getTradeOrders().size();
-                tradestrategy.getPortfolio().getPortfolioAccounts().size();
+                tradestrategy.getPortfolio().getAccounts().size();
                 tradestrategy.getStrategy().getIndicatorSeries().size();
             }
         }

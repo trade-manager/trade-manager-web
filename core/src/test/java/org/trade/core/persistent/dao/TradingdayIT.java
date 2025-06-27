@@ -74,6 +74,8 @@ public class TradingdayIT {
     @Autowired
     private TradingdayRepository tradingdayRepository;
 
+    private static Tradingday tradingday;
+
     /**
      * Method setUpBeforeClass.
      */
@@ -86,7 +88,6 @@ public class TradingdayIT {
      */
     @BeforeEach
     public void setUp() {
-        ;
     }
 
     /**
@@ -94,6 +95,8 @@ public class TradingdayIT {
      */
     @AfterEach
     public void tearDown() {
+
+        tradeService.deleteAspect(tradingday);
     }
 
     /**
@@ -112,15 +115,14 @@ public class TradingdayIT {
 
         ZonedDateTime open = TradingCalendar.getTradingDayStart(
                 TradingCalendar.getPrevTradingDay(TradingCalendar.getDateTimeNowMarketTimeZone()));
-        Tradingday transientInstance = tradingdayRepository.findByOpenCloseDate(open,
+        tradingday = tradingdayRepository.findByOpenCloseDate(open,
                 TradingCalendar.getTradingDayEnd(open));
-        if (null == transientInstance) {
-            transientInstance = Tradingday.newInstance(open);
+        if (null == tradingday) {
+            tradingday = Tradingday.newInstance(open);
         }
-        tradeService.saveTradingday(transientInstance);
-        _log.info("Tradingday added Id = {}", transientInstance.getId());
-        assertNotNull(transientInstance.getId());
-        tradeService.deleteAspect(transientInstance);
+        tradeService.saveTradingday(tradingday);
+        _log.info("Tradingday added Id = {}", tradingday.getId());
+        assertNotNull(tradingday.getId());
     }
 
     @Test
@@ -132,15 +134,14 @@ public class TradingdayIT {
 
         ZonedDateTime open = TradingCalendar.getTradingDayStart(
                 TradingCalendar.getPrevTradingDay(TradingCalendar.getDateTimeNowMarketTimeZone()));
-        Tradingday transientInstance = tradingdayRepository.findByOpenCloseDate(open,
+        tradingday = tradingdayRepository.findByOpenCloseDate(open,
                 TradingCalendar.getTradingDayEnd(open));
-        if (null == transientInstance) {
-            transientInstance = Tradingday.newInstance(open);
+        if (null == tradingday) {
+            tradingday = Tradingday.newInstance(open);
         }
-        transientInstance.setMarketBar(MarketBar.newInstance("+WRB").getCode());
-        tradeService.saveTradingday(transientInstance);
-        _log.info("Tradingday Update Id = {}", transientInstance.getId());
-        assertNotNull(transientInstance.getId());
-        tradeService.deleteAspect(transientInstance);
+        tradingday.setMarketBar(MarketBar.newInstance("+WRB").getCode());
+        tradeService.saveTradingday(tradingday);
+        _log.info("Tradingday Update Id = {}", tradingday.getId());
+        assertNotNull(tradingday.getId());
     }
 }

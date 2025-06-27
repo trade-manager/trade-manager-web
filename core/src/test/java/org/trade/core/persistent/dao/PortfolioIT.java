@@ -47,13 +47,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
-import org.trade.core.dao.Aspect;
-import org.trade.core.dao.Aspects;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.valuetype.AccountType;
 import org.trade.core.valuetype.Currency;
 import org.trade.core.valuetype.DAOPortfolio;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -74,6 +74,8 @@ public class PortfolioIT {
     @Autowired
     private PortfolioRepository portfolioRepository;
 
+    private static final String accountNumber = "TEST-" + TradestrategyBase.getRandomNumber(4);
+
     /**
      * Method setUpBeforeClass.
      */
@@ -92,14 +94,10 @@ public class PortfolioIT {
      * Method tearDown.
      */
     @AfterEach
-    public void tearDown() throws Exception {
+    public void tearDown() throws ClassNotFoundException {
 
-        Aspects accounts = tradeService.findByClassName(Account.class.getName());
-
-        for (Aspect aspect : accounts.getAspect()) {
-
-            tradeService.deleteAspect(aspect);
-        }
+        Account account = tradeService.findAccountByAccountNumber(accountNumber);
+        tradeService.deleteAspect(account);
     }
 
     /**
@@ -114,9 +112,10 @@ public class PortfolioIT {
 
         Portfolio portfolio = (Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
         portfolio = portfolioRepository.findByName(portfolio.getName());
-        Account account = new Account("Test", "T123456", Currency.USD, AccountType.INDIVIDUAL);
-        PortfolioAccount portfolioAccount = new PortfolioAccount(portfolio, account);
-        portfolio.getPortfolioAccounts().add(portfolioAccount);
+        List<Account> accounts = new ArrayList<>(0);
+        Account account = new Account("Test", accountNumber, Currency.USD, AccountType.INDIVIDUAL);
+        accounts.add(account);
+        portfolio.setAccounts(accounts);
         portfolio = portfolioRepository.save(portfolio);
         assertNotNull(portfolio.getIndividualAccount());
     }

@@ -11,6 +11,6 @@ DELETE FROM tradeorder WHERE id >= '0';
 COMMIT;
 DELETE FROM tradeposition WHERE id >= '0';
 COMMIT;
-UPDATE tradestrategy SET STATUS = NULL WHERE id >= '0';
+UPDATE tradestrategy SET status = NULL WHERE id >= '0';
 COMMIT;
 

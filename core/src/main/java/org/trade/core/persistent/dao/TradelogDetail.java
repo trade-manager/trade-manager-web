@@ -38,9 +38,8 @@ package org.trade.core.persistent.dao;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityResult;
-import jakarta.persistence.Id;
+import jakarta.persistence.FieldResult;
 import jakarta.persistence.SqlResultSetMapping;
-import jakarta.persistence.SqlResultSetMappings;
 import org.trade.core.dao.Aspect;
 import org.trade.core.properties.ConfigProperties;
 
@@ -53,8 +52,34 @@ import java.time.ZonedDateTime;
  *
  */
 @Entity
-@SqlResultSetMappings({
-        @SqlResultSetMapping(name = "TradelogDetailMapping", entities = @EntityResult(entityClass = TradelogDetail.class))})
+//@SqlResultSetMappings({
+//        @SqlResultSetMapping(name = "TradelogDetailMapping", entities = @EntityResult(entityClass = TradelogDetail.class))})
+
+@SqlResultSetMapping(
+        name = "TradelogDetailMapping",
+        entities = {
+                @EntityResult(
+                        entityClass = TradelogDetail.class,
+                        fields = {
+                                @FieldResult(name = "id", column = "id"),
+                                @FieldResult(name = "open", column = "open"),
+                                @FieldResult(name = "symbol", column = "symbol"),
+                                @FieldResult(name = "tradestrategyId", column = "tradestrategy_id"),
+                                @FieldResult(name = "longShort", column = "long_short"),
+                                @FieldResult(name = "tier", column = "tier"),
+                                @FieldResult(name = "marketBias", column = "market_bias"),
+                                @FieldResult(name = "marketBar", column = "market_bar"),
+                                @FieldResult(name = "name", column = "name"),
+                                @FieldResult(name = "status", column = "status"),
+                                @FieldResult(name = "side", column = "side"),
+                                @FieldResult(name = "action", column = "action"),
+                                @FieldResult(name = "stopPrice", column = "stop_price"),
+                                @FieldResult(name = "orderStatus", column = "order_status"),
+                                @FieldResult(name = "filledDate", column = "filled_date"),
+                                @FieldResult(name = "quantity", column = "quantity"),
+                                @FieldResult(name = "averageFilledPrice", column = "average_filled_price"),
+                                @FieldResult(name = "commission", column = "commission"),
+                                @FieldResult(name = "profitLoss", column = "profit_loss")})})
 public class TradelogDetail extends Aspect implements java.io.Serializable {
 
     /**
@@ -62,10 +87,6 @@ public class TradelogDetail extends Aspect implements java.io.Serializable {
      */
     @Serial
     private static final long serialVersionUID = -832064631322873796L;
-
-    @Id
-    @Column(name = "tradelog_detail_id")
-    private Integer id;
 
     @Column(name = "tradestrategy_id")
     private Integer tradestrategyId;
@@ -127,14 +148,14 @@ public class TradelogDetail extends Aspect implements java.io.Serializable {
     /**
      * Constructor for TradelogDetail.
      *
-     * @param tradestrategyId    Integer
      * @param open               String
+     * @param symbol             String
+     * @param tradestrategyId    Integer
+     * @param longShort          String
+     * @param tier               String
      * @param marketBias         String
      * @param marketBar          String
      * @param name               String
-     * @param symbol             String
-     * @param longShort          String
-     * @param tier               String
      * @param status             String
      * @param side               String
      * @param action             String
@@ -146,17 +167,17 @@ public class TradelogDetail extends Aspect implements java.io.Serializable {
      * @param commission         BigDecimal
      * @param profitLoss         BigDecimal
      */
-    public TradelogDetail(Integer tradestrategyId, String open, String marketBias, String marketBar, String name,
-                          String symbol, String longShort, String tier, String status, String side, String action,
+    public TradelogDetail(String open, String symbol, Integer tradestrategyId, String longShort, String tier, String marketBias, String marketBar, String name,
+                          String status, String side, String action,
                           BigDecimal stopPrice, String orderStatus, ZonedDateTime filledDate, Integer quantity,
                           BigDecimal averageFilledPrice, BigDecimal commission, BigDecimal profitLoss) {
 
-        this.tradestrategyId = tradestrategyId;
         this.open = open;
+        this.symbol = symbol;
+        this.tradestrategyId = tradestrategyId;
         this.marketBias = marketBias;
         this.marketBar = marketBar;
         this.name = name;
-        this.symbol = symbol;
         this.longShort = longShort;
         this.tier = tier;
         this.status = status;
@@ -172,39 +193,20 @@ public class TradelogDetail extends Aspect implements java.io.Serializable {
     }
 
     /**
-     * Method getTradelogDetailId.
-     *
-     * @return Integer
-     */
-    public Integer getTradelogDetailId() {
-        return this.id;
-    }
-
-    /**
-     * Method setTradelogDetailId.
-     *
-     * @param tradelogDetailId Integer
-     */
-    public void setTradelogDetailId(Integer tradelogDetailId) {
-        this.id = tradelogDetailId;
-    }
-
-    /**
      * Method gettradestrategyId.
      *
      * @return Integer
      */
-
     public Integer getTradestrategyId() {
         return this.tradestrategyId;
     }
 
     /**
-     * Method setIdTradestrategy.
+     * Method setTradestrategyId.
      *
      * @param tradestrategyId Integer
      */
-    public void setIdTradestrategy(Integer tradestrategyId) {
+    public void setTradestrategyId(Integer tradestrategyId) {
         this.tradestrategyId = tradestrategyId;
     }
 

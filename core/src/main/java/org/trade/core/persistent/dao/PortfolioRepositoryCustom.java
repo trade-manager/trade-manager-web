@@ -7,6 +7,6 @@ public interface PortfolioRepositoryCustom {
 
     void resetDefaultPortfolio(final Portfolio defaultPortfolio);
 
-    PortfolioAccount findByPortfolioNameAndAccountNumber(String portfolioName, String accountNumber);
+    // PortfolioAccount findByPortfolioNameAndAccountNumber(String portfolioName, String accountNumber);
 
 }

@@ -39,6 +39,9 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
@@ -48,6 +51,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 
 /**
@@ -78,8 +82,12 @@ public class Portfolio extends Aspect implements Serializable, Cloneable {
     @OneToMany(mappedBy = "portfolio", fetch = FetchType.LAZY)
     private List<Tradestrategy> tradestrategies = new ArrayList<>(0);
 
-    @OneToMany(mappedBy = "portfolio", fetch = FetchType.EAGER, orphanRemoval = true, cascade = {CascadeType.ALL})
-    private List<PortfolioAccount> portfolioAccounts = new ArrayList<>(0);
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(name = "portfolioaccount",
+            joinColumns = @JoinColumn(name = "portfolio_id"),
+            inverseJoinColumns = @JoinColumn(name = "account_id")
+    )
+    private List<Account> accounts = new ArrayList<>(0);
 
     public Portfolio() {
 
@@ -206,21 +214,21 @@ public class Portfolio extends Aspect implements Serializable, Cloneable {
     }
 
     /**
-     * Method getPortfolioAccounts.
+     * Method getAccounts.
      *
-     * @return List<PortfolioAccounts>
+     * @return List<Account>
      */
-    public List<PortfolioAccount> getPortfolioAccounts() {
-        return this.portfolioAccounts;
+    public List<Account> getAccounts() {
+        return this.accounts;
     }
 
     /**
      * Method setPortfolioAccounts.
      *
-     * @param portfolioAccounts List<CodeAttribute>
+     * @param accounts List<Account>
      */
-    public void setPortfolioAccounts(List<PortfolioAccount> portfolioAccounts) {
-        this.portfolioAccounts = portfolioAccounts;
+    public void setAccounts(List<Account> accounts) {
+        this.accounts = accounts;
     }
 
     /**
@@ -231,8 +239,8 @@ public class Portfolio extends Aspect implements Serializable, Cloneable {
     @Transient
     public Account getIndividualAccount() {
 
-        if (this.getPortfolioAccounts().size() == 1) {
-            return this.getPortfolioAccounts().getFirst().getAccount();
+        if (this.getAccounts().size() == 1) {
+            return this.getAccounts().getFirst();
         }
         return null;
     }
@@ -242,15 +250,35 @@ public class Portfolio extends Aspect implements Serializable, Cloneable {
      *
      * @return boolean
      */
-    @Transient
     public boolean isDirty() {
 
-        for (PortfolioAccount item : this.getPortfolioAccounts()) {
+        for (Account item : this.getAccounts()) {
 
-            if (item.isDirty())
+            if (item.isDirty()) {
                 return true;
+            }
         }
         return super.isDirty();
+    }
+
+    /**
+     * Method removeTradestrategy.
+     *
+     * @param tradestrategy Tradestrategy
+     */
+    public boolean removeTradestrategy(Tradestrategy tradestrategy) {
+
+        for (ListIterator<Tradestrategy> itemIter = this.tradestrategies.listIterator(); itemIter.hasNext(); ) {
+
+            Tradestrategy item = itemIter.next();
+
+            if (item.equals(tradestrategy)) {
+
+                itemIter.remove();
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

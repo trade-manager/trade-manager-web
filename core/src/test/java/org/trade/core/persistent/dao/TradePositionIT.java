@@ -67,7 +67,8 @@ public class TradePositionIT {
     @Autowired
     private TradeService tradeService;
 
-    private Tradestrategy tradestrategy = null;
+    private static Tradestrategy tradestrategy;
+    private static final String symbol = "TEST-" + TradestrategyBase.getRandomNumber(4);
 
     /**
      * Method setUpBeforeClass.
@@ -83,9 +84,8 @@ public class TradePositionIT {
     @BeforeEach
     public void setUp() throws Exception {
 
-        String symbol = "TEST";
-        this.tradestrategy = TradestrategyBase.getTestTradestrategy(tradeService, symbol);
-        assertNotNull(this.tradestrategy);
+        tradestrategy = TradestrategyBase.createTestTradestrategy(tradeService, symbol);
+        assertNotNull(tradestrategy);
     }
 
     /**
@@ -94,7 +94,7 @@ public class TradePositionIT {
     @AfterEach
     public void tearDown() throws Exception {
 
-        TradestrategyBase.clearDBData(tradeService);
+        TradestrategyBase.clearDBData(tradeService, tradestrategy);
     }
 
     /**
@@ -108,17 +108,17 @@ public class TradePositionIT {
     public void addRemoveTradePosition() {
 
 
-        TradePosition instance = new TradePosition(this.tradestrategy.getContract(),
+        TradePosition instance = new TradePosition(tradestrategy.getContractLite(),
                 TradingCalendar.getDateTimeNowMarketTimeZone(), Side.BOT);
 
-        TradePosition tradePosition = tradeService.saveAspect(instance);
+        instance = tradeService.saveAspect(instance);
 
-        assertNotNull(tradePosition.getId());
-        _log.info("testAddTradePosition IdTradeStrategy: {}IdTradePosition: {}", this.tradestrategy.getId(), tradePosition.getId());
+        assertNotNull(instance.getId());
+        _log.info("testAddTradePosition IdTradeStrategy: {}IdTradePosition: {}", tradestrategy.getId(), instance.getId());
 
-        tradeService.deleteAspect(tradePosition);
+        tradeService.deleteAspect(instance);
         _log.info("testDeleteTradePosition IdTradeStrategy: {}", tradestrategy.getId());
-        tradePosition = tradeService.findTradePositionById(tradePosition.getId());
-        assertNull(tradePosition);
+        instance = tradeService.findTradePositionById(instance.getId());
+        assertNull(instance);
     }
 }

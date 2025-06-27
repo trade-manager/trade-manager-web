@@ -32,16 +32,13 @@ public class TradelogSummaryRepositoryImpl implements TradelogSummaryRepositoryC
                                                        String symbol, BigDecimal winLossAmount) throws IOException {
 
         Query querySummary = entityManager.createNativeQuery(TradelogSummary.getSQLString(),
-                TradelogSummary.class);
+                "TradelogSummaryMapping");
 
-        querySummary.setParameter("idPortfolio", portfolio.getId());
+        querySummary.setParameter("portfolioId", portfolio.getId());
         querySummary.setParameter("start", TradingCalendar.getFormattedDate(start, DATE_FORMAT));
         querySummary.setParameter("end", TradingCalendar.getFormattedDate(end, DATE_FORMAT));
         querySummary.setParameter("symbol", symbol);
         querySummary.setParameter("winLossAmount", winLossAmount);
-
-        List<TradelogSummary> items = querySummary.getResultList();
-
-        return items;
+        return querySummary.getResultList();
     }
 }

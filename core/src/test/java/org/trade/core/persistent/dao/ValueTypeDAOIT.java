@@ -46,7 +46,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
-import org.trade.core.properties.TradeAppLoadConfig;
 import org.trade.core.valuetype.ChartDays;
 import org.trade.core.valuetype.DAODecode;
 import org.trade.core.valuetype.DAOEntryLimit;
@@ -85,7 +84,7 @@ public class ValueTypeDAOIT {
      */
     @BeforeEach
     public void setUp() throws Exception {
-        TradeAppLoadConfig.loadAppProperties();
+
     }
 
     /**

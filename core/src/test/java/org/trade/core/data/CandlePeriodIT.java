@@ -81,7 +81,8 @@ public class CandlePeriodIT extends TradestrategyBase {
     @Autowired
     private TradeService tradeService;
 
-    private Tradestrategy tradestrategy = null;
+    private static Tradestrategy tradestrategy;
+    private static final String symbol = "TEST-" + TradestrategyBase.getRandomNumber(4);
 
     /**
      * Method setUpBeforeClass.
@@ -96,9 +97,8 @@ public class CandlePeriodIT extends TradestrategyBase {
     @BeforeEach
     public void setUp() throws Exception {
 
-        String symbol = "TEST";
-        this.tradestrategy = this.getTestTradestrategy(tradeService, symbol);
-        assertNotNull(this.tradestrategy);
+        tradestrategy = createTestTradestrategy(tradeService, symbol);
+        assertNotNull(tradestrategy);
     }
 
     /**
@@ -106,7 +106,8 @@ public class CandlePeriodIT extends TradestrategyBase {
      */
     @AfterEach
     public void tearDown() throws Exception {
-        this.clearDBData(tradeService);
+
+        clearDBData(tradeService, tradestrategy);
     }
 
     /**
@@ -120,29 +121,29 @@ public class CandlePeriodIT extends TradestrategyBase {
     public void getCandleBar() throws Exception {
 
 
-        ZonedDateTime startPeriod = this.tradestrategy.getTradingday().getOpen();
+        ZonedDateTime startPeriod = tradestrategy.getTradingday().getOpen();
         ZonedDateTime prevTradingday = tradestrategy.getTradingday().getOpen()
                 .minusDays((tradestrategy.getChartDays() - 1));
         prevTradingday = TradingCalendar.getPrevTradingDay(prevTradingday);
         List<Candle> candles = tradeService.findCandlesByContractDateRangeBarSize(
-                this.tradestrategy.getContract().getId(), prevTradingday,
-                this.tradestrategy.getTradingday().getOpen(), this.tradestrategy.getBarSize());
+                tradestrategy.getContract().getId(), prevTradingday,
+                tradestrategy.getTradingday().getOpen(), tradestrategy.getBarSize());
 
         if (candles.isEmpty()) {
 
-            StrategyData.doDummyData(this.tradestrategy.getStrategyData().getBaseCandleSeries(),
+            StrategyData.doDummyData(tradestrategy.getStrategyData().getBaseCandleSeries(),
                     Tradingday.newInstance(prevTradingday), 2, BarSize.FIVE_MIN, true, 0);
         } else {
 
-            CandleDataset.populateSeries(this.tradestrategy.getStrategyData(), candles);
+            CandleDataset.populateSeries(tradestrategy.getStrategyData(), candles);
         }
 
-        assertFalse(this.tradestrategy.getStrategyData().getBaseCandleSeries().isEmpty());
-        Candle candle = this.tradestrategy.getStrategyData().getBaseCandleSeries()
+        assertFalse(tradestrategy.getStrategyData().getBaseCandleSeries().isEmpty());
+        Candle candle = tradestrategy.getStrategyData().getBaseCandleSeries()
                 .getBar(TradingCalendar.getDateAtTime(TradingCalendar.getPrevTradingDay(startPeriod),
-                                this.tradestrategy.getTradingday().getOpen()),
+                                tradestrategy.getTradingday().getOpen()),
                         TradingCalendar.getDateAtTime(TradingCalendar.getPrevTradingDay(startPeriod),
-                                this.tradestrategy.getTradingday().getClose()));
+                                tradestrategy.getTradingday().getClose()));
 
         _log.info("Bar for Contract: {} Start Period: {} Open: {} High: {} Low: {} Close: {} Vwap: {} Volume: {}", candle.getContract().getSymbol(), candle.getPeriod(), candle.getOpen(), candle.getHigh(), candle.getLow(), candle.getClose(), candle.getVwap(), candle.getVolume());
     }
@@ -151,37 +152,35 @@ public class CandlePeriodIT extends TradestrategyBase {
     public void getAvgCandleBar() throws Exception {
 
 
-        ZonedDateTime startPeriod = this.tradestrategy.getTradingday().getOpen();
-        ZonedDateTime prevTradingday = this.tradestrategy.getTradingday().getOpen()
-                .minusDays((this.tradestrategy.getChartDays() - 1));
+        ZonedDateTime startPeriod = tradestrategy.getTradingday().getOpen();
+        ZonedDateTime prevTradingday = tradestrategy.getTradingday().getOpen()
+                .minusDays((tradestrategy.getChartDays() - 1));
         prevTradingday = TradingCalendar.getPrevTradingDay(prevTradingday);
         List<Candle> candles = tradeService.findCandlesByContractDateRangeBarSize(
-                this.tradestrategy.getContract().getId(), prevTradingday,
-                this.tradestrategy.getTradingday().getOpen(), this.tradestrategy.getBarSize());
+                tradestrategy.getContract().getId(), prevTradingday,
+                tradestrategy.getTradingday().getOpen(), tradestrategy.getBarSize());
         if (candles.isEmpty()) {
-            StrategyData.doDummyData(this.tradestrategy.getStrategyData().getBaseCandleSeries(),
+            StrategyData.doDummyData(tradestrategy.getStrategyData().getBaseCandleSeries(),
                     Tradingday.newInstance(prevTradingday), 2, BarSize.FIVE_MIN, true, 0);
         } else {
-            CandleDataset.populateSeries(this.tradestrategy.getStrategyData(), candles);
+            CandleDataset.populateSeries(tradestrategy.getStrategyData(), candles);
         }
-        assertFalse(this.tradestrategy.getStrategyData().getBaseCandleSeries().isEmpty());
-        Candle candle = this.tradestrategy.getStrategyData().getBaseCandleSeries().getAverageBar(
+        assertFalse(tradestrategy.getStrategyData().getBaseCandleSeries().isEmpty());
+        Candle candle = tradestrategy.getStrategyData().getBaseCandleSeries().getAverageBar(
                 TradingCalendar.getDateAtTime(TradingCalendar.getPrevTradingDay(startPeriod),
-                        this.tradestrategy.getTradingday().getOpen()),
+                        tradestrategy.getTradingday().getOpen()),
                 TradingCalendar.getDateAtTime(TradingCalendar.getPrevTradingDay(startPeriod),
-                        this.tradestrategy.getTradingday().getClose()),
+                        tradestrategy.getTradingday().getClose()),
                 false);
         _log.info("Non wieghted avg bar for Contract: {} Start Period: {} Open: {} High: {} Low: {} Close: {} Vwap: {} Volume: {}", candle.getContract().getSymbol(), candle.getPeriod(), candle.getOpen(), candle.getHigh(), candle.getLow(), candle.getClose(), candle.getVwap(), candle.getVolume());
 
-        candle = this.tradestrategy.getStrategyData().getBaseCandleSeries().getAverageBar(
+        candle = tradestrategy.getStrategyData().getBaseCandleSeries().getAverageBar(
                 TradingCalendar.getDateAtTime(TradingCalendar.getPrevTradingDay(startPeriod),
-                        this.tradestrategy.getTradingday().getOpen()),
+                        tradestrategy.getTradingday().getOpen()),
                 TradingCalendar.getDateAtTime(TradingCalendar.getPrevTradingDay(startPeriod),
-                        this.tradestrategy.getTradingday().getClose()),
+                        tradestrategy.getTradingday().getClose()),
                 true);
-        _log.info("Wieghted avg bar for Contract: {} Start Period: {} Open: {} High: {} Low: {} Close: {} Vwap: {} Volume: {}", candle.getContract().getSymbol(), candle.getPeriod(), candle.getOpen(), candle.getHigh(), candle.getLow(), candle.getClose(), candle.getVwap(), candle.getVolume());
-
-
+        _log.info("Weighted avg bar for Contract: {} Start Period: {} Open: {} High: {} Low: {} Close: {} Vwap: {} Volume: {}", candle.getContract().getSymbol(), candle.getPeriod(), candle.getOpen(), candle.getHigh(), candle.getLow(), candle.getClose(), candle.getVwap(), candle.getVolume());
     }
 
     @Test
@@ -212,11 +211,11 @@ public class CandlePeriodIT extends TradestrategyBase {
 
         int size = 100;
         int secondsLength = 3600;
-
         RegularTimePeriod period = new CandlePeriod(
                 TradingCalendar.getTradingDayStart(TradingCalendar.getDateTimeNowMarketTimeZone()), secondsLength);
 
         for (int i = 0; i < size; i++) {
+
             _log.info("Time is : {} Start: {} End: {}", period, period.getStart(), period.getEnd());
             period = period.next();
             assertNotNull(period);
@@ -228,11 +227,11 @@ public class CandlePeriodIT extends TradestrategyBase {
 
         int size = 100;
         int secondsLength = 3600;
-
         RegularTimePeriod period = new CandlePeriod(
                 TradingCalendar.getTradingDayStart(TradingCalendar.getDateTimeNowMarketTimeZone()), secondsLength);
 
         for (int i = 0; i < size; i++) {
+
             _log.info("Time is : {} Start: {} End: {}", period, period.getStart(), period.getEnd());
             period = period.previous();
             assertNotNull(period);
@@ -247,7 +246,6 @@ public class CandlePeriodIT extends TradestrategyBase {
         ZonedDateTime startBusDate = TradingCalendar.getTradingDayStart(now);
         long periods = TradingCalendar.getDurationInSeconds(startBusDate, now) / secondsLength;
         startBusDate = startBusDate.plusSeconds(periods);
-
         RegularTimePeriod period = new CandlePeriod(startBusDate, secondsLength);
         _log.info("\n Bus Day Start : {}\n Start: {}\n End: {}\n Periods: {}", startBusDate, period.getStart(), period.getEnd(), periods);
         assertNotNull(period);

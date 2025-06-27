@@ -92,17 +92,18 @@ public class BrokerModelIT extends TradestrategyBase implements IBrokerChangeLis
     @Autowired
     private TradeService tradeService;
 
-    private IBrokerModel backTestbrokerModel;
-    private final BigDecimal price = new BigDecimal("108.85");
-    private Tradestrategy tradestrategy = null;
-    private static Integer port = null;
-    private static String host = null;
+    private static final String symbol = "NVDA";
+    private static Tradestrategy tradestrategy;
+    private static IBrokerModel backTestbrokerModel;
+    private static final BigDecimal price = new BigDecimal("108.85");
+    private static Integer port;
+    private static String host;
     private static Integer clientId;
-    private static Timer timer = null;
-    private boolean connectionFailed = false;
-    private static AtomicInteger timerRunning = null;
-    private final static Object lockCoreUtilsTest = new Object();
-    private final static String _broker = IBrokerModel._brokerTest;
+    private static Timer timer;
+    private static boolean connectionFailed = false;
+    private static AtomicInteger timerRunning;
+    private static final Object lockCoreUtilsTest = new Object();
+    private static final String _broker = IBrokerModel._brokerTest;
 
     /**
      * Method setUpBeforeClass.
@@ -129,11 +130,10 @@ public class BrokerModelIT extends TradestrategyBase implements IBrokerChangeLis
     @BeforeEach
     public void setUp() throws Exception {
 
-        String symbol = "NVDA";
-        this.tradestrategy = this.getTestTradestrategy(tradeService, symbol);
+        tradestrategy = createTestTradestrategy(tradeService, symbol);
         backTestbrokerModel = (IBrokerModel) ClassFactory.getServiceForInterface(_broker, BrokerModelIT.class);
         backTestbrokerModel.onConnect(host, port, clientId);
-        assertNotNull(this.tradestrategy);
+        assertNotNull(tradestrategy);
 
         backTestbrokerModel = (IBrokerModel) ClassFactory.getServiceForInterface(_broker, BrokerModelIT.class);
         backTestbrokerModel.onConnect(host, port, clientId);
@@ -161,7 +161,7 @@ public class BrokerModelIT extends TradestrategyBase implements IBrokerChangeLis
 
         // Wait for the BackTestBroker to complete. These tests use the testing
         // client from org.trade.brokerclient that runs its own thread.
-        Broker backTestBroker = backTestbrokerModel.getBackTestBroker(this.tradestrategy.getId());
+        Broker backTestBroker = backTestbrokerModel.getBackTestBroker(tradestrategy.getId());
         if (null != backTestBroker) {
             // Ping the broker to see if its completed. Not isConnected always
             // returns false for BackTestBrokerModel.
@@ -179,7 +179,7 @@ public class BrokerModelIT extends TradestrategyBase implements IBrokerChangeLis
         if (backTestbrokerModel.isConnected()) {
             backTestbrokerModel.onDisconnect();
         }
-        this.clearDBData(tradeService);
+        clearDBData(tradeService, tradestrategy);
     }
 
     /**
@@ -192,13 +192,13 @@ public class BrokerModelIT extends TradestrategyBase implements IBrokerChangeLis
     @Test
     public void testSubmitBuyOrder() throws Exception {
 
-        TradeOrder tradeOrder = new TradeOrder(this.tradestrategy, Action.BUY, OrderType.STPLMT, 100, price,
+        TradeOrder tradeOrder = new TradeOrder(tradestrategy, Action.BUY, OrderType.STPLMT, 100, price,
                 price.add(new BigDecimal("0.02")), TradingCalendar.getDateTimeNowMarketTimeZone());
         tradeOrder.setClientId(clientId);
         tradeOrder.setTransmit(true);
         tradeOrder.setStatus(OrderStatus.UNSUBMIT);
 
-        tradeOrder = backTestbrokerModel.onPlaceOrder(this.tradestrategy.getContract(), tradeOrder);
+        tradeOrder = backTestbrokerModel.onPlaceOrder(tradestrategy.getContract(), tradeOrder);
 
         _log.info("IdTradeOrder: {} OrderKey: {}", tradeOrder.getId(), tradeOrder.getOrderKey());
         assertNotNull(tradeOrder);
@@ -207,16 +207,16 @@ public class BrokerModelIT extends TradestrategyBase implements IBrokerChangeLis
     @Test
     public void testSubmitSellShortOrder() throws Exception {
 
-        _log.info("Symbol: {}", this.tradestrategy.getContract().getSymbol());
+        _log.info("Symbol: {}", tradestrategy.getContract().getSymbol());
 
-        TradeOrder tradeOrder = new TradeOrder(this.tradestrategy, Action.SELL, OrderType.STPLMT, 100,
+        TradeOrder tradeOrder = new TradeOrder(tradestrategy, Action.SELL, OrderType.STPLMT, 100,
                 price.subtract(new BigDecimal("0.70")), price.subtract(new BigDecimal("0.73")),
                 TradingCalendar.getDateTimeNowMarketTimeZone());
 
         tradeOrder.setClientId(clientId);
         tradeOrder.setTransmit(true);
         tradeOrder.setStatus(OrderStatus.UNSUBMIT);
-        tradeOrder = backTestbrokerModel.onPlaceOrder(this.tradestrategy.getContract(), tradeOrder);
+        tradeOrder = backTestbrokerModel.onPlaceOrder(tradestrategy.getContract(), tradeOrder);
 
         _log.info("IdTradeOrder: {} OrderKey: {}", tradeOrder.getId(), tradeOrder.getOrderKey());
         assertNotNull(tradeOrder.getId());
@@ -227,7 +227,7 @@ public class BrokerModelIT extends TradestrategyBase implements IBrokerChangeLis
 
         String ocaID = Integer.toString((BigDecimal.valueOf(Math.random() * 1000000)).intValue());
 
-        TradeOrder tradeOrder = new TradeOrder(this.tradestrategy, Action.SELL, OrderType.LMT, 50, null,
+        TradeOrder tradeOrder = new TradeOrder(tradestrategy, Action.SELL, OrderType.LMT, 50, null,
                 price.add(new BigDecimal("1.0")), TradingCalendar.getDateTimeNowMarketTimeZone());
 
         tradeOrder.setClientId(clientId);
@@ -235,10 +235,10 @@ public class BrokerModelIT extends TradestrategyBase implements IBrokerChangeLis
         tradeOrder.setOcaGroupName(ocaID);
         tradeOrder.setTransmit(true);
         tradeOrder.setStatus(OrderStatus.UNSUBMIT);
-        tradeOrder = backTestbrokerModel.onPlaceOrder(this.tradestrategy.getContract(), tradeOrder);
+        tradeOrder = backTestbrokerModel.onPlaceOrder(tradestrategy.getContract(), tradeOrder);
         assertNotNull(tradeOrder.getId());
 
-        TradeOrder tradeOrder1 = new TradeOrder(this.tradestrategy, Action.SELL, OrderType.LMT, 50,
+        TradeOrder tradeOrder1 = new TradeOrder(tradestrategy, Action.SELL, OrderType.LMT, 50,
                 price.subtract(new BigDecimal("1.0")), price.add(new BigDecimal("2.0")),
                 TradingCalendar.getDateTimeNowMarketTimeZone());
 
@@ -248,10 +248,10 @@ public class BrokerModelIT extends TradestrategyBase implements IBrokerChangeLis
         tradeOrder1.setTransmit(false);
         tradeOrder1.setStatus(OrderStatus.UNSUBMIT);
 
-        tradeOrder1 = backTestbrokerModel.onPlaceOrder(this.tradestrategy.getContract(), tradeOrder1);
+        tradeOrder1 = backTestbrokerModel.onPlaceOrder(tradestrategy.getContract(), tradeOrder1);
         assertNotNull(tradeOrder1.getId());
 
-        TradeOrder tradeOrder2 = new TradeOrder(this.tradestrategy, Action.SELL, OrderType.STP, 50,
+        TradeOrder tradeOrder2 = new TradeOrder(tradestrategy, Action.SELL, OrderType.STP, 50,
                 price.subtract(new BigDecimal("1.0")), null, TradingCalendar.getDateTimeNowMarketTimeZone());
         ocaID = ocaID + "abc";
         tradeOrder2.setClientId(clientId);
@@ -259,32 +259,32 @@ public class BrokerModelIT extends TradestrategyBase implements IBrokerChangeLis
         tradeOrder2.setOcaGroupName(ocaID);
         tradeOrder2.setTransmit(true);
         tradeOrder2.setStatus(OrderStatus.UNSUBMIT);
-        tradeOrder2 = backTestbrokerModel.onPlaceOrder(this.tradestrategy.getContract(), tradeOrder2);
+        tradeOrder2 = backTestbrokerModel.onPlaceOrder(tradestrategy.getContract(), tradeOrder2);
         assertNotNull(tradeOrder2.getId());
 
-        TradeOrder tradeOrder3 = new TradeOrder(this.tradestrategy, Action.SELL, OrderType.STP, 50,
+        TradeOrder tradeOrder3 = new TradeOrder(tradestrategy, Action.SELL, OrderType.STP, 50,
                 price.subtract(new BigDecimal("2.0")), null, TradingCalendar.getDateTimeNowMarketTimeZone());
         tradeOrder3.setClientId(clientId);
         tradeOrder3.setOcaType(2);
         tradeOrder3.setOcaGroupName(ocaID);
         tradeOrder3.setTransmit(false);
         tradeOrder3.setStatus(OrderStatus.UNSUBMIT);
-        tradeOrder3 = backTestbrokerModel.onPlaceOrder(this.tradestrategy.getContract(), tradeOrder3);
+        tradeOrder3 = backTestbrokerModel.onPlaceOrder(tradestrategy.getContract(), tradeOrder3);
         assertNotNull(tradeOrder3.getId());
         _log.info("IdTradeOrder: {} OrderKey2: {} OrderKey2 Price: {} OrderKey3: {} OrderKey3 Price: {}", tradeOrder3.getId(), tradeOrder2.getOrderKey(), tradeOrder2.getLimitPrice(), tradeOrder3.getOrderKey(), tradeOrder3.getAuxPrice());
         // Update the Stop price
         tradeOrder2.setAuxPrice(price.subtract(new BigDecimal("0.9")));
         tradeOrder2.setStatus(OrderStatus.UNSUBMIT);
-        tradeOrder2 = backTestbrokerModel.onPlaceOrder(this.tradestrategy.getContract(), tradeOrder2);
+        tradeOrder2 = backTestbrokerModel.onPlaceOrder(tradestrategy.getContract(), tradeOrder2);
 
         tradeOrder3.setAuxPrice(price.subtract(new BigDecimal("0.9")));
         tradeOrder3.setStatus(OrderStatus.UNSUBMIT);
-        tradeOrder3 = backTestbrokerModel.onPlaceOrder(this.tradestrategy.getContract(), tradeOrder3);
+        tradeOrder3 = backTestbrokerModel.onPlaceOrder(tradestrategy.getContract(), tradeOrder3);
         _log.info("IdTradeOrder: {} OrderKey2: {} OrderKey2 Price: {} OrderKey3: {} OrderKey3 Price: {}", tradeOrder3.getId(), tradeOrder2.getOrderKey(), tradeOrder2.getLimitPrice(), tradeOrder3.getOrderKey(), tradeOrder3.getAuxPrice());
 
         tradeOrder3.setTransmit(true);
         tradeOrder3.setStatus(OrderStatus.UNSUBMIT);
-        tradeOrder3 = backTestbrokerModel.onPlaceOrder(this.tradestrategy.getContract(), tradeOrder3);
+        tradeOrder3 = backTestbrokerModel.onPlaceOrder(tradestrategy.getContract(), tradeOrder3);
 
         _log.info("IdTradeOrder: {} OrderKey: {}", tradeOrder2.getId(), tradeOrder3.getOrderKey());
         assertNotNull(tradeOrder3);
@@ -293,21 +293,21 @@ public class BrokerModelIT extends TradestrategyBase implements IBrokerChangeLis
     @Test
     public void testOnBrokerData() throws Exception {
 
-        StrategyData.doDummyData(this.tradestrategy.getStrategyData().getCandleDataset().getSeries(0),
+        StrategyData.doDummyData(tradestrategy.getStrategyData().getCandleDataset().getSeries(0),
                 tradestrategy.getTradingday(), tradestrategy.getChartDays(), tradestrategy.getBarSize(), true, 0);
         backTestbrokerModel.setBrokerDataOnly(true);
         backTestbrokerModel.onBrokerData(tradestrategy, tradestrategy.getTradingday().getClose());
 
-        assertFalse(this.tradestrategy.getStrategyData().getCandleDataset().getSeries(0).isEmpty());
+        assertFalse(tradestrategy.getStrategyData().getCandleDataset().getSeries(0).isEmpty());
 
-        IndicatorSeries candleseries = this.tradestrategy.getStrategyData().getCandleDataset().getSeries(0);
-        IndicatorSeries sma1Series = this.tradestrategy.getStrategyData()
+        IndicatorSeries candleseries = tradestrategy.getStrategyData().getCandleDataset().getSeries(0);
+        IndicatorSeries sma1Series = tradestrategy.getStrategyData()
                 .getIndicatorByType(IndicatorSeries.MovingAverageSeries).getSeries(0);
-        IndicatorSeries sma2Series = this.tradestrategy.getStrategyData()
+        IndicatorSeries sma2Series = tradestrategy.getStrategyData()
                 .getIndicatorByType(IndicatorSeries.MovingAverageSeries).getSeries(1);
-        IndicatorSeries vwapSeries = this.tradestrategy.getStrategyData()
+        IndicatorSeries vwapSeries = tradestrategy.getStrategyData()
                 .getIndicatorByType(IndicatorSeries.VwapSeries).getSeries(0);
-        IndicatorSeries heikinAshiSeries = this.tradestrategy.getStrategyData()
+        IndicatorSeries heikinAshiSeries = tradestrategy.getStrategyData()
                 .getIndicatorByType(IndicatorSeries.HeikinAshiSeries).getSeries(0);
 
         for (int i = 0; i < candleseries.getItemCount(); i++) {
@@ -416,29 +416,29 @@ public class BrokerModelIT extends TradestrategyBase implements IBrokerChangeLis
     @Test
     public void testOnReqRealTimeBars() throws Exception {
 
-        this.tradestrategy.getContract().addTradestrategy(this.tradestrategy);
-        backTestbrokerModel.onReqRealTimeBars(this.tradestrategy.getContract(), false);
+        tradestrategy.getContract().addTradestrategy(tradestrategy);
+        backTestbrokerModel.onReqRealTimeBars(tradestrategy.getContract(), false);
         assertFalse(backTestbrokerModel.isRealtimeBarsRunning(tradestrategy));
     }
 
     @Test
     public void testOnReqAllExecutions() throws Exception {
 
-        backTestbrokerModel.onReqAllExecutions(this.tradestrategy.getTradingday().getOpen());
+        backTestbrokerModel.onReqAllExecutions(tradestrategy.getTradingday().getOpen());
     }
 
     @Test
     public void testOnReqExecutions() throws Exception {
 
-        backTestbrokerModel.onReqExecutions(this.tradestrategy, false);
+        backTestbrokerModel.onReqExecutions(tradestrategy, false);
 
     }
 
     @Test
     public void testIsRealtimeBarsRunning() {
 
-        backTestbrokerModel.onCancelRealtimeBars(this.tradestrategy);
-        assertFalse(backTestbrokerModel.isRealtimeBarsRunning(this.tradestrategy));
+        backTestbrokerModel.onCancelRealtimeBars(tradestrategy);
+        assertFalse(backTestbrokerModel.isRealtimeBarsRunning(tradestrategy));
 
     }
 
@@ -454,48 +454,48 @@ public class BrokerModelIT extends TradestrategyBase implements IBrokerChangeLis
     @Test
     public void testIsHistoricalDataRunningTradestrategy() {
 
-        backTestbrokerModel.onCancelBrokerData(this.tradestrategy);
-        assertFalse(backTestbrokerModel.isHistoricalDataRunning(this.tradestrategy));
+        backTestbrokerModel.onCancelBrokerData(tradestrategy);
+        assertFalse(backTestbrokerModel.isHistoricalDataRunning(tradestrategy));
     }
 
     @Test
     public void testIsHistoricalDataRunningContract() {
 
-        backTestbrokerModel.onCancelBrokerData(this.tradestrategy.getContract());
-        assertFalse(backTestbrokerModel.isHistoricalDataRunning(this.tradestrategy.getContract()));
+        backTestbrokerModel.onCancelBrokerData(tradestrategy.getContract());
+        assertFalse(backTestbrokerModel.isHistoricalDataRunning(tradestrategy.getContract()));
     }
 
     @Test
     public void testOnCancelAllRealtimeData() {
 
         backTestbrokerModel.onCancelAllRealtimeData();
-        assertFalse(backTestbrokerModel.isRealtimeBarsRunning(this.tradestrategy));
+        assertFalse(backTestbrokerModel.isRealtimeBarsRunning(tradestrategy));
     }
 
     @Test
     public void testOnCancelRealtimeBars() {
 
-        backTestbrokerModel.onCancelRealtimeBars(this.tradestrategy);
-        assertFalse(backTestbrokerModel.isRealtimeBarsRunning(this.tradestrategy));
+        backTestbrokerModel.onCancelRealtimeBars(tradestrategy);
+        assertFalse(backTestbrokerModel.isRealtimeBarsRunning(tradestrategy));
     }
 
     @Test
     public void testOnCancelBrokerData() {
 
-        backTestbrokerModel.onCancelBrokerData(this.tradestrategy);
-        assertFalse(backTestbrokerModel.isHistoricalDataRunning(this.tradestrategy));
+        backTestbrokerModel.onCancelBrokerData(tradestrategy);
+        assertFalse(backTestbrokerModel.isHistoricalDataRunning(tradestrategy));
     }
 
     @Test
     public void testOnCancelContractDetails() {
 
-        backTestbrokerModel.onCancelContractDetails(this.tradestrategy.getContract());
+        backTestbrokerModel.onCancelContractDetails(tradestrategy.getContract());
     }
 
     @Test
     public void testOnContractDetails() throws Exception {
 
-        backTestbrokerModel.onContractDetails(this.tradestrategy.getContract());
+        backTestbrokerModel.onContractDetails(tradestrategy.getContract());
     }
 
     @Test
@@ -508,18 +508,18 @@ public class BrokerModelIT extends TradestrategyBase implements IBrokerChangeLis
     @Test
     public void testOnPlaceOrder() throws Exception {
 
-        TradeOrder tradeOrder = new TradeOrder(this.tradestrategy, Action.BUY, OrderType.MKT, 1000, null, null,
+        TradeOrder tradeOrder = new TradeOrder(tradestrategy, Action.BUY, OrderType.MKT, 1000, null, null,
                 TradingCalendar.getDateTimeNowMarketTimeZone());
-        tradeOrder = backTestbrokerModel.onPlaceOrder(this.tradestrategy.getContract(), tradeOrder);
+        tradeOrder = backTestbrokerModel.onPlaceOrder(tradestrategy.getContract(), tradeOrder);
         assertNotNull(tradeOrder);
     }
 
     @Test
     public void testOnCancelOrder() throws Exception {
 
-        TradeOrder tradeOrder = new TradeOrder(this.tradestrategy, Action.BUY, OrderType.MKT, 1000, null, null,
+        TradeOrder tradeOrder = new TradeOrder(tradestrategy, Action.BUY, OrderType.MKT, 1000, null, null,
                 TradingCalendar.getDateTimeNowMarketTimeZone());
-        tradeOrder = backTestbrokerModel.onPlaceOrder(this.tradestrategy.getContract(), tradeOrder);
+        tradeOrder = backTestbrokerModel.onPlaceOrder(tradestrategy.getContract(), tradeOrder);
         assertNotNull(tradeOrder);
         backTestbrokerModel.onCancelOrder(tradeOrder);
     }

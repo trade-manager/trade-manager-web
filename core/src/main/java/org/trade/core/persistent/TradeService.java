@@ -435,12 +435,20 @@ public interface TradeService extends AspectService {
     List<Strategy> findStrategies();
 
     /**
+     * Method saveAspect.
+     *
+     * @param instance Aspect
+     * @return Aspect
+     */
+    //<T extends Aspect> T findAspectById(T instance);
+
+    /**
      * Method findAspectById.
      *
      * @param instance Aspect
      * @return Aspect
      */
-    Optional<Aspect> findAspectById(Aspect instance);
+    Aspect findAspectById(final Aspect instance) throws ClassNotFoundException;
 
     /**
      * Method saveAspect.

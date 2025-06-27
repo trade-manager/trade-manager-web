@@ -81,6 +81,7 @@ public class Aspects implements java.io.Serializable {
      * @param aspect    List<Aspect>
      */
     public Aspects(Integer idAspects, List<Aspect> aspect) {
+
         this.idAspects = idAspects;
         this.aspect = aspect;
     }
@@ -145,7 +146,9 @@ public class Aspects implements java.io.Serializable {
      * @return boolean
      */
     public boolean isDirty() {
+
         for (Aspect aspect : this.getAspect()) {
+
             if (aspect.isDirty()) {
                 return true;
             }

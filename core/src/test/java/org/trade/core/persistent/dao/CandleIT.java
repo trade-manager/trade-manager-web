@@ -78,7 +78,8 @@ public class CandleIT {
     @Autowired
     private TradeService tradeService;
 
-    private Tradestrategy tradestrategy = null;
+    private static Tradestrategy tradestrategy;
+    private static final String symbol = "TEST-" + TradestrategyBase.getRandomNumber(4);
 
     /**
      * Method setUpBeforeClass.
@@ -94,9 +95,8 @@ public class CandleIT {
     @BeforeEach
     public void setUp() throws Exception {
 
-        String symbol = "TEST";
-        this.tradestrategy = TradestrategyBase.getTestTradestrategy(tradeService, symbol);
-        assertNotNull(this.tradestrategy);
+        tradestrategy = TradestrategyBase.createTestTradestrategy(tradeService, symbol);
+        assertNotNull(tradestrategy);
     }
 
     /**
@@ -105,7 +105,7 @@ public class CandleIT {
     @AfterEach
     public void tearDown() throws Exception {
 
-        TradestrategyBase.clearDBData(tradeService);
+        TradestrategyBase.clearDBData(tradeService, tradestrategy);
     }
 
     /**
@@ -122,19 +122,19 @@ public class CandleIT {
         RegularTimePeriod period = new CandlePeriod(
                 TradingCalendar.getTradingDayStart(TradingCalendar.getDateTimeNowMarketTimeZone()), 300);
 
-        Candle transientInstance = new Candle(this.tradestrategy.getContract(), this.tradestrategy.getTradingday(),
+        Candle candle = new Candle(tradestrategy.getContract(), tradestrategy.getTradingday(),
                 period, period.getStart());
-        transientInstance.setHigh(new BigDecimal("20.33"));
-        transientInstance.setLow(new BigDecimal("20.11"));
-        transientInstance.setOpen(new BigDecimal("20.23"));
-        transientInstance.setClose(new BigDecimal("20.28"));
-        transientInstance.setVolume(1500L);
-        transientInstance.setVwap(new BigDecimal("20.1"));
-        transientInstance.setTradeCount(10);
+        candle.setHigh(new BigDecimal("20.33"));
+        candle.setLow(new BigDecimal("20.11"));
+        candle.setOpen(new BigDecimal("20.23"));
+        candle.setClose(new BigDecimal("20.28"));
+        candle.setVolume(1500L);
+        candle.setVwap(new BigDecimal("20.1"));
+        candle.setTradeCount(10);
 
-        transientInstance = tradeService.saveCandle(transientInstance);
-        assertNotNull(transientInstance.getId());
-        _log.info("testAddCandle IdCandle: {}", transientInstance.getId());
+        candle = tradeService.saveCandle(candle);
+        assertNotNull(candle.getId());
+        _log.info("testAddCandle IdCandle: {}", candle.getId());
     }
 
     @Test

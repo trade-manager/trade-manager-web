@@ -8,20 +8,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
-import org.trade.core.dao.Aspect;
 import org.trade.core.persistent.TradeService;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
@@ -32,36 +28,30 @@ public class TradeServiceIT {
     @Autowired
     private TradeService tradeService;
 
-    List<Aspect> entities = new ArrayList<>(0);
+    private static Tradestrategy tradestrategy;
+    private static final String symbol = "IBM-" + TradestrategyBase.getRandomNumber(4);
 
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws Exception {
 
-        LocalDateTime now = LocalDateTime.now();
-        ZonedDateTime expiry = now.atZone(ZoneId.systemDefault());
-        Contract contract1 = new Contract("STK", "Test1", "SMART", "USD", expiry, new BigDecimal(1));
-        Contract contract2 = new Contract("STK", "Test2", "SMART", "USD", expiry, new BigDecimal(1));
-
-        //save user, verify has ID value after save
-        assertNull(contract1.getId());
-        assertNull(contract2.getId());//null before save
-        contract1 = tradeService.saveAspect(contract1);
-        contract2 = tradeService.saveAspect(contract2);
-        assertNotNull(contract1.getId());
-        assertNotNull(contract2.getId());
+        tradestrategy = TradestrategyBase.createTestTradestrategy(tradeService, symbol);
+        assertNotNull(tradestrategy);
     }
 
+    /**
+     * Method tearDown.
+     */
     @AfterEach
-    public void tearDown() {
+    public void tearDown() throws Exception {
 
-        tradeService.deleteAllAspects(entities);
+        TradestrategyBase.clearDBData(tradeService, tradestrategy);
     }
 
     @Test
     public void fetchData() {
 
         /*Test data retrieval*/
-        Optional<Contract> contract = tradeService.findContractBySymbol("Test2");
+        Optional<Contract> contract = tradeService.findContractBySymbol(symbol);
         assertNotNull(contract);
         Iterable<Contract> item = tradeService.findAllContracts();
         assertTrue(item.iterator().hasNext());
@@ -77,5 +67,6 @@ public class TradeServiceIT {
 
         Optional<Contract> contract1 = tradeService.findContractBySymbol(contract.getSymbol());
         assertThat(contract1.get()).extracting(Contract::getSymbol).isEqualTo(contract.getSymbol());
+        tradeService.deleteAspect(contract);
     }
 }

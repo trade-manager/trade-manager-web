@@ -41,7 +41,6 @@ import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.Account;
 import org.trade.core.persistent.dao.Contract;
 import org.trade.core.persistent.dao.Portfolio;
-import org.trade.core.persistent.dao.PortfolioAccount;
 import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradePosition;
@@ -82,14 +81,13 @@ public class TradestrategyBase {
         Portfolio portfolio = (Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
         portfolio = tradeService.findPortfolioByName(portfolio.getName());
 
-        if (portfolio.getPortfolioAccounts().isEmpty()) {
+        if (portfolio.getAccounts().isEmpty()) {
 
             Account account = new Account("Test", "T123456", Currency.USD, AccountType.INDIVIDUAL);
             account.setAvailableFunds(new BigDecimal(25000));
             account.setBuyingPower(new BigDecimal(100000));
             account.setCashBalance(new BigDecimal(25000));
-            PortfolioAccount portfolioAccount = new PortfolioAccount(portfolio, account);
-            portfolio.getPortfolioAccounts().add(portfolioAccount);
+            portfolio.getAccounts().add(account);
             portfolio = tradeService.savePortfolio(portfolio);
         }
 
@@ -189,13 +187,6 @@ public class TradestrategyBase {
         Aspects tradePositions = tradeService.findByClassName(TradePosition.class.getName());
 
         for (Aspect aspect : tradePositions.getAspect()) {
-
-            tradeService.deleteAspect(aspect);
-        }
-
-        Aspects portfolioAccounts = tradeService.findByClassName(PortfolioAccount.class.getName());
-
-        for (Aspect aspect : portfolioAccounts.getAspect()) {
 
             tradeService.deleteAspect(aspect);
         }

@@ -2,15 +2,11 @@ package org.trade.core.persistent.dao;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Join;
-import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -39,7 +35,7 @@ public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
 
             if (item.getIsDefault()) {
 
-                item.getPortfolioAccounts().size();
+                // item.getPortfolioAccounts().size();
                 portfolio = item;
                 break;
             }
@@ -74,37 +70,38 @@ public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
      * @param portfolioName String
      * @param accountNumber String
      * @return Portfolio
-     */
+
     public PortfolioAccount findByPortfolioNameAndAccountNumber(String portfolioName, String accountNumber) {
 
-        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<PortfolioAccount> query = builder.createQuery(PortfolioAccount.class);
-        Root<PortfolioAccount> from = query.from(PortfolioAccount.class);
-        query.select(from);
-        List<Predicate> predicates = new ArrayList<>();
+    CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+    CriteriaQuery<PortfolioAccount> query = builder.createQuery(PortfolioAccount.class);
+    Root<PortfolioAccount> from = query.from(PortfolioAccount.class);
+    query.select(from);
+    List<Predicate> predicates = new ArrayList<>();
 
-        if (null != accountNumber) {
+    if (null != accountNumber) {
 
-            Join<PortfolioAccount, Account> account = from.join("account");
-            Predicate predicate = builder.equal(account.get("accountNumber"), accountNumber);
-            predicates.add(predicate);
-        }
-
-        if (null != portfolioName) {
-
-            Join<PortfolioAccount, Portfolio> portfolio = from.join("portfolio");
-            Predicate predicate = builder.equal(portfolio.get("name"), portfolioName);
-            predicates.add(predicate);
-        }
-
-        query.where(predicates.toArray(new Predicate[]{}));
-        TypedQuery<PortfolioAccount> typedQuery = entityManager.createQuery(query);
-        List<PortfolioAccount> items = typedQuery.getResultList();
-
-        if (!items.isEmpty()) {
-
-            return items.getFirst();
-        }
-        return null;
+    Join<PortfolioAccount, Account> account = from.join("account");
+    Predicate predicate = builder.equal(account.get("accountNumber"), accountNumber);
+    predicates.add(predicate);
     }
+
+    if (null != portfolioName) {
+
+    Join<PortfolioAccount, Portfolio> portfolio = from.join("portfolio");
+    Predicate predicate = builder.equal(portfolio.get("name"), portfolioName);
+    predicates.add(predicate);
+    }
+
+    query.where(predicates.toArray(new Predicate[]{}));
+    TypedQuery<PortfolioAccount> typedQuery = entityManager.createQuery(query);
+    List<PortfolioAccount> items = typedQuery.getResultList();
+
+    if (!items.isEmpty()) {
+
+    return items.getFirst();
+    }
+    return null;
+    }
+     */
 }
