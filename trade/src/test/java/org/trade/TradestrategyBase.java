@@ -189,13 +189,11 @@ public class TradestrategyBase {
         }
 
         Tradingday tradingday = tradestrategy.getTradingday();
-        tradeService.deleteAspect(tradestrategy);
+        tradeService.deleteAspect(tradingday);
         Contract contract = tradestrategy.getContract();
         contract.setTradePosition(null);
         contract = tradeService.saveAspect(contract);
         tradeService.deleteAspect(contract);
-        Aspect aspect = tradeService.findAspectById(tradingday);
-        tradeService.deleteAspect(aspect);
 
         portfolio = tradeService.findPortfolioById(portfolio.getId());
 
