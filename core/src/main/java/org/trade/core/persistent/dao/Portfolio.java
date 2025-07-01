@@ -280,6 +280,7 @@ public class Portfolio extends Aspect implements Serializable, Cloneable {
         }
         return false;
     }
+
     /**
      * Method removeTradestrategy.
      *

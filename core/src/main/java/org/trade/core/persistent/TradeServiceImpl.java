@@ -49,6 +49,7 @@ import org.trade.core.persistent.dao.CandleRepository;
 import org.trade.core.persistent.dao.CodeType;
 import org.trade.core.persistent.dao.CodeTypeRepository;
 import org.trade.core.persistent.dao.Contract;
+import org.trade.core.persistent.dao.ContractLite;
 import org.trade.core.persistent.dao.ContractRepository;
 import org.trade.core.persistent.dao.Portfolio;
 import org.trade.core.persistent.dao.PortfolioRepository;
@@ -319,9 +320,17 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
         return portfolioRepository.findDefault();
     }
 
+    @Transactional
     public void resetDefaultPortfolio(final Portfolio instance) {
 
-        portfolioRepository.resetDefaultPortfolio(instance);
+        List<Portfolio> items = portfolioRepository.findAllPortfolios();
+
+        for (Portfolio item : items) {
+
+            item.setIsDefault(Objects.equals(item.getId(), instance.getId()));
+            item = this.saveAspect(item);
+            instance.setIsDefault(item.getIsDefault());
+        }
     }
 
     @Transactional
@@ -533,7 +542,6 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
     @Transactional
     public Tradingday saveTradingday(Tradingday instance) {
 
-        instance = this.saveAspect(instance);
 
         for (Tradestrategy tradestrategy : instance.getTradestrategies()) {
 
@@ -564,8 +572,10 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
             /*
              * Persist or merge the tradestrategy.
              */
-            tradestrategy = this.saveAspect(tradestrategy);
+            //   this.saveAspect(tradestrategy);
         }
+
+        instance = this.saveAspect(instance);
 
         List<Tradestrategy> tradestrategies = tradingdayRepository.findTradestrategyByTradingdayId(instance.getId());
 
@@ -593,6 +603,24 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
 
         instance.setDirty(false);
         return instance;
+    }
+
+    /**
+     * Method saveTradePosition.
+     *
+     * @param instance TradePosition
+     * @return TradePosition
+     */
+    @Transactional
+    public TradePosition saveTradePosition(TradePosition instance) {
+
+        ContractLite contract = contractRepository.findContractLiteById(instance.getContract().getId());
+
+        if (null != contract) {
+
+            instance.setContract(contract);
+        }
+        return this.saveAspect(instance);
     }
 
     @Transactional

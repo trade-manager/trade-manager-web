@@ -49,7 +49,6 @@ import org.trade.core.dao.Aspect;
 import org.trade.core.util.CoreUtils;
 
 import java.io.Serial;
-import java.time.ZonedDateTime;
 import java.util.Comparator;
 import java.util.Objects;
 
@@ -91,14 +90,11 @@ public class Rule extends Aspect implements java.io.Serializable {
     /**
      * Constructor for Rule.
      *
-     * @param strategy       Strategy
-     * @param version        Integer
-     * @param comment        String
-     * @param createDate     Date
-     * @param lastUpdateDate Date
+     * @param strategy Strategy
+     * @param version  Integer
+     * @param comment  String
      */
-    public Rule(Strategy strategy, Integer version, String comment, ZonedDateTime createDate,
-                ZonedDateTime lastUpdateDate) {
+    public Rule(Strategy strategy, Integer version, String comment) {
 
         this.strategy = strategy;
         this.version = version;
@@ -113,8 +109,7 @@ public class Rule extends Aspect implements java.io.Serializable {
      * @param comment  String
      * @param rule     byte[]
      */
-    public Rule(Strategy strategy, Integer version, String comment, byte[] rule
-    ) {
+    public Rule(Strategy strategy, Integer version, String comment, byte[] rule) {
 
         this.strategy = strategy;
         this.version = version;

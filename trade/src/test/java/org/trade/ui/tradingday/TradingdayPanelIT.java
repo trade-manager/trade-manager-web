@@ -33,11 +33,10 @@
  * -------
  *
  */
-package org.trade.core.persistent.dao;
+package org.trade.ui.tradingday;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -45,39 +44,37 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
+import org.trade.TradestrategyBase;
 import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
-import org.trade.core.TradestrategyBase;
 import org.trade.core.persistent.TradeService;
-import org.trade.core.util.time.TradingCalendar;
-import org.trade.core.valuetype.Side;
+import org.trade.core.persistent.dao.Contract;
+import org.trade.core.persistent.dao.Tradestrategy;
+import org.trade.core.persistent.dao.Tradingday;
+import org.trade.core.persistent.dao.Tradingdays;
+import org.trade.ui.models.TradingdayTableModel;
+import org.trade.ui.tables.TradingdayTable;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
+ * Some tests for the  DataUtilities class.
  *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 @SpringBootTest
 @ContextConfiguration(classes = ApplicationRepositoryConfig.class,
         initializers = ApplicationProfileInitializer.class)
-public class TradePositionIT {
+public class TradingdayPanelIT {
 
-    private final static Logger _log = LoggerFactory.getLogger(TradePositionIT.class);
+    private final static Logger _log = LoggerFactory.getLogger(TradingdayPanelIT.class);
 
     @Autowired
     private TradeService tradeService;
 
     private static Tradestrategy tradestrategy;
-    private static final String symbol = "TEST-" + TradestrategyBase.getRandomNumber(4);
-
-    /**
-     * Method setUpBeforeClass.
-     */
-    @BeforeAll
-    public static void setUpBeforeClass() {
-
-    }
+    private static final String symbol = "IBM-" + TradestrategyBase.getRandomNumber(4);
 
     /**
      * Method setUp.
@@ -106,20 +103,40 @@ public class TradePositionIT {
     }
 
     @Test
-    public void addRemoveTradePosition() {
+    public void replaceTradingday() throws Exception {
 
+        Tradingdays tradingdays = new Tradingdays();
 
-        TradePosition instance = new TradePosition(tradestrategy.getContractLite(),
-                TradingCalendar.getDateTimeNowMarketTimeZone(), Side.BOT);
+        Tradingday instance1 = tradeService
+                .findTradingdayById(tradestrategy.getTradingday().getId());
+        tradingdays.add(instance1);
 
-        instance = tradeService.saveAspect(instance);
+        TradingdayTableModel tradingdayModel = new TradingdayTableModel();
+        tradingdayModel.setData(tradingdays);
+        TradingdayTable tradingdayTable = new TradingdayTable(tradingdayModel);
+        tradingdayTable.setRowSelectionInterval(0, 0);
 
-        assertNotNull(instance.getId());
-        _log.info("testAddTradePosition IdTradeStrategy: {}IdTradePosition: {}", tradestrategy.getId(), instance.getId());
+        tradestrategy.getContract().setIndustry("Computer");
+        Contract result = this.tradeService.saveAspect(tradestrategy.getContract());
+        assertNotNull(result);
+        Tradingday instance2 = tradeService
+                .findTradingdayById(tradestrategy.getTradingday().getId());
+        tradingdays.replaceTradingday(instance2);
+        int selectedRow = tradingdayTable.getSelectedRow();
+        tradingdayModel.setData(tradingdays);
+        if (selectedRow > -1) {
+            tradingdayTable.setRowSelectionInterval(selectedRow, selectedRow);
+        }
+        org.trade.core.valuetype.Date openDate = (org.trade.core.valuetype.Date) tradingdayModel
+                .getValueAt(tradingdayTable.convertRowIndexToModel(0), 0);
+        org.trade.core.valuetype.Date closeDate = (org.trade.core.valuetype.Date) tradingdayModel
+                .getValueAt(tradingdayTable.convertRowIndexToModel(0), 1);
+        Tradingday transferObject = tradingdayModel.getData().getTradingday(openDate.getZonedDateTime(),
+                closeDate.getZonedDateTime());
+        assertNotNull(transferObject);
 
-        tradeService.deleteAspect(instance);
-        _log.info("testDeleteTradePosition IdTradeStrategy: {}", tradestrategy.getId());
-        instance = tradeService.findTradePositionById(instance.getId());
-        assertNull(instance);
+        assertNotNull(tradingdays.getTradingday(instance1.getOpen(), instance1.getClose()));
+        String industry = transferObject.getTradestrategies().getFirst().getContract().getIndustry();
+        assertNotNull("4", industry);
     }
 }

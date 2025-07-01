@@ -48,6 +48,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
+import org.trade.core.TradestrategyBase;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.Tradestrategy;
@@ -74,7 +75,8 @@ public class AspectServiceIT {
     @Autowired
     private TradeService tradeService;
 
-    private Tradestrategy tradestrategy = null;
+    private static Tradestrategy tradestrategy;
+    private static final String symbol = "IBM-" + TradestrategyBase.getRandomNumber(4);
 
     /**
      * Method setUpBeforeClass.
@@ -88,16 +90,19 @@ public class AspectServiceIT {
      * Method setUp.
      */
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws Exception {
 
+        tradestrategy = TradestrategyBase.createTestTradestrategy(tradeService, symbol);
+        assertNotNull(tradestrategy);
     }
 
     /**
      * Method tearDown.
      */
     @AfterEach
-    public void tearDown() {
+    public void tearDown() throws Exception {
 
+        TradestrategyBase.clearDBData(tradeService, tradestrategy);
     }
 
     /**
@@ -106,6 +111,18 @@ public class AspectServiceIT {
     @AfterAll
     public static void tearDownAfterClass() {
 
+    }
+
+    @Test
+    public void findAspectById() throws Exception {
+
+        // Create new instance of Strategy and set
+        // values in it by reading them from form object
+        String className = "org.trade.core.persistent.dao.Strategy";
+        _log.info("Find Aspects by className: {}", className);
+
+        Aspect aspect = tradeService.findAspectById(tradestrategy);
+        assertNotNull(aspect);
     }
 
     @Test

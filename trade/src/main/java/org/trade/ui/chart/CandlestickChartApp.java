@@ -112,10 +112,11 @@ public class CandlestickChartApp extends BasePanel implements IBrokerChangeListe
         });
     }
 
-    public static TradeService  getTradeService() {
+    public static TradeService getTradeService() {
 
-       return _tradeService;
+        return _tradeService;
     }
+
     /**
      * Constructor for CandlestickChartApp.
      *
@@ -334,7 +335,7 @@ public class CandlestickChartApp extends BasePanel implements IBrokerChangeListe
 
     private static void createChart(Tradestrategy tradestrategy, TradeService tradeService) {
 
-        StrategyDataUI strategyData = StrategyDataUI.create(tradestrategy );
+        StrategyDataUI strategyData = StrategyDataUI.create(tradestrategy);
 
         CandlestickChart chart = new CandlestickChart(tradestrategy.getContract().getSymbol(), strategyData,
                 Tradingday.newInstance(TradingCalendar.getDateTimeNowMarketTimeZone()));

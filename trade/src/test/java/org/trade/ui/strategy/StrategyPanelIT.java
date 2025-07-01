@@ -10,7 +10,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
+import org.trade.TradestrategyBase;
 import org.trade.base.StreamEditorPane;
+import org.trade.core.ApplicationProfileInitializer;
+import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.broker.IBrokerModel;
 import org.trade.core.factory.ClassFactory;
 import org.trade.core.persistent.TradeService;
@@ -24,7 +28,6 @@ import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.DynamicCode;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.BarSize;
-import org.trade.ui.persistent.TradestrategyBase;
 
 import javax.swing.*;
 import java.awt.*;
@@ -48,6 +51,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  *
  */
 @SpringBootTest
+@ContextConfiguration(classes = ApplicationRepositoryConfig.class,
+        initializers = ApplicationProfileInitializer.class)
 public class StrategyPanelIT {
 
     private final static Logger _log = LoggerFactory.getLogger(StrategyPanelIT.class);
@@ -55,12 +60,11 @@ public class StrategyPanelIT {
     @Autowired
     private TradeService tradeService;
 
-
     private static Tradestrategy tradestrategy;
     private static final String symbol = "IBM-" + TradestrategyBase.getRandomNumber(4);
-    private String m_templateName;
-    private String m_strategyDir;
-    private final String m_tmpDir = "temp";
+    private String templateName;
+    private String strategyDir;
+    private final String tmpDir = "temp";
 
     /**
      * Method setUpBeforeClass.
@@ -75,10 +79,10 @@ public class StrategyPanelIT {
     @BeforeEach
     public void setUp() throws Exception {
 
-        m_templateName = ConfigProperties.getPropAsString("trade.strategy.template");
-        assertNotNull(m_templateName);
-        m_strategyDir = ConfigProperties.getPropAsString("trade.strategy.default.dir");
-        assertNotNull(m_strategyDir);
+        templateName = ConfigProperties.getPropAsString("trade.strategy.template");
+        assertNotNull(templateName);
+        strategyDir = ConfigProperties.getPropAsString("trade.strategy.default.dir");
+        assertNotNull(strategyDir);
         this.tradestrategy = TradestrategyBase.createTestTradestrategy(tradeService, symbol);
         assertNotNull(this.tradestrategy);
         List<Strategy> strategies = this.tradeService.findStrategies();
@@ -86,7 +90,7 @@ public class StrategyPanelIT {
 
         for (Strategy strategy : strategies) {
 
-            String fileName = m_strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/') + strategy.getClassName()
+            String fileName = strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/') + strategy.getClassName()
                     + ".java";
             String content = readFile(fileName);
             assertNotNull("setUp: Strategy java file should be not null", content);
@@ -107,7 +111,7 @@ public class StrategyPanelIT {
     @AfterEach
     public void tearDown() throws Exception {
 
-        File dir = new File(m_tmpDir);
+        File dir = new File(tmpDir);
         StrategyPanel.deleteDir(dir);
         TradestrategyBase.clearDBData(tradeService, tradestrategy);
     }
@@ -134,7 +138,7 @@ public class StrategyPanelIT {
         sourceText.setSelectionColor(Color.red);
         sourceText.setEditable(true);
 
-        String fileName = m_strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/') + m_templateName + ".java";
+        String fileName = strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/') + templateName + ".java";
         String content = readFile(fileName);
         sourceText.setText(content);
         assertEquals(content,
@@ -161,9 +165,9 @@ public class StrategyPanelIT {
         parm.add(this.tradestrategy.getId());
         _log.info("Ready to create Strategy");
         DynamicCode dynacode = new DynamicCode();
-        dynacode.addSourceDir(new File(m_strategyDir));
+        dynacode.addSourceDir(new File(strategyDir));
         IStrategyRule strategyProxy = (IStrategyRule) dynacode.newProxyInstance(IStrategyRule.class,
-                IStrategyRule.PACKAGE + m_templateName, parm);
+                IStrategyRule.PACKAGE + templateName, parm);
         _log.info("Created Strategy{}", strategyProxy);
         strategyProxy.execute();
 
@@ -201,7 +205,7 @@ public class StrategyPanelIT {
                 myRule = rule;
         }
         assertNotNull(myRule);
-        String fileDir = m_tmpDir + "/" + IStrategyRule.PACKAGE.replace('.', '/');
+        String fileDir = tmpDir + "/" + IStrategyRule.PACKAGE.replace('.', '/');
         String className = strategy.getClassName() + ".java";
 
         srcDirFile = new File(fileDir);
@@ -216,7 +220,7 @@ public class StrategyPanelIT {
 
         _log.info("Ready to create Strategy");
         DynamicCode dynacode = new DynamicCode();
-        dynacode.addSourceDir(new File(m_tmpDir));
+        dynacode.addSourceDir(new File(tmpDir));
         IStrategyRule strategyRule = (IStrategyRule) dynacode.newProxyInstance(IStrategyRule.class,
                 IStrategyRule.PACKAGE + strategy.getClassName(), parm);
         assertNotNull(strategyRule);
@@ -282,7 +286,7 @@ public class StrategyPanelIT {
         myrule.setComment("Test Ver: " + myrule.getVersion());
         StreamEditorPane textArea = new StreamEditorPane("text/rtf");
         new JScrollPane(textArea);
-        String fileDir = m_strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/');
+        String fileDir = strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/');
         String className = strategy.getClassName() + ".java";
         String fileName = fileDir + className;
         String content = strategyPanel.readFile(fileName);

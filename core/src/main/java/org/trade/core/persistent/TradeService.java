@@ -83,14 +83,14 @@ public interface TradeService extends AspectService {
     Iterable<Contract> findAllContracts();
 
     /**
-     * Method persistTrading.
+     * Method saveTrading.
      *
      * @param transientInstance Tradingday
      */
     Tradingday saveTradingday(Tradingday transientInstance);
 
     /**
-     * Method persistPortfolio.
+     * Method savePortfolio.
      *
      * @param instance Portfolio
      * @return Portfolio
@@ -99,7 +99,7 @@ public interface TradeService extends AspectService {
     Portfolio savePortfolio(Portfolio instance);
 
     /**
-     * Method persistTradeOrder.
+     * Method saveTradeOrder.
      *
      * @param instance TradeOrder
      * @return TradeOrder
@@ -107,7 +107,15 @@ public interface TradeService extends AspectService {
     TradeOrder saveTradeOrder(TradeOrder instance);
 
     /**
-     * Method persistTradeOrderfill.
+     * Method saveTradePosition.
+     *
+     * @param instance TradePosition
+     * @return TradePosition
+     */
+    TradePosition saveTradePosition(TradePosition instance);
+
+    /**
+     * Method saveTradeOrderfill.
      *
      * @param tradeOrder TradeOrder
      * @return TradeOrder
@@ -115,14 +123,14 @@ public interface TradeService extends AspectService {
     TradeOrder saveTradeOrderfill(TradeOrder tradeOrder);
 
     /**
-     * Method persistCandleSeries.
+     * Method saveCandleSeries.
      *
      * @param candleSeries CandleSeries
      */
     void saveCandleSeries(CandleSeries candleSeries);
 
     /**
-     * Method persistCandle.
+     * Method saveCandle.
      *
      * @param candle Candle
      * @return Candle
@@ -440,7 +448,7 @@ public interface TradeService extends AspectService {
      * @param instance Aspect
      * @return Aspect
      */
-    //<T extends Aspect> T findAspectById(T instance);
+    // <T extends Aspect> T findAspectById1(T instance);
 
     /**
      * Method findAspectById.

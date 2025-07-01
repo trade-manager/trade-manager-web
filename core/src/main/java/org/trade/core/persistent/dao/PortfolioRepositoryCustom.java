@@ -1,12 +1,11 @@
 package org.trade.core.persistent.dao;
 
 
+import java.util.List;
+
 public interface PortfolioRepositoryCustom {
 
     Portfolio findDefault();
 
-    void resetDefaultPortfolio(final Portfolio defaultPortfolio);
-
-    // PortfolioAccount findByPortfolioNameAndAccountNumber(String portfolioName, String accountNumber);
-
+    List<Portfolio> findAllPortfolios();
 }

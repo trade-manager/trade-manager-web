@@ -1812,7 +1812,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
 
         try {
 
-            Vector<Object> param =  new Vector<>();
+            Vector<Object> param = new Vector<>();
             param.add(tradeService);
 
             if (null != brokerModel) {
@@ -1831,7 +1831,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                 brokerModel.addMessageListener(this);
 
             } else if (IBrokerModel._broker.equals(model)) {
-                brokerModel = (IBrokerModel) ClassFactory.getServiceForInterface(IBrokerModel._broker, param,this);
+                brokerModel = (IBrokerModel) ClassFactory.getServiceForInterface(IBrokerModel._broker, param, this);
                 /*
                  * Controller listens for problems from the TWS interface see
                  * doError()

@@ -47,17 +47,20 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
-import org.trade.core.dao.Aspect;
+import org.trade.core.TradestrategyBase;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.TradestrategyStatus;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  *
@@ -188,6 +191,7 @@ public class TradestrategyIT {
         String TEST_FILE = "../db/LoadFile10Stocks.csv";
         tradingdays.populateDataFromFile(TEST_FILE, instance);
         assertFalse(tradingdays.getTradingdays().isEmpty());
+        List<String> contracts = new ArrayList<>();
 
         for (Tradingday tradingday : tradingdays.getTradingdays()) {
 
@@ -198,13 +202,17 @@ public class TradestrategyIT {
 
                 _log.info("findAndSavefileMultipleDayTradestrategy id: {}", tradestrategy.getId());
                 assertNotNull(tradestrategy.getId());
-                Aspect aspect = tradeService.findAspectById(tradestrategy);
-                tradeService.deleteAspect(aspect);
-                aspect = tradeService.findAspectById(tradestrategy.getContract());
-                tradeService.deleteAspect(aspect);
+                contracts.add(tradestrategy.getContract().getSymbol());
             }
-            Aspect aspect = tradeService.findAspectById(tradingday);
-            tradeService.deleteAspect(aspect);
+
+            tradeService.deleteAspect(tradingday);
+
+            for (String symbol : contracts) {
+
+                Optional<Contract> contract = tradeService.findContractBySymbol(symbol);
+                assertTrue(contract.isPresent());
+                tradeService.deleteAspect(contract.get());
+            }
         }
     }
 
@@ -215,24 +223,28 @@ public class TradestrategyIT {
         String TEST_FILE = "../db/LoadFile1Stock.csv";
         tradingdays.populateDataFromFile(TEST_FILE, null);
         assertFalse(tradingdays.getTradingdays().isEmpty());
+        List<String> contracts = new ArrayList<>();
 
         for (Tradingday tradingday : tradingdays.getTradingdays()) {
 
             tradingday = tradeService.saveTradingday(tradingday);
-
             assertEquals(1, tradingday.getTradestrategies().size());
 
             for (Tradestrategy tradestrategy : tradingday.getTradestrategies()) {
 
                 _log.info("findAndSavefileOneDayTradestrategy id:{}", tradestrategy.getId());
                 assertNotNull(tradestrategy.getId());
-                Aspect aspect = tradeService.findAspectById(tradestrategy);
-                tradeService.deleteAspect(aspect);
-                aspect = tradeService.findAspectById(tradestrategy.getContract());
-                tradeService.deleteAspect(aspect);
+                contracts.add(tradestrategy.getContract().getSymbol());
             }
-            Aspect aspect = tradeService.findAspectById(tradingday);
-            tradeService.deleteAspect(aspect);
+
+            tradeService.deleteAspect(tradingday);
+
+            for (String symbol : contracts) {
+
+                Optional<Contract> contract = tradeService.findContractBySymbol(symbol);
+                assertTrue(contract.isPresent());
+                tradeService.deleteAspect(contract.get());
+            }
         }
     }
 

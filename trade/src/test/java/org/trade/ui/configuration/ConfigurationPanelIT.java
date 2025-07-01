@@ -42,6 +42,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
+import org.trade.core.ApplicationProfileInitializer;
+import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.factory.ClassFactory;
 import org.trade.core.persistent.dao.CodeAttribute;
 import org.trade.core.persistent.dao.CodeType;
@@ -62,7 +66,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-public class ConfigurationPanelIT {
+@SpringBootTest
+@ContextConfiguration(classes = ApplicationRepositoryConfig.class,
+        initializers = ApplicationProfileInitializer.class)
+class ConfigurationPanelIT {
 
     private final static Logger _log = LoggerFactory.getLogger(ConfigurationPanelIT.class);
 

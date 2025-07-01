@@ -33,9 +33,8 @@
  * -------
  *
  */
-package org.trade.ui.persistent;
+package org.trade.core;
 
-import org.trade.core.dao.Aspect;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.Account;
 import org.trade.core.persistent.dao.Contract;
@@ -189,13 +188,11 @@ public class TradestrategyBase {
         }
 
         Tradingday tradingday = tradestrategy.getTradingday();
-        tradeService.deleteAspect(tradestrategy);
+        tradeService.deleteAspect(tradingday);
         Contract contract = tradestrategy.getContract();
         contract.setTradePosition(null);
         contract = tradeService.saveAspect(contract);
         tradeService.deleteAspect(contract);
-        Aspect aspect = tradeService.findAspectById(tradingday);
-        tradeService.deleteAspect(aspect);
 
         portfolio = tradeService.findPortfolioById(portfolio.getId());
 
