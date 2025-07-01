@@ -45,9 +45,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
+import org.trade.core.TradestrategyBase;
 import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
-import org.trade.core.TradestrategyBase;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.series.indicator.StrategyData;
 import org.trade.core.persistent.dao.series.indicator.candle.CandleItem;
@@ -61,7 +61,6 @@ import java.time.ZonedDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-
 
 /**
  * Some tests for the CandleIT class.

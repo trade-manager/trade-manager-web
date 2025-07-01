@@ -11,10 +11,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
-import org.trade.TradestrategyBase;
 import org.trade.base.StreamEditorPane;
 import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
+import org.trade.core.TradestrategyBase;
 import org.trade.core.broker.IBrokerModel;
 import org.trade.core.factory.ClassFactory;
 import org.trade.core.persistent.TradeService;
@@ -45,7 +45,6 @@ import java.util.Vector;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-
 
 /**
  *
