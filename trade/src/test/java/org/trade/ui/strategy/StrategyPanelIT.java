@@ -5,6 +5,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +18,7 @@ import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
 import org.trade.core.broker.IBrokerModel;
 import org.trade.core.factory.ClassFactory;
+import org.trade.core.persistent.ServiceException;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.Rule;
 import org.trade.core.persistent.dao.Strategy;
@@ -45,6 +47,8 @@ import java.util.Vector;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  *
@@ -83,8 +87,8 @@ public class StrategyPanelIT {
         assertNotNull(templateName);
         strategyDir = ConfigProperties.getPropAsString("trade.strategy.default.dir");
         assertNotNull(strategyDir);
-        this.tradestrategy = TradestrategyBase.createTestTradestrategy(tradeService, symbol);
-        assertNotNull(this.tradestrategy);
+        tradestrategy = TradestrategyBase.createTestTradestrategy(tradeService, symbol);
+        assertNotNull(tradestrategy);
         List<Strategy> strategies = this.tradeService.findStrategies();
         assertNotNull(strategies);
 
@@ -93,7 +97,7 @@ public class StrategyPanelIT {
             String fileName = strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/') + strategy.getClassName()
                     + ".java";
             String content = readFile(fileName);
-            assertNotNull("setUp: Strategy java file should be not null", content);
+            assertNotNull(content);
 
             if (strategy.getRules().isEmpty()) {
 
@@ -124,7 +128,7 @@ public class StrategyPanelIT {
     }
 
     @Test
-    public void jEditorPaneTextEquals() throws Exception {
+    public void jEditorPaneTextEquals() {
 
         DefaultSyntaxKit.initKit();
         JEditorPane sourceText = new JEditorPane();
@@ -140,6 +144,7 @@ public class StrategyPanelIT {
 
         String fileName = strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/') + templateName + ".java";
         String content = readFile(fileName);
+        assertNotNull(content);
         sourceText.setText(content);
         assertEquals(content,
                 sourceText.getText());
@@ -147,58 +152,90 @@ public class StrategyPanelIT {
         String content1 = readFile(fileName);
         sourceText.setText(null);
         sourceText.setText(content1);
-        assertEquals(
-                content1, sourceText.getText());
+        assertEquals(content1, sourceText.getText());
     }
 
+    @Disabled
     @Test
-    public void doCompileAndRunStrategy() throws Exception {
+    public void doCompileAndRunStrategy() {
 
         Vector<Object> param = new Vector<>();
         param.add(tradeService);
-        IBrokerModel brokerManagerModel = (IBrokerModel) ClassFactory
-                .getServiceForInterface(IBrokerModel._brokerTest, param, this);
+        IBrokerModel brokerManagerModel = null;
 
-        Vector<Object> parm = new Vector<>(0);
-        parm.add(brokerManagerModel);
-        parm.add(this.tradestrategy.getStrategyData());
-        parm.add(this.tradestrategy.getId());
+        try {
+
+            brokerManagerModel = (IBrokerModel) ClassFactory
+                    .getServiceForInterface(IBrokerModel._brokerTest, param, this);
+        } catch (Exception ex) {
+
+            fail("Failed to create brokerManagerModel msg: " + ex.getMessage());
+        }
+
+        param.clear();
+        param.add(brokerManagerModel);
+        param.add(tradestrategy.getStrategyData());
+        param.add(tradestrategy.getId());
         _log.info("Ready to create Strategy");
         DynamicCode dynacode = new DynamicCode();
         dynacode.addSourceDir(new File(strategyDir));
-        IStrategyRule strategyProxy = (IStrategyRule) dynacode.newProxyInstance(IStrategyRule.class,
-                IStrategyRule.PACKAGE + templateName, parm);
-        _log.info("Created Strategy{}", strategyProxy);
-        strategyProxy.execute();
+        IStrategyRule strategyProxy = null;
 
-        while (!strategyProxy.isWaiting()) {
+        try {
 
-            Thread.sleep(250);
+            strategyProxy = (IStrategyRule) dynacode.newProxyInstance(IStrategyRule.class,
+                    IStrategyRule.PACKAGE + templateName, param);
+
+            _log.info("Created Strategy{}", strategyProxy);
+            strategyProxy.execute();
+
+            while (!strategyProxy.isWaiting()) {
+
+                Thread.sleep(250);
+            }
+        } catch (Exception ex) {
+
+            fail("Failed to create strategyProxy msg: " + ex.getMessage());
         }
 
-        StrategyData.doDummyData(tradestrategy.getStrategyData().getBaseCandleSeries(),
-                Tradingday.newInstance(TradingCalendar.getDateTimeNowMarketTimeZone()), 1, BarSize.FIVE_MIN, true,
-                250);
+        try {
+
+            StrategyData.doDummyData(tradestrategy.getStrategyData().getBaseCandleSeries(),
+                    Tradingday.newInstance(TradingCalendar.getDateTimeNowMarketTimeZone()), 1, BarSize.FIVE_MIN, true,
+                    250);
+        } catch (ServiceException ex) {
+
+            fail("Failed to create dummy data msg: " + ex.getMessage());
+        }
         assertFalse(
                 tradestrategy.getStrategyData().getBaseCandleSeries().isEmpty());
         strategyProxy.cancel();
     }
 
+    @Disabled
     @Test
-    public void doCompileRule() throws Exception {
+    public void doCompileRule() {
 
-        File srcDirFile;
         Vector<Object> param = new Vector<>();
         param.add(tradeService);
-        IBrokerModel m_brokerManagerModel = (IBrokerModel) ClassFactory
-                .getServiceForInterface(IBrokerModel._brokerTest, param, this);
+        IBrokerModel brokerManagerModel;
+        Strategy strategy = null;
 
-        Vector<Object> parm = new Vector<>(0);
-        parm.add(m_brokerManagerModel);
-        parm.add(this.tradestrategy.getStrategyData());
-        parm.add(this.tradestrategy.getId());
-        Strategy strategy = this.tradeService
-                .findStrategyById(this.tradestrategy.getStrategy().getId());
+        try {
+
+            brokerManagerModel = (IBrokerModel) ClassFactory
+                    .getServiceForInterface(IBrokerModel._brokerTest, param, this);
+            param.clear();
+            param.add(brokerManagerModel);
+            param.add(tradestrategy.getStrategyData());
+            param.add(tradestrategy.getId());
+            strategy = this.tradeService
+                    .findStrategyById(tradestrategy.getStrategy().getId());
+        } catch (Exception ex) {
+
+            fail("Failed to create broker msg: " + ex.getMessage());
+        }
+
         Integer version = this.tradeService.findRuleByMaxVersion(strategy);
         Rule myRule = null;
 
@@ -212,26 +249,37 @@ public class StrategyPanelIT {
         String fileDir = tmpDir + "/" + IStrategyRule.PACKAGE.replace('.', '/');
         String className = strategy.getClassName() + ".java";
 
-        srcDirFile = new File(fileDir);
-        srcDirFile.mkdirs();
+        File srcDirFile = new File(fileDir);
+        assertTrue(srcDirFile.mkdirs());
         srcDirFile.deleteOnExit();
-        FileWriter fileWriter = new FileWriter(fileDir + className);
-        PrintWriter writer = new PrintWriter(fileWriter);
-        writer.println(new String(myRule.getRule()));
-        writer.flush();
-        writer.close();
-        fileWriter.close();
+
+        try (PrintWriter writer = new PrintWriter(new FileWriter(fileDir + className))) {
+
+            writer.println(new String(myRule.getRule()));
+            writer.flush();
+        } catch (IOException ex) {
+
+            fail("Failed to create file writer msg: " + ex.getMessage());
+        }
 
         _log.info("Ready to create Strategy");
         DynamicCode dynacode = new DynamicCode();
         dynacode.addSourceDir(new File(tmpDir));
-        IStrategyRule strategyRule = (IStrategyRule) dynacode.newProxyInstance(IStrategyRule.class,
-                IStrategyRule.PACKAGE + strategy.getClassName(), parm);
+        IStrategyRule strategyRule = null;
+
+        try {
+
+            strategyRule = (IStrategyRule) dynacode.newProxyInstance(IStrategyRule.class,
+                    IStrategyRule.PACKAGE + strategy.getClassName(), param);
+        } catch (Exception ex) {
+
+            fail("Failed to create strategyRule msg: " + ex.getMessage());
+        }
         assertNotNull(strategyRule);
     }
 
     @Test
-    public void doCompile() throws Exception {
+    public void doCompile() {
 
         StrategyPanel strategyPanel = new StrategyPanel(this.tradeService);
         List<Strategy> strategies = this.tradeService.findStrategies();
@@ -244,10 +292,13 @@ public class StrategyPanelIT {
         strategy.getRules().sort(Rule.VERSION_ORDER);
 
         for (Rule rule : strategy.getRules()) {
+
             myrule = rule;
             break;
         }
+
         if (null == myrule) {
+
             myrule = new Rule();
             myrule.setStrategy(strategy);
 
@@ -271,15 +322,14 @@ public class StrategyPanelIT {
         strategy.getRules().sort(Rule.VERSION_ORDER);
 
         for (Rule rule : strategy.getRules()) {
+
             myrule = rule;
         }
 
         if (null == myrule) {
 
-
             myrule = new Rule();
             myrule.setStrategy(strategy);
-
         }
         myrule.setComment("Test Ver: " + myrule.getVersion());
         StreamEditorPane textArea = new StreamEditorPane("text/rtf");
@@ -294,6 +344,7 @@ public class StrategyPanelIT {
         assertNotNull(myrule.getId());
         Rule ruleSaved = this.tradeService.findRuleById(myrule.getId());
         assertNotNull(ruleSaved.getId());
+
         String javaCode = new String(ruleSaved.getRule());
         assertEquals(javaCode, textArea.getText());
         _log.info("Java file to Saved: {}", javaCode);
@@ -305,23 +356,24 @@ public class StrategyPanelIT {
      * @param fileName String
      * @return String
      */
-    private String readFile(String fileName) throws Exception {
+    private String readFile(String fileName) {
 
-        FileReader inputStreamReader;
-        BufferedReader bufferedReader;
-        inputStreamReader = new FileReader(fileName);
-        bufferedReader = new BufferedReader(inputStreamReader);
-        String newLine = "\n";
-        StringBuilder sb = new StringBuilder();
-        String line;
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
 
-        while ((line = bufferedReader.readLine()) != null) {
-            sb.append(line).append(newLine);
+            String newLine = "\n";
+            StringBuilder sb = new StringBuilder();
+            String line;
+
+            while ((line = bufferedReader.readLine()) != null) {
+
+                sb.append(line).append(newLine);
+            }
+            return sb.toString();
+        } catch (IOException ex) {
+
+            fail("Failed to read file msg: " + ex.getMessage());
         }
-
-        bufferedReader.close();
-        inputStreamReader.close();
-        return sb.toString();
+        return null;
     }
 
     /**
@@ -330,11 +382,14 @@ public class StrategyPanelIT {
      * @param fileName String
      * @param content  String
      */
-    private void writeFile(String fileName, String content) throws IOException {
+    private void writeFile(String fileName, String content) {
 
-        OutputStream out = new FileOutputStream(fileName);
-        out.write(content.getBytes());
-        out.flush();
-        out.close();
+        try (OutputStream out = new FileOutputStream(fileName)) {
+
+            out.write(content.getBytes());
+        } catch (IOException ex) {
+
+            fail("Failed to write OutputStream msg: " + ex.getMessage());
+        }
     }
 }

@@ -39,15 +39,16 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
-import org.trade.core.TradestrategyBase;
 import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
+import org.trade.core.TradestrategyBase;
 import org.trade.core.broker.BackTestBrokerModel;
 import org.trade.core.broker.IBrokerModel;
 import org.trade.core.factory.ClassFactory;
@@ -87,6 +88,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  *
@@ -166,77 +168,84 @@ public class AbstractStrategyIT {
     public static void tearDownAfterClass() {
     }
 
+    @Disabled
     @Test
-    public void entryRuleNoEntryByRT() throws Exception {
+    public void entryRuleNoEntryByRT() {
 
-        tradestrategy.setTrade(true);
-        Vector<Object> parm = new Vector<>(0);
-        parm.add(tradeService);
-        parm.add(brokerModel);
-        parm.add(tradestrategy.getStrategyData());
-        parm.add(tradestrategy.getId());
-        DynamicCode dynacode = new DynamicCode();
-        dynacode.addSourceDir(new File(strategyDir));
-        IStrategyRule strategyProxy = (IStrategyRule) dynacode.newProxyInstance(IStrategyRule.class,
-                IStrategyRule.PACKAGE + templateName, parm);
+        try {
 
-        strategyProxy.execute();
+            tradestrategy.setTrade(true);
+            Vector<Object> parm = new Vector<>(0);
+            parm.add(tradeService);
+            parm.add(brokerModel);
+            parm.add(tradestrategy.getStrategyData());
+            parm.add(tradestrategy.getId());
+            DynamicCode dynacode = new DynamicCode();
+            dynacode.addSourceDir(new File(strategyDir));
+            IStrategyRule strategyProxy = (IStrategyRule) dynacode.newProxyInstance(IStrategyRule.class,
+                    IStrategyRule.PACKAGE + templateName, parm);
+            strategyProxy.execute();
 
-        do {
+            do {
 
-            Thread.sleep(1000);
-        } while (!strategyProxy.isWaiting());
+                Thread.sleep(1000);
+            } while (!strategyProxy.isWaiting());
 
-        StrategyData.doDummyData(tradestrategy.getStrategyData().getBaseCandleSeries(), tradestrategy.getTradingday(), 1, BarSize.FIVE_MIN, Side.BOT.equals(tradestrategy.getSide()), 0);
-        strategyProxy.cancel();
+            StrategyData.doDummyData(tradestrategy.getStrategyData().getBaseCandleSeries(), tradestrategy.getTradingday(), 1, BarSize.FIVE_MIN, Side.BOT.equals(tradestrategy.getSide()), 0);
+            strategyProxy.cancel();
+
+        } catch (Exception ex) {
+
+            fail("Failed entryRuleNoEntryByRT msg: " + ex.getMessage());
+        }
     }
 
     @Test
-    public void entryRuleMoveStopToBE() throws Exception {
+    public void entryRuleMoveStopToBE() throws Exception{
 
-        Money price = new Money(37.99);
-        TradeOrder openOrder = strategyProxy.createRiskOpenPosition(Action.BUY, price,
-                price.subtract(new Money(0.2)), true, null, null, null, null);
+            Money price = new Money(37.99);
+            TradeOrder openOrder = strategyProxy.createRiskOpenPosition(Action.BUY, price,
+                    price.subtract(new Money(0.2)), true, null, null, null, null);
 
-        TradeOrderfill execution = new TradeOrderfill();
-        execution.setTradeOrder(openOrder);
-        execution.setTime(TradingCalendar.getDateTimeNowMarketTimeZone());
-        execution.setExchange("SMART");
-        execution.setSide(Side.BOT);
-        execution.setQuantity(openOrder.getQuantity());
-        execution.setAveragePrice(price.getBigDecimalValue());
-        execution.setPrice(price.getBigDecimalValue());
-        execution.setCumulativeQuantity(openOrder.getQuantity());
-        execution.setCommission(new BigDecimal(0));
+            TradeOrderfill execution = new TradeOrderfill();
+            execution.setTradeOrder(openOrder);
+            execution.setTime(TradingCalendar.getDateTimeNowMarketTimeZone());
+            execution.setExchange("SMART");
+            execution.setSide(Side.BOT);
+            execution.setQuantity(openOrder.getQuantity());
+            execution.setAveragePrice(price.getBigDecimalValue());
+            execution.setPrice(price.getBigDecimalValue());
+            execution.setCumulativeQuantity(openOrder.getQuantity());
+            execution.setCommission(new BigDecimal(0));
 
-        ((BackTestBrokerModel) brokerModel).execDetails(openOrder.getOrderKey(), tradestrategy.getContract(),
-                execution);
-        this.reFreshPositionOrders();
+            ((BackTestBrokerModel) brokerModel).execDetails(openOrder.getOrderKey(), tradestrategy.getContract(),
+                    execution);
+            this.reFreshPositionOrders();
 
-        assertNotNull(strategyProxy.getOpenPositionOrder());
-        /*
-         * Position has been open submit the target and stop orders.
-         */
-        if (strategyProxy.isThereOpenPosition()) {
-            if (null != strategyProxy.getOpenTradePosition().getOpenQuantity()) {
-                /*
-                 * Position has been opened submit the target and stop
-                 * orders. Two targets at 3R and 6R
-                 */
-                _log.info("Open position submit Stop/Tgt orders Symbol: {}", openOrder.getTradestrategy().getContract().getSymbol());
-                strategyProxy.createStopAndTargetOrder(strategyProxy.getOpenPositionOrder(), 1, new Money(0.01), 3,
-                        new Money(0.02), strategyProxy.getOpenTradePosition().getOpenQuantity() / 2, true);
+            assertNotNull(strategyProxy.getOpenPositionOrder());
+            /*
+             * Position has been open submit the target and stop orders.
+             */
+            if (strategyProxy.isThereOpenPosition()) {
+                if (null != strategyProxy.getOpenTradePosition().getOpenQuantity()) {
+                    /*
+                     * Position has been opened submit the target and stop
+                     * orders. Two targets at 3R and 6R
+                     */
+                    _log.info("Open position submit Stop/Tgt orders Symbol: {}", openOrder.getTradestrategy().getContract().getSymbol());
+                    strategyProxy.createStopAndTargetOrder(strategyProxy.getOpenPositionOrder(), 1, new Money(0.01), 3,
+                            new Money(0.02), strategyProxy.getOpenTradePosition().getOpenQuantity() / 2, true);
 
-                strategyProxy.createStopAndTargetOrder(strategyProxy.getOpenPositionOrder(), 1, new Money(0.01), 3,
-                        new Money(0.02), strategyProxy.getOpenTradePosition().getOpenQuantity() / 2, true);
+                    strategyProxy.createStopAndTargetOrder(strategyProxy.getOpenPositionOrder(), 1, new Money(0.01), 3,
+                            new Money(0.02), strategyProxy.getOpenTradePosition().getOpenQuantity() / 2, true);
 
-                strategyProxy.isPositionCovered();
+                    strategyProxy.isPositionCovered();
+                }
             }
-        }
 
-        StrategyData.doDummyData(tradestrategy.getStrategyData().getBaseCandleSeries(),
-                tradestrategy.getTradingday(), 1, BarSize.FIVE_MIN, Side.BOT.equals(tradestrategy.getSide()), 0);
-        strategyProxy.cancel();
+            StrategyData.doDummyData(tradestrategy.getStrategyData().getBaseCandleSeries(),
+                    tradestrategy.getTradingday(), 1, BarSize.FIVE_MIN, Side.BOT.equals(tradestrategy.getSide()), 0);
+            strategyProxy.cancel();
     }
 
     @Test

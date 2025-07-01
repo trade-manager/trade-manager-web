@@ -53,10 +53,12 @@ import org.trade.core.persistent.dao.Contract;
 import org.trade.core.persistent.dao.Tradestrategy;
 import org.trade.core.persistent.dao.Tradingday;
 import org.trade.core.persistent.dao.Tradingdays;
+import org.trade.core.valuetype.ValueTypeException;
 import org.trade.ui.models.TradingdayTableModel;
 import org.trade.ui.tables.TradingdayTable;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Some tests for the  DataUtilities class.
@@ -112,7 +114,7 @@ public class TradingdayPanelIT {
     }
 
     @Test
-    public void replaceTradingday() throws Exception {
+    public void replaceTradingday() {
 
         Tradingdays tradingdays = new Tradingdays();
 
@@ -122,7 +124,14 @@ public class TradingdayPanelIT {
 
         TradingdayTableModel tradingdayModel = new TradingdayTableModel();
         tradingdayModel.setData(tradingdays);
-        TradingdayTable tradingdayTable = new TradingdayTable(tradingdayModel);
+        TradingdayTable tradingdayTable = null;
+        try {
+
+            tradingdayTable = new TradingdayTable(tradingdayModel);
+        } catch (ValueTypeException ex) {
+
+            fail("Failed to create tradingdayTable msg: " + ex.getMessage());
+        }
         tradingdayTable.setRowSelectionInterval(0, 0);
 
         tradestrategy.getContract().setIndustry("Computer");
@@ -133,7 +142,9 @@ public class TradingdayPanelIT {
         tradingdays.replaceTradingday(instance2);
         int selectedRow = tradingdayTable.getSelectedRow();
         tradingdayModel.setData(tradingdays);
+
         if (selectedRow > -1) {
+
             tradingdayTable.setRowSelectionInterval(selectedRow, selectedRow);
         }
         org.trade.core.valuetype.Date openDate = (org.trade.core.valuetype.Date) tradingdayModel

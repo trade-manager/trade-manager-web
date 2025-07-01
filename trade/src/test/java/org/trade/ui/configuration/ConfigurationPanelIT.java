@@ -58,6 +58,7 @@ import org.trade.indicator.IndicatorSeries;
 import java.util.Vector;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 
 /**
@@ -103,90 +104,123 @@ class ConfigurationPanelIT {
     }
 
     @Test
-    public void createIntegerClass() throws Exception {
+    public void createIntegerClass() {
 
         CodeType codeType = new CodeType("Moving Average", CodeType.IndicatorParameters, "Moving Average");
         CodeAttribute codeAttribute = new CodeAttribute(codeType, "Length", "The length of the MA", "10",
                 "java.lang.Integer", null);
         CodeValue codeValue = new CodeValue(codeAttribute, "20");
 
-        Vector<Object> parm = new Vector<>();
-        parm.add(codeValue.getCodeValue());
+        Vector<Object> param = new Vector<>();
+        param.add(codeValue.getCodeValue());
+        Integer value = null;
 
-        Integer value = (Integer) ClassFactory.getCreateClass(codeValue.getCodeAttribute().getClassName(), parm,
-                this);
+        try {
+
+            value = (Integer) ClassFactory.getCreateClass(codeValue.getCodeAttribute().getClassName(), param,
+                    this);
+        } catch (Exception ex) {
+
+            fail("Failed to create value msg: " + ex.getMessage());
+        }
         _log.info("Value is: {}", value);
         assertEquals(20, value, 0);
     }
 
     @Test
-    public void createBooleanClass() throws Exception {
+    public void createBooleanClass() {
 
         CodeType codeType = new CodeType("Moving Average", CodeType.IndicatorParameters, "Moving Average");
         CodeAttribute codeAttribute = new CodeAttribute(codeType, "Length", "The length of the MA", "true",
                 "java.lang.Boolean", null);
         CodeValue codeValue = new CodeValue(codeAttribute, "true");
 
-        Vector<Object> parm = new Vector<>();
-        parm.add(codeValue.getCodeValue());
+        Vector<Object> param = new Vector<>();
+        param.add(codeValue.getCodeValue());
+        Boolean value = null;
 
-        Boolean value = (Boolean) ClassFactory.getCreateClass(codeValue.getCodeAttribute().getClassName(), parm,
-                this);
+        try {
+
+            value = (Boolean) ClassFactory.getCreateClass(codeValue.getCodeAttribute().getClassName(), param,
+                    this);
+        } catch (Exception ex) {
+
+            fail("Failed to create value msg: " + ex.getMessage());
+        }
         _log.info("Value is: {}", value);
         assertEquals(true, value);
     }
 
     @Test
-    public void createStringClass() throws Exception {
+    public void createStringClass() {
 
         CodeType codeType = new CodeType("Moving Average", CodeType.IndicatorParameters, "Moving Average");
         CodeAttribute codeAttribute = new CodeAttribute(codeType, "Length", "The length of the MA", "Test",
                 "java.lang.String", null);
         CodeValue codeValue = new CodeValue(codeAttribute, "Simple");
 
-        Vector<Object> parm = new Vector<>();
-        parm.add(codeValue.getCodeValue());
+        Vector<Object> param = new Vector<>();
+        param.add(codeValue.getCodeValue());
+        String value = null;
 
-        String value = (String) ClassFactory.getCreateClass(codeValue.getCodeAttribute().getClassName(), parm,
-                this);
+        try {
+
+            value = (String) ClassFactory.getCreateClass(codeValue.getCodeAttribute().getClassName(), param,
+                    this);
+        } catch (Exception ex) {
+
+            fail("Failed to create value msg: " + ex.getMessage());
+        }
         assertEquals("Simple", value);
         _log.info("Value is: {}", value);
     }
 
     @Test
-    public void createDecodeClass() throws Exception {
+    public void createDecodeClass() {
 
         CodeType codeType = new CodeType("Moving Average", CodeType.IndicatorParameters, "Moving Average");
         CodeAttribute codeAttribute = new CodeAttribute(codeType, "SMAType", "The length of the MA", "LINEAR",
                 "org.trade.core.valuetype.CalculationType", null);
         CodeValue codeValue = new CodeValue(codeAttribute, CalculationType.LINEAR);
 
-        Vector<Object> parm = new Vector<>();
-        // parm.add(codeValue.getCodeValue());
+        Vector<Object> param = new Vector<>();
+        CalculationType value = null;
+        // param.add(codeValue.getCodeValue());
+        try {
+            value = (CalculationType) ClassFactory
+                    .getCreateClass(codeValue.getCodeAttribute().getClassName(), param, this);
+        } catch (Exception ex) {
 
-        CalculationType value = (CalculationType) ClassFactory
-                .getCreateClass(codeValue.getCodeAttribute().getClassName(), parm, this);
+            fail("Failed to create value msg: " + ex.getMessage());
+        }
         value.setValue(CalculationType.LINEAR);
         assertEquals(CalculationType.LINEAR, value.getCode());
         _log.info("Value is: {}", value);
     }
 
     @Test
-    public void createIndicatorSeriesClass() throws Exception {
+    public void createIndicatorSeriesClass() {
 
         final String packageName = "org.trade.indicator.";
         Strategy strategy = (Strategy) DAOStrategy.newInstance().getObject();
-        Vector<Object> parm = new Vector<>();
-        parm.add(strategy);
-        parm.add("20-SMA");
-        parm.add(IndicatorSeries.MovingAverageSeries);
-        parm.add("20 Simple Moving Average");
-        parm.add(false);
-        parm.add(0);
-        parm.add(false);
+        Vector<Object> param = new Vector<>();
+        param.add(strategy);
+        param.add("20-SMA");
+        param.add(IndicatorSeries.MovingAverageSeries);
+        param.add("20 Simple Moving Average");
+        param.add(false);
+        param.add(0);
+        param.add(false);
         String className = packageName + IndicatorSeries.MovingAverageSeries;
+        IndicatorSeries value = null;
 
-        IndicatorSeries value = (IndicatorSeries) ClassFactory.getCreateClass(className, parm, this);
+        try {
+
+            value = (IndicatorSeries) ClassFactory.getCreateClass(className, param, this);
+        } catch (Exception ex) {
+
+            fail("Failed to create value msg: " + ex.getMessage());
+        }
 
         assertEquals(className, value.getClass().getName());
         _log.info("Value is: {}", value);
