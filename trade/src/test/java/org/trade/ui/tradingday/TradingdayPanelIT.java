@@ -37,6 +37,7 @@ package org.trade.ui.tradingday;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -75,6 +76,14 @@ public class TradingdayPanelIT {
 
     private static Tradestrategy tradestrategy;
     private static final String symbol = "IBM-" + TradestrategyBase.getRandomNumber(4);
+
+    /**
+     * Method setUpBeforeClass.
+     */
+    @BeforeAll
+    public static void setUpBeforeClass() {
+        System.setProperty("java.awt.headless", "false");
+    }
 
     /**
      * Method setUp.

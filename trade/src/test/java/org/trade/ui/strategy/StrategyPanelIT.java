@@ -70,6 +70,7 @@ public class StrategyPanelIT {
      */
     @BeforeAll
     public static void setUpBeforeClass() {
+        System.setProperty("java.awt.headless", "false");
     }
 
     /**
@@ -155,11 +156,11 @@ public class StrategyPanelIT {
 
         Vector<Object> param = new Vector<>();
         param.add(tradeService);
-        IBrokerModel m_brokerManagerModel = (IBrokerModel) ClassFactory
+        IBrokerModel brokerManagerModel = (IBrokerModel) ClassFactory
                 .getServiceForInterface(IBrokerModel._brokerTest, param, this);
 
         Vector<Object> parm = new Vector<>(0);
-        parm.add(m_brokerManagerModel);
+        parm.add(brokerManagerModel);
         parm.add(this.tradestrategy.getStrategyData());
         parm.add(this.tradestrategy.getId());
         _log.info("Ready to create Strategy");
@@ -171,6 +172,7 @@ public class StrategyPanelIT {
         strategyProxy.execute();
 
         while (!strategyProxy.isWaiting()) {
+
             Thread.sleep(250);
         }
 
@@ -199,9 +201,12 @@ public class StrategyPanelIT {
                 .findStrategyById(this.tradestrategy.getStrategy().getId());
         Integer version = this.tradeService.findRuleByMaxVersion(strategy);
         Rule myRule = null;
+
         for (Rule rule : strategy.getRules()) {
-            if (version.equals(rule.getVersion()))
+
+            if (version.equals(rule.getVersion())) {
                 myRule = rule;
+            }
         }
         assertNotNull(myRule);
         String fileDir = tmpDir + "/" + IStrategyRule.PACKAGE.replace('.', '/');
@@ -236,7 +241,6 @@ public class StrategyPanelIT {
         Strategy strategy = strategies.getFirst();
         assertNotNull(strategy);
         Rule myrule = null;
-
         strategy.getRules().sort(Rule.VERSION_ORDER);
 
         for (Rule rule : strategy.getRules()) {
@@ -245,12 +249,8 @@ public class StrategyPanelIT {
         }
         if (null == myrule) {
             myrule = new Rule();
-            myrule.setVersion(0);
             myrule.setStrategy(strategy);
 
-        } else {
-            myrule.setVersion(myrule.getVersion() + 1);
-            //    myrule.setId(null);
         }
         assertNotNull(myrule);
         strategyPanel.doCompile(myrule);
@@ -273,14 +273,13 @@ public class StrategyPanelIT {
         for (Rule rule : strategy.getRules()) {
             myrule = rule;
         }
+
         if (null == myrule) {
+
+
             myrule = new Rule();
-            myrule.setVersion(0);
             myrule.setStrategy(strategy);
 
-        } else {
-            myrule.setVersion(myrule.getVersion() + 1);
-            //   myrule.setId(myrule.getId());
         }
         myrule.setComment("Test Ver: " + myrule.getVersion());
         StreamEditorPane textArea = new StreamEditorPane("text/rtf");
@@ -321,7 +320,6 @@ public class StrategyPanelIT {
         }
 
         bufferedReader.close();
-
         inputStreamReader.close();
         return sb.toString();
     }

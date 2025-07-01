@@ -117,10 +117,13 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
 
 
     public StrategyPanel(TradeService tradeService) {
+
         try {
 
             this.tradeService = tradeService;
+
             if (null != getMenu()) {
+
                 getMenu().addMessageListener(this);
             }
 
