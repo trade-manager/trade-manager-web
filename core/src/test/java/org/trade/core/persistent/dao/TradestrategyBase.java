@@ -164,12 +164,11 @@ public class TradestrategyBase {
     public static void clearDBData(TradeService tradeService, Tradestrategy tradestrategy) throws Exception {
 
 
-        if(null == tradestrategy || null == tradestrategy.getId()){
+        if (null == tradestrategy || null == tradestrategy.getId()) {
+
             return;
         }
-        Contract contract = tradestrategy.getContract();
-        contract.setTradePosition(null);
-        contract = tradeService.saveAspect(contract);
+
         tradestrategy = tradeService.findTradestrategyById(tradestrategy.getId());
 
         Portfolio portfolio = tradestrategy.getPortfolio();
@@ -183,6 +182,9 @@ public class TradestrategyBase {
 
         Tradingday tradingday = tradestrategy.getTradingday();
         tradeService.deleteAspect(tradestrategy);
+        Contract contract = tradestrategy.getContract();
+        contract.setTradePosition(null);
+        contract = tradeService.saveAspect(contract);
         tradeService.deleteAspect(contract);
         Aspect aspect = tradeService.findAspectById(tradingday);
         tradeService.deleteAspect(aspect);

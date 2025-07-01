@@ -65,7 +65,7 @@ public class ClassFactory {
      * @param context      Object
      * @return Object
      */
-    public static Object getServiceForInterface(String theInterface,  Vector<Object> param, Object context)
+    public static Object getServiceForInterface(String theInterface, Vector<Object> param, Object context)
             throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException,
             NoSuchMethodException, InvocationTargetException {
 
@@ -79,7 +79,7 @@ public class ClassFactory {
         Class<?>[] args = new Class[1];
         args[0] = Object.class;
 
-        if(null == param){
+        if (null == param) {
 
             param = new Vector<>();
         }

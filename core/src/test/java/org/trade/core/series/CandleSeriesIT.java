@@ -16,7 +16,6 @@ import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.Tradestrategy;
 import org.trade.core.persistent.dao.TradestrategyBase;
 import org.trade.core.persistent.dao.series.indicator.CandleSeries;
-import org.trade.core.properties.TradeAppLoadConfig;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;

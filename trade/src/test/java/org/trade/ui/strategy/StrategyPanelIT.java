@@ -21,7 +21,6 @@ import org.trade.core.persistent.dao.Tradingday;
 import org.trade.core.persistent.dao.series.indicator.StrategyData;
 import org.trade.core.persistent.dao.strategy.IStrategyRule;
 import org.trade.core.properties.ConfigProperties;
-import org.trade.core.properties.TradeAppLoadConfig;
 import org.trade.core.util.DynamicCode;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.BarSize;
@@ -56,9 +55,11 @@ public class StrategyPanelIT {
     @Autowired
     private TradeService tradeService;
 
-    private Tradestrategy tradestrategy = null;
-    private String m_templateName = null;
-    private String m_strategyDir = null;
+
+    private static Tradestrategy tradestrategy;
+    private static final String symbol = "IBM-" + TradestrategyBase.getRandomNumber(4);
+    private String m_templateName;
+    private String m_strategyDir;
     private final String m_tmpDir = "temp";
 
     /**
@@ -74,22 +75,24 @@ public class StrategyPanelIT {
     @BeforeEach
     public void setUp() throws Exception {
 
-        TradeAppLoadConfig.loadAppProperties();
         m_templateName = ConfigProperties.getPropAsString("trade.strategy.template");
         assertNotNull(m_templateName);
         m_strategyDir = ConfigProperties.getPropAsString("trade.strategy.default.dir");
         assertNotNull(m_strategyDir);
-        String symbol = "TEST";
-        this.tradestrategy = TradestrategyBase.getTestTradestrategy(tradeService, symbol);
+        this.tradestrategy = TradestrategyBase.createTestTradestrategy(tradeService, symbol);
         assertNotNull(this.tradestrategy);
         List<Strategy> strategies = this.tradeService.findStrategies();
         assertNotNull(strategies);
+
         for (Strategy strategy : strategies) {
+
             String fileName = m_strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/') + strategy.getClassName()
                     + ".java";
             String content = readFile(fileName);
             assertNotNull("setUp: Strategy java file should be not null", content);
+
             if (strategy.getRules().isEmpty()) {
+
                 Rule nextRule = new Rule(strategy, 1, null,
                         content.getBytes());
                 strategy.add(nextRule);
@@ -106,7 +109,7 @@ public class StrategyPanelIT {
 
         File dir = new File(m_tmpDir);
         StrategyPanel.deleteDir(dir);
-        TradestrategyBase.clearDBData(tradeService);
+        TradestrategyBase.clearDBData(tradeService, tradestrategy);
     }
 
     /**
@@ -117,7 +120,7 @@ public class StrategyPanelIT {
     }
 
     @Test
-    public void testJEditorPaneTextEquals() throws Exception {
+    public void jEditorPaneTextEquals() throws Exception {
 
         DefaultSyntaxKit.initKit();
         JEditorPane sourceText = new JEditorPane();
@@ -145,12 +148,12 @@ public class StrategyPanelIT {
     }
 
     @Test
-    public void testDoCompileAndRunStrategy() throws Exception {
+    public void doCompileAndRunStrategy() throws Exception {
 
-        Vector<Object> param =  new Vector<>();
+        Vector<Object> param = new Vector<>();
         param.add(tradeService);
         IBrokerModel m_brokerManagerModel = (IBrokerModel) ClassFactory
-                .getServiceForInterface(IBrokerModel._brokerTest, param,this);
+                .getServiceForInterface(IBrokerModel._brokerTest, param, this);
 
         Vector<Object> parm = new Vector<>(0);
         parm.add(m_brokerManagerModel);
@@ -177,13 +180,13 @@ public class StrategyPanelIT {
     }
 
     @Test
-    public void testDoCompileRule() throws Exception {
+    public void doCompileRule() throws Exception {
 
         File srcDirFile;
-        Vector<Object> param =  new Vector<>();
+        Vector<Object> param = new Vector<>();
         param.add(tradeService);
         IBrokerModel m_brokerManagerModel = (IBrokerModel) ClassFactory
-                .getServiceForInterface(IBrokerModel._brokerTest, param,this);
+                .getServiceForInterface(IBrokerModel._brokerTest, param, this);
 
         Vector<Object> parm = new Vector<>(0);
         parm.add(m_brokerManagerModel);
@@ -220,7 +223,7 @@ public class StrategyPanelIT {
     }
 
     @Test
-    public void testDoCompile() throws Exception {
+    public void doCompile() throws Exception {
 
         StrategyPanel strategyPanel = new StrategyPanel(this.tradeService);
         List<Strategy> strategies = this.tradeService.findStrategies();
@@ -251,7 +254,7 @@ public class StrategyPanelIT {
     }
 
     @Test
-    public void testDoSave() throws Exception {
+    public void doSave() throws Exception {
 
         StrategyPanel strategyPanel = new StrategyPanel(this.tradeService);
         List<Strategy> strategies = this.tradeService.findStrategies();

@@ -38,6 +38,7 @@ package org.trade.strategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trade.core.broker.IBrokerModel;
+import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.Candle;
 import org.trade.core.persistent.dao.Entrylimit;
 import org.trade.core.persistent.dao.TradeOrder;
@@ -103,14 +104,14 @@ public class FiveMinWRBGapBarStrategy extends AbstractStrategyRule {
      * that value if the strategy were to be restarted and the constraint is not
      * met.
      *
+     * @param tradeService       TradeService
      * @param brokerManagerModel BrokerModel
      * @param strategyData       StrategyData
      * @param idTradestrategy    Integer
      */
 
-    public FiveMinWRBGapBarStrategy(IBrokerModel brokerManagerModel, StrategyData strategyData,
-                                    Integer idTradestrategy) {
-        super(brokerManagerModel, strategyData, idTradestrategy);
+    public FiveMinWRBGapBarStrategy(TradeService tradeService, IBrokerModel brokerManagerModel, StrategyData strategyData, Integer idTradestrategy) {
+        super(tradeService, brokerManagerModel, strategyData, idTradestrategy);
 
     }
 

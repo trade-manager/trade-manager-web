@@ -36,7 +36,6 @@
 package org.trade.ui.persistent;
 
 import org.trade.core.dao.Aspect;
-import org.trade.core.dao.Aspects;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.Account;
 import org.trade.core.persistent.dao.Contract;
@@ -60,7 +59,8 @@ import org.trade.core.valuetype.SECType;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.Hashtable;
-import java.util.Objects;
+import java.util.List;
+import java.util.Random;
 
 /**
  *
@@ -68,22 +68,24 @@ import java.util.Objects;
 public class TradestrategyBase {
 
 
+    public TradestrategyBase() {
+    }
+
     /**
      * Method getTestTradestrategy.
      *
      * @return Tradestrategy
      */
-    public static Tradestrategy getTestTradestrategy(TradeService tradeService, String symbol) throws Exception {
-
+    public static Tradestrategy createTestTradestrategy(TradeService tradeService, String symbol) throws Exception {
 
         Tradestrategy tradestrategy;
         Strategy strategy = (Strategy) DAOStrategy.newInstance().getObject();
-        Portfolio portfolio = (Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
+        Portfolio portfolio = (Portfolio) DAOPortfolio.newInstance().getObject();
         portfolio = tradeService.findPortfolioByName(portfolio.getName());
 
         if (portfolio.getAccounts().isEmpty()) {
 
-            Account account = new Account("Test", "T123456", Currency.USD, AccountType.INDIVIDUAL);
+            Account account = new Account(symbol, getRandomNumber(8), Currency.USD, AccountType.INDIVIDUAL);
             account.setAvailableFunds(new BigDecimal(25000));
             account.setBuyingPower(new BigDecimal(100000));
             account.setCashBalance(new BigDecimal(25000));
@@ -108,12 +110,11 @@ public class TradestrategyBase {
 
             if (null != tradestrategy) {
 
-                Tradestrategy transientInstance = tradeService.findTradestrategyById(tradestrategy.getId());
-                transientInstance.setStatus(null);
-                transientInstance = tradeService.saveAspect(transientInstance);
+                Tradestrategy instance = tradeService.findTradestrategyById(tradestrategy.getId());
+                instance = tradeService.saveAspect(instance);
                 Hashtable<Integer, TradePosition> tradePositions = new Hashtable<>();
 
-                for (TradeOrder tradeOrder : transientInstance.getTradeOrders()) {
+                for (TradeOrder tradeOrder : instance.getTradeOrders()) {
 
                     if (tradeOrder.hasTradePosition()) {
 
@@ -129,21 +130,21 @@ public class TradestrategyBase {
 
                 for (TradePosition tradePosition : tradePositions.values()) {
 
-                    tradePosition = (TradePosition) tradeService.findTradePositionById(tradePosition.getId());
+                    tradePosition = tradeService.findTradePositionById(tradePosition.getId());
                     /*
                      * Remove the open trade position from contract if this is a
                      * tradePosition to be deleted.
                      */
-                    if (tradePosition.equals(transientInstance.getContract().getTradePosition())) {
+                    if (tradePosition.equals(instance.getContract().getTradePosition())) {
 
-                        transientInstance.getContract().setTradePosition(null);
-                        transientInstance.setContract(tradeService.saveAspect(transientInstance.getContract()));
+                        instance.getContract().setTradePosition(null);
+                        instance.setContract(tradeService.saveAspect(instance.getContract()));
                     }
                     tradeService.deleteAspect(tradePosition);
                 }
 
-                transientInstance.getTradeOrders().clear();
-                return transientInstance;
+                instance.getTradeOrders().clear();
+                return instance;
             }
         }
 
@@ -155,6 +156,7 @@ public class TradestrategyBase {
             tradingday.getTradestrategies().clear();
             tradingday = instanceTradingDay;
         }
+
         tradestrategy = new Tradestrategy(contract, tradingday, strategy, portfolio, new BigDecimal(100), "BUY", "0",
                 true, ChartDays.TWO_DAYS, BarSize.FIVE_MIN);
         tradingday.addTradestrategy(tradestrategy);
@@ -167,56 +169,52 @@ public class TradestrategyBase {
     /**
      * Method clearDBData.
      */
-    public static void clearDBData(TradeService tradeService) throws Exception {
+    public static void clearDBData(TradeService tradeService, Tradestrategy tradestrategy) throws Exception {
 
-        Aspects contracts = tradeService.findByClassName(Contract.class.getName());
 
-        for (Aspect aspect : contracts.getAspect()) {
+        if (null == tradestrategy || null == tradestrategy.getId()) {
 
-            ((Contract) aspect).setTradePosition(null);
-            tradeService.saveAspect(aspect);
+            return;
         }
 
-        Aspects tradeOrders = tradeService.findByClassName(TradeOrder.class.getName());
+        tradestrategy = tradeService.findTradestrategyById(tradestrategy.getId());
 
-        for (Aspect aspect : tradeOrders.getAspect()) {
+        Portfolio portfolio = tradestrategy.getPortfolio();
 
-            tradeService.deleteAspect(aspect);
+        List<Account> accounts = portfolio.getAccounts();
+
+        for (Account account : accounts) {
+
+            tradeService.deleteAspect(account);
         }
 
-        Aspects tradePositions = tradeService.findByClassName(TradePosition.class.getName());
+        Tradingday tradingday = tradestrategy.getTradingday();
+        tradeService.deleteAspect(tradestrategy);
+        Contract contract = tradestrategy.getContract();
+        contract.setTradePosition(null);
+        contract = tradeService.saveAspect(contract);
+        tradeService.deleteAspect(contract);
+        Aspect aspect = tradeService.findAspectById(tradingday);
+        tradeService.deleteAspect(aspect);
 
-        for (Aspect aspect : tradePositions.getAspect()) {
+        portfolio = tradeService.findPortfolioById(portfolio.getId());
 
-            tradeService.deleteAspect(aspect);
+        if (!portfolio.getIsDefault() && portfolio.getTradestrategies().isEmpty()) {
+
+            tradeService.deleteAspect(portfolio);
         }
+    }
 
-        Aspects accounts = tradeService.findByClassName(Account.class.getName());
+    public static String getRandomNumber(int length) {
 
-        for (Aspect aspect : accounts.getAspect()) {
+        int mutiplier = 1;
 
-            tradeService.deleteAspect(aspect);
+        for (int i = 0; i < length; i++) {
+
+            mutiplier = mutiplier * 10;
         }
-
-        Aspects tradestrategies = tradeService.findByClassName(Tradestrategy.class.getName());
-
-        for (Aspect aspect : tradestrategies.getAspect()) {
-
-            tradeService.deleteAspect(aspect);
-        }
-
-        contracts = tradeService.findByClassName(Contract.class.getName());
-
-        for (Aspect aspect : contracts.getAspect()) {
-
-            tradeService.deleteAspect(aspect);
-        }
-
-        Aspects tradingdays = tradeService.findByClassName(Tradingday.class.getName());
-
-        for (Aspect aspect : tradingdays.getAspect()) {
-
-            tradeService.deleteAspect(aspect);
-        }
+        Random random = new Random();
+        Integer number = random.nextInt((mutiplier - 1) + 1); // Generates a number between min (inclusive) and max (inclusive)
+        return String.format("%0" + length + "d", number);
     }
 }

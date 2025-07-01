@@ -75,6 +75,11 @@ public class TWSAccountAliasRequest extends SaxMapper {
                 final String value = contents.toString();
                 final Account temp = (Account) stack.peek();
                 temp.setAccountNumber(value);
+
+                if (null == temp.getName()) {
+
+                    temp.setName(value);
+                }
                 _log.trace("accountTracker: {}", value);
             }
         };

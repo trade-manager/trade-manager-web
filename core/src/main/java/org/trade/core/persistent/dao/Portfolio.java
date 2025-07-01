@@ -262,6 +262,25 @@ public class Portfolio extends Aspect implements Serializable, Cloneable {
     }
 
     /**
+     * Method removeAccount.
+     *
+     * @param account Account
+     */
+    public boolean removeAccount(Account account) {
+
+        for (ListIterator<Account> itemIter = this.accounts.listIterator(); itemIter.hasNext(); ) {
+
+            Account item = itemIter.next();
+
+            if (item.equals(account)) {
+
+                itemIter.remove();
+                return true;
+            }
+        }
+        return false;
+    }
+    /**
      * Method removeTradestrategy.
      *
      * @param tradestrategy Tradestrategy

@@ -62,20 +62,12 @@ public class TradestrategyRepositoryImpl implements TradestrategyRepositoryCusto
     /**
      * Method findPositionOrdersByTradestrategyId.
      *
-     * @param idTradestrategy Integer
+     * @param tradestrategyId Integer
      * @return PositionOrders
      */
-    public TradestrategyOrders findPositionOrdersByTradestrategyId(Integer idTradestrategy) {
+    public TradestrategyOrders findPositionOrdersByTradestrategyId(Integer tradestrategyId) {
 
-        TradestrategyOrders instance = entityManager.find(TradestrategyOrders.class, idTradestrategy);
-        /*
-         * If we have an open position get all the orders for that position.
-         * Note the position could have been opened by a different
-         * tradestrategy. So this set of orders is for the position.
-         */
-        if (instance.hasOpenTradePosition()) {
-            instance.getOpenTradePosition().getTradeOrders().size();
-        }
+        TradestrategyOrders instance = entityManager.find(TradestrategyOrders.class, tradestrategyId);
 
         return instance;
     }

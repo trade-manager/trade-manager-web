@@ -69,7 +69,6 @@ import org.trade.core.persistent.dao.series.indicator.IIndicatorDataset;
 import org.trade.core.persistent.dao.series.indicator.StrategyData;
 import org.trade.core.persistent.dao.series.indicator.candle.CandlePeriod;
 import org.trade.core.properties.ConfigProperties;
-import org.trade.core.properties.TradeAppLoadConfig;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.Action;
 import org.trade.core.valuetype.BarSize;
@@ -113,8 +112,10 @@ public class TradeServiceIT {
     @Autowired
     private TradeService tradeService;
 
-    private Tradestrategy tradestrategy = null;
-    private Integer clientId = null;
+
+    private static Tradestrategy tradestrategy;
+    private static final String symbol = "IBM-" + TradestrategyBase.getRandomNumber(4);
+    private Integer clientId;
 
     /**
      * Method setUp.
@@ -122,10 +123,8 @@ public class TradeServiceIT {
     @BeforeEach
     public void setUp() throws Exception {
 
-        TradeAppLoadConfig.loadAppProperties();
         clientId = ConfigProperties.getPropAsInt("trade.tws.clientId");
-        String symbol = "TEST";
-        this.tradestrategy = TradestrategyBase.getTestTradestrategy(tradeService, symbol);
+        this.tradestrategy = TradestrategyBase.createTestTradestrategy(tradeService, symbol);
         assertNotNull(this.tradestrategy);
     }
 
@@ -135,7 +134,7 @@ public class TradeServiceIT {
     @AfterEach
     public void tearDown() throws Exception {
 
-        TradestrategyBase.clearDBData(tradeService);
+        TradestrategyBase.clearDBData(tradeService, tradestrategy);
     }
 
     /**
@@ -146,7 +145,7 @@ public class TradeServiceIT {
     }
 
     @Test
-    public void testAddTradestrategy() throws Exception {
+    public void addTradestrategy() throws Exception {
 
         Strategy strategy = (Strategy) DAOStrategy.newInstance().getObject();
         Portfolio portfolio = (Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
@@ -180,7 +179,7 @@ public class TradeServiceIT {
     }
 
     @Test
-    public void testFindOpenTradePositionByTradestrategyId() throws Exception {
+    public void findOpenTradePositionByTradestrategyId() throws Exception {
 
         TradestrategyOrders positionOrders = this.tradeService
                 .findPositionOrdersByTradestrategyId(this.tradestrategy.getId());
@@ -199,7 +198,7 @@ public class TradeServiceIT {
     }
 
     @Test
-    public void testLifeCycleTradeOrder() throws Exception {
+    public void lifeCycleTradeOrder() throws Exception {
 
         String side = this.tradestrategy.getSide();
         String action = Action.BUY;
@@ -421,35 +420,35 @@ public class TradeServiceIT {
     }
 
     @Test
-    public void testPersistTradingday() throws Exception {
+    public void saveTradingday() throws Exception {
 
         this.tradeService.saveTradingday(this.tradestrategy.getTradingday());
         assertNotNull(this.tradestrategy.getTradingday().getId());
     }
 
     @Test
-    public void testPersistTradestrategy() throws Exception {
+    public void saveTradestrategy() throws Exception {
 
         Tradestrategy result = this.tradeService.saveAspect(this.tradestrategy);
         assertNotNull(result.getId());
     }
 
     @Test
-    public void testPersistContract() throws Exception {
+    public void saveContract() throws Exception {
 
         Contract result = this.tradeService.saveAspect(this.tradestrategy.getContract());
         assertNotNull(result.getId());
     }
 
     @Test
-    public void testResetDefaultPortfolio() throws Exception {
+    public void setDefaultPortfolio() throws Exception {
 
         this.tradeService.resetDefaultPortfolio(this.tradestrategy.getPortfolio());
         assertTrue(this.tradestrategy.getPortfolio().getIsDefault());
     }
 
     @Test
-    public void testPersistTradeOrder() throws Exception {
+    public void saveTradeOrder() throws Exception {
 
         TradeOrder tradeOrder = new TradeOrder(this.tradestrategy, Action.BUY, OrderType.MKT, 1000, null, null,
                 TradingCalendar.getDateTimeNowMarketTimeZone());
@@ -460,7 +459,7 @@ public class TradeServiceIT {
     }
 
     @Test
-    public void testPersistTradeOrderFilledLong() throws Exception {
+    public void saveTradeOrderFilledLong() throws Exception {
 
         BigDecimal price = new BigDecimal("100.00");
         TradeOrder tradeOrderBuy = new TradeOrder(this.tradestrategy, Action.BUY, OrderType.STPLMT, 1000, price,
@@ -526,7 +525,7 @@ public class TradeServiceIT {
     }
 
     @Test
-    public void testPersistTradeOrderFilledShort() throws Exception {
+    public void saveTradeOrderFilledShort() throws Exception {
 
         BigDecimal price = new BigDecimal("100.00");
         TradeOrder tradeOrderBuy = new TradeOrder(this.tradestrategy, Action.SELL, OrderType.STPLMT, 1000, price,
@@ -591,7 +590,7 @@ public class TradeServiceIT {
     }
 
     @Test
-    public void testPersistTradePosition() throws Exception {
+    public void saveTradePosition() throws Exception {
 
         TradePosition tradePosition = new TradePosition(this.tradestrategy.getContract(),
                 TradingCalendar.getDateTimeNowMarketTimeZone(), Side.BOT);
@@ -600,7 +599,7 @@ public class TradeServiceIT {
     }
 
     @Test
-    public void testPersistCandleSeries() throws Exception {
+    public void saveCandleSeries() throws Exception {
 
         CandleSeries candleSeries = new CandleSeries(this.tradestrategy.getStrategyData().getBaseCandleSeries(),
                 BarSize.FIVE_MIN, this.tradestrategy.getTradingday().getOpen(),
@@ -614,7 +613,7 @@ public class TradeServiceIT {
     }
 
     @Test
-    public void testPersistCandle() throws Exception {
+    public void saveCandle() throws Exception {
 
         ZonedDateTime date = TradingCalendar.getTradingDayStart(TradingCalendar.getDateTimeNowMarketTimeZone());
         CandleItem candleItem = new CandleItem(this.tradestrategy.getContract(), this.tradestrategy.getTradingday(),
@@ -624,7 +623,7 @@ public class TradeServiceIT {
     }
 
     @Test
-    public void testFindAccountById() throws Exception {
+    public void findAccountById() throws Exception {
 
         Portfolio result = this.tradeService
                 .findPortfolioById(this.tradestrategy.getPortfolio().getId());
@@ -632,14 +631,14 @@ public class TradeServiceIT {
     }
 
     @Test
-    public void testFindAccountByNumber() throws Exception {
+    public void findAccountByNumber() throws Exception {
 
         Account result = this.tradeService.findAccountByAccountNumber(this.tradestrategy.getPortfolio().getIndividualAccount().getAccountNumber());
         assertNotNull(result);
     }
 
     @Test
-    public void testFindContractById() throws Exception {
+    public void findContractById() throws Exception {
 
         Contract result = this.tradeService
                 .findContractById(this.tradestrategy.getContract().getId());
@@ -647,7 +646,7 @@ public class TradeServiceIT {
     }
 
     @Test
-    public void testFindContractByUniqueKey() throws Exception {
+    public void findContractByUniqueKey() throws Exception {
 
         Contract result = this.tradeService.findContractByUniqueKey(
                 this.tradestrategy.getContract().getSecType(), this.tradestrategy.getContract().getSymbol(),
@@ -657,14 +656,14 @@ public class TradeServiceIT {
     }
 
     @Test
-    public void testFindTradestrategyByTradestrategy() throws Exception {
+    public void findTradestrategyByTradestrategy() throws Exception {
 
         Tradestrategy result = this.tradeService.findTradestrategyById(this.tradestrategy);
         assertNotNull(result);
     }
 
     @Test
-    public void testFindTradestrategyById() throws Exception {
+    public void findTradestrategyById() throws Exception {
 
         Tradestrategy result = this.tradeService
                 .findTradestrategyById(this.tradestrategy.getId());
@@ -672,7 +671,7 @@ public class TradeServiceIT {
     }
 
     @Test
-    public void testFindTradestrategyByUniqueKeys() throws Exception {
+    public void findTradestrategyByUniqueKeys() throws Exception {
 
         Tradestrategy result = this.tradeService.findTradestrategyByUniqueKeys(
                 this.tradestrategy.getTradingday().getOpen(), this.tradestrategy.getStrategy().getName(),
@@ -681,14 +680,14 @@ public class TradeServiceIT {
     }
 
     @Test
-    public void testFindAllTradestrategies() throws Exception {
+    public void findAllTradestrategies() throws Exception {
 
         List<Tradestrategy> result = this.tradeService.findAllTradestrategies();
         assertNotNull(result);
     }
 
     @Test
-    public void testFindTradePositionById() throws Exception {
+    public void findTradePositionById() throws Exception {
 
         TradePosition tradePosition = new TradePosition(this.tradestrategy.getContract(),
                 TradingCalendar.getDateTimeNowMarketTimeZone(), Side.BOT);
@@ -698,7 +697,7 @@ public class TradeServiceIT {
     }
 
     @Test
-    public void testFindPositionOrdersByTradestrategyId() throws Exception {
+    public void findPositionOrdersByTradestrategyId() throws Exception {
 
         TradePosition tradePosition = new TradePosition(this.tradestrategy.getContract(),
                 TradingCalendar.getDateTimeNowMarketTimeZone(), Side.BOT);
@@ -716,7 +715,7 @@ public class TradeServiceIT {
     }
 
     @Test
-    public void testRefreshPositionOrdersByTradestrategyId() throws Exception {
+    public void refreshPositionOrdersByTradestrategyId() throws Exception {
 
         TradePosition tradePosition = new TradePosition(this.tradestrategy.getContract(),
                 TradingCalendar.getDateTimeNowMarketTimeZone(), Side.BOT);
@@ -737,7 +736,7 @@ public class TradeServiceIT {
     }
 
     @Test
-    public void testRemoveTradingdayTradeOrders() throws Exception {
+    public void removeTradingdayTradeOrders() throws Exception {
 
         TradePosition tradePosition = new TradePosition(this.tradestrategy.getContract(),
                 TradingCalendar.getDateTimeNowMarketTimeZone(), Side.BOT);
@@ -749,7 +748,7 @@ public class TradeServiceIT {
     }
 
     @Test
-    public void testRemoveTradestrategyTradeOrders() throws Exception {
+    public void removeTradestrategyTradeOrders() throws Exception {
 
         TradePosition tradePosition = new TradePosition(this.tradestrategy.getContract(),
                 TradingCalendar.getDateTimeNowMarketTimeZone(), Side.BOT);
@@ -761,7 +760,7 @@ public class TradeServiceIT {
     }
 
     @Test
-    public void testFindTradeOrderById() throws Exception {
+    public void findTradeOrderById() throws Exception {
 
         BigDecimal price = new BigDecimal("100.00");
         TradeOrder tradeOrder = new TradeOrder(this.tradestrategy, Action.BUY, OrderType.STPLMT, 1000, price,
@@ -773,7 +772,7 @@ public class TradeServiceIT {
     }
 
     @Test
-    public void testFindTradeOrderByKey() throws Exception {
+    public void findTradeOrderByKey() throws Exception {
 
         BigDecimal price = new BigDecimal("100.00");
         TradeOrder tradeOrder = new TradeOrder(this.tradestrategy, Action.BUY, OrderType.STPLMT, 1000, price,
@@ -785,7 +784,7 @@ public class TradeServiceIT {
     }
 
     @Test
-    public void testFindTradeOrderfillByExecId() throws Exception {
+    public void findTradeOrderfillByExecId() throws Exception {
 
         BigDecimal price = new BigDecimal("100.00");
         TradeOrder tradeOrder = new TradeOrder(this.tradestrategy, Action.BUY, OrderType.STPLMT, 1000, price,
@@ -802,14 +801,14 @@ public class TradeServiceIT {
     }
 
     @Test
-    public void testFindTradeOrderByMaxKey() throws Exception {
+    public void fFindTradeOrderByMaxKey() throws Exception {
 
         Integer result = this.tradeService.findTradeOrderByMaxKey();
         assertNotNull(result);
     }
 
     @Test
-    public void testFindTradingdayById() throws Exception {
+    public void findTradingdayById() throws Exception {
 
         Tradingday result = this.tradeService
                 .findTradingdayById(this.tradestrategy.getTradingday().getId());
@@ -817,7 +816,7 @@ public class TradeServiceIT {
     }
 
     @Test
-    public void testFindTradingdayByOpenDate() throws Exception {
+    public void findTradingdayByOpenDate() throws Exception {
 
         Tradingday result = this.tradeService.findTradingdayByOpenCloseDate(
                 this.tradestrategy.getTradingday().getOpen(), this.tradestrategy.getTradingday().getClose());
@@ -825,7 +824,7 @@ public class TradeServiceIT {
     }
 
     @Test
-    public void testFindTradingdaysByDateRange() throws Exception {
+    public void findTradingdaysByDateRange() throws Exception {
 
         Tradingdays result = this.tradeService.findTradingdaysByDateRange(
                 this.tradestrategy.getTradingday().getOpen(), this.tradestrategy.getTradingday().getOpen());
@@ -833,7 +832,7 @@ public class TradeServiceIT {
     }
 
     @Test
-    public void testFindTradestrategyDistinctByDateRange() {
+    public void findTradestrategyDistinctByDateRange() {
 
         List<Tradestrategy> result = this.tradeService.findTradestrategyDistinctByDateRange(
                 this.tradestrategy.getTradingday().getOpen(), this.tradestrategy.getTradingday().getOpen());
@@ -841,7 +840,7 @@ public class TradeServiceIT {
     }
 
     @Test
-    public void testFindTradelogReport() throws Exception {
+    public void findTradelogReport() throws Exception {
 
         TradelogReport result = this.tradeService.findTradelogReport(this.tradestrategy.getPortfolio(),
                 TradingCalendar.getYearStart(), this.tradestrategy.getTradingday().getClose(), true, null,
@@ -850,7 +849,7 @@ public class TradeServiceIT {
     }
 
     @Test
-    public void testFindCandlesByContractAndDateRange() throws Exception {
+    public void findCandlesByContractAndDateRange() throws Exception {
 
         List<Candle> result = this.tradeService.findCandlesByContractDateRangeBarSize(
                 this.tradestrategy.getContract().getId(), this.tradestrategy.getTradingday().getOpen(),
@@ -859,7 +858,7 @@ public class TradeServiceIT {
     }
 
     @Test
-    public void testFindCandleCount() throws Exception {
+    public void findCandleCount() throws Exception {
 
         Long result = this.tradeService.findCandleCount(
                 this.tradestrategy.getTradingday().getId(),
@@ -868,7 +867,7 @@ public class TradeServiceIT {
     }
 
     @Test
-    public void testPersistRule() throws Exception {
+    public void saveRule() throws Exception {
 
         Integer version = this.tradeService.findRuleByMaxVersion(this.tradestrategy.getStrategy()) + 1;
         Rule rule = new Rule(this.tradestrategy.getStrategy(), version, "Test",
@@ -879,7 +878,7 @@ public class TradeServiceIT {
     }
 
     @Test
-    public void testFindRuleById() throws Exception {
+    public void findRuleById() throws Exception {
 
         Integer version = this.tradeService.findRuleByMaxVersion(this.tradestrategy.getStrategy()) + 1;
         Rule rule = new Rule(this.tradestrategy.getStrategy(), version, "Test",
@@ -892,14 +891,14 @@ public class TradeServiceIT {
     }
 
     @Test
-    public void testFindRuleByMaxVersion() throws Exception {
+    public void findRuleByMaxVersion() throws Exception {
 
         Integer result = this.tradeService.findRuleByMaxVersion(this.tradestrategy.getStrategy());
         assertNotNull(result);
     }
 
     @Test
-    public void testFindStrategyById() throws Exception {
+    public void findStrategyById() throws Exception {
 
         Strategy result = this.tradeService
                 .findStrategyById(this.tradestrategy.getStrategy().getId());
@@ -907,14 +906,14 @@ public class TradeServiceIT {
     }
 
     @Test
-    public void testFindStrategyByName() throws Exception {
+    public void findStrategyByName() throws Exception {
 
         Strategy result = this.tradeService.findStrategyByName(this.tradestrategy.getStrategy().getName());
         assertNotNull(result);
     }
 
     @Test
-    public void testFindCodeTypeByNameType() throws Exception {
+    public void findCodeTypeByNameType() throws Exception {
 
         String indicatorName = IndicatorSeries.MovingAverageSeries.substring(0,
                 IndicatorSeries.MovingAverageSeries.indexOf("Series"));
@@ -924,7 +923,7 @@ public class TradeServiceIT {
     }
 
     @Test
-    public void testRemoveRule() throws Exception {
+    public void removeRule() throws Exception {
 
         Integer version = this.tradeService.findRuleByMaxVersion(this.tradestrategy.getStrategy()) + 1;
         Rule rule = new Rule(this.tradestrategy.getStrategy(), version, "Test",
@@ -935,21 +934,21 @@ public class TradeServiceIT {
     }
 
     @Test
-    public void testFindStrategies() throws Exception {
+    public void findStrategies() throws Exception {
 
         List<Strategy> result = this.tradeService.findStrategies();
         assertNotNull(result);
     }
 
     @Test
-    public void testFindAspectsByClassName() throws Exception {
+    public void findAspectsByClassName() throws Exception {
 
         Aspects result = this.tradeService.findByClassName(this.tradestrategy.getClass().getName());
         assertNotNull(result);
     }
 
     @Test
-    public void testFindAspectsByClassNameFieldName() throws Exception {
+    public void findAspectsByClassNameFieldName() throws Exception {
 
         for (IIndicatorDataset indicator : this.tradestrategy.getStrategyData().getIndicators()) {
 
@@ -962,33 +961,31 @@ public class TradeServiceIT {
     }
 
     @Test
-    public void testFindAspectById() throws ClassNotFoundException {
+    public void findAspectById() throws ClassNotFoundException {
 
         Aspect result = this.tradeService.findAspectById(this.tradestrategy);
         assertNotNull(result);
     }
 
     @Test
-    public void testPersistAspect() {
+    public void saveAspect() {
 
         Aspect result = this.tradeService.saveAspect(this.tradestrategy);
         assertNotNull(result);
     }
 
     @Test
-    public void testRemoveAspect() {
+    public void removeAspect() {
 
         this.tradeService.deleteAspect(this.tradestrategy);
         assertThrows(ServiceException.class,
                 () -> {
                     this.tradeService.findAspectById(this.tradestrategy);
                 });
-
-
     }
 
     @Test
-    public void testReassignStrategy() throws Exception {
+    public void reassignStrategy() throws Exception {
 
         Tradingday tradingday = this.tradeService
                 .findTradingdayById(this.tradestrategy.getTradingday().getId());
@@ -1000,7 +997,7 @@ public class TradeServiceIT {
     }
 
     @Test
-    public void testReplaceTradingday() throws Exception {
+    public void replaceTradingday() throws Exception {
 
         Tradingdays tradingdays = new Tradingdays();
 

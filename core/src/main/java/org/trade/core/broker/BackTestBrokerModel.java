@@ -38,8 +38,6 @@ package org.trade.core.broker;
 import com.ib.client.ContractDetails;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.trade.core.broker.client.Broker;
 import org.trade.core.broker.client.ClientSocket;
 import org.trade.core.broker.client.IClientWrapper;
@@ -78,7 +76,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
 
     private final static Logger _log = LoggerFactory.getLogger(BackTestBrokerModel.class);
 
-    private static TradeService tradeService;
+    private TradeService tradeService;
 
     // Use getId as key
     private static final ConcurrentHashMap<Integer, Tradestrategy> historyDataRequests = new ConcurrentHashMap<>();
@@ -111,9 +109,9 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
 
         try {
 
-            tradeService = tradeService;
+            this.tradeService = tradeService;
             client = new ClientSocket(this);
-            int maxKey = tradeService.findTradeOrderByMaxKey();
+            int maxKey = this.tradeService.findTradeOrderByMaxKey();
 
             if (maxKey < 100000) {
 
@@ -672,14 +670,14 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
      * @param execution  Execution
      */
     public void execDetails(int reqId, Contract contractIB, TradeOrderfill execution) {
+
         try {
 
             BackTestBrokerModel.logExecution(execution);
-
-            TradeOrder transientInstance = tradeService
+            TradeOrder instance = tradeService
                     .findTradeOrderByKey(execution.getTradeOrder().getOrderKey());
 
-            if (null == transientInstance) {
+            if (null == instance) {
 
                 error(execution.getTradeOrder().getOrderKey(), 3170,
                         "Warning Order not found for Order Key: " + execution.getTradeOrder().getOrderKey()
@@ -690,22 +688,26 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
             /*
              * We already have this order fill.
              */
-            if (transientInstance.existTradeOrderfill(execution.getExecId()))
+            if (instance.existTradeOrderfill(execution.getExecId())) {
+
                 return;
+            }
 
             TradeOrderfill tradeOrderfill = new TradeOrderfill();
             BackTestBrokerModel.populateTradeOrderfill(execution, tradeOrderfill);
-            tradeOrderfill.setTradeOrder(transientInstance);
-            transientInstance.addTradeOrderfill(tradeOrderfill);
-            transientInstance.setAverageFilledPrice(tradeOrderfill.getAveragePrice());
-            transientInstance.setFilledQuantity(tradeOrderfill.getCumulativeQuantity());
-            transientInstance.setFilledDate(tradeOrderfill.getTime());
-            boolean isFilled = transientInstance.getIsFilled();
-            TradeOrder updatedOrder = tradeService.saveTradeOrderfill(transientInstance);
+            tradeOrderfill.setTradeOrder(instance);
+            instance.addTradeOrderfill(tradeOrderfill);
+            instance.setAverageFilledPrice(tradeOrderfill.getAveragePrice());
+            instance.setFilledQuantity(tradeOrderfill.getCumulativeQuantity());
+            instance.setFilledDate(tradeOrderfill.getTime());
+            boolean isFilled = instance.getIsFilled();
+            TradeOrder updatedOrder = tradeService.saveTradeOrderfill(instance);
 
             // Let the controller know an order was filled
-            if (updatedOrder.getIsFilled() && !isFilled)
+            if (updatedOrder.getIsFilled() && !isFilled) {
+
                 this.fireTradeOrderFilled(updatedOrder);
+            }
 
         } catch (Exception ex) {
             error(reqId, 3160, "Errors saving execution: " + ex.getMessage());

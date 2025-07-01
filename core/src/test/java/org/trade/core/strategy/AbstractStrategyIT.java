@@ -101,7 +101,6 @@ public class AbstractStrategyIT {
     @Autowired
     private TradeService tradeService;
 
-    private static final TradestrategyBase tradestrategyBase = new TradestrategyBase();
     private static final String symbol = "TEST-" + TradestrategyBase.getRandomNumber(4);
     private static Tradestrategy tradestrategy;
     private static IBrokerModel brokerModel;
@@ -125,7 +124,7 @@ public class AbstractStrategyIT {
         // m_brokerModel = (IBrokerModel)
         // ClassFactory.getServiceForInterface(
         // IBrokerModel._brokerTest, this);
-        Vector<Object> param =  new Vector<>();
+        Vector<Object> param = new Vector<>();
         param.add(tradeService);
         brokerModel = (IBrokerModel) ClassFactory.getServiceForInterface(IBrokerModel._brokerTest, param, this);
         templateName = ConfigProperties.getPropAsString("trade.strategy.template");
@@ -138,7 +137,7 @@ public class AbstractStrategyIT {
         tradestrategy = TradestrategyBase.createTestTradestrategy(tradeService, symbol);
         assertNotNull(tradestrategy);
 
-        strategyProxy = new StrategyRuleTest(brokerModel, tradestrategy.getStrategyData(),
+        strategyProxy = new StrategyRuleTest(tradeService, brokerModel, tradestrategy.getStrategyData(),
                 tradestrategy.getId());
         assertNotNull(strategyProxy);
         strategyProxy.execute();
@@ -172,6 +171,7 @@ public class AbstractStrategyIT {
 
         tradestrategy.setTrade(true);
         Vector<Object> parm = new Vector<>(0);
+        parm.add(tradeService);
         parm.add(brokerModel);
         parm.add(tradestrategy.getStrategyData());
         parm.add(tradestrategy.getId());
@@ -183,6 +183,7 @@ public class AbstractStrategyIT {
         strategyProxy.execute();
 
         do {
+
             Thread.sleep(1000);
         } while (!strategyProxy.isWaiting());
 
@@ -206,6 +207,7 @@ public class AbstractStrategyIT {
         execution.setAveragePrice(price.getBigDecimalValue());
         execution.setPrice(price.getBigDecimalValue());
         execution.setCumulativeQuantity(openOrder.getQuantity());
+        execution.setCommission(new BigDecimal(0));
 
         ((BackTestBrokerModel) brokerModel).execDetails(openOrder.getOrderKey(), tradestrategy.getContract(),
                 execution);
@@ -683,13 +685,14 @@ public class AbstractStrategyIT {
         /**
          * Default Constructor
          *
+         * @param tradeService       TradeService
          * @param brokerManagerModel IBrokerModel
          * @param strategyData       StrategyData
          * @param idTradestrategy    Integer
          */
 
-        public StrategyRuleTest(IBrokerModel brokerManagerModel, StrategyData strategyData, Integer idTradestrategy) {
-            super(brokerManagerModel, strategyData, idTradestrategy);
+        public StrategyRuleTest(TradeService tradeService, IBrokerModel brokerManagerModel, StrategyData strategyData, Integer idTradestrategy) {
+            super(tradeService, brokerManagerModel, strategyData, idTradestrategy);
         }
 
         /*

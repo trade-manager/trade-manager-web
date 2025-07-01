@@ -200,7 +200,7 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
     @Column(name = "parent_id")
     private Integer parentId;
 
-    @OneToMany(mappedBy = "tradeOrder", fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "tradeOrder", fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
     @OrderBy("time ASC")
     private List<TradeOrderfill> tradeOrderfills = new ArrayList<>(0);
 

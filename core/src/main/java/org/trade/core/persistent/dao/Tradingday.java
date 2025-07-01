@@ -93,7 +93,7 @@ public class Tradingday extends Aspect implements Serializable, Cloneable {
     @OrderBy("side ASC, id ASC")
     private List<Tradestrategy> tradestrategies = new ArrayList<>(0);
 
-   // @OneToMany(mappedBy = "tradingday", fetch = FetchType.LAZY)
+    // @OneToMany(mappedBy = "tradingday", fetch = FetchType.LAZY)
     @OneToMany(mappedBy = "tradingday", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE, CascadeType.REFRESH})
     private List<Candle> candles = new ArrayList<>(0);
 

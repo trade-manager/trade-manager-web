@@ -139,7 +139,12 @@ public class TWSAllocationRequest extends SaxMapper {
 
                 final String value = contents.toString();
                 Portfolio temp = (Portfolio) stack.peek();
-                temp.getAccounts().getFirst().setAccountNumber(value);
+                temp.getAccounts().getLast().setAccountNumber(value);
+
+                if (null == temp.getAccounts().getLast().getName()) {
+
+                    temp.getAccounts().getLast().setName(value);
+                }
             }
         };
 

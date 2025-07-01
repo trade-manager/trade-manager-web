@@ -55,6 +55,13 @@ import org.trade.core.persistent.dao.Portfolio;
 import org.trade.core.valuetype.AccountType;
 import org.trade.core.valuetype.Currency;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /**
  *
  */
@@ -68,7 +75,7 @@ public class TWSFinancialAccountRequestIT {
     @Autowired
     private TradeService tradeService;
 
-    private static Account account = null;
+    private static final List<Account> accounts = new ArrayList<>();
 
     /**
      * Method setUpBeforeClass.
@@ -91,7 +98,16 @@ public class TWSFinancialAccountRequestIT {
     @AfterEach
     public void tearDown() throws Exception {
 
-        tradeService.deleteAspect(this.account);
+        for (Account account : accounts) {
+
+            account = tradeService.findAccountByAccountNumber(account.getAccountNumber());
+
+            if (null != account) {
+
+                tradeService.deleteAspect(account);
+            }
+        }
+        accounts.clear();
     }
 
     /**
@@ -102,7 +118,7 @@ public class TWSFinancialAccountRequestIT {
     }
 
     @Test
-    public void testAliasEmptyRequest() throws Exception {
+    public void aliasEmptyRequest() throws Exception {
 
         final TWSAccountAliasRequest request = new TWSAccountAliasRequest();
 
@@ -115,147 +131,193 @@ public class TWSFinancialAccountRequestIT {
         final Aspects aspects = (Aspects) request.fromXML(Thread.currentThread().getContextClassLoader()
                 .getResourceAsStream("broker/request/aliasesEmpty.xml"));
 
-        for (Aspect aspect : aspects.getAspect()) {
-
-            Account item = (Account) aspect;
-            this.account = tradeService.findAccountByAccountNumber(item.getAccountNumber());
-            this.account.setAlias(item.getAlias());
-            tradeService.saveAspect(this.account);
-        }
+        assertTrue(aspects.getAspect().isEmpty());
     }
 
     @Test
-    public void testAliasRequest() throws Exception {
+    public void aliasRequest() throws Exception {
 
         final TWSAccountAliasRequest request = new TWSAccountAliasRequest();
         final Aspects aspects = (Aspects) request.fromXML(Thread.currentThread().getContextClassLoader()
                 .getResourceAsStream("broker/request/aliases.xml"));
+
+        assertFalse(aspects.getAspect().isEmpty());
+
         for (Aspect aspect : aspects.getAspect()) {
+
             Account item = (Account) aspect;
-            this.account = tradeService.findAccountByAccountNumber(item.getAccountNumber());
 
-            if (null == this.account) {
+            if (null == tradeService.findAccountByAccountNumber(item.getAccountNumber())) {
 
-                this.account = new Account(item.getAccountNumber(), item.getAccountNumber(), Currency.USD,
-                        AccountType.INDIVIDUAL);
+                item.setCurrency(Currency.USD);
+                item.setAccountType(AccountType.INDIVIDUAL);
+                item = tradeService.saveAspect(item);
+                assertNotNull(item.getId());
+                accounts.add(item);
             }
-            this.account.setAlias(item.getAlias());
-            tradeService.saveAspect(this.account);
         }
     }
 
     @Test
-    public void testAliasRequest1() throws Exception {
+    public void aliasRequest1() throws Exception {
 
         final TWSAccountAliasRequest request = new TWSAccountAliasRequest();
         final Aspects aspects = (Aspects) request.fromXML(Thread.currentThread().getContextClassLoader()
                 .getResourceAsStream("broker/request/aliases1.xml"));
 
+        assertFalse(aspects.getAspect().isEmpty());
+
         for (Aspect aspect : aspects.getAspect()) {
 
             Account item = (Account) aspect;
-            this.account = tradeService.findAccountByAccountNumber(item.getAccountNumber());
 
-            if (null == this.account) {
+            if (null == tradeService.findAccountByAccountNumber(item.getAccountNumber())) {
 
-                this.account = new Account(item.getAccountNumber(), item.getAccountNumber(), Currency.USD,
-                        AccountType.INDIVIDUAL);
+                item.setCurrency(Currency.USD);
+                item.setAccountType(AccountType.INDIVIDUAL);
+                item = tradeService.saveAspect(item);
+                assertNotNull(item.getId());
+                accounts.add(item);
             }
-            this.account.setAlias(item.getAlias());
-            tradeService.saveAspect(this.account);
         }
     }
 
     @Test
-    public void testAllocationEmptyRequest() throws Exception {
+    public void allocationEmptyRequest() throws Exception {
 
         final TWSAllocationRequest request = new TWSAllocationRequest();
         final Aspects aspects = (Aspects) request.fromXML(Thread.currentThread().getContextClassLoader()
                 .getResourceAsStream("broker/request/allocationEmpty.xml"));
 
-        for (Aspect aspect : aspects.getAspect()) {
-
-            tradeService.savePortfolio((Portfolio) aspect);
-        }
+        assertTrue(aspects.getAspect().isEmpty());
     }
 
     @Test
-    public void testAllocationRequest() throws Exception {
+    public void allocationRequest() throws Exception {
 
         final TWSAllocationRequest request = new TWSAllocationRequest();
         final Aspects aspects = (Aspects) request.fromXML(Thread.currentThread().getContextClassLoader()
                 .getResourceAsStream("broker/request/allocation.xml"));
 
+        assertFalse(aspects.getAspect().isEmpty());
+
         for (Aspect aspect : aspects.getAspect()) {
 
-            tradeService.savePortfolio((Portfolio) aspect);
+            Portfolio item = (Portfolio) aspect;
+
+            accounts.addAll(item.getAccounts());
+
+            item = tradeService.savePortfolio(item);
+            assertNotNull(item.getId());
+            tradeService.deleteAspect(item);
         }
     }
 
     @Test
-    public void testAllocationRequest1() throws Exception {
+    public void allocationRequest1() throws Exception {
 
         final TWSAllocationRequest request = new TWSAllocationRequest();
         final Aspects aspects = (Aspects) request.fromXML(Thread.currentThread().getContextClassLoader()
                 .getResourceAsStream("broker/request/allocation1.xml"));
 
+        assertFalse(aspects.getAspect().isEmpty());
+
         for (Aspect aspect : aspects.getAspect()) {
 
-            tradeService.savePortfolio((Portfolio) aspect);
+            Portfolio item = (Portfolio) aspect;
+
+            accounts.addAll(item.getAccounts());
+
+            item = tradeService.savePortfolio(item);
+            assertNotNull(item.getId());
+            tradeService.deleteAspect(item);
         }
     }
 
     @Test
-    public void testAllocationRequestNew() throws Exception {
+    public void allocationRequestNew() {
 
         Aspects aspects = new Aspects();
         Portfolio portfolio = new Portfolio("pf_eq_daily", "pf_eq_daily");
-        this.account = new Account("DU12345", "DU12345", Currency.USD, AccountType.INDIVIDUAL);
-        portfolio.getAccounts().add(this.account);
+        Account account1 = new Account("DU12345", "DU12345", Currency.USD, AccountType.INDIVIDUAL);
+        portfolio.getAccounts().add(account1);
         aspects.add(portfolio);
+
+        assertFalse(aspects.getAspect().isEmpty());
 
         for (Aspect aspect : aspects.getAspect()) {
 
-            tradeService.savePortfolio((Portfolio) aspect);
+            Portfolio item = (Portfolio) aspect;
+
+            accounts.addAll(item.getAccounts());
+
+            item = tradeService.savePortfolio(item);
+            assertNotNull(item.getId());
+            tradeService.deleteAspect(item);
         }
     }
 
     @Test
-    public void testGroupEmptyRequest() throws Exception {
+    public void groupEmptyRequest() throws Exception {
 
         final TWSGroupRequest request = new TWSGroupRequest();
         final Aspects aspects = (Aspects) request.fromXML(Thread.currentThread().getContextClassLoader()
                 .getResourceAsStream("broker/request/groupsEmpty.xml"));
 
-        for (Aspect aspect : aspects.getAspect()) {
-
-            tradeService.savePortfolio((Portfolio) aspect);
-        }
+        assertTrue(aspects.getAspect().isEmpty());
     }
 
     @Test
-    public void testGroupRequest() throws Exception {
+    public void groupRequest() throws Exception {
 
         final TWSGroupRequest request = new TWSGroupRequest();
         final Aspects aspects = (Aspects) request.fromXML(Thread.currentThread().getContextClassLoader()
                 .getResourceAsStream("broker/request/groups.xml"));
 
+        assertFalse(aspects.getAspect().isEmpty());
+
         for (Aspect aspect : aspects.getAspect()) {
 
-            tradeService.savePortfolio((Portfolio) aspect);
+            Portfolio item = (Portfolio) aspect;
+
+            for (Account account : item.getAccounts()) {
+
+                if (null == account.getName()) {
+                    account.setName(account.getAccountNumber());
+                }
+                accounts.add(account);
+            }
+
+            item = tradeService.savePortfolio(item);
+            assertNotNull(item.getId());
+            tradeService.deleteAspect(item);
         }
     }
 
     @Test
-    public void testGroupRequest1() throws Exception {
+    public void groupRequest1() throws Exception {
 
         final TWSGroupRequest request = new TWSGroupRequest();
         final Aspects aspects = (Aspects) request.fromXML(Thread.currentThread().getContextClassLoader()
                 .getResourceAsStream("broker/request/groups1.xml"));
 
+        assertFalse(aspects.getAspect().isEmpty());
+
         for (Aspect aspect : aspects.getAspect()) {
 
-            tradeService.savePortfolio((Portfolio) aspect);
+            Portfolio item = (Portfolio) aspect;
+
+            for (Account account : item.getAccounts()) {
+
+                if (null == account.getName()) {
+                    account.setName(account.getAccountNumber());
+                }
+                accounts.add(account);
+            }
+
+            item = tradeService.savePortfolio(item);
+            assertNotNull(item.getId());
+            tradeService.deleteAspect(item);
         }
     }
 }

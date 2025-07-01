@@ -47,7 +47,6 @@ import org.trade.core.persistent.dao.CodeAttribute;
 import org.trade.core.persistent.dao.CodeType;
 import org.trade.core.persistent.dao.CodeValue;
 import org.trade.core.persistent.dao.Strategy;
-import org.trade.core.properties.TradeAppLoadConfig;
 import org.trade.core.valuetype.CalculationType;
 import org.trade.core.valuetype.DAOStrategy;
 import org.trade.indicator.IndicatorSeries;
@@ -71,33 +70,33 @@ public class ConfigurationPanelIT {
      * Method setUpBeforeClass.
      */
     @BeforeAll
-    public static void setUpBeforeClass() throws Exception {
+    public static void setUpBeforeClass() {
     }
 
     /**
      * Method setUp.
      */
     @BeforeEach
-    public void setUp() throws Exception {
-        TradeAppLoadConfig.loadAppProperties();
+    public void setUp() {
+
     }
 
     /**
      * Method tearDown.
      */
     @AfterEach
-    public void tearDown() throws Exception {
+    public void tearDown() {
     }
 
     /**
      * Method tearDownAfterClass.
      */
     @AfterAll
-    public static void tearDownAfterClass() throws Exception {
+    public static void tearDownAfterClass() {
     }
 
     @Test
-    public void testCreateIntegerClass() throws Exception {
+    public void createIntegerClass() throws Exception {
 
         CodeType codeType = new CodeType("Moving Average", CodeType.IndicatorParameters, "Moving Average");
         CodeAttribute codeAttribute = new CodeAttribute(codeType, "Length", "The length of the MA", "10",
@@ -114,7 +113,7 @@ public class ConfigurationPanelIT {
     }
 
     @Test
-    public void testCreateBooleanClass() throws Exception {
+    public void createBooleanClass() throws Exception {
 
         CodeType codeType = new CodeType("Moving Average", CodeType.IndicatorParameters, "Moving Average");
         CodeAttribute codeAttribute = new CodeAttribute(codeType, "Length", "The length of the MA", "true",
@@ -131,7 +130,7 @@ public class ConfigurationPanelIT {
     }
 
     @Test
-    public void testCreateStringClass() throws Exception {
+    public void createStringClass() throws Exception {
 
         CodeType codeType = new CodeType("Moving Average", CodeType.IndicatorParameters, "Moving Average");
         CodeAttribute codeAttribute = new CodeAttribute(codeType, "Length", "The length of the MA", "Test",
@@ -148,7 +147,7 @@ public class ConfigurationPanelIT {
     }
 
     @Test
-    public void testCreateDecodeClass() throws Exception {
+    public void createDecodeClass() throws Exception {
 
         CodeType codeType = new CodeType("Moving Average", CodeType.IndicatorParameters, "Moving Average");
         CodeAttribute codeAttribute = new CodeAttribute(codeType, "SMAType", "The length of the MA", "LINEAR",
@@ -166,7 +165,7 @@ public class ConfigurationPanelIT {
     }
 
     @Test
-    public void testCreateIndicatorSeriesClass() throws Exception {
+    public void createIndicatorSeriesClass() throws Exception {
 
         final String packageName = "org.trade.indicator.";
         Strategy strategy = (Strategy) DAOStrategy.newInstance().getObject();
