@@ -91,12 +91,12 @@ public class PortfolioPanel extends BasePanel implements ChangeListener, ItemLis
     private static final long serialVersionUID = 98016024273398947L;
 
     private TradeService tradeService;
-    private TradelogReport m_tradelogReport = new TradelogReport();
-    private String m_csvDefaultDir = null;
-    private Table m_tableTradelogSummary = null;
-    private TradelogSummaryTableModel m_tradelogSummaryModel = null;
-    private Table m_tableTradelogDetail = null;
-    private TradelogDetailTableModel m_tradelogDetailModel = null;
+    private TradelogReport tradelogReport = new TradelogReport();
+    private String csvDefaultDir = null;
+    private Table tableTradelogSummary = null;
+    private TradelogSummaryTableModel tradelogSummaryModel = null;
+    private Table tableTradelogDetail = null;
+    private TradelogDetailTableModel tradelogDetailModel = null;
     private BaseButton transferButton = null;
     private final JSpinner spinnerStart = new JSpinner();
     private final JSpinner spinnerEnd = new JSpinner();
@@ -106,7 +106,7 @@ public class PortfolioPanel extends BasePanel implements ChangeListener, ItemLis
     private static final String DATEFORMAT = "MM/dd/yyyy";
     private TradelogDetail selectedTradelogDetail = null;
     private Portfolio portfolio = null;
-    private final MoneyField m_lossGainAmt = new MoneyField();
+    private final MoneyField lossGainAmt = new MoneyField();
 
     private static final String MASK = "**********";
     private static final String VALID_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz123456789. ";
@@ -118,15 +118,18 @@ public class PortfolioPanel extends BasePanel implements ChangeListener, ItemLis
      * @param controller   BasePanel
      * @param tradeService TradeService
      */
-
     public PortfolioPanel(BasePanel controller, TradeService tradeService) {
         try {
-            if (null != getMenu())
+
+            if (null != getMenu()) {
+
                 getMenu().addMessageListener(this);
+            }
+
             this.setLayout(new BorderLayout());
 
-            tradeService = tradeService;
-            m_csvDefaultDir = ConfigProperties.getPropAsString("trade.csv.default.dir");
+            this.tradeService = tradeService;
+            csvDefaultDir = ConfigProperties.getPropAsString("trade.csv.default.dir");
             transferButton = new BaseButton(controller, BaseUIPropertyCodes.TRANSFER);
             JLabel portfolioLabel = new JLabel("Portfolio:");
             portfolioEditorComboBox = new DAODecodeComboBoxEditor(Objects.requireNonNull(DAOPortfolio.newInstance()).getCodesDecodes());
@@ -136,10 +139,10 @@ public class PortfolioPanel extends BasePanel implements ChangeListener, ItemLis
             portfolioEditorComboBox.setItem(DAOPortfolio.newInstance());
             portfolioEditorComboBox.addItemListener(this);
 
-            m_tradelogSummaryModel = new TradelogSummaryTableModel();
-            m_tableTradelogSummary = new TradelogSummaryTable(m_tradelogSummaryModel);
-            m_tradelogDetailModel = new TradelogDetailTableModel();
-            m_tableTradelogDetail = new TradelogDetailTable(m_tradelogDetailModel);
+            tradelogSummaryModel = new TradelogSummaryTableModel();
+            tableTradelogSummary = new TradelogSummaryTable(tradelogSummaryModel);
+            tradelogDetailModel = new TradelogDetailTableModel();
+            tableTradelogDetail = new TradelogDetailTable(tradelogDetailModel);
             spinnerStart.setModel(new SpinnerDateModel());
             JSpinner.DateEditor dateStart = new JSpinner.DateEditor(spinnerStart, DATEFORMAT);
             spinnerStart.setEditor(dateStart);
@@ -155,9 +158,9 @@ public class PortfolioPanel extends BasePanel implements ChangeListener, ItemLis
             JPanel jPanel1 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
             jPanel1.setBorder(new BevelBorder(BevelBorder.RAISED));
             JLabel jLabelSummary = new JLabel("Ignor in Batting/Sharpe $ under");
-            m_lossGainAmt.setBorder(new BevelBorder(BevelBorder.LOWERED));
+            lossGainAmt.setBorder(new BevelBorder(BevelBorder.LOWERED));
             jPanel1.add(jLabelSummary, null);
-            jPanel1.add(m_lossGainAmt, null);
+            jPanel1.add(lossGainAmt, null);
             JPanel jPanel2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
             JLabel startLabel = new JLabel("Start Date:");
             JLabel endLabel = new JLabel("End Date:");
@@ -180,21 +183,21 @@ public class PortfolioPanel extends BasePanel implements ChangeListener, ItemLis
             jToolBar.add(jPanel2, BorderLayout.WEST);
             jToolBar.add(jPanel1, BorderLayout.EAST);
 
-            m_tableTradelogSummary.setEnabled(false);
-            m_tableTradelogSummary.setFont(new Font("Monospaced", Font.PLAIN, 12));
+            tableTradelogSummary.setEnabled(false);
+            tableTradelogSummary.setFont(new Font("Monospaced", Font.PLAIN, 12));
             JScrollPane jScrollPane = new JScrollPane();
-            jScrollPane.getViewport().add(m_tableTradelogSummary, BorderLayout.CENTER);
+            jScrollPane.getViewport().add(tableTradelogSummary, BorderLayout.CENTER);
             jScrollPane.setBorder(new BevelBorder(BevelBorder.LOWERED));
-            jScrollPane.addMouseListener(m_tableTradelogSummary);
+            jScrollPane.addMouseListener(tableTradelogSummary);
             JPanel jPanel3 = new JPanel(new BorderLayout());
             jPanel3.add(jScrollPane, BorderLayout.CENTER);
 
-            m_tableTradelogDetail.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-            m_tableTradelogDetail.setFont(new Font("Monospaced", Font.PLAIN, 12));
+            tableTradelogDetail.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            tableTradelogDetail.setFont(new Font("Monospaced", Font.PLAIN, 12));
             JScrollPane jScrollPane1 = new JScrollPane();
-            jScrollPane1.getViewport().add(m_tableTradelogDetail, BorderLayout.CENTER);
+            jScrollPane1.getViewport().add(tableTradelogDetail, BorderLayout.CENTER);
             jScrollPane1.setBorder(new BevelBorder(BevelBorder.LOWERED));
-            jScrollPane1.addMouseListener(m_tableTradelogDetail);
+            jScrollPane1.addMouseListener(tableTradelogDetail);
             JPanel jPanel4 = new JPanel(new BorderLayout());
             jPanel4.add(jScrollPane1, BorderLayout.CENTER);
 
@@ -204,8 +207,8 @@ public class PortfolioPanel extends BasePanel implements ChangeListener, ItemLis
             this.add(jToolBar, BorderLayout.NORTH);
             this.add(jSplitPane1, BorderLayout.CENTER);
 
-            m_tableTradelogDetail.getSelectionModel().addListSelectionListener(new TradelogDetailTableRowListener());
-            m_tableTradelogDetail.addMouseListener(new MouseAdapter() {
+            tableTradelogDetail.getSelectionModel().addListSelectionListener(new TradelogDetailTableRowListener());
+            tableTradelogDetail.addMouseListener(new MouseAdapter() {
                 public void mouseClicked(MouseEvent e) {
                     if (e.getClickCount() == 2) {
                         if (null != selectedTradelogDetail) {
@@ -241,18 +244,18 @@ public class PortfolioPanel extends BasePanel implements ChangeListener, ItemLis
             if (symbol.isEmpty())
                 symbol = null;
 
-            m_tradelogReport = tradeService.findTradelogReport(this.portfolio, startDate, endDate,
-                    filterButton.isSelected(), symbol, m_lossGainAmt.getMoney().getBigDecimalValue());
+            tradelogReport = this.tradeService.findTradelogReport(this.portfolio, startDate, endDate,
+                    filterButton.isSelected(), symbol, lossGainAmt.getMoney().getBigDecimalValue());
             this.clearStatusBarMessage();
-            if (m_tradelogReport.getTradelogDetail().isEmpty()) {
+            if (tradelogReport.getTradelogDetail().isEmpty()) {
                 this.setStatusBarMessage("No data found for selected criteria", INFORMATION);
             }
 
-            m_tradelogDetailModel.setData(m_tradelogReport);
-            m_tradelogSummaryModel.setData(m_tradelogReport);
-            RowSorter<?> rsDetail = m_tableTradelogDetail.getRowSorter();
+            tradelogDetailModel.setData(tradelogReport);
+            tradelogSummaryModel.setData(tradelogReport);
+            RowSorter<?> rsDetail = tableTradelogDetail.getRowSorter();
             rsDetail.setSortKeys(null);
-            RowSorter<?> rsSummary = m_tableTradelogSummary.getRowSorter();
+            RowSorter<?> rsSummary = tableTradelogSummary.getRowSorter();
             rsSummary.setSortKeys(null);
 
         } catch (Exception ex) {
@@ -317,7 +320,7 @@ public class PortfolioPanel extends BasePanel implements ChangeListener, ItemLis
 
         try {
             resetPortfolioComboBox(portfolioEditorComboBox);
-            if (m_tradelogReport.getTradelogDetail().isEmpty()) {
+            if (tradelogReport.getTradelogDetail().isEmpty()) {
                 doSearch();
             }
         } catch (Exception ex) {
@@ -363,8 +366,8 @@ public class PortfolioPanel extends BasePanel implements ChangeListener, ItemLis
             if (!event.getValueIsAdjusting()) {
                 ListSelectionModel model = (ListSelectionModel) event.getSource();
                 if (model.getLeadSelectionIndex() > -1) {
-                    selectedTradelogDetail = m_tradelogDetailModel.getData().getTradelogDetail()
-                            .get(m_tableTradelogDetail.convertRowIndexToModel(model.getLeadSelectionIndex()));
+                    selectedTradelogDetail = tradelogDetailModel.getData().getTradelogDetail()
+                            .get(tableTradelogDetail.convertRowIndexToModel(model.getLeadSelectionIndex()));
                 }
             }
         }
@@ -381,11 +384,11 @@ public class PortfolioPanel extends BasePanel implements ChangeListener, ItemLis
         ExampleFileFilter filter = new ExampleFileFilter(new String[]{"csv"}, "Portfolio Files");
         // Start in the curr dir
 
-        if (null == m_csvDefaultDir) {
-            m_csvDefaultDir = System.getProperty("user.dir");
+        if (null == csvDefaultDir) {
+            csvDefaultDir = System.getProperty("user.dir");
         }
 
-        JFileChooser filer1 = new JFileChooser(m_csvDefaultDir);
+        JFileChooser filer1 = new JFileChooser(csvDefaultDir);
         ExampleFileChooser fileView = new ExampleFileChooser();
         filer1.setFileView(fileView);
         filer1.addChoosableFileFilter(filter);
@@ -443,8 +446,8 @@ public class PortfolioPanel extends BasePanel implements ChangeListener, ItemLis
                         + TradelogSummaryTableModel.LOSS_AMOUNT + "," + TradelogSummaryTableModel.POSITION_COUNT + ","
                         + TradelogSummaryTableModel.CONTRACT_COUNT);
                 // Write out the lines
-                if (null != m_tradelogReport) {
-                    for (TradelogSummary tradelogSummary : m_tradelogReport.getTradelogSummary()) {
+                if (null != tradelogReport) {
+                    for (TradelogSummary tradelogSummary : tradelogReport.getTradelogSummary()) {
                         writer.println(formatTradelogSummaryLine(tradelogSummary));
                     }
                 }
@@ -458,8 +461,8 @@ public class PortfolioPanel extends BasePanel implements ChangeListener, ItemLis
                         + TradelogDetailTableModel.QUANTITY + "," + TradelogDetailTableModel.AVG_FILL_PRICE + ","
                         + TradelogDetailTableModel.COMMISION + "," + TradelogDetailTableModel.PROFIT_LOSS);
                 // Write out the lines
-                if (null != m_tradelogReport) {
-                    for (TradelogDetail tradelogDetail : m_tradelogReport.getTradelogDetail()) {
+                if (null != tradelogReport) {
+                    for (TradelogDetail tradelogDetail : tradelogReport.getTradelogDetail()) {
                         writer.println(formatTradelogDetailLine(tradelogDetail));
                     }
                 }

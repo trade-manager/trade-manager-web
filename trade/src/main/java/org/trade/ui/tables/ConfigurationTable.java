@@ -73,7 +73,9 @@ public class ConfigurationTable extends Table {
      * @param model TableModel
      */
     public ConfigurationTable(TableModel model) throws ValueTypeException {
+
         super(model);
+
         DecodeTableEditor currencyEditor = new DecodeTableEditor(
                 new JComboBox<>((new Currency()).getCodesDecodes()));
         DecodeTableEditor accountTypeEditor = new DecodeTableEditor(
@@ -93,12 +95,15 @@ public class ConfigurationTable extends Table {
 
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
                                                           boolean cellHasFocus) {
+
                 if (value instanceof Decode) {
+
                     String indicatorName = ((Decode) value).getCode().substring(0,
                             ((Decode) value).getCode().indexOf("Series"));
                     setToolTipText(indicatorName);
                     value = ((Decode) value).getDisplayName();
                 } else {
+
                     setToolTipText(null);
                 }
                 return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);

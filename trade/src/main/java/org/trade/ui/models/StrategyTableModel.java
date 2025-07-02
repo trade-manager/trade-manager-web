@@ -194,6 +194,7 @@ public class StrategyTableModel extends AspectTableModel {
      * @param element Strategy
      */
     public void getNewRow(Vector<Object> newRow, Strategy element) {
+
         newRow.addElement(element.getName());
         newRow.addElement(element.getDescription());
         newRow.addElement(element.getClassName());

@@ -104,6 +104,7 @@ public class BasePanelMenu extends JPanel {
     }
 
     public BasePanelMenu() {
+
         this.setLayout(new BorderLayout());
         JPanel jPanel1 = new JPanel();
         jPanel1.setLayout(new BorderLayout());

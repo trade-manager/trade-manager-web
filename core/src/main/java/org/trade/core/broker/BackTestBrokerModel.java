@@ -66,6 +66,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  *
  */
+
 public class BackTestBrokerModel extends AbstractBrokerModel implements IClientWrapper {
 
     /**
@@ -76,7 +77,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
 
     private final static Logger _log = LoggerFactory.getLogger(BackTestBrokerModel.class);
 
-    private TradeService tradeService;
+    private final TradeService tradeService;
 
     // Use getId as key
     private static final ConcurrentHashMap<Integer, Tradestrategy> historyDataRequests = new ConcurrentHashMap<>();
@@ -96,6 +97,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
     private static final Integer backfillUseRTH;
 
     static {
+
         try {
             backfillWhatToShow = ConfigProperties.getPropAsString("trade.backfill.whatToShow");
             backfillUseRTH = ConfigProperties.getPropAsInt("trade.backfill.useRTH");

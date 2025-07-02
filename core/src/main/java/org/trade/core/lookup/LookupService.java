@@ -73,6 +73,7 @@ public class LookupService {
         int providersSize = _providers.size();
 
         for (int i = 0; i < providersSize; i++) {
+
             lookup = _providers.elementAt(i).getLookup(lookupName, qualifier, optional);
 
             if (null != lookup) {

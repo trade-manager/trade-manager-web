@@ -50,6 +50,8 @@ import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
 import org.trade.core.persistent.TradeService;
+import org.trade.core.persistent.dao.Account;
+import org.trade.core.persistent.dao.Rule;
 import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.Tradestrategy;
 
@@ -57,6 +59,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 /**
@@ -144,7 +147,7 @@ public class AspectServiceIT {
     }
 
     @Test
-    public void findCodesByClassName() throws Exception {
+    public void findCodesByClassNameValid() throws Exception {
 
         // Create new instance of Strategy and set
         // values in it by reading them from form object
@@ -158,6 +161,19 @@ public class AspectServiceIT {
 
             _log.info("Found code name: {}", ((Strategy) daoObject).getName());
         }
+    }
+
+    @Test
+    public void findCodesByClassNameEmpty() throws Exception {
+
+        // Create new instance of Strategy and set
+        // values in it by reading them from form object
+        String className = "org.trade.core.persistent.dao.Rule";
+        _log.info("Find Aspects by className: {}", className);
+
+        List<?> codes = tradeService.findCodesByClassName(className);
+        assertNotNull(codes);
+        assertTrue(codes.isEmpty());
     }
 
     @Test

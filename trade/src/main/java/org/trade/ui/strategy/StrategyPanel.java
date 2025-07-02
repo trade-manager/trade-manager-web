@@ -101,26 +101,30 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
 
     private static final String TEMP_DIR = "temp";
 
-    private Tree m_tree = null;
+    private final TradeService tradeService;
+    private Tree tree = null;
     private JEditorPane sourceText = null;
     private JTextArea commentText = null;
     private StreamEditorPane messageText = null;
     private BaseButton compileButton = null;
     private BaseButton newButton = null;
     private StrategyTreeModel strategyTreeModel = null;
-    private TradeService tradeService;
-    private String m_strategyDir = null;
+    private String strategyDir = null;
     private DynamicCode dynacode = null;
     private List<Strategy> strategies = null;
     private Rule currentRule = null;
     private SimpleAttributeSet colorRedAttr = null;
 
-
+    /**
+     * Constructor for StrategyPanel.
+     *
+     * @param tradeService TradeService
+     */
     public StrategyPanel(TradeService tradeService) {
 
-        try {
+        this.tradeService = tradeService;
 
-            this.tradeService = tradeService;
+        try {
 
             if (null != getMenu()) {
 
@@ -128,16 +132,15 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
             }
 
             this.setLayout(new BorderLayout());
-            this.tradeService = tradeService;
             colorRedAttr = new SimpleAttributeSet();
             StyleConstants.setForeground(colorRedAttr, Color.RED);
-            m_strategyDir = ConfigProperties.getPropAsString("trade.strategy.default.dir");
+            strategyDir = ConfigProperties.getPropAsString("trade.strategy.default.dir");
             String fileDir = TEMP_DIR + "/" + IStrategyRule.PACKAGE.replace('.', '/');
             File srcDirFile = new File(fileDir);
             srcDirFile.mkdirs();
             srcDirFile.deleteOnExit();
             this.dynacode = new DynamicCode();
-            this.dynacode.addSourceDir(new File(m_strategyDir));
+            this.dynacode.addSourceDir(new File(strategyDir));
             this.strategies = this.tradeService.findStrategies();
             strategyTreeModel = new StrategyTreeModel(this.strategies);
             compileButton = new BaseButton(this, UIPropertyCodes.newInstance(UIPropertyCodes.COMPILE));
@@ -190,12 +193,12 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
 
             // create the JTree and scroll pane.
             JPanel treePanel = new JPanel(new BorderLayout());
-            m_tree = new Tree(strategyTreeModel);
-            m_tree.setCellRenderer(new StrategyTreeCellRenderer());
-            m_tree.addTreeSelectionListener(this);
-            ToolTipManager.sharedInstance().registerComponent(m_tree);
+            tree = new Tree(strategyTreeModel);
+            tree.setCellRenderer(new StrategyTreeCellRenderer());
+            tree.addTreeSelectionListener(this);
+            ToolTipManager.sharedInstance().registerComponent(tree);
 
-            JScrollPane jScrollPane2 = new JScrollPane(m_tree);
+            JScrollPane jScrollPane2 = new JScrollPane(tree);
             treePanel.add(jScrollPane2, BorderLayout.CENTER);
             treePanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder("Rules"),
                     BorderFactory.createEmptyBorder(4, 4, 4, 4)));
@@ -214,9 +217,9 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
             loadStrategiesFromFileSystem(this.strategies);
             strategyTreeModel.setData(this.strategies);
             // Expand the tree
-            for (int i = 0; i < m_tree.getRowCount(); i++) {
+            for (int i = 0; i < tree.getRowCount(); i++) {
 
-                m_tree.expandRow(i);
+                tree.expandRow(i);
             }
         } catch (Exception ex) {
             this.setErrorMessage("Error during initialization.", ex.getMessage(), ex);
@@ -344,12 +347,12 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
             fileView.addChoosableFileFilter(new JavaFilter());
             fileView.setAcceptAllFileFilterUsed(false);
 
-            if (null == m_strategyDir) {
+            if (null == strategyDir) {
 
                 fileView.setCurrentDirectory(new File(System.getProperty("user.dir")));
             } else {
 
-                String dir = m_strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/');
+                String dir = strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/');
                 fileView.setCurrentDirectory(new File(dir));
             }
 
@@ -359,7 +362,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
 
                 String fileName = fileView.getSelectedFile().getPath();
 
-                DefaultMutableTreeNode node = (DefaultMutableTreeNode) Objects.requireNonNull(m_tree.getSelectionPath())
+                DefaultMutableTreeNode node = (DefaultMutableTreeNode) Objects.requireNonNull(tree.getSelectionPath())
                         .getLastPathComponent();
                 setContent(readFile(fileName));
                 commentText.setText(null);
@@ -398,7 +401,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
                 }
             }
 
-            String fileName = m_strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/');
+            String fileName = strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/');
             String fileNameSource = fileName + this.currentRule.getStrategy().getClassName() + ".java";
             String fileNameComments = fileName + this.currentRule.getStrategy().getClassName() + ".txt";
             int result = JOptionPane.NO_OPTION;
@@ -453,7 +456,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
         try {
 
             String templateName = ConfigProperties.getPropAsString("trade.strategy.template");
-            String fileName = m_strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/') + templateName + ".java";
+            String fileName = strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/') + templateName + ".java";
 
             commentText.setText(null);
             setContent(readFile(fileName));
@@ -536,9 +539,9 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
 
         for (Strategy strategy : strategies) {
 
-            String fileNameCode = m_strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/')
+            String fileNameCode = strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/')
                     + strategy.getClassName() + ".java";
-            String fileNameComments = m_strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/')
+            String fileNameComments = strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/')
                     + strategy.getClassName() + ".txt";
 
             try {
@@ -681,20 +684,20 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
     }
 
     private void refreshTree() throws ValueTypeException {
-        DefaultMutableTreeNode treeNodeSelected = (DefaultMutableTreeNode) m_tree.getLastSelectedPathComponent();
+        DefaultMutableTreeNode treeNodeSelected = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
         strategyTreeModel.setData(this.strategies);
         // Expand the tree
-        for (int i = 0; i < m_tree.getRowCount(); i++) {
-            m_tree.expandRow(i);
+        for (int i = 0; i < tree.getRowCount(); i++) {
+            tree.expandRow(i);
         }
         if (null == treeNodeSelected)
             return;
 
-        TreePath path = m_tree.findTreePathByObject(treeNodeSelected.getUserObject());
+        TreePath path = tree.findTreePathByObject(treeNodeSelected.getUserObject());
 
         if (null != path) {
-            m_tree.setSelectionPath(path);
-            m_tree.scrollPathToVisible(path);
+            tree.setSelectionPath(path);
+            tree.scrollPathToVisible(path);
         }
     }
 
@@ -756,10 +759,10 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
         );
         strategy.add(nextRule);
         refreshTree();
-        TreePath path = m_tree.findTreePathByObject(nextRule);
+        TreePath path = tree.findTreePathByObject(nextRule);
         if (null != path) {
-            m_tree.setSelectionPath(path);
-            m_tree.scrollPathToVisible(path);
+            tree.setSelectionPath(path);
+            tree.scrollPathToVisible(path);
         }
     }
 

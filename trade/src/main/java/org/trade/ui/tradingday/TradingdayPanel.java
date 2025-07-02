@@ -95,15 +95,15 @@ public class TradingdayPanel extends BasePanel {
     @Serial
     private static final long serialVersionUID = 8543984162821384818L;
 
-    private TradeService tradeService;
-    private TradingdayTableModel m_tradingdayModel = null;
-    private Table m_tradestrategyTable = null;
-    private TradestrategyTableModel m_tradestrategyModel = null;
-    private Table m_tradingdayTable = null;
-    private Tradingdays m_tradingdays = null;
-    private static final ConcurrentHashMap<String, IStrategyRule> m_strategyWorkers = new ConcurrentHashMap<>();
+    private final TradeService tradeService;
+    private TradingdayTableModel tradingdayModel = null;
+    private Table tradestrategyTable = null;
+    private TradestrategyTableModel tradestrategyModel = null;
+    private Table tradingdayTable = null;
+    private Tradingdays tradingdays = null;
+    private static final ConcurrentHashMap<String, IStrategyRule> strategyWorkers = new ConcurrentHashMap<>();
     private DeleteProgressMonitor deleteProgressMonitor = null;
-    private static String m_defaultDir = null;
+    private static String defaultDir = null;
     private BaseButton ordersButton = null;
     private BaseButton deleteTradeOrderButton = null;
     private BaseButton runStrategyButton = null;
@@ -128,6 +128,7 @@ public class TradingdayPanel extends BasePanel {
     private static final String DATEFORMAT = "MM/dd/yyyy";
 
     static {
+
         StyleConstants.setBold(bold, true);
         StyleConstants.setBackground(colorRedAttr, Color.RED);
         StyleConstants.setBackground(colorGreenAttr, Color.GREEN);
@@ -140,17 +141,19 @@ public class TradingdayPanel extends BasePanel {
      * @param controller   BasePanel
      * @param tradeService TradeService
      */
-
     public TradingdayPanel(Tradingdays tradingdays, BasePanel controller, TradeService tradeService) {
+
+        this.tradeService = tradeService;
         try {
+
             if (null != getMenu()) {
+
                 getMenu().addMessageListener(this);
             }
             this.setLayout(new BorderLayout());
 
-            m_tradingdays = tradingdays;
-            this.tradeService = tradeService;
-            m_defaultDir = ConfigProperties.getPropAsString("trade.csv.default.dir");
+            this.tradingdays = tradingdays;
+            defaultDir = ConfigProperties.getPropAsString("trade.csv.default.dir");
             currencyFormater.setMinimumFractionDigits(2);
 
             // This allows the controller to listen to these events
@@ -172,29 +175,30 @@ public class TradingdayPanel extends BasePanel {
             strategyParmButton = new BaseButton(controller,
                     UIPropertyCodes.newInstance(UIPropertyCodes.STRATEGY_PARMS));
             BaseButton reAssignButton = new BaseButton(this, UIPropertyCodes.newInstance(UIPropertyCodes.REASSIGN));
-            m_tradestrategyModel = new TradestrategyTableModel();
+            tradestrategyModel = new TradestrategyTableModel();
             Tradingday tradingday = null;
 
-            for (Tradingday instance : m_tradingdays.getTradingdays()) {
+            for (Tradingday instance : this.tradingdays.getTradingdays()) {
                 tradingday = instance;
                 break;
             }
 
-            m_tradestrategyModel.setData(tradingday);
-            m_tradestrategyTable = new TradestrategyTable(m_tradestrategyModel, m_strategyWorkers);
-            ToolTipManager.sharedInstance().registerComponent(m_tradestrategyTable);
-            m_tradestrategyTable.getSelectionModel().addListSelectionListener(new TradestrategyTableRowListener());
-            m_tradestrategyTable.addMouseListener(new MouseAdapter() {
+            tradestrategyModel.setData(tradingday);
+            tradestrategyTable = new TradestrategyTable(tradestrategyModel, strategyWorkers);
+            ToolTipManager.sharedInstance().registerComponent(tradestrategyTable);
+            tradestrategyTable.getSelectionModel().addListSelectionListener(new TradestrategyTableRowListener());
+            tradestrategyTable.addMouseListener(new MouseAdapter() {
                 public void mouseClicked(MouseEvent e) {
+
                     if (e.getClickCount() == 2) {
                         transferButton.doClick();
                     }
                 }
             });
-            m_tradingdayModel = new TradingdayTableModel();
-            m_tradingdayModel.setData(m_tradingdays);
-            m_tradingdayTable = new TradingdayTable(m_tradingdayModel);
-            m_tradingdayTable.getSelectionModel().addListSelectionListener(new TradingdayTableRowListener());
+            tradingdayModel = new TradingdayTableModel();
+            tradingdayModel.setData(this.tradingdays);
+            tradingdayTable = new TradingdayTable(tradingdayModel);
+            tradingdayTable.getSelectionModel().addListSelectionListener(new TradingdayTableRowListener());
 
             JPanel jPanel2 = new JPanel(new BorderLayout());
             JPanel jPanel3 = new JPanel(new BorderLayout());
@@ -211,12 +215,12 @@ public class TradingdayPanel extends BasePanel {
             strategyToEditorComboBox.setEditable(true);
 
             JScrollPane jScrollPane = new JScrollPane();
-            jScrollPane.getViewport().add(m_tradestrategyTable, BorderLayout.CENTER);
+            jScrollPane.getViewport().add(tradestrategyTable, BorderLayout.CENTER);
             jScrollPane.setBorder(new BevelBorder(BevelBorder.LOWERED));
-            Dimension tradestrategyTableDimension = m_tradestrategyTable.getPreferredSize();
+            Dimension tradestrategyTableDimension = tradestrategyTable.getPreferredSize();
             // Make changes to [i]d[/i] if you like...
-            m_tradestrategyTable.setPreferredScrollableViewportSize(tradestrategyTableDimension);
-            jScrollPane.addMouseListener(m_tradestrategyTable);
+            tradestrategyTable.setPreferredScrollableViewportSize(tradestrategyTableDimension);
+            jScrollPane.addMouseListener(tradestrategyTable);
 
             spinnerStart.setModel(new SpinnerDateModel());
             JSpinner.DateEditor de = new JSpinner.DateEditor(spinnerStart, DATEFORMAT);
@@ -270,11 +274,11 @@ public class TradingdayPanel extends BasePanel {
             jPanel4.add(jScrollPane, BorderLayout.CENTER);
 
             JScrollPane jScrollPane1 = new JScrollPane();
-            jScrollPane1.getViewport().add(m_tradingdayTable, BorderLayout.NORTH);
+            jScrollPane1.getViewport().add(tradingdayTable, BorderLayout.NORTH);
             jScrollPane1.setBorder(new BevelBorder(BevelBorder.LOWERED));
-            Dimension tradingdayTableDimension = m_tradingdayTable.getPreferredSize();
+            Dimension tradingdayTableDimension = tradingdayTable.getPreferredSize();
             // Make changes to [i]d[/i] if you like...
-            m_tradingdayTable.setPreferredScrollableViewportSize(tradingdayTableDimension);
+            tradingdayTable.setPreferredScrollableViewportSize(tradingdayTableDimension);
 
             JPanel jPanel10 = new JPanel(new BorderLayout());
             jPanel10.add(portfolioLabel, BorderLayout.NORTH);
@@ -299,15 +303,15 @@ public class TradingdayPanel extends BasePanel {
 
             DecodeTableEditor portfolioEditor = new DecodeTableEditor(
                     new JComboBox<>((new DAOPortfolio()).getCodesDecodes()));
-            m_tradestrategyTable.setDefaultEditor(DAOPortfolio.class, portfolioEditor);
+            tradestrategyTable.setDefaultEditor(DAOPortfolio.class, portfolioEditor);
 
             DecodeTableEditor strategyEditor = new DecodeTableEditor(
                     new JComboBox<>((new DAOStrategy()).getCodesDecodes()));
-            m_tradestrategyTable.setDefaultEditor(DAOStrategy.class, strategyEditor);
+            tradestrategyTable.setDefaultEditor(DAOStrategy.class, strategyEditor);
 
             DecodeTableEditor strategyManagerEditor = new DecodeTableEditor(
                     new JComboBox<>((new DAOStrategyManager()).getCodesDecodes()));
-            m_tradestrategyTable.setDefaultEditor(DAOStrategyManager.class, strategyManagerEditor);
+            tradestrategyTable.setDefaultEditor(DAOStrategyManager.class, strategyManagerEditor);
 
             resetStrategyComboBox(strategyFromEditorComboBox);
             resetStrategyComboBox(strategyToEditorComboBox);
@@ -323,7 +327,7 @@ public class TradingdayPanel extends BasePanel {
      * @return boolean
      */
     public boolean doWindowDeActivated() {
-        if (m_tradingdays.isDirty()) {
+        if (tradingdays.isDirty()) {
             setStatusBarMessage("Please Save or Refresh as changed are pending", BasePanel.WARNING);
             return false;
         }
@@ -334,7 +338,7 @@ public class TradingdayPanel extends BasePanel {
     }
 
     public void doWindowOpen() {
-        m_tradingdayTable.setRowSelectionInterval(0, 0);
+        tradingdayTable.setRowSelectionInterval(0, 0);
     }
 
     public void doWindowClose() {
@@ -354,7 +358,7 @@ public class TradingdayPanel extends BasePanel {
 
             if (result == JOptionPane.YES_OPTION) {
 
-                deleteTradeOrders(m_tradingdays);
+                deleteTradeOrders(tradingdays);
             }
         } catch (Exception ex) {
             this.setErrorMessage("Error deleting TradeOrders.", ex.getMessage(), ex);
@@ -406,7 +410,7 @@ public class TradingdayPanel extends BasePanel {
                 getFrame().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
                 boolean dirty = false;
 
-                for (Tradingday tradingday : m_tradingdays.getTradingdays()) {
+                for (Tradingday tradingday : tradingdays.getTradingdays()) {
 
                     if (tradingday.getClose().isBefore(tradingday.getOpen())
                             || tradingday.getClose().equals(tradingday.getOpen())) {
@@ -472,7 +476,7 @@ public class TradingdayPanel extends BasePanel {
 
             if (null != todayTradingday) {
 
-                Tradingday currTodayTradingday = m_tradingdays.getTradingday(
+                Tradingday currTodayTradingday = this.tradingdays.getTradingday(
                         TradingCalendar.getTradingDayStart(TradingCalendar.getDateTimeNowMarketTimeZone()),
                         TradingCalendar.getTradingDayEnd(TradingCalendar.getDateTimeNowMarketTimeZone()));
 
@@ -482,11 +486,11 @@ public class TradingdayPanel extends BasePanel {
                     todayTradingday.populateStrategyData(currTodayTradingday);
                 }
             }
-            m_tradingdays.getTradingdays().clear();
+            this.tradingdays.getTradingdays().clear();
 
             if (tradingdays.getTradingdays().isEmpty()) {
 
-                m_tradestrategyModel.setData(new Tradingday());
+                tradestrategyModel.setData(new Tradingday());
                 this.setStatusBarMessage(
                         "Did not find data for period From Date: "
                                 + TradingCalendar.getFormattedDate(startDate.toLocalDate(), DATEFORMAT) + " To Date: "
@@ -495,24 +499,24 @@ public class TradingdayPanel extends BasePanel {
 
             } else {
                 for (Tradingday tradingday : tradingdays.getTradingdays()) {
-                    m_tradingdays.add(tradingday);
+                    this.tradingdays.add(tradingday);
                 }
             }
-            m_tradingdayModel.setData(m_tradingdays);
-            RowSorter<?> rsDetail = m_tradingdayTable.getRowSorter();
+            tradingdayModel.setData(this.tradingdays);
+            RowSorter<?> rsDetail = tradingdayTable.getRowSorter();
             rsDetail.setSortKeys(null);
-            RowSorter<?> rsSummary = m_tradestrategyTable.getRowSorter();
+            RowSorter<?> rsSummary = tradestrategyTable.getRowSorter();
             rsSummary.setSortKeys(null);
 
-            if (!m_tradingdays.getTradingdays().isEmpty()) {
+            if (!this.tradingdays.getTradingdays().isEmpty()) {
 
-                m_tradingdayTable.setRowSelectionInterval(0, 0);
+                tradingdayTable.setRowSelectionInterval(0, 0);
 
             } else {
 
-                m_tradestrategyModel.setData(new Tradingday());
+                tradestrategyModel.setData(new Tradingday());
             }
-            m_tradestrategyTable.enablePopupMenu(true);
+            tradestrategyTable.enablePopupMenu(true);
             enableTradestrategyButtons(null);
         } catch (Exception ex) {
             this.setErrorMessage("Error finding Tradingday.", ex.getMessage(), ex);
@@ -528,7 +532,7 @@ public class TradingdayPanel extends BasePanel {
 
         try {
 
-            if (m_tradingdays.isDirty()) {
+            if (tradingdays.isDirty()) {
                 this.setStatusBarMessage("Please save or refresh before running strategy ...\n", BasePanel.WARNING);
                 return;
             }
@@ -537,7 +541,7 @@ public class TradingdayPanel extends BasePanel {
              * positions. If they do kill the strategy worker before deleting
              * trades.
              */
-            for (Tradingday tradingday : m_tradingdays.getTradingdays()) {
+            for (Tradingday tradingday : tradingdays.getTradingdays()) {
                 if (Tradingdays.hasTradeOrders(tradingday)) {
                     JOptionPane.showMessageDialog(this.getFrame(),
                             "Tradingday: " + tradingday.getOpen()
@@ -559,7 +563,7 @@ public class TradingdayPanel extends BasePanel {
                         .getObject());
 
                 final ReAssignProgressMonitor reAssignProgressMonitor = new ReAssignProgressMonitor(
-                        tradeService, m_tradingdays, fromStrategy, toStrategy);
+                        tradeService, tradingdays, fromStrategy, toStrategy);
                 reAssignProgressMonitor.addPropertyChangeListener(evt -> {
                     if ("progress".equals(evt.getPropertyName())) {
                         int progress = (Integer) evt.getNewValue();
@@ -582,11 +586,11 @@ public class TradingdayPanel extends BasePanel {
     public void doRefresh(final Tradingday tradingday) {
         try {
             this.clearStatusBarMessage();
-            Tradingday currentTradingday = m_tradingdays.getTradingday(tradingday.getOpen(), tradingday.getClose());
+            Tradingday currentTradingday = tradingdays.getTradingday(tradingday.getOpen(), tradingday.getClose());
             if (null != currentTradingday && null != currentTradingday.getId()) {
                 Tradingday instance = tradeService.findTradingdayById(currentTradingday.getId());
                 instance.populateStrategyData(currentTradingday);
-                m_tradingdays.replaceTradingday(instance);
+                tradingdays.replaceTradingday(instance);
             }
         } catch (Exception ex) {
             this.setErrorMessage("Error finding Tradingday.", ex.getMessage(), ex);
@@ -601,23 +605,23 @@ public class TradingdayPanel extends BasePanel {
     public void doRefreshTradingdayTable(final Tradingday tradingday) {
         try {
             this.clearStatusBarMessage();
-            int selectedRow = m_tradingdayTable.getSelectedRow();
-            m_tradingdayModel.setData(m_tradingdays);
-            for (int i = 0; i < m_tradingdayModel.getRowCount(); i++) {
-                ZonedDateTime open = ((Date) m_tradingdayModel.getValueAt(i, 0))
+            int selectedRow = tradingdayTable.getSelectedRow();
+            tradingdayModel.setData(tradingdays);
+            for (int i = 0; i < tradingdayModel.getRowCount(); i++) {
+                ZonedDateTime open = ((Date) tradingdayModel.getValueAt(i, 0))
                         .getZonedDateTime();
-                ZonedDateTime close = ((Date) m_tradingdayModel.getValueAt(i, 1))
+                ZonedDateTime close = ((Date) tradingdayModel.getValueAt(i, 1))
                         .getZonedDateTime();
                 if (tradingday.getOpen().equals(open) && tradingday.getClose().equals(close)) {
-                    selectedRow = m_tradingdayTable.convertRowIndexToView(i);
+                    selectedRow = tradingdayTable.convertRowIndexToView(i);
                     break;
                 }
             }
 
             if (selectedRow > -1) {
-                m_tradingdayTable.setRowSelectionInterval(selectedRow, selectedRow);
+                tradingdayTable.setRowSelectionInterval(selectedRow, selectedRow);
             } else {
-                m_tradingdayTable.setRowSelectionInterval(0, 0);
+                tradingdayTable.setRowSelectionInterval(0, 0);
                 enableTradestrategyButtons(null);
             }
         } catch (Exception ex) {
@@ -630,13 +634,13 @@ public class TradingdayPanel extends BasePanel {
      * pressed.
      */
     public void doRefresh() {
-        int row = m_tradingdayTable.getSelectedRow();
+        int row = tradingdayTable.getSelectedRow();
         if (row > -1) {
-            Date openDate = (Date) m_tradingdayModel
-                    .getValueAt(m_tradingdayTable.convertRowIndexToModel(row), 0);
-            Date closeDate = (Date) m_tradingdayModel
-                    .getValueAt(m_tradingdayTable.convertRowIndexToModel(row), 1);
-            Tradingday tradingday = m_tradingdayModel.getData().getTradingday(openDate.getZonedDateTime(),
+            Date openDate = (Date) tradingdayModel
+                    .getValueAt(tradingdayTable.convertRowIndexToModel(row), 0);
+            Date closeDate = (Date) tradingdayModel
+                    .getValueAt(tradingdayTable.convertRowIndexToModel(row), 1);
+            Tradingday tradingday = tradingdayModel.getData().getTradingday(openDate.getZonedDateTime(),
                     closeDate.getZonedDateTime());
             doRefresh(tradingday);
             this.doRefreshTradingdayTable(tradingday);
@@ -672,12 +676,12 @@ public class TradingdayPanel extends BasePanel {
             fileView.setAcceptAllFileFilterUsed(false);
             fileView.setMultiSelectionEnabled(true);
 
-            if (null == m_defaultDir) {
+            if (null == defaultDir) {
 
                 fileView.setCurrentDirectory(new File(System.getProperty("user.dir")));
             } else {
 
-                fileView.setCurrentDirectory(new File(m_defaultDir));
+                fileView.setCurrentDirectory(new File(defaultDir));
             }
 
             int returnVal = fileView.showOpenDialog(this);
@@ -695,40 +699,40 @@ public class TradingdayPanel extends BasePanel {
                 int selectedRow = 0;
                 Tradingday tradingday = null;
 
-                if (m_tradingdayTable.getSelectionModel().getLeadSelectionIndex() == -1) {
+                if (tradingdayTable.getSelectionModel().getLeadSelectionIndex() == -1) {
 
-                    if (!m_tradingdays.getTradingdays().isEmpty()) {
+                    if (!tradingdays.getTradingdays().isEmpty()) {
 
-                        m_tradingdayTable.setRowSelectionInterval(0, 0);
+                        tradingdayTable.setRowSelectionInterval(0, 0);
                     }
                 }
-                if (m_tradingdayTable.getSelectionModel().getLeadSelectionIndex() > -1) {
+                if (tradingdayTable.getSelectionModel().getLeadSelectionIndex() > -1) {
 
-                    selectedRow = m_tradingdayTable.getSelectionModel().getLeadSelectionIndex();
-                    Date openDate = (Date) m_tradingdayModel
-                            .getValueAt(m_tradingdayTable.convertRowIndexToModel(selectedRow), 0);
-                    Date closeDate = (Date) m_tradingdayModel
-                            .getValueAt(m_tradingdayTable.convertRowIndexToModel(selectedRow), 1);
-                    tradingday = m_tradingdayModel.getData().getTradingday(openDate.getZonedDateTime(),
+                    selectedRow = tradingdayTable.getSelectionModel().getLeadSelectionIndex();
+                    Date openDate = (Date) tradingdayModel
+                            .getValueAt(tradingdayTable.convertRowIndexToModel(selectedRow), 0);
+                    Date closeDate = (Date) tradingdayModel
+                            .getValueAt(tradingdayTable.convertRowIndexToModel(selectedRow), 1);
+                    tradingday = tradingdayModel.getData().getTradingday(openDate.getZonedDateTime(),
                             closeDate.getZonedDateTime());
                 }
 
                 for (File file : files) {
 
                     String fileName = file.getPath();
-                    m_tradingdays.populateDataFromFile(fileName, tradingday);
+                    tradingdays.populateDataFromFile(fileName, tradingday);
                 }
 
-                m_tradingdayModel.setData(m_tradingdays);
+                tradingdayModel.setData(tradingdays);
 
-                if (!m_tradingdays.getTradingdays().isEmpty()) {
+                if (!tradingdays.getTradingdays().isEmpty()) {
 
-                    m_tradingdayTable.setRowSelectionInterval(selectedRow, selectedRow);
+                    tradingdayTable.setRowSelectionInterval(selectedRow, selectedRow);
                     spinnerEnd.setValue(
-                            ((Date) m_tradingdayModel.getValueAt(m_tradingdayTable.convertRowIndexToModel(0), 0))
+                            ((Date) tradingdayModel.getValueAt(tradingdayTable.convertRowIndexToModel(0), 0))
                                     .getDate());
-                    spinnerStart.setValue(((Date) m_tradingdayModel.getValueAt(
-                            m_tradingdayTable.convertRowIndexToModel(m_tradingdayModel.getRowCount() - 1), 1))
+                    spinnerStart.setValue(((Date) tradingdayModel.getValueAt(
+                            tradingdayTable.convertRowIndexToModel(tradingdayModel.getRowCount() - 1), 1))
                             .getDate());
                 }
             }
@@ -745,9 +749,9 @@ public class TradingdayPanel extends BasePanel {
      */
     public void setConnected(Boolean connected) {
         this.connected = connected;
-        if (m_tradestrategyTable.getSelectedRow() > -1) {
-            Tradestrategy transferObject = m_tradestrategyModel.getData().getTradestrategies()
-                    .get(m_tradestrategyTable.convertRowIndexToModel(m_tradestrategyTable.getSelectedRow()));
+        if (tradestrategyTable.getSelectedRow() > -1) {
+            Tradestrategy transferObject = tradestrategyModel.getData().getTradestrategies()
+                    .get(tradestrategyTable.convertRowIndexToModel(tradestrategyTable.getSelectedRow()));
             enableTradestrategyButtons(transferObject);
         }
     }
@@ -875,8 +879,8 @@ public class TradingdayPanel extends BasePanel {
      * @return boolean
      */
     public boolean isStrategyWorkerRunning(String key) {
-        if (m_strategyWorkers.containsKey(key)) {
-            IStrategyRule strategy = m_strategyWorkers.get(key);
+        if (strategyWorkers.containsKey(key)) {
+            IStrategyRule strategy = strategyWorkers.get(key);
             return !strategy.isDone();
         }
         return false;
@@ -889,7 +893,7 @@ public class TradingdayPanel extends BasePanel {
      * @param strategy IStrategyRule
      */
     public void addStrategyWorker(String key, final IStrategyRule strategy) {
-        m_strategyWorkers.put(key, strategy);
+        strategyWorkers.put(key, strategy);
     }
 
     /**
@@ -898,7 +902,7 @@ public class TradingdayPanel extends BasePanel {
      * @param key String
      */
     public void removeStrategyWorker(String key) {
-        m_strategyWorkers.remove(key);
+        strategyWorkers.remove(key);
     }
 
     /**
@@ -907,8 +911,8 @@ public class TradingdayPanel extends BasePanel {
      * @param key String
      */
     public IStrategyRule getStrategyWorker(String key) {
-        if (m_strategyWorkers.containsKey(key)) {
-            return m_strategyWorkers.get(key);
+        if (strategyWorkers.containsKey(key)) {
+            return strategyWorkers.get(key);
         }
         return null;
     }
@@ -937,8 +941,8 @@ public class TradingdayPanel extends BasePanel {
      * @param key String
      */
     public void killStrategyWorker(String key) {
-        if (m_strategyWorkers.containsKey(key)) {
-            IStrategyRule strategy = m_strategyWorkers.get(key);
+        if (strategyWorkers.containsKey(key)) {
+            IStrategyRule strategy = strategyWorkers.get(key);
             if (!strategy.isDone()) {
                 strategy.cancel();
             }
@@ -949,7 +953,7 @@ public class TradingdayPanel extends BasePanel {
      * Method killAllStrategyWorker.
      */
     public void killAllStrategyWorker() {
-        for (String key : m_strategyWorkers.keySet()) {
+        for (String key : strategyWorkers.keySet()) {
             killStrategyWorker(key);
         }
     }
@@ -958,9 +962,9 @@ public class TradingdayPanel extends BasePanel {
      * Method cleanStrategyWorker.
      */
     public void cleanStrategyWorker() {
-        for (String key : m_strategyWorkers.keySet()) {
-            if (m_strategyWorkers.get(key).isDone()) {
-                m_strategyWorkers.remove(key);
+        for (String key : strategyWorkers.keySet()) {
+            if (strategyWorkers.get(key).isDone()) {
+                strategyWorkers.remove(key);
             }
         }
     }
@@ -1116,8 +1120,8 @@ public class TradingdayPanel extends BasePanel {
                 ListSelectionModel model = (ListSelectionModel) event.getSource();
                 if (model.getLeadSelectionIndex() > -1) {
 
-                    Tradestrategy transferObject = m_tradestrategyModel.getData().getTradestrategies()
-                            .get(m_tradestrategyTable.convertRowIndexToModel(model.getLeadSelectionIndex()));
+                    Tradestrategy transferObject = tradestrategyModel.getData().getTradestrategies()
+                            .get(tradestrategyTable.convertRowIndexToModel(model.getLeadSelectionIndex()));
                     enableTradestrategyButtons(transferObject);
                 } else {
                     enableTradestrategyButtons(null);
@@ -1142,20 +1146,20 @@ public class TradingdayPanel extends BasePanel {
                     ListSelectionModel model = (ListSelectionModel) event.getSource();
 
                     if (model.getLeadSelectionIndex() > -1) {
-                        Date openDate = (Date) m_tradingdayModel
-                                .getValueAt(m_tradingdayTable.convertRowIndexToModel(model.getLeadSelectionIndex()), 0);
-                        Date closeDate = (Date) m_tradingdayModel
-                                .getValueAt(m_tradingdayTable.convertRowIndexToModel(model.getLeadSelectionIndex()), 1);
-                        Tradingday transferObject = m_tradingdayModel.getData()
+                        Date openDate = (Date) tradingdayModel
+                                .getValueAt(tradingdayTable.convertRowIndexToModel(model.getLeadSelectionIndex()), 0);
+                        Date closeDate = (Date) tradingdayModel
+                                .getValueAt(tradingdayTable.convertRowIndexToModel(model.getLeadSelectionIndex()), 1);
+                        Tradingday transferObject = tradingdayModel.getData()
                                 .getTradingday(openDate.getZonedDateTime(), closeDate.getZonedDateTime());
 
-                        m_tradestrategyModel.setData(transferObject);
-                        m_tradestrategyTable.enablePopupMenu(true);
+                        tradestrategyModel.setData(transferObject);
+                        tradestrategyTable.enablePopupMenu(true);
                         enableTradestrategyButtons(null);
 
                     } else {
-                        m_tradestrategyModel.setData(null);
-                        m_tradestrategyTable.enablePopupMenu(false);
+                        tradestrategyModel.setData(null);
+                        tradestrategyTable.enablePopupMenu(false);
                     }
                 }
             } catch (Exception ex) {

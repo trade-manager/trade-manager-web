@@ -6,6 +6,7 @@ import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
+import jakarta.transaction.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,7 @@ public abstract class AspectServiceImpl<ID extends Aspect> implements AspectServ
      * @param className String
      * @return Aspects
      */
+    @Transactional
     public Aspects findByClassName(String className) throws ClassNotFoundException {
 
         Aspects aspects = new Aspects();
@@ -48,6 +50,7 @@ public abstract class AspectServiceImpl<ID extends Aspect> implements AspectServ
      * @param value     String
      * @return Aspects
      */
+    @Transactional
     public Aspects findByClassNameAndFieldName(String className, String fieldName, String value) throws ClassNotFoundException {
 
         Aspects aspects = new Aspects();
@@ -75,6 +78,7 @@ public abstract class AspectServiceImpl<ID extends Aspect> implements AspectServ
     /**
      *
      */
+    @Transactional
     public List<?> findCodesByClassName(String className) throws ClassNotFoundException {
 
         Class<?> c = Class.forName(className);

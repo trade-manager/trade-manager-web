@@ -60,7 +60,7 @@ public class DBTableLookupServiceProvider implements ILookupServiceProvider {
 
     private final static Logger _log = LoggerFactory.getLogger(DBTableLookupServiceProvider.class);
 
-    TradeService tradeService;
+    private static TradeService _tradeService;
     /*
      * This will be a hashtable of hashtable's of ILookup objects. The first key
      * is the lookup name and the second key is the LookupQualifier.
@@ -71,10 +71,15 @@ public class DBTableLookupServiceProvider implements ILookupServiceProvider {
      * Default Constructor
      */
     public DBTableLookupServiceProvider(TradeService tradeService) {
-        this.tradeService = tradeService;
+
+        if (null == _tradeService) {
+
+            _tradeService = tradeService;
+        }
     }
 
     public static void clearLookup() {
+
         _lookups.clear();
     }
 
@@ -212,7 +217,8 @@ public class DBTableLookupServiceProvider implements ILookupServiceProvider {
                         rows.add(newRowNone);
                     }
 
-                    List<?> codes = tradeService.findCodesByClassName(dao);
+                    List<?> codes = _tradeService.findCodesByClassName(dao);
+
                     for (Object daoObject : codes) {
 
                         Method method = Reflector.findMethod(daoObject.getClass(), methodName, null);
@@ -274,7 +280,7 @@ public class DBTableLookupServiceProvider implements ILookupServiceProvider {
 
         /*
          * Need to clone the object otherwise changes in position in the object
-         * returned would effect everyone using the object.
+         * returned would affect everyone using the object.
          */
         if (null != lookup) {
 

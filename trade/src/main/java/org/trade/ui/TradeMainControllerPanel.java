@@ -37,8 +37,6 @@ package org.trade.ui;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.trade.base.BasePanel;
 import org.trade.base.ComponentPrintService;
 import org.trade.base.TabbedAppPanel;
@@ -130,16 +128,12 @@ import java.util.concurrent.ConcurrentHashMap;
  * display charts. Other series are used for indicators that have been setup for
  * the strategy.
  */
-@Component
 public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerChangeListener, IStrategyChangeListener {
 
     @Serial
     private static final long serialVersionUID = -7717664255656430982L;
 
     private final static Logger _log = LoggerFactory.getLogger(TradeMainControllerPanel.class);
-
-    @Autowired
-    private TradeService tradeService;
 
     private static Tradingdays tradingdays = null;
     private IBrokerModel brokerModel = null;
@@ -158,9 +152,9 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
      *
      * @param frame the main application Frame.
      */
-    public TradeMainControllerPanel(Frame frame) {
+    public TradeMainControllerPanel(Frame frame, TradeService tradeService) {
 
-        super(frame);
+        super(frame, tradeService);
 
         try {
 
@@ -170,7 +164,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
             setMenu(new TradeMainPanelMenu(this));
             /*
              * This allows the main controller to receive all events as it is
-             * allways considered selected.
+             * always considered selected.
              */
             setSelected(true);
             Tradingday tradingday = Tradingday.newInstance(TradingCalendar.getCurrentTradingDay());
@@ -194,7 +188,6 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
              * contracts and decide how to trade them.
              *
              */
-
             tradingdayPanel = new TradingdayPanel(tradingdays, this, tradeService);
             /*
              * Constructs a new Contract tab that contains all information
@@ -202,7 +195,6 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
              * trading day.
              *
              */
-
             contractPanel = new ContractPanel(tradingdays, this, tradeService);
 
             /*
@@ -212,7 +204,6 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
              * month i.e. Batting avg, Simple Sharpe ratio and P/L information.
              *
              */
-
             PortfolioPanel portfolioPanel = new PortfolioPanel(this, tradeService);
 
             /*
@@ -221,7 +212,6 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
              * indicators, accounts.
              *
              */
-
             ConfigurationPanel configurationPanel = new ConfigurationPanel(tradeService);
 
             /*
@@ -231,7 +221,6 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
              * this will be where you can edit the strategies and deploy them.
              *
              */
-
             strategyPanel = new StrategyPanel(tradeService);
 
             this.addTab("Tradingday", tradingdayPanel);
@@ -1819,6 +1808,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                 brokerModel.removeMessageListener(this);
                 brokerModel = null;
             }
+
             if (IBrokerModel._brokerTest.equals(model)) {
 
                 brokerModel = (IBrokerModel) ClassFactory.getServiceForInterface(IBrokerModel._brokerTest, param, this);
