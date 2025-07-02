@@ -48,7 +48,6 @@ import java.awt.*;
  */
 public class AppMain {
 
-    public final TradeService tradeService = null;
 
     // Construct the application
     public AppMain() {
@@ -66,7 +65,7 @@ public class AppMain {
 
             appWidth = 1200;
         }
-        AppFrame frame = new AppFrame(tradeService);
+        AppFrame frame = new AppFrame(null);
         frame.setIconImage(ImageBuilder.getImage("trade.gif"));
         frame.setSize((int) appWidth, (int) appHieght);
         frame.setLocation((int) ((screenSize.getWidth() - frame.getSize().getWidth()) / 2),
@@ -84,6 +83,7 @@ public class AppMain {
      * @param args String[]
      */
     public static void main(String[] args) {
+
         SwingUtilities.invokeLater(AppMain::new);
     }
 }

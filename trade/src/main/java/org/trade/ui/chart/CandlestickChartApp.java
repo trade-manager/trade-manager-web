@@ -67,10 +67,10 @@ public class CandlestickChartApp extends BasePanel implements IBrokerChangeListe
     private static TradeService _tradeService;
 
     private final static Logger _log = LoggerFactory.getLogger(CandlestickChartApp.class);
-    private final JPanel m_menuPanel;
-    private static IBrokerModel m_brokerModel = null;
-    private static BrokerDataRequestMonitor m_brokerDataRequestProgressMonitor = null;
-    private static JFrame m_frame = null;
+    private final JPanel menuPanel;
+    private static IBrokerModel brokerModel = null;
+    private static BrokerDataRequestMonitor brokerDataRequestProgressMonitor = null;
+    private static JFrame frame = null;
 
     // Main method
 
@@ -86,12 +86,12 @@ public class CandlestickChartApp extends BasePanel implements IBrokerChangeListe
             try {
 
                 TradeAppLoadConfig.loadAppProperties();
-                m_frame = new JFrame();
+                frame = new JFrame();
                 String symbol = "MSFT";
 
                 Vector<Object> param = new Vector<>(0);
                 param.add(getTradeService());
-                m_brokerModel = (IBrokerModel) ClassFactory.getServiceForInterface(IBrokerModel._brokerTest, param, CandlestickChartApp.class);
+                brokerModel = (IBrokerModel) ClassFactory.getServiceForInterface(IBrokerModel._brokerTest, param, CandlestickChartApp.class);
 
                 Contract contract = new Contract(SECType.STOCK, symbol, Exchange.SMART, Currency.USD, null, null);
                 // contract.setId(Integer.MAX_VALUE);
@@ -158,9 +158,9 @@ public class CandlestickChartApp extends BasePanel implements IBrokerChangeListe
         jPanel2.add(chart, BorderLayout.CENTER);
         jPanel1.add(jPanel2, BorderLayout.CENTER);
         jPanel1.add(jPanel3, BorderLayout.SOUTH);
-        m_menuPanel = new JPanel();
-        m_menuPanel.setLayout(new BorderLayout());
-        jPanel1.add(m_menuPanel, BorderLayout.NORTH);
+        menuPanel = new JPanel();
+        menuPanel.setLayout(new BorderLayout());
+        jPanel1.add(menuPanel, BorderLayout.NORTH);
         this.add(jPanel1, BorderLayout.CENTER);
         this.setStatusBar(jTextFieldStatus);
         this.setProgressBar(progressBar);
@@ -178,8 +178,8 @@ public class CandlestickChartApp extends BasePanel implements IBrokerChangeListe
      */
     public void setMenu(BasePanelMenu menu) {
 
-        m_menuPanel.removeAll();
-        m_menuPanel.add(menu, BorderLayout.NORTH);
+        menuPanel.removeAll();
+        menuPanel.add(menu, BorderLayout.NORTH);
         super.setMenu(menu);
     }
 
@@ -341,15 +341,15 @@ public class CandlestickChartApp extends BasePanel implements IBrokerChangeListe
                 Tradingday.newInstance(TradingCalendar.getDateTimeNowMarketTimeZone()));
         CandlestickChartApp panel = new CandlestickChartApp(chart, tradeService);
 
-        m_frame.getContentPane().add(panel);
-        m_frame.setSize(1200, 900);
+        frame.getContentPane().add(panel);
+        frame.setSize(1200, 900);
         Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
 
-        m_frame.setLocation((d.width - m_frame.getSize().width) / 2, (d.height - m_frame.getSize().height) / 2);
-        m_frame.setIconImage(ImageBuilder.getImage("trade.gif"));
-        m_frame.validate();
-        m_frame.repaint();
-        m_frame.setVisible(true);
+        frame.setLocation((d.width - frame.getSize().width) / 2, (d.height - frame.getSize().height) / 2);
+        frame.setIconImage(ImageBuilder.getImage("trade.gif"));
+        frame.validate();
+        frame.repaint();
+        frame.setVisible(true);
         EventQueue waitQue = new WaitCursorEventQueue(500);
         Toolkit.getDefaultToolkit().getSystemEventQueue().push(waitQue);
     }
@@ -410,13 +410,13 @@ public class CandlestickChartApp extends BasePanel implements IBrokerChangeListe
 
         try {
 
-            m_brokerModel.setBrokerDataOnly(brokerDataOnly);
+            brokerModel.setBrokerDataOnly(brokerDataOnly);
 
             Tradingday tradingday = tradestrategy.getTradingday();
 
             if (Tradingdays.hasTradeOrders(tradingday) && !brokerDataOnly) {
 
-                int result = JOptionPane.showConfirmDialog(m_frame,
+                int result = JOptionPane.showConfirmDialog(frame,
                         "Tradingday: " + tradingday.getOpen()
                                 + " has orders. Do you want to delete all orders?",
                         "Information", JOptionPane.YES_NO_OPTION);
@@ -429,18 +429,18 @@ public class CandlestickChartApp extends BasePanel implements IBrokerChangeListe
 
             try {
 
-                if (brokerDataOnly && !m_brokerModel.validateBrokerData(tradestrategy)) {
+                if (brokerDataOnly && !brokerModel.validateBrokerData(tradestrategy)) {
 
                     return;
                 }
             } catch (BrokerModelException ex) {
 
-                JOptionPane.showConfirmDialog(m_frame, ex.getMessage(), "Warning",
+                JOptionPane.showConfirmDialog(frame, ex.getMessage(), "Warning",
                         JOptionPane.OK_CANCEL_OPTION);
                 return;
             }
 
-            if (brokerDataOnly && !m_brokerModel.isConnected()) {
+            if (brokerDataOnly && !brokerModel.isConnected()) {
 
                 ZonedDateTime endDate = TradingCalendar.getDateAtTime(
                         TradingCalendar.getPrevTradingDay(TradingCalendar
@@ -455,7 +455,7 @@ public class CandlestickChartApp extends BasePanel implements IBrokerChangeListe
 
                 if (!candles.isEmpty()) {
 
-                    int result = JOptionPane.showConfirmDialog(m_frame,
+                    int result = JOptionPane.showConfirmDialog(frame,
                             "Candle data already exists for Symbol: "
                                     + tradestrategy.getContract().getSymbol() + " Do you want to delete?",
                             "Information", JOptionPane.YES_NO_OPTION);
@@ -474,31 +474,31 @@ public class CandlestickChartApp extends BasePanel implements IBrokerChangeListe
 
             Tradingdays tradingdays = new Tradingdays();
             tradingdays.add(tradingday);
-            m_brokerDataRequestProgressMonitor = new BrokerDataRequestMonitor(m_brokerModel, tradeService,
+            brokerDataRequestProgressMonitor = new BrokerDataRequestMonitor(brokerModel, tradeService,
                     tradingdays);
-            m_brokerDataRequestProgressMonitor.addPropertyChangeListener(evt -> SwingUtilities.invokeLater(() -> {
+            brokerDataRequestProgressMonitor.addPropertyChangeListener(evt -> SwingUtilities.invokeLater(() -> {
 
                 if ("progress".equals(evt.getPropertyName())) {
 
                     int progress = (Integer) evt.getNewValue();
                 } else if ("information".equals(evt.getPropertyName())) {
 
-                    if (m_brokerDataRequestProgressMonitor.isDone()) {
+                    if (brokerDataRequestProgressMonitor.isDone()) {
 
                         createChart(tradestrategy, tradeService);
                     }
                 } else if ("error".equals(evt.getPropertyName())) {
 
-                    JOptionPane.showConfirmDialog(m_frame, "Error getting history data msg: " +
+                    JOptionPane.showConfirmDialog(frame, "Error getting history data msg: " +
                                     ((Exception) evt.getNewValue()).getMessage() + " value: " + evt.getNewValue(), "Error",
                             JOptionPane.OK_CANCEL_OPTION);
                 }
             }));
 
-            m_brokerDataRequestProgressMonitor.execute();
+            brokerDataRequestProgressMonitor.execute();
         } catch (Exception ex) {
 
-            JOptionPane.showConfirmDialog(m_frame, "Error running Strategies or Chart Data msg: " +
+            JOptionPane.showConfirmDialog(frame, "Error running Strategies or Chart Data msg: " +
                             ex.getMessage(), "Error",
                     JOptionPane.OK_CANCEL_OPTION);
         }
