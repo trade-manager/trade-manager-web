@@ -201,51 +201,51 @@ public class AbstractStrategyIT {
     }
 
     @Test
-    public void entryRuleMoveStopToBE() throws Exception{
+    public void entryRuleMoveStopToBE() throws Exception {
 
-            Money price = new Money(37.99);
-            TradeOrder openOrder = strategyProxy.createRiskOpenPosition(Action.BUY, price,
-                    price.subtract(new Money(0.2)), true, null, null, null, null);
+        Money price = new Money(37.99);
+        TradeOrder openOrder = strategyProxy.createRiskOpenPosition(Action.BUY, price,
+                price.subtract(new Money(0.2)), true, null, null, null, null);
 
-            TradeOrderfill execution = new TradeOrderfill();
-            execution.setTradeOrder(openOrder);
-            execution.setTime(TradingCalendar.getDateTimeNowMarketTimeZone());
-            execution.setExchange("SMART");
-            execution.setSide(Side.BOT);
-            execution.setQuantity(openOrder.getQuantity());
-            execution.setAveragePrice(price.getBigDecimalValue());
-            execution.setPrice(price.getBigDecimalValue());
-            execution.setCumulativeQuantity(openOrder.getQuantity());
-            execution.setCommission(new BigDecimal(0));
+        TradeOrderfill execution = new TradeOrderfill();
+        execution.setTradeOrder(openOrder);
+        execution.setTime(TradingCalendar.getDateTimeNowMarketTimeZone());
+        execution.setExchange("SMART");
+        execution.setSide(Side.BOT);
+        execution.setQuantity(openOrder.getQuantity());
+        execution.setAveragePrice(price.getBigDecimalValue());
+        execution.setPrice(price.getBigDecimalValue());
+        execution.setCumulativeQuantity(openOrder.getQuantity());
+        execution.setCommission(new BigDecimal(0));
 
-            ((BackTestBrokerModel) brokerModel).execDetails(openOrder.getOrderKey(), tradestrategy.getContract(),
-                    execution);
-            this.reFreshPositionOrders();
+        ((BackTestBrokerModel) brokerModel).execDetails(openOrder.getOrderKey(), tradestrategy.getContract(),
+                execution);
+        this.reFreshPositionOrders();
 
-            assertNotNull(strategyProxy.getOpenPositionOrder());
-            /*
-             * Position has been open submit the target and stop orders.
-             */
-            if (strategyProxy.isThereOpenPosition()) {
-                if (null != strategyProxy.getOpenTradePosition().getOpenQuantity()) {
-                    /*
-                     * Position has been opened submit the target and stop
-                     * orders. Two targets at 3R and 6R
-                     */
-                    _log.info("Open position submit Stop/Tgt orders Symbol: {}", openOrder.getTradestrategy().getContract().getSymbol());
-                    strategyProxy.createStopAndTargetOrder(strategyProxy.getOpenPositionOrder(), 1, new Money(0.01), 3,
-                            new Money(0.02), strategyProxy.getOpenTradePosition().getOpenQuantity() / 2, true);
+        assertNotNull(strategyProxy.getOpenPositionOrder());
+        /*
+         * Position has been open submit the target and stop orders.
+         */
+        if (strategyProxy.isThereOpenPosition()) {
+            if (null != strategyProxy.getOpenTradePosition().getOpenQuantity()) {
+                /*
+                 * Position has been opened submit the target and stop
+                 * orders. Two targets at 3R and 6R
+                 */
+                _log.info("Open position submit Stop/Tgt orders Symbol: {}", openOrder.getTradestrategy().getContract().getSymbol());
+                strategyProxy.createStopAndTargetOrder(strategyProxy.getOpenPositionOrder(), 1, new Money(0.01), 3,
+                        new Money(0.02), strategyProxy.getOpenTradePosition().getOpenQuantity() / 2, true);
 
-                    strategyProxy.createStopAndTargetOrder(strategyProxy.getOpenPositionOrder(), 1, new Money(0.01), 3,
-                            new Money(0.02), strategyProxy.getOpenTradePosition().getOpenQuantity() / 2, true);
+                strategyProxy.createStopAndTargetOrder(strategyProxy.getOpenPositionOrder(), 1, new Money(0.01), 3,
+                        new Money(0.02), strategyProxy.getOpenTradePosition().getOpenQuantity() / 2, true);
 
-                    strategyProxy.isPositionCovered();
-                }
+                strategyProxy.isPositionCovered();
             }
+        }
 
-            StrategyData.doDummyData(tradestrategy.getStrategyData().getBaseCandleSeries(),
-                    tradestrategy.getTradingday(), 1, BarSize.FIVE_MIN, Side.BOT.equals(tradestrategy.getSide()), 0);
-            strategyProxy.cancel();
+        StrategyData.doDummyData(tradestrategy.getStrategyData().getBaseCandleSeries(),
+                tradestrategy.getTradingday(), 1, BarSize.FIVE_MIN, Side.BOT.equals(tradestrategy.getSide()), 0);
+        strategyProxy.cancel();
     }
 
     @Test
