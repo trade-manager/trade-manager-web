@@ -55,7 +55,6 @@ import java.util.Vector;
  *
  * @author Simon Allen
  */
-@Component
 public class DBTableLookupServiceProvider implements ILookupServiceProvider {
 
     private final static Logger _log = LoggerFactory.getLogger(DBTableLookupServiceProvider.class);

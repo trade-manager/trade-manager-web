@@ -40,7 +40,7 @@ import org.trade.core.exception.ExceptionContext;
 import org.trade.core.exception.ExceptionMessage;
 
 /**
- * Exception messages represent the user friendly messages returned by the
+ * Exception messages represent the user-friendly messages returned by the
  * system. This class should include every message that can possibly be returned
  * by the system.
  *
