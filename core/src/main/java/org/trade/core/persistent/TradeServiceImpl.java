@@ -480,12 +480,13 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
         for (int i = 0; i < candleSeries.getItemCount(); i++) {
 
             CandleItem candleItem = (CandleItem) candleSeries.getDataItem(i);
+            Candle candle = candleItem.getCandle();
 
             if (null != candleItem.getCandle().getId()) {
 
-                Candle instance = candleRepository.findById(candleItem.getCandle().getId()).get();
+                Optional<Candle> instance = candleRepository.findById(candle.getId());
 
-                if (instance.equals(candleItem.getCandle())) {
+                if (instance.isPresent() && instance.equals(candle)) {
 
                     continue;
                 }
@@ -493,31 +494,35 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
 
             if (null == tradingday) {
 
-                tradingday = this.findTradingdayByOpenCloseDate(candleItem.getCandle().getTradingday().getOpen(),
-                        candleItem.getCandle().getTradingday().getClose());
+                tradingday = this.findTradingdayByOpenCloseDate(candle.getTradingday().getOpen(),
+                        candle.getTradingday().getClose());
 
             } else {
 
-                if (!tradingday.getOpen().equals(candleItem.getCandle().getTradingday().getOpen()) &&
-                        !tradingday.getClose().equals(candleItem.getCandle().getTradingday().getClose())) {
+                if (!tradingday.getOpen().equals(candle.getTradingday().getOpen()) &&
+                        !tradingday.getClose().equals(candle.getTradingday().getClose())) {
 
-                    tradingday = this.findTradingdayByOpenCloseDate(candleItem.getCandle().getTradingday().getOpen(),
-                            candleItem.getCandle().getTradingday().getClose());
+                    tradingday = this.findTradingdayByOpenCloseDate(candle.getTradingday().getOpen(),
+                            candle.getTradingday().getClose());
                     tradingDayChanged = true;
                 }
             }
 
             if (null == tradingday) {
 
-                tradingday = this.saveTradingday(candleItem.getCandle().getTradingday());
+                tradingday = this.saveAspect(candle.getTradingday());
             }
+
+            candle.setTradingday(tradingday);
+            candle.setContract(contract.get());
 
             if (tradingDayChanged) {
 
                 tradingDayChanged = false;
                 Integer barSize = candleSeries.getBarSize();
                 // String hqlDelete = "delete Candle where contract = :contract and tradingday = :tradingday and barSize = :barSize";
-                List<Candle> candles = candleRepository.findByTradingdayAndContractAndBarSize(tradingday, contract.get(), barSize);
+                List<Candle> candles = candleRepository.findByContractAndDateRange(contract.get().getId(), tradingday.getOpen(),
+                        tradingday.getClose(), barSize);
 
                 if (!candles.isEmpty()) {
 
@@ -525,10 +530,7 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
                 }
             }
 
-            Candle instance = candleItem.getCandle();
-            instance.setTradingday(tradingday);
-            instance.setContract(contract.get());
-            candleRepository.save(instance);
+            this.saveAspect(candle);
         }
     }
 
@@ -579,11 +581,6 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
 
                 tradestrategy.setContract(contract);
             }
-
-            /*
-             * Persist or merge the tradestrategy.
-             */
-            //   this.saveAspect(tradestrategy);
         }
 
         instance = this.saveAspect(instance);

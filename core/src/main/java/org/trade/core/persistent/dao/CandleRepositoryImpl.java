@@ -42,7 +42,7 @@ public class CandleRepositoryImpl implements CandleRepositoryCustom {
         if (null != contractId) {
 
             Join<Candle, Contract> contract = from.join("contract");
-            Predicate predicate = builder.equal(contract.get("idContract"), contractId);
+            Predicate predicate = builder.equal(contract.get("id"), contractId);
             predicates.add(predicate);
         }
 
