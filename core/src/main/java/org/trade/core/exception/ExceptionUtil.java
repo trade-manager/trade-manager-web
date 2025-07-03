@@ -35,10 +35,10 @@
  */
 package org.trade.core.exception;
 
-import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
 import java.io.Serial;
 import java.io.Serializable;
+import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.Enumeration;
 
@@ -61,38 +61,42 @@ public class ExceptionUtil implements Serializable {
     /**
      * Method captureStackTrace.
      *
-     * @param t Throwable
+     * @param throwable Throwable
      * @return String
      */
-    public static String captureStackTrace(Throwable t) {
-        String stackTrace;
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        PrintWriter writer = new PrintWriter(out);
+    public static String captureStackTrace(Throwable throwable) {
 
-        t.printStackTrace(writer);
+        if (throwable == null) {
 
-        writer.flush();
-        stackTrace = out.toString();
-        return stackTrace;
+            return null;
+        } else {
+
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            // Prints the stack trace to the PrintWriter
+            throwable.printStackTrace(pw);
+            // Retrieves the content as a String
+            return sw.toString();
+        }
     }
 
     /**
      * Method nestStackTrace.
      *
      * @param stackTrace String
-     * @param t          Throwable
+     * @param throwable  Throwable
      * @return String
      */
-    public static String nestStackTrace(String stackTrace, Throwable t) {
-        String newStackTrace;
+    public static String nestStackTrace(String stackTrace, Throwable throwable) {
 
-        if (t instanceof NestingException ex) {
-            newStackTrace = stackTrace + Arrays.toString(ex.getStackTrace());
+
+        if (throwable instanceof NestingException ex) {
+
+            return stackTrace + Arrays.toString(ex.getStackTrace());
         } else {
-            newStackTrace = stackTrace + captureStackTrace(t);
-        }
 
-        return newStackTrace;
+            return stackTrace + captureStackTrace(throwable);
+        }
     }
 
     /**
@@ -106,15 +110,15 @@ public class ExceptionUtil implements Serializable {
     public static String fillInExceptionMessage(NestingException nestingException, String stackTrace,
                                                 String errorMsg) {
         if (stackTrace != null) {
-            int index = stackTrace.indexOf(':');
 
+            int index = stackTrace.indexOf(':');
             String s1 = stackTrace.substring(0, index + 1);
             index = stackTrace.indexOf("\tat");
-            String s2;
+            String s2 = "";
+
             if (index >= 0) {
+
                 s2 = stackTrace.substring(index);
-            } else {
-                s2 = "";
             }
 
             // Construct the first line of the stack trace.
@@ -128,6 +132,7 @@ public class ExceptionUtil implements Serializable {
             // user-friendly messages.
             Enumeration<?> enumeration = nestingException.getAllExceptionMessages();
             while (enumeration.hasMoreElements()) {
+
                 ExceptionMessage exceptionMessage;
                 exceptionMessage = (ExceptionMessage) enumeration.nextElement();
 

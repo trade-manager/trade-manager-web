@@ -44,13 +44,11 @@ public class ModelException extends NestingException {
     /**
      *
      */
-
-    private Integer id = 0;
-
-    private Integer code = 0;
-
     @Serial
     private static final long serialVersionUID = -4931142657824969686L;
+
+    private Integer id = 0;
+    private Integer code = 0;
 
     public ModelException() {
         super();
@@ -59,10 +57,11 @@ public class ModelException extends NestingException {
     /**
      * Constructor allowing a reference to another exception to be embedded.
      *
-     * @param t The <code>Throwable</code> to be nested.
+     * @param throwable The <code>Throwable</code> to be nested.
      */
-    public ModelException(Throwable t) {
-        super(t, t.getMessage());
+    public ModelException(Throwable throwable) {
+
+        super(throwable, throwable.getMessage());
     }
 
     /**
@@ -73,6 +72,7 @@ public class ModelException extends NestingException {
      * @param code    Integer
      */
     public ModelException(Integer id, Integer code, String message) {
+
         super(message);
         this.id = id;
         this.code = code;
@@ -94,6 +94,7 @@ public class ModelException extends NestingException {
      * @param gruesomeDetails  String
      */
     public ModelException(ExceptionMessage exceptionMessage, String gruesomeDetails) {
+
         super(exceptionMessage, gruesomeDetails);
     }
 
@@ -102,10 +103,10 @@ public class ModelException extends NestingException {
      *
      * @param exceptionMessage ExceptionMessage
      * @param gruesomeDetails  String
-     * @param t                Throwable
+     * @param throwable        Throwable
      */
-    public ModelException(ExceptionMessage exceptionMessage, String gruesomeDetails, Throwable t) {
-        super(exceptionMessage, gruesomeDetails, t);
+    public ModelException(ExceptionMessage exceptionMessage, String gruesomeDetails, Throwable throwable) {
+        super(exceptionMessage, gruesomeDetails, throwable);
     }
 
     /**
@@ -121,10 +122,10 @@ public class ModelException extends NestingException {
      * Constructor for ModelException.
      *
      * @param exceptionMessage ExceptionMessage
-     * @param t                Throwable
+     * @param throwable        Throwable
      */
-    public ModelException(ExceptionMessage exceptionMessage, Throwable t) {
-        super(exceptionMessage, t);
+    public ModelException(ExceptionMessage exceptionMessage, Throwable throwable) {
+        super(exceptionMessage, throwable);
     }
 
     /**

@@ -54,6 +54,8 @@ public class ExceptionResourceBundle extends PropertyResourceBundle implements S
     @Serial
     private static final long serialVersionUID = 3004803155454107541L;
 
+    private final static String DEFAULT = "default";
+
     /**
      * Takes an InputStream to the properties file where the Exception messages
      * are stored
@@ -82,10 +84,7 @@ public class ExceptionResourceBundle extends PropertyResourceBundle implements S
      * @return the exception message
      */
     public String getMessage() {
+
         return getString(DEFAULT);
     }
-
-    // constants
-    private final static String DEFAULT = "default";
-
-} // end ExceptionResourceBundle
+}

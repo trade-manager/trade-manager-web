@@ -35,7 +35,17 @@
  */
 package org.trade.core.exception;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class ClassName {
+
+    private static final Logger _log = LoggerFactory.getLogger(ClassName.class);
+
+    private String entireClassName = null;
+    private String className = null;
+    private String packageName = null;
+    private String entirePackageName = null;
 
     /**
      * This method exists strictly to test this class
@@ -43,30 +53,27 @@ public class ClassName {
      * @param args String[]
      */
     public static void main(String[] args) {
+
         if (args.length != 1) {
-            System.out.println("Usage = java com.aceva.devtool.ClassName <full class name>");
+
+            _log.error("Usage = java <package>.ClassName <full class name>");
             System.exit(1);
         } else {
+
             try {
+
                 Class<?> aClass = Class.forName(args[0]);
                 ClassName className = new ClassName(aClass);
-                System.out.println("Entire Package Name = " + className.getEntirePackageName());
-                System.out.println("PackageName = " + className.getPackageName());
-                System.out.println("Entire Class Name = " + className.getEntireClassName());
-                System.out.println("Class Name = " + className.getClassName());
-            } catch (Exception e) {
-                e.printStackTrace();
+                _log.info("Entire Package Name = {}", className.getEntirePackageName());
+                _log.info("PackageName = {}", className.getPackageName());
+                _log.info("Entire Class Name = {}", className.getEntireClassName());
+                _log.info("Class Name = {}", className.getClassName());
+            } catch (Exception ex) {
+
+                _log.error("Error creating className: {}, msg: {}", args[0], ex.getMessage());
             }
         }
     }
-
-    private String m_entireClassName = null;
-
-    private String m_className = null;
-
-    private String m_packageName = null;
-
-    private String m_entirePackageName = null;
 
     /**
      * Constructor for ClassName.
@@ -74,8 +81,8 @@ public class ClassName {
      * @param aClass Class<?>
      */
     public ClassName(Class<?> aClass) {
-        super();
 
+        super();
         _parseClassName(aClass.getName());
     }
 
@@ -86,17 +93,16 @@ public class ClassName {
      * @return String
      */
     private String _extractClassName(String className) {
-        String name;
 
         int index = className.lastIndexOf('.');
 
         if (index != -1) {
-            name = className.substring(index + 1);
-        } else {
-            name = className;
-        }
 
-        return name;
+            return className.substring(index + 1);
+        } else {
+
+            return className;
+        }
     }
 
     /**
@@ -106,6 +112,7 @@ public class ClassName {
      * @return String
      */
     private String _extractEntireClassName(String className) {
+
         return className;
     }
 
@@ -116,13 +123,14 @@ public class ClassName {
      * @return String
      */
     private String _extractEntirePackageName(String className) {
-        String packageName = null;
+
         int index = className.lastIndexOf('.');
 
         if (index != -1) {
-            packageName = className.substring(0, index);
+
+            return className.substring(0, index);
         }
-        return packageName;
+        return null;
     }
 
     /**
@@ -132,17 +140,17 @@ public class ClassName {
      * @return String
      */
     private String _extractPackageName(String className) {
-        String packageName = null;
+
+
         int index = className.lastIndexOf('.');
 
         if (index != -1) {
-            packageName = className.substring(0, index);
-            index = packageName.lastIndexOf('.');
 
-            packageName = packageName.substring(++index);
+            index = className.substring(0, index).lastIndexOf('.');
+            return className.substring(++index);
         }
 
-        return packageName;
+        return className;
     }
 
     /**
@@ -151,10 +159,11 @@ public class ClassName {
      * @param className String
      */
     private void _parseClassName(String className) {
-        m_entirePackageName = _extractEntirePackageName(className);
-        m_packageName = _extractPackageName(className);
-        m_entireClassName = _extractEntireClassName(className);
-        m_className = _extractClassName(className);
+
+        this.entirePackageName = _extractEntirePackageName(className);
+        this.packageName = _extractPackageName(className);
+        this.entireClassName = _extractEntireClassName(className);
+        this.className = _extractClassName(className);
     }
 
     /**
@@ -163,7 +172,7 @@ public class ClassName {
      * @return String
      */
     public String getClassName() {
-        return m_className;
+        return this.className;
     }
 
     /**
@@ -173,7 +182,7 @@ public class ClassName {
      */
 
     public String getEntireClassName() {
-        return m_entireClassName;
+        return this.entireClassName;
     }
 
     /**
@@ -182,7 +191,7 @@ public class ClassName {
      * @return String
      */
     public String getEntirePackageName() {
-        return m_entirePackageName;
+        return this.entirePackageName;
     }
 
     /**
@@ -191,7 +200,7 @@ public class ClassName {
      * @return String
      */
     public String getPackageName() {
-        return m_packageName;
+        return this.packageName;
     }
 
 }

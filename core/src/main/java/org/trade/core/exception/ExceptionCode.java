@@ -40,16 +40,16 @@ import java.io.Serial;
 /**
  * ExceptionCode is used as the key for retrieving an exception message.
  * <p>
+ * WARNING: Do not add setters to this class because it is IMMUTABLE.
+ * doing so will break code (e.g. ExceptionMessage which depend upon this
+ * class not changing).
+ *
+ * <p>
  * Objects of this type are immutable (cannot be altered).
  *
  * @author Simon Allen
  */
 public class ExceptionCode implements java.io.Serializable {
-    // WARNING: Do not add setters to this class because it is IMMUTABLE.
-    // doing so will break code (e.g. ExceptionMessage which depend upon this
-    // class not changing).
-
-    // ----- Constants -----//
 
     /**
      *
@@ -58,14 +58,8 @@ public class ExceptionCode implements java.io.Serializable {
     private static final long serialVersionUID = 1429333155399564179L;
 
     private static final String FIELD_SEQUENCE_SEPARATOR = "_";
-
-    // ----- Private attributes -----//
-
-    private final String m_code;
-
-    private String m_fieldRef = null;
-
-    // ----- Constructors and public methods -----//
+    private final String code;
+    private String fieldRef = null;
 
     /**
      * Constructor for ExceptionCode.
@@ -73,7 +67,7 @@ public class ExceptionCode implements java.io.Serializable {
      * @param code String
      */
     public ExceptionCode(String code) {
-        m_code = code;
+        this.code = code;
     }
 
     /**
@@ -83,8 +77,9 @@ public class ExceptionCode implements java.io.Serializable {
      * @param fieldRef String
      */
     public ExceptionCode(String code, String fieldRef) {
-        m_code = code;
-        m_fieldRef = fieldRef;
+
+        this.code = code;
+        this.fieldRef = fieldRef;
     }
 
     /**
@@ -96,15 +91,15 @@ public class ExceptionCode implements java.io.Serializable {
      * @return ExceptionCode
      */
     public ExceptionCode createSequencedCode(int sequence) {
-        ExceptionCode newExceptionCode;
 
-        if (null == m_fieldRef) {
-            newExceptionCode = this; // Okay because this class is immutable.
+        if (null == fieldRef) {
+
+            // Okay because this class is immutable.
+            return this;
         } else {
-            newExceptionCode = new ExceptionCode(m_code, m_fieldRef + FIELD_SEQUENCE_SEPARATOR + sequence);
-        }
 
-        return newExceptionCode;
+            return new ExceptionCode(code, fieldRef + FIELD_SEQUENCE_SEPARATOR + sequence);
+        }
     }
 
     /**
@@ -113,7 +108,7 @@ public class ExceptionCode implements java.io.Serializable {
      * @return String
      */
     public String getCode() {
-        return m_code;
+        return this.code;
     }
 
     /**
@@ -122,7 +117,7 @@ public class ExceptionCode implements java.io.Serializable {
      * @return String
      */
     public String getFieldReference() {
-        return m_fieldRef;
+        return this.fieldRef;
     }
 
     /**
@@ -136,27 +131,30 @@ public class ExceptionCode implements java.io.Serializable {
         if (this == objectToCompare) {
             return true;
         }
+
         if (objectToCompare == null) {
             return false;
         }
+
         if (!(objectToCompare instanceof ExceptionCode otherExceptionCode)) {
             return false;
         }
-        boolean equal = false;
 
+        boolean equal = false;
         boolean codeMatches;
         boolean fieldMatches;
 
-        if (null == m_code) {
-            codeMatches = (null == otherExceptionCode.m_code);
+        if (null == this.code) {
+
+            codeMatches = (null == otherExceptionCode.code);
         } else {
-            codeMatches = (m_code.equals(otherExceptionCode.m_code));
+            codeMatches = (code.equals(otherExceptionCode.code));
         }
 
-        if (null == m_fieldRef) {
-            fieldMatches = (null == otherExceptionCode.m_fieldRef);
+        if (null == this.fieldRef) {
+            fieldMatches = (null == otherExceptionCode.fieldRef);
         } else {
-            fieldMatches = (m_fieldRef.equals(otherExceptionCode.m_fieldRef));
+            fieldMatches = (fieldRef.equals(otherExceptionCode.fieldRef));
         }
 
         if (codeMatches && fieldMatches) {
@@ -172,9 +170,10 @@ public class ExceptionCode implements java.io.Serializable {
      * @return int
      */
     public int hashCode() {
+
         int hash = 1;
-        hash = hash * 31 + m_code.hashCode();
-        hash = hash * 31 + (m_fieldRef == null ? 0 : m_fieldRef.hashCode());
+        hash = hash * 31 + code.hashCode();
+        hash = hash * 31 + (fieldRef == null ? 0 : fieldRef.hashCode());
         return hash;
     }
 
@@ -184,6 +183,6 @@ public class ExceptionCode implements java.io.Serializable {
      * @return String
      */
     public String toString() {
-        return m_code;
+        return this.code;
     }
 }
