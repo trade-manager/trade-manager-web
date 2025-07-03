@@ -47,6 +47,7 @@ public class ClientSocket {
     private final IClientWrapper client;
 
     public ClientSocket(IClientWrapper client) {
+
         this.client = client;
     }
 

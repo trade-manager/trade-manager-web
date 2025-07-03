@@ -228,6 +228,16 @@ public class Contract extends Aspect implements Serializable, Cloneable {
     }
 
     /**
+     * Set the id for dummy tradestrategies when they are indicators.
+     *
+     * @param id
+     */
+    public void setId(Integer id) {
+
+        super.setId(id);
+    }
+
+    /**
      * Method getCategory.
      *
      * @return String

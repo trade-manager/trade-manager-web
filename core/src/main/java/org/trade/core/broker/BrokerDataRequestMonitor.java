@@ -53,13 +53,16 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
      */
     public BrokerDataRequestMonitor(IBrokerModel brokerModel, TradeService tradeService,
                                     Tradingdays tradingdays) throws IOException {
+
         this.brokerModel = brokerModel;
         this.tradeService = tradeService;
         this.tradingdays = tradingdays;
         this.backTestBarSize = ConfigProperties.getPropAsInt("trade.backtest.barSize");
 
         this.timer = new Timer(250, _ -> {
+
             synchronized (lockCoreUtilsTest) {
+
                 timerRunning.addAndGet(250);
                 lockCoreUtilsTest.notifyAll();
             }
@@ -86,9 +89,9 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
         try {
 
             this.grandTotal = calculateTotalTradestrategiesToProcess(this.startTime);
-            tradingdays.getTradingdays().sort(Tradingday.DATE_ORDER_ASC);
+            this.tradingdays.getTradingdays().sort(Tradingday.DATE_ORDER_ASC);
 
-            for (Tradingday tradingday : tradingdays.getTradingdays()) {
+            for (Tradingday tradingday : this.tradingdays.getTradingdays()) {
 
                 Tradingday toProcessTradingday = (Tradingday) tradingday.clone();
 
@@ -109,7 +112,7 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
                 if (totalSumbitted > reSumbittedAt) {
 
                     reSumbittedAt = totalSumbitted + reSumbittedAt;
-                    totalSumbitted = reProcessTradingdays(tradingdays, runningContractRequests, totalSumbitted);
+                    totalSumbitted = reProcessTradingdays(this.tradingdays, runningContractRequests, totalSumbitted);
                 }
             }
 
@@ -121,9 +124,9 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
              */
             if (backTestBarSize > 0 && this.brokerModel.isBrokerDataOnly()) {
 
-                tradingdays.getTradingdays().sort(Tradingday.DATE_ORDER_ASC);
+                this.tradingdays.getTradingdays().sort(Tradingday.DATE_ORDER_ASC);
 
-                for (Tradingday itemTradingday : tradingdays.getTradingdays()) {
+                for (Tradingday itemTradingday : this.tradingdays.getTradingdays()) {
 
                     if (TradingCalendar.isTradingDay(itemTradingday.getOpen())
                             && TradingCalendar.sameDay(itemTradingday.getOpen(),
@@ -144,7 +147,7 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
                                 Tradestrategy tradestrategy = (Tradestrategy) itemTradestrategy.clone();
                                 tradestrategy.setBarSize(getBarSize(tradingday));
                                 tradestrategy.setChartDays(1);
-                                // tradestrategy.setId(this.brokerModel.getNextRequestId());
+                                tradestrategy.setId(this.brokerModel.getNextRequestId());
                                 tradestrategy.setStrategyData(null);
                                 tradestrategy.setStrategyData(StrategyData.create(tradestrategy));
 
@@ -177,7 +180,7 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
              * value.
              */
 
-            totalSumbitted = reProcessTradingdays(tradingdays, runningContractRequests, totalSumbitted);
+            totalSumbitted = reProcessTradingdays(this.tradingdays, runningContractRequests, totalSumbitted);
 
         } catch (InterruptedException ex) {
             // Do nothing
@@ -309,6 +312,7 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
                     lockCoreUtilsTest.wait();
                 }
             }
+
             timer.stop();
             _log.debug("Finished wait.");
         }
@@ -398,12 +402,16 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
 
             int TIME_BETWEEN_SUBMIT = 4;
             if ((this.submitTimes.getFirst() - this.submitTimes.getLast()) < (TIME_BETWEEN_SUBMIT * 1000)) {
+
                 _log.debug("hasSubmittedInSeconds 5 in: {}", (this.submitTimes.getFirst() - this.submitTimes.getLast()) / 1000d);
                 timerRunning = new AtomicInteger(0);
                 timer.start();
+
                 synchronized (lockCoreUtilsTest) {
+
                     while (((this.submitTimes.getFirst() - this.submitTimes.getLast())
                             + timerRunning.get()) < (TIME_BETWEEN_SUBMIT * 1000) && !this.isCancelled()) {
+
                         _log.debug("Please wait {} seconds.", TIME_BETWEEN_SUBMIT - (timerRunning.get() / 1000));
                         lockCoreUtilsTest.wait();
                     }
@@ -423,7 +431,6 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
      * @param totalSumbitted          int
      * @return int
      */
-
     private int reProcessTradingdays(Tradingdays tradingdays,
                                      ConcurrentHashMap<Integer, Tradingday> runningContractRequests, int totalSumbitted) throws Exception {
 
@@ -434,8 +441,11 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
              * Usually means we are submitting identical contracts.
              */
             if (!this.isCancelled()) {
+
                 synchronized (this.brokerModel.getHistoricalData()) {
+
                     while (!this.brokerModel.getHistoricalData().isEmpty()) {
+
                         this.brokerModel.getHistoricalData().wait();
                         int percent = (int) (((double) (totalSumbitted - this.brokerModel.getHistoricalData().size())
                                 / getGrandTotal()) * 100d);
@@ -445,9 +455,14 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
             }
 
             for (Tradingday item : tradingdays.getTradingdays()) {
+
                 for (Integer idTradeingday : runningContractRequests.keySet()) {
+
+
                     Tradingday reProcessTradingday = runningContractRequests.get(idTradeingday);
+
                     if (item.equals(reProcessTradingday)) {
+
                         totalSumbitted = processTradingday(
                                 getTradingdayToProcess(reProcessTradingday, runningContractRequests), totalSumbitted);
                         break;
@@ -507,6 +522,7 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
                 break;
             }
         }
+
         if (null == indicatorTradestrategy) {
 
             Contract contract = series.getContract();
@@ -522,13 +538,16 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
                     contract = this.tradeService.saveAspect(series.getContract());
                 }
             }
+
             indicatorTradestrategy = new Tradestrategy(contract, tradestrategy.getTradingday(),
                     new Strategy("Indicator"), tradestrategy.getPortfolio(), new BigDecimal(0), null, null, false,
                     tradestrategy.getChartDays(), tradestrategy.getBarSize());
-            // indicatorTradestrategy.setId(this.brokerModel.getNextRequestId());
+            indicatorTradestrategy.setId(this.brokerModel.getNextRequestId());
             indicatorTradestrategy.setDirty(false);
         }
+
         if (null == indicatorTradestrategy.getStrategyData()) {
+
             indicatorTradestrategy.setStrategyData(StrategyData.create(indicatorTradestrategy));
         }
 
@@ -616,28 +635,40 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
     private Tradingday getTradingdayToProcess(Tradingday tradingday,
                                               ConcurrentHashMap<Integer, Tradingday> runningContractRequests) throws CloneNotSupportedException {
 
-        if (tradingday.getTradestrategies().isEmpty())
+        if (tradingday.getTradestrategies().isEmpty()) {
             return tradingday;
+        }
 
         tradingday.getTradestrategies().sort(Tradestrategy.TRADINGDAY_CONTRACT);
         Tradingday reProcessTradingday;
+
         if (runningContractRequests.containsKey(tradingday.getId())) {
+
             reProcessTradingday = runningContractRequests.get(tradingday.getId());
         } else {
+
             reProcessTradingday = (Tradingday) tradingday.clone();
         }
+
         Tradingday toProcessTradingday = (Tradingday) tradingday.clone();
         Contract currContract = null;
 
         for (Tradestrategy tradestrategy : tradingday.getTradestrategies()) {
+
             if (this.brokerModel.isHistoricalDataRunning(tradestrategy.getContract())) {
-                if (!reProcessTradingday.existTradestrategy(tradestrategy))
+
+                if (!reProcessTradingday.existTradestrategy(tradestrategy)) {
                     reProcessTradingday.addTradestrategy(tradestrategy);
+                }
             } else {
+
                 if (tradestrategy.getContract().equals(currContract)) {
-                    if (!reProcessTradingday.existTradestrategy(tradestrategy))
+
+                    if (!reProcessTradingday.existTradestrategy(tradestrategy)) {
                         reProcessTradingday.addTradestrategy(tradestrategy);
+                    }
                 } else {
+
                     currContract = tradestrategy.getContract();
                     toProcessTradingday.addTradestrategy(tradestrategy);
                 }
@@ -645,15 +676,18 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
         }
 
         for (Tradestrategy tradestrategy : toProcessTradingday.getTradestrategies()) {
+
             if (reProcessTradingday.existTradestrategy(tradestrategy)) {
 
                 reProcessTradingday.removeTradestrategy(tradestrategy);
             }
         }
+
         if (reProcessTradingday.getTradestrategies().isEmpty()) {
 
             runningContractRequests.remove(reProcessTradingday.getId());
         }
+
         if (!reProcessTradingday.getTradestrategies().isEmpty()) {
 
             runningContractRequests.put(reProcessTradingday.getId(), reProcessTradingday);
@@ -713,9 +747,9 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
                              * request contract details once per contract in the
                              * range of tradingdays to be processed.
                              */
-                            if (!contractRequests.containsKey(contract.getSymbol())) {
+                            if (!this.contractRequests.containsKey(contract.getSymbol())) {
 
-                                contractRequests.put(contract.getSymbol(), contract);
+                                this.contractRequests.put(contract.getSymbol(), contract);
                             }
 
                             /*
@@ -732,9 +766,10 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
                      * contract details once per contract in the range of
                      * tradingdays to be processed.
                      */
-                    if (!contractRequests.containsKey(tradestrategy.getContract().getSymbol())) {
 
-                        contractRequests.put(tradestrategy.getContract().getSymbol(), tradestrategy.getContract());
+                    if (!this.contractRequests.containsKey(tradestrategy.getContract().getSymbol())) {
+
+                        this.contractRequests.put(tradestrategy.getContract().getSymbol(), tradestrategy.getContract());
                     }
                 }
 
@@ -746,7 +781,7 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
                 /*
                  * Get the total for lower barsize timeframes.
                  */
-                if (backTestBarSize > 0) {
+                if (this.backTestBarSize > 0) {
 
                     if (TradingCalendar.isTradingDay(tradingday.getOpen())
                             && TradingCalendar.sameDay(tradingday.getOpen(),
@@ -758,7 +793,7 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
 
                     for (Tradestrategy tradestrategy : tradingday.getTradestrategies()) {
 
-                        if (backTestBarSize < tradestrategy.getBarSize()) {
+                        if (this.backTestBarSize < tradestrategy.getBarSize()) {
                             total++;
                         }
 

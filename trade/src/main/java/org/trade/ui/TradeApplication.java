@@ -13,7 +13,6 @@ import org.trade.core.persistent.TradeService;
 
 import java.awt.*;
 
-
 @SpringBootApplication(scanBasePackages = {"org.trade.core", "org.trade.ui"})
 @ConfigurationPropertiesScan("org.trade.core")
 public class TradeApplication {

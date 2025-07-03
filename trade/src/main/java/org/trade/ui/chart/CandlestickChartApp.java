@@ -94,17 +94,17 @@ public class CandlestickChartApp extends BasePanel implements IBrokerChangeListe
                 brokerModel = (IBrokerModel) ClassFactory.getServiceForInterface(IBrokerModel._brokerTest, param, CandlestickChartApp.class);
 
                 Contract contract = new Contract(SECType.STOCK, symbol, Exchange.SMART, Currency.USD, null, null);
-                // contract.setId(Integer.MAX_VALUE);
+                contract.setId(Integer.MAX_VALUE);
                 ZonedDateTime endDate = TradingCalendar.getDateTimeNowMarketTimeZone();
                 endDate = TradingCalendar.getTradingDayEnd(TradingCalendar.getPrevTradingDay(endDate));
                 ZonedDateTime startDate = TradingCalendar.getTradingDayStart(endDate);
 
                 Strategy daoStrategy = (Strategy) DAOStrategy.newInstance().getObject();
                 String name = daoStrategy.getName();
-                // Strategy strategy = tradeService.findStrategyByName(name);
-                //Tradestrategy tradestrategy = getTradestrategy(contract, strategy, ChartDays.TWO_DAYS, BarSize.FIVE_MIN, startDate, endDate);
-                //   tradestrategy.setId(Integer.MAX_VALUE);
-                //runStrategy(tradeService, tradestrategy, true);
+                Strategy strategy = _tradeService.findStrategyByName(name);
+                Tradestrategy tradestrategy = getTradestrategy(contract, strategy, ChartDays.TWO_DAYS, BarSize.FIVE_MIN, startDate, endDate);
+                   tradestrategy.setId(Integer.MAX_VALUE);
+                runStrategy(_tradeService, tradestrategy, true);
 
             } catch (Exception ex) {
                 _log.error("Error getting broker data msg: {}", ex.getMessage(), ex);

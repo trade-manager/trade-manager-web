@@ -468,15 +468,14 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
     @Transactional
     public void saveCandleSeries(final CandleSeries candleSeries) {
 
-        Candle transientInstance;
-
         if (candleSeries.isEmpty()) {
 
             return;
         }
 
-
-        Contract contract = findContractById(candleSeries.getContract().getId());
+        Optional<Contract> contract = findContractBySymbol(candleSeries.getContract().getSymbol());
+        Tradingday tradingday = null;
+        boolean tradingDayChanged = true;
 
         for (int i = 0; i < candleSeries.getItemCount(); i++) {
 
@@ -492,36 +491,48 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
                 }
             }
 
-            Tradingday tradingday;
-
-            if (null == candleItem.getCandle().getTradingday().getId()) {
+            if (null == tradingday) {
 
                 tradingday = this.findTradingdayByOpenCloseDate(candleItem.getCandle().getTradingday().getOpen(),
                         candleItem.getCandle().getTradingday().getClose());
+
             } else {
 
-                tradingday = this.findTradingdayById(candleItem.getCandle().getTradingday().getId());
+                if (!tradingday.getOpen().equals(candleItem.getCandle().getTradingday().getOpen()) &&
+                        !tradingday.getClose().equals(candleItem.getCandle().getTradingday().getClose())) {
+
+                    tradingday = this.findTradingdayByOpenCloseDate(candleItem.getCandle().getTradingday().getOpen(),
+                            candleItem.getCandle().getTradingday().getClose());
+                    tradingDayChanged = true;
+                }
             }
 
             if (null == tradingday) {
 
                 tradingday = this.saveTradingday(candleItem.getCandle().getTradingday());
-            } else {
-
-                Integer barSize = candleSeries.getBarSize();
-                // String hqlDelete = "delete Candle where contract = :contract and tradingday = :tradingday and barSize = :barSize";
-                List<Candle> candles = candleRepository.findByTradingdayAndContractAndBarSize(tradingday, contract, barSize);
-                candleRepository.deleteAll(candles);
             }
 
+            if (tradingDayChanged) {
 
-            transientInstance = candleItem.getCandle();
-            transientInstance.setTradingday(tradingday);
-            transientInstance.setContract(contract);
-            candleRepository.save(transientInstance);
+                tradingDayChanged = false;
+                Integer barSize = candleSeries.getBarSize();
+                // String hqlDelete = "delete Candle where contract = :contract and tradingday = :tradingday and barSize = :barSize";
+                List<Candle> candles = candleRepository.findByTradingdayAndContractAndBarSize(tradingday, contract.get(), barSize);
+
+                if (!candles.isEmpty()) {
+
+                    candleRepository.deleteAll(candles);
+                }
+            }
+
+            Candle instance = candleItem.getCandle();
+            instance.setTradingday(tradingday);
+            instance.setContract(contract.get());
+            candleRepository.save(instance);
         }
     }
 
+    @Transactional
     public Candle saveCandle(final Candle candle) {
 
         if (null == candle.getTradingday().getId()) {
