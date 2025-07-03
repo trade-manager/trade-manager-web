@@ -53,7 +53,6 @@ public class TradeAppFrame extends JFrame {
 
     private final TradeMainControllerPanel mainPanel;
 
-
     public TradeAppFrame(TradeService tradeService) {
 
         super();

@@ -52,7 +52,6 @@ import org.trade.core.persistent.dao.CodeValue;
 import org.trade.core.persistent.dao.Portfolio;
 import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.series.indicator.IndicatorSeries;
-import org.trade.core.valuetype.DAOAccount;
 import org.trade.core.valuetype.DAOEntryLimit;
 import org.trade.core.valuetype.ReferenceTable;
 import org.trade.ui.models.AccountTableModel;
@@ -84,7 +83,7 @@ public class ConfigurationPanel extends BasePanel {
     @Serial
     private static final long serialVersionUID = 8543984162821384818L;
 
-    private TradeService tradeService;
+    private final TradeService tradeService;
     private final static Logger _log = LoggerFactory.getLogger(ConfigurationPanel.class);
     private JScrollPane jScrollPane = null;
     private final JScrollPane jScrollPane1 = new JScrollPane();
@@ -104,6 +103,9 @@ public class ConfigurationPanel extends BasePanel {
      */
 
     public ConfigurationPanel(TradeService tradeService) {
+
+        this.tradeService = tradeService;
+
         try {
 
             if (null != getMenu()) {
@@ -117,8 +119,6 @@ public class ConfigurationPanel extends BasePanel {
              * be cached.
              */
             DAOEntryLimit.newInstance();
-            DAOAccount.newInstance();
-            this.tradeService = tradeService;
             jScrollPane = new JScrollPane();
             propertiesButton = new BaseButton(this, BaseUIPropertyCodes.PROPERTIES, 0);
             propertiesButton.setEnabled(false);

@@ -8,7 +8,6 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
 import org.trade.base.ImageBuilder;
 import org.trade.base.WaitCursorEventQueue;
-import org.trade.core.ApplicationContextProvider;
 import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.persistent.TradeService;
 
@@ -21,23 +20,18 @@ public class TradeApplication {
 
     public static void main(String[] args) {
 
-        //ConfigurableApplicationContext ctx = new SpringApplicationBuilder(TradeApplication.class)
-        //        .headless(false).run(args);
         ConfigurableApplicationContext applicationContext = new SpringApplicationBuilder(TradeApplication.class)
                 .initializers(new ApplicationProfileInitializer()).headless(false).run(args);
-        // SwingApp frame = applicationContext.getBean(SwingApp.class);
     }
 
     @Component
-    static class SwingApp {
+    class SwingApp {
 
         @Autowired
         TradeService tradeService;
 
-        public SwingApp() {
+        public SwingApp(TradeService tradeService) {
 
-            // SwingUtilities.invokeLater(TradeAppFrame::new);
-            tradeService = ApplicationContextProvider.getBean(TradeService.class);
             Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
             double appWidth = screenSize.getWidth() * 0.9;
             double appHieght = screenSize.getHeight() * 0.9;

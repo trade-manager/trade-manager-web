@@ -37,7 +37,6 @@ package org.trade.ui;
 
 import org.trade.base.ImageBuilder;
 import org.trade.base.WaitCursorEventQueue;
-import org.trade.core.persistent.TradeService;
 
 import javax.swing.*;
 import java.awt.*;
