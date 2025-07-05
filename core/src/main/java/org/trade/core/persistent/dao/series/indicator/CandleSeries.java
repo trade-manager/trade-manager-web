@@ -167,7 +167,6 @@ public class CandleSeries extends IndicatorSeries {
      * @param startTime ZonedDateTime
      * @param endTime   ZonedDateTime
      */
-
     public CandleSeries(String legend, Contract contract, Integer barSize, ZonedDateTime startTime, ZonedDateTime endTime) {
 
         super(legend, IndicatorSeries.CandleSeries, true, 0, false);
@@ -212,7 +211,9 @@ public class CandleSeries extends IndicatorSeries {
      */
     @Transient
     public Contract getContract() {
+
         if (null == this.contract) {
+
             this.contract = new Contract(this.getSecType(), this.getSymbol(), this.getExchange(), this.getCurrency(),
                     null, null);
         }
@@ -264,9 +265,13 @@ public class CandleSeries extends IndicatorSeries {
      */
     @Transient
     public String getSymbol() {
+
         try {
-            if (null == this.symbol)
+
+            if (null == this.symbol) {
+
                 this.symbol = (String) CodeValue.getValueCode(SYMBOL, this.getCodeValues());
+            }
         } catch (Exception e) {
             this.symbol = null;
         }
@@ -289,9 +294,13 @@ public class CandleSeries extends IndicatorSeries {
      */
     @Transient
     public String getCurrency() {
+
         try {
-            if (null == this.currency)
+
+            if (null == this.currency) {
+
                 this.currency = (String) CodeValue.getValueCode(CURRENCY, this.getCodeValues());
+            }
         } catch (Exception e) {
             this.currency = null;
         }
@@ -314,10 +323,13 @@ public class CandleSeries extends IndicatorSeries {
      */
     @Transient
     public String getExchange() {
+
         try {
-            if (null == this.exchange)
+
+            if (null == this.exchange) {
                 this.exchange = (String) CodeValue.getValueCode(EXCHANGE, this.getCodeValues());
-        } catch (Exception e) {
+            }
+        } catch (Exception ex) {
             this.exchange = null;
         }
         return this.exchange;
@@ -339,10 +351,13 @@ public class CandleSeries extends IndicatorSeries {
      */
     @Transient
     public String getSecType() {
+
         try {
-            if (null == this.secType)
+
+            if (null == this.secType) {
                 this.secType = (String) CodeValue.getValueCode(SEC_TYPE, this.getCodeValues());
-        } catch (Exception e) {
+            }
+        } catch (Exception ex) {
             this.secType = null;
         }
         return this.secType;
@@ -364,6 +379,7 @@ public class CandleSeries extends IndicatorSeries {
      * @return The time period.
      */
     public RegularTimePeriod getPeriod(int index) {
+
         final CandleItem item = (CandleItem) getDataItem(index);
         return item.getPeriod();
     }
@@ -413,9 +429,13 @@ public class CandleSeries extends IndicatorSeries {
      */
     public void add(Contract contract, Tradingday tradingday, RegularTimePeriod period, double open, double high,
                     double low, double close, long volume, double vwap, int tradeCount, ZonedDateTime lastUpdateDate) throws ServiceException {
+
         if (!this.isEmpty()) {
+
             CandleItem item0 = (CandleItem) this.getDataItem(0);
+
             if (!period.getClass().equals(item0.getPeriod().getClass())) {
+
                 throw new IllegalArgumentException("Can't mix RegularTimePeriod class types.");
             }
         }
@@ -430,9 +450,13 @@ public class CandleSeries extends IndicatorSeries {
      * @param notify     boolean
      */
     public void add(CandleItem candleItem, boolean notify) throws ServiceException {
+
         if (!this.isEmpty()) {
+
             CandleItem item0 = (CandleItem) this.getDataItem(0);
+
             if (!candleItem.getPeriod().getClass().equals(item0.getPeriod().getClass())) {
+
                 throw new IllegalArgumentException("Can't mix RegularTimePeriod class types.");
             }
         }
@@ -448,12 +472,17 @@ public class CandleSeries extends IndicatorSeries {
     public int indexOf(ZonedDateTime date) {
 
         for (int i = this.data.size(); i > 0; i--) {
+
             CandleItem item = (CandleItem) this.data.get(i - 1);
+
             if (date.isAfter(item.getPeriod().getEnd())) {
+
                 return -1;
             }
+
             if ((date.isAfter(item.getPeriod().getStart()) || date.equals(item.getPeriod().getStart()))
                     && (date.isBefore(item.getPeriod().getEnd()) || date.equals(item.getPeriod().getEnd()))) {
+
                 return i - 1;
             }
         }
@@ -487,6 +516,7 @@ public class CandleSeries extends IndicatorSeries {
 
         CandleItem candleItem;
         boolean newCandle = false;
+
         if (index > -1) {
 
             candleItem = (CandleItem) this.getDataItem(index);
@@ -500,10 +530,12 @@ public class CandleSeries extends IndicatorSeries {
             if (candleItem.getHigh() < high) {
                 candleItem.setHigh(high);
             }
+
             if (candleItem.getLow() > low) {
                 candleItem.setLow(low);
             }
             candleItem.setClose(close);
+
             if (rollupInterval > 1) {
                 candleItem.setVolume(candleItem.getVolume() + volume);
                 candleItem.setCount(candleItem.getCount() + tradeCount);
@@ -511,6 +543,7 @@ public class CandleSeries extends IndicatorSeries {
                 candleItem.setVolume(volume);
                 candleItem.setCount(tradeCount);
             }
+
             candleItem.setVwap(this.rollingCandle.getVwap());
             candleItem.setLastUpdateDate(lastUpdateDate);
         } else {
@@ -520,8 +553,10 @@ public class CandleSeries extends IndicatorSeries {
                     TradingCalendar.getDateAtTime(period.getStart(), this.getStartTime()),
                     TradingCalendar.getDateAtTime(period.getStart(), this.getEndTime()));
 
-            if (null == lastUpdateDate)
+            if (null == lastUpdateDate) {
+
                 lastUpdateDate = period.getEnd();
+            }
 
             this.rollCandle(period, rollupInterval, open, high, low, close, volume, tradeCount, vwap, lastUpdateDate);
 

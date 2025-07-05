@@ -1108,14 +1108,12 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
 
                 CandleSeries candleSeries = tradestrategy.getStrategyData().getBaseCandleSeries();
                 tradeService.saveCandleSeries(candleSeries);
-
                 _log.debug("HistoricalData complete Req Id: {}, Symbol: {}, Tradingday: {}, candles to saved: {}, Contract Tradestrategies size:: {}", reqId, tradestrategy.getContract().getSymbol(), tradestrategy.getTradingday().getOpen(), candleSeries.getItemCount(), tradestrategy.getContract().getTradestrategies().size());
 
                 /*
                  * The last one has arrived the reqId is the
                  * tradeStrategyId. Remove this from the processing vector.
                  */
-
                 synchronized (historyDataRequests) {
 
                     historyDataRequests.remove(reqId);

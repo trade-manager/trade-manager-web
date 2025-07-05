@@ -14,8 +14,8 @@ USE @db-dba.schema@//
 -- Table EntryLimits
 -- -----------------------------------------------------
 DROP SEQUENCE IF EXISTS entrylimit_seq //
-CREATE SEQUENCE entrylimit_seq start with 1 minvalue 1 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
-DO SETVAL(entrylimit_seq, 101, 0) //
+CREATE SEQUENCE entrylimit_seq start with 1000 minvalue 1000 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
+DO SETVAL(entrylimit_seq, 1001, 0) //
 
 DROP TABLE IF EXISTS entrylimit //
 SHOW WARNINGS//
@@ -41,8 +41,8 @@ SHOW WARNINGS//
 -- Table Contract
 -- -----------------------------------------------------
 DROP SEQUENCE IF EXISTS contract_seq //
-CREATE SEQUENCE contract_seq start with 1 minvalue 1 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
-DO SETVAL(contract_seq, 101, 0) //
+CREATE SEQUENCE contract_seq start with 1000 minvalue 1000 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
+DO SETVAL(contract_seq, 1001, 0) //
 
 DROP TABLE IF EXISTS contract //
 SHOW WARNINGS//
@@ -100,8 +100,8 @@ SHOW WARNINGS//
 -- Table Portfolio
 -- -----------------------------------------------------
 DROP SEQUENCE IF EXISTS portfolio_seq //
-CREATE SEQUENCE portfolio_seq start with 1 minvalue 1 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
-DO SETVAL(portfolio_seq, 101, 0) //
+CREATE SEQUENCE portfolio_seq start with 1000 minvalue 1000 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
+DO SETVAL(portfolio_seq, 1001, 0) //
 
 DROP TABLE IF EXISTS portfolio //
 SHOW WARNINGS//
@@ -125,8 +125,8 @@ SHOW WARNINGS//
 -- Table Account
 -- -----------------------------------------------------
 DROP SEQUENCE IF EXISTS account_seq //
-CREATE SEQUENCE account_seq start with 1 minvalue 1 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
-DO SETVAL(account_seq, 101, 0) //
+CREATE SEQUENCE account_seq start with 1000 minvalue 1000 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
+DO SETVAL(account_seq, 1001, 0) //
 
 DROP TABLE IF EXISTS account //
 SHOW WARNINGS//
@@ -157,8 +157,8 @@ SHOW WARNINGS//
 -- Table PortfolioAccount
 -- -----------------------------------------------------
 DROP SEQUENCE IF EXISTS portfolioaccount_seq //
-CREATE SEQUENCE portfolioaccount_seq start with 1 minvalue 1 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
-DO SETVAL(portfolioaccount_seq, 101, 0) //
+CREATE SEQUENCE portfolioaccount_seq start with 1000 minvalue 1000 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
+DO SETVAL(portfolioaccount_seq, 1001, 0) //
 
 DROP TABLE IF EXISTS portfolioaccount //
 SHOW WARNINGS//
@@ -191,8 +191,8 @@ SHOW WARNINGS//
 -- Table TradingDay
 -- -----------------------------------------------------
 DROP SEQUENCE IF EXISTS tradingday_seq //
-CREATE SEQUENCE tradingday_seq start with 1 minvalue 1 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
-DO SETVAL(tradingday_seq, 101, 0) //
+CREATE SEQUENCE tradingday_seq start with 1000 minvalue 1000 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
+DO SETVAL(tradingday_seq, 1001, 0) //
 
 DROP TABLE IF EXISTS tradingday //
 SHOW WARNINGS//
@@ -216,8 +216,8 @@ SHOW WARNINGS//
 -- Table Strategy
 -- -----------------------------------------------------
 DROP SEQUENCE IF EXISTS strategy_seq //
-CREATE SEQUENCE strategy_seq start with 1 minvalue 1 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
-DO SETVAL(strategy_seq, 101, 0) //
+CREATE SEQUENCE strategy_seq start with 1000 minvalue 1000 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
+DO SETVAL(strategy_seq, 1001, 0) //
 
 DROP TABLE IF EXISTS strategy //
 SHOW WARNINGS//
@@ -247,8 +247,8 @@ SHOW WARNINGS//
 -- Table TradeStrategy
 -- -----------------------------------------------------
 DROP SEQUENCE IF EXISTS tradestrategy_seq //
-CREATE SEQUENCE tradestrategy_seq start with 1 minvalue 1 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
-DO SETVAL(tradestrategy_seq, 101, 0) //
+CREATE SEQUENCE tradestrategy_seq start with 1000 minvalue 1000 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
+DO SETVAL(tradestrategy_seq, 1001, 0) //
 
 DROP TABLE IF EXISTS tradestrategy //
 SHOW WARNINGS//
@@ -302,8 +302,8 @@ SHOW WARNINGS//
 -- Table TradePosition
 -- -----------------------------------------------------
 DROP SEQUENCE IF EXISTS tradeposition_seq //
-CREATE SEQUENCE tradeposition_seq start with 1 minvalue 1 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
-DO SETVAL(tradeposition_seq, 101, 0) //
+CREATE SEQUENCE tradeposition_seq start with 1000 minvalue 1000 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
+DO SETVAL(tradeposition_seq, 1001, 0) //
 
 DROP TABLE IF EXISTS tradeposition //
 SHOW WARNINGS//
@@ -338,8 +338,8 @@ SHOW WARNINGS//
 -- Table TradeOrder
 -- -----------------------------------------------------
 DROP SEQUENCE IF EXISTS tradeorder_seq //
-CREATE SEQUENCE tradeorder_seq start with 1 minvalue 1 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
-DO SETVAL(tradeorder_seq, 101, 0) //
+CREATE SEQUENCE tradeorder_seq start with 1000 minvalue 1000 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
+DO SETVAL(tradeorder_seq, 1001, 0) //
 
 DROP TABLE IF EXISTS tradeorder //
 SHOW WARNINGS//
@@ -412,8 +412,8 @@ SHOW WARNINGS//
 -- Table TradeOrderFill
 -- -----------------------------------------------------
 DROP SEQUENCE IF EXISTS tradeorderfill_seq //
-CREATE SEQUENCE tradeorderfill_seq start with 1 minvalue 1 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
-DO SETVAL(tradeorderfill_seq, 101, 0) //
+CREATE SEQUENCE tradeorderfill_seq start with 1000 minvalue 1000 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
+DO SETVAL(tradeorderfill_seq, 1001, 0) //
 
 DROP TABLE IF EXISTS tradeorderfill //
 SHOW WARNINGS//
@@ -451,8 +451,8 @@ SHOW WARNINGS//
 -- Table Candle
 -- -----------------------------------------------------
 DROP SEQUENCE IF EXISTS candle_seq //
-CREATE SEQUENCE candle_seq start with 1 minvalue 1 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
-DO SETVAL(candle_seq, 101, 0) //
+CREATE SEQUENCE candle_seq start with 1000 minvalue 1000 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
+DO SETVAL(candle_seq, 1001, 0) //
 
 DROP TABLE IF EXISTS candle //
 SHOW WARNINGS//
@@ -498,8 +498,8 @@ SHOW WARNINGS//
 -- Table Rule
 -- -----------------------------------------------------
 DROP SEQUENCE IF EXISTS rule_seq //
-CREATE SEQUENCE rule_seq start with 1 minvalue 1 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
-DO SETVAL(rule_seq, 101, 0) //
+CREATE SEQUENCE rule_seq start with 1000 minvalue 1000 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
+DO SETVAL(rule_seq, 1001, 0) //
 
 DROP TABLE IF EXISTS rule //
 SHOW WARNINGS//
@@ -527,8 +527,8 @@ SHOW WARNINGS//
 -- Table IndicatorSeries
 -- -----------------------------------------------------
 DROP SEQUENCE IF EXISTS indicatorseries_seq //
-CREATE SEQUENCE indicatorseries_seq start with 1 minvalue 1 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
-DO SETVAL(indicatorseries_seq, 101, 0) //
+CREATE SEQUENCE indicatorseries_seq start with 1000 minvalue 1000 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
+DO SETVAL(indicatorseries_seq, 1001, 0) //
 
 DROP TABLE IF EXISTS indicatorseries //
 SHOW WARNINGS//
@@ -560,8 +560,8 @@ SHOW WARNINGS//
 -- Table CodeType
 -- -----------------------------------------------------
 DROP SEQUENCE IF EXISTS codetype_seq //
-CREATE SEQUENCE codetype_seq start with 1 minvalue 1 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
-DO SETVAL(codetype_seq, 101, 0) //
+CREATE SEQUENCE codetype_seq start with 1000 minvalue 1000 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
+DO SETVAL(codetype_seq, 1001, 0) //
 
 DROP TABLE IF EXISTS codetype //
 SHOW WARNINGS//
@@ -583,8 +583,8 @@ SHOW WARNINGS//
 -- Table CodeAttribute
 -- -----------------------------------------------------
 DROP SEQUENCE IF EXISTS codeattribute_seq //
-CREATE SEQUENCE codeattribute_seq start with 1 minvalue 1 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
-DO SETVAL(codeattribute_seq, 101, 0) //
+CREATE SEQUENCE codeattribute_seq start with 1000 minvalue 1000 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
+DO SETVAL(codeattribute_seq, 1001, 0) //
 
 DROP TABLE IF EXISTS codeattribute //
 SHOW WARNINGS//
@@ -614,8 +614,8 @@ SHOW WARNINGS//
 -- Table CodeValue
 -- -----------------------------------------------------
 DROP SEQUENCE IF EXISTS codevalue_seq //
-CREATE SEQUENCE codevalue_seq start with 1 minvalue 1 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
-DO SETVAL(codevalue_seq, 101, 0) //
+CREATE SEQUENCE codevalue_seq start with 1000 minvalue 1000 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
+DO SETVAL(codevalue_seq, 1001, 0) //
 
 DROP TABLE IF EXISTS codevalue //
 SHOW WARNINGS//
@@ -657,8 +657,8 @@ SHOW WARNINGS//
 -- Table Domain
 -- -----------------------------------------------------
 DROP SEQUENCE IF EXISTS domain_seq //
-CREATE SEQUENCE domain_seq start with 1 minvalue 1 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
-DO SETVAL(domain_seq, 101, 0) //
+CREATE SEQUENCE domain_seq start with 1000 minvalue 1000 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
+DO SETVAL(domain_seq, 1001, 0) //
 
 DROP TABLE IF EXISTS domain //
 SHOW WARNINGS//
@@ -679,8 +679,8 @@ SHOW WARNINGS//
 -- Table User
 -- -----------------------------------------------------
 DROP SEQUENCE IF EXISTS user_seq //
-CREATE SEQUENCE user_seq start with 1 minvalue 1 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
-DO SETVAL(user_seq, 101, 0) //
+CREATE SEQUENCE user_seq start with 1000 minvalue 1000 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
+DO SETVAL(user_seq, 1001, 0) //
 
 DROP TABLE IF EXISTS user //
 SHOW WARNINGS//
@@ -711,8 +711,8 @@ SHOW WARNINGS//
 -- Table Role
 -- -----------------------------------------------------
 DROP SEQUENCE IF EXISTS role_seq //
-CREATE SEQUENCE role_seq start with 1 minvalue 1 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
-DO SETVAL(role_seq, 101, 0) //
+CREATE SEQUENCE role_seq start with 1000 minvalue 1000 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
+DO SETVAL(role_seq, 1001, 0) //
 
 DROP TABLE IF EXISTS role //
 SHOW WARNINGS//
@@ -733,8 +733,8 @@ SHOW WARNINGS//
 -- Table UserRole
 -- -----------------------------------------------------
 DROP SEQUENCE IF EXISTS userrole_seq //
-CREATE SEQUENCE userrole_seq start with 1 minvalue 1 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
-DO SETVAL(userrole_seq, 101, 0) //
+CREATE SEQUENCE userrole_seq start with 1000 minvalue 1000 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
+DO SETVAL(userrole_seq, 1001, 0) //
 
 DROP TABLE IF EXISTS userrole //
 SHOW WARNINGS//
@@ -766,8 +766,8 @@ SHOW WARNINGS//
 -- Table employee table
 -- -----------------------------------------------------
 DROP SEQUENCE IF EXISTS employee_seq //
-CREATE SEQUENCE employee_seq start with 1 minvalue 1 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
-DO SETVAL(employee_seq, 101, 0) //
+CREATE SEQUENCE employee_seq start with 1000 minvalue 1000 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
+DO SETVAL(employee_seq, 1001, 0) //
 
 DROP TABLE IF EXISTS employee//
 SHOW WARNINGS//

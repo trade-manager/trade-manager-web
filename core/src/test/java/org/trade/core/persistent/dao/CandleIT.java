@@ -58,6 +58,7 @@ import org.trade.core.valuetype.BarSize;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -154,6 +155,9 @@ public class CandleIT {
             _log.info("testAddCandle IdTradeStrategy: {}", tradestrategy.getId());
             assertNotNull(((CandleItem) tradestrategy.getStrategyData().getBaseCandleSeries().getDataItem(0))
                     .getCandle().getId());
+
+            List<Candle> candles = tradeService.findCandlesByTradingdayAndContractAndBarSize(tradestrategy.getTradingday(),tradestrategy.getContract(),BarSize.FIVE_MIN);
+            assertFalse(candles.isEmpty());
         }
     }
 }

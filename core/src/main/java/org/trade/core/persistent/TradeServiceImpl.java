@@ -35,7 +35,8 @@
  */
 package org.trade.core.persistent;
 
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.trade.core.dao.Aspect;
@@ -459,13 +460,18 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
         return candleRepository.findCandlesByContractDateRangeBarSize(contractId, startDate, endDate, barSize);
     }
 
+    public List<Candle> findCandlesByTradingdayAndContractAndBarSize(Tradingday tradingday, Contract contract, Integer barSize) {
+
+        return candleRepository.findByTradingdayAndContractAndBarSize(tradingday, contract, barSize);
+    }
 
     public Long findCandleCount(final Integer tradingdayId, final Integer contractId) {
 
         return candleRepository.findCandleCount(tradingdayId, contractId);
     }
 
-    @Transactional
+// READ_UNCOMMITTED, READ_COMMITTED, REPEATABLE_READ, SERIALIZABLE
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public void saveCandleSeries(final CandleSeries candleSeries) {
 
         if (candleSeries.isEmpty()) {
@@ -474,8 +480,8 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
         }
 
         Optional<Contract> contract = findContractBySymbol(candleSeries.getContract().getSymbol());
-        Tradingday tradingday = null;
         boolean tradingDayChanged = true;
+        Tradingday tradingday = null;
 
         for (int i = 0; i < candleSeries.getItemCount(); i++) {
 
@@ -492,11 +498,12 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
                 }
             }
 
+            candle.setContract(contract.get());
+
             if (null == tradingday) {
 
                 tradingday = this.findTradingdayByOpenCloseDate(candle.getTradingday().getOpen(),
                         candle.getTradingday().getClose());
-
             } else {
 
                 if (!tradingday.getOpen().equals(candle.getTradingday().getOpen()) &&
@@ -508,21 +515,17 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
                 }
             }
 
-            if (null == tradingday) {
+            if (null != tradingday) {
 
-                tradingday = this.saveAspect(candle.getTradingday());
+                candle.setTradingday(tradingday);
             }
-
-            candle.setTradingday(tradingday);
-            candle.setContract(contract.get());
 
             if (tradingDayChanged) {
 
                 tradingDayChanged = false;
                 Integer barSize = candleSeries.getBarSize();
                 // String hqlDelete = "delete Candle where contract = :contract and tradingday = :tradingday and barSize = :barSize";
-                List<Candle> candles = candleRepository.findByContractAndDateRange(contract.get().getId(), tradingday.getOpen(),
-                        tradingday.getClose(), barSize);
+                List<Candle> candles = candleRepository.findByTradingdayAndContractAndBarSize(tradingday, contract.get(), barSize);
 
                 if (!candles.isEmpty()) {
 
@@ -537,15 +540,11 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
     @Transactional
     public Candle saveCandle(final Candle candle) {
 
-        if (null == candle.getTradingday().getId()) {
+        Tradingday tradingday = this.findTradingdayByOpenCloseDate(candle.getTradingday().getOpen(),
+                candle.getTradingday().getClose());
 
-            Tradingday tradingday = this.findTradingdayByOpenCloseDate(candle.getTradingday().getOpen(),
-                    candle.getTradingday().getClose());
+        if (null != tradingday) {
 
-            if (null == tradingday) {
-
-                tradingday = this.saveTradingday(candle.getTradingday());
-            }
             candle.setTradingday(tradingday);
         }
 
@@ -554,7 +553,6 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
 
     @Transactional
     public Tradingday saveTradingday(Tradingday instance) {
-
 
         for (Tradestrategy tradestrategy : instance.getTradestrategies()) {
 

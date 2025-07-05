@@ -395,6 +395,14 @@ public interface TradeService extends AspectService {
                                                        ZonedDateTime endDate, Integer barSize);
 
     /**
+     * @param tradingday
+     * @param contract
+     * @param barSize
+     * @return
+     */
+    List<Candle> findCandlesByTradingdayAndContractAndBarSize(Tradingday tradingday, Contract contract, Integer barSize);
+
+    /**
      * Method findCandleCount.
      *
      * @param tradingdayId Integer

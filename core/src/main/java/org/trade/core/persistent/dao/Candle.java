@@ -37,6 +37,7 @@ package org.trade.core.persistent.dao;
 
 // Generated Feb 21, 2011 12:43:33 PM by Hibernate Tools 3.4.0.CR1
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -106,7 +107,7 @@ public class Candle extends Aspect implements java.io.Serializable {
     @Column(name = "last_update_date", nullable = false)
     private ZonedDateTime lastUpdateDate;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "tradingday_id", nullable = false)
     private Tradingday tradingday;
 

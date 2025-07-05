@@ -269,6 +269,7 @@ public class StrategyData extends Worker {
         this.getBaseCandleSeries().updatePercentChanged(candleItem);
         updateIndicators(this.getBaseCandleDataset(), newBar);
         this.getBaseCandleSeries().fireSeriesChanged();
+
         /*
          * If thread Indicators the updates to all indicators and the subsequent
          * firing of base series changed is performed via the worker thread.
