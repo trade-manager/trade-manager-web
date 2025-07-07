@@ -679,7 +679,9 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
 
                 Contract contract = this.tradeService.findContractByUniqueKey(series.getSecType(),
                         series.getSymbol(), series.getExchange(), series.getCurrency(), null);
+
                 if (null != contract) {
+
                     Tradestrategy childTradestrategy = new Tradestrategy(contract, tradestrategy.getTradingday(),
                             new Strategy(), tradestrategy.getPortfolio(), new BigDecimal(0), null, null, false,
                             tradestrategy.getChartDays(), tradestrategy.getBarSize());
@@ -688,11 +690,14 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
                     List<Candle> indicatorCandles = this.tradeService.findCandlesByContractDateRangeBarSize(
                             childTradestrategy.getContract(), startDate, endDate,
                             childTradestrategy.getBarSize());
+
                     if (indicatorCandles.isEmpty()) {
+
                         this.setStatusBarMessage(
                                 "No chart data available for " + childTradestrategy.getContract().getSymbol(),
                                 BasePanel.INFORMATION);
                     } else {
+
                         StrategyData strategyData = StrategyData.create(childTradestrategy);
                         org.trade.core.persistent.dao.series.indicator.CandleDataset.populateSeries(strategyData, indicatorCandles);
                         indicatorCandles.clear();
