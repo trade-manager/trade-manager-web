@@ -47,15 +47,13 @@ import org.trade.core.broker.IBrokerChangeListener;
 import org.trade.core.broker.IBrokerModel;
 import org.trade.core.factory.ClassFactory;
 import org.trade.core.lookup.DBTableLookupServiceProvider;
-import org.trade.core.persistent.IPersistentModel;
-import org.trade.core.persistent.PersistentModelException;
+import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.Account;
 import org.trade.core.persistent.dao.Candle;
 import org.trade.core.persistent.dao.CodeType;
 import org.trade.core.persistent.dao.CodeValue;
 import org.trade.core.persistent.dao.Contract;
 import org.trade.core.persistent.dao.Portfolio;
-import org.trade.core.persistent.dao.PortfolioAccount;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradePosition;
 import org.trade.core.persistent.dao.Tradestrategy;
@@ -137,9 +135,8 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
 
     private final static Logger _log = LoggerFactory.getLogger(TradeMainControllerPanel.class);
 
-    private static Tradingdays m_tradingdays = null;
-    private IBrokerModel m_brokerModel = null;
-    private IPersistentModel m_tradePersistentModel = null;
+    private static Tradingdays tradingdays = null;
+    private IBrokerModel brokerModel = null;
     private BrokerDataRequestMonitor brokerDataRequestProgressMonitor = null;
 
     private TradingdayPanel tradingdayPanel = null;
@@ -155,10 +152,9 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
      *
      * @param frame the main application Frame.
      */
+    public TradeMainControllerPanel(Frame frame, TradeService tradeService) {
 
-    public TradeMainControllerPanel(Frame frame) {
-
-        super(frame);
+        super(frame, tradeService);
 
         try {
 
@@ -168,21 +164,19 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
             setMenu(new TradeMainPanelMenu(this));
             /*
              * This allows the main controller to receive all events as it is
-             * allways considered selected.
+             * always considered selected.
              */
             setSelected(true);
-            m_tradePersistentModel = (IPersistentModel) ClassFactory
-                    .getServiceForInterface(IPersistentModel._persistentModel, this);
             Tradingday tradingday = Tradingday.newInstance(TradingCalendar.getCurrentTradingDay());
-            Tradingday todayTradingday = m_tradePersistentModel.findTradingdayByOpenCloseDate(tradingday.getOpen(),
+            Tradingday todayTradingday = tradeService.findTradingdayByOpenCloseDate(tradingday.getOpen(),
                     tradingday.getClose());
 
             if (null != todayTradingday) {
                 tradingday = todayTradingday;
             }
 
-            m_tradingdays = new Tradingdays();
-            m_tradingdays.add(tradingday);
+            tradingdays = new Tradingdays();
+            tradingdays.add(tradingday);
             String strategyDir = ConfigProperties.getPropAsString("trade.strategy.default.dir");
             dynacode = new DynamicCode();
             dynacode.addSourceDir(new File(strategyDir));
@@ -194,16 +188,14 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
              * contracts and decide how to trade them.
              *
              */
-
-            tradingdayPanel = new TradingdayPanel(m_tradingdays, this, m_tradePersistentModel);
+            tradingdayPanel = new TradingdayPanel(tradingdays, this, tradeService);
             /*
              * Constructs a new Contract tab that contains all information
              * related to the Tradestrategy i.e. charts, Orders for a particular
              * trading day.
              *
              */
-
-            contractPanel = new ContractPanel(m_tradingdays, this, m_tradePersistentModel);
+            contractPanel = new ContractPanel(tradingdays, this, tradeService);
 
             /*
              * Constructs a new Portfolio tab that contains all information
@@ -212,8 +204,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
              * month i.e. Batting avg, Simple Sharpe ratio and P/L information.
              *
              */
-
-            PortfolioPanel portfolioPanel = new PortfolioPanel(this, m_tradePersistentModel);
+            PortfolioPanel portfolioPanel = new PortfolioPanel(this, tradeService);
 
             /*
              * Constructs a new Configuration tab that contains all information
@@ -221,8 +212,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
              * indicators, accounts.
              *
              */
-
-            ConfigurationPanel configurationPanel = new ConfigurationPanel(m_tradePersistentModel);
+            ConfigurationPanel configurationPanel = new ConfigurationPanel(tradeService);
 
             /*
              * Constructs a new Strategy tab that contains all information
@@ -231,8 +221,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
              * this will be where you can edit the strategies and deploy them.
              *
              */
-
-            strategyPanel = new StrategyPanel(m_tradePersistentModel);
+            strategyPanel = new StrategyPanel(tradeService);
 
             this.addTab("Tradingday", tradingdayPanel);
             this.addTab("Contract Details", contractPanel);
@@ -278,7 +267,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                 int result = JOptionPane.showConfirmDialog(this.getFrame(),
                         "Do you want to save orders that did not orginate from this TM client?", "Information",
                         JOptionPane.YES_NO_OPTION);
-                m_brokerModel.onReqExecutions(tradestrategy, result == JOptionPane.YES_OPTION);
+                brokerModel.onReqExecutions(tradestrategy, result == JOptionPane.YES_OPTION);
 
             }
         } catch (BrokerModelException ex) {
@@ -294,12 +283,12 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
 
     public void doData() {
 
-        if (m_tradingdays.isDirty()) {
+        if (tradingdays.isDirty()) {
 
             this.setStatusBarMessage("Please save before running strategy ...\n", BasePanel.WARNING);
         } else {
 
-            runStrategy(m_tradingdays, true);
+            runStrategy(tradingdays, true);
         }
     }
 
@@ -322,7 +311,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
 
             Tradingdays tradingdays = new Tradingdays();
             Tradingday tradingday = Tradingday.newInstance(tradestrategy.getTradingday().getOpen());
-            tradingday.setId(Integer.MAX_VALUE);
+            // tradingday.setId(Integer.MAX_VALUE);
             tradingday.addTradestrategy(tradestrategy);
             tradingdays.add(tradingday);
             runStrategy(tradingdays, true);
@@ -343,7 +332,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
         try {
 
             this.getFrame().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            TradeOrder instance = m_tradePersistentModel.findTradeOrderByKey(tradeOrder.getOrderKey());
+            TradeOrder instance = tradeService.findTradeOrderByKey(tradeOrder.getOrderKey());
 
             if (null != instance) {
 
@@ -352,10 +341,10 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                     this.setStatusBarMessage("Please refresh order before submitting change ...\n", BasePanel.WARNING);
                 }
             }
-            Tradestrategy tradestrategy = m_tradePersistentModel.findTradestrategyById(tradeOrder.getTradestrategy());
+            Tradestrategy tradestrategy = tradeService.findTradestrategyById(tradeOrder.getTradestrategy());
             // Check the order is valid.
             instance.validate();
-            submittedTradeOrder = m_brokerModel.onPlaceOrder(tradestrategy.getContract(), instance);
+            submittedTradeOrder = brokerModel.onPlaceOrder(tradestrategy.getContract(), instance);
             setStatusBarMessage("Order sent to broker.\n", BasePanel.INFORMATION);
 
         } catch (Exception ex) {
@@ -374,12 +363,12 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
 
         try {
 
-            if (m_tradingdays.isDirty()) {
+            if (tradingdays.isDirty()) {
 
                 this.setStatusBarMessage("Please save or refresh before running strategy ...\n", BasePanel.WARNING);
             } else {
 
-                runStrategy(m_tradingdays, false);
+                runStrategy(tradingdays, false);
             }
         } catch (Exception ex) {
             this.setErrorMessage("Error running Trade Strategies.", ex.getMessage(), ex);
@@ -402,7 +391,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
             } else {
                 Tradingdays tradingdays = new Tradingdays();
                 Tradingday tradingday = Tradingday.newInstance(tradestrategy.getTradingday().getOpen());
-                tradingday.setId(Integer.MAX_VALUE);
+                //  tradingday.setId(Integer.MAX_VALUE);
                 tradingday.addTradestrategy(tradestrategy);
                 tradingdays.add(tradingday);
                 runStrategy(tradingdays, false);
@@ -420,7 +409,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
 
     public void doTest() {
         try {
-            if (m_tradingdays.isDirty()) {
+            if (tradingdays.isDirty()) {
                 this.setStatusBarMessage("Please save before running strategy ...\n", BasePanel.WARNING);
             } else {
                 contractPanel.doCloseAll();
@@ -432,17 +421,17 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                  * These must be run one at a time and will require orders to be
                  * deleted between runs.
                  */
-                m_tradingdays.getTradingdays().sort(Tradingday.DATE_ORDER_DESC);
-                if (m_tradingdays.getTradingdays().isEmpty()) {
+                tradingdays.getTradingdays().sort(Tradingday.DATE_ORDER_DESC);
+                if (tradingdays.getTradingdays().isEmpty()) {
                     return;
                 }
-                ZonedDateTime toOpen = m_tradingdays.getTradingdays().getFirst().getOpen();
-                ZonedDateTime fromOpen = m_tradingdays.getTradingdays().getLast()
+                ZonedDateTime toOpen = tradingdays.getTradingdays().getFirst().getOpen();
+                ZonedDateTime fromOpen = tradingdays.getTradingdays().getLast()
                         .getOpen();
-                List<Tradestrategy> strategyBarSizeChartHistItems = m_tradePersistentModel
+                List<Tradestrategy> strategyBarSizeChartHistItems = tradeService
                         .findTradestrategyDistinctByDateRange(fromOpen, toOpen);
 
-                List<Tradestrategy> contractsItems = m_tradePersistentModel
+                List<Tradestrategy> contractsItems = tradeService
                         .findTradestrategyContractDistinctByDateRange(fromOpen, toOpen);
 
                 FilterBackTestPane filterTradestrategyPane = new FilterBackTestPane(fromOpen, toOpen,
@@ -460,7 +449,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                     List<Contract> contracts = filterTradestrategyPane.getSelectedContracts();
 
                     Tradingdays tradingdays = new Tradingdays();
-                    for (Tradingday itemTradingday : m_tradingdays.getTradingdays()) {
+                    for (Tradingday itemTradingday : TradeMainControllerPanel.tradingdays.getTradingdays()) {
 
                         if (!TradingCalendar.between(itemTradingday.getOpen(),
                                 filterTradestrategyPane.getSelectedStartDate(),
@@ -513,7 +502,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
             contractPanel.doClose(tradestrategy);
             Tradingdays tradingdays = new Tradingdays();
             Tradingday tradingday = Tradingday.newInstance(tradestrategy.getTradingday().getOpen());
-            tradingday.setId(Integer.MAX_VALUE);
+            // tradingday.setId(Integer.MAX_VALUE);
             tradingday.addTradestrategy(tradestrategy);
             tradingdays.add(tradingday);
             runStrategy(tradingdays, false);
@@ -534,7 +523,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
         SwingUtilities.invokeLater(() -> {
             try {
 
-                Tradingday todayTradingday = m_tradingdays.getTradingday(
+                Tradingday todayTradingday = tradingdays.getTradingday(
                         TradingCalendar.getTradingDayStart(TradingCalendar.getDateTimeNowMarketTimeZone()),
                         TradingCalendar.getTradingDayEnd(TradingCalendar.getDateTimeNowMarketTimeZone()));
                 if (null == todayTradingday) {
@@ -550,7 +539,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                         // Note we use the orderReference to store the
                         // tradestrategyId.
 
-                        Tradestrategy tradestrategy = m_tradePersistentModel
+                        Tradestrategy tradestrategy = tradeService
                                 .findTradestrategyById(Integer.parseInt(openOrder.getOrderReference()));
                         int result = JOptionPane.showConfirmDialog(getFrame(),
                                 "Missing order key: " + openOrder.getOrderKey() + " for contract "
@@ -558,7 +547,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                                 "Information", JOptionPane.YES_NO_OPTION);
                         if (result == JOptionPane.YES_OPTION) {
                             openOrder.setTradestrategy(tradestrategy);
-                            openOrder = m_tradePersistentModel.persistTradeOrder(openOrder);
+                            openOrder = tradeService.saveTradeOrder(openOrder);
                         }
                     }
                 }
@@ -567,13 +556,13 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                  * Cancel any orders that were open and not filled.
                  */
                 for (Tradestrategy tradestrategy : todayTradingday.getTradestrategies()) {
-                    Tradestrategy instance = m_tradePersistentModel.findTradestrategyById(tradestrategy);
+                    Tradestrategy instance = tradeService.findTradestrategyById(tradestrategy);
                     for (TradeOrder todayTradeOrder : instance.getTradeOrders()) {
                         if (todayTradeOrder.isActive()) {
                             if (!openTradeOrders.containsKey(todayTradeOrder.getOrderKey())) {
                                 todayTradeOrder.setStatus(OrderStatus.CANCELLED);
-                                todayTradeOrder.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
-                                m_tradePersistentModel.persistTradeOrder(todayTradeOrder);
+                                todayTradeOrder.setOrderUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
+                                tradeService.saveTradeOrder(todayTradeOrder);
                             }
                         }
                     }
@@ -595,7 +584,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
      */
     public void executionDetailsEnd(final ConcurrentHashMap<Integer, TradeOrder> tradeOrders) {
         try {
-            Tradingday todayTradingday = m_tradingdays.getTradingday(
+            Tradingday todayTradingday = tradingdays.getTradingday(
                     TradingCalendar.getTradingDayStart(TradingCalendar.getDateTimeNowMarketTimeZone()),
                     TradingCalendar.getTradingDayEnd(TradingCalendar.getDateTimeNowMarketTimeZone()));
             if (null == todayTradingday) {
@@ -623,8 +612,8 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
     public void tradeOrderFilled(final TradeOrder tradeOrder) {
 
         try {
-            final Tradestrategy tradestrategy = m_tradingdays
-                    .getTradestrategy(tradeOrder.getTradestrategyId().getId());
+            final Tradestrategy tradestrategy = tradingdays
+                    .getTradestrategy(tradeOrder.getTradestrategyLite().getId());
 
             if (null == tradestrategy) {
                 this.setStatusBarMessage("Warning position opened but Tradestrategy not found for Order Key: "
@@ -674,7 +663,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                     }
                 }
             }
-            tradestrategy.setStatus(tradeOrder.getTradestrategyId().getStatus());
+            tradestrategy.setStatus(tradeOrder.getTradestrategyLite().getStatus());
             contractPanel.doRefresh(tradestrategy);
 
         } catch (Exception ex) {
@@ -691,12 +680,12 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
      */
     public void tradeOrderCancelled(final TradeOrder tradeOrder) {
 
-        if (m_brokerModel.isConnected() && contractPanel.isSelected()) {
+        if (brokerModel.isConnected() && contractPanel.isSelected()) {
 
             SwingUtilities.invokeLater(() -> {
                 try {
-                    Tradestrategy tradestrategy = m_tradingdays
-                            .getTradestrategy(tradeOrder.getTradestrategyId().getId());
+                    Tradestrategy tradestrategy = tradingdays
+                            .getTradestrategy(tradeOrder.getTradestrategyLite().getId());
                     if (null == tradestrategy) {
                         setStatusBarMessage(
                                 "Warning position cancelled but Tradestrategy not found for Order Key: "
@@ -721,12 +710,12 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
      */
     public void tradeOrderStatusChanged(final TradeOrder tradeOrder) {
 
-        if (m_brokerModel.isConnected() && contractPanel.isSelected()) {
+        if (brokerModel.isConnected() && contractPanel.isSelected()) {
 
             SwingUtilities.invokeLater(() -> {
                 try {
-                    Tradestrategy tradestrategy = m_tradingdays
-                            .getTradestrategy(tradeOrder.getTradestrategyId().getId());
+                    Tradestrategy tradestrategy = tradingdays
+                            .getTradestrategy(tradeOrder.getTradestrategyLite().getId());
                     if (null == tradestrategy) {
                         setStatusBarMessage(
                                 "Warning position opened but Tradestrategy not found for Order Key: "
@@ -734,7 +723,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                                 BasePanel.WARNING);
                         return;
                     }
-                    tradestrategy.setStatus(tradeOrder.getTradestrategyId().getStatus());
+                    tradestrategy.setStatus(tradeOrder.getTradestrategyLite().getStatus());
                     contractPanel.doRefresh(tradestrategy);
 
                 } catch (Exception ex) {
@@ -754,17 +743,17 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
      */
     public void positionClosed(final TradePosition tradePosition) {
 
-        if (m_brokerModel.isConnected()) {
+        if (brokerModel.isConnected()) {
             SwingUtilities.invokeLater(() -> {
 
                 try {
 
-                    TradePosition currTradePosition = m_tradePersistentModel
+                    TradePosition currTradePosition = tradeService
                             .findTradePositionById(tradePosition.getId());
                     for (TradeOrder tradeOrder : currTradePosition.getTradeOrders()) {
-                        Tradestrategy tradestrategy = m_tradePersistentModel
-                                .findTradestrategyById(tradeOrder.getTradestrategyId().getId());
-                        m_tradingdays.getTradestrategy(tradestrategy.getId())
+                        Tradestrategy tradestrategy = tradeService
+                                .findTradestrategyById(tradeOrder.getTradestrategyLite().getId());
+                        tradingdays.getTradestrategy(tradestrategy.getId())
                                 .setStatus(tradestrategy.getStatus());
                         contractPanel.doRefresh(tradestrategy);
                     }
@@ -784,9 +773,9 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
     public void strategyComplete(String strategyClassName, Tradestrategy tradestrategy) {
 
         try {
-            if (m_brokerModel.isConnected()) {
-                tradestrategy = m_tradePersistentModel.findTradestrategyById(tradestrategy.getId());
-                m_tradingdays.getTradestrategy(tradestrategy.getId()).setStatus(tradestrategy.getStatus());
+            if (brokerModel.isConnected()) {
+                tradestrategy = tradeService.findTradestrategyById(tradestrategy.getId());
+                tradingdays.getTradestrategy(tradestrategy.getId()).setStatus(tradestrategy.getStatus());
                 contractPanel.doRefresh(tradestrategy);
             }
             tradingdayPanel.removeStrategyWorker(strategyClassName + tradestrategy.getId());
@@ -901,7 +890,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
              * time data has started, so fire of the strategy for this
              * tradestrategy.
              */
-            if (!m_brokerModel.isBrokerDataOnly()) {
+            if (!brokerModel.isBrokerDataOnly()) {
 
                 if (tradestrategy.getTrade()) {
                     if (tradestrategy.isThereOpenTradePosition()) {
@@ -923,7 +912,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                                             + " do you want to delete all Orders?",
                                     "Information", JOptionPane.YES_NO_OPTION);
                             if (result1 == JOptionPane.YES_OPTION) {
-                                m_tradePersistentModel.removeTradestrategyTradeOrders(tradestrategy);
+                                tradeService.deleteTradestrategyTradeOrders(tradestrategy);
                             }
                         }
 
@@ -947,7 +936,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
     public void doConnect() {
         try {
 
-            if ((null != m_brokerModel) && m_brokerModel.isConnected()) {
+            if ((null != brokerModel) && brokerModel.isConnected()) {
 
                 int result = JOptionPane.showConfirmDialog(this.getFrame(),
                         "Already connected. Do you want to disconnect?", "Information", JOptionPane.YES_NO_OPTION);
@@ -972,7 +961,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
             /*
              * Update the default portfolio.
              */
-            m_tradePersistentModel.resetDefaultPortfolio(connectionPane.getPortfolio());
+            tradeService.resetDefaultPortfolio(connectionPane.getPortfolio());
             DBTableLookupServiceProvider.clearLookup();
 
             if (!dialog.getCancel()) {
@@ -983,7 +972,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
 
                     try {
 
-                        m_brokerModel.onConnect(connectionPane.getHost(), connectionPane.getPort(),
+                        brokerModel.onConnect(connectionPane.getHost(), connectionPane.getPort(),
                                 connectionPane.getClientId());
                     } finally {
                         getFrame().setCursor(Cursor.getDefaultCursor());
@@ -1062,7 +1051,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
 
             tradingdayPanel.killAllStrategyWorker();
 
-            if (m_brokerModel.isConnected()) {
+            if (brokerModel.isConnected()) {
 
                 if ((null != brokerDataRequestProgressMonitor) && !brokerDataRequestProgressMonitor.isDone()) {
 
@@ -1076,13 +1065,13 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
 
                 try {
 
-                    m_brokerModel.onDisconnect();
+                    brokerModel.onDisconnect();
                 } finally {
                     getFrame().setCursor(Cursor.getDefaultCursor());
                 }
             });
 
-            refreshTradingdays(m_tradingdays);
+            refreshTradingdays(tradingdays);
         } catch (Exception ex) {
             this.setErrorMessage("Could Not Disconnect From TWS", ex.getMessage(), ex);
         }
@@ -1103,7 +1092,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
             tradingdayPanel.setConnected(true);
             contractPanel.setConnected(true);
 
-            Tradingday todayTradingday = m_tradingdays.getTradingday(
+            Tradingday todayTradingday = tradingdays.getTradingday(
                     TradingCalendar.getTradingDayStart(TradingCalendar.getDateTimeNowMarketTimeZone()),
                     TradingCalendar.getTradingDayEnd(TradingCalendar.getDateTimeNowMarketTimeZone()));
 
@@ -1113,7 +1102,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
              */
             if (null != todayTradingday) {
 
-                m_brokerModel.onReqAllExecutions(todayTradingday.getOpen());
+                brokerModel.onReqAllExecutions(todayTradingday.getOpen());
             }
         } catch (Exception ex) {
             this.setErrorMessage("Error finding excecutions.", ex.getMessage(), ex);
@@ -1139,7 +1128,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
 
             if (forced) {
 
-                if (!m_brokerModel.isConnected()) {
+                if (!brokerModel.isConnected()) {
 
                     doConnect();
                 }
@@ -1172,12 +1161,13 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
 
             int tokens = accountNumbers.replaceAll("[^,]", "").length();
 
-            Portfolio defaultPortfolio = m_tradePersistentModel.findPortfolioDefault();
+            Portfolio defaultPortfolio = tradeService.findPortfolioDefault();
 
             while (scanLine.hasNext()) {
+
                 String accountNumber = scanLine.next().trim();
                 if (!accountNumber.isEmpty()) {
-                    Account account = m_tradePersistentModel.findAccountByNumber(accountNumber);
+                    Account account = tradeService.findAccountByAccountNumber(accountNumber);
 
                     if (null == account) {
                         account = new Account(accountNumber, accountNumber, Currency.USD, AccountType.INDIVIDUAL);
@@ -1187,27 +1177,25 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                      * the default portfolio has no accounts add this account to
                      * the default portfolio.
                      */
-                    if (defaultPortfolio.getPortfolioAccounts().isEmpty() && tokens == 0) {
-                        PortfolioAccount portfolioAccount = new PortfolioAccount(defaultPortfolio, account);
-                        defaultPortfolio.getPortfolioAccounts().add(portfolioAccount);
-                        defaultPortfolio = m_tradePersistentModel.persistPortfolio(defaultPortfolio);
+                    if (defaultPortfolio.getAccounts().isEmpty() && tokens == 0) {
+                        defaultPortfolio.getAccounts().add(account);
+                        defaultPortfolio = tradeService.savePortfolio(defaultPortfolio);
                         /*
                          * Update the account (key) to the current account only
                          * when the default Portfolio has no accounts.
                          */
                         defaultPortfolio.setName(account.getAccountNumber());
-                        defaultPortfolio = m_tradePersistentModel.persistAspect(defaultPortfolio);
+                        defaultPortfolio = tradeService.saveAspect(defaultPortfolio);
 
                     } else {
                         Portfolio portfolio = new Portfolio(account.getAccountNumber(), account.getAccountNumber());
-                        PortfolioAccount portfolioAccount = new PortfolioAccount(portfolio, account);
-                        portfolio.getPortfolioAccounts().add(portfolioAccount);
-                        portfolio = m_tradePersistentModel.persistPortfolio(portfolio);
+                        portfolio.getAccounts().add(account);
+                        portfolio = tradeService.savePortfolio(portfolio);
                         if (tokens == 0) {
                             /*
                              * Update the default portfolio.
                              */
-                            m_tradePersistentModel.resetDefaultPortfolio(portfolio);
+                            tradeService.resetDefaultPortfolio(portfolio);
                         }
                     }
                 }
@@ -1215,11 +1203,11 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
 
             DBTableLookupServiceProvider.clearLookup();
             tradingdayPanel.doWindowActivated();
-            defaultPortfolio = m_tradePersistentModel.findPortfolioByName(defaultPortfolio.getName());
+            defaultPortfolio = tradeService.findPortfolioByName(defaultPortfolio.getName());
 
-            for (PortfolioAccount item : defaultPortfolio.getPortfolioAccounts()) {
+            for (Account item : defaultPortfolio.getAccounts()) {
 
-                m_brokerModel.onSubscribeAccountUpdates(true, item.getAccount().getAccountNumber());
+                brokerModel.onSubscribeAccountUpdates(true, item.getAccountNumber());
             }
 
             this.setStatusBarMessage(
@@ -1240,10 +1228,10 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
 
         SwingUtilities.invokeLater(() -> {
             try {
-                Account account = m_tradePersistentModel.findAccountByNumber(accountNumber);
+                Account account = tradeService.findAccountByAccountNumber(accountNumber);
                 Portfolio portfolio = account.getDefaultPortfolio();
                 if (null != portfolio) {
-                    portfolio = m_tradePersistentModel.findPortfolioById(portfolio.getId());
+                    portfolio = tradeService.findPortfolioById(portfolio.getId());
                     tradingdayPanel.setPortfolioLabel(portfolio);
                     setStatusBarMessage("Account: " + accountNumber + " information updated.",
                             BasePanel.INFORMATION);
@@ -1270,11 +1258,11 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
 
         try {
 
-            for (Tradingday tradingday : m_tradingdays.getTradingdays()) {
+            for (Tradingday tradingday : tradingdays.getTradingdays()) {
 
                 for (Tradestrategy tradestrategy : tradingday.getTradestrategies()) {
 
-                    m_brokerModel.onContractDetails(tradestrategy.getContract());
+                    brokerModel.onContractDetails(tradestrategy.getContract());
                 }
             }
         } catch (BrokerModelException ex) {
@@ -1291,12 +1279,12 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
         try {
 
             this.clearStatusBarMessage();
-            CodeType codeType = m_tradePersistentModel.findCodeTypeByNameType(tradestrategy.getStrategy().getName(),
+            CodeType codeType = tradeService.findCodeTypeByNameType(tradestrategy.getStrategy().getName(),
                     CodeType.StrategyParameters);
 
             if (null != codeType) {
 
-                Tradestrategy instance = m_tradePersistentModel.findTradestrategyById(tradestrategy);
+                Tradestrategy instance = tradeService.findTradestrategyById(tradestrategy);
                 CodeAttributePanel codeAttributePanel = new CodeAttributePanel(codeType, instance.getCodeValues());
 
                 if (null != codeAttributePanel) {
@@ -1311,9 +1299,12 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                          * Populate the code values from the fields.
                          */
                         for (CodeValue value : codeAttributePanel.getCodeValues()) {
-                            if (null == value.getTradestrategy())
+
+                            if (null == value.getTradestrategy()) {
+
                                 value.setTradestrategy(instance);
-                            m_tradePersistentModel.persistAspect(value);
+                            }
+                            tradeService.saveAspect(value);
                         }
                     }
                 }
@@ -1338,7 +1329,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
 
             try {
 
-                m_brokerModel.onCancelOrder(order);
+                brokerModel.onCancelOrder(order);
             } catch (BrokerModelException ex) {
 
                 this.setErrorMessage("Error cancelling Order " + order.getOrderKey(), ex.getMessage(), ex);
@@ -1357,14 +1348,14 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
     public void doCancel() {
 
         // Cancel the candleWorker if running
-        m_brokerModel.onCancelAllRealtimeData();
+        brokerModel.onCancelAllRealtimeData();
 
         if ((null != brokerDataRequestProgressMonitor) && !brokerDataRequestProgressMonitor.isDone()) {
 
             brokerDataRequestProgressMonitor.cancel(true);
         }
         tradingdayPanel.killAllStrategyWorker();
-        refreshTradingdays(m_tradingdays);
+        refreshTradingdays(tradingdays);
         this.setStatusBarMessage("Strategies and live data have been cancelled.", BasePanel.INFORMATION);
     }
 
@@ -1379,9 +1370,9 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
     public void doCancel(final Tradestrategy tradestrategy) {
         try {
 
-            if (m_brokerModel.isRealtimeBarsRunning(tradestrategy)) {
+            if (brokerModel.isRealtimeBarsRunning(tradestrategy)) {
 
-                m_brokerModel.onCancelRealtimeBars(tradestrategy);
+                brokerModel.onCancelRealtimeBars(tradestrategy);
                 this.setStatusBarMessage(
                         "Realtime data has been cancelled for Symbol: " + tradestrategy.getContract().getSymbol(),
                         BasePanel.INFORMATION);
@@ -1406,7 +1397,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
      */
     public void doCloseAll() {
         try {
-            for (Tradingday tradingday : m_tradingdays.getTradingdays()) {
+            for (Tradingday tradingday : tradingdays.getTradingdays()) {
                 for (Tradestrategy tradestrategy : tradingday.getTradestrategies()) {
                     doCloseAll(tradestrategy);
                 }
@@ -1425,12 +1416,12 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
             if (null == tradestrategy.getId()) {
                 return;
             }
-            TradestrategyOrders positionOrders = m_tradePersistentModel
+            TradestrategyOrders positionOrders = tradeService
                     .findPositionOrdersByTradestrategyId(tradestrategy.getId());
-            Tradestrategy instance = m_tradePersistentModel.findTradestrategyById(tradestrategy.getId());
+            Tradestrategy instance = tradeService.findTradestrategyById(tradestrategy.getId());
             for (TradeOrder order : positionOrders.getTradeOrders()) {
                 if (order.isActive()) {
-                    m_brokerModel.onCancelOrder(order);
+                    brokerModel.onCancelOrder(order);
                 }
             }
             if (positionOrders.hasOpenTradePosition()) {
@@ -1473,7 +1464,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                                 }
                             }
                         }
-                        tradeOrder = m_brokerModel.onPlaceOrder(instance.getContract(), tradeOrder);
+                        tradeOrder = brokerModel.onPlaceOrder(instance.getContract(), tradeOrder);
                     }
                 }
             }
@@ -1530,25 +1521,22 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
      * @param idTradestrategy Integer
      */
     public void doTransfer(Integer idTradestrategy) {
-        try {
-            Tradestrategy tradestrategy = m_tradingdays.getTradestrategy(idTradestrategy);
-            if (null == tradestrategy) {
-                tradestrategy = m_tradePersistentModel.findTradestrategyById(idTradestrategy);
-            }
-            if (null == m_tradingdays.getTradingday(tradestrategy.getTradingday().getOpen(),
-                    tradestrategy.getTradingday().getClose())) {
-                Tradingday tradingday = m_tradePersistentModel
-                        .findTradingdayById(tradestrategy.getTradingday().getId());
-                m_tradingdays.add(tradingday);
-            }
-            if (tradestrategy.isDirty()) {
-                setStatusBarMessage("Please save ...\n", BasePanel.WARNING);
-            } else {
-                contractPanel.doTransfer(tradestrategy);
-                this.setSelectPanel(contractPanel);
-            }
-        } catch (PersistentModelException ex) {
-            this.setErrorMessage("Error finding Tradingday.", ex.getMessage(), ex);
+
+        Tradestrategy tradestrategy = tradingdays.getTradestrategy(idTradestrategy);
+        if (null == tradestrategy) {
+            tradestrategy = tradeService.findTradestrategyById(idTradestrategy);
+        }
+        if (null == tradingdays.getTradingday(tradestrategy.getTradingday().getOpen(),
+                tradestrategy.getTradingday().getClose())) {
+            Tradingday tradingday = tradeService
+                    .findTradingdayById(tradestrategy.getTradingday().getId());
+            tradingdays.add(tradingday);
+        }
+        if (tradestrategy.isDirty()) {
+            setStatusBarMessage("Please save ...\n", BasePanel.WARNING);
+        } else {
+            contractPanel.doTransfer(tradestrategy);
+            this.setSelectPanel(contractPanel);
         }
     }
 
@@ -1564,7 +1552,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
         getMenu().setEnabledRunStrategy(false);
         getMenu().setEnabledBrokerData(false);
         getMenu().setEnabledTestStrategy(false);
-        getMenu().setEnabledConnect(!m_brokerModel.isConnected());
+        getMenu().setEnabledConnect(!brokerModel.isConnected());
 
         if (tradingdayPanel == newBasePanel) {
 
@@ -1572,7 +1560,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
 
                 getMenu().setEnabledDelete(true, "Delete all Order");
 
-                if (m_brokerModel.isConnected()) {
+                if (brokerModel.isConnected()) {
 
                     getMenu().setEnabledRunStrategy(true);
                 } else {
@@ -1597,7 +1585,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
 
         try {
 
-            m_brokerModel.setBrokerDataOnly(brokerDataOnly);
+            brokerModel.setBrokerDataOnly(brokerDataOnly);
 
             if ((null != brokerDataRequestProgressMonitor) && !brokerDataRequestProgressMonitor.isDone()) {
 
@@ -1605,7 +1593,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                 return;
             } else {
 
-                if (brokerDataOnly && !m_brokerModel.isConnected()) {
+                if (brokerDataOnly && !brokerModel.isConnected()) {
 
                     int result = JOptionPane.showConfirmDialog(this.getFrame(),
                             "Polygon will be used to retrieve candle data.\n Do you want to continue ?",
@@ -1634,7 +1622,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
 
                         if (result == JOptionPane.YES_OPTION) {
 
-                            m_tradePersistentModel.removeTradingdayTradeOrders(tradingday);
+                            tradeService.deleteTradingdayTradeOrders(tradingday);
                         }
                     }
 
@@ -1642,7 +1630,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
 
                         try {
 
-                            if (brokerDataOnly && !m_brokerModel.validateBrokerData(tradestrategy)) {
+                            if (brokerDataOnly && !brokerModel.validateBrokerData(tradestrategy)) {
 
                                 return;
                             }
@@ -1654,7 +1642,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                             return;
                         }
 
-                        if (m_brokerModel.isRealtimeBarsRunning(tradestrategy)) {
+                        if (brokerModel.isRealtimeBarsRunning(tradestrategy)) {
 
                             int result = JOptionPane.showConfirmDialog(this.getFrame(),
                                     "A real time data request is already running for Symbol: "
@@ -1664,13 +1652,13 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
 
                             if (result == JOptionPane.YES_OPTION) {
 
-                                m_brokerModel.onCancelRealtimeBars(tradestrategy);
+                                brokerModel.onCancelRealtimeBars(tradestrategy);
                             } else {
                                 return;
                             }
                         }
 
-                        if (brokerDataOnly && !m_brokerModel.isConnected()) {
+                        if (brokerDataOnly && !brokerModel.isConnected()) {
 
                             ZonedDateTime endDate = TradingCalendar.getDateAtTime(
                                     TradingCalendar.getPrevTradingDay(TradingCalendar
@@ -1679,7 +1667,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                             ZonedDateTime startDate = endDate.minusDays((tradestrategy.getChartDays() - 1));
                             startDate = TradingCalendar.getPrevTradingDay(startDate);
 
-                            List<Candle> candles = m_tradePersistentModel.findCandlesByContractDateRangeBarSize(
+                            List<Candle> candles = tradeService.findCandlesByContractDateRangeBarSize(
                                     tradestrategy.getContract().getId(), startDate, endDate,
                                     tradestrategy.getBarSize());
 
@@ -1694,7 +1682,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
 
                                     for (Candle item : candles) {
 
-                                        m_tradePersistentModel.removeAspect(item);
+                                        tradeService.deleteAspect(item);
                                     }
                                 } else {
                                     return;
@@ -1718,7 +1706,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                 this.setStatusBarMessage("Running strategy please wait ...", BasePanel.INFORMATION);
             }
 
-            if (m_brokerModel.isConnected()) {
+            if (brokerModel.isConnected()) {
 
                 getMenu().setEnabledBrokerData(false);
                 getMenu().setEnabledRunStrategy(false);
@@ -1733,7 +1721,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
              * Now run a thread that gets and saves historical data from IB TWS.
              */
             getProgressBar().setMaximum(100);
-            brokerDataRequestProgressMonitor = new BrokerDataRequestMonitor(m_brokerModel, m_tradePersistentModel,
+            brokerDataRequestProgressMonitor = new BrokerDataRequestMonitor(brokerModel, tradeService,
                     tradingdays);
             brokerDataRequestProgressMonitor.addPropertyChangeListener(evt -> SwingUtilities.invokeLater(() -> {
 
@@ -1784,7 +1772,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
         }
 
         Vector<Object> parm = new Vector<>(0);
-        parm.add(m_brokerModel);
+        parm.add(brokerModel);
         parm.add(tradestrategy.getStrategyData());
         parm.add(tradestrategy.getId());
 
@@ -1793,12 +1781,12 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
 
         strategy.addMessageListener(this);
 
-        if (!m_brokerModel.isConnected()) {
+        if (!brokerModel.isConnected()) {
             /*
              * For back test the back tester listens to the strategy for orders
              * being created/completed.
              */
-            strategy.addMessageListener(m_brokerModel.getBackTestBroker(tradestrategy.getId()));
+            strategy.addMessageListener(brokerModel.getBackTestBroker(tradestrategy.getId()));
         }
         strategy.execute();
         tradingdayPanel.addStrategyWorker(key, strategy);
@@ -1813,28 +1801,32 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
 
         try {
 
-            if (null != m_brokerModel) {
-                m_brokerModel.removeMessageListener(this);
-                m_brokerModel = null;
+            Vector<Object> param = new Vector<>();
+            param.add(tradeService);
+
+            if (null != brokerModel) {
+                brokerModel.removeMessageListener(this);
+                brokerModel = null;
             }
+
             if (IBrokerModel._brokerTest.equals(model)) {
 
-                m_brokerModel = (IBrokerModel) ClassFactory.getServiceForInterface(IBrokerModel._brokerTest, this);
+                brokerModel = (IBrokerModel) ClassFactory.getServiceForInterface(IBrokerModel._brokerTest, param, this);
                 tradingdayPanel.setConnected(false);
                 contractPanel.setConnected(false);
                 /*
                  * Controller listens for problems from the TWS interface see
                  * doError()
                  */
-                m_brokerModel.addMessageListener(this);
+                brokerModel.addMessageListener(this);
 
             } else if (IBrokerModel._broker.equals(model)) {
-                m_brokerModel = (IBrokerModel) ClassFactory.getServiceForInterface(IBrokerModel._broker, this);
+                brokerModel = (IBrokerModel) ClassFactory.getServiceForInterface(IBrokerModel._broker, param, this);
                 /*
                  * Controller listens for problems from the TWS interface see
                  * doError()
                  */
-                m_brokerModel.addMessageListener(this);
+                brokerModel.addMessageListener(this);
 
             }
         } catch (Exception ex) {
@@ -1894,7 +1886,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                     tradingdays.getTradingdays().getLast());
         }
 
-        if (m_brokerModel.isConnected()) {
+        if (brokerModel.isConnected()) {
             getMenu().setEnabledBrokerData(true);
             getMenu().setEnabledRunStrategy(true);
             getMenu().setEnabledConnect(false);

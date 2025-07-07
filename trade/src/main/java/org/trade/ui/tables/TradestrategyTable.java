@@ -95,6 +95,7 @@ public class TradestrategyTable extends Table {
 
     public TradestrategyTable(TableModel model, ConcurrentHashMap<String, IStrategyRule> strategyWorkers)
             throws ValueTypeException, ParseException {
+
         super(model);
         DateRenderer rDate = new DateRenderer(DATETIMEFORMAT);
         DateEditor eDate = new DateEditor(new DateField(DATETIMEFORMAT),

@@ -38,13 +38,15 @@ package org.trade.core.persistent.dao;
 import org.trade.core.dao.Aspect;
 
 import java.io.Serial;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  *
  */
-public class TradelogReport extends Aspect implements java.io.Serializable {
+
+public class TradelogReport extends Aspect implements Serializable {
 
     /**
      *
@@ -61,20 +63,11 @@ public class TradelogReport extends Aspect implements java.io.Serializable {
     /**
      * Constructor for TradelogReport.
      *
-     * @param idTradelogDetail Integer
-     */
-    public TradelogReport(Integer idTradelogDetail) {
-        this.id = idTradelogDetail;
-    }
-
-    /**
-     * Constructor for TradelogReport.
-     *
-     * @param idTradelogDetail Integer
+     * @param tradelogDetailId Integer
      * @param tradelogDetail   List<TradelogDetail>
      */
-    public TradelogReport(Integer idTradelogDetail, List<TradelogDetail> tradelogDetail) {
-        this.id = idTradelogDetail;
+    public TradelogReport(Integer tradelogDetailId, List<TradelogDetail> tradelogDetail) {
+        this.setId(tradelogDetailId);
         this.tradelogDetail = tradelogDetail;
 
     }
@@ -84,17 +77,17 @@ public class TradelogReport extends Aspect implements java.io.Serializable {
      *
      * @return Integer
      */
-    public Integer getIdTradingdays() {
-        return this.id;
+    public Integer getTradingdaysId() {
+        return this.getId();
     }
 
     /**
      * Method setIdTradingdays.
      *
-     * @param idTradelogDetail Integer
+     * @param tradelogDetailId Integer
      */
-    public void setIdTradingdays(Integer idTradelogDetail) {
-        this.id = idTradelogDetail;
+    public void setTradingdaysId(Integer tradelogDetailId) {
+        this.setId(tradelogDetailId);
     }
 
     /**

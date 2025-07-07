@@ -51,6 +51,7 @@ public class StrategyParameters extends CodeType {
     private static final long serialVersionUID = 2273276207080568947L;
 
     public StrategyParameters(String name, String description) {
+
         super(name, CodeType.StrategyParameters, description);
     }
 

@@ -1,6 +1,6 @@
 package org.trade.core.persistent.dao.series;
 
-import org.trade.core.persistent.PersistentModelException;
+import org.trade.core.persistent.ServiceException;
 import org.trade.core.util.CloneUtils;
 
 import java.io.Serializable;
@@ -58,16 +58,16 @@ public class ComparableObjectSeries extends Series implements Cloneable, Seriali
 
     }
 
-    protected void add(Comparable x, Object y) throws PersistentModelException {
+    protected void add(Comparable x, Object y) throws ServiceException {
         this.add(x, y, true);
     }
 
-    protected void add(Comparable x, Object y, boolean notify) throws PersistentModelException {
+    protected void add(Comparable x, Object y, boolean notify) throws ServiceException {
         ComparableObjectItem item = new ComparableObjectItem(x, y);
         this.add(item, notify);
     }
 
-    protected void add(ComparableObjectItem item, boolean notify) throws PersistentModelException {
+    protected void add(ComparableObjectItem item, boolean notify) throws ServiceException {
         //    Args.nullNotPermitted(item, "item");
         if (this.autoSort) {
             int index = Collections.binarySearch(this.data, item);
@@ -75,7 +75,7 @@ public class ComparableObjectSeries extends Series implements Cloneable, Seriali
                 this.data.add(-index - 1, item);
             } else {
                 if (!this.allowDuplicateXValues) {
-                    throw new PersistentModelException("X-value already exists.");
+                    throw new ServiceException("X-value already exists.");
                 }
 
                 for (int size = this.data.size(); index < size && item.compareTo(this.data.get(index)) == 0; ++index) {
@@ -91,7 +91,7 @@ public class ComparableObjectSeries extends Series implements Cloneable, Seriali
             if (!this.allowDuplicateXValues) {
                 int index = this.indexOf(item.getComparable());
                 if (index >= 0) {
-                    throw new PersistentModelException("X-value already exists.");
+                    throw new ServiceException("X-value already exists.");
                 }
             }
 
@@ -123,10 +123,10 @@ public class ComparableObjectSeries extends Series implements Cloneable, Seriali
         }
     }
 
-    protected void update(Comparable x, Object y) throws PersistentModelException {
+    protected void update(Comparable x, Object y) throws ServiceException {
         int index = this.indexOf(x);
         if (index < 0) {
-            throw new PersistentModelException("No observation for x = " + x);
+            throw new ServiceException("No observation for x = " + x);
         } else {
             ComparableObjectItem item = this.getDataItem(index);
             item.setObject(y);

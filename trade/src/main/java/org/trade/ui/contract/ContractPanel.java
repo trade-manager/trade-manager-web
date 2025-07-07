@@ -44,8 +44,8 @@ import org.trade.base.Table;
 import org.trade.base.TextDialog;
 import org.trade.base.Tree;
 import org.trade.core.dao.Aspects;
-import org.trade.core.persistent.IPersistentModel;
-import org.trade.core.persistent.PersistentModelException;
+import org.trade.core.persistent.ServiceException;
+import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.Candle;
 import org.trade.core.persistent.dao.Contract;
 import org.trade.core.persistent.dao.Portfolio;
@@ -114,15 +114,16 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
     @Serial
     private static final long serialVersionUID = 4026209743607182423L;
 
-    private Tradingdays m_tradingdays = null;
-    private IPersistentModel m_tradePersistentModel = null;
-    private final JTabbedPane m_jTabbedPaneContract = new JTabbedPane();
-    private TradingdayTreeModel m_treeModel = null;
-    private Tree m_tree = null;
-    private Table m_tradeOrderTable = null;
-    private TradeOrderTableModel m_tradeOrderModel = null;
-    private JEditorPane m_tradeLabel = null;
-    private JEditorPane m_strategyLabel = null;
+    private final TradeService tradeService;
+
+    private Tradingdays tradingdays = null;
+    private final JTabbedPane jTabbedPaneContract = new JTabbedPane();
+    private TradingdayTreeModel treeModel = null;
+    private Tree tree = null;
+    private Table tradeOrderTable = null;
+    private TradeOrderTableModel tradeOrderModel = null;
+    private JEditorPane tradeLabel = null;
+    private JEditorPane strategyLabel = null;
     private BaseButton executeButton = null;
     private BaseButton brokerDataButton = null;
     private BaseButton cancelButton = null;
@@ -140,6 +141,7 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
     private static final Hashtable<Integer, StrategyDataUI> strategyDataTable = new Hashtable();
 
     static {
+
         StyleConstants.setBold(bold, true);
         StyleConstants.setBackground(colorRedAttr, Color.RED);
         StyleConstants.setBackground(colorGreenAttr, Color.GREEN);
@@ -148,53 +150,57 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
     /**
      * Constructor for ContractPanel.
      *
-     * @param tradingdays          Tradingdays
-     * @param controller           TabbedAppPanel
-     * @param tradePersistentModel IPersistentModel
+     * @param tradingdays  Tradingdays
+     * @param controller   TabbedAppPanel
+     * @param tradeService TradeService
      */
 
-    public ContractPanel(Tradingdays tradingdays, TabbedAppPanel controller, IPersistentModel tradePersistentModel) {
+    public ContractPanel(Tradingdays tradingdays, TabbedAppPanel controller, TradeService tradeService) {
+
+        this.tradeService = tradeService;
+        this.tradingdays = tradingdays;
 
         try {
-            if (null != getMenu())
-                getMenu().addMessageListener(this);
-            this.setLayout(new BorderLayout());
-            m_tradePersistentModel = tradePersistentModel;
-            m_tradingdays = tradingdays;
 
-            currencyFormater.setMinimumFractionDigits(2);
-            backfillOffsetDays = ConfigProperties.getPropAsInt("trade.backfill.offsetDays");
-            propertiesButton = new BaseButton(this, BaseUIPropertyCodes.PROPERTIES, 0);
-            propertiesButton.setEnabled(false);
-            executeButton = new BaseButton(controller, BaseUIPropertyCodes.EXECUTE);
-            executeButton.addMessageListener(this);
-            brokerDataButton = new BaseButton(controller, BaseUIPropertyCodes.DATA);
-            brokerDataButton.setToolTipText("Get Chart Data");
-            cancelButton = new BaseButton(controller, BaseUIPropertyCodes.CANCEL);
-            cancelButton.setToolTipText("Cancel Order");
-            cancelButton.setTransferObject(new Aspects());
-            cancelButton.addMessageListener(this);
-            cancelStrategiesButton = new BaseButton(controller, BaseUIPropertyCodes.CANCEL);
-            cancelStrategiesButton.setToolTipText("Cancel Strategy");
-            refreshButton = new BaseButton(this, BaseUIPropertyCodes.REFRESH);
+            if (null != getMenu()) {
+
+                getMenu().addMessageListener(this);
+            }
+
+            this.setLayout(new BorderLayout());
+            this.currencyFormater.setMinimumFractionDigits(2);
+            this.backfillOffsetDays = ConfigProperties.getPropAsInt("trade.backfill.offsetDays");
+            this. propertiesButton = new BaseButton(this, BaseUIPropertyCodes.PROPERTIES, 0);
+            this.propertiesButton.setEnabled(false);
+            this.executeButton = new BaseButton(controller, BaseUIPropertyCodes.EXECUTE);
+            this.executeButton.addMessageListener(this);
+            this.brokerDataButton = new BaseButton(controller, BaseUIPropertyCodes.DATA);
+            this.brokerDataButton.setToolTipText("Get Chart Data");
+            this.cancelButton = new BaseButton(controller, BaseUIPropertyCodes.CANCEL);
+            this.cancelButton.setToolTipText("Cancel Order");
+            this.cancelButton.setTransferObject(new Aspects());
+            this.cancelButton.addMessageListener(this);
+            this.cancelStrategiesButton = new BaseButton(controller, BaseUIPropertyCodes.CANCEL);
+            this.cancelStrategiesButton.setToolTipText("Cancel Strategy");
+            this.refreshButton = new BaseButton(this, BaseUIPropertyCodes.REFRESH);
             BaseButton closeAllButton = new BaseButton(this, BaseUIPropertyCodes.CLOSE_ALL);
-            closeAllPositionsButton = new BaseButton(controller, BaseUIPropertyCodes.CLOSE_ALL);
-            closeAllPositionsButton.setToolTipText("Cancel Orders & Close Position");
-            m_tradeOrderModel = new TradeOrderTableModel();
-            m_tradeOrderTable = new TradeOrderTable(m_tradeOrderModel);
-            m_tradeOrderTable.getSelectionModel().addListSelectionListener(new TradeOrderTableRowListener());
-            m_tradeOrderTable.setDefaultEditor(TradeOrder.class, new ButtonEditor(propertiesButton));
-            m_tradeOrderTable.setDefaultRenderer(TradeOrder.class, new ButtonRenderer(BaseUIPropertyCodes.PROPERTIES));
-            m_treeModel = new TradingdayTreeModel(m_tradingdays);
-            m_tree = new Tree(m_treeModel);
+            this.closeAllPositionsButton = new BaseButton(controller, BaseUIPropertyCodes.CLOSE_ALL);
+            this.closeAllPositionsButton.setToolTipText("Cancel Orders & Close Position");
+            this.tradeOrderModel = new TradeOrderTableModel();
+            this.tradeOrderTable = new TradeOrderTable(tradeOrderModel);
+            this.tradeOrderTable.getSelectionModel().addListSelectionListener(new TradeOrderTableRowListener());
+            this.tradeOrderTable.setDefaultEditor(TradeOrder.class, new ButtonEditor(propertiesButton));
+            this.tradeOrderTable.setDefaultRenderer(TradeOrder.class, new ButtonRenderer(BaseUIPropertyCodes.PROPERTIES));
+            this.treeModel = new TradingdayTreeModel(this.tradingdays);
+            this.tree = new Tree(treeModel);
             // Listen for when the selection changes.
-            m_tree.addTreeSelectionListener(this);
-            m_tree.setCellRenderer(new TradingdayTreeCellRenderer());
-            ToolTipManager.sharedInstance().registerComponent(m_tree);
+            this.tree.addTreeSelectionListener(this);
+            this.tree.setCellRenderer(new TradingdayTreeCellRenderer());
+            ToolTipManager.sharedInstance().registerComponent(this.tree);
 
             JPanel jPanel1 = new JPanel(new BorderLayout());
             JScrollPane jScrollPane1Tree = new JScrollPane();
-            jScrollPane1Tree.getViewport().add(m_tree, BorderLayout.CENTER);
+            jScrollPane1Tree.getViewport().add(this.tree, BorderLayout.CENTER);
             JPanel jPanel2 = new JPanel(new BorderLayout());
             jPanel2.add(jScrollPane1Tree, BorderLayout.CENTER);
             jPanel2.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder("Tradingday"),
@@ -204,51 +210,51 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
 
             // Chart Panel
             JLabel jLabelPeriod = new JLabel("Period:");
-            periodEditorComboBox = new DecodeComboBoxEditor((new BarSize()).getCodesDecodes());
+            this.periodEditorComboBox = new DecodeComboBoxEditor((new BarSize()).getCodesDecodes());
             DecodeComboBoxRenderer periodRenderer = new DecodeComboBoxRenderer();
-            periodEditorComboBox.setRenderer(periodRenderer);
-            periodEditorComboBox.setItem(BarSize.newInstance(BarSize.FIVE_MIN));
-            periodEditorComboBox.setEnabled(false);
-            periodEditorComboBox.addItemListener(this);
+            this.periodEditorComboBox.setRenderer(periodRenderer);
+            this.periodEditorComboBox.setItem(BarSize.newInstance(BarSize.FIVE_MIN));
+            this.periodEditorComboBox.setEnabled(false);
+            this.periodEditorComboBox.addItemListener(this);
             JPanel jPanel6 = new JPanel(new FlowLayout(FlowLayout.LEFT));
             jPanel6.setBorder(new BevelBorder(BevelBorder.RAISED));
             jPanel6.add(closeAllButton, null);
-            jPanel6.add(brokerDataButton, null);
-            jPanel6.add(cancelStrategiesButton, null);
+            jPanel6.add(this.brokerDataButton, null);
+            jPanel6.add(this.cancelStrategiesButton, null);
             jPanel6.add(jLabelPeriod, null);
-            jPanel6.add(periodEditorComboBox, null);
+            jPanel6.add(this.periodEditorComboBox, null);
             JToolBar jToolBar = new JToolBar();
             jToolBar.setLayout(new BorderLayout());
             jToolBar.add(jPanel6);
 
-            m_strategyLabel = new JEditorPane("text/rtf", "");
-            m_strategyLabel.setAutoscrolls(false);
-            m_strategyLabel.setEditable(false);
-            m_tradeLabel = new JEditorPane("text/rtf", "");
-            m_tradeLabel.setAutoscrolls(false);
-            m_tradeLabel.setEditable(false);
+            this.strategyLabel = new JEditorPane("text/rtf", "");
+            this.strategyLabel.setAutoscrolls(false);
+            this.strategyLabel.setEditable(false);
+            this.tradeLabel = new JEditorPane("text/rtf", "");
+            this.tradeLabel.setAutoscrolls(false);
+            this.tradeLabel.setEditable(false);
 
             JPanel jPanel12 = new JPanel(new BorderLayout());
-            jPanel12.add(m_strategyLabel, null);
+            jPanel12.add(strategyLabel, null);
             JPanel jPanel18 = new JPanel(new BorderLayout());
             jPanel18.add(jToolBar, BorderLayout.WEST);
             JPanel jPanel11 = new JPanel(new BorderLayout());
             jPanel11.add(jPanel18, BorderLayout.WEST);
             jPanel11.add(jPanel12, BorderLayout.CENTER);
             JPanel jPanel7 = new JPanel(new BorderLayout());
-            jPanel7.add(m_jTabbedPaneContract, BorderLayout.CENTER);
+            jPanel7.add(jTabbedPaneContract, BorderLayout.CENTER);
             JScrollPane jScrollPane3 = new JScrollPane();
             jScrollPane3.getViewport().add(jPanel7, BorderLayout.CENTER);
             JPanel jPanel9 = new JPanel(new BorderLayout());
             jPanel9.add(jScrollPane3, BorderLayout.CENTER);
             jPanel9.add(jPanel11, BorderLayout.NORTH);
             // Order Panel
-            m_tradeOrderTable.setFont(new Font("Monospaced", Font.PLAIN, 12));
+            this.tradeOrderTable.setFont(new Font("Monospaced", Font.PLAIN, 12));
             JPanel jPanel5 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-            jPanel5.add(executeButton, null);
-            jPanel5.add(cancelButton, null);
-            jPanel5.add(refreshButton, null);
-            jPanel5.add(closeAllPositionsButton, null);
+            jPanel5.add(this.executeButton, null);
+            jPanel5.add(this.cancelButton, null);
+            jPanel5.add(this.refreshButton, null);
+            jPanel5.add(this.closeAllPositionsButton, null);
             jPanel5.setBorder(new BevelBorder(BevelBorder.RAISED));
             JToolBar jToolBar1 = new JToolBar();
             jToolBar1.setLayout(new BorderLayout());
@@ -256,16 +262,16 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
             JPanel jPanel19 = new JPanel(new BorderLayout());
             jPanel19.add(jToolBar1, BorderLayout.WEST);
             JScrollPane jScrollPane2 = new JScrollPane();
-            jScrollPane2.getViewport().add(m_tradeOrderTable, BorderLayout.CENTER);
+            jScrollPane2.getViewport().add(this.tradeOrderTable, BorderLayout.CENTER);
             jScrollPane2.setBorder(new BevelBorder(BevelBorder.LOWERED));
             JPanel jPanel16 = new JPanel(new BorderLayout());
-            Dimension d = m_tradeOrderTable.getPreferredSize();
+            Dimension d = this.tradeOrderTable.getPreferredSize();
             // Make changes to [i]d[/i] if you like...
-            m_tradeOrderTable.setPreferredScrollableViewportSize(d);
-            jScrollPane2.addMouseListener(m_tradeOrderTable);
+            this.tradeOrderTable.setPreferredScrollableViewportSize(d);
+            jScrollPane2.addMouseListener(this.tradeOrderTable);
             JPanel jPanel17 = new JPanel(new BorderLayout());
             jPanel17.add(jPanel19, BorderLayout.WEST);
-            jPanel17.add(m_tradeLabel, BorderLayout.CENTER);
+            jPanel17.add(tradeLabel, BorderLayout.CENTER);
             jPanel16.add(jPanel17, BorderLayout.NORTH);
             jPanel16.add(jScrollPane2, BorderLayout.CENTER);
 
@@ -280,16 +286,19 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
             mainSplitPane.setOneTouchExpandable(true);
             mainSplitPane.setResizeWeight(0.15d);
             this.add(mainSplitPane, BorderLayout.CENTER);
-            m_jTabbedPaneContract.addChangeListener(this);
+            this.jTabbedPaneContract.addChangeListener(this);
             this.reFreshTab();
         } catch (Exception ex) {
+
             this.setErrorMessage("Error during initialization.", ex.getMessage(), ex);
         }
     }
 
     public void doOpen() {
+
         try {
-            m_treeModel.setData(m_tradingdays);
+
+            this.treeModel.setData(this.tradingdays);
         } catch (Exception ex) {
             this.setErrorMessage("Error opening all tabs.", ex.getMessage(), ex);
         }
@@ -339,11 +348,11 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
 
     public void doCloseAll() {
         try {
-            int tabsCount = m_jTabbedPaneContract.getTabCount();
+            int tabsCount = jTabbedPaneContract.getTabCount();
             for (int index = 0; index < tabsCount; index++) {
                 doClose(0);
             }
-            m_tree.clearSelection();
+            tree.clearSelection();
         } catch (Exception ex) {
             this.setErrorMessage("Error removing all tabs.", ex.getMessage(), ex);
         }
@@ -355,8 +364,8 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
      * @param tradestrategy Tradestrategy
      */
     public void doClose(final Tradestrategy tradestrategy) {
-        for (int index = 0; index < m_jTabbedPaneContract.getTabCount(); index++) {
-            ChartPanel chart = (ChartPanel) m_jTabbedPaneContract.getComponentAt(index);
+        for (int index = 0; index < jTabbedPaneContract.getTabCount(); index++) {
+            ChartPanel chart = (ChartPanel) jTabbedPaneContract.getComponentAt(index);
             if ((null != chart)
                     && chart.getTradestrategy().getId().equals(tradestrategy.getId())) {
                 doClose(index);
@@ -371,13 +380,13 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
      * @param index Integer
      */
     public void doClose(Integer index) {
-        ChartPanel chartPanel = (ChartPanel) m_jTabbedPaneContract.getComponentAt(index);
-        TabbedCloseButton tabbedCloseButton = (TabbedCloseButton) m_jTabbedPaneContract.getTabComponentAt(index);
+        ChartPanel chartPanel = (ChartPanel) jTabbedPaneContract.getComponentAt(index);
+        TabbedCloseButton tabbedCloseButton = (TabbedCloseButton) jTabbedPaneContract.getTabComponentAt(index);
         tabbedCloseButton.removeMessageListener(this);
         chartPanel.getCandlestickChart().removeChart();
         chartPanel = null;
-        m_jTabbedPaneContract.remove(index);
-        m_tree.clearSelection();
+        jTabbedPaneContract.remove(index);
+        tree.clearSelection();
     }
 
     public void doDelete() {
@@ -399,20 +408,20 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
         try {
             Object selectedObject = brokerDataButton.getTransferObject();
             if (null == selectedObject) {
-                DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) m_tree.getLastSelectedPathComponent();
+                DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
                 if (null != selectedNode)
                     selectedObject = selectedNode.getUserObject();
             }
-            m_treeModel.setData(m_tradingdays);
+            treeModel.setData(tradingdays);
             // Expand the tree
-            for (int i = 0; i < m_tree.getRowCount(); i++) {
-                m_tree.expandRow(i);
+            for (int i = 0; i < tree.getRowCount(); i++) {
+                tree.expandRow(i);
             }
-            TreePath path = m_tree.findTreePathByObject(selectedObject);
+            TreePath path = tree.findTreePathByObject(selectedObject);
 
             if (null != path) {
-                m_tree.setSelectionPath(path);
-                m_tree.scrollPathToVisible(path);
+                tree.setSelectionPath(path);
+                tree.scrollPathToVisible(path);
             }
         } catch (Exception ex) {
             this.setErrorMessage("Error window activated.", ex.getMessage(), ex);
@@ -429,7 +438,7 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
     }
 
     public void doRefresh() {
-        ChartPanel currentTab = (ChartPanel) m_jTabbedPaneContract.getSelectedComponent();
+        ChartPanel currentTab = (ChartPanel) jTabbedPaneContract.getSelectedComponent();
         if (null != currentTab)
             doRefresh(currentTab.getTradestrategy());
     }
@@ -444,7 +453,7 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
             SwingUtilities.invokeLater(() -> {
                 try {
                     getFrame().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-                    ChartPanel currentTab = (ChartPanel) m_jTabbedPaneContract.getSelectedComponent();
+                    ChartPanel currentTab = (ChartPanel) jTabbedPaneContract.getSelectedComponent();
                     if (null != currentTab) {
                         if (currentTab.getTradestrategy().equals(tradestrategy)) {
                             reFreshTab();
@@ -484,9 +493,9 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
             if (nodeInfo instanceof Tradestrategy tradestrategy) {
                 periodEditorComboBox.setItem(BarSize.newInstance(tradestrategy.getBarSize()));
                 int currentTabIndex = -1;
-                for (int index = 0; index < m_jTabbedPaneContract.getTabCount(); index++) {
+                for (int index = 0; index < jTabbedPaneContract.getTabCount(); index++) {
 
-                    ChartPanel chartPanel = (ChartPanel) m_jTabbedPaneContract.getComponentAt(index);
+                    ChartPanel chartPanel = (ChartPanel) jTabbedPaneContract.getComponentAt(index);
 
                     if ((null != chartPanel) && chartPanel.getTradestrategy().getId()
                             .equals(tradestrategy.getId())) {
@@ -499,14 +508,14 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
                 if (currentTabIndex == -1) {
 
                     ChartPanel chartPanel = createChartPanel(tradestrategy);
-                    m_jTabbedPaneContract.add(chartPanel.getCandlestickChart().getName(), chartPanel);
-                    currentTabIndex = m_jTabbedPaneContract.getTabCount() - 1;
-                    m_jTabbedPaneContract.setTabComponentAt(currentTabIndex,
-                            new TabbedCloseButton(m_jTabbedPaneContract, this));
+                    jTabbedPaneContract.add(chartPanel.getCandlestickChart().getName(), chartPanel);
+                    currentTabIndex = jTabbedPaneContract.getTabCount() - 1;
+                    jTabbedPaneContract.setTabComponentAt(currentTabIndex,
+                            new TabbedCloseButton(jTabbedPaneContract, this));
                 }
-                m_jTabbedPaneContract.setSelectedIndex(currentTabIndex);
+                jTabbedPaneContract.setSelectedIndex(currentTabIndex);
             }
-        } catch (PersistentModelException ex) {
+        } catch (ServiceException ex) {
             setErrorMessage("Error refreshing Tradestrategy.", ex.getMessage(), ex);
         } catch (Exception ex) {
             setErrorMessage("Error enabling chart.", ex.getMessage(), ex);
@@ -558,7 +567,7 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
 
         if (e.getStateChange() == ItemEvent.SELECTED) {
 
-            ChartPanel currentTab = (ChartPanel) m_jTabbedPaneContract.getSelectedComponent();
+            ChartPanel currentTab = (ChartPanel) jTabbedPaneContract.getSelectedComponent();
             Integer newPeriod = Integer.valueOf(((BarSize) e.getItem()).getValue());
 
             if (null != currentTab && !this.isConnected()) {
@@ -570,7 +579,7 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
                     if (newPeriod.compareTo(currentTab.getTradestrategy().getBarSize()) > -1) {
                         try {
                             currentTab.getTradestrategy().getStrategyData().changeCandleSeriesPeriod(newPeriod);
-                        } catch (PersistentModelException ex) {
+                        } catch (ServiceException ex) {
                             throw new RuntimeException(ex);
                         }
                         this.clearStatusBarMessage();
@@ -597,7 +606,7 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
      * @param tradestrategy Tradestrategy
      * @return ChartPanel
      */
-    private ChartPanel createChartPanel(Tradestrategy tradestrategy) throws PersistentModelException {
+    private ChartPanel createChartPanel(Tradestrategy tradestrategy) throws ServiceException {
 
         ZonedDateTime startDate;
         ZonedDateTime endDate;
@@ -625,7 +634,7 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
             startDate = endDate.minusDays((tradestrategy.getChartDays() - 1));
             startDate = TradingCalendar.getPrevTradingDay(startDate);
             startDate = TradingCalendar.getDateAtTime(startDate, tradestrategy.getTradingday().getOpen());
-            List<Candle> candles = m_tradePersistentModel.findCandlesByContractDateRangeBarSize(
+            List<Candle> candles = this.tradeService.findCandlesByContractDateRangeBarSize(
                     tradestrategy.getContract().getId(), startDate, endDate, tradestrategy.getBarSize());
 
             if (candles.isEmpty()) {
@@ -657,7 +666,7 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
      * @param endDate       Date
      */
     private void populateIndicatorCandleSeries(Tradestrategy tradestrategy, ZonedDateTime startDate,
-                                               ZonedDateTime endDate) throws PersistentModelException {
+                                               ZonedDateTime endDate) throws ServiceException {
 
         org.trade.core.persistent.dao.series.indicator.CandleDataset candleDataset = (org.trade.core.persistent.dao.series.indicator.CandleDataset) tradestrategy.getStrategyData()
                 .getIndicatorByType(org.trade.core.persistent.dao.series.indicator.IndicatorSeries.CandleSeries);
@@ -668,7 +677,7 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
 
                 org.trade.core.persistent.dao.series.indicator.CandleSeries series = candleDataset.getSeries(seriesIndex);
 
-                Contract contract = m_tradePersistentModel.findContractByUniqueKey(series.getSecType(),
+                Contract contract = this.tradeService.findContractByUniqueKey(series.getSecType(),
                         series.getSymbol(), series.getExchange(), series.getCurrency(), null);
                 if (null != contract) {
                     Tradestrategy childTradestrategy = new Tradestrategy(contract, tradestrategy.getTradingday(),
@@ -676,7 +685,7 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
                             tradestrategy.getChartDays(), tradestrategy.getBarSize());
                     childTradestrategy.setDirty(false);
 
-                    List<Candle> indicatorCandles = m_tradePersistentModel.findCandlesByContractDateRangeBarSize(
+                    List<Candle> indicatorCandles = this.tradeService.findCandlesByContractDateRangeBarSize(
                             childTradestrategy.getContract().getId(), startDate, endDate,
                             childTradestrategy.getBarSize());
                     if (indicatorCandles.isEmpty()) {
@@ -715,7 +724,7 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
      * @param endDate        Date
      */
     private void populateIndicatorCandleSeries(Tradestrategy tradestrategy, StrategyDataUI strategyDataUI, ZonedDateTime startDate,
-                                               ZonedDateTime endDate) throws PersistentModelException {
+                                               ZonedDateTime endDate) throws ServiceException {
 
         CandleDataset candleDatasetUI = (CandleDataset) strategyDataUI
                 .getIndicatorByType(IndicatorSeries.CandleSeries);
@@ -726,7 +735,7 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
 
                 CandleSeries series = candleDatasetUI.getSeries(seriesIndex);
 
-                Contract contract = m_tradePersistentModel.findContractByUniqueKey(series.getSecType(),
+                Contract contract = this.tradeService.findContractByUniqueKey(series.getSecType(),
                         series.getSymbol(), series.getExchange(), series.getCurrency(), null);
 
                 if (null != contract) {
@@ -736,7 +745,7 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
                             tradestrategy.getChartDays(), tradestrategy.getBarSize());
                     childTradestrategy.setDirty(false);
 
-                    List<Candle> indicatorCandles = m_tradePersistentModel.findCandlesByContractDateRangeBarSize(
+                    List<Candle> indicatorCandles = this.tradeService.findCandlesByContractDateRangeBarSize(
                             childTradestrategy.getContract().getId(), startDate, endDate,
                             childTradestrategy.getBarSize());
 
@@ -785,11 +794,11 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
                 if (model.getLeadSelectionIndex() > -1) {
 
                     clearStatusBarMessage();
-                    int row = m_tradeOrderTable.convertRowIndexToModel(model.getLeadSelectionIndex());
+                    int row = tradeOrderTable.convertRowIndexToModel(model.getLeadSelectionIndex());
 
                     int i = 0;
 
-                    for (TradeOrder tradeOrder : m_tradeOrderModel.getData().getTradeOrders()) {
+                    for (TradeOrder tradeOrder : tradeOrderModel.getData().getTradeOrders()) {
 
                         if (i == row) {
 
@@ -817,7 +826,7 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
      */
     private void setStrategyLabel(final Tradestrategy tradestrategy) {
         try {
-            m_strategyLabel.setText(null);
+            strategyLabel.setText(null);
             String primaryExchange = "";
             String industry = "";
             String strategyDesc = "";
@@ -830,14 +839,14 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
                         : tradestrategy.getStrategy().getDescription());
             }
 
-            CoreUtils.setDocumentText(m_strategyLabel.getDocument(), "Primary Exch: ", false, bold);
-            CoreUtils.setDocumentText(m_strategyLabel.getDocument(), CoreUtils.padRight(primaryExchange, 8), false,
+            CoreUtils.setDocumentText(strategyLabel.getDocument(), "Primary Exch: ", false, bold);
+            CoreUtils.setDocumentText(strategyLabel.getDocument(), CoreUtils.padRight(primaryExchange, 8), false,
                     null);
-            CoreUtils.setDocumentText(m_strategyLabel.getDocument(), " Industry:", false, bold);
-            CoreUtils.setDocumentText(m_strategyLabel.getDocument(), CoreUtils.padRight(industry, 30), false, null);
-            CoreUtils.setDocumentText(m_strategyLabel.getDocument(), "\n", false, null);
-            CoreUtils.setDocumentText(m_strategyLabel.getDocument(), "Strategy:", false, bold);
-            CoreUtils.setDocumentText(m_strategyLabel.getDocument(), CoreUtils.padRight(strategyDesc, 30), false, null);
+            CoreUtils.setDocumentText(strategyLabel.getDocument(), " Industry:", false, bold);
+            CoreUtils.setDocumentText(strategyLabel.getDocument(), CoreUtils.padRight(industry, 30), false, null);
+            CoreUtils.setDocumentText(strategyLabel.getDocument(), "\n", false, null);
+            CoreUtils.setDocumentText(strategyLabel.getDocument(), "Strategy:", false, bold);
+            CoreUtils.setDocumentText(strategyLabel.getDocument(), CoreUtils.padRight(strategyDesc, 30), false, null);
 
         } catch (Exception ex) {
             this.setErrorMessage("Error setting Tradestrategy Label.", ex.getMessage(), ex);
@@ -852,20 +861,20 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
             this.clearStatusBarMessage();
             Tradestrategy tradestrategy = null;
             TradestrategyOrders tradestrategyOrders = null;
-            ChartPanel currentTab = (ChartPanel) m_jTabbedPaneContract.getSelectedComponent();
+            ChartPanel currentTab = (ChartPanel) jTabbedPaneContract.getSelectedComponent();
             if (null == currentTab) {
-                m_tradeOrderModel.setData(new Tradestrategy());
+                tradeOrderModel.setData(new Tradestrategy());
                 closeAllPositionsButton.setTransferObject(new Tradestrategy());
             } else {
                 /*
                  * Refresh the Tradestrategy this will get the latest orders.
                  */
-                tradestrategy = m_tradePersistentModel.findTradestrategyById(currentTab.getTradestrategy());
-                tradestrategyOrders = m_tradePersistentModel
+                tradestrategy = this.tradeService.findTradestrategyById(currentTab.getTradestrategy());
+                tradestrategyOrders = this.tradeService
                         .findPositionOrdersByTradestrategyId(currentTab.getTradestrategy().getId());
                 currentTab.setTradestrategy(tradestrategy);
-                m_tradeOrderModel.setData(tradestrategy);
-                RowSorter<?> rsDetail = m_tradeOrderTable.getRowSorter();
+                tradeOrderModel.setData(tradestrategy);
+                RowSorter<?> rsDetail = tradeOrderTable.getRowSorter();
                 rsDetail.setSortKeys(null);
                 periodEditorComboBox.setItem(BarSize.newInstance(tradestrategy.getBarSize()));
                 closeAllPositionsButton.setTransferObject(tradestrategy);
@@ -933,7 +942,7 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
                     prevTradeOrder = order;
                 }
                 if (null != prevIdTradePosition) {
-                    TradePosition tradePosition = m_tradePersistentModel.findTradePositionById(prevIdTradePosition);
+                    TradePosition tradePosition = this.tradeService.findTradePositionById(prevIdTradePosition);
 
                     unRealizedPL = tradePosition
                             .getUnRealizedProfit(
@@ -948,57 +957,57 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
 
             netValue = netValue - commision;
 
-            m_tradeLabel.setText(null);
-            CoreUtils.setDocumentText(m_tradeLabel.getDocument(), "Symbol:", false, bold);
-            CoreUtils.setDocumentText(m_tradeLabel.getDocument(), CoreUtils.padRight(symbol, 10), false, null);
-            CoreUtils.setDocumentText(m_tradeLabel.getDocument(), " Side:", false, bold);
-            CoreUtils.setDocumentText(m_tradeLabel.getDocument(), CoreUtils.padRight(side, 6), false, null);
-            CoreUtils.setDocumentText(m_tradeLabel.getDocument(), " Tier:", false, bold);
-            CoreUtils.setDocumentText(m_tradeLabel.getDocument(), CoreUtils.padRight(tier, 6), false, null);
-            CoreUtils.setDocumentText(m_tradeLabel.getDocument(), " Status:", false, bold);
-            CoreUtils.setDocumentText(m_tradeLabel.getDocument(), CoreUtils.padRight(status, 20), false, null);
-            CoreUtils.setDocumentText(m_tradeLabel.getDocument(), " Portfolio:", false, bold);
-            CoreUtils.setDocumentText(m_tradeLabel.getDocument(), CoreUtils.padRight(portfolio, 15), false, null);
-            CoreUtils.setDocumentText(m_tradeLabel.getDocument(), " Risk:", false, bold);
-            CoreUtils.setDocumentText(m_tradeLabel.getDocument(), CoreUtils.padLeft(risk, 10), false, null);
-            CoreUtils.setDocumentText(m_tradeLabel.getDocument(), "\n", false, null);
-            CoreUtils.setDocumentText(m_tradeLabel.getDocument(), "Net Total:", false, bold);
+            tradeLabel.setText(null);
+            CoreUtils.setDocumentText(tradeLabel.getDocument(), "Symbol:", false, bold);
+            CoreUtils.setDocumentText(tradeLabel.getDocument(), CoreUtils.padRight(symbol, 10), false, null);
+            CoreUtils.setDocumentText(tradeLabel.getDocument(), " Side:", false, bold);
+            CoreUtils.setDocumentText(tradeLabel.getDocument(), CoreUtils.padRight(side, 6), false, null);
+            CoreUtils.setDocumentText(tradeLabel.getDocument(), " Tier:", false, bold);
+            CoreUtils.setDocumentText(tradeLabel.getDocument(), CoreUtils.padRight(tier, 6), false, null);
+            CoreUtils.setDocumentText(tradeLabel.getDocument(), " Status:", false, bold);
+            CoreUtils.setDocumentText(tradeLabel.getDocument(), CoreUtils.padRight(status, 20), false, null);
+            CoreUtils.setDocumentText(tradeLabel.getDocument(), " Portfolio:", false, bold);
+            CoreUtils.setDocumentText(tradeLabel.getDocument(), CoreUtils.padRight(portfolio, 15), false, null);
+            CoreUtils.setDocumentText(tradeLabel.getDocument(), " Risk:", false, bold);
+            CoreUtils.setDocumentText(tradeLabel.getDocument(), CoreUtils.padLeft(risk, 10), false, null);
+            CoreUtils.setDocumentText(tradeLabel.getDocument(), "\n", false, null);
+            CoreUtils.setDocumentText(tradeLabel.getDocument(), "Net Total:", false, bold);
             if (netValue < 0) {
-                CoreUtils.setDocumentText(m_tradeLabel.getDocument(),
+                CoreUtils.setDocumentText(tradeLabel.getDocument(),
                         CoreUtils.padLeft(currencyFormater.format(netValue), 10), false, colorRedAttr);
             } else if (netValue > 0) {
-                CoreUtils.setDocumentText(m_tradeLabel.getDocument(),
+                CoreUtils.setDocumentText(tradeLabel.getDocument(),
                         CoreUtils.padLeft(currencyFormater.format(netValue), 10), false, colorGreenAttr);
             } else {
-                CoreUtils.setDocumentText(m_tradeLabel.getDocument(),
+                CoreUtils.setDocumentText(tradeLabel.getDocument(),
                         CoreUtils.padLeft(currencyFormater.format(netValue), 10), false, null);
             }
-            CoreUtils.setDocumentText(m_tradeLabel.getDocument(), " Realized P/L:", false, bold);
+            CoreUtils.setDocumentText(tradeLabel.getDocument(), " Realized P/L:", false, bold);
             if (realizedPL < 0) {
-                CoreUtils.setDocumentText(m_tradeLabel.getDocument(),
+                CoreUtils.setDocumentText(tradeLabel.getDocument(),
                         CoreUtils.padLeft(currencyFormater.format(realizedPL), 10), false, colorRedAttr);
             } else if (realizedPL > 0) {
-                CoreUtils.setDocumentText(m_tradeLabel.getDocument(),
+                CoreUtils.setDocumentText(tradeLabel.getDocument(),
                         CoreUtils.padLeft(currencyFormater.format(realizedPL), 10), false, colorGreenAttr);
             } else {
-                CoreUtils.setDocumentText(m_tradeLabel.getDocument(),
+                CoreUtils.setDocumentText(tradeLabel.getDocument(),
                         CoreUtils.padLeft(currencyFormater.format(realizedPL), 10), false, null);
             }
-            CoreUtils.setDocumentText(m_tradeLabel.getDocument(), " UnRealized P/L:", false, bold);
+            CoreUtils.setDocumentText(tradeLabel.getDocument(), " UnRealized P/L:", false, bold);
             if (unRealizedPL < 0) {
-                CoreUtils.setDocumentText(m_tradeLabel.getDocument(),
+                CoreUtils.setDocumentText(tradeLabel.getDocument(),
                         CoreUtils.padLeft(currencyFormater.format(unRealizedPL), 10), false, colorRedAttr);
             } else if (unRealizedPL > 0) {
-                CoreUtils.setDocumentText(m_tradeLabel.getDocument(),
+                CoreUtils.setDocumentText(tradeLabel.getDocument(),
                         CoreUtils.padLeft(currencyFormater.format(unRealizedPL), 10), false, colorGreenAttr);
             } else {
-                CoreUtils.setDocumentText(m_tradeLabel.getDocument(),
+                CoreUtils.setDocumentText(tradeLabel.getDocument(),
                         CoreUtils.padLeft(currencyFormater.format(unRealizedPL), 10), false, null);
             }
-            CoreUtils.setDocumentText(m_tradeLabel.getDocument(), " Open Qty:", false, bold);
-            CoreUtils.setDocumentText(m_tradeLabel.getDocument(), CoreUtils.padLeft(openQuantity, 10), false, null);
-            CoreUtils.setDocumentText(m_tradeLabel.getDocument(), " Comms:", false, bold);
-            CoreUtils.setDocumentText(m_tradeLabel.getDocument(),
+            CoreUtils.setDocumentText(tradeLabel.getDocument(), " Open Qty:", false, bold);
+            CoreUtils.setDocumentText(tradeLabel.getDocument(), CoreUtils.padLeft(openQuantity, 10), false, null);
+            CoreUtils.setDocumentText(tradeLabel.getDocument(), " Comms:", false, bold);
+            CoreUtils.setDocumentText(tradeLabel.getDocument(),
                     CoreUtils.padLeft(currencyFormater.format(commision), 10), false, null);
         } catch (Exception ex) {
             this.setErrorMessage("Error refreshing Tab.", ex.getMessage(), ex);
@@ -1017,7 +1026,7 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
         brokerDataButton.setEnabled(false);
         cancelButton.setEnabled(false);
         cancelStrategiesButton.setEnabled(false);
-        m_tradeOrderTable.enablePopupMenu(false);
+        tradeOrderTable.enablePopupMenu(false);
         periodEditorComboBox.setEnabled(false);
         refreshButton.setEnabled(false);
         brokerDataButton.setTransferObject(tradestrategy);
@@ -1033,7 +1042,7 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
                 refreshButton.setEnabled(true);
                 cancelButton.setEnabled(true);
                 closeAllPositionsButton.setEnabled(true);
-                m_tradeOrderTable.enablePopupMenu(true);
+                tradeOrderTable.enablePopupMenu(true);
             } else {
                 periodEditorComboBox.setEnabled(true);
             }

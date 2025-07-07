@@ -37,11 +37,8 @@ package org.trade.core.persistent.dao;
 
 // Generated Feb 21, 2011 12:43:33 PM by Hibernate Tools 3.4.0.CR1
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -49,8 +46,6 @@ import org.trade.core.dao.Aspect;
 
 import java.io.Serial;
 import java.io.Serializable;
-
-import static jakarta.persistence.GenerationType.IDENTITY;
 
 
 /**
@@ -69,25 +64,15 @@ public class ContractLite extends Aspect implements Serializable, Cloneable {
     @Serial
     private static final long serialVersionUID = 5691902477608387034L;
 
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "trade_position_id", insertable = false)
     private TradePosition tradePosition;
 
     public ContractLite() {
     }
 
     public ContractLite(Integer id) {
-        this.id = id;
-    }
-
-    /**
-     * Method getId.
-     *
-     * @return Integer
-     */
-    @Id
-    @GeneratedValue(strategy = IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
-    public Integer getId() {
-        return this.id;
+        setId(id);
     }
 
     /**
@@ -95,8 +80,6 @@ public class ContractLite extends Aspect implements Serializable, Cloneable {
      *
      * @return TradePosition
      */
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_trade_position", insertable = false)
     public TradePosition getTradePosition() {
         return this.tradePosition;
     }

@@ -13,9 +13,13 @@ USE @db-dba.schema@//
 -- -----------------------------------------------------
 -- Table EntryLimits
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS entrylimit //
+DROP SEQUENCE IF EXISTS entrylimit_seq //
+CREATE SEQUENCE entrylimit_seq start with 1000 minvalue 1000 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
+DO SETVAL(entrylimit_seq, 1001, 0) //
 
+DROP TABLE IF EXISTS entrylimit //
 SHOW WARNINGS//
+
 CREATE  TABLE IF NOT EXISTS entrylimit (
 id INT NOT NULL AUTO_INCREMENT ,
 start_price DECIMAL(10,2) NOT NULL ,
@@ -27,17 +31,22 @@ pivot_range DECIMAL(5,2) NULL ,
 price_round DECIMAL(10,2) NULL ,
 share_round INT NULL ,
 version INT NULL,
+created_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 PRIMARY KEY (id) )
 ENGINE = InnoDB//
-
 SHOW WARNINGS//
 
 -- -----------------------------------------------------
 -- Table Contract
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS contract //
+DROP SEQUENCE IF EXISTS contract_seq //
+CREATE SEQUENCE contract_seq start with 1000 minvalue 1000 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
+DO SETVAL(contract_seq, 1001, 0) //
 
+DROP TABLE IF EXISTS contract //
 SHOW WARNINGS//
+
 CREATE  TABLE IF NOT EXISTS contract (
 id INT NOT NULL AUTO_INCREMENT ,
 category VARCHAR(80) NULL ,
@@ -46,9 +55,9 @@ contract_month VARCHAR(6)  NULL ,
 currency VARCHAR(3) NOT NULL ,
 ev_multiplier DECIMAL(10,2) NULL ,
 ev_rule VARCHAR(80) NULL ,
-EXCHANGE VARCHAR(30) NOT NULL ,
+exchange VARCHAR(30) NOT NULL ,
 expiry DATETIME NULL ,
-id_contract_IB INT NULL ,
+contract_ib_id INT NULL ,
 include_expired  SMALLINT(1)  NULL ,
 industry VARCHAR(120) NULL ,
 local_symbol VARCHAR(20) NULL ,
@@ -73,25 +82,30 @@ trading_hours VARCHAR(100) NULL ,
 under_con_id INT NULL ,
 valid_exchanges VARCHAR(200) NULL ,
 version INT NULL,
-id_trade_position INT NULL,
+created_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+trade_position_id INT NULL,
 PRIMARY KEY (id) ,
-UNIQUE INDEX contract_tradePosition_uq (id_trade_position ASC),
+UNIQUE INDEX contract_tradePosition_uq (trade_position_id ASC),
 UNIQUE INDEX contract_uq (sec_type ASC, symbol ASC, EXCHANGE ASC, currency ASC, expiry ASC),
 CONSTRAINT contract_trade_position_fk
-FOREIGN KEY (id_trade_position )
+FOREIGN KEY (trade_position_id )
 REFERENCES tradeposition (id )
   ON DELETE NO ACTION
   ON UPDATE NO ACTION)
 ENGINE = InnoDB//
-
 SHOW WARNINGS//
 
 -- -----------------------------------------------------
 -- Table Portfolio
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS portfolio //
+DROP SEQUENCE IF EXISTS portfolio_seq //
+CREATE SEQUENCE portfolio_seq start with 1000 minvalue 1000 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
+DO SETVAL(portfolio_seq, 1001, 0) //
 
+DROP TABLE IF EXISTS portfolio //
 SHOW WARNINGS//
+
 CREATE  TABLE IF NOT EXISTS portfolio (
 id INT NOT NULL AUTO_INCREMENT ,
 name VARCHAR(45) NOT NULL ,
@@ -99,20 +113,24 @@ alias VARCHAR(45) NULL ,
 allocation_method  VARCHAR(20) NULL ,
 description VARCHAR(240) NULL ,
 is_default SMALLINT(1)  NOT NULL ,
-last_update_date DATETIME(3) NOT NULL ,
 version INT NULL,
+created_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 PRIMARY KEY (id) ,
 UNIQUE INDEX portfolio_name_uq (name ASC))
 ENGINE = InnoDB//
-
 SHOW WARNINGS//
 
 -- -----------------------------------------------------
 -- Table Account
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS account //
+DROP SEQUENCE IF EXISTS account_seq //
+CREATE SEQUENCE account_seq start with 1000 minvalue 1000 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
+DO SETVAL(account_seq, 1001, 0) //
 
+DROP TABLE IF EXISTS account //
 SHOW WARNINGS//
+
 CREATE  TABLE IF NOT EXISTS account (
 id INT NOT NULL AUTO_INCREMENT ,
 account_number VARCHAR(20) NOT NULL ,
@@ -126,50 +144,59 @@ currency VARCHAR(3) NOT NULL ,
 gross_position_value DECIMAL(10,2) NULL ,
 realized_pn_l DECIMAL(10,2) NULL ,
 unrealized_pn_l DECIMAL(10,2) NULL ,
-last_update_date DATETIME(3) NOT NULL ,
 version INT NULL,
+created_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 PRIMARY KEY (id) ,
 UNIQUE INDEX account_name_uq (name ASC),
 UNIQUE INDEX account_number_uq (account_number ASC) )
 ENGINE = InnoDB//
-
 SHOW WARNINGS//
 
 -- -----------------------------------------------------
 -- Table PortfolioAccount
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS portfolioaccount //
+DROP SEQUENCE IF EXISTS portfolioaccount_seq //
+CREATE SEQUENCE portfolioaccount_seq start with 1000 minvalue 1000 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
+DO SETVAL(portfolioaccount_seq, 1001, 0) //
 
+DROP TABLE IF EXISTS portfolioaccount //
 SHOW WARNINGS//
+
 CREATE  TABLE IF NOT EXISTS portfolioaccount (
 id INT NOT NULL AUTO_INCREMENT ,
 version INT NULL,
-id_portfolio INT NOT NULL ,
-id_account INT NOT NULL ,
+created_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+portfolio_id INT NOT NULL ,
+account_id INT NOT NULL ,
 PRIMARY KEY (id) ,
-INDEX portfolioaccount_account_idx  (id_account ASC) ,
-INDEX portfolioaccount_portfolio_idx  (id_portfolio ASC) ,
-UNIQUE INDEX portfolioaccount_uq (id_portfolio ASC, id_account ASC),
+INDEX portfolioaccount_account_idx  (account_id ASC) ,
+INDEX portfolioaccount_portfolio_idx  (portfolio_id ASC) ,
+UNIQUE INDEX portfolioaccount_uq (portfolio_id ASC, account_id ASC),
 CONSTRAINT portfolioaccount_portfolio_fk
-FOREIGN KEY (id_portfolio )
+FOREIGN KEY (portfolio_id )
 REFERENCES portfolio (id)
-  ON DELETE NO ACTION
-  ON UPDATE NO ACTION,
+  ON DELETE CASCADE
+  ON UPDATE CASCADE,
 CONSTRAINT portfolioaccount_account_fk
-FOREIGN KEY (id_account)
+FOREIGN KEY (account_id)
 REFERENCES account (id)
-  ON DELETE NO ACTION
-  ON UPDATE NO ACTION )
+  ON DELETE CASCADE
+  ON UPDATE CASCADE )
 ENGINE = InnoDB//
-
 SHOW WARNINGS//
 
 -- -----------------------------------------------------
 -- Table TradingDay
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS tradingday //
+DROP SEQUENCE IF EXISTS tradingday_seq //
+CREATE SEQUENCE tradingday_seq start with 1000 minvalue 1000 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
+DO SETVAL(tradingday_seq, 1001, 0) //
 
+DROP TABLE IF EXISTS tradingday //
 SHOW WARNINGS//
+
 CREATE  TABLE IF NOT EXISTS tradingday (
 id INT NOT NULL AUTO_INCREMENT ,
 open DATETIME NOT NULL ,
@@ -178,100 +205,114 @@ market_bias VARCHAR(10) NULL ,
 market_gap VARCHAR(10) NULL ,
 market_bar VARCHAR(10) NULL ,
 version INT NULL,
+created_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 PRIMARY KEY (id) ,
 UNIQUE INDEX open_close_uq (open ASC, close ASC))
 ENGINE = InnoDB//
-
 SHOW WARNINGS//
 
 -- -----------------------------------------------------
 -- Table Strategy
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS strategy //
+DROP SEQUENCE IF EXISTS strategy_seq //
+CREATE SEQUENCE strategy_seq start with 1000 minvalue 1000 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
+DO SETVAL(strategy_seq, 1001, 0) //
 
+DROP TABLE IF EXISTS strategy //
 SHOW WARNINGS//
+
 CREATE  TABLE IF NOT EXISTS strategy (
 id INT NOT NULL AUTO_INCREMENT ,
 name VARCHAR(45) NOT NULL ,
 description VARCHAR(240) NULL ,
 market_data SMALLINT(1)  NULL ,
 class_Name VARCHAR(100) NOT NULL ,
-id_strategy_manager INT NULL ,
+strategy_manager_id INT NULL ,
 version INT NULL,
+created_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 PRIMARY KEY (id) ,
 UNIQUE INDEX strategy_name_uq (name ASC) ,
-INDEX strategy_strategy_idx (id_strategy_manager ASC) ,
+INDEX strategy_strategy_idx (strategy_manager_id ASC) ,
 CONSTRAINT strategy_strategy_fk
-FOREIGN KEY (id_strategy_manager )
+FOREIGN KEY (strategy_manager_id )
 REFERENCES strategy (id )
   ON DELETE NO ACTION
   ON UPDATE NO ACTION)
 ENGINE = InnoDB//
-
 SHOW WARNINGS//
 
 -- -----------------------------------------------------
 -- Table TradeStrategy
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS tradestrategy //
+DROP SEQUENCE IF EXISTS tradestrategy_seq //
+CREATE SEQUENCE tradestrategy_seq start with 1000 minvalue 1000 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
+DO SETVAL(tradestrategy_seq, 1001, 0) //
 
+DROP TABLE IF EXISTS tradestrategy //
 SHOW WARNINGS//
+
 CREATE  TABLE IF NOT EXISTS tradestrategy (
 id INT NOT NULL AUTO_INCREMENT ,
 bar_Size  INT NULL ,
 chart_days INT NULL ,
-STATUS VARCHAR(20) NULL ,
+status VARCHAR(20) NULL ,
 risk_amount DECIMAL(10,2) NULL ,
 side VARCHAR(3) NULL ,
 tier VARCHAR(1) NULL ,
 trade SMALLINT(1)  NULL ,
-last_update_date DATETIME(3) NOT NULL ,
 version INT NULL,
-id_trading_day INT NOT NULL ,
-id_contract INT NOT NULL ,
-id_strategy INT NOT NULL ,
-id_portfolio INT NOT NULL ,
+created_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+tradingday_id INT NOT NULL ,
+contract_id INT NOT NULL ,
+strategy_id INT NOT NULL ,
+portfolio_id INT NOT NULL ,
 PRIMARY KEY (id) ,
-INDEX tradeStrategy_tradingDay_idx (id_trading_day ASC) ,
-INDEX tradeStrategy_contract_idx  (id_contract ASC) ,
-INDEX tradeStrategy_stategy_idx  (id_strategy ASC) ,
-INDEX tradeStrategy_portfolio_idx  (id_portfolio ASC) ,
-UNIQUE INDEX tradestrategy_uq (id_trading_day ASC, id_contract ASC, id_strategy ASC, id_portfolio ASC, bar_size ASC),
+INDEX tradeStrategy_tradingDay_idx (tradingday_id ASC) ,
+INDEX tradeStrategy_contract_idx  (contract_id ASC) ,
+INDEX tradeStrategy_stategy_idx  (strategy_id ASC) ,
+INDEX tradeStrategy_portfolio_idx  (portfolio_id ASC) ,
+UNIQUE INDEX tradestrategy_uq (tradingday_id ASC, contract_id ASC, strategy_id ASC, portfolio_id ASC, bar_size ASC),
 CONSTRAINT tradestrategy_tradingday_fk
-FOREIGN KEY (id_trading_day )
+FOREIGN KEY (tradingday_id )
 REFERENCES tradingday (id )
   ON DELETE NO ACTION
   ON UPDATE NO ACTION,
 CONSTRAINT tradestrategy_contract_fk
-FOREIGN KEY (id_contract )
+FOREIGN KEY (contract_id )
 REFERENCES contract (id )
   ON DELETE NO ACTION
   ON UPDATE NO ACTION,
 CONSTRAINT tradestrategy_stategy_fk
-FOREIGN KEY (id_strategy )
+FOREIGN KEY (strategy_id )
 REFERENCES strategy (id )
   ON DELETE NO ACTION
   ON UPDATE NO ACTION,
 CONSTRAINT tradestrategy_portfolio_fk
-FOREIGN KEY (id_portfolio)
+FOREIGN KEY (portfolio_id)
 REFERENCES portfolio (id)
   ON DELETE NO ACTION
   ON UPDATE NO ACTION)
 ENGINE = InnoDB//
-
 SHOW WARNINGS//
 
 -- -----------------------------------------------------
 -- Table TradePosition
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS tradeposition //
+DROP SEQUENCE IF EXISTS tradeposition_seq //
+CREATE SEQUENCE tradeposition_seq start with 1000 minvalue 1000 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
+DO SETVAL(tradeposition_seq, 1001, 0) //
 
+DROP TABLE IF EXISTS tradeposition //
 SHOW WARNINGS//
+
 CREATE  TABLE IF NOT EXISTS tradeposition (
 id INT NOT NULL AUTO_INCREMENT ,
 open_quantity INT NULL ,
-position_open_date DATETIME(3) NOT NULL ,
-position_close_date DATETIME(3) NULL ,
+position_open_date DATETIME(6) NOT NULL ,
+position_close_date DATETIME(6) NULL ,
 side VARCHAR(3) NOT NULL ,
 total_commission DECIMAL(10,2) NULL ,
 total_buy_quantity INT NULL ,
@@ -279,25 +320,28 @@ total_buy_value DECIMAL(10,2) NULL ,
 total_sell_quantity INT NULL ,
 total_sell_value DECIMAL(10,2) NULL ,
 total_net_value DECIMAL(10,2) NULL ,
-last_update_date DATETIME(3) NOT NULL ,
 version INT NULL,
-id_contract INT NOT NULL ,
+created_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+contract_id INT NOT NULL ,
 PRIMARY KEY (id) ,
-INDEX tradeposition_contract_idx (id_contract ASC) ,
+INDEX tradeposition_contract_idx (contract_id ASC) ,
 CONSTRAINT tradeposition_contract_fk
-FOREIGN KEY (id_contract )
+FOREIGN KEY (contract_id )
 REFERENCES contract (id )
   ON DELETE CASCADE
   ON UPDATE NO ACTION)
 ENGINE = InnoDB//
-
 SHOW WARNINGS//
 
 -- -----------------------------------------------------
 -- Table TradeOrder
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS tradeorder //
+DROP SEQUENCE IF EXISTS tradeorder_seq //
+CREATE SEQUENCE tradeorder_seq start with 1000 minvalue 1000 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
+DO SETVAL(tradeorder_seq, 1001, 0) //
 
+DROP TABLE IF EXISTS tradeorder //
 SHOW WARNINGS//
 
 CREATE  TABLE IF NOT EXISTS tradeorder (
@@ -309,13 +353,13 @@ aux_price DECIMAL(10,2) NULL ,
 average_filled_price DECIMAL(11,3) NULL ,
 client_id INT NULL ,
 commission DECIMAL(10,2) NULL ,
-create_date DATETIME(3) NOT NULL ,
+order_create_date DATETIME(6) NOT NULL ,
 display_quantity INT NULL ,
-FA_group  VARCHAR(45) NULL ,
-FA_method  VARCHAR(45) NULL ,
-FA_percent  DECIMAL(10,6) NULL ,
-FA_profile  VARCHAR(45) NULL ,
-filled_date DATETIME(3) NULL ,
+fa_group  VARCHAR(45) NULL ,
+fa_method  VARCHAR(45) NULL ,
+fa_percent  DECIMAL(10,6) NULL ,
+fa_profile  VARCHAR(45) NULL ,
+filled_date DATETIME(6) NULL ,
 filled_quantity INT NULL ,
 good_after_time DATETIME NULL ,
 good_till_time DATETIME NULL ,
@@ -333,7 +377,7 @@ perm_id INT NULL ,
 parent_id INT NULL ,
 quantity INT NOT NULL ,
 time_in_force VARCHAR(3) NOT NULL ,
-STATUS VARCHAR(45) NULL ,
+status VARCHAR(45) NULL ,
 stop_price DECIMAL(10,2) NULL ,
 transmit SMALLINT(1)  NULL ,
 trail_stop_price DECIMAL(10,2) NULL ,
@@ -341,33 +385,37 @@ trailing_percent DECIMAL(10,2) NULL ,
 trigger_method INT NOT NULL ,
 warning_message VARCHAR(200) NULL ,
 why_held VARCHAR(45) NULL ,
-last_update_date DATETIME(3) NOT NULL ,
+order_update_date DATETIME(6) NOT NULL ,
 version INT NULL,
-id_tradestrategy INT NOT NULL ,
-id_trade_position INT NULL ,
+created_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+tradestrategy_id INT NOT NULL ,
+trade_position_id INT NULL ,
 PRIMARY KEY (id) ,
-INDEX tradeorder_tradestrategy_idx (id_tradestrategy ASC) ,
-INDEX tradeorder_tradeposition_idx (id_trade_position ASC) ,
+INDEX tradeorder_tradestrategy_idx (tradestrategy_id ASC) ,
+INDEX tradeorder_tradeposition_idx (trade_position_id ASC) ,
 UNIQUE INDEX tradeorderkey_uq (order_Key ASC) ,
 CONSTRAINT tradeorder_tradestrategy_fk
-FOREIGN KEY (id_tradestrategy )
+FOREIGN KEY (tradestrategy_id )
 REFERENCES tradestrategy (id )
   ON DELETE CASCADE
   ON UPDATE NO ACTION,
 CONSTRAINT tradeorder_tradeposition_fk
-FOREIGN KEY (id_trade_position )
+FOREIGN KEY (trade_position_id )
 REFERENCES tradeposition (id )
   ON DELETE CASCADE
   ON UPDATE NO ACTION)
 ENGINE = InnoDB//
-
 SHOW WARNINGS//
 
 -- -----------------------------------------------------
 -- Table TradeOrderFill
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS tradeorderfill //
+DROP SEQUENCE IF EXISTS tradeorderfill_seq //
+CREATE SEQUENCE tradeorderfill_seq start with 1000 minvalue 1000 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
+DO SETVAL(tradeorderfill_seq, 1001, 0) //
 
+DROP TABLE IF EXISTS tradeorderfill //
 SHOW WARNINGS//
 
 CREATE  TABLE IF NOT EXISTS tradeorderfill (
@@ -376,33 +424,37 @@ account_number VARCHAR(20) NULL ,
 average_price DECIMAL(11,3) NULL ,
 commission DECIMAL(11,3) NULL ,
 cumulative_quantity INT NULL ,
-EXCHANGE VARCHAR(10) NULL ,
+exchange VARCHAR(10) NULL ,
 exec_id VARCHAR(45) NULL ,
 order_reference VARCHAR(45) NULL ,
 perm_id INT NULL ,
 price DECIMAL(10,2) NOT NULL ,
 quantity INT NOT NULL ,
 side VARCHAR(3) NOT NULL ,
-time DATETIME(3) NOT NULL ,
+time DATETIME(6) NOT NULL ,
 version INT NULL,
-id_trade_order INT NOT NULL ,
+created_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+trade_order_id INT NOT NULL ,
 PRIMARY KEY (id) ,
-INDEX tradeorderfill_order_idx (id_trade_order ASC) ,
-UNIQUE INDEX execid_uq (exec_Id ASC, id_trade_order ASC) ,
+INDEX tradeorderfill_order_idx (trade_order_id ASC) ,
+UNIQUE INDEX execid_uq (exec_Id ASC, trade_order_id ASC) ,
 CONSTRAINT tradeorderfill_order_fk
-FOREIGN KEY (id_trade_order )
+FOREIGN KEY (trade_order_id )
 REFERENCES tradeorder (id )
   ON DELETE CASCADE
   ON UPDATE NO ACTION)
 ENGINE = InnoDB//
-
 SHOW WARNINGS//
 
 -- -----------------------------------------------------
 -- Table Candle
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS candle //
+DROP SEQUENCE IF EXISTS candle_seq //
+CREATE SEQUENCE candle_seq start with 1000 minvalue 1000 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
+DO SETVAL(candle_seq, 1001, 0) //
 
+DROP TABLE IF EXISTS candle //
 SHOW WARNINGS//
 
 CREATE  TABLE IF NOT EXISTS candle (
@@ -412,67 +464,75 @@ high DECIMAL(10,2) NULL ,
 low DECIMAL(10,2) NULL ,
 close DECIMAL(10,2) NULL ,
 period VARCHAR(45) NULL ,
-start_period DATETIME(3) NULL ,
-end_period DATETIME(3) NULL ,
+start_period DATETIME(6) NULL ,
+end_period DATETIME(6) NULL ,
 bar_size INT  NULL ,
 trade_count INT NULL ,
 volume INT NULL ,
 vwap DECIMAL(10,2) NULL ,
-last_update_date DATETIME(3) NOT NULL ,
+last_update_date DATETIME(6) NOT NULL ,
 version INT NULL,
-id_contract INT NOT NULL ,
-id_trading_day INT NOT NULL ,
+created_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+contract_id INT NOT NULL ,
+tradingday_id INT NOT NULL ,
 PRIMARY KEY (id) ,
-INDEX candle_contract_idx (id_contract ASC) ,
-INDEX candle_tradingday_idx (id_trading_day ASC) ,
-INDEX candle_condaybar_idx (id_contract ASC, id_trading_day ASC, bar_size ASC) ,
-UNIQUE INDEX candle_uq (id_contract ASC, id_trading_day ASC,  start_period ASC, end_period ASC) ,
+INDEX candle_contract_idx (contract_id ASC) ,
+INDEX candle_tradingday_idx (tradingday_id ASC) ,
+INDEX candle_condaybar_idx (contract_id ASC, tradingday_id ASC, bar_size ASC) ,
+UNIQUE INDEX candle_uq (contract_id ASC, tradingday_id ASC,  start_period ASC, end_period ASC) ,
 CONSTRAINT candle_contract_fk
-FOREIGN KEY (id_contract )
+FOREIGN KEY (contract_id )
 REFERENCES contract (id )
   ON DELETE CASCADE
   ON UPDATE NO ACTION,
 CONSTRAINT candle_tradingday_fk
-FOREIGN KEY (id_trading_day )
+FOREIGN KEY (tradingday_id )
 REFERENCES tradingday (id )
   ON DELETE CASCADE
   ON UPDATE NO ACTION)
 ENGINE = InnoDB//
-
 SHOW WARNINGS//
 
 -- -----------------------------------------------------
 -- Table Rule
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS rule //
+DROP SEQUENCE IF EXISTS rule_seq //
+CREATE SEQUENCE rule_seq start with 1000 minvalue 1000 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
+DO SETVAL(rule_seq, 1001, 0) //
 
+DROP TABLE IF EXISTS rule //
 SHOW WARNINGS//
+
 CREATE  TABLE IF NOT EXISTS rule (
 id INT NOT NULL AUTO_INCREMENT,
-COMMENT TEXT NULL,
-create_date DATETIME(3) NOT NULL,
+comment TEXT NULL,
 rule BLOB NULL,
-last_update_date DATETIME(3) NOT NULL,
 version INT NOT NULL,
-id_strategy INT NOT NULL,
+created_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+strategy_id INT NOT NULL,
 PRIMARY KEY (id),
-INDEX rule_stategy_idx (id_strategy ASC),
-UNIQUE INDEX idstrategy_version_uq (id_strategy ASC, version ASC),
+INDEX rule_stategy_idx (strategy_id ASC),
+UNIQUE INDEX idstrategy_version_uq (strategy_id ASC, version ASC),
 CONSTRAINT rule_stategy_fk
-FOREIGN KEY (id_strategy )
+FOREIGN KEY (strategy_id )
 REFERENCES strategy (id )
   ON DELETE NO ACTION
   ON UPDATE NO ACTION)
 ENGINE = InnoDB//
-
 SHOW WARNINGS//
 
 -- -----------------------------------------------------
 -- Table IndicatorSeries
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS indicatorseries //
+DROP SEQUENCE IF EXISTS indicatorseries_seq //
+CREATE SEQUENCE indicatorseries_seq start with 1000 minvalue 1000 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
+DO SETVAL(indicatorseries_seq, 1001, 0) //
 
+DROP TABLE IF EXISTS indicatorseries //
 SHOW WARNINGS//
+
 CREATE  TABLE IF NOT EXISTS indicatorseries (
 id INT NOT NULL AUTO_INCREMENT,
 name VARCHAR(45) NOT NULL ,
@@ -482,44 +542,53 @@ display_series SMALLINT(1) NULL ,
 series_RGB_color INT NULL ,
 sub_chart SMALLINT(1) NULL ,
 version INT NULL,
-id_strategy INT NULL ,
+created_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+strategy_id INT NULL ,
 PRIMARY KEY (id) ,
-INDEX indicator_strategy_idx (id_strategy ASC) ,
-UNIQUE INDEX indicatorseries_uq (id_strategy ASC, TYPE ASC, name ASC),
+INDEX indicator_strategy_idx (strategy_id ASC) ,
+UNIQUE INDEX indicatorseries_uq (strategy_id ASC, TYPE ASC, name ASC),
 CONSTRAINT indicator_strategy_fk
-FOREIGN KEY (id_strategy )
+FOREIGN KEY (strategy_id )
 REFERENCES strategy (id )
   ON DELETE NO ACTION
   ON UPDATE NO ACTION)
 ENGINE = InnoDB//
-
 SHOW WARNINGS//
 
 -- -----------------------------------------------------
 -- Table CodeType
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS codetype //
+DROP SEQUENCE IF EXISTS codetype_seq //
+CREATE SEQUENCE codetype_seq start with 1000 minvalue 1000 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
+DO SETVAL(codetype_seq, 1001, 0) //
 
+DROP TABLE IF EXISTS codetype //
 SHOW WARNINGS//
 
 CREATE  TABLE IF NOT EXISTS codetype (
 id INT NOT NULL AUTO_INCREMENT ,
 name VARCHAR(45) NOT NULL ,
-TYPE VARCHAR(45) NOT NULL ,
+type VARCHAR(45) NOT NULL ,
 description VARCHAR(100) NULL ,
 version INT NULL,
+created_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 PRIMARY KEY (id) ,
 UNIQUE INDEX codetype_name_type_uq (name ASC, TYPE ASC) )
 ENGINE = InnoDB//
-
 SHOW WARNINGS//
 
 -- -----------------------------------------------------
 -- Table CodeAttribute
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS codeattribute //
+DROP SEQUENCE IF EXISTS codeattribute_seq //
+CREATE SEQUENCE codeattribute_seq start with 1000 minvalue 1000 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
+DO SETVAL(codeattribute_seq, 1001, 0) //
 
+DROP TABLE IF EXISTS codeattribute //
 SHOW WARNINGS//
+
 CREATE  TABLE IF NOT EXISTS codeattribute (
 id INT NOT NULL AUTO_INCREMENT ,
 name VARCHAR(45) NOT NULL ,
@@ -528,86 +597,105 @@ default_value VARCHAR(45) NULL ,
 class_name VARCHAR(100) NOT NULL ,
 class_editor_Name VARCHAR(100) NULL ,
 version INT NULL,
-id_code_type INT NOT NULL ,
+created_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+code_type_id INT NOT NULL ,
 PRIMARY KEY (id) ,
-INDEX codeAttribute_codetype_idx (id_code_type ASC) ,
+INDEX codeAttribute_codetype_idx (code_type_id ASC) ,
 CONSTRAINT codeattribute_codetype_fk
-FOREIGN KEY (id_code_type )
+FOREIGN KEY (code_type_id )
 REFERENCES codetype (id )
   ON DELETE NO ACTION
   ON UPDATE NO ACTION)
 ENGINE = InnoDB//
-
 SHOW WARNINGS//
 
 -- -----------------------------------------------------
 -- Table CodeValue
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS codevalue //
+DROP SEQUENCE IF EXISTS codevalue_seq //
+CREATE SEQUENCE codevalue_seq start with 1000 minvalue 1000 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
+DO SETVAL(codevalue_seq, 1001, 0) //
 
+DROP TABLE IF EXISTS codevalue //
 SHOW WARNINGS//
+
 CREATE  TABLE IF NOT EXISTS codevalue (
 id INT NOT NULL AUTO_INCREMENT ,
 code_value VARCHAR(45) NOT NULL ,
 version INT NULL,
-id_code_attribute INT NOT NULL ,
-id_indicator_series INT NULL ,
-id_tradestrategy INT NULL ,
+created_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+code_attribute_id INT NOT NULL ,
+indicator_series_id INT NULL ,
+tradestrategy_id INT NULL ,
 PRIMARY KEY (id) ,
-INDEX codeValue_codeattribute_idx (id_code_attribute ASC) ,
-INDEX codeValue_indicatorseries_idx (id_indicator_series ASC) ,
-INDEX codeValue_tradestrategy_idx (id_tradestrategy ASC) ,
-UNIQUE INDEX codeValue_tradestrategy_codeattribute_uq (id_code_attribute ASC, id_tradestrategy ASC),
-UNIQUE INDEX codeValue_indicatorseries_codeattribute_uq (id_indicator_series ASC, id_code_attribute ASC),
+INDEX codeValue_codeattribute_idx (code_attribute_id ASC) ,
+INDEX codeValue_indicatorseries_idx (indicator_series_id ASC) ,
+INDEX codeValue_tradestrategy_idx (tradestrategy_id ASC) ,
+UNIQUE INDEX codeValue_tradestrategy_codeattribute_uq (code_attribute_id ASC, tradestrategy_id ASC),
+UNIQUE INDEX codeValue_indicatorseries_codeattribute_uq (indicator_series_id ASC, code_attribute_id ASC),
 CONSTRAINT codeValue_codeattribute_fk
-FOREIGN KEY (id_code_attribute )
+FOREIGN KEY (code_attribute_id )
 REFERENCES codeattribute (id )
   ON DELETE NO ACTION
   ON UPDATE NO ACTION,
 CONSTRAINT codeValue_indicatorseries_fk
-FOREIGN KEY (id_indicator_series )
+FOREIGN KEY (indicator_series_id )
 REFERENCES indicatorseries (id )
   ON DELETE NO ACTION
   ON UPDATE NO ACTION,
 CONSTRAINT codevalue_tradestrategy_fk
-FOREIGN KEY (id_tradestrategy )
+FOREIGN KEY (tradestrategy_id )
 REFERENCES tradestrategy (id )
   ON DELETE NO ACTION
   ON UPDATE NO ACTION)
 ENGINE = InnoDB//
-
 SHOW WARNINGS//
 
 -- -----------------------------------------------------
 -- Table Domain
 -- -----------------------------------------------------
+DROP SEQUENCE IF EXISTS domain_seq //
+CREATE SEQUENCE domain_seq start with 1000 minvalue 1000 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
+DO SETVAL(domain_seq, 1001, 0) //
+
 DROP TABLE IF EXISTS domain //
+SHOW WARNINGS//
 
 CREATE  TABLE IF NOT EXISTS domain (
 id BIGINT NOT NULL AUTO_INCREMENT ,
 name VARCHAR(255) NOT NULL ,
 description VARCHAR(100) NULL ,
 version BIGINT NULL,
+created_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 PRIMARY KEY (id) ,
 UNIQUE INDEX domain_name_uq (name ASC) )
 ENGINE = InnoDB//
-
 SHOW WARNINGS//
 
 -- -----------------------------------------------------
 -- Table User
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS USER //
+DROP SEQUENCE IF EXISTS user_seq //
+CREATE SEQUENCE user_seq start with 1000 minvalue 1000 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
+DO SETVAL(user_seq, 1001, 0) //
 
-CREATE  TABLE IF NOT EXISTS USER (
+DROP TABLE IF EXISTS user //
+SHOW WARNINGS//
+
+CREATE  TABLE IF NOT EXISTS user (
 id BIGINT NOT NULL AUTO_INCREMENT ,
 name VARCHAR(100) NOT NULL ,
 first_name VARCHAR(100)  NULL ,
 last_name VARCHAR(100)  NULL ,
 password VARCHAR(255) NOT NULL ,
-ROLES TINYBLOB NULL ,
+roles TINYBLOB NULL ,
 domain_id BIGINT NOT NULL ,
 version BIGINT NULL,
+created_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 PRIMARY KEY (id) ,
 UNIQUE INDEX user_name_uq (name ASC) ,
 INDEX user_domain_idx (domain_id ASC) ,
@@ -617,58 +705,72 @@ REFERENCES domain (id )
   ON DELETE NO ACTION
   ON UPDATE NO ACTION)
 ENGINE = InnoDB//
-
 SHOW WARNINGS//
 
 -- -----------------------------------------------------
 -- Table Role
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS ROLE //
+DROP SEQUENCE IF EXISTS role_seq //
+CREATE SEQUENCE role_seq start with 1000 minvalue 1000 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
+DO SETVAL(role_seq, 1001, 0) //
 
-CREATE  TABLE IF NOT EXISTS ROLE (
+DROP TABLE IF EXISTS role //
+SHOW WARNINGS//
+
+CREATE  TABLE IF NOT EXISTS role (
 id BIGINT NOT NULL AUTO_INCREMENT ,
 name VARCHAR(100) NOT NULL ,
 description VARCHAR(100) NULL ,
 version BIGINT NULL,
+created_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 PRIMARY KEY (id) ,
-UNIQUE INDEX user_name_uq (name ASC) )
+UNIQUE INDEX role_name_uq (name ASC) )
 ENGINE = InnoDB//
-
 SHOW WARNINGS//
 
 -- -----------------------------------------------------
 -- Table UserRole
 -- -----------------------------------------------------
+DROP SEQUENCE IF EXISTS userrole_seq //
+CREATE SEQUENCE userrole_seq start with 1000 minvalue 1000 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
+DO SETVAL(userrole_seq, 1001, 0) //
+
 DROP TABLE IF EXISTS userrole //
+SHOW WARNINGS//
 
 CREATE  TABLE IF NOT EXISTS userrole (
 id BIGINT NOT NULL AUTO_INCREMENT ,
 user_id BIGINT NOT NULL ,
 role_id BIGINT NOT NULL ,
 version BIGINT NULL,
+created_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 PRIMARY KEY (id) ,
-INDEX userrole_Role_idx (role_id ASC) ,
-CONSTRAINT userrole_Role_fk
+INDEX userrole_role_idx (role_id ASC) ,
+CONSTRAINT userrole_role_fk
 FOREIGN KEY (role_id )
-REFERENCES ROLE (id )
+REFERENCES role (id )
   ON DELETE NO ACTION
   ON UPDATE NO ACTION,
 INDEX userrole_user_idx (user_id ASC) ,
 CONSTRAINT userrole_user_fk
 FOREIGN KEY (user_id )
-REFERENCES USER (id )
+REFERENCES user (id )
   ON DELETE NO ACTION
   ON UPDATE NO ACTION)
-
 ENGINE = InnoDB//
-
 SHOW WARNINGS//
 
 -- -----------------------------------------------------
--- Table employee dummy table
+-- Table employee table
 -- -----------------------------------------------------
+DROP SEQUENCE IF EXISTS employee_seq //
+CREATE SEQUENCE employee_seq start with 1000 minvalue 1000 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
+DO SETVAL(employee_seq, 1001, 0) //
 
 DROP TABLE IF EXISTS employee//
+SHOW WARNINGS//
 
 CREATE  TABLE IF NOT EXISTS employee (
 id BIGINT NOT NULL AUTO_INCREMENT ,
@@ -677,16 +779,17 @@ last_name VARCHAR(100)  NULL ,
 description VARCHAR(100)  NULL ,
 user_id BIGINT NOT NULL ,
 version BIGINT NULL,
+created_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 PRIMARY KEY (id) ,
 INDEX employee_name_uq (first_name ASC, last_name ASC) ,
-INDEX user_domain_idx (user_id ASC) ,
+INDEX user_idx (user_id ASC) ,
 CONSTRAINT employee_user_fk
 FOREIGN KEY (user_id )
-REFERENCES USER (id )
+REFERENCES user (id )
   ON DELETE NO ACTION
   ON UPDATE NO ACTION)
 ENGINE = InnoDB//
-
 SHOW WARNINGS//
 
 SET SQL_MODE=@OLD_SQL_MODE//

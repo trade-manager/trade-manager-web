@@ -20,10 +20,9 @@ import com.ib.controller.Group;
 import com.ib.controller.Position;
 import com.ib.controller.Profile;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.trade.core.broker.client.Broker;
-import org.trade.core.factory.ClassFactory;
-import org.trade.core.persistent.IPersistentModel;
-import org.trade.core.persistent.PersistentModelException;
+import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.Account;
 import org.trade.core.persistent.dao.Contract;
 import org.trade.core.persistent.dao.Portfolio;
@@ -69,13 +68,16 @@ public class TWSBrokerService extends AbstractBrokerModel {
 
     private final static org.slf4j.Logger _log = LoggerFactory.getLogger(TWSBrokerModel.class);
 
+    @Autowired
+    private TradeService tradeService;
+
     // Use getId as key
-    private static final ConcurrentHashMap<Integer, Tradestrategy> m_historyDataRequests = new ConcurrentHashMap<>();
-    private static final ConcurrentHashMap<Integer, Contract> m_realTimeBarsRequests = new ConcurrentHashMap<>();
-    private static final ConcurrentHashMap<Integer, Contract> m_marketDataRequests = new ConcurrentHashMap<>();
-    private static final ConcurrentHashMap<Integer, Contract> m_contractRequests = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<Integer, Tradestrategy> historyDataRequests = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<Integer, Contract> realTimeBarsRequests = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<Integer, Contract> marketDataRequests = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<Integer, Contract> contractRequests = new ConcurrentHashMap<>();
     // Use account number as key
-    private static final ConcurrentHashMap<String, Account> m_accountRequests = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, Account> cccountRequests = new ConcurrentHashMap<>();
 
     // All Use orderKey as key
     private static final ConcurrentHashMap<Integer, TradeOrder> openOrders = new ConcurrentHashMap<>();
@@ -124,14 +126,11 @@ public class TWSBrokerService extends AbstractBrokerModel {
     private Integer m_clientId = null;
     private AtomicInteger reqId = null;
     private AtomicInteger orderKey = null;
-    private IPersistentModel m_tradePersistentModel = null;
     private ApiController m_controller;
 
     public TWSBrokerService() {
         try {
 
-            m_tradePersistentModel = (IPersistentModel) ClassFactory
-                    .getServiceForInterface(IPersistentModel._persistentModel, this);
             reqId = new AtomicInteger((int) (System.currentTimeMillis() / 1000d));
 
         } catch (Exception ex) {
@@ -153,9 +152,13 @@ public class TWSBrokerService extends AbstractBrokerModel {
 
     @Override
     public void onDisconnect() {
+
         onCancelAllRealtimeData();
+
         if (isConnected()) {
-            for (String accountNumber : m_accountRequests.keySet()) {
+
+            for (String accountNumber : cccountRequests.keySet()) {
+
                 this.onCancelAccountUpdates(accountNumber);
             }
             controller().disconnect();
@@ -165,15 +168,22 @@ public class TWSBrokerService extends AbstractBrokerModel {
 
     @Override
     public void error(int id, int code, String msg) {
+
         String symbol = "N/A";
         BrokerModelException brokerModelException = null;
-        if (m_contractRequests.containsKey(id)) {
-            symbol = m_contractRequests.get(id).getSymbol();
+
+        if (contractRequests.containsKey(id)) {
+
+            symbol = contractRequests.get(id).getSymbol();
         }
-        if (m_historyDataRequests.containsKey(id)) {
-            Tradestrategy tradestrategy = m_historyDataRequests.get(id);
+
+        if (historyDataRequests.containsKey(id)) {
+
+            Tradestrategy tradestrategy = historyDataRequests.get(id);
             symbol = tradestrategy.getContract().getSymbol();
+
             if (code == 162) {
+
                 symbol = tradestrategy.getContract().getSymbol() + " pacing violation Tradingday: "
                         + tradestrategy.getTradingday().getOpen() + " BarSize: " + tradestrategy.getBarSize()
                         + " ChartDays: " + tradestrategy.getChartDays() + "  \n"
@@ -182,16 +192,20 @@ public class TWSBrokerService extends AbstractBrokerModel {
                         + "2/ Making six or more historical data requests for the same Contract, Exchange and Tick Type within two seconds. \n"
                         + "3/ Making more than 60 historical data requests in any ten-minute period.  \n";
             }
-            synchronized (m_historyDataRequests) {
-                m_historyDataRequests.remove(id);
-                m_historyDataRequests.notify();
+            synchronized (historyDataRequests) {
+                historyDataRequests.remove(id);
+                historyDataRequests.notify();
             }
         }
-        if (m_realTimeBarsRequests.containsKey(id)) {
-            symbol = m_realTimeBarsRequests.get(id).getSymbol();
+
+        if (realTimeBarsRequests.containsKey(id)) {
+
+            symbol = realTimeBarsRequests.get(id).getSymbol();
         }
-        if (m_marketDataRequests.containsKey(id)) {
-            symbol = m_marketDataRequests.get(id).getSymbol();
+
+        if (marketDataRequests.containsKey(id)) {
+
+            symbol = marketDataRequests.get(id).getSymbol();
         }
 
         /*
@@ -227,14 +241,16 @@ public class TWSBrokerService extends AbstractBrokerModel {
             }
 
         } else {
-            if (m_realTimeBarsRequests.containsKey(id)) {
-                synchronized (m_realTimeBarsRequests) {
-                    m_realTimeBarsRequests.remove(id);
+
+            if (realTimeBarsRequests.containsKey(id)) {
+                synchronized (realTimeBarsRequests) {
+                    realTimeBarsRequests.remove(id);
                 }
             }
-            if (m_marketDataRequests.containsKey(id)) {
-                synchronized (m_marketDataRequests) {
-                    m_marketDataRequests.remove(id);
+
+            if (marketDataRequests.containsKey(id)) {
+                synchronized (marketDataRequests) {
+                    marketDataRequests.remove(id);
                 }
             }
 
@@ -267,8 +283,8 @@ public class TWSBrokerService extends AbstractBrokerModel {
     @Override
     public void onSubscribeAccountUpdates(boolean subscribe, String accountNumber) throws BrokerModelException {
         try {
-            Account account = m_tradePersistentModel.findAccountByNumber(accountNumber);
-            m_accountRequests.put(accountNumber, account);
+            Account account = tradeService.findAccountByAccountNumber(accountNumber);
+            cccountRequests.put(accountNumber, account);
             if (controller().client().isConnected()) {
                 controller().reqAccountUpdates(subscribe, accountNumber, new AccountHandler(this, accountNumber));
 //               controller().client().reqAccountUpdates(subscribe, accountNumber);
@@ -284,13 +300,13 @@ public class TWSBrokerService extends AbstractBrokerModel {
 
     @Override
     public void onCancelAccountUpdates(String accountNumber) {
-        synchronized (m_accountRequests) {
-            if (m_accountRequests.containsKey(accountNumber)) {
+        synchronized (cccountRequests) {
+            if (cccountRequests.containsKey(accountNumber)) {
                 if (controller().client().isConnected()) {
                     controller().reqAccountUpdates(false, accountNumber, new AccountHandler(this, accountNumber));
 //                    controller().client().reqAccountUpdates(false, accountNumber);
                 }
-                m_accountRequests.remove(accountNumber);
+                cccountRequests.remove(accountNumber);
             }
         }
     }
@@ -364,7 +380,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
                 if (!tradestrategy.getStrategyData().isRunning())
                     tradestrategy.getStrategyData().execute();
 
-                m_historyDataRequests.put(tradestrategy.getId(), tradestrategy);
+                historyDataRequests.put(tradestrategy.getId(), tradestrategy);
 
                 endDate = TradingCalendar.getDateAtTime(TradingCalendar.addTradingDays(endDate, backfillOffsetDays),
                         endDate);
@@ -419,7 +435,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
                             "RealtimeBars request is already in progress for: " + contract.getSymbol()
                                     + " Please wait or cancel.");
                 }
-                m_realTimeBarsRequests.put(contract.getId(), contract);
+                realTimeBarsRequests.put(contract.getId(), contract);
 
                 /*
                  * Bar interval is set to 5= 5sec this is the only thing
@@ -455,7 +471,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
                                     + " Please wait or cancel.");
                 }
                 List<TagValue> mktDataOptions = new ArrayList<TagValue>();
-                m_marketDataRequests.put(contract.getId(), contract);
+                marketDataRequests.put(contract.getId(), contract);
                 controller().reqTopMktData(TWSBrokerModel.getIBContract(contract), genericTicklist, snapshot, new TopMktDataHandler(this, contract.getId()));
 
 //                controller().client().reqMktData(contract.getId(), TWSBrokerModel.getIBContract(contract), genericTicklist, snapshot,
@@ -535,7 +551,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
 
     @Override
     public boolean isHistoricalDataRunning(Contract contract) {
-        for (Tradestrategy item : m_historyDataRequests.values()) {
+        for (Tradestrategy item : historyDataRequests.values()) {
             if (contract.equals(item.getContract())) {
                 return true;
             }
@@ -545,8 +561,8 @@ public class TWSBrokerService extends AbstractBrokerModel {
 
     @Override
     public boolean isRealtimeBarsRunning(Tradestrategy tradestrategy) {
-        if (m_realTimeBarsRequests.containsKey(tradestrategy.getContract().getId())) {
-            Contract contract = m_realTimeBarsRequests.get(tradestrategy.getContract().getId());
+        if (realTimeBarsRequests.containsKey(tradestrategy.getContract().getId())) {
+            Contract contract = realTimeBarsRequests.get(tradestrategy.getContract().getId());
             for (Tradestrategy item : contract.getTradestrategies()) {
                 if (item.equals(tradestrategy)) {
                     return true;
@@ -559,7 +575,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
     @Override
     public boolean isRealtimeBarsRunning(Contract contract) {
         if (controller().client().isConnected()) {
-            if (m_realTimeBarsRequests.containsKey(contract.getId())) {
+            if (realTimeBarsRequests.containsKey(contract.getId())) {
                 return true;
             }
         }
@@ -568,8 +584,8 @@ public class TWSBrokerService extends AbstractBrokerModel {
 
     @Override
     public boolean isMarketDataRunning(Tradestrategy tradestrategy) {
-        if (m_marketDataRequests.containsKey(tradestrategy.getContract().getId())) {
-            Contract contract = m_marketDataRequests.get(tradestrategy.getContract().getId());
+        if (marketDataRequests.containsKey(tradestrategy.getContract().getId())) {
+            Contract contract = marketDataRequests.get(tradestrategy.getContract().getId());
             for (Tradestrategy item : contract.getTradestrategies()) {
                 if (item.equals(tradestrategy)) {
                     return true;
@@ -582,7 +598,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
     @Override
     public boolean isMarketDataRunning(Contract contract) {
         if (controller().client().isConnected()) {
-            if (m_marketDataRequests.containsKey(contract.getId())) {
+            if (marketDataRequests.containsKey(contract.getId())) {
                 return true;
             }
         }
@@ -591,7 +607,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
 
     @Override
     public boolean isHistoricalDataRunning(Tradestrategy tradestrategy) {
-        if (m_historyDataRequests.containsKey(tradestrategy.getId())) {
+        if (historyDataRequests.containsKey(tradestrategy.getId())) {
             return true;
         }
         return false;
@@ -599,7 +615,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
 
     @Override
     public boolean isAccountUpdatesRunning(String accountNumber) {
-        if (m_accountRequests.containsKey(accountNumber)) {
+        if (cccountRequests.containsKey(accountNumber)) {
             return true;
         }
         return false;
@@ -608,40 +624,40 @@ public class TWSBrokerService extends AbstractBrokerModel {
     @Override
     public void onCancelAllRealtimeData() {
         if (controller().client().isConnected()) {
-            for (Tradestrategy tradestrategy : m_historyDataRequests.values()) {
+            for (Tradestrategy tradestrategy : historyDataRequests.values()) {
                 this.onCancelBrokerData(tradestrategy);
             }
-            for (Contract contract : m_realTimeBarsRequests.values()) {
+            for (Contract contract : realTimeBarsRequests.values()) {
                 this.onCancelRealtimeBars(contract);
             }
-            for (Contract contract : m_marketDataRequests.values()) {
+            for (Contract contract : marketDataRequests.values()) {
                 this.onCancelMarketData(contract);
             }
-            for (Contract contract : m_contractRequests.values()) {
+            for (Contract contract : contractRequests.values()) {
                 this.onCancelContractDetails(contract);
             }
         }
-        m_contractRequests.clear();
-        m_historyDataRequests.clear();
-        m_realTimeBarsRequests.clear();
-        m_marketDataRequests.clear();
+        contractRequests.clear();
+        historyDataRequests.clear();
+        realTimeBarsRequests.clear();
+        marketDataRequests.clear();
     }
 
     @Override
     public void onCancelRealtimeBars(Contract contract) {
-        if (m_realTimeBarsRequests.containsKey(contract.getId())) {
+        if (realTimeBarsRequests.containsKey(contract.getId())) {
             if (controller().client().isConnected())
                 controller().client().cancelRealTimeBars(contract.getId());
-            synchronized (m_realTimeBarsRequests) {
-                m_realTimeBarsRequests.remove(contract.getId());
+            synchronized (realTimeBarsRequests) {
+                realTimeBarsRequests.remove(contract.getId());
             }
         }
     }
 
     @Override
     public void onCancelRealtimeBars(Tradestrategy tradestrategy) {
-        if (m_realTimeBarsRequests.containsKey(tradestrategy.getContract().getId())) {
-            Contract contract = m_realTimeBarsRequests.get(tradestrategy.getContract().getId());
+        if (realTimeBarsRequests.containsKey(tradestrategy.getContract().getId())) {
+            Contract contract = realTimeBarsRequests.get(tradestrategy.getContract().getId());
             for (Tradestrategy item : contract.getTradestrategies()) {
                 if (item.equals(tradestrategy)) {
                     contract.removeTradestrategy(tradestrategy);
@@ -657,19 +673,19 @@ public class TWSBrokerService extends AbstractBrokerModel {
 
     @Override
     public void onCancelMarketData(Contract contract) {
-        if (m_marketDataRequests.containsKey(contract.getId())) {
+        if (marketDataRequests.containsKey(contract.getId())) {
             if (controller().client().isConnected())
                 controller().client().cancelMktData(contract.getId());
-            synchronized (m_marketDataRequests) {
-                m_marketDataRequests.remove(contract.getId());
+            synchronized (marketDataRequests) {
+                marketDataRequests.remove(contract.getId());
             }
         }
     }
 
     @Override
     public void onCancelMarketData(Tradestrategy tradestrategy) {
-        if (m_marketDataRequests.containsKey(tradestrategy.getContract().getId())) {
-            Contract contract = m_marketDataRequests.get(tradestrategy.getContract().getId());
+        if (marketDataRequests.containsKey(tradestrategy.getContract().getId())) {
+            Contract contract = marketDataRequests.get(tradestrategy.getContract().getId());
             for (Tradestrategy item : contract.getTradestrategies()) {
                 if (item.equals(tradestrategy)) {
                     contract.removeTradestrategy(tradestrategy);
@@ -684,25 +700,25 @@ public class TWSBrokerService extends AbstractBrokerModel {
 
     @Override
     public void onCancelBrokerData(Tradestrategy tradestrategy) {
-        if (m_historyDataRequests.containsKey(tradestrategy.getId())) {
+        if (historyDataRequests.containsKey(tradestrategy.getId())) {
             if (controller().client().isConnected())
                 controller().client().cancelHistoricalData(tradestrategy.getId());
-            synchronized (m_historyDataRequests) {
-                m_historyDataRequests.remove(tradestrategy.getId());
-                m_historyDataRequests.notify();
+            synchronized (historyDataRequests) {
+                historyDataRequests.remove(tradestrategy.getId());
+                historyDataRequests.notify();
             }
         }
     }
 
     @Override
     public void onCancelBrokerData(Contract contract) {
-        for (Tradestrategy tradestrategy : m_historyDataRequests.values()) {
+        for (Tradestrategy tradestrategy : historyDataRequests.values()) {
             if (contract.equals(tradestrategy.getContract())) {
                 if (controller().client().isConnected())
                     controller().client().cancelHistoricalData(tradestrategy.getId());
-                synchronized (m_historyDataRequests) {
-                    m_historyDataRequests.remove(tradestrategy.getId());
-                    m_historyDataRequests.notify();
+                synchronized (historyDataRequests) {
+                    historyDataRequests.remove(tradestrategy.getId());
+                    historyDataRequests.notify();
                 }
             }
         }
@@ -711,9 +727,9 @@ public class TWSBrokerService extends AbstractBrokerModel {
     @Override
     public void onCancelContractDetails(Contract contract) {
         if (controller().client().isConnected()) {
-            if (m_contractRequests.contains(contract.getId()))
-                synchronized (m_contractRequests) {
-                    m_contractRequests.remove(contract.getId());
+            if (contractRequests.contains(contract.getId()))
+                synchronized (contractRequests) {
+                    contractRequests.remove(contract.getId());
                 }
         }
     }
@@ -722,14 +738,14 @@ public class TWSBrokerService extends AbstractBrokerModel {
     public void onContractDetails(Contract contract) throws BrokerModelException {
         try {
             if (controller().client().isConnected()) {
-                if (!m_contractRequests.containsKey(contract.getId())) {
+                if (!contractRequests.containsKey(contract.getId())) {
                     /*
                      * Null the IB Contract Id as these sometimes change. This
                      * will force a get of the IB data via the
                      * Exchange/Symbol/Currency.
                      */
-                    contract.setIdContractIB(null);
-                    m_contractRequests.put(contract.getId(), contract);
+                    contract.setContractIBId(null);
+                    contractRequests.put(contract.getId(), contract);
                     logContract(TWSBrokerModel.getIBContract(contract));
                     controller().client().reqContractDetails(contract.getId(), TWSBrokerModel.getIBContract(contract));
                 }
@@ -745,7 +761,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
 
     @Override
     public ConcurrentHashMap<Integer, Tradestrategy> getHistoricalData() {
-        return m_historyDataRequests;
+        return historyDataRequests;
     }
 
     @Override
@@ -759,7 +775,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
                     if (null == tradeOrder.getClientId()) {
                         tradeOrder.setClientId(this.m_clientId);
                     }
-                    tradeOrder = m_tradePersistentModel.persistTradeOrder(tradeOrder);
+                    tradeOrder = tradeService.saveTradeOrder(tradeOrder);
 
                     _log.debug("Order Placed Key: " + tradeOrder.getOrderKey());
                     com.ib.client.Contract IBContract = TWSBrokerModel.getIBContract(contract);
@@ -906,69 +922,52 @@ public class TWSBrokerService extends AbstractBrokerModel {
     public class AdvisorHandler implements ApiController.IAdvisorHandler {
 
         private AbstractBrokerModel m_brokerModel;
-        private IPersistentModel m_tradePersistentModel;
+
 
         AdvisorHandler(AbstractBrokerModel brokerModel) {
             this.m_brokerModel = brokerModel;
-            try {
-                m_tradePersistentModel = (IPersistentModel) ClassFactory
-                        .getServiceForInterface(IPersistentModel._persistentModel, this);
-
-            } catch (Exception ex) {
-                throw new IllegalArgumentException("Error initializing IBrokerModel Msg: " + ex.getMessage());
-            }
         }
 
         private AbstractBrokerModel getBrokerModel() {
             return this.m_brokerModel;
         }
 
-        private IPersistentModel getPersistentModel() {
-            return this.m_tradePersistentModel;
+        private TradeService getPersistentModel() {
+            return tradeService;
         }
 
         public void groups(ArrayList<Group> groups) {
-            try {
 
-                for (Group group : groups) {
-                    _log.debug("Group: " + group.name() + "/n");
-                    Portfolio portfolio = new Portfolio(group.name(), group.name());
-                    getPersistentModel().persistPortfolio(portfolio);
-                }
-            } catch (PersistentModelException ex) {
-                error(Types.FADataType.ALIASES.ordinal(), 3235, ex.getMessage());
+            for (Group group : groups) {
+                _log.debug("Group: " + group.name() + "/n");
+                Portfolio portfolio = new Portfolio(group.name(), group.name());
+                getPersistentModel().savePortfolio(portfolio);
             }
+
         }
 
         public void profiles(ArrayList<Profile> profiles) {
-            try {
-                for (Profile profile : profiles) {
-                    _log.debug("Profiles: " + profile.name() + "/n");
-                    Portfolio portfolio = new Portfolio(profile.name(), profile.name());
-                    getPersistentModel().persistPortfolio(portfolio);
-                }
-                getBrokerModel().fireFAAccountsCompleted();
-            } catch (PersistentModelException ex) {
-                error(Types.FADataType.ALIASES.ordinal(), 3235, ex.getMessage());
+
+            for (Profile profile : profiles) {
+                _log.debug("Profiles: " + profile.name() + "/n");
+                Portfolio portfolio = new Portfolio(profile.name(), profile.name());
+                getPersistentModel().savePortfolio(portfolio);
             }
+            getBrokerModel().fireFAAccountsCompleted();
         }
 
         public void aliases(ArrayList<Alias> aliases) {
-            try {
-                for (Alias alias : aliases) {
-                    _log.debug("Aliases: " + alias.alias() + "/n");
 
-                    Account account = getPersistentModel().findAccountByNumber(alias.account());
-                    if (null == account) {
-                        account = new Account(alias.account(), alias.account(), Currency.USD,
-                                AccountType.INDIVIDUAL);
-                    }
-                    account.setAlias(alias.alias());
-                    account.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
-                    getPersistentModel().persistAspect(account);
+            for (Alias alias : aliases) {
+                _log.debug("Aliases: " + alias.alias() + "/n");
+
+                Account account = getPersistentModel().findAccountByAccountNumber(alias.account());
+                if (null == account) {
+                    account = new Account(alias.account(), alias.account(), Currency.USD,
+                            AccountType.INDIVIDUAL);
                 }
-            } catch (PersistentModelException ex) {
-                error(Types.FADataType.ALIASES.ordinal(), 3235, ex.getMessage());
+                account.setAlias(alias.alias());
+                account = getPersistentModel().saveAspect(account);
             }
         }
     }
@@ -977,26 +976,18 @@ public class TWSBrokerService extends AbstractBrokerModel {
 
         private AbstractBrokerModel m_brokerModel;
         private String m_accountNumber;
-        private IPersistentModel m_tradePersistentModel;
 
         AccountHandler(AbstractBrokerModel brokerModel, String accountNumber) {
             this.m_brokerModel = brokerModel;
             m_accountNumber = accountNumber;
-            try {
-                m_tradePersistentModel = (IPersistentModel) ClassFactory
-                        .getServiceForInterface(IPersistentModel._persistentModel, this);
-
-            } catch (Exception ex) {
-                throw new IllegalArgumentException("Error initializing IBrokerModel Msg: " + ex.getMessage());
-            }
         }
 
         private AbstractBrokerModel getBrokerModel() {
             return this.m_brokerModel;
         }
 
-        private IPersistentModel getPersistentModel() {
-            return this.m_tradePersistentModel;
+        private TradeService getPersistentModel() {
+            return tradeService;
         }
 
         private String getAccountNumber() {
@@ -1020,26 +1011,18 @@ public class TWSBrokerService extends AbstractBrokerModel {
     public class LiveOrderHandler implements ApiController.ILiveOrderHandler {
 
         private AbstractBrokerModel m_brokerModel;
-        private IPersistentModel m_tradePersistentModel;
 
         LiveOrderHandler(AbstractBrokerModel brokerModel) {
             this.m_brokerModel = brokerModel;
 
-            try {
-                m_tradePersistentModel = (IPersistentModel) ClassFactory
-                        .getServiceForInterface(IPersistentModel._persistentModel, this);
-
-            } catch (Exception ex) {
-                throw new IllegalArgumentException("Error initializing IBrokerModel Msg: " + ex.getMessage());
-            }
         }
 
         private AbstractBrokerModel getBrokerModel() {
             return this.m_brokerModel;
         }
 
-        private IPersistentModel getPersistentModel() {
-            return this.m_tradePersistentModel;
+        private TradeService getPersistentModel() {
+            return tradeService;
         }
 
         public void openOrder(com.ib.client.Contract contract, Order order, OrderState orderState) {
@@ -1059,26 +1042,18 @@ public class TWSBrokerService extends AbstractBrokerModel {
 
         private AbstractBrokerModel m_brokerModel;
         private Integer m_orderKey;
-        private IPersistentModel m_tradePersistentModel;
 
         OrderHandler(AbstractBrokerModel brokerModel, Integer orderKey) {
             this.m_brokerModel = brokerModel;
             m_orderKey = orderKey;
-            try {
-                m_tradePersistentModel = (IPersistentModel) ClassFactory
-                        .getServiceForInterface(IPersistentModel._persistentModel, this);
-
-            } catch (Exception ex) {
-                throw new IllegalArgumentException("Error initializing IBrokerModel Msg: " + ex.getMessage());
-            }
         }
 
         private AbstractBrokerModel getBrokerModel() {
             return this.m_brokerModel;
         }
 
-        private IPersistentModel getPersistentModel() {
-            return this.m_tradePersistentModel;
+        private TradeService getPersistentModel() {
+            return tradeService;
         }
 
         private Integer getOrderKey() {
@@ -1122,7 +1097,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
                 }
 
                 if (changed) {
-                    transientInstance.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
+                    transientInstance.setOrderUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
                     transientInstance.setStatus(status.name().toUpperCase());
                     transientInstance.setWhyHeld(whyHeld);
                     _log.debug("Order Status changed. Status: " + status);
@@ -1130,7 +1105,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
                             lastFillPrice, clientId, whyHeld);
 
                     boolean isFilled = transientInstance.getIsFilled();
-                    transientInstance = getPersistentModel().persistTradeOrder(transientInstance);
+                    transientInstance = getPersistentModel().saveTradeOrder(transientInstance);
 
                     if (OrderStatus.CANCELLED.equals(transientInstance.getStatus())) {
                         // Let the controller know a position was closed
@@ -1156,26 +1131,18 @@ public class TWSBrokerService extends AbstractBrokerModel {
 
         private AbstractBrokerModel m_brokerModel;
         private Integer m_reqId;
-        private IPersistentModel m_tradePersistentModel;
 
         HistoricalDataHandler(AbstractBrokerModel brokerModel, Integer reqId) {
             this.m_brokerModel = brokerModel;
             this.m_reqId = reqId;
-            try {
-                m_tradePersistentModel = (IPersistentModel) ClassFactory
-                        .getServiceForInterface(IPersistentModel._persistentModel, this);
-
-            } catch (Exception ex) {
-                throw new IllegalArgumentException("Error initializing IBrokerModel Msg: " + ex.getMessage());
-            }
         }
 
         private AbstractBrokerModel getBrokerModel() {
             return this.m_brokerModel;
         }
 
-        private IPersistentModel getPersistentModel() {
-            return this.m_tradePersistentModel;
+        private TradeService getPersistentModel() {
+            return tradeService;
         }
 
         private Integer getReqId() {
@@ -1186,8 +1153,8 @@ public class TWSBrokerService extends AbstractBrokerModel {
             try {
                 long volume = bar.volume() * 100;
 
-                if (m_historyDataRequests.containsKey(getReqId())) {
-                    Tradestrategy tradestrategy = m_historyDataRequests.get(getReqId());
+                if (historyDataRequests.containsKey(getReqId())) {
+                    Tradestrategy tradestrategy = historyDataRequests.get(getReqId());
 
                     ZonedDateTime date;
                     /*
@@ -1230,10 +1197,10 @@ public class TWSBrokerService extends AbstractBrokerModel {
         public void historicalDataEnd() {
 
             try {
-                Tradestrategy tradestrategy = m_historyDataRequests.get(getReqId());
+                Tradestrategy tradestrategy = historyDataRequests.get(getReqId());
 
                 CandleSeries candleSeries = tradestrategy.getStrategyData().getBaseCandleSeries();
-                m_tradePersistentModel.persistCandleSeries(candleSeries);
+                tradeService.saveCandleSeries(candleSeries);
 
                 _log.debug("HistoricalData complete Req Id: " + getReqId() + " Symbol: "
                         + tradestrategy.getContract().getSymbol() + " Tradingday: "
@@ -1246,9 +1213,9 @@ public class TWSBrokerService extends AbstractBrokerModel {
                  * tradeStrategyId. Remove this from the processing vector.
                  */
 
-                synchronized (m_historyDataRequests) {
-                    m_historyDataRequests.remove(getReqId());
-                    m_historyDataRequests.notify();
+                synchronized (historyDataRequests) {
+                    historyDataRequests.remove(getReqId());
+                    historyDataRequests.notify();
                 }
 
                 /*
@@ -1265,7 +1232,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
                             getBrokerModel().onReqRealTimeBars(tradestrategy.getContract(),
                                     tradestrategy.getStrategy().getMarketData());
                         } else {
-                            Contract contract = m_realTimeBarsRequests.get(tradestrategy.getContract().getId());
+                            Contract contract = realTimeBarsRequests.get(tradestrategy.getContract().getId());
                             contract.addTradestrategy(tradestrategy);
                         }
                     }
@@ -1283,26 +1250,18 @@ public class TWSBrokerService extends AbstractBrokerModel {
 
         private AbstractBrokerModel m_brokerModel;
         private Integer m_reqId;
-        private IPersistentModel m_tradePersistentModel;
 
         RealTimeBarHandler(AbstractBrokerModel brokerModel, Integer reqId) {
             this.m_brokerModel = brokerModel;
             this.m_reqId = reqId;
-            try {
-                m_tradePersistentModel = (IPersistentModel) ClassFactory
-                        .getServiceForInterface(IPersistentModel._persistentModel, this);
-
-            } catch (Exception ex) {
-                throw new IllegalArgumentException("Error initializing IBrokerModel Msg: " + ex.getMessage());
-            }
         }
 
         private AbstractBrokerModel getBrokerModel() {
             return this.m_brokerModel;
         }
 
-        private IPersistentModel getPersistentModel() {
-            return this.m_tradePersistentModel;
+        private TradeService getPersistentModel() {
+            return tradeService;
         }
 
         private Integer getReqId() {
@@ -1318,8 +1277,8 @@ public class TWSBrokerService extends AbstractBrokerModel {
                 ZonedDateTime date = TradingCalendar.getZonedDateTimeFromMilli(bar.time() * 1000);
 
                 // Only store data that is during mkt hours
-                if (m_realTimeBarsRequests.containsKey(getReqId())) {
-                    Contract contract = m_realTimeBarsRequests.get(getReqId());
+                if (realTimeBarsRequests.containsKey(getReqId())) {
+                    Contract contract = realTimeBarsRequests.get(getReqId());
 
                     synchronized (contract) {
                         Collections.sort(contract.getTradestrategies(), Tradestrategy.TRADINGDAY_CONTRACT);
@@ -1345,7 +1304,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
                                     CandleItem candleItem = (CandleItem) strategyData.getBaseCandleSeries()
                                             .getDataItem(strategyData.getBaseCandleSeries().getItemCount() - 1);
                                     if (updateCandleDB) {
-                                        getPersistentModel().persistCandle(candleItem.getCandle());
+                                        getPersistentModel().saveCandle(candleItem.getCandle());
                                         updateCandleDB = false;
                                     }
                                 }
@@ -1363,26 +1322,18 @@ public class TWSBrokerService extends AbstractBrokerModel {
 
         private AbstractBrokerModel m_brokerModel;
         private Integer m_reqId;
-        private IPersistentModel m_tradePersistentModel;
 
         TopMktDataHandler(AbstractBrokerModel brokerModel, Integer reqId) {
             this.m_brokerModel = brokerModel;
             this.m_reqId = reqId;
-            try {
-                m_tradePersistentModel = (IPersistentModel) ClassFactory
-                        .getServiceForInterface(IPersistentModel._persistentModel, this);
-
-            } catch (Exception ex) {
-                throw new IllegalArgumentException("Error initializing IBrokerModel Msg: " + ex.getMessage());
-            }
         }
 
         private AbstractBrokerModel getBrokerModel() {
             return this.m_brokerModel;
         }
 
-        private IPersistentModel getPersistentModel() {
-            return this.m_tradePersistentModel;
+        private TradeService getPersistentModel() {
+            return tradeService;
         }
 
         private Integer getReqId() {
@@ -1396,9 +1347,9 @@ public class TWSBrokerService extends AbstractBrokerModel {
                 synchronized (price) {
                     // _log.warn("tickPrice Field: " + field + " value :" + value
                     // + " time: " + System.currentTimeMillis());
-                    if (!m_marketDataRequests.containsKey(getReqId()))
+                    if (!marketDataRequests.containsKey(getReqId()))
                         return;
-                    Contract contract = m_marketDataRequests.get(getReqId());
+                    Contract contract = marketDataRequests.get(getReqId());
 
                     /*
                      * Make sure the lastPrice is between the current Bid/Ask as
@@ -1439,8 +1390,8 @@ public class TWSBrokerService extends AbstractBrokerModel {
                 switch (tickType) {
                     case VOLUME: {
 
-                        if (m_realTimeBarsRequests.containsKey(getReqId())) {
-                            Contract contract = m_realTimeBarsRequests.get(getReqId());
+                        if (realTimeBarsRequests.containsKey(getReqId())) {
+                            Contract contract = realTimeBarsRequests.get(getReqId());
 
                             for (Tradestrategy tradestrategy : contract
                                     .getTradestrategies()) {
@@ -1493,7 +1444,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
 
                 synchronized (value) {
 
-                    if (!m_marketDataRequests.containsKey(getReqId()))
+                    if (!marketDataRequests.containsKey(getReqId()))
                         return;
 
                     switch (tickType) {
@@ -1544,7 +1495,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
 
                             if (price.doubleValue() > 0) {
 
-                                Contract contract = m_marketDataRequests.get(getReqId());
+                                Contract contract = marketDataRequests.get(getReqId());
                                 // _log.warn("TickString ReqId: " + reqId + " Field: "
                                 // + field + " String: " + value);
                                 for (Tradestrategy tradestrategy : contract.getTradestrategies()) {
@@ -1650,26 +1601,18 @@ public class TWSBrokerService extends AbstractBrokerModel {
 
         private AbstractBrokerModel m_brokerModel;
         private Integer m_reqId;
-        private IPersistentModel m_tradePersistentModel;
 
         TradeReportHandler(AbstractBrokerModel brokerModel, Integer reqId) {
             this.m_brokerModel = brokerModel;
             this.m_reqId = reqId;
-            try {
-                m_tradePersistentModel = (IPersistentModel) ClassFactory
-                        .getServiceForInterface(IPersistentModel._persistentModel, this);
-
-            } catch (Exception ex) {
-                throw new IllegalArgumentException("Error initializing IBrokerModel Msg: " + ex.getMessage());
-            }
         }
 
         private AbstractBrokerModel getBrokerModel() {
             return this.m_brokerModel;
         }
 
-        private IPersistentModel getPersistentModel() {
-            return this.m_tradePersistentModel;
+        private TradeService getPersistentModel() {
+            return tradeService;
         }
 
         private Integer getReqId() {
@@ -1709,7 +1652,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
                 transientInstance.setFilledQuantity(tradeOrderfill.getCumulativeQuantity());
                 transientInstance.setFilledDate(tradeOrderfill.getTime());
                 boolean isFilled = transientInstance.getIsFilled();
-                transientInstance = getPersistentModel().persistTradeOrderfill(transientInstance);
+                transientInstance = getPersistentModel().saveTradeOrderfill(transientInstance);
                 // Let the controller know an order was filled
                 if (transientInstance.getIsFilled() && !isFilled)
                     getBrokerModel().fireTradeOrderFilled(transientInstance);
@@ -1805,8 +1748,8 @@ public class TWSBrokerService extends AbstractBrokerModel {
                                      * Make sure the create date for the order is
                                      * the earliest time.
                                      */
-                                    if (tradeOrder.getCreateDate().isAfter(tradeOrderfill1.getTime())) {
-                                        tradeOrder.setCreateDate(tradeOrderfill1.getTime());
+                                    if (tradeOrder.getOrderCreateDate().isAfter(tradeOrderfill1.getTime())) {
+                                        tradeOrder.setOrderCreateDate(tradeOrderfill1.getTime());
                                     }
                                 }
                             }
@@ -1823,7 +1766,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
 
                         for (TradeOrder tradeOrder : orders) {
                             // tradeOrder =
-                            // m_tradePersistentModel.persistTradeOrder(tradeOrder);
+                            // tradeService.persistTradeOrder(tradeOrder);
                             double totalComms = 0;
                             for (String key : executionDetails.keySet()) {
                                 Execution execution = executionDetails.get(key);
@@ -1847,7 +1790,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
                                 }
                             }
                             tradeOrder.setCommission(new BigDecimal(totalComms));
-                            tradeOrder = getPersistentModel().persistTradeOrderfill(tradeOrder);
+                            tradeOrder = getPersistentModel().saveTradeOrderfill(tradeOrder);
                             TradeOrder transientInstance = getPersistentModel()
                                     .findTradeOrderByKey(tradeOrder.getOrderKey());
                             // Let the controller know an order was filled
@@ -1877,7 +1820,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
                     for (TradeOrderfill tradeOrderfill : tradeOrder.getTradeOrderfills()) {
                         if (tradeOrderfill.getExecId().equals(commissionReport.m_execId)) {
                             tradeOrderfill.setCommission(new BigDecimal(commissionReport.m_commission));
-                            getPersistentModel().persistTradeOrderfill(tradeOrderfill.getTradeOrder());
+                            getPersistentModel().saveTradeOrderfill(tradeOrderfill.getTradeOrder());
                             return;
                         }
                     }
@@ -2045,7 +1988,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
                 changed = true;
             }
             if (changed)
-                order.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
+                order.setOrderUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
         }
         return changed;
     }
@@ -2069,9 +2012,9 @@ public class TWSBrokerService extends AbstractBrokerModel {
                 transientContract.setLocalSymbol(contractDetails.contract().localSymbol());
                 changed = true;
             }
-            if (CoreUtils.nullSafeComparator(transientContract.getIdContractIB(),
+            if (CoreUtils.nullSafeComparator(transientContract.getContractIBId(),
                     contractDetails.contract().conid()) != 0) {
-                transientContract.setIdContractIB(contractDetails.contract().conid());
+                transientContract.setContractIBId(contractDetails.contract().conid());
                 changed = true;
             }
             if (CoreUtils.nullSafeComparator(transientContract.getPrimaryExchange(),

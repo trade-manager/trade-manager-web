@@ -1,0 +1,162 @@
+/* ===========================================================
+ * TradeManager : a application to trade strategies for the Java(tm) platform
+ * ===========================================================
+ *
+ * (C) Copyright 2011-2011, by Simon Allen and Contributors.
+ *
+ * Project Info:  org.trade
+ *
+ * This library is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation; either version 2.1 of the License, or
+ * (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public
+ * License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301,
+ * USA.
+ *
+ * [Java is a trademark or registered trademark of Oracle, Inc.
+ * in the United States and other countries.]
+ *
+ * (C) Copyright 2011-2011, by Simon Allen and Contributors.
+ *
+ * Original Author:  Simon Allen;
+ * Contributor(s):   -;
+ *
+ * Changes
+ * -------
+ *
+ */
+package org.trade.ui.tradingday;
+
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
+import org.trade.core.ApplicationProfileInitializer;
+import org.trade.core.ApplicationRepositoryConfig;
+import org.trade.core.TradestrategyBase;
+import org.trade.core.persistent.TradeService;
+import org.trade.core.persistent.dao.Contract;
+import org.trade.core.persistent.dao.Tradestrategy;
+import org.trade.core.persistent.dao.Tradingday;
+import org.trade.core.persistent.dao.Tradingdays;
+import org.trade.core.valuetype.ValueTypeException;
+import org.trade.ui.models.TradingdayTableModel;
+import org.trade.ui.tables.TradingdayTable;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
+
+/**
+ * Some tests for the  DataUtilities class.
+ *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
+ */
+@SpringBootTest
+@ContextConfiguration(classes = ApplicationRepositoryConfig.class,
+        initializers = ApplicationProfileInitializer.class)
+public class TradingdayPanelIT {
+
+    private final static Logger _log = LoggerFactory.getLogger(TradingdayPanelIT.class);
+
+    @Autowired
+    private TradeService tradeService;
+
+    private static Tradestrategy tradestrategy;
+    private static final String symbol = "IBM-" + TradestrategyBase.getRandomNumber(4);
+
+    /**
+     * Method setUpBeforeClass.
+     */
+    @BeforeAll
+    public static void setUpBeforeClass() {
+        System.setProperty("java.awt.headless", "false");
+    }
+
+    /**
+     * Method setUp.
+     */
+    @BeforeEach
+    public void setUp() throws Exception {
+
+        tradestrategy = TradestrategyBase.createTestTradestrategy(tradeService, symbol);
+        assertNotNull(tradestrategy);
+    }
+
+    /**
+     * Method tearDown.
+     */
+    @AfterEach
+    public void tearDown() throws Exception {
+
+        TradestrategyBase.clearDBData(tradeService, tradestrategy);
+    }
+
+    /**
+     * Method tearDownAfterClass.
+     */
+    @AfterAll
+    public static void tearDownAfterClass() {
+    }
+
+    @Test
+    public void replaceTradingday() {
+
+        Tradingdays tradingdays = new Tradingdays();
+
+        Tradingday instance1 = tradeService
+                .findTradingdayById(tradestrategy.getTradingday().getId());
+        tradingdays.add(instance1);
+
+        TradingdayTableModel tradingdayModel = new TradingdayTableModel();
+        tradingdayModel.setData(tradingdays);
+        TradingdayTable tradingdayTable = null;
+        try {
+
+            tradingdayTable = new TradingdayTable(tradingdayModel);
+        } catch (ValueTypeException ex) {
+
+            fail("Failed to create tradingdayTable msg: " + ex.getMessage());
+        }
+        tradingdayTable.setRowSelectionInterval(0, 0);
+
+        tradestrategy.getContract().setIndustry("Computer");
+        Contract result = this.tradeService.saveAspect(tradestrategy.getContract());
+        assertNotNull(result);
+        Tradingday instance2 = tradeService
+                .findTradingdayById(tradestrategy.getTradingday().getId());
+        tradingdays.replaceTradingday(instance2);
+        int selectedRow = tradingdayTable.getSelectedRow();
+        tradingdayModel.setData(tradingdays);
+
+        if (selectedRow > -1) {
+
+            tradingdayTable.setRowSelectionInterval(selectedRow, selectedRow);
+        }
+        org.trade.core.valuetype.Date openDate = (org.trade.core.valuetype.Date) tradingdayModel
+                .getValueAt(tradingdayTable.convertRowIndexToModel(0), 0);
+        org.trade.core.valuetype.Date closeDate = (org.trade.core.valuetype.Date) tradingdayModel
+                .getValueAt(tradingdayTable.convertRowIndexToModel(0), 1);
+        Tradingday transferObject = tradingdayModel.getData().getTradingday(openDate.getZonedDateTime(),
+                closeDate.getZonedDateTime());
+        assertNotNull(transferObject);
+
+        assertNotNull(tradingdays.getTradingday(instance1.getOpen(), instance1.getClose()));
+        String industry = transferObject.getTradestrategies().getFirst().getContract().getIndustry();
+        assertNotNull("4", industry);
+    }
+}

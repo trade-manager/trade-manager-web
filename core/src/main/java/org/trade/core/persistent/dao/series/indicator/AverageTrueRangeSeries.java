@@ -38,7 +38,7 @@ package org.trade.core.persistent.dao.series.indicator;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Transient;
-import org.trade.core.persistent.PersistentModelException;
+import org.trade.core.persistent.ServiceException;
 import org.trade.core.persistent.dao.CodeValue;
 import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.series.indicator.atr.AverageTrueRangeItem;
@@ -169,7 +169,7 @@ public class AverageTrueRangeSeries extends IndicatorSeries {
      * @param period           the period.
      * @param averageTrueRange the AverageTrueRange.
      */
-    public void add(RegularTimePeriod period, BigDecimal averageTrueRange) throws PersistentModelException {
+    public void add(RegularTimePeriod period, BigDecimal averageTrueRange) throws ServiceException {
         if (!this.isEmpty()) {
             AverageTrueRangeItem item0 = (AverageTrueRangeItem) this.getDataItem(0);
             if (!period.getClass().equals(item0.getPeriod().getClass())) {
@@ -185,7 +185,7 @@ public class AverageTrueRangeSeries extends IndicatorSeries {
      * @param dataItem the AverageTrueRange.
      * @param notify   the notify listeners.
      */
-    public void add(AverageTrueRangeItem dataItem, boolean notify) throws PersistentModelException {
+    public void add(AverageTrueRangeItem dataItem, boolean notify) throws ServiceException {
         if (!this.isEmpty()) {
             AverageTrueRangeItem item0 = (AverageTrueRangeItem) this.getDataItem(0);
             if (!dataItem.getPeriod().getClass().equals(item0.getPeriod().getClass())) {
@@ -251,7 +251,7 @@ public class AverageTrueRangeSeries extends IndicatorSeries {
      * @param source      CandleDataset
      * @param seriesIndex int
      */
-    public void createSeries(CandleDataset source, int seriesIndex) throws PersistentModelException {
+    public void createSeries(CandleDataset source, int seriesIndex) throws ServiceException {
 
         if (source.getSeries(seriesIndex) == null) {
             throw new IllegalArgumentException("Null source (CandleDataset).");
@@ -269,7 +269,7 @@ public class AverageTrueRangeSeries extends IndicatorSeries {
      * @param skip   int
      * @param newBar boolean
      */
-    public void updateSeries(CandleSeries source, int skip, boolean newBar) throws PersistentModelException {
+    public void updateSeries(CandleSeries source, int skip, boolean newBar) throws ServiceException {
 
         if (source == null) {
             throw new IllegalArgumentException("Null source (CandleSeries).");

@@ -39,7 +39,7 @@ import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.data.general.DatasetChangeEvent;
 import org.jfree.data.xy.AbstractXYDataset;
 import org.jfree.data.xy.XYDataset;
-import org.trade.core.persistent.PersistentModelException;
+import org.trade.core.persistent.ServiceException;
 import org.trade.core.persistent.dao.Candle;
 import org.trade.core.persistent.dao.Contract;
 import org.trade.core.util.CloneUtils;
@@ -511,7 +511,7 @@ public class CandleDataset extends AbstractXYDataset implements OHLCVwapDataset,
      * @param strategyData StrategyData
      * @param candles      List<Candle>
      */
-    public static void populateSeries(StrategyDataUI strategyData, List<Candle> candles) throws PersistentModelException {
+    public static void populateSeries(StrategyDataUI strategyData, List<Candle> candles) throws ServiceException {
 
         strategyData.clearBaseCandleDataset();
 

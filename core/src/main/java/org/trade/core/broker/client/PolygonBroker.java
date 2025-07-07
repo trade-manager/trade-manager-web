@@ -76,6 +76,7 @@ public class PolygonBroker extends Broker {
     static {
 
         try {
+
             url = ConfigProperties.getPropAsString("trade.polygon.url");
             apiKey = ConfigProperties.getPropAsString("trade.polygon.key");
         } catch (IOException ex) {

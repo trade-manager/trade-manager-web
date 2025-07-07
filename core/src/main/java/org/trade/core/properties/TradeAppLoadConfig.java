@@ -36,13 +36,15 @@
 package org.trade.core.properties;
 
 import java.io.IOException;
+import java.util.Properties;
 
 /**
  *
  */
 public class TradeAppLoadConfig {
+
     private final static String PROPERTIES_PROPERTY_FILE = "trade.properties";
-    private final static TradeAppLoadConfig m_AppConfigLoad = new TradeAppLoadConfig();
+    private final static TradeAppLoadConfig tradeAppLoadConfig = new TradeAppLoadConfig();
 
     TradeAppLoadConfig() {
     }
@@ -50,7 +52,7 @@ public class TradeAppLoadConfig {
     /**
      * Method loadAppProperties.
      */
-    public static void loadAppProperties() throws IOException {
-        ConfigProperties.loadDeploymentProperties(m_AppConfigLoad, PROPERTIES_PROPERTY_FILE);
+    public static Properties loadAppProperties() throws IOException {
+        return ConfigProperties.getDeploymentProperties(tradeAppLoadConfig, PROPERTIES_PROPERTY_FILE);
     }
 }

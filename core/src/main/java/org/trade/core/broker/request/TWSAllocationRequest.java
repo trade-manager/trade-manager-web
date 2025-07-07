@@ -3,7 +3,6 @@ package org.trade.core.broker.request;
 import org.trade.core.dao.Aspects;
 import org.trade.core.persistent.dao.Account;
 import org.trade.core.persistent.dao.Portfolio;
-import org.trade.core.persistent.dao.PortfolioAccount;
 import org.trade.core.xml.SaxMapper;
 import org.trade.core.xml.TagTracker;
 import org.trade.core.xml.XMLModelException;
@@ -14,15 +13,15 @@ import java.util.Stack;
 
 public class TWSAllocationRequest extends SaxMapper {
 
-    private Aspects m_target = null;
-    private final Stack<Object> m_stack = new Stack<>();
+    private Aspects target = null;
+    private final Stack<Object> stack = new Stack<>();
 
     public TWSAllocationRequest() throws XMLModelException {
         super();
     }
 
     public Object getMappedObject() {
-        return m_target;
+        return target;
     }
 
     public TagTracker createTagTrackerNetwork() {
@@ -34,10 +33,10 @@ public class TWSAllocationRequest extends SaxMapper {
                 // The root will be deactivated when
                 // parsing a new document begins.
                 // clear the stack
-                m_stack.removeAllElements();
+                stack.removeAllElements();
 
                 // create the root "dir" object.
-                m_target = new Aspects();
+                target = new Aspects();
                 // push the root dir on the stack...
             }
         };
@@ -47,14 +46,14 @@ public class TWSAllocationRequest extends SaxMapper {
             public void onStart(String namespaceURI, String localName, String qName, Attributes attr) {
 
                 Portfolio aspect = new Portfolio();
-                m_target.add(aspect);
-                m_stack.push(aspect);
+                target.add(aspect);
+                stack.push(aspect);
             }
 
             public void onEnd(String namespaceURI, String localName, String qName, CharArrayWriter contents) {
 
                 // Clean up the directory stack...
-                m_stack.pop();
+                stack.pop();
             }
         };
 
@@ -71,7 +70,7 @@ public class TWSAllocationRequest extends SaxMapper {
             public void onEnd(String namespaceURI, String localName, String qName, CharArrayWriter contents) {
 
                 final String value = contents.toString();
-                final Portfolio temp = (Portfolio) m_stack.peek();
+                final Portfolio temp = (Portfolio) stack.peek();
                 temp.setName(value);
             }
         };
@@ -89,7 +88,7 @@ public class TWSAllocationRequest extends SaxMapper {
             public void onEnd(String namespaceURI, String localName, String qName, CharArrayWriter contents) {
 
                 final String value = contents.toString();
-                final Portfolio temp = (Portfolio) m_stack.peek();
+                final Portfolio temp = (Portfolio) stack.peek();
                 temp.setAllocationMethod(value);
             }
         };
@@ -101,14 +100,14 @@ public class TWSAllocationRequest extends SaxMapper {
 
             public void onStart(String namespaceURI, String localName, String qName, Attributes attr) {
 
-                final Portfolio temp = (Portfolio) m_stack.peek();
-                m_stack.push(temp);
+                final Portfolio temp = (Portfolio) stack.peek();
+                stack.push(temp);
             }
 
             public void onEnd(String namespaceURI, String localName, String qName, CharArrayWriter contents) {
 
                 // Clean up the directory stack...
-                m_stack.pop();
+                stack.pop();
             }
         };
 
@@ -119,16 +118,15 @@ public class TWSAllocationRequest extends SaxMapper {
 
             public void onStart(String namespaceURI, String localName, String qName, Attributes attr) {
 
-                final Portfolio portfolio = (Portfolio) m_stack.peek();
-                PortfolioAccount temp = new PortfolioAccount(portfolio, new Account());
-                portfolio.getPortfolioAccounts().add(temp);
-                m_stack.push(temp);
+                final Portfolio portfolio = (Portfolio) stack.peek();
+                portfolio.getAccounts().add(new Account());
+                stack.push(portfolio);
             }
 
             public void onEnd(String namespaceURI, String localName, String qName, CharArrayWriter contents) {
 
                 // Clean up the directory stack...
-                m_stack.pop();
+                stack.pop();
             }
         };
 
@@ -140,8 +138,13 @@ public class TWSAllocationRequest extends SaxMapper {
             public void onEnd(String namespaceURI, String localName, String qName, CharArrayWriter contents) {
 
                 final String value = contents.toString();
-                PortfolioAccount temp = (PortfolioAccount) m_stack.peek();
-                temp.getAccount().setAccountNumber(value);
+                Portfolio temp = (Portfolio) stack.peek();
+                temp.getAccounts().getLast().setAccountNumber(value);
+
+                if (null == temp.getAccounts().getLast().getName()) {
+
+                    temp.getAccounts().getLast().setName(value);
+                }
             }
         };
 

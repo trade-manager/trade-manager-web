@@ -51,6 +51,6 @@ public class AppLoadConfig {
      * Method loadAppProperties.
      */
     public static void loadAppProperties() throws IOException {
-        ConfigProperties.loadDeploymentProperties(m_AppConfigLoad, PROPERTIES_PROPERTY_FILE);
+        ConfigProperties.getDeploymentProperties(m_AppConfigLoad, PROPERTIES_PROPERTY_FILE);
     }
 }

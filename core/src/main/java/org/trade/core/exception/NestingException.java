@@ -65,20 +65,13 @@ public class NestingException extends Exception {
     @Serial
     private static final long serialVersionUID = 1692132595046896286L;
 
-    // ----- Member variables -----//
-    public String m_exception;
-
-    public String m_seedClassName;
-
-    private NestingException m_nestedException;
-
-    private final Vector<ExceptionMessage> m_exceptionMessages = new Vector<>();
-
-    private Vector<ExceptionContext> m_exceptionContexts = new Vector<>();
-
-    private final Date m_timeStamp = new Date();
-
-    private String m_stackTrace = null;
+    public String exception;
+    public String seedClassName;
+    private NestingException nestedException;
+    private final Vector<ExceptionMessage> exceptionMessages = new Vector<>();
+    private Vector<ExceptionContext> exceptionContexts = new Vector<>();
+    private final Date timeStamp = new Date();
+    private String stackTrace = null;
 
     /**
      * Default constructor.
@@ -96,37 +89,39 @@ public class NestingException extends Exception {
         super(message);
 
         // init member variables
-        m_stackTrace = captureStackTrace();
+        stackTrace = captureStackTrace();
     }
 
     /**
      * Constructor that allows nesting of another <code>Throwable</code>.
      *
-     * @param t The <code>Throwable</code> to be nested.
+     * @param throwable The <code>Throwable</code> to be nested.
      */
-    public NestingException(Throwable t) {
-        this(t, getNoExceptionMessage());
+    public NestingException(Throwable throwable) {
+        this(throwable, getNoExceptionMessage());
     }
 
     /**
      * Constructor allows the developer to set the exception message
      *
-     * @param t       java.lang.Throwable
-     * @param message the exception message
+     * @param throwable java.lang.Throwable
+     * @param message   the exception message
      */
-    public NestingException(Throwable t, String message) {
+    public NestingException(Throwable throwable, String message) {
+
         this(message);
 
         // Initialize member variables.
-        m_exception = t.toString();
-        m_stackTrace = ExceptionUtil.nestStackTrace(m_stackTrace, t);
+        this.exception = throwable.toString();
+        this.stackTrace = ExceptionUtil.nestStackTrace(this.stackTrace, throwable);
 
         // Store the exception itself if it is a NestingException
-        if (t instanceof NestingException) {
-            m_nestedException = (NestingException) t;
-            assimilateContext(m_nestedException);
+        if (throwable instanceof NestingException) {
+
+            this.nestedException = (NestingException) throwable;
+            assimilateContext(this.nestedException);
         } else {
-            m_seedClassName = t.getClass().toString();
+            this.seedClassName = throwable.getClass().toString();
         }
     }
 
@@ -147,6 +142,7 @@ public class NestingException extends Exception {
      * @param exceptionContext ExceptionContext
      */
     public NestingException(ExceptionMessage exceptionMessage, ExceptionContext exceptionContext) {
+
         this();
         addExceptionMessage(exceptionMessage);
         addExceptionContext(exceptionContext);
@@ -159,6 +155,7 @@ public class NestingException extends Exception {
      * @param message          The standard message printed in stack traces.
      */
     public NestingException(ExceptionMessage exceptionMessage, String message) {
+
         this(message);
         addExceptionMessage(exceptionMessage);
     }
@@ -171,6 +168,7 @@ public class NestingException extends Exception {
      * @param message          String
      */
     public NestingException(ExceptionMessage exceptionMessage, ExceptionContext exceptionContext, String message) {
+
         this(message);
         addExceptionMessage(exceptionMessage);
         addExceptionContext(exceptionContext);
@@ -180,10 +178,11 @@ public class NestingException extends Exception {
      * Constructor for NestingException.
      *
      * @param exceptionMessage ExceptionMessage
-     * @param t                Throwable
+     * @param throwable        Throwable
      */
-    public NestingException(ExceptionMessage exceptionMessage, Throwable t) {
-        this(t);
+    public NestingException(ExceptionMessage exceptionMessage, Throwable throwable) {
+
+        this(throwable);
         addExceptionMessage(exceptionMessage);
     }
 
@@ -192,10 +191,10 @@ public class NestingException extends Exception {
      *
      * @param exceptionMessage ExceptionMessage
      * @param gruesomeDetails  String
-     * @param t                Throwable
+     * @param throwable        Throwable
      */
-    public NestingException(ExceptionMessage exceptionMessage, String gruesomeDetails, Throwable t) {
-        this(t, gruesomeDetails);
+    public NestingException(ExceptionMessage exceptionMessage, String gruesomeDetails, Throwable throwable) {
+        this(throwable, gruesomeDetails);
         addExceptionMessage(exceptionMessage);
     }
 
@@ -206,10 +205,12 @@ public class NestingException extends Exception {
      * @param nestingException NestingException
      */
     private void assimilateContext(NestingException nestingException) {
+
         // Get the contexts to be added if any.
         Enumeration<ExceptionContext> enumExeptions = nestingException.getExceptionContexts();
 
         if (enumExeptions.hasMoreElements()) {
+
             // Add each of the contexts to this
             while (enumExeptions.hasMoreElements()) {
                 addExceptionContext(enumExeptions.nextElement());
@@ -226,11 +227,13 @@ public class NestingException extends Exception {
      * @return Enumeration<ExceptionContext>
      */
     private Enumeration<ExceptionContext> getExceptionContexts() {
-        return m_exceptionContexts.elements();
+
+        return exceptionContexts.elements();
     }
 
     private void clearContexts() {
-        m_exceptionContexts = new Vector<>(1);
+
+        exceptionContexts = new Vector<>(1);
     }
 
     /**
@@ -240,11 +243,12 @@ public class NestingException extends Exception {
      * @see ExceptionMessage
      */
     public void addExceptionMessage(ExceptionMessage exceptionMessage) {
-        m_exceptionMessages.addElement(exceptionMessage);
+
+        this.exceptionMessages.addElement(exceptionMessage);
 
         // Here we loop through any outstanding contexts and apply them.
         Enumeration<ExceptionContext> enumeration;
-        enumeration = m_exceptionContexts.elements();
+        enumeration = this.exceptionContexts.elements();
 
         while (enumeration.hasMoreElements()) {
             addExceptionContext(enumeration.nextElement());
@@ -270,7 +274,7 @@ public class NestingException extends Exception {
     public void addExceptionMessages(Enumeration<?> messages) {
         while (messages.hasMoreElements()) {
             ExceptionMessage m = (ExceptionMessage) messages.nextElement();
-            m_exceptionMessages.addElement(m);
+            exceptionMessages.addElement(m);
         }
     }
 
@@ -290,8 +294,8 @@ public class NestingException extends Exception {
      * @param exceptionContext ExceptionContext
      */
     public void addExceptionContext(ExceptionContext exceptionContext) {
-        ExceptionMessage mostRecent;
-        mostRecent = m_exceptionMessages.lastElement();
+
+        ExceptionMessage mostRecent = this.exceptionMessages.lastElement();
 
         if (null != mostRecent) {
             // There is at least one exception message, so we add the context
@@ -300,17 +304,19 @@ public class NestingException extends Exception {
         } else {
             // There are no exception messages so we hold onto the context
             // in case a message is added later.
-            m_exceptionContexts.addElement(exceptionContext);
+            this.exceptionContexts.addElement(exceptionContext);
         }
 
         // Regardless of whether we cached the context we will apply the
         // context recursively to any nested exceptions we find.
-        if (null != m_nestedException) {
-            Enumeration<?> enumeration;
-            enumeration = m_nestedException.getAllExceptionMessages();
+        if (null != this.nestedException) {
+
+            Enumeration<?> enumeration = this.nestedException.getAllExceptionMessages();
 
             ExceptionMessage exceptionMessage;
+
             while (enumeration.hasMoreElements()) {
+
                 exceptionMessage = (ExceptionMessage) enumeration.nextElement();
                 exceptionMessage.addExceptionContext(exceptionContext);
             }
@@ -325,6 +331,7 @@ public class NestingException extends Exception {
      * @param code    ExceptionCode
      */
     public void addExceptionMessage(ExceptionCode code, String message) {
+
         addExceptionMessage(new ExceptionMessage(code, message));
     }
 
@@ -337,7 +344,8 @@ public class NestingException extends Exception {
      * @param nestingException NestingException
      */
     public void addExceptionMessage(ExceptionCode code, String message, NestingException nestingException) {
-        m_exceptionMessages.addElement(new ExceptionMessage(code, message));
+
+        this.exceptionMessages.addElement(new ExceptionMessage(code, message));
         assimilateContext(nestingException);
     }
 
@@ -348,7 +356,8 @@ public class NestingException extends Exception {
      * @param nestingException    NestingException
      */
     public void addExceptionMessage(ExceptionMessage userFriendlyMessage, NestingException nestingException) {
-        m_exceptionMessages.addElement(userFriendlyMessage);
+
+        this.exceptionMessages.addElement(userFriendlyMessage);
         assimilateContext(nestingException);
     }
 
@@ -358,7 +367,8 @@ public class NestingException extends Exception {
      * @param message ExceptionMessage
      */
     public void removeExceptionMessage(ExceptionMessage message) {
-        m_exceptionMessages.removeElement(message);
+
+        this.exceptionMessages.removeElement(message);
     }
 
     /**
@@ -367,18 +377,25 @@ public class NestingException extends Exception {
      * @param code ExceptionCode
      */
     public void removeExceptionMessages(ExceptionCode code) {
+
         Vector<ExceptionMessage> remove = new Vector<>();
         int i;
-        int nbrMessages = m_exceptionMessages.size();
+        int nbrMessages = this.exceptionMessages.size();
+
         for (i = 0; i < nbrMessages; i++) {
-            ExceptionMessage msg = m_exceptionMessages.elementAt(i);
+
+            ExceptionMessage msg = this.exceptionMessages.elementAt(i);
+
             if (msg.getExceptionCode().equals(code)) {
+
                 remove.addElement(msg);
             }
         }
 
         int removeSize = remove.size();
+
         for (i = 0; i < removeSize; i++) {
+
             removeExceptionMessage(remove.elementAt(i));
         }
     }
@@ -387,19 +404,14 @@ public class NestingException extends Exception {
      * @return true if the object has user friendly error messages.
      */
     public boolean hasExceptionMessages() {
-        boolean returnValue = false;
 
-        if (m_nestedException != null) {
-            if (!m_exceptionMessages.isEmpty() || m_nestedException.hasExceptionMessages()) {
-                returnValue = true;
-            }
+        if (nestedException != null) {
+
+            return !this.exceptionMessages.isEmpty() || this.nestedException.hasExceptionMessages();
         } else {
-            if (!m_exceptionMessages.isEmpty()) {
-                returnValue = true;
-            }
-        }
 
-        return returnValue;
+            return !this.exceptionMessages.isEmpty();
+        }
     }
 
     /**
@@ -410,7 +422,8 @@ public class NestingException extends Exception {
      * containing user-friendly text.
      */
     protected Enumeration<ExceptionMessage> getExceptionMessages() {
-        return m_exceptionMessages.elements();
+
+        return this.exceptionMessages.elements();
     }
 
     /**
@@ -422,16 +435,16 @@ public class NestingException extends Exception {
      * #getAllUserFriendlyMessages()
      */
     public Enumeration<?> getAllExceptionMessages() {
-        Enumerator enumMsg;
 
-        if (m_nestedException != null) {
-            enumMsg = (Enumerator) m_nestedException.getAllExceptionMessages();
-            enumMsg.prependEnumeration(m_exceptionMessages.elements());
+        if (nestedException != null) {
+
+            Enumerator enumMsg = (Enumerator) this.nestedException.getAllExceptionMessages();
+            enumMsg.prependEnumeration(this.exceptionMessages.elements());
+            return enumMsg;
         } else {
-            enumMsg = new Enumerator(m_exceptionMessages.elements());
-        }
 
-        return enumMsg;
+            return new Enumerator(this.exceptionMessages.elements());
+        }
     }
 
     /**
@@ -440,16 +453,16 @@ public class NestingException extends Exception {
      * @return time stamp
      */
     public Date getTimeStamp() {
-        return m_timeStamp;
+        return this.timeStamp;
     }
 
     /**
      * Prints the stack trace for this exception to the console.
      */
     public void printStackTrace() {
-        m_stackTrace = ExceptionUtil.fillInExceptionMessage(this, m_stackTrace, getMessage());
 
-        System.out.print(m_stackTrace);
+        this.stackTrace = ExceptionUtil.fillInExceptionMessage(this, this.stackTrace, getMessage());
+        System.out.print(this.stackTrace);
     }
 
     /**
@@ -459,15 +472,10 @@ public class NestingException extends Exception {
      * @param writer The <code>PrintWriter</code> to use.
      */
     public void printStackTrace(PrintWriter writer) {
-        m_stackTrace = ExceptionUtil.fillInExceptionMessage(this, m_stackTrace, getMessage());
 
-        writer.print(m_stackTrace);
+        this.stackTrace = ExceptionUtil.fillInExceptionMessage(this, this.stackTrace, getMessage());
+        writer.print(this.stackTrace);
     }
-
-    // public String getStackTrace()
-    // {
-    // return m_stackTrace;
-    // }
 
     /**
      * Method getNoExceptionMessage.
@@ -475,6 +483,7 @@ public class NestingException extends Exception {
      * @return String
      */
     static String getNoExceptionMessage() {
+
         return ("SEE NESTED EXCEPTION MESSAGE BELOW");
     }
 
@@ -484,14 +493,11 @@ public class NestingException extends Exception {
      * @return String
      */
     private String captureStackTrace() {
-        String stackTrace;
+
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         PrintWriter writer = new PrintWriter(out);
-
         super.printStackTrace(writer);
-
         writer.flush();
-        stackTrace = out.toString();
-        return stackTrace;
+        return out.toString();
     }
 }

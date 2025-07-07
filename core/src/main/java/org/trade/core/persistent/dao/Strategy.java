@@ -41,15 +41,11 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
-import jakarta.persistence.Version;
-import jakarta.validation.constraints.NotNull;
 import org.trade.core.dao.Aspect;
 import org.trade.core.persistent.dao.series.indicator.IndicatorSeries;
 
@@ -57,8 +53,6 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
-import static jakarta.persistence.GenerationType.IDENTITY;
 
 
 /**
@@ -77,16 +71,33 @@ public class Strategy extends Aspect implements Serializable, Cloneable {
     @Serial
     private static final long serialVersionUID = -5704206226348654910L;
 
-    @NotNull
-    private String className;
-    @NotNull
+    @Column(name = "name", unique = true, nullable = false, length = 45)
     private String name;
+
+    @Column(name = "class_name", nullable = false, length = 100)
+    private String className;
+
+    @Column(name = "description", length = 240)
     private String description;
+
+    @Column(name = "market_data", length = 1)
     private Boolean marketData = false;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "strategy_manager_id")
     private Strategy strategy;
+
+    @OneToMany(mappedBy = "strategy", fetch = FetchType.LAZY)
     private List<Tradestrategy> tradestrategies = new ArrayList<>(0);
+
+    @OneToMany(mappedBy = "strategy", fetch = FetchType.EAGER, orphanRemoval = true, cascade = {CascadeType.ALL})
     private List<Rule> rules = new ArrayList<>(0);
+
+    @OneToMany(mappedBy = "strategy", fetch = FetchType.EAGER, orphanRemoval = true, cascade = {CascadeType.ALL})
     private List<IndicatorSeries> indicators = new ArrayList<>(0);
+
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "strategy_manager_id")
     private List<Strategy> strategies = new ArrayList<>(0);
 
     public Strategy() {
@@ -98,6 +109,7 @@ public class Strategy extends Aspect implements Serializable, Cloneable {
      * @param name String
      */
     public Strategy(String name) {
+
         this.name = name;
         this.className = name;
     }
@@ -109,6 +121,7 @@ public class Strategy extends Aspect implements Serializable, Cloneable {
      * @param className String
      */
     public Strategy(String name, String className) {
+
         this.name = name;
         this.className = className;
     }
@@ -126,6 +139,7 @@ public class Strategy extends Aspect implements Serializable, Cloneable {
      */
     public Strategy(String name, String description, Boolean marketData, String className,
                     List<Tradestrategy> tradestrategies, List<Rule> rules, List<Strategy> strategies) {
+
         this.name = name;
         this.description = description;
         this.marketData = marketData;
@@ -136,23 +150,10 @@ public class Strategy extends Aspect implements Serializable, Cloneable {
     }
 
     /**
-     * Method getId.
-     *
-     * @return Integer
-     */
-    @Id
-    @GeneratedValue(strategy = IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
-    public Integer getId() {
-        return this.id;
-    }
-
-    /**
      * Method getName.
      *
      * @return String
      */
-    @Column(name = "name", unique = true, nullable = false, length = 45)
     public String getName() {
         return this.name;
     }
@@ -171,7 +172,6 @@ public class Strategy extends Aspect implements Serializable, Cloneable {
      *
      * @return String
      */
-    @Column(name = "class_name", nullable = false, length = 100)
     public String getClassName() {
         return this.className;
     }
@@ -190,7 +190,6 @@ public class Strategy extends Aspect implements Serializable, Cloneable {
      *
      * @return String
      */
-    @Column(name = "description", length = 240)
     public String getDescription() {
         return this.description;
     }
@@ -209,7 +208,6 @@ public class Strategy extends Aspect implements Serializable, Cloneable {
      *
      * @return Boolean
      */
-    @Column(name = "market_data", length = 1)
     public Boolean getMarketData() {
         return this.marketData;
     }
@@ -224,22 +222,10 @@ public class Strategy extends Aspect implements Serializable, Cloneable {
     }
 
     /**
-     * Method getVersion.
-     *
-     * @return Integer
-     */
-    @Version
-    @Column(name = "version")
-    public Integer getVersion() {
-        return this.version;
-    }
-
-    /**
      * Method getTradestrategies.
      *
      * @return List<Tradestrategy>
      */
-    @OneToMany(mappedBy = "strategy", fetch = FetchType.LAZY)
     public List<Tradestrategy> getTradestrategies() {
         return this.tradestrategies;
     }
@@ -258,7 +244,7 @@ public class Strategy extends Aspect implements Serializable, Cloneable {
      *
      * @return List<Rule>
      */
-    @OneToMany(mappedBy = "strategy", fetch = FetchType.LAZY, orphanRemoval = true, cascade = {CascadeType.ALL})
+
     public List<Rule> getRules() {
         return this.rules;
     }
@@ -286,7 +272,6 @@ public class Strategy extends Aspect implements Serializable, Cloneable {
      *
      * @return List<IndicatorSeries>
      */
-    @OneToMany(mappedBy = "strategy", fetch = FetchType.LAZY, orphanRemoval = true, cascade = {CascadeType.ALL})
     public List<IndicatorSeries> getIndicatorSeries() {
         return this.indicators;
     }
@@ -305,8 +290,6 @@ public class Strategy extends Aspect implements Serializable, Cloneable {
      *
      * @return List<Strategy>
      */
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_strategy_manager")
     public List<Strategy> getStrategies() {
         return this.strategies;
     }
@@ -325,8 +308,6 @@ public class Strategy extends Aspect implements Serializable, Cloneable {
      *
      * @return Strategy
      */
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_strategy_manager")
     public Strategy getStrategyManager() {
         return this.strategy;
     }
@@ -356,9 +337,12 @@ public class Strategy extends Aspect implements Serializable, Cloneable {
      */
     @Transient
     public boolean isDirty() {
+
         for (IndicatorSeries item : this.getIndicatorSeries()) {
-            if (item.isDirty())
+
+            if (item.isDirty()) {
                 return true;
+            }
         }
         return super.isDirty();
     }

@@ -404,7 +404,7 @@ public final class DynamicCode {
          * @param method Method
          * @param args   Object[]
          * @return Object
-         * @see java.lang.reflect.InvocationHandler#invoke(Object, Method,
+         * @see InvocationHandler#invoke(Object, Method,
          * Object[])
          */
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {

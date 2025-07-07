@@ -39,9 +39,7 @@ import org.trade.core.dao.Aspect;
 import org.trade.core.dao.Aspects;
 import org.trade.core.persistent.dao.Account;
 import org.trade.core.persistent.dao.Portfolio;
-import org.trade.core.persistent.dao.PortfolioAccount;
 import org.trade.core.util.CoreUtils;
-import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.AllocationMethod;
 import org.trade.core.valuetype.DAOAccount;
 import org.trade.core.valuetype.Decode;
@@ -139,17 +137,22 @@ public class PortfolioTableModel extends AspectTableModel {
                 break;
             }
             case 4: {
+
                 Account account = (Account) ((DAOAccount) value).getObject();
                 boolean exists = false;
-                for (PortfolioAccount item : element.getPortfolioAccounts()) {
-                    if (account.getAccountNumber().equals(item.getAccount().getAccountNumber())) {
+
+                for (Account item : element.getAccounts()) {
+
+                    if (account.getAccountNumber().equals(item.getAccountNumber())) {
+
                         exists = true;
                         break;
                     }
                 }
+
                 if (!exists) {
-                    PortfolioAccount portfolioAccount = new PortfolioAccount(element, account);
-                    element.getPortfolioAccounts().add(portfolioAccount);
+
+                    element.getAccounts().add(account);
                 }
                 break;
             }
@@ -167,7 +170,6 @@ public class PortfolioTableModel extends AspectTableModel {
             default: {
             }
         }
-        element.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
         element.setDirty(true);
     }
 

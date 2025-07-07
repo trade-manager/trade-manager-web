@@ -39,8 +39,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trade.core.broker.BrokerModelException;
 import org.trade.core.broker.IBrokerModel;
-import org.trade.core.factory.ClassFactory;
-import org.trade.core.persistent.IPersistentModel;
+import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.Account;
 import org.trade.core.persistent.dao.Candle;
 import org.trade.core.persistent.dao.Contract;
@@ -87,6 +86,8 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
 
     private final static Logger _log = LoggerFactory.getLogger(AbstractStrategyRule.class);
 
+    private TradeService tradeService;
+
     /*
      * Message handler that allows the main controller to listen for errors.
      * Storage for registered change listeners.
@@ -94,12 +95,11 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
     private final transient EventListenerList listenerList;
 
     private final IBrokerModel brokerModel;
-    private IPersistentModel tradePersistentModel;
     private final DAOEntryLimit entryLimits = new DAOEntryLimit();
     private final StrategyData strategyData;
     private Tradestrategy tradestrategy = null;
     private TradestrategyOrders tradestrategyOrders = null;
-    private final Integer idTradestrategy;
+    private final Integer tradestrategyId;
     private String symbol = null;
     private boolean seriesChanged = false;
     private final Object lockStrategyWorker = new Object();
@@ -113,15 +113,18 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
      * candle data set for changes. This class runs in its own thread. there
      * will be one Strategy running per tradestrategy.
      *
-     * @param brokerManagerModel IBrokerModel
-     * @param strategyData       StrategyData
-     * @param idTradestrategy    Integer
+     * @param tradeService    TradeService
+     * @param brokerModel     IBrokerModel
+     * @param strategyData    StrategyData
+     * @param idTradestrategy Integer
      */
-    public AbstractStrategyRule(IBrokerModel brokerManagerModel, StrategyData strategyData, Integer idTradestrategy) {
+    public AbstractStrategyRule(TradeService tradeService, IBrokerModel brokerModel, StrategyData strategyData, Integer idTradestrategy) {
+
         this.listenerList = new EventListenerList();
-        this.brokerModel = brokerManagerModel;
+        this.tradestrategyId = idTradestrategy;
+        this.tradeService = tradeService;
+        this.brokerModel = brokerModel;
         this.strategyData = strategyData;
-        this.idTradestrategy = idTradestrategy;
     }
 
     /**
@@ -136,13 +139,16 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
     public void error(int id, int errorCode, String errorMsg) {
 
         if (id > 0) {
+
             _log.warn("Error symbol: {} Error Id: {} Error Code: {} Error Msg: {}", symbol, id, errorCode, errorMsg);
         }
+
         this.fireStrategyError(new StrategyRuleException(id, errorCode, "Symbol: " + symbol + " " + errorMsg));
         /*
          * For Errors close the strategy down.
          */
         if (id == 1) {
+
             this.cancel();
         }
     }
@@ -154,6 +160,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
      * @param listener the object to register.
      */
     public void addMessageListener(IStrategyChangeListener listener) {
+
         this.listenerList.add(IStrategyChangeListener.class, listener);
     }
 
@@ -164,12 +171,16 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
      * @param listener the object to deregister.
      */
     public void removeMessageListener(IStrategyChangeListener listener) {
+
         this.listenerList.remove(IStrategyChangeListener.class, listener);
     }
 
     public void removeAllMessageListener() {
+
         IStrategyChangeListener[] listeners = this.listenerList.getListeners(IStrategyChangeListener.class);
+
         for (IStrategyChangeListener listener : listeners) {
+
             removeMessageListener(listener);
         }
     }
@@ -180,9 +191,13 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
      * @param strategyError StrategyRuleException
      */
     protected void fireStrategyError(StrategyRuleException strategyError) {
+
         Object[] listeners = this.listenerList.getListenerList();
+
         for (int i = listeners.length - 2; i >= 0; i -= 2) {
+
             if (listeners[i] == IStrategyChangeListener.class) {
+
                 ((IStrategyChangeListener) listeners[i + 1]).strategyError(strategyError);
             }
         }
@@ -194,9 +209,13 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
      * @param tradestrategy Tradestrategy
      */
     protected void fireStrategyComplete(String strategyClassName, final Tradestrategy tradestrategy) {
+
         Object[] listeners = this.listenerList.getListenerList();
+
         for (int i = listeners.length - 2; i >= 0; i -= 2) {
+
             if (listeners[i] == IStrategyChangeListener.class) {
+
                 ((IStrategyChangeListener) listeners[i + 1]).strategyComplete(strategyClassName, tradestrategy);
             }
         }
@@ -208,9 +227,13 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
      * @param tradestrategy Tradestrategy
      */
     protected void fireStrategyStarted(String strategyClassName, final Tradestrategy tradestrategy) {
+
         Object[] listeners = this.listenerList.getListenerList();
+
         for (int i = listeners.length - 2; i >= 0; i -= 2) {
+
             if (listeners[i] == IStrategyChangeListener.class) {
+
                 ((IStrategyChangeListener) listeners[i + 1]).strategyStarted(strategyClassName, tradestrategy);
             }
         }
@@ -223,8 +246,11 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
      * @param tradestrategy Tradestrategy
      */
     protected void fireRuleComplete(final Tradestrategy tradestrategy) {
+
         Object[] listeners = this.listenerList.getListenerList();
+
         for (int i = listeners.length - 2; i >= 0; i -= 2) {
+
             if (listeners[i] == IStrategyChangeListener.class) {
                 ((IStrategyChangeListener) listeners[i + 1]).ruleComplete(tradestrategy);
             }
@@ -246,14 +272,12 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
          */
         try {
 
-            this.tradePersistentModel = (IPersistentModel) ClassFactory
-                    .getServiceForInterface(IPersistentModel._persistentModel, this);
             // Get an instances for this thread.
-            this.tradestrategy = this.tradePersistentModel.findTradestrategyById(this.idTradestrategy);
+            this.tradestrategy = tradeService.findTradestrategyById(this.tradestrategyId);
             this.tradestrategy.setStrategyData(this.strategyData);
             this.symbol = this.tradestrategy.getContract().getSymbol();
 
-            _log.info("Starting strategyClass: {} engine doInBackground Symbol: {} idTradestrategy: {} Tradingday Date: {}", this.getClass().getName(), this.symbol, this.idTradestrategy, this.tradestrategy.getTradingday().getOpen());
+            _log.info("Starting strategyClass: {} engine doInBackground Symbol: {} idTradestrategy: {} Tradingday Date: {}", this.getClass().getName(), this.symbol, this.tradestrategyId, this.tradestrategy.getTradingday().getOpen());
 
             /*
              * Process the current candle if there is one on startup.
@@ -356,7 +380,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
                         this.fireStrategyStarted(this.getClass().getSimpleName(), this.tradestrategy);
                         listeningCandles = true;
 
-                        _log.info("Started strategyClass: {} engine doInBackground Symbol: {} idTradestrategy: {}", this.getClass().getName(), this.symbol, this.idTradestrategy);
+                        _log.info("Started strategyClass: {} engine doInBackground Symbol: {} idTradestrategy: {}", this.getClass().getName(), this.symbol, this.tradestrategyId);
                     } else {
                         this.fireRuleComplete(this.tradestrategy);
                     }
@@ -576,7 +600,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
             if (null == orderKey)
                 throw new StrategyRuleException(1, 200, "Order Key cannot be null");
 
-            TradeOrder tradeOrder = tradePersistentModel.findTradeOrderByKey(orderKey);
+            TradeOrder tradeOrder = tradeService.findTradeOrderByKey(orderKey);
 
             if (null == action)
                 throw new StrategyRuleException(1, 201, "Action cannot be null");
@@ -601,7 +625,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
                     auxPrice = addPennyAndRoundStop(auxPrice.doubleValue(), side, action, 0.01);
                 }
             }
-            tradeOrder.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
+            tradeOrder.setOrderUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
             tradeOrder.setLimitPrice((null == limitPrice ? null : limitPrice.getBigDecimalValue()));
             tradeOrder.setAuxPrice((null == auxPrice ? null : auxPrice.getBigDecimalValue()));
 
@@ -632,12 +656,14 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
     public TradeOrder createRiskOpenPosition(String action, Money entryPrice, Money stopPrice, boolean transmit,
                                              String FAProfile, String FAGroup, String FAMethod, Percent FAPercent) throws StrategyRuleException {
 
-        if (this.isThereOpenPosition())
+        if (this.isThereOpenPosition()) {
             throw new StrategyRuleException(1, 205, "Cannot create position for TradePosition Id: "
                     + this.getOpenTradePosition().getId() + " as position is already open.");
+        }
 
-        if (null == action)
+        if (null == action) {
             throw new StrategyRuleException(1, 206, "Action cannot be null");
+        }
 
         try {
 
@@ -660,8 +686,10 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
              * can use. If percentOfMargin is null or zero ignore this calc.
              */
             if (null != entrylimit.getPercentOfMargin() && entrylimit.getPercentOfMargin().doubleValue() > 0) {
+
                 if ((quantity * entryPrice.doubleValue()) > this.getIndividualAccount().getBuyingPower()
                         .multiply(entrylimit.getPercentOfMargin()).doubleValue()) {
+
                     quantity = (int) ((int) this.getIndividualAccount().getBuyingPower().doubleValue()
                             * entrylimit.getPercentOfMargin().doubleValue()
                             / entryPrice.getBigDecimalValue().doubleValue());
@@ -670,6 +698,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
 
             quantity = (int) ((Math.rint(quantity / entrylimit.getShareRound().doubleValue()))
                     * entrylimit.getShareRound().doubleValue());
+
             if (quantity == 0) {
                 quantity = 10;
             }
@@ -682,15 +711,21 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
 
             tradeOrder.setStopPrice(stopPrice.getBigDecimalValue());
             tradeOrder.setTransmit(transmit);
+
             if (FAProfile != null) {
+
                 tradeOrder.setFAProfile(FAProfile);
             } else {
+
                 if (FAGroup != null) {
+
                     tradeOrder.setFAGroup(FAGroup);
                     tradeOrder.setFAMethod(FAMethod);
                     tradeOrder.setFAPercent(FAPercent.getBigDecimalValue());
                 } else {
+
                     if (null != getTradestrategy().getPortfolio().getIndividualAccount()) {
+
                         tradeOrder.setAccountNumber(
                                 getTradestrategy().getPortfolio().getIndividualAccount().getAccountNumber());
                     }
@@ -699,6 +734,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
             tradeOrder = getBrokerManager().onPlaceOrder(getTradestrategy().getContract(), tradeOrder);
             this.getTradestrategyOrders().addTradeOrder(tradeOrder);
             return tradeOrder;
+
         } catch (BrokerModelException ex) {
             throw new StrategyRuleException(1, 520, "Error submitting new tradeOrder to broker: " + ex.getMessage());
         } catch (Exception ex) {
@@ -842,8 +878,10 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
                                                final Integer quantity, final Boolean stopTransmit) throws StrategyRuleException {
 
         if (!this.isThereOpenPosition()) {
+
             throw new StrategyRuleException(1, 209, "Error position is not open");
         }
+
         try {
             /*
              * Risk amount is based of the average filled price and actual stop
@@ -977,7 +1015,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
                         if (OrderType.STP.equals(tradeOrder.getOrderType()) && null != tradeOrder.getOcaGroupName()) {
                             if (!tradeOrder.getAuxPrice().equals(stopPrice.getBigDecimalValue())
                                     || !tradeOrder.getTransmit().equals(transmit)) {
-                                tradeOrder.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
+                                tradeOrder.setOrderUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
                                 tradeOrder.setAuxPrice(stopPrice.getBigDecimalValue());
                                 tradeOrder.setTransmit(transmit);
                                 TradeOrder tradeOrderBE = this.getBrokerManager()
@@ -1086,8 +1124,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
     public void updateTradestrategyStatus(String status) throws StrategyRuleException {
         try {
             this.getTradestrategyOrders().setStatus(status);
-            this.getTradestrategyOrders().setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
-            this.tradestrategyOrders = this.tradePersistentModel.persistAspect(this.getTradestrategyOrders());
+            this.tradestrategyOrders = tradeService.saveAspect(this.getTradestrategyOrders());
         } catch (Exception ex) {
             throw new StrategyRuleException(1, 400, "Error updating tradestrategy status: " + ex.getMessage());
         }
@@ -1144,8 +1181,8 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
 
     public void reFreshPositionOrders() throws StrategyRuleException {
         try {
-            this.tradestrategyOrders = this.tradePersistentModel
-                    .findPositionOrdersByTradestrategyId(this.idTradestrategy);
+            this.tradestrategyOrders = tradeService
+                    .findPositionOrdersByTradestrategyId(this.tradestrategyId);
         } catch (Exception ex) {
             throw new StrategyRuleException(1, 410, "Error position orders: " + ex.getMessage());
         }
@@ -1160,7 +1197,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
     public Account getIndividualAccount() throws StrategyRuleException {
         try {
             if (null != getTradestrategy().getPortfolio().getIndividualAccount()) {
-                return this.tradePersistentModel.findAccountByNumber(
+                return tradeService.findAccountByAccountNumber(
                         getTradestrategy().getPortfolio().getIndividualAccount().getAccountNumber());
             }
             return null;

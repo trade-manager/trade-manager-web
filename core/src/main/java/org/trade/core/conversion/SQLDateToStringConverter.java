@@ -98,6 +98,6 @@ public class SQLDateToStringConverter implements IJavaTypeConverter {
      * org.trade.core.conversion.IJavaTypeConverter#getTargetType()
      */
     public Class<?> getTargetType() {
-        return java.lang.String.class;
+        return String.class;
     }
 }

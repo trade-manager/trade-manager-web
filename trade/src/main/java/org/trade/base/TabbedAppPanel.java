@@ -37,6 +37,7 @@ package org.trade.base;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.trade.core.persistent.TradeService;
 import org.trade.ui.widget.Clock;
 
 import javax.swing.*;
@@ -56,12 +57,11 @@ public abstract class TabbedAppPanel extends BasePanel implements ChangeListener
     @Serial
     private static final long serialVersionUID = 8405644422808736326L;
 
+    public final TradeService tradeService;
     private final static Logger _log = LoggerFactory.getLogger(TabbedAppPanel.class);
-    private final JTabbedPane m_tabbedPane = new JTabbedPane();
-
-    public String m_title = null;
-    private final JPanel m_menuPanel = new JPanel();
-    private final PrintController m_printJob = new PrintController();
+    private final JTabbedPane tabbedPane = new JTabbedPane();
+    private final JPanel menuPanel = new JPanel();
+    private final PrintController printJob = new PrintController();
     private int currentTab = 0;
     private BasePanel currBasePanel = null;
 
@@ -70,42 +70,48 @@ public abstract class TabbedAppPanel extends BasePanel implements ChangeListener
      *
      * @param frame Frame
      */
-    public TabbedAppPanel(Frame frame) {
+    public TabbedAppPanel(Frame frame, TradeService tradeService) {
+        this.tradeService = tradeService;
 
-        this.setLayout(new BorderLayout());
+        try {
 
-        JPanel jPanel1 = new JPanel(new BorderLayout());
-        JPanel jPanelProgressBar = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        JProgressBar progressBar = new JProgressBar(0, 0);
-        jPanelProgressBar.add(progressBar);
+            this.setLayout(new BorderLayout());
+            JPanel jPanel1 = new JPanel(new BorderLayout());
+            JPanel jPanelProgressBar = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+            JProgressBar progressBar = new JProgressBar(0, 0);
+            jPanelProgressBar.add(progressBar);
 
-        JPanel jPanelClock = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        Clock clock = new Clock();
-        jPanelClock.add(clock);
+            JPanel jPanelClock = new JPanel(new FlowLayout(FlowLayout.LEFT));
+            Clock clock = new Clock();
+            jPanelClock.add(clock);
 
-        JPanel jPanelStatus = new JPanel(new GridLayout());
-        JTextField jTextFieldStatus = new JTextField();
-        jTextFieldStatus.setRequestFocusEnabled(false);
-        jTextFieldStatus.setMargin(new Insets(5, 5, 5, 5));
-        jTextFieldStatus.setBackground(Color.white);
-        jTextFieldStatus.setBorder(BorderFactory.createLoweredBevelBorder());
-        jPanelStatus.add(jTextFieldStatus);
+            JPanel jPanelStatus = new JPanel(new GridLayout());
+            JTextField jTextFieldStatus = new JTextField();
+            jTextFieldStatus.setRequestFocusEnabled(false);
+            jTextFieldStatus.setMargin(new Insets(5, 5, 5, 5));
+            jTextFieldStatus.setBackground(Color.white);
+            jTextFieldStatus.setBorder(BorderFactory.createLoweredBevelBorder());
+            jPanelStatus.add(jTextFieldStatus);
 
-        JPanel jPanel3 = new JPanel(new BorderLayout());
-        jPanel3.add(jPanelClock, BorderLayout.WEST);
-        jPanel3.add(jPanelProgressBar, BorderLayout.EAST);
-        jPanel3.add(jPanelStatus, BorderLayout.CENTER);
+            JPanel jPanel3 = new JPanel(new BorderLayout());
+            jPanel3.add(jPanelClock, BorderLayout.WEST);
+            jPanel3.add(jPanelProgressBar, BorderLayout.EAST);
+            jPanel3.add(jPanelStatus, BorderLayout.CENTER);
 
-        JPanel jPanel2 = new JPanel(new BorderLayout());
-        jPanel2.add(m_tabbedPane, BorderLayout.CENTER);
-        jPanel1.add(jPanel2, BorderLayout.CENTER);
-        jPanel1.add(jPanel3, BorderLayout.SOUTH);
-        m_menuPanel.setLayout(new BorderLayout());
-        jPanel1.add(m_menuPanel, BorderLayout.NORTH);
-        this.add(jPanel1, BorderLayout.CENTER);
-        this.setStatusBar(jTextFieldStatus);
-        this.setProgressBar(progressBar);
-        m_tabbedPane.addChangeListener(this);
+            JPanel jPanel2 = new JPanel(new BorderLayout());
+            jPanel2.add(tabbedPane, BorderLayout.CENTER);
+            jPanel1.add(jPanel2, BorderLayout.CENTER);
+            jPanel1.add(jPanel3, BorderLayout.SOUTH);
+            menuPanel.setLayout(new BorderLayout());
+            jPanel1.add(menuPanel, BorderLayout.NORTH);
+            this.add(jPanel1, BorderLayout.CENTER);
+            this.setStatusBar(jTextFieldStatus);
+            this.setProgressBar(progressBar);
+            tabbedPane.addChangeListener(this);
+        } catch (Exception e) {
+
+            this.setErrorMessage("Error During Initialization.", e.getMessage(), e);
+        }
     }
 
     /**
@@ -114,8 +120,9 @@ public abstract class TabbedAppPanel extends BasePanel implements ChangeListener
      * @param menu BasePanelMenu
      */
     public void setMenu(BasePanelMenu menu) {
-        m_menuPanel.removeAll();
-        m_menuPanel.add(menu, BorderLayout.NORTH);
+
+        menuPanel.removeAll();
+        menuPanel.add(menu, BorderLayout.NORTH);
         super.setMenu(menu);
     }
 
@@ -180,8 +187,8 @@ public abstract class TabbedAppPanel extends BasePanel implements ChangeListener
     }
 
     public void doExit() {
-        for (int i = 0; i < m_tabbedPane.getTabCount(); i++) {
-            currBasePanel = (BasePanel) m_tabbedPane.getComponent(i);
+        for (int i = 0; i < tabbedPane.getTabCount(); i++) {
+            currBasePanel = (BasePanel) tabbedPane.getComponent(i);
             currBasePanel.doWindowClose();
         }
         System.exit(0);
@@ -201,7 +208,7 @@ public abstract class TabbedAppPanel extends BasePanel implements ChangeListener
      * @param comp Component
      */
     protected void printComponent(Component comp) {
-        m_printJob.printComponent(getFrame(), comp, null);
+        printJob.printComponent(getFrame(), comp, null);
     }
 
     /**
@@ -211,7 +218,7 @@ public abstract class TabbedAppPanel extends BasePanel implements ChangeListener
      * @param panel BasePanel
      */
     protected void addTab(String title, final BasePanel panel) {
-        m_tabbedPane.add(title, panel);
+        tabbedPane.add(title, panel);
         SwingUtilities.invokeLater(panel::doWindowOpen);
 
     }
@@ -243,7 +250,7 @@ public abstract class TabbedAppPanel extends BasePanel implements ChangeListener
      * @param tabIndex int
      */
     public void setSelectPanel(int tabIndex) {
-        m_tabbedPane.setSelectedIndex(tabIndex);
+        tabbedPane.setSelectedIndex(tabIndex);
     }
 
     /**
@@ -252,10 +259,10 @@ public abstract class TabbedAppPanel extends BasePanel implements ChangeListener
      * @param tabPanel BasePanel
      */
     public void setSelectPanel(BasePanel tabPanel) {
-        for (int i = 0; i < m_tabbedPane.getTabCount(); i++) {
-            BasePanel tabBasePanel = ((BasePanel) m_tabbedPane.getComponent(i));
+        for (int i = 0; i < tabbedPane.getTabCount(); i++) {
+            BasePanel tabBasePanel = ((BasePanel) tabbedPane.getComponent(i));
             if (tabBasePanel.equals(tabPanel)) {
-                m_tabbedPane.setSelectedIndex(i);
+                tabbedPane.setSelectedIndex(i);
             }
         }
     }

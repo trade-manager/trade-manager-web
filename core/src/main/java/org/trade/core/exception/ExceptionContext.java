@@ -50,13 +50,9 @@ public class ExceptionContext implements java.io.Serializable {
     @Serial
     private static final long serialVersionUID = 4837522639316151345L;
 
-    // constants
     private final static String NULL_VALUE = "";
-
-    // member variables
-    private final String m_parameterName;
-
-    private String m_value;
+    private final String parameterName;
+    private String value;
 
     /**
      * Constructor.
@@ -65,7 +61,8 @@ public class ExceptionContext implements java.io.Serializable {
      * @param value         Object
      */
     public ExceptionContext(String parameterName, Object value) {
-        m_parameterName = parameterName;
+
+        this.parameterName = parameterName;
         setValue(value);
     }
 
@@ -75,8 +72,9 @@ public class ExceptionContext implements java.io.Serializable {
      * @param other ExceptionContext
      */
     public ExceptionContext(ExceptionContext other) {
-        m_parameterName = other.m_parameterName;
-        m_value = other.m_value;
+
+        this.parameterName = other.parameterName;
+        value = other.value;
     }
 
     /**
@@ -87,7 +85,8 @@ public class ExceptionContext implements java.io.Serializable {
      *              object being copied
      */
     public ExceptionContext(ExceptionContext other, Object value) {
-        m_parameterName = other.m_parameterName;
+
+        this.parameterName = other.parameterName;
         setValue(value);
     }
 
@@ -98,7 +97,7 @@ public class ExceptionContext implements java.io.Serializable {
      * @return String
      */
     public String getParameterName() {
-        return m_parameterName;
+        return this.parameterName;
     }
 
     /**
@@ -108,7 +107,7 @@ public class ExceptionContext implements java.io.Serializable {
      * @return String
      */
     public String getValue() {
-        return m_value;
+        return this.value;
     }
 
     /**
@@ -117,10 +116,11 @@ public class ExceptionContext implements java.io.Serializable {
      * @param value Object
      */
     private void setValue(Object value) {
+
         if (null == value) {
             value = NULL_VALUE;
         }
 
-        m_value = value.toString();
+        this.value = value.toString();
     }
 }

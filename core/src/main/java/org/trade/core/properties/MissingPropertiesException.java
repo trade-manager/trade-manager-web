@@ -44,7 +44,7 @@ import java.util.Vector;
  *
  * @author : Simon Allen
  */
-public class MissingPropertiesException extends java.lang.Exception {
+public class MissingPropertiesException extends Exception {
     /**
      *
      */

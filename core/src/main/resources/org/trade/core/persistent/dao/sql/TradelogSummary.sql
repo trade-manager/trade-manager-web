@@ -1,5 +1,5 @@
 select
-cast(rand()*1000000000 as unsigned integer) as id_tradelog_summary,
+cast(rand()*1000000000 as unsigned integer) as id,
 dataAll.period as period,
 (dataAll.win_count/ (dataAll.win_count  + dataAll.loss_count)) as batting_average,
 ((dataAll.profit_amount/ dataAll.win_count)/((dataAll.loss_amount*-1)/dataAll.loss_count))  as simple_sharpe_ratio,
@@ -57,16 +57,16 @@ if(sum(((if(tradeorder.action = 'BUY',  -1 , 1))  * tradeorder.quantity * tradeo
 if(ifnull(tradeposition.id,0),1, 0) as position_count,
 0 as tradestrategy_count
 from contract
-left outer join tradeposition  on contract.id = tradeposition.id_contract
-left outer join tradeorder  on tradeposition.id = tradeorder.id_trade_position
-inner join tradestrategy on tradestrategy.id = tradeorder.id_tradestrategy
-inner join portfolio on tradestrategy.id_portfolio = portfolio.id
+left outer join tradeposition  on contract.id = tradeposition.contract_id
+left outer join tradeorder  on tradeposition.id = tradeorder.trade_position_id
+inner join tradestrategy on tradestrategy.id = tradeorder.tradestrategy_id
+inner join portfolio on tradestrategy.portfolio_id = portfolio.id
 where tradeorder.is_filled =1
 and tradeposition.open_quantity = 0
 and tradestrategy.trade = 1
 and (isnull(:symbol) or contract.symbol = :symbol)
 and tradeposition.position_close_date between :start and :end
-and portfolio.id = :idPortfolio
+and portfolio.id = :portfolioId
 group by
 period,
 contract.symbol,
@@ -75,7 +75,7 @@ union all
 select
 date_format(tradingday.open , '%Y/%m') as period,
 contract.symbol,
-0 as id_trade_position,
+0 as trade_position_id,
 0 as quantity_total,
 0 as quantity,
 0 as commission,
@@ -86,13 +86,13 @@ contract.symbol,
 0 as position_count,
 if(ifnull(tradestrategy.id,0),1, 0)  as tradestrategy_count
 from tradestrategy
-inner join contract  on contract.id = tradestrategy.id_contract
-inner join tradingday  on tradingday.id = tradestrategy.id_trading_day
-inner join portfolio on tradestrategy.id_portfolio = portfolio.id
+inner join contract  on contract.id = tradestrategy.contract_id
+inner join tradingday  on tradingday.id = tradestrategy.tradingday_id
+inner join portfolio on tradestrategy.portfolio_id = portfolio.id
 where 
 tradingday.open between :start and :end
 and (isnull(:symbol) or contract.symbol = :symbol)
-and (portfolio.id = :idPortfolio or portfolio.id is null)
+and (portfolio.id = :portfolioId or portfolio.id is null)
 group by
 period,
 contract.symbol,
@@ -135,16 +135,16 @@ if(sum(((if(tradeorder.action = 'BUY',  -1 , 1))  * tradeorder.quantity * tradeo
 if(ifnull(tradeposition.id,0),1, 0) as position_count,
 0 as tradestrategy_count
 from contract
-left outer join tradeposition  on contract.id = tradeposition.id_contract
-left outer join tradeorder  on tradeposition.id = tradeorder.id_trade_position
-inner join tradestrategy on tradestrategy.id = tradeorder.id_tradestrategy
-inner join portfolio on tradestrategy.id_portfolio = portfolio.id
+left outer join tradeposition  on contract.id = tradeposition.contract_id
+left outer join tradeorder  on tradeposition.id = tradeorder.trade_position_id
+inner join tradestrategy on tradestrategy.id = tradeorder.tradestrategy_id
+inner join portfolio on tradestrategy.portfolio_id = portfolio.id
 where tradeorder.is_filled =1
 and tradeposition.open_quantity = 0
 and tradestrategy.trade = 1
 and (isnull(:symbol) or contract.symbol = :symbol)
 and tradeposition.position_close_date between :start and :end
-and portfolio.id = :idPortfolio
+and portfolio.id = :portfolioId
 group by
 period,
 contract.symbol,
@@ -152,7 +152,7 @@ tradeposition.id
 union all
 select date_format(tradingday.open , '%Y/%m') as period,
 contract.symbol,
-0 as id_trade_position,
+0 as trade_position_id,
 0 as quantity_total,
 0 as quantity,
 0 as commission,
@@ -161,15 +161,15 @@ contract.symbol,
 0 as win_count,
 0 as loss_count,
 0 as position_count,
-if(ifnull(tradestrategy.id,0),1, 0)  as tradestrategy_count
+if(ifnull(tradestrategy.id,0),1, 0) as tradestrategy_count
 from tradestrategy
-inner join contract  on contract.id = tradestrategy.id_contract
-inner join tradingday  on tradingday.id = tradestrategy.id_trading_day
-inner join portfolio on tradestrategy.id_portfolio = portfolio.id
+inner join contract  on contract.id = tradestrategy.contract_id
+inner join tradingday  on tradingday.id = tradestrategy.tradingday_id
+inner join portfolio on tradestrategy.portfolio_id = portfolio.id
 where 
 tradingday.open between :start and :end
 and (isnull(:symbol) or contract.symbol = :symbol)
-and (portfolio.id = :idPortfolio or portfolio.id is null)
+and (portfolio.id = :portfolioId or portfolio.id is null)
 group by
 period,
 contract.symbol,

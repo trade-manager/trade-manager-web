@@ -35,7 +35,7 @@
  */
 package org.trade.core.persistent.dao.series.indicator;
 
-import org.trade.core.persistent.PersistentModelException;
+import org.trade.core.persistent.ServiceException;
 
 import java.awt.*;
 
@@ -57,7 +57,7 @@ public interface IIndicatorDataset {
      * @param seriesIndex int
      * @param newBar      boolean
      */
-    void updateDataset(CandleDataset source, int seriesIndex, boolean newBar) throws PersistentModelException;
+    void updateDataset(CandleDataset source, int seriesIndex, boolean newBar) throws ServiceException;
 
     void clear();
 

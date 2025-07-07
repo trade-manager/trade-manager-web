@@ -37,9 +37,9 @@ package org.trade.core.broker.client;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.trade.core.factory.ClassFactory;
-import org.trade.core.persistent.IPersistentModel;
-import org.trade.core.persistent.PersistentModelException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.trade.core.persistent.ServiceException;
+import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.Candle;
 import org.trade.core.persistent.dao.Contract;
 import org.trade.core.persistent.dao.Strategy;
@@ -74,10 +74,12 @@ public class DBBroker extends Broker {
 
     private final static Logger _log = LoggerFactory.getLogger(DBBroker.class);
 
-    private IPersistentModel tradePersistentModel = null;
+    @Autowired
+    private TradeService tradeService;
+
     private final StrategyData strategyData;
     private Tradestrategy tradestrategy = null;
-    private final Integer idTradestrategy;
+    private final Integer tradestrategyId;
     private final IClientWrapper brokerModel;
     private BigDecimal trailAmount = null;
     private BigDecimal trailLimitOffsetAmount = null;
@@ -99,12 +101,12 @@ public class DBBroker extends Broker {
      * Constructor for BackTestBroker.
      *
      * @param strategyData    StrategyData
-     * @param idTradestrategy Integer
+     * @param tradestrategyId Integer
      * @param brokerModel     IBrokerModel
      */
-    public DBBroker(StrategyData strategyData, Integer idTradestrategy, IClientWrapper brokerModel) {
+    public DBBroker(StrategyData strategyData, Integer tradestrategyId, IClientWrapper brokerModel) {
 
-        this.idTradestrategy = idTradestrategy;
+        this.tradestrategyId = tradestrategyId;
         this.brokerModel = brokerModel;
         this.strategyData = strategyData;
     }
@@ -118,9 +120,7 @@ public class DBBroker extends Broker {
 
         try {
 
-            this.tradePersistentModel = (IPersistentModel) ClassFactory
-                    .getServiceForInterface(IPersistentModel._persistentModel, this);
-            this.tradestrategy = this.tradePersistentModel.findTradestrategyById(this.idTradestrategy);
+            this.tradestrategy = tradeService.findTradestrategyById(this.tradestrategyId);
             this.strategyData.clearBaseCandleDataset();
             this.tradestrategy.setStrategyData(this.strategyData);
 
@@ -229,7 +229,7 @@ public class DBBroker extends Broker {
                     continue;
                 }
 
-                positionOrders = this.tradePersistentModel.findPositionOrdersByTradestrategyId(this.idTradestrategy);
+                positionOrders = tradeService.findPositionOrdersByTradestrategyId(this.tradestrategyId);
 
                 /*
                  * The new candle may create an order so this call fills it and
@@ -256,8 +256,8 @@ public class DBBroker extends Broker {
                      * the trade that we weren't stopped out on the entry
                      * candle.
                      */
-                    positionOrders = this.tradePersistentModel
-                            .findPositionOrdersByTradestrategyId(this.idTradestrategy);
+                    positionOrders = tradeService
+                            .findPositionOrdersByTradestrategyId(this.tradestrategyId);
 
                     if (this.tradestrategy.getStrategy().hasStrategyManager()) {
 
@@ -285,8 +285,8 @@ public class DBBroker extends Broker {
                                  * Refresh the orders as the other thread may
                                  * have added orders that need to be filled.
                                  */
-                                positionOrders = this.tradePersistentModel
-                                        .findPositionOrdersByTradestrategyId(this.idTradestrategy);
+                                positionOrders = tradeService
+                                        .findPositionOrdersByTradestrategyId(this.tradestrategyId);
                                 filledOrders(this.tradestrategy.getContract(), positionOrders, candle);
                             }
                         }
@@ -348,7 +348,7 @@ public class DBBroker extends Broker {
                  * visible.
                  */
                 OrderState orderState = new OrderState();
-                orderState.m_status = OrderStatus.SUBMITTED;
+                orderState.status = OrderStatus.SUBMITTED;
                 this.brokerModel.openOrder(order.getOrderKey(), contract, order, orderState);
                 /*
                  * TODO we should read the orders back after any call to the
@@ -439,7 +439,7 @@ public class DBBroker extends Broker {
      */
     private BigDecimal getFilledPrice(TradeOrder order, Candle candle) {
 
-        if (order.getCreateDate().isAfter(candle.getLastUpdateDate())) {
+        if (order.getOrderCreateDate().isAfter(candle.getLastUpdateDate())) {
             return null;
         }
 
@@ -696,8 +696,8 @@ public class DBBroker extends Broker {
         execution.setExecId(String.valueOf(execId++));
         this.brokerModel.execDetails(execution.getTradeOrder().getOrderKey(), contract, execution);
         OrderState orderState = new OrderState();
-        orderState.m_status = OrderStatus.FILLED;
-        orderState.m_commission = commission;
+        orderState.status = OrderStatus.FILLED;
+        orderState.commission = commission;
         this.brokerModel.openOrder(order.getOrderKey(), contract, order, orderState);
     }
 
@@ -710,7 +710,7 @@ public class DBBroker extends Broker {
     private void cancelOrder(Contract contract, TradeOrder order) {
 
         OrderState orderState = new OrderState();
-        orderState.m_status = OrderStatus.CANCELLED;
+        orderState.status = OrderStatus.CANCELLED;
         this.brokerModel.openOrder(order.getOrderKey(), contract, order, orderState);
         order.setStatus(OrderStatus.CANCELLED);
     }
@@ -726,7 +726,7 @@ public class DBBroker extends Broker {
      * @param endDate       ZonedDateTime
      */
     private void populateIndicatorCandleSeries(Tradestrategy tradestrategy, ZonedDateTime startDate,
-                                               ZonedDateTime endDate) throws PersistentModelException {
+                                               ZonedDateTime endDate) throws ServiceException {
 
         CandleDataset candleDataset = (CandleDataset) tradestrategy.getStrategyData()
                 .getIndicatorByType(IndicatorSeries.CandleSeries);
@@ -737,7 +737,7 @@ public class DBBroker extends Broker {
 
                 CandleSeries series = candleDataset.getSeries(seriesIndex);
 
-                Contract contract = this.tradePersistentModel.findContractByUniqueKey(series.getSecType(),
+                Contract contract = tradeService.findContractByUniqueKey(series.getSecType(),
                         series.getSymbol(), series.getExchange(), series.getCurrency(), null);
 
                 if (null == contract) {
@@ -749,7 +749,7 @@ public class DBBroker extends Broker {
                         new Strategy(), tradestrategy.getPortfolio(), new BigDecimal(0), null, null, false,
                         tradestrategy.getChartDays(), tradestrategy.getBarSize());
                 childTradestrategy.setDirty(false);
-                List<Candle> indicatorCandles = this.tradePersistentModel.findCandlesByContractDateRangeBarSize(
+                List<Candle> indicatorCandles = tradeService.findCandlesByContractDateRangeBarSize(
                         childTradestrategy.getContract().getId(), startDate, endDate,
                         childTradestrategy.getBarSize());
 
@@ -787,7 +787,7 @@ public class DBBroker extends Broker {
      */
 
     private List<Candle> getCandles(Tradestrategy tradestrategy, ZonedDateTime startDate, ZonedDateTime endDate,
-                                    int barSize) throws PersistentModelException {
+                                    int barSize) throws ServiceException {
 
         List<Candle> candles = new ArrayList<>(0);
         int[] barSizes = {3600, 1800, 900, 300, 120, 60, 30};
@@ -800,7 +800,7 @@ public class DBBroker extends Broker {
                  */
                 if ((Math.floor(
                         tradestrategy.getBarSize() / (double) size) == (tradestrategy.getBarSize() / (double) size))) {
-                    candles = tradePersistentModel.findCandlesByContractDateRangeBarSize(
+                    candles = tradeService.findCandlesByContractDateRangeBarSize(
                             tradestrategy.getContract().getId(), startDate, endDate, size);
                     if (!candles.isEmpty()) {
                         break;

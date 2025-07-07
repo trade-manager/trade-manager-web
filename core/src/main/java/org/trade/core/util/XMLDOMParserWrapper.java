@@ -828,7 +828,7 @@ public class XMLDOMParserWrapper {
          * Method warning.
          *
          * @param spe SAXParseException
-         * @see org.xml.sax.ErrorHandler#warning(SAXParseException)
+         * @see ErrorHandler#warning(SAXParseException)
          */
         public void warning(SAXParseException spe) {
             out.println("Warning: " + getParseExceptionInfo(spe));
@@ -838,7 +838,7 @@ public class XMLDOMParserWrapper {
          * Method error.
          *
          * @param spe SAXParseException
-         * @see org.xml.sax.ErrorHandler#error(SAXParseException)
+         * @see ErrorHandler#error(SAXParseException)
          */
         public void error(SAXParseException spe) throws SAXException {
             String message = "Error: " + getParseExceptionInfo(spe);
@@ -850,7 +850,7 @@ public class XMLDOMParserWrapper {
          * Method fatalError.
          *
          * @param spe SAXParseException
-         * @see org.xml.sax.ErrorHandler#fatalError(SAXParseException)
+         * @see ErrorHandler#fatalError(SAXParseException)
          */
         public void fatalError(SAXParseException spe) throws SAXException {
             String message = "Fatal Error: " + getParseExceptionInfo(spe);

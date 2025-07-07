@@ -37,17 +37,11 @@ package org.trade.core.persistent.dao;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.persistence.Version;
 import org.trade.core.dao.Aspect;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.ZonedDateTime;
-
-import static jakarta.persistence.GenerationType.IDENTITY;
 
 
 /**
@@ -63,8 +57,8 @@ public class TradestrategyLite extends Aspect implements Serializable {
     @Serial
     private static final long serialVersionUID = -2181676329258092177L;
 
+    @Column(name = "status", length = 20)
     private String status;
-    private ZonedDateTime lastUpdateDate;
 
     public TradestrategyLite() {
     }
@@ -78,20 +72,9 @@ public class TradestrategyLite extends Aspect implements Serializable {
      */
 
     public TradestrategyLite(Integer id, Integer version) {
-        this.id = id;
-        this.version = version;
-    }
 
-    /**
-     * Method getId.
-     *
-     * @return Integer
-     */
-    @Id
-    @GeneratedValue(strategy = IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
-    public Integer getId() {
-        return this.id;
+        setId(id);
+        this.version = version;
     }
 
     /**
@@ -99,7 +82,6 @@ public class TradestrategyLite extends Aspect implements Serializable {
      *
      * @return String
      */
-    @Column(name = "status", length = 20)
     public String getStatus() {
         return this.status;
     }
@@ -111,36 +93,6 @@ public class TradestrategyLite extends Aspect implements Serializable {
      */
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    /**
-     * Method getLastUpdateDate.
-     *
-     * @return ZonedDateTime
-     */
-    @Column(name = "last_update_date", nullable = false)
-    public ZonedDateTime getLastUpdateDate() {
-        return this.lastUpdateDate;
-    }
-
-    /**
-     * Method setLastUpdateDate.
-     *
-     * @param lastUpdateDate ZonedDateTime
-     */
-    public void setLastUpdateDate(ZonedDateTime lastUpdateDate) {
-        this.lastUpdateDate = lastUpdateDate;
-    }
-
-    /**
-     * Method getVersion.
-     *
-     * @return Integer
-     */
-    @Version
-    @Column(name = "version")
-    public Integer getVersion() {
-        return this.version;
     }
 
 }

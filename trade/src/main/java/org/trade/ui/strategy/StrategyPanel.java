@@ -44,8 +44,8 @@ import org.trade.base.Tree;
 import org.trade.base.UIPropertyCodes;
 import org.trade.core.broker.IBrokerModel;
 import org.trade.core.factory.ClassFactory;
-import org.trade.core.persistent.IPersistentModel;
-import org.trade.core.persistent.PersistentModelException;
+import org.trade.core.persistent.ServiceException;
+import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.Contract;
 import org.trade.core.persistent.dao.Rule;
 import org.trade.core.persistent.dao.Strategy;
@@ -101,40 +101,47 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
 
     private static final String TEMP_DIR = "temp";
 
-    private Tree m_tree = null;
+    private final TradeService tradeService;
+    private Tree tree = null;
     private JEditorPane sourceText = null;
     private JTextArea commentText = null;
     private StreamEditorPane messageText = null;
     private BaseButton compileButton = null;
     private BaseButton newButton = null;
     private StrategyTreeModel strategyTreeModel = null;
-    private IPersistentModel tradePersistentModel = null;
-    private String m_strategyDir = null;
+    private String strategyDir = null;
     private DynamicCode dynacode = null;
     private List<Strategy> strategies = null;
     private Rule currentRule = null;
     private SimpleAttributeSet colorRedAttr = null;
 
+    /**
+     * Constructor for StrategyPanel.
+     *
+     * @param tradeService TradeService
+     */
+    public StrategyPanel(TradeService tradeService) {
 
-    public StrategyPanel(IPersistentModel tradePersistentModel) {
+        this.tradeService = tradeService;
+
         try {
 
             if (null != getMenu()) {
+
                 getMenu().addMessageListener(this);
             }
 
             this.setLayout(new BorderLayout());
-            this.tradePersistentModel = tradePersistentModel;
             colorRedAttr = new SimpleAttributeSet();
             StyleConstants.setForeground(colorRedAttr, Color.RED);
-            m_strategyDir = ConfigProperties.getPropAsString("trade.strategy.default.dir");
+            strategyDir = ConfigProperties.getPropAsString("trade.strategy.default.dir");
             String fileDir = TEMP_DIR + "/" + IStrategyRule.PACKAGE.replace('.', '/');
             File srcDirFile = new File(fileDir);
             srcDirFile.mkdirs();
             srcDirFile.deleteOnExit();
             this.dynacode = new DynamicCode();
-            this.dynacode.addSourceDir(new File(m_strategyDir));
-            this.strategies = this.tradePersistentModel.findStrategies();
+            this.dynacode.addSourceDir(new File(strategyDir));
+            this.strategies = this.tradeService.findStrategies();
             strategyTreeModel = new StrategyTreeModel(this.strategies);
             compileButton = new BaseButton(this, UIPropertyCodes.newInstance(UIPropertyCodes.COMPILE));
             newButton = new BaseButton(this, BaseUIPropertyCodes.NEW);
@@ -186,12 +193,12 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
 
             // create the JTree and scroll pane.
             JPanel treePanel = new JPanel(new BorderLayout());
-            m_tree = new Tree(strategyTreeModel);
-            m_tree.setCellRenderer(new StrategyTreeCellRenderer());
-            m_tree.addTreeSelectionListener(this);
-            ToolTipManager.sharedInstance().registerComponent(m_tree);
+            tree = new Tree(strategyTreeModel);
+            tree.setCellRenderer(new StrategyTreeCellRenderer());
+            tree.addTreeSelectionListener(this);
+            ToolTipManager.sharedInstance().registerComponent(tree);
 
-            JScrollPane jScrollPane2 = new JScrollPane(m_tree);
+            JScrollPane jScrollPane2 = new JScrollPane(tree);
             treePanel.add(jScrollPane2, BorderLayout.CENTER);
             treePanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder("Rules"),
                     BorderFactory.createEmptyBorder(4, 4, 4, 4)));
@@ -210,10 +217,10 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
             loadStrategiesFromFileSystem(this.strategies);
             strategyTreeModel.setData(this.strategies);
             // Expand the tree
-            for (int i = 0; i < m_tree.getRowCount(); i++) {
-                m_tree.expandRow(i);
-            }
+            for (int i = 0; i < tree.getRowCount(); i++) {
 
+                tree.expandRow(i);
+            }
         } catch (Exception ex) {
             this.setErrorMessage("Error during initialization.", ex.getMessage(), ex);
         }
@@ -225,18 +232,26 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
             DefaultMutableTreeNode node = (DefaultMutableTreeNode) e.getPath().getLastPathComponent();
 
             if (node.getUserObject() instanceof Strategy) {
+
                 newButton.setTransferObject(node.getUserObject());
                 messageText.setText(null);
             }
+
             if (node.getUserObject() instanceof Rule rule) {
+
                 if (null != currentRule) {
+
                     if (currentRule.getRule().length > 0) {
+
                         if (!(new String(currentRule.getRule())).equals(getContent())) {
+
                             currentRule.setRule(getContent().getBytes());
                             currentRule.setDirty(true);
                         }
                     }
+
                     if (null != currentRule.getComment() && !currentRule.getComment().equals(commentText.getText())) {
+
                         currentRule.setComment(commentText.getText());
                         currentRule.setDirty(true);
                     }
@@ -246,6 +261,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
                 messageText.setText(null);
 
                 try {
+
                     Class<?> thisClass = this.dynacode
                             .loadClass(IStrategyRule.PACKAGE + rule.getStrategy().getClassName());
                     setMessageText(null, false, false, null);
@@ -255,6 +271,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
                             "Methods for super class: " + thisClass.getSuperclass().getName(),
                             messageText.getDocument());
                 } catch (Throwable ex) {
+
                     this.setStatusBarMessage("Strategy definition could not be loaded Msg:" + ex.getMessage()
                             + " Please compile and save the strategy.", BasePanel.INFORMATION);
 
@@ -287,31 +304,34 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
     }
 
     public void doCompile(final Rule rule) {
+
         try {
+
             setMessageText(null, false, false, null);
             String fileName = TEMP_DIR + "/" + IStrategyRule.PACKAGE.replace('.', '/');
             fileName = fileName + rule.getStrategy().getClassName() + ".java";
             doSaveFile(fileName, this.getContent());
 
-            Vector<Object> parm = new Vector<>(0);
+            Vector<Object> param = new Vector<>(0);
+            param.add(this.tradeService);
             IBrokerModel brokerManagerModel = (IBrokerModel) ClassFactory.getServiceForInterface(IBrokerModel._brokerTest,
-                    this);
+                    param, this);
             CandleDataset candleDataset = new CandleDataset();
             CandleSeries candleSeries = new CandleSeries("Test",
                     new Contract(SECType.STOCK, "Test", Exchange.SMART, Currency.USD, null, null), BarSize.FIVE_MIN,
                     TradingCalendar.getDateTimeNowMarketTimeZone(), TradingCalendar.getDateTimeNowMarketTimeZone());
             candleDataset.addSeries(candleSeries);
             StrategyData strategyData = new StrategyData(rule.getStrategy(), candleDataset);
-            parm.add(brokerManagerModel);
-            parm.add(strategyData);
-            parm.add(0);
+            param.clear();
+            param.add(brokerManagerModel);
+            param.add(strategyData);
+            param.add(0);
             DynamicCode dynacode = new DynamicCode();
             dynacode.addSourceDir(new File(TEMP_DIR));
             dynacode.newProxyInstance(IStrategyRule.class, IStrategyRule.PACKAGE + rule.getStrategy().getClassName(),
-                    parm);
+                    param);
 
             this.setStatusBarMessage("File compiled.", BasePanel.INFORMATION);
-
         } catch (Exception ex) {
             setMessageText("Error compiling strategy: " + rule.getStrategy().getName() + ex.getMessage(), false, true,
                     colorRedAttr);
@@ -319,28 +339,36 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
     }
 
     public void doOpen() {
+
         try {
+
             JFileChooser fileView = new JFileChooser();
             fileView.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
             fileView.addChoosableFileFilter(new JavaFilter());
             fileView.setAcceptAllFileFilterUsed(false);
-            if (null == m_strategyDir) {
+
+            if (null == strategyDir) {
+
                 fileView.setCurrentDirectory(new File(System.getProperty("user.dir")));
             } else {
-                String dir = m_strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/');
+
+                String dir = strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/');
                 fileView.setCurrentDirectory(new File(dir));
             }
 
             int returnVal = fileView.showOpenDialog(this);
 
             if (returnVal == JFileChooser.APPROVE_OPTION) {
+
                 String fileName = fileView.getSelectedFile().getPath();
 
-                DefaultMutableTreeNode node = (DefaultMutableTreeNode) Objects.requireNonNull(m_tree.getSelectionPath())
+                DefaultMutableTreeNode node = (DefaultMutableTreeNode) Objects.requireNonNull(tree.getSelectionPath())
                         .getLastPathComponent();
                 setContent(readFile(fileName));
                 commentText.setText(null);
+
                 if (node.getUserObject() instanceof Strategy) {
+
                     createRule((Strategy) node.getUserObject());
                 }
             }
@@ -350,6 +378,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
     }
 
     public void doSave() {
+
         try {
             /*
              * Check to see if the rule has change and its not a new rule.
@@ -360,29 +389,35 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
             }
 
             if (this.currentRule.getRule().length > 0) {
+
                 if ((new String(this.currentRule.getRule())).equals(getContent())) {
+
                     if (null != this.currentRule.getComment() && this.currentRule.getComment().equals(getComments())) {
+
                         if (null != this.currentRule.getId()) {
                             return;
                         }
                     }
                 }
             }
-            String fileName = m_strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/');
+
+            String fileName = strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/');
             String fileNameSource = fileName + this.currentRule.getStrategy().getClassName() + ".java";
             String fileNameComments = fileName + this.currentRule.getStrategy().getClassName() + ".txt";
             int result = JOptionPane.NO_OPTION;
+
             if (null != this.currentRule.getId()) {
+
                 result = JOptionPane.showConfirmDialog(this.getFrame(), "Do you want to version this strategy",
                         "Information", JOptionPane.YES_NO_OPTION);
             }
+
             if (result == JOptionPane.YES_OPTION) {
-                Integer version = this.tradePersistentModel.findRuleByMaxVersion(this.currentRule.getStrategy());
-                Rule nextRule = new Rule(this.currentRule.getStrategy(), (version + 1), commentText.getText(),
-                        TradingCalendar.getDateTimeNowMarketTimeZone(), getContent().getBytes(),
-                        TradingCalendar.getDateTimeNowMarketTimeZone());
+
+                Integer version = this.tradeService.findRuleByMaxVersion(this.currentRule.getStrategy());
+                Rule nextRule = new Rule(this.currentRule.getStrategy(), (version + 1), commentText.getText(), getContent().getBytes());
                 this.currentRule.getStrategy().add(nextRule);
-                this.tradePersistentModel.persistAspect(nextRule);
+                this.tradeService.saveAspect(nextRule);
                 doSaveFile(fileNameSource, getContent());
                 doSaveFile(fileNameComments, getComments());
                 /*
@@ -390,19 +425,21 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
                  * changes made.
                  */
 
-                Rule orginalRule = tradePersistentModel.findRuleById(this.currentRule.getId());
+                Rule orginalRule = tradeService.findRuleById(this.currentRule.getId());
                 this.currentRule.setComment(orginalRule.getComment());
-                this.currentRule.setCreateDate(orginalRule.getCreateDate());
                 this.currentRule.setRule(orginalRule.getRule());
 
                 this.setContent(new String(this.currentRule.getRule()));
                 commentText.setText(this.currentRule.getComment());
             } else {
-                if (!getComments().isEmpty())
+
+                if (!getComments().isEmpty()) {
+
                     this.currentRule.setComment(getComments());
-                this.currentRule.setLastUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
+                }
+
                 this.currentRule.setRule(getContent().getBytes());
-                this.tradePersistentModel.persistAspect(this.currentRule);
+                this.currentRule = this.tradeService.saveAspect(this.currentRule);
                 doSaveFile(fileNameSource, getContent());
                 doSaveFile(fileNameComments, getComments());
             }
@@ -419,7 +456,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
         try {
 
             String templateName = ConfigProperties.getPropAsString("trade.strategy.template");
-            String fileName = m_strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/') + templateName + ".java";
+            String fileName = strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/') + templateName + ".java";
 
             commentText.setText(null);
             setContent(readFile(fileName));
@@ -444,11 +481,13 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
                 for (Strategy strategy : this.strategies) {
                     if (strategy.getId().equals(this.currentRule.getStrategy().getId())) {
                         strategy.getRules().remove(this.currentRule);
-                        this.tradePersistentModel.removeAspect(this.currentRule);
+                        this.tradeService.deleteAspect(this.currentRule);
                     }
                 }
-                Integer version = this.tradePersistentModel.findRuleByMaxVersion(this.currentRule.getStrategy());
+                Integer version = this.tradeService.findRuleByMaxVersion(this.currentRule.getStrategy());
+
                 if (Objects.equals(version, this.currentRule.getVersion()) && version > 1) {
+
                     setMessageText("File system is out of sync with DB please re deploy the latest version.", false,
                             true, colorRedAttr);
                 }
@@ -460,9 +499,11 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
     }
 
     public void doRefresh() {
+
         try {
+
             this.clearStatusBarMessage();
-            this.strategies = this.tradePersistentModel.findStrategies();
+            this.strategies = this.tradeService.findStrategies();
             refreshTree();
         } catch (Exception ex) {
             this.setErrorMessage("Error finding rule.", ex.getMessage(), ex);
@@ -493,71 +534,85 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
     }
 
     private void loadStrategiesFromFileSystem(List<Strategy> strategies) {
-        try {
-            this.setMessageText(null, false, false, null);
-            for (Strategy strategy : strategies) {
-                String fileNameCode = m_strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/')
-                        + strategy.getClassName() + ".java";
-                String fileNameComments = m_strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/')
-                        + strategy.getClassName() + ".txt";
 
-                try {
-                    String content = readFile(fileNameCode);
-                    String comments = readFile(fileNameComments);
-                    if (strategy.getRules().isEmpty()) {
-                        Rule nextRule = new Rule(strategy, 1, comments, TradingCalendar.getDateTimeNowMarketTimeZone(),
-                                content.getBytes(), TradingCalendar.getDateTimeNowMarketTimeZone());
-                        strategy.add(nextRule);
-                        this.tradePersistentModel.persistAspect(nextRule);
-                    } else {
-                        Integer version = this.tradePersistentModel.findRuleByMaxVersion(strategy);
-                        for (Rule rule : strategy.getRules()) {
-                            if (rule.getVersion().equals(version)) {
-                                /*
-                                 * Load and save the file in the DB if there is
-                                 * no content for this rule. i.e. initial start
-                                 * up. Else make sure the rule in the DB is the
-                                 * same as the rule in the file system.
-                                 */
-                                if (null == rule.getRule() && null != content) {
-                                    rule.setRule(content.getBytes());
-                                    this.tradePersistentModel.persistAspect(rule);
-                                } else {
-                                    String ruleDB = new String(rule.getRule());
-                                    if (!ruleDB.equals(content)) {
-                                        setMessageText(
-                                                "DB strategy not in sync with file system strategy: " + fileNameCode
-                                                        + " file length: " + Objects.requireNonNull(content).length() + " Strategy "
-                                                        + rule.getStrategy().getName() + " length: " + ruleDB.length(),
-                                                true, true, colorRedAttr);
-                                    }
+        this.setMessageText(null, false, false, null);
+
+        for (Strategy strategy : strategies) {
+
+            String fileNameCode = strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/')
+                    + strategy.getClassName() + ".java";
+            String fileNameComments = strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/')
+                    + strategy.getClassName() + ".txt";
+
+            try {
+
+                String content = readFile(fileNameCode);
+                String comments = readFile(fileNameComments);
+
+                if (strategy.getRules().isEmpty()) {
+
+                    Rule nextRule = new Rule(strategy, 1, comments,
+                            content.getBytes());
+                    strategy.add(nextRule);
+                    this.tradeService.saveAspect(nextRule);
+                } else {
+
+                    Integer version = this.tradeService.findRuleByMaxVersion(strategy);
+                    for (Rule rule : strategy.getRules()) {
+
+                        if (rule.getVersion().equals(version)) {
+
+                            /*
+                             * Load and save the file in the DB if there is
+                             * no content for this rule. i.e. initial start
+                             * up. Else make sure the rule in the DB is the
+                             * same as the rule in the file system.
+                             */
+                            if (null == rule.getRule() && null != content) {
+
+                                rule.setRule(content.getBytes());
+                                rule = this.tradeService.saveAspect(rule);
+                            } else {
+
+                                String ruleDB = new String(rule.getRule());
+
+                                if (!ruleDB.equals(content)) {
+
+                                    setMessageText(
+                                            "DB strategy not in sync with file system strategy: " + fileNameCode
+                                                    + " file length: " + Objects.requireNonNull(content).length() + " Strategy "
+                                                    + rule.getStrategy().getName() + " length: " + ruleDB.length(),
+                                            true, true, colorRedAttr);
                                 }
-                                if (null == rule.getComment() && null != comments) {
-                                    rule.setComment(comments);
-                                    this.tradePersistentModel.persistAspect(rule);
-                                } else {
-                                    String commentsDB = rule.getComment();
-                                    if (!commentsDB.equals(comments)) {
-                                        setMessageText("DB strategy not in sync with file system strategy: "
-                                                        + fileNameComments + " file length: " + Objects.requireNonNull(comments).length() + " Strategy "
-                                                        + rule.getStrategy().getName() + " length: " + commentsDB.length(),
-                                                true, true, colorRedAttr);
-                                    }
+                            }
+                            if (null == rule.getComment() && null != comments) {
+
+                                rule.setComment(comments);
+                                this.tradeService.saveAspect(rule);
+
+                            } else {
+
+                                String commentsDB = rule.getComment();
+                                if (!commentsDB.equals(comments)) {
+
+                                    setMessageText("DB strategy not in sync with file system strategy: "
+                                                    + fileNameComments + " file length: " + Objects.requireNonNull(comments).length() + " Strategy "
+                                                    + rule.getStrategy().getName() + " length: " + commentsDB.length(),
+                                            true, true, colorRedAttr);
                                 }
                             }
                         }
                     }
-                } catch (IOException e) {
-                    // Do nothing.
                 }
+            } catch (IOException e) {
+                // Do nothing.
             }
-            if (!getMessageText().isEmpty()) {
-                setMessageText("Re deploy rule to fix this problem.", true, true, colorRedAttr);
-            }
-
-        } catch (PersistentModelException ex) {
-            this.setErrorMessage("Error saving rule.", ex.getMessage(), ex);
         }
+        if (!getMessageText().isEmpty()) {
+            setMessageText("Re deploy rule to fix this problem.", true, true, colorRedAttr);
+        }
+
+
     }
 
     private void addClassDefinition(Class<?> theClass, String title, Document doc) {
@@ -629,20 +684,20 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
     }
 
     private void refreshTree() throws ValueTypeException {
-        DefaultMutableTreeNode treeNodeSelected = (DefaultMutableTreeNode) m_tree.getLastSelectedPathComponent();
+        DefaultMutableTreeNode treeNodeSelected = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
         strategyTreeModel.setData(this.strategies);
         // Expand the tree
-        for (int i = 0; i < m_tree.getRowCount(); i++) {
-            m_tree.expandRow(i);
+        for (int i = 0; i < tree.getRowCount(); i++) {
+            tree.expandRow(i);
         }
         if (null == treeNodeSelected)
             return;
 
-        TreePath path = m_tree.findTreePathByObject(treeNodeSelected.getUserObject());
+        TreePath path = tree.findTreePathByObject(treeNodeSelected.getUserObject());
 
         if (null != path) {
-            m_tree.setSelectionPath(path);
-            m_tree.scrollPathToVisible(path);
+            tree.setSelectionPath(path);
+            tree.scrollPathToVisible(path);
         }
     }
 
@@ -696,18 +751,18 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
         return dir.delete();
     }
 
-    private void createRule(final Strategy strategy) throws PersistentModelException, ValueTypeException {
+    private void createRule(final Strategy strategy) throws ServiceException, ValueTypeException {
 
-        Integer version = this.tradePersistentModel.findRuleByMaxVersion(strategy);
+        Integer version = this.tradeService.findRuleByMaxVersion(strategy);
         Rule nextRule = new Rule(strategy, (version + 1), commentText.getText(),
-                TradingCalendar.getDateTimeNowMarketTimeZone(), getContent().getBytes(),
-                TradingCalendar.getDateTimeNowMarketTimeZone());
+                getContent().getBytes()
+        );
         strategy.add(nextRule);
         refreshTree();
-        TreePath path = m_tree.findTreePathByObject(nextRule);
+        TreePath path = tree.findTreePathByObject(nextRule);
         if (null != path) {
-            m_tree.setSelectionPath(path);
-            m_tree.scrollPathToVisible(path);
+            tree.setSelectionPath(path);
+            tree.scrollPathToVisible(path);
         }
     }
 

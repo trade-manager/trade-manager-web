@@ -45,9 +45,9 @@ import java.util.Enumeration;
  * @author Simon Allen
  */
 class Enumerator implements Enumeration<Object> {
-    private Enumeration<?> m_mine;
 
-    private Enumerator m_next = null;
+    private Enumeration<?> mine;
+    private Enumerator next = null;
 
     private Enumerator() {
     }
@@ -58,7 +58,7 @@ class Enumerator implements Enumeration<Object> {
      * @param enumeration Enumeration<?>
      */
     Enumerator(Enumeration<?> enumeration) {
-        m_mine = enumeration;
+        mine = enumeration;
     }
 
     /**
@@ -67,10 +67,12 @@ class Enumerator implements Enumeration<Object> {
      * @param enumeration Enumeration<?>
      */
     void appendEnumeration(Enumeration<?> enumeration) {
-        if (m_next == null) {
-            m_next = new Enumerator(enumeration);
+
+        if (next == null) {
+
+            next = new Enumerator(enumeration);
         } else {
-            m_next.appendEnumeration(enumeration);
+            next.appendEnumeration(enumeration);
         }
     }
 
@@ -80,27 +82,31 @@ class Enumerator implements Enumeration<Object> {
      * @param enumeration Enumeration<?>
      */
     void prependEnumeration(Enumeration<?> enumeration) {
+
         Enumerator e = new Enumerator();
-        e.m_mine = m_mine;
-        e.m_next = m_next;
-        m_next = e;
-        m_mine = enumeration;
+        e.mine = mine;
+        e.next = next;
+        next = e;
+        mine = enumeration;
     }
 
     /**
      * Method nextElement.
      *
      * @return Object
-     * @see java.util.Enumeration#nextElement()
+     * @see Enumeration#nextElement()
      */
     public Object nextElement() {
-        if (m_mine.hasMoreElements()) {
-            return m_mine.nextElement();
+
+        if (mine.hasMoreElements()) {
+
+            return mine.nextElement();
         }
-        if (m_next != null) {
+
+        if (next != null) {
             // Here we eliminate the next in the list
-            m_mine = m_next.m_mine;
-            m_next = m_next.m_next;
+            mine = next.mine;
+            next = next.next;
 
             // Recurse on this method
             return nextElement();
@@ -112,14 +118,18 @@ class Enumerator implements Enumeration<Object> {
      * Method hasMoreElements.
      *
      * @return boolean
-     * @see java.util.Enumeration#hasMoreElements()
+     * @see Enumeration#hasMoreElements()
      */
     public boolean hasMoreElements() {
-        if (m_mine.hasMoreElements()) {
+
+        if (mine.hasMoreElements()) {
+
             return true;
         }
-        if (m_next != null) {
-            return m_next.hasMoreElements();
+
+        if (next != null) {
+
+            return next.hasMoreElements();
         }
         return false;
     }

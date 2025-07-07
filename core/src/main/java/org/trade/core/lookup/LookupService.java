@@ -35,20 +35,25 @@
  */
 package org.trade.core.lookup;
 
+import org.trade.core.ApplicationContextProvider;
+import org.trade.core.persistent.TradeService;
+
 import java.util.Vector;
 
 /**
  * @author Simon Allen
  */
 public class LookupService {
+
     //
     // Private Attributes
     //
     private static final Vector<ILookupServiceProvider> _providers = new Vector<>();
 
     static {
+
         addLookupServiceProvider(new PropertyFileLookupServiceProvider());
-        addLookupServiceProvider(new DBTableLookupServiceProvider());
+        addLookupServiceProvider(new DBTableLookupServiceProvider(ApplicationContextProvider.getBean(TradeService.class)));
     }
 
     /**
@@ -61,12 +66,14 @@ public class LookupService {
      */
     public static ILookup getLookup(String lookupName, LookupQualifier qualifier, boolean optional)
             throws LookupException {
+
         ILookup lookup = null;
         // Loop through the registered providers and find and try to find one
         // that can provide the lookup
         int providersSize = _providers.size();
 
         for (int i = 0; i < providersSize; i++) {
+
             lookup = _providers.elementAt(i).getLookup(lookupName, qualifier, optional);
 
             if (null != lookup) {
@@ -84,6 +91,7 @@ public class LookupService {
      * @param provider ILookupServiceProvider
      */
     public static void addLookupServiceProvider(ILookupServiceProvider provider) {
+
         if (!_providers.contains(provider)) {
             _providers.addElement(provider);
         }
@@ -95,6 +103,7 @@ public class LookupService {
      * @param provider ILookupServiceProvider
      */
     public static void removeLookupServiceProvider(ILookupServiceProvider provider) {
+
         _providers.removeElement(provider);
     }
 }

@@ -38,9 +38,8 @@ package org.trade.core.persistent.dao;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityResult;
-import jakarta.persistence.Id;
+import jakarta.persistence.FieldResult;
 import jakarta.persistence.SqlResultSetMapping;
-import jakarta.persistence.SqlResultSetMappings;
 import org.trade.core.dao.Aspect;
 import org.trade.core.properties.ConfigProperties;
 
@@ -53,8 +52,34 @@ import java.time.ZonedDateTime;
  *
  */
 @Entity
-@SqlResultSetMappings({
-        @SqlResultSetMapping(name = "TradelogDetailMapping", entities = @EntityResult(entityClass = TradelogDetail.class))})
+//@SqlResultSetMappings({
+//        @SqlResultSetMapping(name = "TradelogDetailMapping", entities = @EntityResult(entityClass = TradelogDetail.class))})
+
+@SqlResultSetMapping(
+        name = "TradelogDetailMapping",
+        entities = {
+                @EntityResult(
+                        entityClass = TradelogDetail.class,
+                        fields = {
+                                @FieldResult(name = "id", column = "id"),
+                                @FieldResult(name = "open", column = "open"),
+                                @FieldResult(name = "symbol", column = "symbol"),
+                                @FieldResult(name = "tradestrategyId", column = "tradestrategy_id"),
+                                @FieldResult(name = "longShort", column = "long_short"),
+                                @FieldResult(name = "tier", column = "tier"),
+                                @FieldResult(name = "marketBias", column = "market_bias"),
+                                @FieldResult(name = "marketBar", column = "market_bar"),
+                                @FieldResult(name = "name", column = "name"),
+                                @FieldResult(name = "status", column = "status"),
+                                @FieldResult(name = "side", column = "side"),
+                                @FieldResult(name = "action", column = "action"),
+                                @FieldResult(name = "stopPrice", column = "stop_price"),
+                                @FieldResult(name = "orderStatus", column = "order_status"),
+                                @FieldResult(name = "filledDate", column = "filled_date"),
+                                @FieldResult(name = "quantity", column = "quantity"),
+                                @FieldResult(name = "averageFilledPrice", column = "average_filled_price"),
+                                @FieldResult(name = "commission", column = "commission"),
+                                @FieldResult(name = "profitLoss", column = "profit_loss")})})
 public class TradelogDetail extends Aspect implements java.io.Serializable {
 
     /**
@@ -63,24 +88,58 @@ public class TradelogDetail extends Aspect implements java.io.Serializable {
     @Serial
     private static final long serialVersionUID = -832064631322873796L;
 
-    private Integer id;
-    private Integer idTradestrategy;
+    @Column(name = "tradestrategy_id")
+    private Integer tradestrategyId;
+
+    @Column(name = "open", length = 19)
     private String open;
+
+    @Column(name = "market_bias", length = 10)
     private String marketBias;
+
+    @Column(name = "market_bar", length = 10)
     private String marketBar;
+
+    @Column(name = "name", length = 20)
     private String name;
+
+    @Column(name = "symbol", length = 10)
     private String symbol;
+
+    @Column(name = "long_short", length = 6)
     private String longShort;
+
+    @Column(name = "tier", length = 1)
     private String tier;
+
+    @Column(name = "status", length = 10)
     private String status;
+
+    @Column(name = "side", nullable = false, length = 3)
     private String side;
+
+    @Column(name = "action", length = 6)
     private String action;
+
+    @Column(name = "stop_price", precision = 10)
     private BigDecimal stopPrice;
+
+    @Column(name = "order_status", length = 45)
     private String orderStatus;
+
+    @Column(name = "filled_date")
     private ZonedDateTime filledDate;
+
+    @Column(name = "quantity")
     private Integer quantity;
+
+    @Column(name = "average_filled_price", precision = 10)
     private BigDecimal averageFilledPrice;
+
+    @Column(name = "commission", precision = 10)
     private BigDecimal commission;
+
+    @Column(name = "profit_loss", precision = 10)
     private BigDecimal profitLoss;
 
     public TradelogDetail() {
@@ -89,14 +148,14 @@ public class TradelogDetail extends Aspect implements java.io.Serializable {
     /**
      * Constructor for TradelogDetail.
      *
-     * @param idTradestrategy    Integer
      * @param open               String
+     * @param symbol             String
+     * @param tradestrategyId    Integer
+     * @param longShort          String
+     * @param tier               String
      * @param marketBias         String
      * @param marketBar          String
      * @param name               String
-     * @param symbol             String
-     * @param longShort          String
-     * @param tier               String
      * @param status             String
      * @param side               String
      * @param action             String
@@ -108,16 +167,17 @@ public class TradelogDetail extends Aspect implements java.io.Serializable {
      * @param commission         BigDecimal
      * @param profitLoss         BigDecimal
      */
-    public TradelogDetail(Integer idTradestrategy, String open, String marketBias, String marketBar, String name,
-                          String symbol, String longShort, String tier, String status, String side, String action,
+    public TradelogDetail(String open, String symbol, Integer tradestrategyId, String longShort, String tier, String marketBias, String marketBar, String name,
+                          String status, String side, String action,
                           BigDecimal stopPrice, String orderStatus, ZonedDateTime filledDate, Integer quantity,
                           BigDecimal averageFilledPrice, BigDecimal commission, BigDecimal profitLoss) {
-        this.idTradestrategy = idTradestrategy;
+
         this.open = open;
+        this.symbol = symbol;
+        this.tradestrategyId = tradestrategyId;
         this.marketBias = marketBias;
         this.marketBar = marketBar;
         this.name = name;
-        this.symbol = symbol;
         this.longShort = longShort;
         this.tier = tier;
         this.status = status;
@@ -130,46 +190,24 @@ public class TradelogDetail extends Aspect implements java.io.Serializable {
         this.averageFilledPrice = averageFilledPrice;
         this.commission = commission;
         this.profitLoss = profitLoss;
-
     }
 
     /**
-     * Method getIdTradelogDetail.
+     * Method gettradestrategyId.
      *
      * @return Integer
      */
-    @Id
-    @Column(name = "id_tradelog_detail")
-    public Integer getIdTradelogDetail() {
-        return this.id;
+    public Integer getTradestrategyId() {
+        return this.tradestrategyId;
     }
 
     /**
-     * Method setIdTradelogDetail.
+     * Method setTradestrategyId.
      *
-     * @param idTradelogDetail Integer
+     * @param tradestrategyId Integer
      */
-    public void setIdTradelogDetail(Integer idTradelogDetail) {
-        this.id = idTradelogDetail;
-    }
-
-    /**
-     * Method getIdTradestrategy.
-     *
-     * @return Integer
-     */
-    @Column(name = "id_tradestrategy")
-    public Integer getIdTradestrategy() {
-        return this.idTradestrategy;
-    }
-
-    /**
-     * Method setIdTradestrategy.
-     *
-     * @param idTradestrategy Integer
-     */
-    public void setIdTradestrategy(Integer idTradestrategy) {
-        this.idTradestrategy = idTradestrategy;
+    public void setTradestrategyId(Integer tradestrategyId) {
+        this.tradestrategyId = tradestrategyId;
     }
 
     /**
@@ -177,7 +215,6 @@ public class TradelogDetail extends Aspect implements java.io.Serializable {
      *
      * @return String
      */
-    @Column(name = "open", length = 19)
     public String getOpen() {
         return this.open;
     }
@@ -196,7 +233,6 @@ public class TradelogDetail extends Aspect implements java.io.Serializable {
      *
      * @return String
      */
-    @Column(name = "market_bias", length = 10)
     public String getMarketBias() {
         return this.marketBias;
     }
@@ -215,7 +251,7 @@ public class TradelogDetail extends Aspect implements java.io.Serializable {
      *
      * @return String
      */
-    @Column(name = "market_bar", length = 10)
+
     public String getMarketBar() {
         return this.marketBar;
     }
@@ -234,7 +270,6 @@ public class TradelogDetail extends Aspect implements java.io.Serializable {
      *
      * @return String
      */
-    @Column(name = "name", length = 20)
     public String getName() {
         return this.name;
     }
@@ -253,7 +288,6 @@ public class TradelogDetail extends Aspect implements java.io.Serializable {
      *
      * @return String
      */
-    @Column(name = "symbol", length = 10)
     public String getSymbol() {
         return this.symbol;
     }
@@ -272,7 +306,6 @@ public class TradelogDetail extends Aspect implements java.io.Serializable {
      *
      * @return String
      */
-    @Column(name = "long_short", length = 6)
     public String getLongShort() {
         return this.longShort;
     }
@@ -291,7 +324,6 @@ public class TradelogDetail extends Aspect implements java.io.Serializable {
      *
      * @return String
      */
-    @Column(name = "tier", length = 1)
     public String getTier() {
         return this.tier;
     }
@@ -310,7 +342,6 @@ public class TradelogDetail extends Aspect implements java.io.Serializable {
      *
      * @return String
      */
-    @Column(name = "status", length = 10)
     public String getStatus() {
         return this.status;
     }
@@ -329,7 +360,6 @@ public class TradelogDetail extends Aspect implements java.io.Serializable {
      *
      * @return String
      */
-    @Column(name = "side", nullable = false, length = 3)
     public String getSide() {
         return this.side;
     }
@@ -348,7 +378,6 @@ public class TradelogDetail extends Aspect implements java.io.Serializable {
      *
      * @return String
      */
-    @Column(name = "action", length = 6)
     public String getAction() {
         return this.action;
     }
@@ -367,7 +396,6 @@ public class TradelogDetail extends Aspect implements java.io.Serializable {
      *
      * @return BigDecimal
      */
-    @Column(name = "stop_price", precision = 10)
     public BigDecimal getStopPrice() {
         return this.stopPrice;
     }
@@ -386,7 +414,6 @@ public class TradelogDetail extends Aspect implements java.io.Serializable {
      *
      * @return String
      */
-    @Column(name = "order_status", length = 45)
     public String getOrderStatus() {
         return this.orderStatus;
     }
@@ -405,7 +432,6 @@ public class TradelogDetail extends Aspect implements java.io.Serializable {
      *
      * @return ZonedDateTime
      */
-    @Column(name = "filled_date")
     public ZonedDateTime getFilledDate() {
         return this.filledDate;
     }
@@ -424,7 +450,6 @@ public class TradelogDetail extends Aspect implements java.io.Serializable {
      *
      * @return Integer
      */
-    @Column(name = "quantity")
     public Integer getQuantity() {
         return this.quantity;
     }
@@ -443,7 +468,6 @@ public class TradelogDetail extends Aspect implements java.io.Serializable {
      *
      * @return BigDecimal
      */
-    @Column(name = "average_filled_price", precision = 10)
     public BigDecimal getAverageFilledPrice() {
         return this.averageFilledPrice;
     }
@@ -462,7 +486,6 @@ public class TradelogDetail extends Aspect implements java.io.Serializable {
      *
      * @return BigDecimal
      */
-    @Column(name = "commission", precision = 10)
     public BigDecimal getCommission() {
         return this.commission;
     }
@@ -481,7 +504,6 @@ public class TradelogDetail extends Aspect implements java.io.Serializable {
      *
      * @return BigDecimal
      */
-    @Column(name = "profit_loss", precision = 10)
     public BigDecimal getProfitLoss() {
         return this.profitLoss;
     }
@@ -500,15 +522,10 @@ public class TradelogDetail extends Aspect implements java.io.Serializable {
      *
      * @return String
      */
-    public static String getSQLString() {
-        String sql = null;
-        try {
-            sql = ConfigProperties.readFileAsString("org/trade/core/persistent/dao/sql/TradelogDetail.sql",
-                    Thread.currentThread().getContextClassLoader());
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return sql;
+    public static String getSQLString() throws IOException {
+
+        return ConfigProperties.readFileAsString("org/trade/core/persistent/dao/sql/TradelogDetail.sql",
+                Thread.currentThread().getContextClassLoader());
+
     }
 }

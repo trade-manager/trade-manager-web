@@ -46,7 +46,7 @@ import java.sql.Date;
  * JavaTypeTranslator class.
  *
  * @author Simon Allen
- * @see java.sql.Date
+ * @see Date
  */
 public class StringToSQLDateConverter extends StringToObjectConverter {
     /**
@@ -67,7 +67,7 @@ public class StringToSQLDateConverter extends StringToObjectConverter {
      * org.trade.core.conversion.IJavaTypeConverter#getTargetType()
      */
     public Class<?> getTargetType() {
-        return java.sql.Date.class;
+        return Date.class;
     }
 
     //

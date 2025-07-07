@@ -35,7 +35,7 @@
  */
 package org.trade.core.persistent.dao.series.indicator;
 
-import org.trade.core.persistent.PersistentModelException;
+import org.trade.core.persistent.ServiceException;
 import org.trade.core.persistent.dao.series.AbstractIntervalXYDataset;
 import org.trade.core.persistent.dao.series.DatasetChangeEvent;
 import org.trade.core.persistent.dao.series.indicator.volume.IVolumeDataset;
@@ -384,7 +384,7 @@ public class VolumeDataset extends AbstractIntervalXYDataset implements IVolumeD
      * @param seriesIndex int
      * @param newBar      boolean
      */
-    public void updateDataset(CandleDataset source, int seriesIndex, boolean newBar) throws PersistentModelException {
+    public void updateDataset(CandleDataset source, int seriesIndex, boolean newBar) throws ServiceException {
 
         if (source == null) {
             throw new IllegalArgumentException("Null source (CandleDataset).");

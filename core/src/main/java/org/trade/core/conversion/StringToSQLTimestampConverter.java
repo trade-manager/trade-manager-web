@@ -47,7 +47,7 @@ import java.sql.Timestamp;
  * JavaTypeTranslator class.
  *
  * @author Simon Allen
- * @see java.sql.Timestamp
+ * @see Timestamp
  */
 public class StringToSQLTimestampConverter extends StringToObjectConverter {
     /**
@@ -68,7 +68,7 @@ public class StringToSQLTimestampConverter extends StringToObjectConverter {
      * org.trade.core.conversion.IJavaTypeConverter#getTargetType()
      */
     public Class<?> getTargetType() {
-        return java.sql.Timestamp.class;
+        return Timestamp.class;
     }
 
     //

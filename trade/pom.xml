@@ -28,6 +28,13 @@
             <version>1.0.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>org.trade</groupId>
+            <artifactId>trade-manager-core</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -37,6 +44,16 @@
                 <version>1.6.0</version>
                 <configuration>
                     <mainClass>org.trade.ui.TradeAppMain</mainClass>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <systemPropertyVariables>
+                        <user.timezone>America/New_York</user.timezone>
+                        <trade.config>file:../config.properties</trade.config>
+                    </systemPropertyVariables>
                 </configuration>
             </plugin>
         </plugins>

@@ -65,6 +65,7 @@ import javax.swing.*;
  * @author Simon Allen
  */
 public abstract class Worker {
+
     private Object value; // see getValue(), setValue()
     public Thread thread;
     protected boolean isDone = false;
@@ -173,7 +174,9 @@ public abstract class Worker {
      */
 
     public boolean isRunning() {
+
         Thread t = threadVar.get();
+
         if (t == null)
             return false;
 
@@ -209,7 +212,9 @@ public abstract class Worker {
      */
 
     public boolean isWaiting() {
+
         Thread t = threadVar.get();
+
         if (t != null) {
             return t.getState().compareTo(Thread.State.WAITING) == 0
                     || t.getState().compareTo(Thread.State.TIMED_WAITING) == 0;
@@ -222,6 +227,7 @@ public abstract class Worker {
      * the worker to stop what it's doing.
      */
     public void cancel() {
+
         isCancelled = true;
         Thread t = threadVar.get();
         if (t != null) {
@@ -256,14 +262,20 @@ public abstract class Worker {
      * @return the value created by the <code>construct</code> method
      */
     public Object get() {
+
         while (true) {
             Thread t = threadVar.get();
+
             if (t == null) {
+
                 return getValue();
             }
+
             try {
+
                 t.join();
             } catch (InterruptedException e) {
+
                 Thread.currentThread().interrupt(); // propagate
                 return null;
             }
@@ -275,6 +287,7 @@ public abstract class Worker {
      * then exit.
      */
     public Worker() {
+
         final Runnable doFinished = () -> {
             isDone = true;
             done();

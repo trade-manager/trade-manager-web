@@ -54,7 +54,7 @@ import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.trade.core.persistent.PersistentModelException;
+import org.trade.core.persistent.ServiceException;
 import org.trade.core.persistent.dao.CodeValue;
 import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.series.ComparableObjectItem;
@@ -384,7 +384,7 @@ public abstract class IndicatorSeries extends ComparableObjectSeries implements 
      * @return Strategy
      */
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_strategy", nullable = false)
+    @JoinColumn(name = "strategy_id", nullable = false)
     public Strategy getStrategy() {
         return this.strategy;
     }
@@ -448,7 +448,7 @@ public abstract class IndicatorSeries extends ComparableObjectSeries implements 
      * @param skip   int
      * @param newBar boolean
      */
-    public abstract void updateSeries(CandleSeries source, int skip, boolean newBar) throws PersistentModelException;
+    public abstract void updateSeries(CandleSeries source, int skip, boolean newBar) throws ServiceException;
 
     /**
      * Method createSeries.
@@ -456,7 +456,7 @@ public abstract class IndicatorSeries extends ComparableObjectSeries implements 
      * @param source      CandleDataset
      * @param seriesIndex int
      */
-    public abstract void createSeries(CandleDataset source, int seriesIndex) throws PersistentModelException;
+    public abstract void createSeries(CandleDataset source, int seriesIndex) throws ServiceException;
 
     /**
      * Method printSeries.

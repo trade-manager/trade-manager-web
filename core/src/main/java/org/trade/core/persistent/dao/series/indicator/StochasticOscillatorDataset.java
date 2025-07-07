@@ -35,7 +35,7 @@
  */
 package org.trade.core.persistent.dao.series.indicator;
 
-import org.trade.core.persistent.PersistentModelException;
+import org.trade.core.persistent.ServiceException;
 import org.trade.core.persistent.dao.series.AbstractXYDataset;
 import org.trade.core.persistent.dao.series.DatasetChangeEvent;
 import org.trade.core.persistent.dao.series.indicator.stochasticoscillator.IStochasticOscillatorDataset;
@@ -336,7 +336,7 @@ public class StochasticOscillatorDataset extends AbstractXYDataset
      * @param seriesIndex int
      * @param newBar      boolean
      */
-    public void updateDataset(CandleDataset source, int seriesIndex, boolean newBar) throws PersistentModelException {
+    public void updateDataset(CandleDataset source, int seriesIndex, boolean newBar) throws ServiceException {
         if (source == null) {
             throw new IllegalArgumentException("Null source (CandleDataset).");
         }

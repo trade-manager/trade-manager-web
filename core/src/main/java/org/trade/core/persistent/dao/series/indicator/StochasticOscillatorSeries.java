@@ -38,7 +38,7 @@ package org.trade.core.persistent.dao.series.indicator;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Transient;
-import org.trade.core.persistent.PersistentModelException;
+import org.trade.core.persistent.ServiceException;
 import org.trade.core.persistent.dao.CodeValue;
 import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.series.indicator.candle.CandleItem;
@@ -230,7 +230,7 @@ public class StochasticOscillatorSeries extends IndicatorSeries {
      * @param period               the period.
      * @param stochasticOscillator the StochasticOscillator.
      */
-    public void add(RegularTimePeriod period, BigDecimal stochasticOscillator) throws PersistentModelException {
+    public void add(RegularTimePeriod period, BigDecimal stochasticOscillator) throws ServiceException {
         if (!this.isEmpty()) {
             StochasticOscillatorItem item0 = (StochasticOscillatorItem) this.getDataItem(0);
             if (!period.getClass().equals(item0.getPeriod().getClass())) {
@@ -246,7 +246,7 @@ public class StochasticOscillatorSeries extends IndicatorSeries {
      * @param notify   the notify listeners.
      * @param dataItem StochasticOscillatorItem
      */
-    public void add(StochasticOscillatorItem dataItem, boolean notify) throws PersistentModelException {
+    public void add(StochasticOscillatorItem dataItem, boolean notify) throws ServiceException {
         if (!this.isEmpty()) {
             StochasticOscillatorItem item0 = (StochasticOscillatorItem) this.getDataItem(0);
             if (!dataItem.getPeriod().getClass().equals(item0.getPeriod().getClass())) {
@@ -368,7 +368,7 @@ public class StochasticOscillatorSeries extends IndicatorSeries {
      * @param source      CandleDataset
      * @param seriesIndex int
      */
-    public void createSeries(CandleDataset source, int seriesIndex) throws PersistentModelException {
+    public void createSeries(CandleDataset source, int seriesIndex) throws ServiceException {
 
         if (source.getSeries(seriesIndex) == null) {
             throw new IllegalArgumentException("Null source (CandleDataset).");
@@ -386,7 +386,7 @@ public class StochasticOscillatorSeries extends IndicatorSeries {
      * @param skip   int
      * @param newBar boolean
      */
-    public void updateSeries(CandleSeries source, int skip, boolean newBar) throws PersistentModelException {
+    public void updateSeries(CandleSeries source, int skip, boolean newBar) throws ServiceException {
 
         if (source == null) {
             throw new IllegalArgumentException("Null source (CandleSeries).");

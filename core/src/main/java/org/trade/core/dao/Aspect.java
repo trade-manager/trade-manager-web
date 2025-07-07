@@ -35,63 +35,95 @@
  */
 package org.trade.core.dao;
 
-import java.io.Serial;
-import java.io.Serializable;
+import jakarta.persistence.Column;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
+import jakarta.persistence.Transient;
+import jakarta.persistence.Version;
+import org.springframework.data.jpa.domain.AbstractPersistable;
+import org.trade.core.util.time.TradingCalendar;
+
+import java.time.ZonedDateTime;
 
 /**
  *
  */
-public abstract class Aspect implements Serializable {
+@MappedSuperclass
+public abstract class Aspect extends AbstractPersistable<Integer> {
 
-    /**
-     *
-     */
-    @Serial
-    private static final long serialVersionUID = -2295788967071036093L;
-
-    protected static Boolean m_ascending = true;
-    protected Integer id;
+    @Version
+    @Column(name = "version", columnDefinition = "integer DEFAULT 0", nullable = false)
     protected Integer version;
-    private Object m_context;
+
+    @Column(name = "created_date", nullable = false, updatable = false)
+    private ZonedDateTime createdDate;
+
+    @Column(name = "updated_date", nullable = false)
+    private ZonedDateTime updatedDate;
+
+    @Transient
     private boolean dirty = false;
 
-    public Aspect() {
-    }
+    @Transient
+    private static boolean ascending = false;
 
     /**
      * Constructor for Aspect.
-     *
-     * @param context Object
      */
-    public Aspect(Object context) {
-        m_context = context;
+    public Aspect() {
+        super();
+    }
+
+
+    @PrePersist
+    protected void onCreate() {
+
+        createdDate = TradingCalendar.getDateTimeNowMarketTimeZone();
+        updatedDate = TradingCalendar.getDateTimeNowMarketTimeZone();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedDate = TradingCalendar.getDateTimeNowMarketTimeZone();
     }
 
     /**
-     * Method getContext.
+     * Method getCreateDate.
      *
-     * @return Object
+     * @return ZonedDateTime
      */
-    public Object getContext() {
-        return (m_context);
+    public ZonedDateTime getCreateDate() {
+        return this.createdDate;
     }
 
     /**
-     * Method getId.
+     * Method setCreateDate.
      *
-     * @return Integer
+     * @param createdDate ZonedDateTime
      */
-    public Integer getId() {
-        return id;
+    public void setCreateDate(ZonedDateTime createdDate) {
+
+        this.createdDate = createdDate;
     }
 
     /**
-     * Method setId.
+     * Method getUpdateDate.
      *
-     * @param id Integer
+     * @return ZonedDateTime
      */
-    public void setId(Integer id) {
-        this.id = id;
+    public ZonedDateTime getUpdateDate() {
+        return this.updatedDate;
+    }
+
+    /**
+     * Method setUpdateDate.
+     *
+     * @param updatedDate ZonedDateTime
+     */
+    public void setUpdateDate(ZonedDateTime updatedDate) {
+
+        this.updatedDate = updatedDate;
     }
 
     /**
@@ -113,6 +145,24 @@ public abstract class Aspect implements Serializable {
     }
 
     /**
+     * Method getAscending.
+     *
+     * @return Boolean
+     */
+    public static Boolean getAscending() {
+        return ascending;
+    }
+
+    /**
+     * Method setAscending.
+     *
+     * @param ascending Boolean
+     */
+    public static void setAscending(Boolean ascending) {
+        Aspect.ascending = ascending;
+    }
+
+    /**
      * Method isDirty.
      *
      * @return boolean
@@ -128,62 +178,5 @@ public abstract class Aspect implements Serializable {
      */
     public void setDirty(boolean dirty) {
         this.dirty = dirty;
-    }
-
-    /**
-     * Method equals.
-     *
-     * @param objectToCompare Object
-     * @return boolean
-     */
-    public boolean equals(Object objectToCompare) {
-
-        if (this == objectToCompare) {
-            return true;
-        }
-        if (objectToCompare == null) {
-            return false;
-        }
-        if (!(objectToCompare instanceof Aspect)) {
-            return false;
-        }
-        if (null == this.getId())
-            return false;
-        if (this.getClass().equals(objectToCompare.getClass())) {
-            return this.getId().equals(((Aspect) objectToCompare).getId());
-        }
-        return false;
-    }
-
-    /**
-     * Method hashCode.
-     * <p>
-     * For every field tested in the equals-Method, calculate a hash code c by:
-     * <p>
-     * If the field f is a boolean: calculate * (f ? 0 : 1);
-     * <p>
-     * If the field f is a byte, char, short or int: calculate (int)f;
-     * <p>
-     * If the field f is a long: calculate (int)(f ^ (f >>> 32));
-     * <p>
-     * If the field f is a float: calculate Float.floatToIntBits(f);
-     * <p>
-     * If the field f is a double: calculate Double.doubleToLongBits(f) and
-     * handle the return value like every long value;
-     * <p>
-     * If the field f is an object: Use the result of the hashCode() method or 0
-     * if f == null;
-     * <p>
-     * If the field f is an array: See every field as separate element and
-     * calculate the hash value in a recursive fashion and combine the values as
-     * described next.
-     *
-     * @return int
-     */
-    public int hashCode() {
-        int hash = 1;
-        hash = hash * 31 + (this.getId() == null ? 0 : this.getId().hashCode());
-        hash = hash + (this.getVersion() == null ? 0 : this.getVersion().hashCode());
-        return hash;
     }
 }

@@ -47,18 +47,24 @@ import java.awt.*;
  */
 public class AppMain {
 
+
     // Construct the application
     public AppMain() {
 
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         double appWidth = screenSize.getWidth() * 0.9;
         double appHieght = screenSize.getHeight() * 0.9;
-        if (appHieght > 900)
-            appHieght = 900;
 
-        if (appWidth > 1200)
+        if (appHieght > 900) {
+
+            appHieght = 900;
+        }
+
+        if (appWidth > 1200) {
+
             appWidth = 1200;
-        AppFrame frame = new AppFrame();
+        }
+        AppFrame frame = new AppFrame(null);
         frame.setIconImage(ImageBuilder.getImage("trade.gif"));
         frame.setSize((int) appWidth, (int) appHieght);
         frame.setLocation((int) ((screenSize.getWidth() - frame.getSize().getWidth()) / 2),
@@ -76,6 +82,7 @@ public class AppMain {
      * @param args String[]
      */
     public static void main(String[] args) {
+
         SwingUtilities.invokeLater(AppMain::new);
     }
 }

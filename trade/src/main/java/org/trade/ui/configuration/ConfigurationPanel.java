@@ -35,6 +35,8 @@
  */
 package org.trade.ui.configuration;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.trade.base.BaseButton;
 import org.trade.base.BasePanel;
 import org.trade.base.BaseUIPropertyCodes;
@@ -44,7 +46,7 @@ import org.trade.core.dao.Aspect;
 import org.trade.core.dao.Aspects;
 import org.trade.core.factory.ClassFactory;
 import org.trade.core.lookup.DBTableLookupServiceProvider;
-import org.trade.core.persistent.IPersistentModel;
+import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.CodeType;
 import org.trade.core.persistent.dao.CodeValue;
 import org.trade.core.persistent.dao.Portfolio;
@@ -81,28 +83,33 @@ public class ConfigurationPanel extends BasePanel {
     @Serial
     private static final long serialVersionUID = 8543984162821384818L;
 
-    private JScrollPane m_jScrollPane = null;
-    private final JScrollPane m_jScrollPane1 = new JScrollPane();
-    private IPersistentModel m_tradePersistentModel = null;
-    private ConfigurationTable m_table = null;
-    private AspectTableModel m_tableModel = null;
+    private final TradeService tradeService;
+    private final static Logger _log = LoggerFactory.getLogger(ConfigurationPanel.class);
+    private JScrollPane jScrollPane = null;
+    private final JScrollPane jScrollPane1 = new JScrollPane();
+    private ConfigurationTable configTable = null;
+    private AspectTableModel tableModel = null;
     private Aspects m_aspects = null;
 
-    private ConfigurationTable m_tableChild = null;
-    private TableModel m_tableModelChild = null;
+    private ConfigurationTable tableChild = null;
+    private TableModel tableModelChild = null;
     private BaseButton propertiesButton = null;
     private DecodeComboBoxEditor refTableEditorComboBox = null;
 
     /**
      * Constructor
      *
-     * @param tradePersistentModel IPersistentModel
+     * @param tradeService TradeService
      */
 
-    public ConfigurationPanel(IPersistentModel tradePersistentModel) {
+    public ConfigurationPanel(TradeService tradeService) {
+
+        this.tradeService = tradeService;
+
         try {
 
             if (null != getMenu()) {
+
                 getMenu().addMessageListener(this);
             }
 
@@ -111,10 +118,8 @@ public class ConfigurationPanel extends BasePanel {
              * Initialize the ValueType decode tables. This caused the tables to
              * be cached.
              */
-
             DAOEntryLimit.newInstance();
-            m_tradePersistentModel = tradePersistentModel;
-            m_jScrollPane = new JScrollPane();
+            jScrollPane = new JScrollPane();
             propertiesButton = new BaseButton(this, BaseUIPropertyCodes.PROPERTIES, 0);
             propertiesButton.setEnabled(false);
             JLabel refTable = new JLabel("Configuration:");
@@ -125,9 +130,9 @@ public class ConfigurationPanel extends BasePanel {
 
                 if (e.getStateChange() == ItemEvent.SELECTED) {
 
-                    if (null != m_tableChild) {
+                    if (null != tableChild) {
 
-                        m_jScrollPane1.getViewport().remove(m_tableChild);
+                        jScrollPane1.getViewport().remove(tableChild);
                     }
                     addReferenceTablePanel(((ReferenceTable) e.getItem()).getCode());
                 }
@@ -144,12 +149,12 @@ public class ConfigurationPanel extends BasePanel {
             jToolBar.setLayout(new BorderLayout());
             jToolBar.add(jPanel3, BorderLayout.WEST);
 
-            jPanel4.add(m_jScrollPane, BorderLayout.CENTER);
+            jPanel4.add(jScrollPane, BorderLayout.CENTER);
             JScrollPane jScrollPane1 = new JScrollPane();
             jScrollPane1.getViewport().add(jPanel4, BorderLayout.NORTH);
             jScrollPane1.setBorder(new BevelBorder(BevelBorder.LOWERED));
 
-            jPanel2.add(m_jScrollPane1, BorderLayout.CENTER);
+            jPanel2.add(this.jScrollPane1, BorderLayout.CENTER);
             JSplitPane jSplitPane1 = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true, jPanel4, jPanel2);
             jSplitPane1.setResizeWeight(0.2d);
             jSplitPane1.setOneTouchExpandable(true);
@@ -188,9 +193,12 @@ public class ConfigurationPanel extends BasePanel {
      * Method doWindowOpen.
      */
     public void doWindowOpen() {
+
         try {
+
             this.addReferenceTablePanel(ReferenceTable.newInstance().getCode());
         } catch (Exception ex) {
+
             this.setErrorMessage("Error during initiaization.", ex.getMessage(), ex);
         }
     }
@@ -202,14 +210,16 @@ public class ConfigurationPanel extends BasePanel {
     public void doSave() {
         try {
             this.setStatusBarMessage("Save in progress ...", BasePanel.INFORMATION);
-            int selectedRow = m_table.getSelectedRow();
+            int selectedRow = configTable.getSelectedRow();
             String className = "org.trade.persistent.dao."
                     + ((ReferenceTable) Objects.requireNonNull(refTableEditorComboBox.getSelectedItem())).getCode();
 
             for (ListIterator<Aspect> itemIter = m_aspects.getAspect().listIterator(); itemIter.hasNext(); ) {
                 Aspect item = itemIter.next();
+
                 if (item.isDirty()) {
-                    item = m_tradePersistentModel.persistAspect(item);
+
+                    item = tradeService.saveAspect(item);
                 }
 
                 /*
@@ -219,7 +229,7 @@ public class ConfigurationPanel extends BasePanel {
                 itemIter.set(item);
             }
             m_aspects.setDirty(false);
-            Aspects aspects = m_tradePersistentModel.findAspectsByClassName(className);
+            Aspects aspects = tradeService.findByClassName(className);
             for (Aspect currAspect : aspects.getAspect()) {
                 boolean exists = false;
                 for (Aspect aspect : m_aspects.getAspect()) {
@@ -229,12 +239,12 @@ public class ConfigurationPanel extends BasePanel {
                     }
                 }
                 if (!exists)
-                    m_tradePersistentModel.removeAspect(currAspect);
+                    tradeService.deleteAspect(currAspect);
             }
             DBTableLookupServiceProvider.clearLookup();
             doRefresh();
             if (selectedRow > -1)
-                m_table.setRowSelectionInterval(selectedRow, selectedRow);
+                configTable.setRowSelectionInterval(selectedRow, selectedRow);
             this.setStatusBarMessage(
                     "Save complete. Note for changed to take effect the Tradinday Tab Search must be re-run.",
                     BasePanel.INFORMATION);
@@ -280,7 +290,7 @@ public class ConfigurationPanel extends BasePanel {
         try {
             this.clearStatusBarMessage();
             String indicatorName = series.getType().substring(0, series.getType().indexOf("Series"));
-            CodeType codeType = m_tradePersistentModel.findCodeTypeByNameType(indicatorName,
+            CodeType codeType = tradeService.findCodeTypeByNameType(indicatorName,
                     CodeType.IndicatorParameters);
             if (null == codeType) {
                 this.setStatusBarMessage("There are no properties for this Indicator ...", BasePanel.INFORMATION);
@@ -328,8 +338,8 @@ public class ConfigurationPanel extends BasePanel {
                 ListSelectionModel model = (ListSelectionModel) event.getSource();
                 if (model.getLeadSelectionIndex() > -1) {
 
-                    Aspect transferObject = m_tableModel.getData().getAspect()
-                            .get(m_table.convertRowIndexToModel(model.getLeadSelectionIndex()));
+                    Aspect transferObject = tableModel.getData().getAspect()
+                            .get(configTable.convertRowIndexToModel(model.getLeadSelectionIndex()));
                     propertiesButton.setEnabled(false);
                     setChildPanel(transferObject);
                 }
@@ -345,23 +355,25 @@ public class ConfigurationPanel extends BasePanel {
     private void addReferenceTablePanel(String refTableClass) {
 
         try {
-            m_aspects = m_tradePersistentModel.findAspectsByClassName("org.trade.persistent.dao." + refTableClass);
-            Vector<Object> parm = new Vector<>();
-            m_tableModel = (AspectTableModel) ClassFactory
-                    .getCreateClass("org.trade.ui.models." + refTableClass + "TableModel", parm, this);
 
-            m_tableModel.setData(m_aspects);
-            m_table = new ConfigurationTable(m_tableModel);
-            m_table.setFont(new Font("Monospaced", Font.PLAIN, 12));
-            m_table.setPreferredScrollableViewportSize(new Dimension(300, 200));
-            m_table.setFillsViewportHeight(true);
-            m_table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
-            m_table.getSelectionModel().addListSelectionListener(new TableRowListener());
-            m_jScrollPane.getViewport().add(m_table, BorderLayout.CENTER);
-            m_jScrollPane.setBorder(new BevelBorder(BevelBorder.LOWERED));
-            m_jScrollPane.addMouseListener(m_table);
+            m_aspects = tradeService.findByClassName("org.trade.persistent.dao." + refTableClass);
+            Vector<Object> parm = new Vector<>();
+            tableModel = (AspectTableModel) ClassFactory
+                    .getCreateClass("org.trade.ui.models." + refTableClass + "TableModel", parm, this);
+            tableModel.setData(m_aspects);
+            configTable = new ConfigurationTable(tableModel);
+            configTable.setFont(new Font("Monospaced", Font.PLAIN, 12));
+            configTable.setPreferredScrollableViewportSize(new Dimension(300, 200));
+            configTable.setFillsViewportHeight(true);
+            configTable.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
+            configTable.getSelectionModel().addListSelectionListener(new TableRowListener());
+            jScrollPane.getViewport().add(configTable, BorderLayout.CENTER);
+            jScrollPane.setBorder(new BevelBorder(BevelBorder.LOWERED));
+            jScrollPane.addMouseListener(configTable);
+
             if (!m_aspects.getAspect().isEmpty()) {
-                m_table.setRowSelectionInterval(0, 0);
+
+                configTable.setRowSelectionInterval(0, 0);
             }
 
         } catch (Exception ex) {
@@ -385,9 +397,9 @@ public class ConfigurationPanel extends BasePanel {
                 ListSelectionModel model = (ListSelectionModel) event.getSource();
                 if (model.getLeadSelectionIndex() > -1) {
 
-                    IndicatorSeries transferObject = ((IndicatorSeriesTableModel) m_tableModelChild).getData()
+                    IndicatorSeries transferObject = ((IndicatorSeriesTableModel) tableModelChild).getData()
                             .getIndicatorSeries()
-                            .get(m_tableChild.convertRowIndexToModel(model.getLeadSelectionIndex()));
+                            .get(tableChild.convertRowIndexToModel(model.getLeadSelectionIndex()));
                     propertiesButton.setTransferObject(transferObject);
                     propertiesButton.setEnabled(true);
                 }
@@ -404,33 +416,33 @@ public class ConfigurationPanel extends BasePanel {
         try {
             switch (aspect) {
                 case Strategy strategy -> {
-                    m_tableModelChild = new IndicatorSeriesTableModel();
-                    ((IndicatorSeriesTableModel) m_tableModelChild).setData(strategy);
-                    m_tableChild = new ConfigurationTable(m_tableModelChild);
+                    tableModelChild = new IndicatorSeriesTableModel();
+                    ((IndicatorSeriesTableModel) tableModelChild).setData(strategy);
+                    tableChild = new ConfigurationTable(tableModelChild);
 
-                    m_tableChild.getSelectionModel().addListSelectionListener(new IndicatorSeriesTableRowListener());
-                    m_tableChild.setDefaultRenderer(Aspects.class, new ButtonRenderer(BaseUIPropertyCodes.PROPERTIES));
-                    m_tableChild.setDefaultEditor(Aspects.class, new ButtonEditor(propertiesButton));
+                    tableChild.getSelectionModel().addListSelectionListener(new IndicatorSeriesTableRowListener());
+                    tableChild.setDefaultRenderer(Aspects.class, new ButtonRenderer(BaseUIPropertyCodes.PROPERTIES));
+                    tableChild.setDefaultEditor(Aspects.class, new ButtonEditor(propertiesButton));
                 }
                 case CodeType codeType -> {
-                    m_tableModelChild = new CodeAttributeTableModel();
-                    ((CodeAttributeTableModel) m_tableModelChild).setData(codeType);
-                    m_tableChild = new ConfigurationTable(m_tableModelChild);
+                    tableModelChild = new CodeAttributeTableModel();
+                    ((CodeAttributeTableModel) tableModelChild).setData(codeType);
+                    tableChild = new ConfigurationTable(tableModelChild);
                 }
                 case Portfolio portfolio -> {
-                    m_tableModelChild = new AccountTableModel();
-                    ((AccountTableModel) m_tableModelChild).setData(portfolio);
-                    m_tableChild = new ConfigurationTable(m_tableModelChild);
+                    tableModelChild = new AccountTableModel();
+                    ((AccountTableModel) tableModelChild).setData(portfolio);
+                    tableChild = new ConfigurationTable(tableModelChild);
                 }
-                case null, default -> m_tableChild = new ConfigurationTable(null);
+                case null, default -> tableChild = new ConfigurationTable(null);
             }
-            m_tableChild.setFont(new Font("Monospaced", Font.PLAIN, 12));
-            m_tableChild.setPreferredScrollableViewportSize(new Dimension(300, 200));
-            m_tableChild.setFillsViewportHeight(true);
-            m_tableChild.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
+            tableChild.setFont(new Font("Monospaced", Font.PLAIN, 12));
+            tableChild.setPreferredScrollableViewportSize(new Dimension(300, 200));
+            tableChild.setFillsViewportHeight(true);
+            tableChild.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
 
-            m_jScrollPane1.getViewport().add(m_tableChild, BorderLayout.CENTER);
-            m_jScrollPane1.setBorder(new BevelBorder(BevelBorder.LOWERED));
+            jScrollPane1.getViewport().add(tableChild, BorderLayout.CENTER);
+            jScrollPane1.setBorder(new BevelBorder(BevelBorder.LOWERED));
         } catch (Exception ex) {
             this.setErrorMessage("Error deleting Strategy.", ex.getMessage(), ex);
         }

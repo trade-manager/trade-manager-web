@@ -36,9 +36,9 @@
 package org.trade.core.message;
 
 import org.trade.core.exception.ExceptionCode;
+import org.trade.core.exception.ExceptionContext;
 import org.trade.core.exception.ExceptionMessage;
 import org.trade.core.properties.ConfigProperties;
-import org.trade.core.properties.PropertyFileNotFoundException;
 import org.trade.core.properties.PropertyNotFoundException;
 
 import java.io.BufferedInputStream;
@@ -69,27 +69,22 @@ import java.util.Vector;
  * @author Simon Allen
  */
 public class MessageTranslator {
-    public final static String NAME_OF_MESSAGE_FILE_IN_PROPERTIES = "ERROR_MESSAGE_FILE_NAME";
 
-    public final static String CODE_SUFFIX = "_CODE";
+    public static final String NAME_OF_MESSAGE_FILE_IN_PROPERTIES = "ERROR_MESSAGE_FILE_NAME";
+    public static final String CODE_SUFFIX = "_CODE";
+    public static final String CONTEXT_SUFFIX = "";
 
-    public final static String CONTEXT_SUFFIX = "";
-
-    // public final static String PARAMETER_SUFFIX = "_PARAMETER_NAME";
+    public final static String PARAMETER_SUFFIX = "_PARAMETER_NAME";
     public final static String FIELD_REFERENCE_SUFFIX = "_FIELD_REFERENCE";
 
     private static final Hashtable<String, MessageFormat> messageFormats = new Hashtable<>();
-
     private static final Hashtable<String, String[]> indexesTable = new Hashtable<>();
-
     private static final Hashtable<String, String> fieldReferences = new Hashtable<>();
-
     private static final Hashtable<String, String> codes = new Hashtable<>();
 
     // Constants that map to the keys in the property file
-    private PropertyResourceBundle m_props = null;
-
-    private static final MessageTranslator m_theConfig = new MessageTranslator();
+    private PropertyResourceBundle props = null;
+    private static final MessageTranslator theConfig = new MessageTranslator();
 
     // _________________ these methods are taken from the ConfigProperties class
     // ________
@@ -101,10 +96,9 @@ public class MessageTranslator {
      * @return String
      */
     public static String getPropAsString(String key) throws IOException {
+
         String strRet;
-
-        strRet = m_theConfig._getProperty(key);
-
+        strRet = theConfig._getProperty(key);
         return strRet;
     }
 
@@ -117,31 +111,20 @@ public class MessageTranslator {
      * @return String
      */
     private String _getProperty(String key) throws IOException {
-        String ret;
 
-        if (null == m_props) {
-            InputStream unbuffered;
-            unbuffered = getClass().getResourceAsStream(getPropertyFileName());
+        try (InputStream in = new BufferedInputStream(getClass().getResourceAsStream(getPropertyFileName()))) {
 
-            if (unbuffered == null) {
-                throw new PropertyFileNotFoundException("Check " + "to see if the property file \""
-                        + getPropertyFileName() + "\" is installed and available in the class path.");
-            } else {
-                InputStream in = new BufferedInputStream(unbuffered);
-                m_props = new PropertyResourceBundle(in);
-                in.close();
-                unbuffered.close();
+            if (null == props) {
+
+                props = new PropertyResourceBundle(in);
             }
-        }
 
-        try {
-            ret = m_props.getString(key);
-        } catch (MissingResourceException e) {
+            return props.getString(key);
+        } catch (MissingResourceException ex) {
+
             throw new PropertyNotFoundException("The property \"" + key + "\" was not found in the property file \""
-                    + getPropertyFileName() + "\".  Check the file.");
+                    + getPropertyFileName() + "\".  Check the file msg: " + ex.getMessage());
         }
-
-        return ret;
     }
 
     /**
@@ -151,15 +134,18 @@ public class MessageTranslator {
      */
 
     public static String getPropertyFileName() {
+
         try {
+
             return ConfigProperties.getPropAsString(NAME_OF_MESSAGE_FILE_IN_PROPERTIES);
-        } catch (Exception e) {
+        } catch (Exception ex) {
+
             // default value
             return "messages.properties";
         }
     }
 
-    // ------------------ these methods are not in the ConfigProperties class
+// ------------------ these methods are not in the ConfigProperties class
 
     /**
      * This method takes an exception code and a dictionary, and it uses the
@@ -177,6 +163,7 @@ public class MessageTranslator {
      */
     public static ExceptionMessage translateExceptionMessage(ExceptionCode code, Dictionary<?, ?> params)
             throws MessageTranslatorException {
+
         return translateExceptionMessage(code.getCode(), params);
     }
 
@@ -195,8 +182,8 @@ public class MessageTranslator {
      */
     public static ExceptionMessage translateExceptionMessage(String code, Dictionary<?, ?> params)
             throws MessageTranslatorException {
-        // first look up the message + other info based on the code
 
+        // first look up the message + other info based on the code
         MessageFormat mf = lookupMessageFormat(code); // this can throw an
         // exception
         String[] indexNames = lookupArrayIndexNames(code);
@@ -204,25 +191,28 @@ public class MessageTranslator {
         String newCode = lookupCodeName(code);
 
         // next create an object array from the dictionary
-
         Object[] formatParams = new Object[indexNames.length];
+
         for (int i = 0; i < indexNames.length; i++) {
+
             Object param = null;
+
             if (null != params) {
+
                 param = params.get(indexNames[i]);
             }
             formatParams[i] = Objects.requireNonNullElse(param, "");
         }
 
         // then create the message
-
         String message = mf.format(formatParams);
 
         // return an exception message with the gathered values
-
         if (fieldRef == null) {
+
             return new ExceptionMessage(new ExceptionCode(newCode), message);
         } else {
+
             return new ExceptionMessage(new ExceptionCode(newCode, fieldRef), message);
         }
     }
@@ -234,44 +224,60 @@ public class MessageTranslator {
      * @return ExceptionMessage
      */
     public static ExceptionMessage retrieveExceptionMessage(String index) throws MessageTranslatorException {
+
         String code;
         String message;
         String field = null;
 
         try {
+
             message = getPropAsString(index);
             code = getPropAsString(index + CODE_SUFFIX);
         } catch (IOException e) {
+
             throw new MessageTranslatorException(e);
         }
 
         try {
+
             field = getPropAsString(index + FIELD_REFERENCE_SUFFIX);
         } catch (PropertyNotFoundException e) {
             // Ignore since the field is optional
         } catch (IOException e) {
+
             throw new MessageTranslatorException(e);
         }
 
         ExceptionMessage exceptionMessage;
         exceptionMessage = new ExceptionMessage(new ExceptionCode(code, field), message);
-
         return exceptionMessage;
     }
 
-    /*
-     * public static ExceptionContext retrieveExceptionContext(String index)
-     * throws MessageTranslatorException { String name; String context;
-     *
-     * try { name = getPropAsString(index + PARAMETER_SUFFIX); context =
-     * getPropAsString(index + CONTEXT_SUFFIX); } catch (IOException e) { throw
-     * new MessageTranslatorException(e); }
-     *
-     * ExceptionContext exceptionContext; exceptionContext = new
-     * ExceptionContext(name, context);
-     *
-     * return exceptionContext; }
+    /**
+     * @param index
+     * @return
+     * @throws MessageTranslatorException
      */
+    public static ExceptionContext retrieveExceptionContext(String index)
+            throws MessageTranslatorException {
+
+        String name;
+        String context;
+        try {
+            name = getPropAsString(index + PARAMETER_SUFFIX);
+            context =
+                    getPropAsString(index + CONTEXT_SUFFIX);
+        } catch (IOException e) {
+            throw
+                    new MessageTranslatorException(e);
+        }
+
+        ExceptionContext exceptionContext;
+        exceptionContext = new
+                ExceptionContext(name, context);
+
+        return exceptionContext;
+    }
 
     /**
      * This is the same as the translateExceptionMessage method that takes an
@@ -289,9 +295,12 @@ public class MessageTranslator {
      */
 
     public static ExceptionMessage translateExceptionMessage(ExceptionMessage oldMessage, Dictionary<?, ?> params) {
+
         try {
+
             return translateExceptionMessage(oldMessage.getExceptionCode().getCode(), params);
-        } catch (MessageTranslatorException x) {
+        } catch (MessageTranslatorException ex) {
+
             return oldMessage;
         }
     }
@@ -303,6 +312,7 @@ public class MessageTranslator {
      * @return ExceptionMessage
      */
     public static ExceptionMessage translateExceptionMessage(String code) throws MessageTranslatorException {
+
         return translateExceptionMessage(code, null);
     }
 
@@ -313,6 +323,7 @@ public class MessageTranslator {
      * @return ExceptionMessage
      */
     public static ExceptionMessage translateExceptionMessage(ExceptionCode code) throws MessageTranslatorException {
+
         return translateExceptionMessage(code.getCode(), null);
     }
 
@@ -324,23 +335,28 @@ public class MessageTranslator {
      * @return String
      */
     public static String translateMessage(String code, Dictionary<?, ?> params) throws MessageTranslatorException {
-        MessageFormat mf = lookupMessageFormat(code); // this can throw an
+
+        // this can throw an
+        MessageFormat mf = lookupMessageFormat(code);
+
         // exception
         String[] indexNames = lookupArrayIndexNames(code);
 
         // next create an object array from the dictionary
-
         Object[] formatParams = new Object[indexNames.length];
+
         for (int i = 0; i < indexNames.length; i++) {
+
             Object param = null;
+
             if (null != params) {
+
                 param = params.get(indexNames[i]);
             }
             formatParams[i] = Objects.requireNonNullElse(param, "");
         }
 
         // then return the message
-
         return mf.format(formatParams);
     }
 
@@ -351,16 +367,15 @@ public class MessageTranslator {
      * @return String
      */
     public static String translateMessage(String code) throws MessageTranslatorException {
+
         return translateMessage(code, null);
     }
 
-    // look up the message in the hashtable. if it isn't there the try to get
-    // all the info
-    // for that code from the file
-    // if all the info can't be read, throw an exception
-
     /**
      * Method lookupMessageFormat.
+     * <p>
+     * look up the message in the hashtable. if it isn't there the try to get all the info
+     * for that code from the file if all the info can't be read, throw an exception
      *
      * @param code String
      * @return MessageFormat
@@ -374,33 +389,30 @@ public class MessageTranslator {
         return mf;
     }
 
-    // this is the method that actually carries out the loading of the info for
-    // the given code
-
     /**
      * Method loadMessageFormat.
+     * <p>
+     * this is the method that actually carries out the loading of the info for
+     * the given code
      *
      * @param code String
      */
     private static void loadMessageFormat(String code) throws MessageTranslatorException {
 
         try {
-            String formatString = getPropAsString(code); // let it throw an
-            // exception if not
-            // found
+
+            // let it throw an
+            String formatString = getPropAsString(code);
+            // exception if not found
             MessageFormat mf = new MessageFormat(formatString);
-            String[] indexes = removeNamesAndCreateIndex(mf); // this also
-            // strips the
-            // named params
-            // and replaces
-            // then with the
-            // numbers that
-            // MessageFormat
-            // uses
+            String[] indexes = removeNamesAndCreateIndex(mf);
+
+            // this also strips thenamed params and replaces then with the numbers that MessageFormat uses
             messageFormats.put(code, mf);
             indexesTable.put(code, indexes);
-        } catch (Exception x) {
-            throw new MessageTranslatorException(x, x.getMessage());
+        } catch (Exception ex) {
+
+            throw new MessageTranslatorException(ex, ex.getMessage());
         }
     }
 
@@ -412,15 +424,14 @@ public class MessageTranslator {
     public static void loadFieldReference(String code) {
 
         try {
-            String fieldRef = getPropAsString(code + FIELD_REFERENCE_SUFFIX); // returns
-            // null
-            // if
-            // not
-            // found
+
+            String fieldRef = getPropAsString(code + FIELD_REFERENCE_SUFFIX);
+
+            // returns null if not found
             if (null != fieldRef) {
                 fieldReferences.put(code, fieldRef);
             }
-        } catch (Exception e) {
+        } catch (Exception ex) {
             // it doesn't matter if there isn't a field reference
         }
     }
@@ -432,16 +443,15 @@ public class MessageTranslator {
      */
     public static void loadExceptionCode(String code) throws MessageTranslatorException {
         try {
-            String newCode = getPropAsString(code + CODE_SUFFIX); // let it
-            // throw an
-            // exception
-            // if not
-            // found
+            String newCode = getPropAsString(code + CODE_SUFFIX);
+
+            // let it throw an exception if not found
             if (null != newCode) {
+
                 codes.put(code, newCode);
             } else {
-                // there has to be an exception code, otherwise the exception is
-                // not well formed
+
+                // there has to be an exception code, otherwise the exception is not well formed
                 throw new Exception("null value for exception code " + code);
             }
         } catch (Exception x) {
@@ -449,49 +459,54 @@ public class MessageTranslator {
         }
     }
 
-    // looks up the field reference in the hashtable, returning null if the
-    // value is not there
-
     /**
      * Method lookupFieldReference.
+     * <p>
+     * looks up the field reference in the hashtable, returning null if the
+     * value is not there
      *
      * @param code String
      * @return String
      */
     private static String lookupFieldReference(String code) {
+
         String fieldRef = fieldReferences.get(code);
+
         if (null == fieldRef) {
+
             loadFieldReference(code);
             fieldRef = fieldReferences.get(code);
         }
         return fieldRef;
     }
 
-    // looks up the array index names in the hashtabe for the given code,
-    // returning a zero length
-    // string array if there are none
-
     /**
      * Method lookupArrayIndexNames.
+     * <p>
+     * looks up the array index names in the hashtabe for the given code,
+     * returning a zero length string array if there are none
      *
      * @param code String
      * @return String[]
      */
     private static String[] lookupArrayIndexNames(String code) {
+
         String[] toReturn = indexesTable.get(code);
+
         if (null == toReturn) {
+
             try {
-                loadMessageFormat(code); // this can throw a translator
-                // exception
+
+                // this can throw a translator exception
+                loadMessageFormat(code);
                 toReturn = indexesTable.get(code);
-            } catch (Exception x) {
+            } catch (Exception ex) {
+
                 toReturn = new String[0];
             }
         }
         return toReturn;
     }
-
-    // looks up
 
     /**
      * Method lookupCodeName.
@@ -500,30 +515,30 @@ public class MessageTranslator {
      * @return String
      */
     private static String lookupCodeName(String code) throws MessageTranslatorException {
+
         String newCode = codes.get(code);
+
         if (null == newCode) {
+
             loadExceptionCode(code);
             newCode = codes.get(code);
         }
         return newCode;
     }
 
-    // this method takes a message format object that is not valid because it
-    // uses
-    // #name# instead of {0}, {1}, etc.
-    // it replaces each #name# with a number in curly braces
-    // it also creates a string array with all of the names that had to be
-    // removed
-
     /**
      * Method removeNamesAndCreateIndex.
+     * <p>
+     * this method takes a message format object that is not valid because it uses
+     * #name# instead of {0}, {1}, etc. it replaces each #name# with a number in curly braces
+     * it also creates a string array with all the names that had to be removed
      *
      * @param mf MessageFormat
      * @return String[]
      */
     private static String[] removeNamesAndCreateIndex(MessageFormat mf) {
-        // todo: mabe optimize this to not create a new array each time
 
+        // TODO: mabe optimize this to not create a new array each time
         // this code is pasted from the database connection class
         StringTokenizer tokenizer = new StringTokenizer(mf.toPattern(), "#");
 
@@ -537,32 +552,33 @@ public class MessageTranslator {
         {
             String token = tokenizer.nextToken();
 
-            if ((i % 2) == 0) // This is not a parameter.
-            {
-                // no index name to add to the array, nothig to replace in the
-                // string
+            // This is not a parameter.
+            if ((i % 2) == 0) {
+
+                // no index name to add to the array, nothig to replace in the string
                 buf.append(token);
 
-            } else
-            // We have a parameter.
-            {
+            } else {
+                // We have a parameter.
                 returnVector.addElement(token);
 
-                // Remove the parameter markup and replace it with a number
-                // inside curly
+                // Remove the parameter markup and replace it with a number inside curly
                 // braces for the MessageFormat to replace with paramaters
                 buf.append("{").append(counter).append("}");
                 counter++;
             }
         }
+
         mf.applyPattern(buf.toString());
+
         if (!returnVector.isEmpty()) {
+
             String[] namedIndexes = new String[returnVector.size()];
             returnVector.copyInto(namedIndexes);
             return namedIndexes;
         } else {
+
             return new String[0];
         }
     }
-
 }

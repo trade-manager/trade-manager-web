@@ -38,6 +38,7 @@ package org.trade.strategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trade.core.broker.IBrokerModel;
+import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.series.indicator.CandleSeries;
 import org.trade.core.persistent.dao.series.indicator.StrategyData;
 import org.trade.core.persistent.dao.series.indicator.candle.CandleItem;
@@ -79,14 +80,14 @@ public class PosMgrAllOrNothingStrategy extends AbstractStrategyRule {
      * that value if the strategy were to be restarted and the constraint is not
      * met.
      *
+     * @param tradeService       TradeService
      * @param brokerManagerModel BrokerModel
      * @param strategyData       StrategyData
      * @param idTradestrategy    Integer
      */
 
-    public PosMgrAllOrNothingStrategy(IBrokerModel brokerManagerModel, StrategyData strategyData,
-                                      Integer idTradestrategy) {
-        super(brokerManagerModel, strategyData, idTradestrategy);
+    public PosMgrAllOrNothingStrategy(TradeService tradeService, IBrokerModel brokerManagerModel, StrategyData strategyData, Integer idTradestrategy) {
+        super(tradeService, brokerManagerModel, strategyData, idTradestrategy);
     }
 
     /**
