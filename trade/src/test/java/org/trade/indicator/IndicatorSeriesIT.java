@@ -109,9 +109,9 @@ public class IndicatorSeriesIT {
     public void saveCandle() {
 
         ZonedDateTime date = TradingCalendar.getTradingDayStart(TradingCalendar.getDateTimeNowMarketTimeZone());
-        CandleItem candleItem = new CandleItem(tradestrategy.getContract(), tradestrategy.getTradingday(),
+        CandleItem candleItem = new CandleItem(tradestrategy.getContract(),
                 new CandlePeriod(date, 300), 100.23, 100.23, 100.23, 100.23, 10000000L, 100.23, 100, date);
-        Candle candle = this.tradeService.saveCandle(candleItem.getCandle());
+        Candle candle = this.tradeService.saveAspect(candleItem.getCandle());
         assertNotNull(candle.getId());
     }
 

@@ -481,7 +481,9 @@ public class StrategyData extends Worker {
         double close = 33.95;
         double vwap = 34.94;
         int longShort = 1;
+
         if (!longTrade) {
+
             high = 34.15;
             low = 34.01;
             open = 34.10;
@@ -489,16 +491,19 @@ public class StrategyData extends Worker {
             vwap = 34.02;
             longShort = -1;
         }
+
         long volume = 100000;
         int tradeCount = 100;
+
         if (barSize == 1) {
+
             barSize = (int) TradingCalendar.getDurationInSeconds(start.getOpen(), start.getClose());
         }
 
         long count = (TradingCalendar.getDurationInSeconds(start.getOpen(), start.getClose()) / barSize) * noDays;
-
         RegularTimePeriod period = new CandlePeriod(start.getOpen(), barSize);
         series.clear();
+
         for (int i = 0; i < count; i++) {
 
             series.buildCandle(period.getStart(), open, high, low, close, volume, vwap, tradeCount, 1, null);
@@ -515,6 +520,7 @@ public class StrategyData extends Worker {
                         TradingCalendar.getTradingDayStart(TradingCalendar.getNextTradingDay(period.getStart())),
                         barSize);
             }
+
             try {
 
                 if (milliSecondsDeplay > 0) {

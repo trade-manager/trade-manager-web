@@ -170,7 +170,7 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
             this.setLayout(new BorderLayout());
             this.currencyFormater.setMinimumFractionDigits(2);
             this.backfillOffsetDays = ConfigProperties.getPropAsInt("trade.backfill.offsetDays");
-            this. propertiesButton = new BaseButton(this, BaseUIPropertyCodes.PROPERTIES, 0);
+            this.propertiesButton = new BaseButton(this, BaseUIPropertyCodes.PROPERTIES, 0);
             this.propertiesButton.setEnabled(false);
             this.executeButton = new BaseButton(controller, BaseUIPropertyCodes.EXECUTE);
             this.executeButton.addMessageListener(this);
@@ -635,7 +635,7 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
             startDate = TradingCalendar.getPrevTradingDay(startDate);
             startDate = TradingCalendar.getDateAtTime(startDate, tradestrategy.getTradingday().getOpen());
             List<Candle> candles = this.tradeService.findCandlesByContractDateRangeBarSize(
-                    tradestrategy.getContract().getId(), startDate, endDate, tradestrategy.getBarSize());
+                    tradestrategy.getContract(), startDate, endDate, tradestrategy.getBarSize());
 
             if (candles.isEmpty()) {
 
@@ -686,7 +686,7 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
                     childTradestrategy.setDirty(false);
 
                     List<Candle> indicatorCandles = this.tradeService.findCandlesByContractDateRangeBarSize(
-                            childTradestrategy.getContract().getId(), startDate, endDate,
+                            childTradestrategy.getContract(), startDate, endDate,
                             childTradestrategy.getBarSize());
                     if (indicatorCandles.isEmpty()) {
                         this.setStatusBarMessage(
@@ -746,7 +746,7 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
                     childTradestrategy.setDirty(false);
 
                     List<Candle> indicatorCandles = this.tradeService.findCandlesByContractDateRangeBarSize(
-                            childTradestrategy.getContract().getId(), startDate, endDate,
+                            childTradestrategy.getContract(), startDate, endDate,
                             childTradestrategy.getBarSize());
 
                     if (indicatorCandles.isEmpty()) {

@@ -43,7 +43,6 @@ import org.trade.core.persistent.dao.Candle;
 import org.trade.core.persistent.dao.CodeValue;
 import org.trade.core.persistent.dao.Contract;
 import org.trade.core.persistent.dao.Strategy;
-import org.trade.core.persistent.dao.Tradingday;
 import org.trade.core.persistent.dao.series.ComparableObjectItem;
 import org.trade.core.persistent.dao.series.indicator.candle.CandleItem;
 import org.trade.core.persistent.dao.series.indicator.candle.CandlePeriod;
@@ -416,6 +415,7 @@ public class CandleSeries extends IndicatorSeries {
     /**
      * Adds a data item to the series.
      *
+     * @param contract       Contract
      * @param period         the period.
      * @param open           the open-value.
      * @param high           the high-value.
@@ -424,10 +424,9 @@ public class CandleSeries extends IndicatorSeries {
      * @param volume         the volume-value.
      * @param vwap           the vwap-value.
      * @param tradeCount     the tradeCount-value.
-     * @param contract       Contract
      * @param lastUpdateDate Date
      */
-    public void add(Contract contract, Tradingday tradingday, RegularTimePeriod period, double open, double high,
+    public void add(Contract contract, RegularTimePeriod period, double open, double high,
                     double low, double close, long volume, double vwap, int tradeCount, ZonedDateTime lastUpdateDate) throws ServiceException {
 
         if (!this.isEmpty()) {
@@ -439,7 +438,7 @@ public class CandleSeries extends IndicatorSeries {
                 throw new IllegalArgumentException("Can't mix RegularTimePeriod class types.");
             }
         }
-        super.add(new CandleItem(contract, tradingday, period, open, high, low, close, volume, vwap, tradeCount,
+        super.add(new CandleItem(contract, period, open, high, low, close, volume, vwap, tradeCount,
                 lastUpdateDate), true);
     }
 
@@ -549,9 +548,6 @@ public class CandleSeries extends IndicatorSeries {
         } else {
 
             RegularTimePeriod period = this.getPeriodStart(time, this.getBarSize());
-            Tradingday tradingday = new Tradingday(
-                    TradingCalendar.getDateAtTime(period.getStart(), this.getStartTime()),
-                    TradingCalendar.getDateAtTime(period.getStart(), this.getEndTime()));
 
             if (null == lastUpdateDate) {
 
@@ -560,7 +556,7 @@ public class CandleSeries extends IndicatorSeries {
 
             this.rollCandle(period, rollupInterval, open, high, low, close, volume, tradeCount, vwap, lastUpdateDate);
 
-            candleItem = new CandleItem(this.getContract(), tradingday, period, open, high, low, close, volume,
+            candleItem = new CandleItem(this.getContract(), period, open, high, low, close, volume,
                     this.rollingCandle.getVwap(), tradeCount, lastUpdateDate);
             this.add(candleItem, false);
 

@@ -35,10 +35,10 @@
  */
 package org.trade.core.persistent;
 
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 import org.trade.core.dao.Aspect;
 import org.trade.core.dao.AspectRepository;
 import org.trade.core.dao.AspectServiceImpl;
@@ -454,24 +454,24 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
         return tradingdayRepository.findTradingdaysByDateRange(startDate, endDate);
     }
 
-    public List<Candle> findCandlesByContractDateRangeBarSize(final Integer contractId, final ZonedDateTime startDate,
+    public List<Candle> findCandlesByContractDateRangeBarSize(final Contract contract, final ZonedDateTime startDate,
                                                               final ZonedDateTime endDate, final Integer barSize) {
 
-        return candleRepository.findCandlesByContractDateRangeBarSize(contractId, startDate, endDate, barSize);
+        return candleRepository.findCandlesByContractDateRangeBarSize(contract, startDate, endDate, barSize);
     }
 
-    public List<Candle> findCandlesByTradingdayAndContractAndBarSize(Tradingday tradingday, Contract contract, Integer barSize) {
+    public List<Candle> findCandlesByContractAndBarSize(Contract contract, Integer barSize) {
 
-        return candleRepository.findByTradingdayAndContractAndBarSize(tradingday, contract, barSize);
+        return candleRepository.findByContractAndBarSize(contract, barSize);
     }
 
-    public Long findCandleCount(final Integer tradingdayId, final Integer contractId) {
+    public Long findCandleCount(final Contract contract) {
 
-        return candleRepository.findCandleCount(tradingdayId, contractId);
+        return candleRepository.findCandleCount(contract);
     }
 
-// READ_UNCOMMITTED, READ_COMMITTED, REPEATABLE_READ, SERIALIZABLE
-    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
+    // READ_UNCOMMITTED, READ_COMMITTED, REPEATABLE_READ, SERIALIZABLE
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public void saveCandleSeries(final CandleSeries candleSeries) {
 
         if (candleSeries.isEmpty()) {
@@ -480,75 +480,31 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
         }
 
         Optional<Contract> contract = findContractBySymbol(candleSeries.getContract().getSymbol());
-        boolean tradingDayChanged = true;
-        Tradingday tradingday = null;
+        List<Candle> newCandles = new ArrayList<>();
 
         for (int i = 0; i < candleSeries.getItemCount(); i++) {
 
             CandleItem candleItem = (CandleItem) candleSeries.getDataItem(i);
             Candle candle = candleItem.getCandle();
+            List<Candle> candles = candleRepository.findCandlesByContractDateRangeBarSize(contract.get(), candle.getStartPeriod(), candle.getEndPeriod(), candle.getBarSize());
 
-            if (null != candleItem.getCandle().getId()) {
+            if (!candles.isEmpty() && candles.size() == 1) {
 
-                Optional<Candle> instance = candleRepository.findById(candle.getId());
-
-                if (instance.isPresent() && instance.equals(candle)) {
+                if (candle.equals(candles.getFirst())) {
 
                     continue;
+                } else {
+
+                    this.deleteAspect(candles.getFirst());
                 }
             }
 
             candle.setContract(contract.get());
-
-            if (null == tradingday) {
-
-                tradingday = this.findTradingdayByOpenCloseDate(candle.getTradingday().getOpen(),
-                        candle.getTradingday().getClose());
-            } else {
-
-                if (!tradingday.getOpen().equals(candle.getTradingday().getOpen()) &&
-                        !tradingday.getClose().equals(candle.getTradingday().getClose())) {
-
-                    tradingday = this.findTradingdayByOpenCloseDate(candle.getTradingday().getOpen(),
-                            candle.getTradingday().getClose());
-                    tradingDayChanged = true;
-                }
-            }
-
-            if (null != tradingday) {
-
-                candle.setTradingday(tradingday);
-            }
-
-            if (tradingDayChanged) {
-
-                tradingDayChanged = false;
-                Integer barSize = candleSeries.getBarSize();
-                // String hqlDelete = "delete Candle where contract = :contract and tradingday = :tradingday and barSize = :barSize";
-                List<Candle> candles = candleRepository.findByTradingdayAndContractAndBarSize(tradingday, contract.get(), barSize);
-
-                if (!candles.isEmpty()) {
-
-                    candleRepository.deleteAll(candles);
-                }
-            }
-
-            this.saveAspect(candle);
-        }
-    }
-
-    @Transactional
-    public Candle saveCandle(final Candle candle) {
-
-        Tradingday tradingday = this.findTradingdayByOpenCloseDate(candle.getTradingday().getOpen(),
-                candle.getTradingday().getClose());
-
-        if (null != tradingday) {
-
-            candle.setTradingday(tradingday);
+            newCandles.add(candle);
+            //this.saveAspect(candle);
         }
 
-        return this.saveAspect(candle);
+        this.saveAllAspects(newCandles);
     }
 
     @Transactional
@@ -999,6 +955,13 @@ public <T extends Aspect> T findAspectById(T instance){
 
         return getAspectRepository().save(instance);
     }
+
+
+    public <S extends Aspect> List<S> saveAllAspects(final Iterable<S> entities) {
+
+        return getAspectRepository().saveAll(entities);
+    }
+
 
     public <T extends Aspect> T saveAspect(final T instance, boolean overrideVersion) {
 

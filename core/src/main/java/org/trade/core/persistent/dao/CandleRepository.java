@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface CandleRepository extends AspectRepository<Candle, Integer>, CandleRepositoryCustom {
 
-    List<Candle> findByTradingdayAndContractAndBarSize(Tradingday tradingday, Contract contract, Integer barSize);
+    List<Candle> findByContractAndBarSize(Contract contract, Integer barSize);
 
 }

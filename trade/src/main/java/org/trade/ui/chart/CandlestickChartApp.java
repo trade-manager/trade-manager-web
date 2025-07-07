@@ -103,7 +103,7 @@ public class CandlestickChartApp extends BasePanel implements IBrokerChangeListe
                 String name = daoStrategy.getName();
                 Strategy strategy = _tradeService.findStrategyByName(name);
                 Tradestrategy tradestrategy = getTradestrategy(contract, strategy, ChartDays.TWO_DAYS, BarSize.FIVE_MIN, startDate, endDate);
-                   tradestrategy.setId(Integer.MAX_VALUE);
+                tradestrategy.setId(Integer.MAX_VALUE);
                 runStrategy(_tradeService, tradestrategy, true);
 
             } catch (Exception ex) {
@@ -450,7 +450,7 @@ public class CandlestickChartApp extends BasePanel implements IBrokerChangeListe
                 startDate = TradingCalendar.getPrevTradingDay(startDate);
 
                 List<Candle> candles = tradeService.findCandlesByContractDateRangeBarSize(
-                        tradestrategy.getContract().getId(), startDate, endDate,
+                        tradestrategy.getContract(), startDate, endDate,
                         tradestrategy.getBarSize());
 
                 if (!candles.isEmpty()) {
@@ -462,10 +462,7 @@ public class CandlestickChartApp extends BasePanel implements IBrokerChangeListe
 
                     if (result == JOptionPane.YES_OPTION) {
 
-                        for (Candle item : candles) {
-
-                            tradeService.deleteAspect(item);
-                        }
+                        tradeService.deleteAllAspects(candles);
                     } else {
                         return;
                     }

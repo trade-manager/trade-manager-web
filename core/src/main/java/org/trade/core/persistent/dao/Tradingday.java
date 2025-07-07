@@ -93,9 +93,6 @@ public class Tradingday extends Aspect implements Serializable, Cloneable {
     @OrderBy("side ASC, id ASC")
     private List<Tradestrategy> tradestrategies = new ArrayList<>(0);
 
-    @OneToMany(mappedBy = "tradingday", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE, CascadeType.REFRESH})
-    private List<Candle> candles = new ArrayList<>(0);
-
     public Tradingday() {
     }
 
@@ -120,10 +117,9 @@ public class Tradingday extends Aspect implements Serializable, Cloneable {
      * @param marketGap       String
      * @param marketBar       String
      * @param tradestrategies List<Tradestrategy>
-     * @param candles         List<Candle>
      */
     public Tradingday(ZonedDateTime open, ZonedDateTime close, String marketBias, String marketGap, String marketBar,
-                      List<Tradestrategy> tradestrategies, List<Candle> candles) {
+                      List<Tradestrategy> tradestrategies) {
 
         this.open = open;
         this.close = close;
@@ -131,7 +127,6 @@ public class Tradingday extends Aspect implements Serializable, Cloneable {
         this.marketGap = marketGap;
         this.marketBar = marketBar;
         this.tradestrategies = tradestrategies;
-        this.candles = candles;
     }
 
     /**
@@ -271,33 +266,6 @@ public class Tradingday extends Aspect implements Serializable, Cloneable {
         return false;
     }
 
-    /**
-     * Method getCandles.
-     *
-     * @return List<Candle>
-     */
-    public List<Candle> getCandles() {
-        return this.candles;
-    }
-
-    /**
-     * Method setCandles.
-     *
-     * @param candles List<Candle>
-     */
-    public void setCandles(List<Candle> candles) {
-        this.candles = candles;
-    }
-
-    /**
-     * Method addCandle.
-     *
-     * @param candle Candle
-     */
-    public void addCandle(Candle candle) {
-        this.candles.add(candle);
-    }
-
     public static final Comparator<Tradingday> DATE_ORDER_ASC = (o1, o2) -> {
 
         int returnVal;
@@ -375,6 +343,7 @@ public class Tradingday extends Aspect implements Serializable, Cloneable {
     public boolean equals(Object objectToCompare) {
 
         if (super.equals(objectToCompare)) {
+
             return true;
         }
 
@@ -471,8 +440,6 @@ public class Tradingday extends Aspect implements Serializable, Cloneable {
         Tradingday tradingday = (Tradingday) super.clone();
         List<Tradestrategy> tradestrategies = new ArrayList<>(0);
         tradingday.setTradestrategies(tradestrategies);
-        List<Candle> candles = new ArrayList<>(0);
-        tradingday.setCandles(candles);
         return tradingday;
     }
 

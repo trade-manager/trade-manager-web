@@ -750,7 +750,7 @@ public class DBBroker extends Broker {
                         tradestrategy.getChartDays(), tradestrategy.getBarSize());
                 childTradestrategy.setDirty(false);
                 List<Candle> indicatorCandles = tradeService.findCandlesByContractDateRangeBarSize(
-                        childTradestrategy.getContract().getId(), startDate, endDate,
+                        childTradestrategy.getContract(), startDate, endDate,
                         childTradestrategy.getBarSize());
 
                 if (indicatorCandles.isEmpty()) {
@@ -801,7 +801,7 @@ public class DBBroker extends Broker {
                 if ((Math.floor(
                         tradestrategy.getBarSize() / (double) size) == (tradestrategy.getBarSize() / (double) size))) {
                     candles = tradeService.findCandlesByContractDateRangeBarSize(
-                            tradestrategy.getContract().getId(), startDate, endDate, size);
+                            tradestrategy.getContract(), startDate, endDate, size);
                     if (!candles.isEmpty()) {
                         break;
                     }

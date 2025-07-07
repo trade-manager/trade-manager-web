@@ -58,6 +58,7 @@ import org.trade.core.valuetype.BarSize;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -79,8 +80,8 @@ public class CandleIT {
     @Autowired
     private TradeService tradeService;
 
-    private static Tradestrategy tradestrategy;
-    private static final String symbol = "TEST-" + TradestrategyBase.getRandomNumber(4);
+    private static List<Tradestrategy> tradestrategies = new ArrayList<>();
+    private static final String[] symbols = {"TEST-" + TradestrategyBase.getRandomNumber(4), "TEST-" + TradestrategyBase.getRandomNumber(4)};
 
     /**
      * Method setUpBeforeClass.
@@ -96,8 +97,11 @@ public class CandleIT {
     @BeforeEach
     public void setUp() throws Exception {
 
-        tradestrategy = TradestrategyBase.createTestTradestrategy(tradeService, symbol);
-        assertNotNull(tradestrategy);
+        for (String symbol : symbols) {
+
+            Tradestrategy tradestrategy = TradestrategyBase.createTestTradestrategy(tradeService, symbol);
+            assertNotNull(tradestrategy);
+        }
     }
 
     /**
@@ -106,7 +110,11 @@ public class CandleIT {
     @AfterEach
     public void tearDown() throws Exception {
 
-        TradestrategyBase.clearDBData(tradeService, tradestrategy);
+        for (Tradestrategy tradestrategy : tradestrategies) {
+
+            TradestrategyBase.clearDBData(tradeService, tradestrategy);
+        }
+        tradestrategies.clear();
     }
 
     /**
@@ -123,19 +131,22 @@ public class CandleIT {
         RegularTimePeriod period = new CandlePeriod(
                 TradingCalendar.getTradingDayStart(TradingCalendar.getDateTimeNowMarketTimeZone()), 300);
 
-        Candle candle = new Candle(tradestrategy.getContract(), tradestrategy.getTradingday(),
-                period, period.getStart());
-        candle.setHigh(new BigDecimal("20.33"));
-        candle.setLow(new BigDecimal("20.11"));
-        candle.setOpen(new BigDecimal("20.23"));
-        candle.setClose(new BigDecimal("20.28"));
-        candle.setVolume(1500L);
-        candle.setVwap(new BigDecimal("20.1"));
-        candle.setTradeCount(10);
+        for (Tradestrategy tradestrategy : tradeService.findAllTradestrategies()) {
 
-        candle = tradeService.saveCandle(candle);
-        assertNotNull(candle.getId());
-        _log.info("testAddCandle IdCandle: {}", candle.getId());
+            tradestrategies.add(tradestrategy);
+            Candle candle = new Candle(tradestrategy.getContract(), period, period.getStart());
+            candle.setHigh(new BigDecimal("20.33"));
+            candle.setLow(new BigDecimal("20.11"));
+            candle.setOpen(new BigDecimal("20.23"));
+            candle.setClose(new BigDecimal("20.28"));
+            candle.setVolume(1500L);
+            candle.setVwap(new BigDecimal("20.1"));
+            candle.setTradeCount(10);
+
+            candle = tradeService.saveAspect(candle);
+            assertNotNull(candle.getId());
+            _log.info("addCandle IdCandle: {}", candle.getId());
+        }
     }
 
     @Test
@@ -143,20 +154,29 @@ public class CandleIT {
 
         for (Tradestrategy tradestrategy : tradeService.findAllTradestrategies()) {
 
+            tradestrategies.add(tradestrategy);
             tradestrategy = tradeService.findTradestrategyById(tradestrategy.getId());
             tradestrategy.setStrategyData(StrategyData.create(tradestrategy));
             ZonedDateTime prevTradingday = TradingCalendar.addTradingDays(tradestrategy.getTradingday().getOpen(),
                     (-1 * (tradestrategy.getChartDays() - 1)));
             StrategyData.doDummyData(tradestrategy.getStrategyData().getBaseCandleSeries(),
                     Tradingday.newInstance(prevTradingday), 2, BarSize.FIVE_MIN, true, 0);
+            _log.info("addCandleSeries symbol: {} open: {}. close: {}", tradestrategy.getContract().getSymbol(), tradestrategy.getTradingday().getOpen(), tradestrategy.getTradingday().getClose());
+
             assertFalse(tradestrategy.getStrategyData().getBaseCandleSeries().isEmpty());
             tradeService.saveCandleSeries(tradestrategy.getStrategyData().getBaseCandleSeries());
 
-            _log.info("testAddCandle IdTradeStrategy: {}", tradestrategy.getId());
-            assertNotNull(((CandleItem) tradestrategy.getStrategyData().getBaseCandleSeries().getDataItem(0))
-                    .getCandle().getId());
+            // Should do nothing
+            tradeService.saveCandleSeries(tradestrategy.getStrategyData().getBaseCandleSeries());
 
-            List<Candle> candles = tradeService.findCandlesByTradingdayAndContractAndBarSize(tradestrategy.getTradingday(),tradestrategy.getContract(),BarSize.FIVE_MIN);
+            _log.info("addCandleSeries IdTradeStrategy: {}", tradestrategy.getId());
+            CandleItem candleItem = (CandleItem) tradestrategy.getStrategyData().getBaseCandleSeries().getDataItem(0);
+            assertNotNull(candleItem.getCandle().getId());
+
+            List<Candle> candles = tradeService.findCandlesByContractDateRangeBarSize(tradestrategy.getContract(), candleItem.getCandle().getStartPeriod(), candleItem.getCandle().getEndPeriod(), tradestrategy.getBarSize());
+            assertFalse(candles.isEmpty());
+
+            candles = tradeService.findCandlesByContractAndBarSize(tradestrategy.getContract(), BarSize.FIVE_MIN);
             assertFalse(candles.isEmpty());
         }
     }

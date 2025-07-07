@@ -1857,7 +1857,6 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
             if (historyDataRequests.containsKey(reqId)) {
 
                 Tradestrategy tradestrategy = historyDataRequests.get(reqId);
-
                 CandleSeries candleSeries = tradestrategy.getStrategyData().getBaseCandleSeries();
                 tradeService.saveCandleSeries(candleSeries);
 
@@ -1949,7 +1948,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
 
                                 if (updateCandleDB) {
 
-                                    tradeService.saveCandle(candleItem.getCandle());
+                                    tradeService.saveAspect(candleItem.getCandle());
                                     updateCandleDB = false;
                                 }
                             }

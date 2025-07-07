@@ -1660,15 +1660,16 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
 
                         if (brokerDataOnly && !brokerModel.isConnected()) {
 
-                            ZonedDateTime endDate = TradingCalendar.getDateAtTime(
-                                    TradingCalendar.getPrevTradingDay(TradingCalendar
-                                            .addTradingDays(tradestrategy.getTradingday().getClose(), 0)),
-                                    tradestrategy.getTradingday().getClose());
-                            ZonedDateTime startDate = endDate.minusDays((tradestrategy.getChartDays() - 1));
-                            startDate = TradingCalendar.getPrevTradingDay(startDate);
+                            ZonedDateTime startDate = tradestrategy.getTradingday().getOpen();
+                            startDate = startDate.minusDays((tradestrategy.getChartDays() - 1));
+
+                            if (!TradingCalendar.isTradingDay(startDate)) {
+
+                                startDate = TradingCalendar.getPrevTradingDay(startDate);
+                            }
 
                             List<Candle> candles = tradeService.findCandlesByContractDateRangeBarSize(
-                                    tradestrategy.getContract().getId(), startDate, endDate,
+                                    tradestrategy.getContract(), startDate, tradestrategy.getTradingday().getClose(),
                                     tradestrategy.getBarSize());
 
                             if (!candles.isEmpty()) {
@@ -1680,10 +1681,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
 
                                 if (result == JOptionPane.YES_OPTION) {
 
-                                    for (Candle item : candles) {
-
-                                        tradeService.deleteAspect(item);
-                                    }
+                                    tradeService.deleteAllAspects(candles);
                                 } else {
                                     return;
                                 }

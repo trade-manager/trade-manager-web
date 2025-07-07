@@ -130,14 +130,6 @@ public interface TradeService extends AspectService {
     void saveCandleSeries(CandleSeries candleSeries);
 
     /**
-     * Method saveCandle.
-     *
-     * @param candle Candle
-     * @return Candle
-     */
-    Candle saveCandle(Candle candle);
-
-    /**
      * Method findAccountById.
      *
      * @param id Integer
@@ -234,11 +226,11 @@ public interface TradeService extends AspectService {
      *
      * @param open          ZonedDateTime
      * @param strategy      String
-     * @param idContract    Integer
+     * @param contractId    Integer
      * @param portfolioName String
      * @return Tradestrategy
      */
-    Tradestrategy findTradestrategyByUniqueKeys(ZonedDateTime open, String strategy, Integer idContract,
+    Tradestrategy findTradestrategyByUniqueKeys(ZonedDateTime open, String strategy, Integer contractId,
                                                 String portfolioName);
 
     /**
@@ -382,34 +374,30 @@ public interface TradeService extends AspectService {
     TradelogReport findTradelogReport(Portfolio portfolio, ZonedDateTime start, ZonedDateTime end, boolean filter,
                                       String symbol, BigDecimal winLossAmount) throws IOException;
 
-    /**
-     * Method findCandlesByContractDateRangeBarSize.
-     *
-     * @param contractId Integer
-     * @param startDate  ZonedDateTime
-     * @param endDate    ZonedDateTime
-     * @param barSize    Integer
-     * @return List<Candle>
-     */
-    List<Candle> findCandlesByContractDateRangeBarSize(Integer contractId, ZonedDateTime startDate,
-                                                       ZonedDateTime endDate, Integer barSize);
 
     /**
-     * @param tradingday
+     * @param contract
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    List<Candle> findCandlesByContractDateRangeBarSize(final Contract contract, final ZonedDateTime startDate,
+                                                       final ZonedDateTime endDate, final Integer barSize);
+
+    /**
      * @param contract
      * @param barSize
      * @return
      */
-    List<Candle> findCandlesByTradingdayAndContractAndBarSize(Tradingday tradingday, Contract contract, Integer barSize);
+    List<Candle> findCandlesByContractAndBarSize(Contract contract, Integer barSize);
 
     /**
      * Method findCandleCount.
      *
-     * @param tradingdayId Integer
-     * @param contractId   Integer
+     * @param contract Contract
      * @return Long
      */
-    Long findCandleCount(Integer tradingdayId, Integer contractId);
+    Long findCandleCount(final Contract contract);
 
     /**
      * Method findRuleById.
@@ -473,6 +461,15 @@ public interface TradeService extends AspectService {
      * @return Aspect
      */
     <T extends Aspect> T saveAspect(T instance);
+
+    /**
+     * Delete all aspects.
+     *
+     * @param entities
+     * @param <S>
+     * @return
+     */
+    <S extends Aspect> List<S> saveAllAspects(final Iterable<S> entities);
 
     /**
      * Method saveAspect.

@@ -1105,7 +1105,6 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
             if (historyDataRequests.containsKey(reqId)) {
 
                 Tradestrategy tradestrategy = historyDataRequests.get(reqId);
-
                 CandleSeries candleSeries = tradestrategy.getStrategyData().getBaseCandleSeries();
                 tradeService.saveCandleSeries(candleSeries);
                 _log.debug("HistoricalData complete Req Id: {}, Symbol: {}, Tradingday: {}, candles to saved: {}, Contract Tradestrategies size:: {}", reqId, tradestrategy.getContract().getSymbol(), tradestrategy.getTradingday().getOpen(), candleSeries.getItemCount(), tradestrategy.getContract().getTradestrategies().size());
