@@ -38,7 +38,6 @@ package org.trade.indicator.candle;
 import org.jfree.data.ComparableObjectItem;
 import org.trade.core.persistent.dao.Candle;
 import org.trade.core.persistent.dao.Contract;
-import org.trade.core.persistent.dao.Tradingday;
 import org.trade.core.util.time.RegularTimePeriod;
 import org.trade.core.valuetype.Side;
 
@@ -75,10 +74,10 @@ public class CandleItem extends ComparableObjectItem {
      * @param count          int
      * @param lastUpdateDate Date
      */
-    public CandleItem(Contract contract, Tradingday tradingday, RegularTimePeriod period, double open, double high,
+    public CandleItem(Contract contract, RegularTimePeriod period, double open, double high,
                       double low, double close, long volume, double vwap, int count, ZonedDateTime lastUpdateDate) {
         super(period,
-                new Candle(contract, tradingday, period, open, high, low, close, volume, vwap, count, lastUpdateDate));
+                new Candle(contract, period, open, high, low, close, volume, vwap, count, lastUpdateDate));
     }
 
     /**

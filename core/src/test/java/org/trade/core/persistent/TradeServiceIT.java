@@ -867,7 +867,7 @@ public class TradeServiceIT {
     public void findCandlesByContractAndDateRange() {
 
         List<Candle> result = this.tradeService.findCandlesByContractDateRangeBarSize(
-                tradestrategy.getContract().getId(), tradestrategy.getTradingday().getOpen(),
+                tradestrategy.getContract(), tradestrategy.getTradingday().getOpen(),
                 tradestrategy.getTradingday().getClose(), tradestrategy.getBarSize());
         assertNotNull(result);
     }
@@ -875,9 +875,7 @@ public class TradeServiceIT {
     @Test
     public void findCandleCount() {
 
-        Long result = this.tradeService.findCandleCount(
-                tradestrategy.getTradingday().getId(),
-                tradestrategy.getContract().getId());
+        Long result = this.tradeService.findCandleCount(tradestrategy.getContract());
         assertNotNull(result);
     }
 

@@ -126,7 +126,7 @@ public class CandlePeriodIT extends TradestrategyBase {
                 .minusDays((tradestrategy.getChartDays() - 1));
         prevTradingday = TradingCalendar.getPrevTradingDay(prevTradingday);
         List<Candle> candles = tradeService.findCandlesByContractDateRangeBarSize(
-                tradestrategy.getContract().getId(), prevTradingday,
+                tradestrategy.getContract(), prevTradingday,
                 tradestrategy.getTradingday().getOpen(), tradestrategy.getBarSize());
 
         if (candles.isEmpty()) {
@@ -157,7 +157,7 @@ public class CandlePeriodIT extends TradestrategyBase {
                 .minusDays((tradestrategy.getChartDays() - 1));
         prevTradingday = TradingCalendar.getPrevTradingDay(prevTradingday);
         List<Candle> candles = tradeService.findCandlesByContractDateRangeBarSize(
-                tradestrategy.getContract().getId(), prevTradingday,
+                tradestrategy.getContract(), prevTradingday,
                 tradestrategy.getTradingday().getOpen(), tradestrategy.getBarSize());
         if (candles.isEmpty()) {
             StrategyData.doDummyData(tradestrategy.getStrategyData().getBaseCandleSeries(),

@@ -37,7 +37,6 @@ package org.trade.core.persistent.dao;
 
 // Generated Feb 21, 2011 12:43:33 PM by Hibernate Tools 3.4.0.CR1
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -71,6 +70,12 @@ public class Candle extends Aspect implements java.io.Serializable {
     @Serial
     private static final long serialVersionUID = 7644763985378994305L;
 
+    @Column(name = "start_period")
+    private ZonedDateTime startPeriod;
+
+    @Column(name = "end_period")
+    private ZonedDateTime endPeriod;
+
     @Column(name = "open", precision = 10)
     private BigDecimal open;
 
@@ -85,12 +90,6 @@ public class Candle extends Aspect implements java.io.Serializable {
 
     @Column(name = "period", length = 45)
     private String period;
-
-    @Column(name = "end_period")
-    private ZonedDateTime endPeriod;
-
-    @Column(name = "start_period")
-    private ZonedDateTime startPeriod;
 
     @Column(name = "trade_count")
     private Integer tradeCount;
@@ -107,10 +106,6 @@ public class Candle extends Aspect implements java.io.Serializable {
     @Column(name = "last_update_date", nullable = false)
     private ZonedDateTime lastUpdateDate;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    @JoinColumn(name = "tradingday_id", nullable = false)
-    private Tradingday tradingday;
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "contract_id", nullable = false)
     private Contract contract;
@@ -121,19 +116,19 @@ public class Candle extends Aspect implements java.io.Serializable {
     /**
      * Constructor for Candle.
      *
-     * @param tradingday Tradingday
-     * @param contract   Contract
+     * @param contract       Contract
+     * @param lastUpdateDate ZonedDateTime
      */
-    public Candle(Contract contract, Tradingday tradingday, RegularTimePeriod period, ZonedDateTime lastUpdateDate) {
+    public Candle(Contract contract, RegularTimePeriod period, ZonedDateTime lastUpdateDate) {
 
-        this.setTradingday(tradingday);
         this.setContract(contract);
         this.setPeriod(period.toString());
+        this.setLastUpdateDate(lastUpdateDate);
         this.setStartPeriod(period.getStart());
         this.setEndPeriod(period.getEnd());
         int barSize = (int) (TradingCalendar.getDurationInSeconds(period.getStart(), period.getEnd()) + 1);
         this.setBarSize(barSize);
-        this.setLastUpdateDate(lastUpdateDate);
+
     }
 
     /**
@@ -149,8 +144,7 @@ public class Candle extends Aspect implements java.io.Serializable {
     public Candle(Contract contract, RegularTimePeriod period, double open, double high, double low, double close,
                   ZonedDateTime lastUpdateDate) {
 
-        this.setContract(contract);
-        this.setPeriod(period.toString());
+        this(contract, period, lastUpdateDate);
         this.setStartPeriod(period.getStart());
         this.setEndPeriod(period.getEnd());
         Duration duration = Duration.between(period.getStart(), period.getEnd());
@@ -160,29 +154,6 @@ public class Candle extends Aspect implements java.io.Serializable {
         this.setClose(new BigDecimal(close));
         this.setHigh(new BigDecimal(high));
         this.setLow(new BigDecimal(low));
-        this.setLastUpdateDate(lastUpdateDate);
-    }
-
-    /**
-     * Constructor for Candle.
-     *
-     * @param contract       Contract
-     * @param open           double
-     * @param high           double
-     * @param low            double
-     * @param close          double
-     * @param volume         long
-     * @param vwap           double
-     * @param tradeCount     int
-     * @param lastUpdateDate Date
-     */
-    public Candle(Contract contract, RegularTimePeriod period, double open, double high, double low, double close,
-                  long volume, double vwap, int tradeCount, ZonedDateTime lastUpdateDate) {
-
-        this(contract, period, open, high, low, close, lastUpdateDate);
-        this.setVolume(volume);
-        this.setVwap(new BigDecimal(vwap));
-        this.setTradeCount(tradeCount);
     }
 
     /**
@@ -199,10 +170,10 @@ public class Candle extends Aspect implements java.io.Serializable {
      * @param tradeCount     int
      * @param lastUpdateDate Date
      */
-    public Candle(Contract contract, Tradingday tradingday, RegularTimePeriod period, double open, double high,
+    public Candle(Contract contract, RegularTimePeriod period, double open, double high,
                   double low, double close, long volume, double vwap, int tradeCount, ZonedDateTime lastUpdateDate) {
 
-        this(contract, tradingday, period, lastUpdateDate);
+        this(contract, period, lastUpdateDate);
         this.setOpen(new BigDecimal(open));
         this.setClose(new BigDecimal(close));
         this.setHigh(new BigDecimal(high));
@@ -213,23 +184,6 @@ public class Candle extends Aspect implements java.io.Serializable {
         this.setLastUpdateDate(lastUpdateDate);
     }
 
-    /**
-     * Method getTradingday.
-     *
-     * @return Tradingday
-     */
-    public Tradingday getTradingday() {
-        return this.tradingday;
-    }
-
-    /**
-     * Method setTradingday.
-     *
-     * @param tradingday Tradingday
-     */
-    public void setTradingday(Tradingday tradingday) {
-        this.tradingday = tradingday;
-    }
 
     /**
      * Method getContract.
@@ -490,26 +444,27 @@ public class Candle extends Aspect implements java.io.Serializable {
     public boolean equals(Object objectToCompare) {
 
         if (super.equals(objectToCompare)) {
+
             return true;
         }
 
         if (objectToCompare instanceof Candle candle) {
 
-            if (this.getTradingday().equals(candle.getTradingday())) {
+            if (this.getContract().equals(candle.getContract())) {
 
-                if (this.getContract().equals(candle.getContract())) {
+                if (this.getStartPeriod().equals(candle.getStartPeriod())) {
 
-                    if (this.getStartPeriod().equals(candle.getStartPeriod())) {
+                    if (this.getEndPeriod().equals(candle.getEndPeriod())) {
 
-                        if (this.getEndPeriod().equals(candle.getEndPeriod())) {
+                        if (this.getHigh().equals(candle.getHigh())) {
 
-                            if (this.getHigh().equals(candle.getHigh())) {
+                            if (this.getLow().equals(candle.getLow())) {
 
-                                if (this.getLow().equals(candle.getLow())) {
+                                if (this.getOpen().equals(candle.getOpen())) {
 
-                                    if (this.getOpen().equals(candle.getOpen())) {
+                                    if (this.getClose().equals(candle.getClose())) {
 
-                                        return this.getClose().equals(candle.getClose());
+                                        return this.getVolume().equals(candle.getVolume());
                                     }
                                 }
                             }

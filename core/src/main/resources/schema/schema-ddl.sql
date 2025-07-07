@@ -475,20 +475,13 @@ version INT NULL,
 created_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 contract_id INT NOT NULL ,
-tradingday_id INT NOT NULL ,
 PRIMARY KEY (id) ,
 INDEX candle_contract_idx (contract_id ASC) ,
-INDEX candle_tradingday_idx (tradingday_id ASC) ,
-INDEX candle_condaybar_idx (contract_id ASC, tradingday_id ASC, bar_size ASC) ,
-UNIQUE INDEX candle_uq (contract_id ASC, tradingday_id ASC,  start_period ASC, end_period ASC) ,
+INDEX candle_contractbarsize_idx (contract_id ASC, bar_size ASC) ,
+UNIQUE INDEX candle_uq (contract_id ASC, start_period ASC, end_period ASC) ,
 CONSTRAINT candle_contract_fk
 FOREIGN KEY (contract_id )
 REFERENCES contract (id )
-  ON DELETE CASCADE
-  ON UPDATE NO ACTION,
-CONSTRAINT candle_tradingday_fk
-FOREIGN KEY (tradingday_id )
-REFERENCES tradingday (id )
   ON DELETE CASCADE
   ON UPDATE NO ACTION)
 ENGINE = InnoDB//

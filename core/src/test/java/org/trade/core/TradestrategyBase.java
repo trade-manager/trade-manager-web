@@ -44,6 +44,7 @@ import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradePosition;
 import org.trade.core.persistent.dao.Tradestrategy;
 import org.trade.core.persistent.dao.Tradingday;
+import org.trade.core.persistent.dao.Tradingdays;
 import org.trade.core.persistent.dao.series.indicator.StrategyData;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.AccountType;
@@ -159,8 +160,9 @@ public class TradestrategyBase {
         tradestrategy = new Tradestrategy(contract, tradingday, strategy, portfolio, new BigDecimal(100), "BUY", "0",
                 true, ChartDays.TWO_DAYS, BarSize.FIVE_MIN);
         tradingday.addTradestrategy(tradestrategy);
-        tradeService.saveTradingday(tradingday);
-        Tradestrategy instance = tradeService.findTradestrategyById(tradestrategy.getId());
+        tradingday = tradeService.saveTradingday(tradingday);
+        Tradestrategy instance = tradeService.findTradestrategyByUniqueKeys(tradingday.getOpen(), strategy.getName(), contract.getId(),
+                portfolio.getName());
         instance.setStrategyData(StrategyData.create(instance));
         return instance;
     }
@@ -176,30 +178,41 @@ public class TradestrategyBase {
             return;
         }
 
-        tradestrategy = tradeService.findTradestrategyById(tradestrategy.getId());
+        Tradingdays tradingdays = tradeService.findTradingdaysByDateRange(tradestrategy.getTradingday().getOpen(), tradestrategy.getTradingday().getClose());
 
-        Portfolio portfolio = tradestrategy.getPortfolio();
+        for (Tradingday tradingday : tradingdays.getTradingdays()) {
 
-        List<Account> accounts = portfolio.getAccounts();
+            for (Tradestrategy tradestrategy0 : tradingday.getTradestrategies()) {
 
-        for (Account account : accounts) {
+                Contract contract = tradestrategy0.getContract();
+                Portfolio portfolio = tradestrategy0.getPortfolio();
+                tradeService.deleteAspect(tradingday);
 
-            tradeService.deleteAspect(account);
+                if (null != contract.getTradePosition()) {
+
+                    contract.setTradePosition(null);
+                    contract = tradeService.saveAspect(contract);
+                }
+
+                tradeService.deleteAspect(contract);
+                portfolio = tradeService.findPortfolioById(portfolio.getId());
+
+                List<Account> accounts = portfolio.getAccounts();
+
+                for (Account account : accounts) {
+
+                    tradeService.deleteAspect(account);
+                }
+
+                if (!portfolio.getIsDefault() && portfolio.getTradestrategies().isEmpty()) {
+
+
+                    tradeService.deleteAspect(portfolio);
+                }
+            }
         }
 
-        Tradingday tradingday = tradestrategy.getTradingday();
-        tradeService.deleteAspect(tradingday);
-        Contract contract = tradestrategy.getContract();
-        contract.setTradePosition(null);
-        contract = tradeService.saveAspect(contract);
-        tradeService.deleteAspect(contract);
 
-        portfolio = tradeService.findPortfolioById(portfolio.getId());
-
-        if (!portfolio.getIsDefault() && portfolio.getTradestrategies().isEmpty()) {
-
-            tradeService.deleteAspect(portfolio);
-        }
     }
 
     public static String getRandomNumber(int length) {

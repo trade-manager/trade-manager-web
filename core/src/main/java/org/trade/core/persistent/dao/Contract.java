@@ -1000,8 +1000,10 @@ public class Contract extends Aspect implements Serializable, Cloneable {
      */
     public boolean equals(Object objectToCompare) {
 
-        if (super.equals(objectToCompare))
+        if (super.equals(objectToCompare)) {
+
             return true;
+        }
 
         if (objectToCompare instanceof Contract contract) {
 

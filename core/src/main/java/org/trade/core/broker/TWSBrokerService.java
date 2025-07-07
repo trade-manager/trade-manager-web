@@ -1197,8 +1197,8 @@ public class TWSBrokerService extends AbstractBrokerModel {
         public void historicalDataEnd() {
 
             try {
-                Tradestrategy tradestrategy = historyDataRequests.get(getReqId());
 
+                Tradestrategy tradestrategy = historyDataRequests.get(getReqId());
                 CandleSeries candleSeries = tradestrategy.getStrategyData().getBaseCandleSeries();
                 tradeService.saveCandleSeries(candleSeries);
 
@@ -1304,7 +1304,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
                                     CandleItem candleItem = (CandleItem) strategyData.getBaseCandleSeries()
                                             .getDataItem(strategyData.getBaseCandleSeries().getItemCount() - 1);
                                     if (updateCandleDB) {
-                                        getPersistentModel().saveCandle(candleItem.getCandle());
+                                        getPersistentModel().saveAspect(candleItem.getCandle());
                                         updateCandleDB = false;
                                     }
                                 }

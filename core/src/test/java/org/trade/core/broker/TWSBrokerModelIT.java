@@ -465,8 +465,8 @@ public class TWSBrokerModelIT implements IBrokerChangeListener {
      * @param tradestrategy Tradestrategy
      */
     public void historicalDataComplete(Tradestrategy tradestrategy) {
-        _log.info("Symbol: {} Candles  saved: {}", tradestrategy.getContract().getSymbol(), tradeService.findCandleCount(tradestrategy.getTradingday().getId(),
-                tradestrategy.getContract().getId()));
+        _log.info("Symbol: {} Candles  saved: {}", tradestrategy.getContract().getSymbol(), tradeService.findCandleCount(
+                tradestrategy.getContract()));
 
     }
 
