@@ -147,7 +147,6 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
                                 Tradestrategy tradestrategy = (Tradestrategy) itemTradestrategy.clone();
                                 tradestrategy.setBarSize(getBarSize(tradingday));
                                 tradestrategy.setChartDays(1);
-                                //tradestrategy.setId(this.brokerModel.getNextRequestId());
                                 tradestrategy.setStrategyData(null);
                                 tradestrategy.setStrategyData(StrategyData.create(tradestrategy));
 
