@@ -142,7 +142,8 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
             Random random = new Random();
             int min = 1;
             int max = 100000000;
-            requestId = random.nextInt(max - min + 1) + min;;
+            requestId = random.nextInt(max - min + 1) + min;
+            ;
         }
     }
 
