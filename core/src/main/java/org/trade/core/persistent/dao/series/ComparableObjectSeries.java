@@ -11,6 +11,7 @@ import java.util.Objects;
 
 
 public class ComparableObjectSeries extends Series implements Cloneable, Serializable {
+
     protected List data;
     private int maximumItemCount;
     private boolean autoSort;
@@ -21,6 +22,7 @@ public class ComparableObjectSeries extends Series implements Cloneable, Seriali
     }
 
     public ComparableObjectSeries(Comparable key, boolean autoSort, boolean allowDuplicateXValues) {
+
         super(key);
         this.maximumItemCount = Integer.MAX_VALUE;
         this.data = new ArrayList();
@@ -45,52 +47,70 @@ public class ComparableObjectSeries extends Series implements Cloneable, Seriali
     }
 
     public void setMaximumItemCount(int maximum) {
-        this.maximumItemCount = maximum;
 
+        this.maximumItemCount = maximum;
         boolean dataRemoved;
+
         for (dataRemoved = false; this.data.size() > maximum; dataRemoved = true) {
+
             this.data.remove(0);
         }
 
         if (dataRemoved) {
+
             this.fireSeriesChanged();
         }
 
     }
 
     protected void add(Comparable x, Object y) throws ServiceException {
+
         this.add(x, y, true);
     }
 
     protected void add(Comparable x, Object y, boolean notify) throws ServiceException {
+
         ComparableObjectItem item = new ComparableObjectItem(x, y);
         this.add(item, notify);
     }
 
     protected void add(ComparableObjectItem item, boolean notify) throws ServiceException {
+
         //    Args.nullNotPermitted(item, "item");
         if (this.autoSort) {
+
             int index = Collections.binarySearch(this.data, item);
+
             if (index < 0) {
+
                 this.data.add(-index - 1, item);
             } else {
+
                 if (!this.allowDuplicateXValues) {
+
                     throw new ServiceException("X-value already exists.");
                 }
 
                 for (int size = this.data.size(); index < size && item.compareTo(this.data.get(index)) == 0; ++index) {
+
                 }
 
                 if (index < this.data.size()) {
+
                     this.data.add(index, item);
                 } else {
+
                     this.data.add(item);
                 }
             }
         } else {
+
             if (!this.allowDuplicateXValues) {
+
                 int index = this.indexOf(item.getComparable());
+
                 if (index >= 0) {
+
                     throw new ServiceException("X-value already exists.");
                 }
             }
@@ -99,6 +119,7 @@ public class ComparableObjectSeries extends Series implements Cloneable, Seriali
         }
 
         if (this.getItemCount() > this.maximumItemCount) {
+
             this.data.remove(0);
         }
 
@@ -109,12 +130,18 @@ public class ComparableObjectSeries extends Series implements Cloneable, Seriali
     }
 
     public int indexOf(Comparable x) {
+
         if (this.autoSort) {
+
             return Collections.binarySearch(this.data, new ComparableObjectItem(x, (Object) null));
         } else {
+
             for (int i = 0; i < this.data.size(); ++i) {
+
                 ComparableObjectItem item = (ComparableObjectItem) this.data.get(i);
+
                 if (item.getComparable().equals(x)) {
+
                     return i;
                 }
             }
@@ -124,10 +151,14 @@ public class ComparableObjectSeries extends Series implements Cloneable, Seriali
     }
 
     protected void update(Comparable x, Object y) throws ServiceException {
+
         int index = this.indexOf(x);
+
         if (index < 0) {
+
             throw new ServiceException("No observation for x = " + x);
         } else {
+
             ComparableObjectItem item = this.getDataItem(index);
             item.setObject(y);
             this.fireSeriesChanged();
@@ -135,6 +166,7 @@ public class ComparableObjectSeries extends Series implements Cloneable, Seriali
     }
 
     protected void updateByIndex(int index, Object y) {
+
         ComparableObjectItem item = this.getDataItem(index);
         item.setObject(y);
         this.fireSeriesChanged();
@@ -145,7 +177,9 @@ public class ComparableObjectSeries extends Series implements Cloneable, Seriali
     }
 
     protected void delete(int start, int end) {
+
         if (end >= start) {
+
             this.data.subList(start, end + 1).clear();
         }
 
@@ -153,14 +187,15 @@ public class ComparableObjectSeries extends Series implements Cloneable, Seriali
     }
 
     public void clear() {
+
         if (this.data.size() > 0) {
             this.data.clear();
             this.fireSeriesChanged();
         }
-
     }
 
     protected ComparableObjectItem remove(int index) {
+
         ComparableObjectItem result = (ComparableObjectItem) this.data.remove(index);
         this.fireSeriesChanged();
         return result;
@@ -171,6 +206,7 @@ public class ComparableObjectSeries extends Series implements Cloneable, Seriali
     }
 
     public boolean equals(Object obj) {
+
         if (obj == this) {
             return true;
         } else if (!(obj instanceof ComparableObjectSeries)) {
@@ -178,7 +214,9 @@ public class ComparableObjectSeries extends Series implements Cloneable, Seriali
         } else if (!super.equals(obj)) {
             return false;
         } else {
+
             ComparableObjectSeries that = (ComparableObjectSeries) obj;
+
             if (this.maximumItemCount != that.maximumItemCount) {
                 return false;
             } else if (this.autoSort != that.autoSort) {
@@ -192,19 +230,23 @@ public class ComparableObjectSeries extends Series implements Cloneable, Seriali
     }
 
     public int hashCode() {
+
         int result = super.hashCode();
         int count = this.getItemCount();
         if (count > 0) {
+
             ComparableObjectItem item = this.getDataItem(0);
             result = 29 * result + item.hashCode();
         }
 
         if (count > 1) {
+
             ComparableObjectItem item = this.getDataItem(count - 1);
             result = 29 * result + item.hashCode();
         }
 
         if (count > 2) {
+
             ComparableObjectItem item = this.getDataItem(count / 2);
             result = 29 * result + item.hashCode();
         }
@@ -216,6 +258,7 @@ public class ComparableObjectSeries extends Series implements Cloneable, Seriali
     }
 
     public Object clone() throws CloneNotSupportedException {
+
         ComparableObjectSeries clone = (ComparableObjectSeries) super.clone();
         clone.data = CloneUtils.cloneList(this.data);
         return clone;

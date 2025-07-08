@@ -95,6 +95,7 @@ public class CandleItem extends ComparableObjectItem {
      * @return The period (never <code>null</code>).
      */
     public Candle getCandle() {
+
         return (Candle) getObject();
     }
 
@@ -104,6 +105,7 @@ public class CandleItem extends ComparableObjectItem {
      * @return The y-value.
      */
     public double getY() {
+
         return getClose();
     }
 
@@ -113,8 +115,12 @@ public class CandleItem extends ComparableObjectItem {
      * @return The open value.
      */
     public double getOpen() {
-        if (null != getCandle())
+
+        if (null != getCandle()) {
+
             return getCandle().getOpen().doubleValue();
+        }
+
         return Double.NaN;
     }
 
@@ -124,8 +130,12 @@ public class CandleItem extends ComparableObjectItem {
      * @return The high value.
      */
     public double getHigh() {
-        if (null != getCandle())
+
+        if (null != getCandle()) {
+
             return getCandle().getHigh().doubleValue();
+        }
+
         return Double.NaN;
     }
 
@@ -135,8 +145,12 @@ public class CandleItem extends ComparableObjectItem {
      * @return The low value.
      */
     public double getLow() {
-        if (null != getCandle())
+
+        if (null != getCandle()) {
+
             return getCandle().getLow().doubleValue();
+        }
+
         return Double.NaN;
 
     }
@@ -147,8 +161,12 @@ public class CandleItem extends ComparableObjectItem {
      * @return The close value.
      */
     public double getClose() {
-        if (null != getCandle())
+
+        if (null != getCandle()) {
+
             return getCandle().getClose().doubleValue();
+        }
+
         return Double.NaN;
 
     }
@@ -159,8 +177,12 @@ public class CandleItem extends ComparableObjectItem {
      * @return The volume value.
      */
     public long getVolume() {
-        if (null != getCandle())
+
+        if (null != getCandle()) {
+
             return getCandle().getVolume();
+        }
+
         return 0;
     }
 
@@ -170,8 +192,12 @@ public class CandleItem extends ComparableObjectItem {
      * @return The trade count value.
      */
     public int getCount() {
-        if (null != getCandle())
+
+        if (null != getCandle()) {
+
             return getCandle().getTradeCount();
+        }
+
         return 0;
     }
 
@@ -181,8 +207,12 @@ public class CandleItem extends ComparableObjectItem {
      * @return The Vwap value.
      */
     public double getVwap() {
-        if (null != getCandle())
+
+        if (null != getCandle()) {
+
             return getCandle().getVwap().doubleValue();
+        }
+
         return 0;
     }
 
@@ -192,8 +222,11 @@ public class CandleItem extends ComparableObjectItem {
      * @param vwap double
      */
     public void setVwap(double vwap) {
-        if (null != getCandle())
+
+        if (null != getCandle()) {
+
             getCandle().setVwap(new BigDecimal(vwap));
+        }
     }
 
     /**
@@ -202,8 +235,11 @@ public class CandleItem extends ComparableObjectItem {
      * @param open double
      */
     public void setOpen(double open) {
-        if (null != getCandle())
+
+        if (null != getCandle()) {
+
             getCandle().setOpen(new BigDecimal(open));
+        }
     }
 
     /**
@@ -212,8 +248,11 @@ public class CandleItem extends ComparableObjectItem {
      * @param close double
      */
     public void setClose(double close) {
-        if (null != getCandle())
+
+        if (null != getCandle()) {
+
             getCandle().setClose(new BigDecimal(close));
+        }
     }
 
     /**
@@ -222,8 +261,11 @@ public class CandleItem extends ComparableObjectItem {
      * @param high double
      */
     public void setHigh(double high) {
-        if (null != getCandle())
+
+        if (null != getCandle()) {
+
             getCandle().setHigh(new BigDecimal(high));
+        }
     }
 
     /**
@@ -232,8 +274,11 @@ public class CandleItem extends ComparableObjectItem {
      * @param count int
      */
     public void setCount(int count) {
-        if (null != getCandle())
+
+        if (null != getCandle()) {
+
             getCandle().setTradeCount(count);
+        }
     }
 
     /**
@@ -242,8 +287,11 @@ public class CandleItem extends ComparableObjectItem {
      * @param low double
      */
     public void setLow(double low) {
-        if (null != getCandle())
+
+        if (null != getCandle()) {
+
             getCandle().setLow(new BigDecimal(low));
+        }
     }
 
     /**
@@ -252,8 +300,11 @@ public class CandleItem extends ComparableObjectItem {
      * @param volume long
      */
     public void setVolume(long volume) {
-        if (null != getCandle())
+
+        if (null != getCandle()) {
+
             getCandle().setVolume(volume);
+        }
     }
 
     /**
@@ -262,6 +313,7 @@ public class CandleItem extends ComparableObjectItem {
      * @return boolean The side of the bar true is green false is red.
      */
     public boolean getSide() {
+
         return this.getClose() >= this.getOpen();
     }
 
@@ -272,8 +324,12 @@ public class CandleItem extends ComparableObjectItem {
      * @return boolean
      */
     public boolean isSide(String side) {
-        if (Side.BOT.equals(side))
+
+        if (Side.BOT.equals(side)) {
+
             return getSide();
+        }
+
         return (!getSide());
     }
 
@@ -283,8 +339,11 @@ public class CandleItem extends ComparableObjectItem {
      * @param lastUpdateDate ZonedDateTime
      */
     public void setLastUpdateDate(ZonedDateTime lastUpdateDate) {
-        if (null != getCandle())
+
+        if (null != getCandle()) {
+
             getCandle().setLastUpdateDate(lastUpdateDate);
+        }
     }
 
     /**
@@ -293,10 +352,13 @@ public class CandleItem extends ComparableObjectItem {
      * @return The lastUpdateDate value.
      */
     public ZonedDateTime getLastUpdateDate() {
-        if (null != getCandle())
-            return getCandle().getLastUpdateDate();
-        return null;
 
+        if (null != getCandle()) {
+
+            return getCandle().getLastUpdateDate();
+        }
+
+        return null;
     }
 
     /**
@@ -305,8 +367,11 @@ public class CandleItem extends ComparableObjectItem {
      * @param version Integer
      */
     public void setVersion(Integer version) {
-        if (null != getCandle())
+
+        if (null != getCandle()) {
+
             getCandle().setVersion(version);
+        }
     }
 
     /**
@@ -315,9 +380,12 @@ public class CandleItem extends ComparableObjectItem {
      * @return The version value.
      */
     public Integer getVersion() {
-        if (null != getCandle())
-            return getCandle().getVersion();
-        return null;
 
+        if (null != getCandle()) {
+
+            return getCandle().getVersion();
+        }
+
+        return null;
     }
 }

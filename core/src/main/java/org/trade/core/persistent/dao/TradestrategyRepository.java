@@ -5,4 +5,5 @@ import org.trade.core.dao.AspectRepository;
 
 public interface TradestrategyRepository extends AspectRepository<Tradestrategy, Integer>, TradestrategyRepositoryCustom {
 
+    Tradestrategy findByRequestId(Integer requestId);
 }

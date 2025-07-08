@@ -263,7 +263,9 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
     public Tradestrategy findTradestrategyById(final Integer id) {
 
         Optional<Tradestrategy> tradestrategyOpt = tradestrategyRepository.findById(id);
+
         if (tradestrategyOpt.isPresent()) {
+
             Tradestrategy tradestrategy = tradestrategyOpt.get();
 
             for (TradeOrder tradeOrder : tradestrategy.getTradeOrders()) {
@@ -462,7 +464,7 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
 
     public List<Candle> findCandlesByContractAndBarSize(Contract contract, Integer barSize) {
 
-        return candleRepository.findByContractAndBarSize(contract, barSize);
+        return candleRepository.findByContractAndBarSizeOrderByStartPeriodAsc(contract, barSize);
     }
 
     public Long findCandleCount(final Contract contract) {

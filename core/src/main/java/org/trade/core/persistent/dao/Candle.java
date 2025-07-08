@@ -50,6 +50,7 @@ import org.trade.core.util.time.TradingCalendar;
 
 import java.io.Serial;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.Duration;
 import java.time.ZonedDateTime;
 
@@ -456,13 +457,13 @@ public class Candle extends Aspect implements java.io.Serializable {
 
                     if (this.getEndPeriod().equals(candle.getEndPeriod())) {
 
-                        if (this.getHigh().equals(candle.getHigh())) {
+                        if (this.getHigh().setScale(2, RoundingMode.HALF_EVEN).equals(candle.getHigh())) {
 
-                            if (this.getLow().equals(candle.getLow())) {
+                            if (this.getLow().setScale(2, RoundingMode.HALF_EVEN).equals(candle.getLow())) {
 
-                                if (this.getOpen().equals(candle.getOpen())) {
+                                if (this.getOpen().setScale(2, RoundingMode.HALF_EVEN).equals(candle.getOpen())) {
 
-                                    if (this.getClose().equals(candle.getClose())) {
+                                    if (this.getClose().setScale(2, RoundingMode.HALF_EVEN).equals(candle.getClose())) {
 
                                         return this.getVolume().equals(candle.getVolume());
                                     }

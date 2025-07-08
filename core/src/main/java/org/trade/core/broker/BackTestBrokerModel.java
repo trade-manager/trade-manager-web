@@ -918,11 +918,14 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
         if (historyDataRequests.containsKey(id)) {
 
             symbol = historyDataRequests.get(id).getContract().getSymbol();
+
             synchronized (historyDataRequests) {
+
                 historyDataRequests.remove(id);
                 historyDataRequests.notify();
             }
         }
+
         if (realTimeBarsRequests.containsKey(id)) {
 
             symbol = realTimeBarsRequests.get(id).getSymbol();
@@ -947,21 +950,27 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
                 || (code == 321) || (code == 3170)) {
 
             if (((code > 1999) && (code < 3000))) {
+
                 _log.info(errorMsg);
                 brokerModelException = new BrokerModelException(3, code, errorMsg);
             } else if (code == 202 || code == 201 || code == 3170) {
+
                 _log.warn(errorMsg);
                 brokerModelException = new BrokerModelException(2, code, errorMsg);
             } else if (code == 321) {
+
                 _log.info(errorMsg);
                 return;
             } else {
+
                 _log.warn(errorMsg);
                 brokerModelException = new BrokerModelException(2, code, errorMsg);
             }
 
         } else {
+
             if (realTimeBarsRequests.containsKey(id)) {
+
                 synchronized (realTimeBarsRequests) {
                     realTimeBarsRequests.remove(id);
                 }
@@ -1085,7 +1094,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
                 _log.error("HistoricalData request not found for Req Id: {} Date: {}", reqId, dateString);
             }
         } catch (Exception ex) {
-            error(reqId, 3260, ex.getMessage());
+            error(reqId, 3270, "Error: historicalData msg: " + ex.getMessage());
         }
     }
 
@@ -1145,7 +1154,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
                 _log.error("HistoricalDataComplete request not found for Req Id: {}", reqId);
             }
         } catch (Exception ex) {
-            error(reqId, 3260, ex.getMessage());
+            error(reqId, 3260, "Error: HistoricalDataComplete msg: " + ex.getMessage());
         }
     }
 
