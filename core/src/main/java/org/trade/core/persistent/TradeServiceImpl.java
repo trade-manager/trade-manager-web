@@ -284,8 +284,9 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
         return instance.isPresent();
     }
 
-    public TradestrategyLite findTradestrategyLiteById(final Integer id) {
-        return tradestrategyRepository.findTradestrategyLiteById(id);
+    public TradestrategyLite findTradestrategyLiteByTradestrategy(final Tradestrategy tradestrategy) {
+
+        return tradestrategyRepository.findTradestrategyLiteByTradestrategy(tradestrategy);
     }
 
     public TradePosition findTradePositionById(final Integer id) {
@@ -366,9 +367,9 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
     }
 
     public Tradestrategy findTradestrategyByUniqueKeys(final ZonedDateTime open, final String strategy,
-                                                       final Integer idContract, final String portfolioName) {
+                                                       final Contract contract, final String portfolioName) {
 
-        return tradestrategyRepository.findTradestrategyByUniqueKeys(open, strategy, idContract, portfolioName);
+        return tradestrategyRepository.findTradestrategyByUniqueKeys(open, strategy, contract, portfolioName);
     }
 
     public List<Tradestrategy> findTradestrategyDistinctByDateRange(final ZonedDateTime fromOpen,
@@ -541,7 +542,7 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
 
         instance = this.saveAspect(instance);
 
-        List<Tradestrategy> tradestrategies = tradingdayRepository.findTradestrategyByTradingdayId(instance.getId());
+        List<Tradestrategy> tradestrategies = tradingdayRepository.findTradestrategyByTradingday(instance);
 
         for (Tradestrategy tradestrategy : tradestrategies) {
 

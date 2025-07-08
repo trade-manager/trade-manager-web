@@ -10,5 +10,5 @@ public interface TradingdayRepositoryCustom {
 
     Tradingday findByOpenCloseDate(ZonedDateTime openDate, ZonedDateTime closeDate);
 
-    List<Tradestrategy> findTradestrategyByTradingdayId(Integer idTradingday);
+    List<Tradestrategy> findTradestrategyByTradingday(Tradingday tradingday);
 }

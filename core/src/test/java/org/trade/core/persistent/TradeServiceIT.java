@@ -692,7 +692,7 @@ public class TradeServiceIT {
 
         Tradestrategy result = this.tradeService.findTradestrategyByUniqueKeys(
                 tradestrategy.getTradingday().getOpen(), tradestrategy.getStrategy().getName(),
-                tradestrategy.getContract().getId(), tradestrategy.getPortfolio().getName());
+                tradestrategy.getContract(), tradestrategy.getPortfolio().getName());
         assertNotNull(result);
     }
 

@@ -24,12 +24,12 @@ public class TradestrategyRepositoryImpl implements TradestrategyRepositoryCusto
     /**
      * Method findTradestrategyLiteById.
      *
-     * @param id Integer
+     * @param tradestrategy Tradestrategy
      * @return TradestrategyLite
      */
-    public TradestrategyLite findTradestrategyLiteById(Integer id) {
+    public TradestrategyLite findTradestrategyLiteByTradestrategy(Tradestrategy tradestrategy) {
 
-        TradestrategyLite instance = entityManager.find(TradestrategyLite.class, id);
+        TradestrategyLite instance = entityManager.find(TradestrategyLite.class, tradestrategy.getId());
         return instance;
     }
 
@@ -75,13 +75,13 @@ public class TradestrategyRepositoryImpl implements TradestrategyRepositoryCusto
     /**
      * Method findByTradeId.
      *
-     * @param idTradeOrder Integer
+     * @param tradeOrder TradeOrder
      * @return Tradestrategy
      */
-    public Tradestrategy findByTradeOrderId(Integer idTradeOrder) {
+    public Tradestrategy findByTradeOrder(TradeOrder tradeOrder) {
 
         Tradestrategy tradestrategy = null;
-        TradeOrder instance = entityManager.find(TradeOrder.class, idTradeOrder);
+        TradeOrder instance = entityManager.find(TradeOrder.class, tradeOrder.getId());
         if (null != instance) {
             tradestrategy = instance.getTradestrategy();
             tradestrategy.getContract();
@@ -95,11 +95,11 @@ public class TradestrategyRepositoryImpl implements TradestrategyRepositoryCusto
      *
      * @param open          Date
      * @param strategyName  String
-     * @param idContract    Integer
+     * @param contract      Contract
      * @param portfolioName String
      * @return Tradestrategy
      */
-    public Tradestrategy findTradestrategyByUniqueKeys(ZonedDateTime open, String strategyName, Integer idContract,
+    public Tradestrategy findTradestrategyByUniqueKeys(ZonedDateTime open, String strategyName, Contract contract,
                                                        String portfolioName) {
 
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
@@ -129,10 +129,10 @@ public class TradestrategyRepositoryImpl implements TradestrategyRepositoryCusto
             predicates.add(predicate);
         }
 
-        if (null != idContract) {
+        if (null != contract) {
 
-            Join<Tradestrategy, Contract> contract = from.join("contract");
-            Predicate predicate = builder.equal(contract.get("id"), idContract);
+            Join<Tradestrategy, Contract> contractJoin = from.join("contract");
+            Predicate predicate = builder.equal(contractJoin.get("id"), contract.getId());
             predicates.add(predicate);
         }
 

@@ -6,15 +6,15 @@ import java.util.List;
 
 public interface TradestrategyRepositoryCustom {
 
-    TradestrategyLite findTradestrategyLiteById(Integer id);
+    TradestrategyLite findTradestrategyLiteByTradestrategy(Tradestrategy tradestrategy);
 
     Integer findVersionById(Integer id);
 
     TradestrategyOrders findPositionOrdersByTradestrategyId(Integer tradestrategyId);
 
-    Tradestrategy findByTradeOrderId(Integer tradeOrderId);
+    Tradestrategy findByTradeOrder(TradeOrder tradeOrder);
 
-    Tradestrategy findTradestrategyByUniqueKeys(ZonedDateTime open, String strategyName, Integer contractId,
+    Tradestrategy findTradestrategyByUniqueKeys(ZonedDateTime open, String strategyName, Contract contract,
                                                 String portfolioName);
 
     List<Tradestrategy> findTradestrategyDistinctByDateRange(ZonedDateTime fromOpen, ZonedDateTime toOpen);
