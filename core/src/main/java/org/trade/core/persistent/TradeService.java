@@ -190,11 +190,11 @@ public interface TradeService extends AspectService {
     Tradestrategy findTradestrategyById(Integer tradestrategyId);
 
     /**
-     *
      * @param tradestrategy
      * @return
      */
     TradestrategyLite findTradestrategyLiteByTradestrategy(final Tradestrategy tradestrategy);
+
     /**
      * Method existTradestrategyById.
      *
@@ -224,7 +224,7 @@ public interface TradeService extends AspectService {
      *
      * @param open          ZonedDateTime
      * @param strategy      String
-     * @param contract    Contract
+     * @param contract      Contract
      * @param portfolioName String
      * @return Tradestrategy
      */

@@ -55,7 +55,7 @@ public class ClientSocket {
      * Method reqHistoricalData.
      *
      * @param reqId             int
-     * @param tradestrategy     com.ib.client.Contract
+     * @param tradestrategy     Tradestrategy
      * @param endDateTime       String
      * @param chartDays         String
      * @param barSizeSetting    String
@@ -94,20 +94,20 @@ public class ClientSocket {
     /**
      * Method removeBackTestBroker.
      *
-     * @param idTradestrategy Integer
+     * @param reqId Integer
      */
 
-    public void removeBackTestBroker(Integer idTradestrategy) {
+    public void removeBackTestBroker(Integer reqId) {
 
         synchronized (backTestBroker) {
 
-            Broker worker = backTestBroker.get(idTradestrategy);
+            Broker worker = backTestBroker.get(reqId);
 
             if (null != worker) {
 
                 if (worker.isDone() || worker.isCancelled()) {
 
-                    backTestBroker.remove(idTradestrategy);
+                    backTestBroker.remove(reqId);
                 }
             }
         }
@@ -116,12 +116,12 @@ public class ClientSocket {
     /**
      * Method getBackTestBroker.
      *
-     * @param idTradestrategy Integer
+     * @param reqId Integer
      * @return BackTestBroker
      */
-    public Broker getBackTestBroker(Integer idTradestrategy) {
+    public Broker getBackTestBroker(Integer reqId) {
 
-        return backTestBroker.get(idTradestrategy);
+        return backTestBroker.get(reqId);
     }
 
     /**

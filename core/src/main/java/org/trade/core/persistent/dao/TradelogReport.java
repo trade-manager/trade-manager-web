@@ -67,7 +67,7 @@ public class TradelogReport extends Aspect implements Serializable {
      * @param tradelogDetail   List<TradelogDetail>
      */
     public TradelogReport(Integer tradelogDetailId, List<TradelogDetail> tradelogDetail) {
-        this.setId(tradelogDetailId);
+        super.setId(tradelogDetailId);
         this.tradelogDetail = tradelogDetail;
 
     }
@@ -87,7 +87,7 @@ public class TradelogReport extends Aspect implements Serializable {
      * @param tradelogDetailId Integer
      */
     public void setTradingdaysId(Integer tradelogDetailId) {
-        this.setId(tradelogDetailId);
+        super.setId(tradelogDetailId);
     }
 
     /**

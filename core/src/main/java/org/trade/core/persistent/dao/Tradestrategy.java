@@ -137,15 +137,9 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
     @PrePersist
     public void initializeRequestId() {
 
-        if (requestId == null) {
-
-            Random random = new Random();
-            int min = 1;
-            int max = 100000000;
-            requestId = random.nextInt(max - min + 1) + min;
-        }
+        getRequestId();
     }
-    
+
     /**
      * Constructor for Tradestrategy.
      *
@@ -203,13 +197,22 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
     }
 
     /**
-     * Set the id for dummy tradestrategies when they are indicators.
+     * Method getRequestId.
      *
-     * @param id
+     * @return Integer
      */
-    public void setId(Integer id) {
+    public Integer getRequestId() {
 
-        super.setId(id);
+        if (this.requestId == null) {
+
+            Random random = new Random();
+            int min = 1;
+            int max = 1000000000;
+            // Formula: random.nextInt(max - min + 1) + min
+            this.requestId = random.nextInt(max - min + 1) + min;
+        }
+
+        return this.requestId;
     }
 
     /**
@@ -217,7 +220,6 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
      *
      * @return Integer
      */
-
     public Integer getBarSize() {
         return this.barSize;
     }
@@ -264,15 +266,6 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
      */
     public String getStatus() {
         return this.status;
-    }
-
-    /**
-     * Method getRequestId.
-     *
-     * @return Integer
-     */
-    public Integer getRequestId() {
-        return this.requestId;
     }
 
     /**

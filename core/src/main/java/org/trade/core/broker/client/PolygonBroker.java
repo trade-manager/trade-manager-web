@@ -102,7 +102,7 @@ public class PolygonBroker extends Broker {
 
             if (setContractDetails(contract)) {
 
-                this.brokerModel.contractDetails(contract.getId(), contract);
+                this.brokerModel.contractDetails(contract.getRequestId(), contract);
 
                 ZonedDateTime endDate = TradingCalendar.getZonedDateTimeFromDateTimeString(this.endDateTime,
                         "yyyyMMdd HH:mm:ss");
@@ -138,7 +138,7 @@ public class PolygonBroker extends Broker {
 
             // This will save the candle series.
             _log.debug("Debug: PolygonBroker::doInBackground finished ReqId: {} Symbol: {}", this.reqId, this.contract.getSymbol());
-            this.brokerModel.contractDetailsEnd(contract.getId());
+            this.brokerModel.contractDetailsEnd(contract.getRequestId());
             this.brokerModel.historicalDataComplete(this.reqId);
         }
         return null;

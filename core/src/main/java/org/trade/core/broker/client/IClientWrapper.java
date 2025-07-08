@@ -41,6 +41,7 @@ import org.trade.core.persistent.dao.TradeOrderfill;
 import org.trade.core.persistent.dao.Tradestrategy;
 
 public interface IClientWrapper {
+
     void error(Exception e);
 
     void error(String str);

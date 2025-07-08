@@ -311,7 +311,6 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
 
             Tradingdays tradingdays = new Tradingdays();
             Tradingday tradingday = Tradingday.newInstance(tradestrategy.getTradingday().getOpen());
-            // tradingday.setId(Integer.MAX_VALUE);
             tradingday.addTradestrategy(tradestrategy);
             tradingdays.add(tradingday);
             runStrategy(tradingdays, true);
@@ -391,7 +390,6 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
             } else {
                 Tradingdays tradingdays = new Tradingdays();
                 Tradingday tradingday = Tradingday.newInstance(tradestrategy.getTradingday().getOpen());
-                //  tradingday.setId(Integer.MAX_VALUE);
                 tradingday.addTradestrategy(tradestrategy);
                 tradingdays.add(tradingday);
                 runStrategy(tradingdays, false);
@@ -502,7 +500,6 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
             contractPanel.doClose(tradestrategy);
             Tradingdays tradingdays = new Tradingdays();
             Tradingday tradingday = Tradingday.newInstance(tradestrategy.getTradingday().getOpen());
-            // tradingday.setId(Integer.MAX_VALUE);
             tradingday.addTradestrategy(tradestrategy);
             tradingdays.add(tradingday);
             runStrategy(tradingdays, false);

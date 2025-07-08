@@ -98,7 +98,7 @@ public class Tradingdays extends Aspect implements java.io.Serializable {
      * @param tradingdays   List<Tradingday>
      */
     public Tradingdays(Integer idTradingdays, List<Tradingday> tradingdays) {
-        setId(idTradingdays);
+        super.setId(idTradingdays);
         this.tradingdays.addAll(tradingdays);
     }
 
@@ -117,7 +117,7 @@ public class Tradingdays extends Aspect implements java.io.Serializable {
      * @param idTradingdays Integer
      */
     public void setIdTradingdays(Integer idTradingdays) {
-        this.setId(idTradingdays);
+        super.setId(idTradingdays);
     }
 
     /**

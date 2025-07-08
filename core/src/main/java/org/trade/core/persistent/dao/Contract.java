@@ -46,6 +46,7 @@ import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import org.trade.core.dao.Aspect;
@@ -58,6 +59,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Random;
 
 
 /**
@@ -191,6 +193,11 @@ public class Contract extends Aspect implements Serializable, Cloneable {
     @Transient
     private BigDecimal lastPrice = new BigDecimal(0);
 
+    // Use for Interactive broker data requests API are int reqId
+    @Column(name = "request_id")
+    private Integer requestId;
+
+
     @Transient
     private List<Tradestrategy> tradestrategies = Collections.synchronizedList(new ArrayList<>(0));
 
@@ -203,6 +210,13 @@ public class Contract extends Aspect implements Serializable, Cloneable {
 
     @OneToMany(mappedBy = "contract", fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH, CascadeType.REMOVE})
     private List<Candle> candles = new ArrayList<>(0);
+
+
+    @PrePersist
+    public void initializeRequestId() {
+
+        getRequestId();
+    }
 
     public Contract() {
     }
@@ -228,13 +242,22 @@ public class Contract extends Aspect implements Serializable, Cloneable {
     }
 
     /**
-     * Set the id for dummy tradestrategies when they are indicators.
+     * Method getRequestId.
      *
-     * @param id
+     * @return Integer
      */
-    public void setId(Integer id) {
+    public Integer getRequestId() {
 
-        super.setId(id);
+        if (this.requestId == null) {
+
+            Random random = new Random();
+            int min = 1;
+            int max = 1000000000;
+            // Formula: random.nextInt(max - min + 1) + min
+            this.requestId = random.nextInt(max - min + 1) + min;
+        }
+
+        return this.requestId;
     }
 
     /**
