@@ -94,7 +94,6 @@ public class CandlestickChartApp extends BasePanel implements IBrokerChangeListe
                 brokerModel = (IBrokerModel) ClassFactory.getServiceForInterface(IBrokerModel._brokerTest, param, CandlestickChartApp.class);
 
                 Contract contract = new Contract(SECType.STOCK, symbol, Exchange.SMART, Currency.USD, null, null);
-                contract.setId(Integer.MAX_VALUE);
                 ZonedDateTime endDate = TradingCalendar.getDateTimeNowMarketTimeZone();
                 endDate = TradingCalendar.getTradingDayEnd(TradingCalendar.getPrevTradingDay(endDate));
                 ZonedDateTime startDate = TradingCalendar.getTradingDayStart(endDate);
@@ -103,7 +102,6 @@ public class CandlestickChartApp extends BasePanel implements IBrokerChangeListe
                 String name = daoStrategy.getName();
                 Strategy strategy = _tradeService.findStrategyByName(name);
                 Tradestrategy tradestrategy = getTradestrategy(contract, strategy, ChartDays.TWO_DAYS, BarSize.FIVE_MIN, startDate, endDate);
-                tradestrategy.setId(Integer.MAX_VALUE);
                 runStrategy(_tradeService, tradestrategy, true);
 
             } catch (Exception ex) {
@@ -357,7 +355,6 @@ public class CandlestickChartApp extends BasePanel implements IBrokerChangeListe
     private static Tradestrategy getTradestrategy(Contract contract, Strategy strategy, Integer chartDays, Integer barSize, ZonedDateTime open, ZonedDateTime close) {
 
         Tradingday tradingday = new Tradingday(open, close);
-        //  tradingday.setId(Integer.MAX_VALUE);
         Tradestrategy tradestrategy;
         Portfolio portfolio = (Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
         int riskAmount = 0;

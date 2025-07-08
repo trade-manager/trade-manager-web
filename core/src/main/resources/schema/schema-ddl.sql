@@ -70,6 +70,7 @@ order_types VARCHAR(50) NULL ,
 price_magnifier DECIMAL(10,2) NULL ,
 price_multiplier DECIMAL(10,2) NULL ,
 primary_exchange VARCHAR(10) NULL ,
+request_id INT NOT NULL ,
 symbol VARCHAR(20) NOT NULL ,
 sec_id VARCHAR(10) NULL ,
 sec_id_type VARCHAR(5) NULL ,
@@ -88,6 +89,7 @@ trade_position_id INT NULL,
 PRIMARY KEY (id) ,
 UNIQUE INDEX contract_tradePosition_uq (trade_position_id ASC),
 UNIQUE INDEX contract_uq (sec_type ASC, symbol ASC, EXCHANGE ASC, currency ASC, expiry ASC),
+UNIQUE INDEX request_id_uq (request_id ASC),
 CONSTRAINT contract_trade_position_fk
 FOREIGN KEY (trade_position_id )
 REFERENCES tradeposition (id )
@@ -276,6 +278,7 @@ INDEX tradeStrategy_contract_idx  (contract_id ASC) ,
 INDEX tradeStrategy_stategy_idx  (strategy_id ASC) ,
 INDEX tradeStrategy_portfolio_idx  (portfolio_id ASC) ,
 UNIQUE INDEX tradestrategy_uq (tradingday_id ASC, contract_id ASC, strategy_id ASC, portfolio_id ASC, bar_size ASC),
+UNIQUE INDEX request_id_uq (request_id ASC),
 CONSTRAINT tradestrategy_tradingday_fk
 FOREIGN KEY (tradingday_id )
 REFERENCES tradingday (id )

@@ -147,7 +147,7 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
                                 Tradestrategy tradestrategy = (Tradestrategy) itemTradestrategy.clone();
                                 tradestrategy.setBarSize(getBarSize(tradingday));
                                 tradestrategy.setChartDays(1);
-                                tradestrategy.setId(this.brokerModel.getNextRequestId());
+                                //tradestrategy.setId(this.brokerModel.getNextRequestId());
                                 tradestrategy.setStrategyData(null);
                                 tradestrategy.setStrategyData(StrategyData.create(tradestrategy));
 
@@ -360,11 +360,11 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
                 Tradestrategy indicatorTradestrategy = getIndicatorTradestrategy(tradestrategy, series);
                 candleDataset.setSeries(seriesIndex, indicatorTradestrategy.getStrategyData().getBaseCandleSeries());
 
-                if (!indicatorRequests.containsKey(indicatorTradestrategy.getId())) {
+                if (!indicatorRequests.containsKey(indicatorTradestrategy.getRequestId())) {
 
                     if (this.brokerModel.isConnected() || this.brokerModel.isBrokerDataOnly()) {
 
-                        indicatorRequests.put(indicatorTradestrategy.getId(), indicatorTradestrategy);
+                        indicatorRequests.put(indicatorTradestrategy.getRequestId(), indicatorTradestrategy);
                         tradingday.addTradestrategy(indicatorTradestrategy);
                         addedIndicator = true;
                     }
@@ -542,7 +542,6 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
             indicatorTradestrategy = new Tradestrategy(contract, tradestrategy.getTradingday(),
                     new Strategy("Indicator"), tradestrategy.getPortfolio(), new BigDecimal(0), null, null, false,
                     tradestrategy.getChartDays(), tradestrategy.getBarSize());
-            indicatorTradestrategy.setId(this.brokerModel.getNextRequestId());
             indicatorTradestrategy.setDirty(false);
         }
 

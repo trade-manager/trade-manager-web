@@ -1,27 +1,18 @@
 package org.trade.web;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.Version;
+import org.trade.core.dao.Aspect;
 
-import static jakarta.persistence.GenerationType.IDENTITY;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "employee")
-public class Employee {
-
-
-    @Id
-    @GeneratedValue(strategy = IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
-    private Long id;
+public class Employee extends Aspect implements Serializable, Cloneable {
 
     @Column(name = "first_name")
     private String firstName;
@@ -36,11 +27,6 @@ public class Employee {
     @JoinColumn(name = "user_id", insertable = true, updatable = true, nullable = false)
     private User user;
 
-    @Version
-    @JsonIgnore
-    @Column(name = "version")
-    private Long version;
-
     private Employee() {
     }
 
@@ -49,14 +35,6 @@ public class Employee {
         this.lastName = lastName;
         this.description = description;
         this.user = user;
-    }
-
-    public Long getId() {
-        return this.id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getFirstName() {
@@ -81,14 +59,6 @@ public class Employee {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public Long getVersion() {
-        return this.version;
-    }
-
-    public void setVersion(Long version) {
-        this.version = version;
     }
 
     public User getUser() {

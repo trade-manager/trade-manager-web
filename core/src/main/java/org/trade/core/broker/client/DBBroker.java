@@ -37,7 +37,6 @@ package org.trade.core.broker.client;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.trade.core.persistent.ServiceException;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.Candle;
@@ -74,8 +73,7 @@ public class DBBroker extends Broker {
 
     private final static Logger _log = LoggerFactory.getLogger(DBBroker.class);
 
-    @Autowired
-    private TradeService tradeService;
+    private final TradeService tradeService;
 
     private final StrategyData strategyData;
     private Tradestrategy tradestrategy = null;
@@ -100,12 +98,14 @@ public class DBBroker extends Broker {
     /**
      * Constructor for BackTestBroker.
      *
+     * @param tradeService    TradeService
      * @param strategyData    StrategyData
      * @param tradestrategyId Integer
      * @param brokerModel     IBrokerModel
      */
-    public DBBroker(StrategyData strategyData, Integer tradestrategyId, IClientWrapper brokerModel) {
+    public DBBroker(TradeService tradeService, StrategyData strategyData, Integer tradestrategyId, IClientWrapper brokerModel) {
 
+        this.tradeService = tradeService;
         this.tradestrategyId = tradestrategyId;
         this.brokerModel = brokerModel;
         this.strategyData = strategyData;

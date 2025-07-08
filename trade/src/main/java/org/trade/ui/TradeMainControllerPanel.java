@@ -311,7 +311,6 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
 
             Tradingdays tradingdays = new Tradingdays();
             Tradingday tradingday = Tradingday.newInstance(tradestrategy.getTradingday().getOpen());
-            // tradingday.setId(Integer.MAX_VALUE);
             tradingday.addTradestrategy(tradestrategy);
             tradingdays.add(tradingday);
             runStrategy(tradingdays, true);
@@ -391,7 +390,6 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
             } else {
                 Tradingdays tradingdays = new Tradingdays();
                 Tradingday tradingday = Tradingday.newInstance(tradestrategy.getTradingday().getOpen());
-                //  tradingday.setId(Integer.MAX_VALUE);
                 tradingday.addTradestrategy(tradestrategy);
                 tradingdays.add(tradingday);
                 runStrategy(tradingdays, false);
@@ -502,7 +500,6 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
             contractPanel.doClose(tradestrategy);
             Tradingdays tradingdays = new Tradingdays();
             Tradingday tradingday = Tradingday.newInstance(tradestrategy.getTradingday().getOpen());
-            // tradingday.setId(Integer.MAX_VALUE);
             tradingday.addTradestrategy(tradestrategy);
             tradingdays.add(tradingday);
             runStrategy(tradingdays, false);
@@ -934,6 +931,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
      */
 
     public void doConnect() {
+
         try {
 
             if ((null != brokerModel) && brokerModel.isConnected()) {
@@ -949,6 +947,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                     return;
                 }
             } else {
+
                 this.setBrokerMenu(null);
                 this.setBrokerModel(IBrokerModel._brokerTest);
             }
@@ -965,6 +964,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
             DBTableLookupServiceProvider.clearLookup();
 
             if (!dialog.getCancel()) {
+
                 this.setBrokerModel(IBrokerModel._broker);
                 this.getFrame().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
                 this.setStatusBarMessage("Please wait while login proceeds", BasePanel.INFORMATION);

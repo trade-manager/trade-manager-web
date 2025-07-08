@@ -45,6 +45,7 @@ public class TradingdayRepositoryImpl implements TradingdayRepositoryCustom {
             Predicate predicate = builder.greaterThanOrEqualTo(from.get("open"), startDate);
             predicates.add(predicate);
         }
+
         if (null != endDate) {
 
             Predicate predicate = builder.lessThanOrEqualTo(from.get("open"), endDate);
@@ -68,7 +69,6 @@ public class TradingdayRepositoryImpl implements TradingdayRepositoryCustom {
         }
 
         return tradingdays;
-
     }
 
     /**
@@ -86,10 +86,12 @@ public class TradingdayRepositoryImpl implements TradingdayRepositoryCustom {
         query.select(from);
 
         if (null != openDate) {
+
             query.where(builder.equal(from.get("open"), openDate));
         }
 
         if (null != closeDate) {
+
             query.where(builder.equal(from.get("close"), closeDate));
         }
 
@@ -105,8 +107,10 @@ public class TradingdayRepositoryImpl implements TradingdayRepositoryCustom {
         }
 
         if (!items.isEmpty()) {
+
             return items.getFirst();
         }
+
         return null;
     }
 
@@ -133,8 +137,8 @@ public class TradingdayRepositoryImpl implements TradingdayRepositoryCustom {
             }
             return items.getFirst();
         }
-        return null;
 
+        return null;
     }
 
     /**
@@ -152,10 +156,12 @@ public class TradingdayRepositoryImpl implements TradingdayRepositoryCustom {
         query.select(from);
 
         if (null != openDate) {
+
             query.where(builder.equal(from.get("open"), openDate));
         }
 
         if (null != closeDate) {
+
             query.where(builder.equal(from.get("close"), closeDate));
         }
 
@@ -165,16 +171,17 @@ public class TradingdayRepositoryImpl implements TradingdayRepositoryCustom {
 
             return items.getFirst();
         }
+
         return null;
     }
 
     /**
      * Method findTradestrategyByDate.
      *
-     * @param idTradingday Integer
+     * @param tradingday Tradingday
      * @return List<Tradestrategy>
      */
-    public List<Tradestrategy> findTradestrategyByTradingdayId(Integer idTradingday) {
+    public List<Tradestrategy> findTradestrategyByTradingday(Tradingday tradingday) {
 
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Tradestrategy> query = builder.createQuery(Tradestrategy.class);
@@ -182,12 +189,13 @@ public class TradingdayRepositoryImpl implements TradingdayRepositoryCustom {
         query.select(from);
         List<Predicate> predicates = new ArrayList<>();
 
-        if (null != idTradingday) {
+        if (null != tradingday) {
 
-            Join<Tradestrategy, Tradingday> tradingday = from.join("tradingday");
-            Predicate predicate = builder.equal(tradingday.get("id"), idTradingday);
+            Join<Tradestrategy, Tradingday> tradingdayJoin = from.join("tradingday");
+            Predicate predicate = builder.equal(tradingdayJoin.get("id"), tradingday.getId());
             predicates.add(predicate);
         }
+
         query.where(predicates.toArray(new Predicate[]{}));
         TypedQuery<Tradestrategy> typedQuery = entityManager.createQuery(query);
         return typedQuery.getResultList();
@@ -217,21 +225,25 @@ public class TradingdayRepositoryImpl implements TradingdayRepositoryCustom {
             Predicate predicate = builder.equal(from.get("secType"), SECType);
             predicates.add(predicate);
         }
+
         if (null != symbol) {
 
             Predicate predicate = builder.equal(from.get("symbol"), symbol);
             predicates.add(predicate);
         }
+
         if (null != exchange) {
 
             Predicate predicate = builder.equal(from.get("exchange"), exchange);
             predicates.add(predicate);
         }
+
         if (null != currency) {
 
             Predicate predicate = builder.equal(from.get("currency"), currency);
             predicates.add(predicate);
         }
+
         if (null != expiryDate) {
 
             Integer yearExpiry = expiryDate.getYear();
@@ -253,6 +265,7 @@ public class TradingdayRepositoryImpl implements TradingdayRepositoryCustom {
 
             return items.getFirst();
         }
+
         return null;
     }
 }

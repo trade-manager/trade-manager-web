@@ -36,6 +36,7 @@
 package org.trade.core.broker.client;
 
 import org.trade.core.broker.BrokerModelException;
+import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.Contract;
 import org.trade.core.persistent.dao.Tradestrategy;
 
@@ -44,10 +45,13 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ClientSocket {
 
     private static final ConcurrentHashMap<Integer, Broker> backTestBroker = new ConcurrentHashMap<>();
+
+    private final TradeService tradeService;
     private final IClientWrapper client;
 
-    public ClientSocket(IClientWrapper client) {
+    public ClientSocket(IClientWrapper client, TradeService tradeService) {
 
+        this.tradeService = tradeService;
         this.client = client;
     }
 
@@ -55,7 +59,7 @@ public class ClientSocket {
      * Method reqHistoricalData.
      *
      * @param reqId             int
-     * @param tradestrategy     com.ib.client.Contract
+     * @param tradestrategy     Tradestrategy
      * @param endDateTime       String
      * @param chartDays         String
      * @param barSizeSetting    String
@@ -78,7 +82,7 @@ public class ClientSocket {
 
                 if (tradestrategy.getTrade()) {
 
-                    DBBroker backTestBroker = new DBBroker(tradestrategy.getStrategyData(),
+                    DBBroker backTestBroker = new DBBroker(this.tradeService, tradestrategy.getStrategyData(),
                             tradestrategy.getId(), client);
                     ClientSocket.backTestBroker.put(reqId, backTestBroker);
                     backTestBroker.execute();
@@ -94,20 +98,20 @@ public class ClientSocket {
     /**
      * Method removeBackTestBroker.
      *
-     * @param idTradestrategy Integer
+     * @param reqId Integer
      */
 
-    public void removeBackTestBroker(Integer idTradestrategy) {
+    public void removeBackTestBroker(Integer reqId) {
 
         synchronized (backTestBroker) {
 
-            Broker worker = backTestBroker.get(idTradestrategy);
+            Broker worker = backTestBroker.get(reqId);
 
             if (null != worker) {
 
                 if (worker.isDone() || worker.isCancelled()) {
 
-                    backTestBroker.remove(idTradestrategy);
+                    backTestBroker.remove(reqId);
                 }
             }
         }
@@ -116,12 +120,12 @@ public class ClientSocket {
     /**
      * Method getBackTestBroker.
      *
-     * @param idTradestrategy Integer
+     * @param reqId Integer
      * @return BackTestBroker
      */
-    public Broker getBackTestBroker(Integer idTradestrategy) {
+    public Broker getBackTestBroker(Integer reqId) {
 
-        return backTestBroker.get(idTradestrategy);
+        return backTestBroker.get(reqId);
     }
 
     /**
