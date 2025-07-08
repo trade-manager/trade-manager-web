@@ -42,6 +42,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import org.trade.core.dao.Aspect;
@@ -57,6 +58,7 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Random;
 import java.util.Vector;
 
 /**
@@ -93,6 +95,10 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
     @Column(name = "trade", length = 1)
     private Boolean trade = false;
 
+    // Use for Interactive broker data requests API are int reqId
+    @Column(name = "request_id")
+    private Integer requestId;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "strategy_id", nullable = false)
     private Strategy strategy;
@@ -127,6 +133,19 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
 
     public Tradestrategy() {
     }
+
+    @PrePersist
+    public void initializeRequestId() {
+
+        if (requestId == null) {
+
+            Random random = new Random();
+            int min = 1;
+            int max = 100000000;
+            requestId = random.nextInt(max - min + 1) + min;;
+        }
+    }
+
 
     /**
      * Constructor for Tradestrategy.
@@ -246,6 +265,15 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
      */
     public String getStatus() {
         return this.status;
+    }
+
+    /**
+     * Method getRequestId.
+     *
+     * @return Integer
+     */
+    public Integer getRequestId() {
+        return this.requestId;
     }
 
     /**

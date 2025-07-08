@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface CandleRepository extends AspectRepository<Candle, Integer>, CandleRepositoryCustom {
 
-    List<Candle> findByContractAndBarSizeOrderByPeriodAsc(Contract contract, Integer barSize);
+    List<Candle> findByContractAndBarSizeOrderByStartPeriodAsc(Contract contract, Integer barSize);
 
 }
