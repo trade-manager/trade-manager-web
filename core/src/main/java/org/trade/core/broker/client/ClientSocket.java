@@ -36,6 +36,7 @@
 package org.trade.core.broker.client;
 
 import org.trade.core.broker.BrokerModelException;
+import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.Contract;
 import org.trade.core.persistent.dao.Tradestrategy;
 
@@ -44,10 +45,13 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ClientSocket {
 
     private static final ConcurrentHashMap<Integer, Broker> backTestBroker = new ConcurrentHashMap<>();
+
+    private final TradeService tradeService;
     private final IClientWrapper client;
 
-    public ClientSocket(IClientWrapper client) {
+    public ClientSocket(IClientWrapper client, TradeService tradeService) {
 
+        this.tradeService = tradeService;
         this.client = client;
     }
 
@@ -78,7 +82,7 @@ public class ClientSocket {
 
                 if (tradestrategy.getTrade()) {
 
-                    DBBroker backTestBroker = new DBBroker(tradestrategy.getStrategyData(),
+                    DBBroker backTestBroker = new DBBroker(this.tradeService, tradestrategy.getStrategyData(),
                             tradestrategy.getId(), client);
                     ClientSocket.backTestBroker.put(reqId, backTestBroker);
                     backTestBroker.execute();

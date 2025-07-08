@@ -38,7 +38,6 @@ package org.trade.core.broker;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradePosition;
 import org.trade.core.persistent.dao.Tradestrategy;
@@ -73,11 +72,6 @@ public abstract class AbstractBrokerModel implements IBrokerModel, Cloneable, Se
      */
     private transient EventListenerList listenerList;
     private boolean brokerDataOnly = false;
-
-    /**
-     * @return TradeService
-     */
-    abstract TradeService getTradeService();
 
     /**
      * Constructs a broker.

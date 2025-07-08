@@ -112,7 +112,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
         try {
 
             this.tradeService = tradeService;
-            client = new ClientSocket(this);
+            client = new ClientSocket(this, tradeService);
             int maxKey = this.tradeService.findTradeOrderByMaxKey();
 
             if (maxKey < 100000) {
@@ -123,11 +123,6 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
         } catch (Exception ex) {
             throw new IllegalArgumentException("Error initializing IBrokerModel Msg: " + ex.getMessage());
         }
-    }
-
-    public TradeService getTradeService() {
-
-        return this.tradeService;
     }
 
     /**

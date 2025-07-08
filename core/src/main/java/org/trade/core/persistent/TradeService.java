@@ -232,6 +232,12 @@ public interface TradeService extends AspectService {
                                                 String portfolioName);
 
     /**
+     * @param requestId
+     * @return
+     */
+    Tradestrategy findTradestrategyByRequestId(Integer requestId);
+
+    /**
      * Method findTradestrategyDistinctByDateRange.
      *
      * @param fromOpen ZonedDateTime

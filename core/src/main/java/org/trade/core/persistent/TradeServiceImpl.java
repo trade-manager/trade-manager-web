@@ -227,6 +227,11 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
         return instance;
     }
 
+    public Tradestrategy findTradestrategyByRequestId(Integer requestId) {
+
+        return tradestrategyRepository.findByRequestId(requestId);
+    }
+
     public TradestrategyOrders refreshPositionOrdersByTradestrategyId(final TradestrategyOrders positionOrders) {
 
         Integer version = tradestrategyRepository.findVersionById(Objects.requireNonNull(positionOrders.getId()));

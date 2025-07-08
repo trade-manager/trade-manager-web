@@ -137,11 +137,6 @@ public class TWSBrokerService extends AbstractBrokerModel {
         }
     }
 
-    public TradeService getTradeService() {
-
-        return this.tradeService;
-    }
-
     @Override
     public void onConnect(String host, Integer port, Integer clientId) {
 

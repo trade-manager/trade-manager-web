@@ -159,11 +159,6 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
         }
     }
 
-    public TradeService getTradeService() {
-
-        return this.tradeService;
-    }
-
     public boolean isConnected() {
         return client.isConnected();
     }
@@ -870,7 +865,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
 
                 if (tradeService.existTradestrategyById(reqId)) {
 
-                    Tradestrategy tradestrategy = tradeService.findTradestrategyById(reqId);
+                    Tradestrategy tradestrategy = tradeService.findTradestrategyByRequestId(reqId);
                     /*
                      * Internal created order have Integer.MAX_VALUE or are
                      * negative as their value, so change the m_orderId to
