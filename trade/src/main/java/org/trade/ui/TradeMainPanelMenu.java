@@ -81,6 +81,7 @@ public class TradeMainPanelMenu extends BasePanelMenu {
      * @param basePanel BasePanel
      */
     public TradeMainPanelMenu(BasePanel basePanel) {
+
         super(basePanel);
 
         cancelButton.setToolTipText("Cancel Strategies & Data");
