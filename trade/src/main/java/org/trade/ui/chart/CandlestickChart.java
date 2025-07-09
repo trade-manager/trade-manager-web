@@ -138,20 +138,27 @@ public class CandlestickChart extends JPanel implements SeriesChangeListener {
         chartPanel.addChartMouseListener(new ChartMouseListener() {
 
             public void chartMouseMoved(ChartMouseEvent e) {
+
             }
 
             public void chartMouseClicked(final ChartMouseEvent e) {
+
                 CombinedDomainXYPlot combinedXYplot = (CombinedDomainXYPlot) e.getChart().getPlot();
                 List<XYPlot> subplots = combinedXYplot.getSubplots();
+
                 if (e.getTrigger().getClickCount() == 2) {
+
                     double xItem;
                     double yItem;
+
                     if (e.getEntity() instanceof XYItemEntity xYItemEntity) {
+
                         xItem = xYItemEntity.getDataset().getXValue(xYItemEntity.getSeriesIndex(),
                                 xYItemEntity.getItem());
                         yItem = xYItemEntity.getDataset().getYValue(xYItemEntity.getSeriesIndex(),
                                 xYItemEntity.getItem());
                     } else {
+
                         PlotEntity plotEntity = ((PlotEntity) e.getEntity());
                         XYPlot plot = (XYPlot) plotEntity.getPlot();
                         xItem = plot.getDomainCrosshairValue();
@@ -230,6 +237,7 @@ public class CandlestickChart extends JPanel implements SeriesChangeListener {
     }
 
     public void removeChart() {
+
         this.strategyData.getCandleDataset().getSeries(0).removeChangeListener(this);
         this.chart.getXYPlot().clearAnnotations();
         this.chart.getXYPlot().clearDomainAxes();
@@ -437,12 +445,15 @@ public class CandlestickChart extends JPanel implements SeriesChangeListener {
                 String annotationText = "("
                         + TradingCalendar.getFormattedDate(candleItem.getLastUpdateDate(), TIME_FORMAT) + ", "
                         + new Money(candleItem.getClose()) + ")";
+
                 if (null == closePriceLine) {
+
                     closePriceLine = new XYTextAnnotation(annotationText, x, candleItem.getY());
                     closePriceLine.setTextAnchor(TextAnchor.BOTTOM_RIGHT);
                     xyplot.addAnnotation(closePriceLine);
                     xyplot.addRangeMarker(valueMarker);
                 } else {
+
                     closePriceLine.setText(annotationText);
                     closePriceLine.setX(x);
                     closePriceLine.setY(candleItem.getY());
@@ -462,6 +473,7 @@ public class CandlestickChart extends JPanel implements SeriesChangeListener {
      * @param quantity Integer
      */
     public void addBuySellTradeArrow(String action, Money price, ZonedDateTime time, Integer quantity) {
+
         String label = Action.newInstance(action) + " " + quantity + "@" + price;
         XYPointerAnnotation arrow = new XYPointerAnnotation(label, TradingCalendar.geMillisFromZonedDateTime(time),
                 price.doubleValue(), 90d);

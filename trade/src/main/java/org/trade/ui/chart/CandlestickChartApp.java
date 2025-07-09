@@ -53,6 +53,8 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  *
  */
+//@SpringBootApplication(scanBasePackages = {"org.trade.core", "org.trade.ui"})
+//@ConfigurationPropertiesScan("org.trade.core")
 public class CandlestickChartApp extends BasePanel implements IBrokerChangeListener {
 
     /**
@@ -81,7 +83,18 @@ public class CandlestickChartApp extends BasePanel implements IBrokerChangeListe
      */
     public static void main(String[] args) {
 
-        SwingUtilities.invokeLater(() -> {
+        //  ConfigurableApplicationContext applicationContext = new SpringApplicationBuilder(CandlestickChartApp.class)
+        //          .initializers(new ApplicationProfileInitializer()).headless(false).run(args);
+
+    }
+
+    // @org.springframework.stereotype.Component
+    class SwingApp {
+
+        //  @Autowired
+        TradeService tradeService;
+
+        public SwingApp(TradeService tradeService) {
 
             try {
 
@@ -90,7 +103,7 @@ public class CandlestickChartApp extends BasePanel implements IBrokerChangeListe
                 String symbol = "MSFT";
 
                 Vector<Object> param = new Vector<>(0);
-                param.add(getTradeService());
+                param.add(tradeService);
                 brokerModel = (IBrokerModel) ClassFactory.getServiceForInterface(IBrokerModel._brokerTest, param, CandlestickChartApp.class);
 
                 Contract contract = new Contract(SECType.STOCK, symbol, Exchange.SMART, Currency.USD, null, null);
@@ -107,12 +120,11 @@ public class CandlestickChartApp extends BasePanel implements IBrokerChangeListe
             } catch (Exception ex) {
                 _log.error("Error getting broker data msg: {}", ex.getMessage(), ex);
             }
-        });
+        }
     }
 
-    public static TradeService getTradeService() {
 
-        return _tradeService;
+    public void run(String... args) {
     }
 
     /**
