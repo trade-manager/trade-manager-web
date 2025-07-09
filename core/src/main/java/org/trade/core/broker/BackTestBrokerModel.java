@@ -180,12 +180,12 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
     /**
      * Method getBackTestBroker.
      *
-     * @param tradestrategyReqId Integer
+     * @param reqId Integer
      * @see IBrokerModel#getBackTestBroker(Integer)
      */
-    public Broker getBackTestBroker(Integer tradestrategyReqId) {
+    public Broker getBackTestBroker(Integer reqId) {
 
-        return client.getBackTestBroker(tradestrategyReqId);
+        return client.getBackTestBroker(reqId);
     }
 
     /**

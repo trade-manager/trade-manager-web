@@ -198,7 +198,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
         this.fireConnectionClosed(true);
     }
 
-    public Broker getBackTestBroker(Integer tradestrategyReqId) {
+    public Broker getBackTestBroker(Integer reqId) {
         return null;
     }
 

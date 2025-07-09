@@ -97,20 +97,20 @@ public class ClientSocket {
     /**
      * Method removeBackTestBroker.
      *
-     * @param tradestrategyReqId Integer
+     * @param reqId Integer
      */
 
-    public void removeBackTestBroker(Integer tradestrategyReqId) {
+    public void removeBackTestBroker(Integer reqId) {
 
         synchronized (backTestBroker) {
 
-            Broker worker = backTestBroker.get(tradestrategyReqId);
+            Broker worker = backTestBroker.get(reqId);
 
             if (null != worker) {
 
                 if (worker.isDone() || worker.isCancelled()) {
 
-                    backTestBroker.remove(tradestrategyReqId);
+                    backTestBroker.remove(reqId);
                 }
             }
         }
@@ -119,12 +119,12 @@ public class ClientSocket {
     /**
      * Method getBackTestBroker.
      *
-     * @param tradestrategyReqId Integer
+     * @param reqId Integer
      * @return BackTestBroker
      */
-    public Broker getBackTestBroker(Integer tradestrategyReqId) {
+    public Broker getBackTestBroker(Integer reqId) {
 
-        return backTestBroker.get(tradestrategyReqId);
+        return backTestBroker.get(reqId);
     }
 
     /**

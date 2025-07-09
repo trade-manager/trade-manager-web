@@ -277,7 +277,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
     }
 
     @Override
-    public Broker getBackTestBroker(Integer tradestrategyReqId) {
+    public Broker getBackTestBroker(Integer reqId) {
 
         return null;
     }
