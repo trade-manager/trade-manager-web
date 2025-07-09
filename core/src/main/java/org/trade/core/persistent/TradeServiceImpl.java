@@ -150,7 +150,7 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
     private static final int SCALE_5 = 5;
     private static final int SCALE_2 = 2;
 
-    public AspectRepository<Aspect, Integer> getAspectRepository() {
+    public AspectRepository<Aspect, Long> getAspectRepository() {
         return this.aspectRepository;
     }
 
@@ -186,7 +186,7 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
     }
 
 
-    public Account findAccountById(final Integer id) {
+    public Account findAccountById(final Long id) {
         return accountRepository.findById(id).isPresent() ? accountRepository.findById(id).get() : null;
     }
 
@@ -197,7 +197,7 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
     }
 
 
-    public Tradingday findTradingdayById(final Integer tradingdayId) {
+    public Tradingday findTradingdayById(final Long tradingdayId) {
         return tradingdayRepository.findById(tradingdayId).isPresent() ? tradingdayRepository.findById(tradingdayId).get() : null;
     }
 
@@ -205,11 +205,11 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
         return tradingdayRepository.findByOpenCloseDate(openDate, closeDate);
     }
 
-    public Contract findContractById(final Integer id) {
+    public Contract findContractById(final Long id) {
         return contractRepository.findById(id).isPresent() ? contractRepository.findById(id).get() : null;
     }
 
-    public TradeOrder findTradeOrderById(final Integer id) {
+    public TradeOrder findTradeOrderById(final Long id) {
         return tradeOrderRepository.findById(id).isPresent() ? tradeOrderRepository.findById(id).get() : null;
     }
 
@@ -234,7 +234,7 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
 
     public TradestrategyOrders refreshPositionOrdersByTradestrategyId(final TradestrategyOrders positionOrders) {
 
-        Integer version = tradestrategyRepository.findVersionById(Objects.requireNonNull(positionOrders.getId()));
+        Integer version = tradestrategyRepository.findVersionByTradestrategyId(Objects.requireNonNull(positionOrders.getId()));
 
         if (positionOrders.getVersion().equals(version)) {
 
@@ -247,7 +247,7 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
     }
 
     @Transactional
-    public TradestrategyOrders findPositionOrdersByTradestrategyId(final Integer tradestrategyId) {
+    public TradestrategyOrders findPositionOrdersByTradestrategyId(final Long tradestrategyId) {
 
         TradestrategyOrders instance = tradestrategyRepository.findPositionOrdersByTradestrategyId(tradestrategyId);
 
@@ -265,7 +265,7 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
     }
 
     @Transactional
-    public Tradestrategy findTradestrategyById(final Integer id) {
+    public Tradestrategy findTradestrategyById(final Long id) {
 
         Optional<Tradestrategy> tradestrategyOpt = tradestrategyRepository.findById(id);
 
@@ -283,10 +283,10 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
         return null;
     }
 
-    public boolean existTradestrategyById(final Integer id) {
+    public boolean existTradestrategyByRequestId(final Integer requestId) {
 
-        Optional<Tradestrategy> instance = tradestrategyRepository.findById(id);
-        return instance.isPresent();
+        Tradestrategy instance = tradestrategyRepository.findByRequestId(requestId);
+        return instance == null ? false : true;
     }
 
     public TradestrategyLite findTradestrategyLiteByTradestrategy(final Tradestrategy tradestrategy) {
@@ -294,12 +294,12 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
         return tradestrategyRepository.findTradestrategyLiteByTradestrategy(tradestrategy);
     }
 
-    public TradePosition findTradePositionById(final Integer id) {
+    public TradePosition findTradePositionById(final Long id) {
         return tradePositionRepository.findById(id).isPresent() ? tradePositionRepository.findById(id).get() : null;
     }
 
     @Transactional
-    public Portfolio findPortfolioById(final Integer id) {
+    public Portfolio findPortfolioById(final Long id) {
 
         Optional<Portfolio> portfolio = portfolioRepository.findById(id);
 
@@ -408,7 +408,7 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
         transientInstance.setStatus(null);
         getAspectRepository().save(transientInstance);
 
-        Hashtable<Integer, TradePosition> tradePositions = new Hashtable<>();
+        Hashtable<Long, TradePosition> tradePositions = new Hashtable<>();
 
         for (TradeOrder tradeOrder : transientInstance.getTradeOrders()) {
 
@@ -616,7 +616,7 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
             tradeOrder.setStatus(OrderStatus.FILLED);
         }
 
-        Integer tradestrategyId = tradeOrder.getTradestrategy().getId();
+        Long tradestrategyId = tradeOrder.getTradestrategy().getId();
 
         /*
          * If the filled qty is > 0 and we have no TradePosition then create
@@ -878,7 +878,7 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
         return saveTradeOrder(tradeOrder);
     }
 
-    public Rule findRuleById(final Integer ruleId) {
+    public Rule findRuleById(final Long ruleId) {
 
         return ruleRepository.findById(ruleId).isPresent() ? ruleRepository.findById(ruleId).get() : null;
     }
@@ -888,7 +888,7 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
         return ruleRepository.findByMaxVersion(strategy);
     }
 
-    public Strategy findStrategyById(final Integer id) {
+    public Strategy findStrategyById(final Long id) {
 
         return strategyRepository.findById(id).isPresent() ? strategyRepository.findById(id).get() : null;
 

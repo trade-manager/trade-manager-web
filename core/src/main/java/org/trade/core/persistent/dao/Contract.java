@@ -194,9 +194,8 @@ public class Contract extends Aspect implements Serializable, Cloneable {
     private BigDecimal lastPrice = new BigDecimal(0);
 
     // Use for Interactive broker data requests API are int reqId
-    @Column(name = "request_id")
+    @Column(name = "request_id", unique = true)
     private Integer requestId;
-
 
     @Transient
     private List<Tradestrategy> tradestrategies = Collections.synchronizedList(new ArrayList<>(0));

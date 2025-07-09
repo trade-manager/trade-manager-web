@@ -73,10 +73,10 @@ public class ContractRepositoryImpl implements ContractRepositoryCustom {
     /**
      * Method findByContractId.
      *
-     * @param id Integer
+     * @param id Long
      * @return ContractId
      */
-    public ContractLite findContractLiteById(Integer id) {
+    public ContractLite findContractLiteById(Long id) {
 
         return entityManager.find(ContractLite.class, id);
     }

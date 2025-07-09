@@ -132,10 +132,10 @@ public interface TradeService extends AspectService {
     /**
      * Method findAccountById.
      *
-     * @param id Integer
+     * @param id Long
      * @return Account
      */
-    Account findAccountById(Integer id);
+    Account findAccountById(Long id);
 
     /**
      * Method findAccountByNumber.
@@ -148,18 +148,18 @@ public interface TradeService extends AspectService {
     /**
      * Method findContractById.
      *
-     * @param contractId Integer
+     * @param id Long
      * @return Contract
      */
-    Contract findContractById(Integer contractId);
+    Contract findContractById(Long id);
 
     /**
      * Method findTradeOrderById.
      *
-     * @param tradeOrderId Integer
+     * @param id Long
      * @return TradeOrder
      */
-    TradeOrder findTradeOrderById(Integer tradeOrderId);
+    TradeOrder findTradeOrderById(Long id);
 
     /**
      * Method findContractByUniqueKey.
@@ -184,10 +184,10 @@ public interface TradeService extends AspectService {
     /**
      * Method findTradestrategyById.
      *
-     * @param tradestrategyId Integer
+     * @param id Long
      * @return Tradestrategy
      */
-    Tradestrategy findTradestrategyById(Integer tradestrategyId);
+    Tradestrategy findTradestrategyById(Long id);
 
     /**
      * @param tradestrategy
@@ -198,18 +198,18 @@ public interface TradeService extends AspectService {
     /**
      * Method existTradestrategyById.
      *
-     * @param id Integer
+     * @param requestId Integer
      * @return boolean
      */
-    boolean existTradestrategyById(Integer id);
+    boolean existTradestrategyByRequestId(final Integer requestId);
 
     /**
      * Method findPositionOrdersByTradestrategyId.
      *
-     * @param tradestrategyId Integer
+     * @param tradestrategyId Long
      * @return PositionOrders
      */
-    TradestrategyOrders findPositionOrdersByTradestrategyId(Integer tradestrategyId);
+    TradestrategyOrders findPositionOrdersByTradestrategyId(Long tradestrategyId);
 
     /**
      * Method refreshPositionOrdersByTradestrategyId.
@@ -232,7 +232,7 @@ public interface TradeService extends AspectService {
                                                 String portfolioName);
 
     /**
-     * @param requestId
+     * @param requestId Integer
      * @return
      */
     Tradestrategy findTradestrategyByRequestId(Integer requestId);
@@ -265,18 +265,18 @@ public interface TradeService extends AspectService {
     /**
      * Method findTradePositionById.
      *
-     * @param tradePositionId Integer
+     * @param tradePositionId Long
      * @return TradePosition
      */
-    TradePosition findTradePositionById(Integer tradePositionId);
+    TradePosition findTradePositionById(Long tradePositionId);
 
     /**
      * Method findPortfolioById.
      *
-     * @param id Integer
+     * @param id Long
      * @return Portfolio
      */
-    Portfolio findPortfolioById(Integer id);
+    Portfolio findPortfolioById(Long id);
 
     /**
      * Method findPortfolioByName.
@@ -341,10 +341,10 @@ public interface TradeService extends AspectService {
     /**
      * Method findTradingdayById.
      *
-     * @param tradingdayId Integer
+     * @param tradingdayId Long
      * @return Tradingday
      */
-    Tradingday findTradingdayById(Integer tradingdayId);
+    Tradingday findTradingdayById(Long tradingdayId);
 
     /**
      * Method findTradingdayByOpenDate.
@@ -406,10 +406,10 @@ public interface TradeService extends AspectService {
     /**
      * Method findRuleById.
      *
-     * @param ruleId Integer
+     * @param ruleId Long
      * @return Rule
      */
-    Rule findRuleById(Integer ruleId);
+    Rule findRuleById(Long ruleId);
 
     /**
      * Method findRuleByMaxVersion.
@@ -422,10 +422,10 @@ public interface TradeService extends AspectService {
     /**
      * Method findStrategyById.
      *
-     * @param id Integer
+     * @param id Long
      * @return Strategy
      */
-    Strategy findStrategyById(Integer id);
+    Strategy findStrategyById(Long id);
 
     /**
      * Method findStrategyByName.

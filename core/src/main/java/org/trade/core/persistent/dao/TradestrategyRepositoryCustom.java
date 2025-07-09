@@ -8,9 +8,9 @@ public interface TradestrategyRepositoryCustom {
 
     TradestrategyLite findTradestrategyLiteByTradestrategy(Tradestrategy tradestrategy);
 
-    Integer findVersionById(Integer id);
+    Integer findVersionByTradestrategyId(Long tradestrategyId);
 
-    TradestrategyOrders findPositionOrdersByTradestrategyId(Integer tradestrategyId);
+    TradestrategyOrders findPositionOrdersByTradestrategyId(Long tradestrategyId);
 
     Tradestrategy findByTradeOrder(TradeOrder tradeOrder);
 

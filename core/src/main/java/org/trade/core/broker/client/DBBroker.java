@@ -77,7 +77,7 @@ public class DBBroker extends Broker {
 
     private final StrategyData strategyData;
     private Tradestrategy tradestrategy = null;
-    private final Integer tradestrategyId;
+    private final Long tradestrategyId;
     private final IClientWrapper brokerModel;
     private BigDecimal trailAmount = null;
     private BigDecimal trailLimitOffsetAmount = null;
@@ -100,10 +100,10 @@ public class DBBroker extends Broker {
      *
      * @param tradeService    TradeService
      * @param strategyData    StrategyData
-     * @param tradestrategyId Integer
+     * @param tradestrategyId Long
      * @param brokerModel     IBrokerModel
      */
-    public DBBroker(TradeService tradeService, StrategyData strategyData, Integer tradestrategyId, IClientWrapper brokerModel) {
+    public DBBroker(TradeService tradeService, StrategyData strategyData, Long tradestrategyId, IClientWrapper brokerModel) {
 
         this.tradeService = tradeService;
         this.tradestrategyId = tradestrategyId;

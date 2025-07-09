@@ -276,7 +276,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
     }
 
     @Override
-    public Broker getBackTestBroker(Integer idTradestrategy) {
+    public Broker getBackTestBroker(Long tradestrategyId) {
         return null;
     }
 
@@ -366,7 +366,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
 
             if (controller().client().isConnected()) {
                 if (this.isHistoricalDataRunning(tradestrategy)) {
-                    throw new BrokerModelException(tradestrategy.getId(), 3010,
+                    throw new BrokerModelException(tradestrategy.getRequestId(), 3010,
                             "HistoricalData request is already in progress for: "
                                     + tradestrategy.getContract().getSymbol() + " Please wait or cancel.");
                 }
@@ -402,7 +402,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
                 List<TagValue> chartOptions = new ArrayList<>();
 
                 controller().reqHistoricalData(TWSBrokerModel.getIBContract(tradestrategy.getContract()), endDateTime, chartDays, Types.DurationUnit.DAY, Types.BarSize.valueOf(BarSize.newInstance(tradestrategy.getBarSize()).getCode()),
-                        Types.WhatToShow.valueOf(backfillWhatToShow), (backfillUseRTH == 1), new HistoricalDataHandler(this, tradestrategy.getId()));
+                        Types.WhatToShow.valueOf(backfillWhatToShow), (backfillUseRTH == 1), new HistoricalDataHandler(this, tradestrategy.getRequestId()));
 
 //                controller().client().reqHistoricalData(tradestrategy.getId(),
 //                        TWSBrokerModel.getIBContract(tradestrategy.getContract()), endDateTime,
@@ -411,11 +411,11 @@ public class TWSBrokerService extends AbstractBrokerModel {
 //                        backfillUseRTH, backfillDateFormat, chartOptions);
 
             } else {
-                throw new BrokerModelException(tradestrategy.getId(), 3100,
+                throw new BrokerModelException(tradestrategy.getRequestId(), 3100,
                         "Not conected to TWS historical data cannot be retrieved");
             }
         } catch (Exception ex) {
-            throw new BrokerModelException(tradestrategy.getId(), 3110, "Error broker data Symbol: "
+            throw new BrokerModelException(tradestrategy.getRequestId(), 3110, "Error broker data Symbol: "
                     + tradestrategy.getContract().getSymbol() + " Msg: " + ex.getMessage());
         }
     }
@@ -426,7 +426,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
             if (controller().client().isConnected()) {
 
                 if (this.isRealtimeBarsRunning(contract)) {
-                    throw new BrokerModelException(contract.getId(), 3030,
+                    throw new BrokerModelException(contract.getRequestId(), 3030,
                             "RealtimeBars request is already in progress for: " + contract.getSymbol()
                                     + " Please wait or cancel.");
                 }
@@ -447,11 +447,11 @@ public class TWSBrokerService extends AbstractBrokerModel {
                 }
 
             } else {
-                throw new BrokerModelException(contract.getId(), 3040,
+                throw new BrokerModelException(contract.getRequestId(), 3040,
                         "Not conected to TWS historical data cannot be retrieved");
             }
         } catch (Exception ex) {
-            throw new BrokerModelException(contract.getId(), 3050,
+            throw new BrokerModelException(contract.getRequestId(), 3050,
                     "Error broker data Symbol: " + contract.getSymbol() + " Msg: " + ex.getMessage());
         }
     }
@@ -461,7 +461,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
         try {
             if (controller().client().isConnected()) {
                 if (this.isMarketDataRunning(contract)) {
-                    throw new BrokerModelException(contract.getId(), 3030,
+                    throw new BrokerModelException(contract.getRequestId(), 3030,
                             "MarketData request is already in progress for: " + contract.getSymbol()
                                     + " Please wait or cancel.");
                 }
@@ -536,11 +536,11 @@ public class TWSBrokerService extends AbstractBrokerModel {
 //                        TWSBrokerModel.getIBExecutionFilter(clientId, tradestrategy.getTradingday().getOpen(),
 //                                tradestrategy.getContract().getSecType(), tradestrategy.getContract().getSymbol()));
             } else {
-                throw new BrokerModelException(tradestrategy.getId(), 3020,
+                throw new BrokerModelException(tradestrategy.getRequestId(), 3020,
                         "Not conected to TWS historical data cannot be retrieved");
             }
         } catch (Exception ex) {
-            throw new BrokerModelException(tradestrategy.getId(), 3020,
+            throw new BrokerModelException(tradestrategy.getRequestId(), 3020,
                     "Error request executions for symbol: " + tradestrategy.getContract().getSymbol() + " Msg: "
                             + ex.getMessage());
         }
@@ -784,11 +784,11 @@ public class TWSBrokerService extends AbstractBrokerModel {
                     controller().client().reqContractDetails(contract.getRequestId(), TWSBrokerModel.getIBContract(contract));
                 }
             } else {
-                throw new BrokerModelException(contract.getId(), 3080,
+                throw new BrokerModelException(contract.getRequestId(), 3080,
                         "Not conected to TWS contract data cannot be retrieved");
             }
         } catch (Exception ex) {
-            throw new BrokerModelException(contract.getId(), 3090,
+            throw new BrokerModelException(contract.getRequestId(), 3090,
                     "Error broker data Symbol: " + contract.getSymbol() + " Msg: " + ex.getMessage());
         }
     }
@@ -1750,9 +1750,9 @@ public class TWSBrokerService extends AbstractBrokerModel {
                      * only contains executions for tradeOrders that do not exist.
                      */
 
-                    if (getPersistentModel().existTradestrategyById(getReqId())) {
+                    if (getPersistentModel().existTradestrategyByRequestId(getReqId())) {
 
-                        Tradestrategy tradestrategy = getPersistentModel().findTradestrategyById(getReqId());
+                        Tradestrategy tradestrategy = getPersistentModel().findTradestrategyByRequestId(getReqId());
                         /*
                          * Internal created order have Integer.MAX_VALUE or are
                          * negative as their value, so change the m_orderId to

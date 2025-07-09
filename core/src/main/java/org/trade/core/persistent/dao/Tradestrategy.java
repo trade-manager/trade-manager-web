@@ -96,7 +96,7 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
     private Boolean trade = false;
 
     // Use for Interactive broker data requests API are int reqId
-    @Column(name = "request_id")
+    @Column(name = "request_id", unique = true)
     private Integer requestId;
 
     @ManyToOne(fetch = FetchType.EAGER)

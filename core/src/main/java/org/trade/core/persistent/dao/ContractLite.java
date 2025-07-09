@@ -71,7 +71,7 @@ public class ContractLite extends Aspect implements Serializable, Cloneable {
     public ContractLite() {
     }
 
-    public ContractLite(Integer id) {
+    public ContractLite(Long id) {
         setId(id);
     }
 

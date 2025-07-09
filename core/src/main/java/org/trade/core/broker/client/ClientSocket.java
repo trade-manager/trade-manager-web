@@ -44,7 +44,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class ClientSocket {
 
-    private static final ConcurrentHashMap<Integer, Broker> backTestBroker = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<Long, Broker> backTestBroker = new ConcurrentHashMap<>();
 
     private final TradeService tradeService;
     private final IClientWrapper client;
@@ -76,7 +76,7 @@ public class ClientSocket {
 
                 PolygonBroker broker = new PolygonBroker(reqId, tradestrategy.getContract(), endDateTime, chartDays,
                         barSizeSetting, client);
-                backTestBroker.put(reqId, broker);
+                backTestBroker.put(tradestrategy.getId(), broker);
                 broker.execute();
             } else {
 
@@ -84,7 +84,7 @@ public class ClientSocket {
 
                     DBBroker backTestBroker = new DBBroker(this.tradeService, tradestrategy.getStrategyData(),
                             tradestrategy.getId(), client);
-                    ClientSocket.backTestBroker.put(reqId, backTestBroker);
+                    ClientSocket.backTestBroker.put(tradestrategy.getId(), backTestBroker);
                     backTestBroker.execute();
                 }
                 client.historicalDataComplete(reqId);
@@ -98,20 +98,20 @@ public class ClientSocket {
     /**
      * Method removeBackTestBroker.
      *
-     * @param reqId Integer
+     * @param tradestrategyId Long
      */
 
-    public void removeBackTestBroker(Integer reqId) {
+    public void removeBackTestBroker(Long tradestrategyId) {
 
         synchronized (backTestBroker) {
 
-            Broker worker = backTestBroker.get(reqId);
+            Broker worker = backTestBroker.get(tradestrategyId);
 
             if (null != worker) {
 
                 if (worker.isDone() || worker.isCancelled()) {
 
-                    backTestBroker.remove(reqId);
+                    backTestBroker.remove(tradestrategyId);
                 }
             }
         }
@@ -120,12 +120,12 @@ public class ClientSocket {
     /**
      * Method getBackTestBroker.
      *
-     * @param reqId Integer
+     * @param tradestrategyId Long
      * @return BackTestBroker
      */
-    public Broker getBackTestBroker(Integer reqId) {
+    public Broker getBackTestBroker(Long tradestrategyId) {
 
-        return backTestBroker.get(reqId);
+        return backTestBroker.get(tradestrategyId);
     }
 
     /**

@@ -3,7 +3,7 @@ package org.trade.core.persistent.dao;
 import org.trade.core.dao.AspectRepository;
 
 
-public interface TradeOrderfillRepository extends AspectRepository<TradeOrderfill, Integer>, TradeOrderfillRepositoryCustom {
+public interface TradeOrderfillRepository extends AspectRepository<TradeOrderfill, Long>, TradeOrderfillRepositoryCustom {
 
     TradeOrderfill findByExecId(String execId);
 }

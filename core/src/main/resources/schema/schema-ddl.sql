@@ -21,7 +21,7 @@ DROP TABLE IF EXISTS entrylimit //
 SHOW WARNINGS//
 
 CREATE  TABLE IF NOT EXISTS entrylimit (
-id INT NOT NULL AUTO_INCREMENT ,
+id BIGINT NOT NULL AUTO_INCREMENT ,
 start_price DECIMAL(10,2) NOT NULL ,
 end_price DECIMAL(10,2) NOT NULL ,
 limit_amount DECIMAL(10,2) NULL ,
@@ -48,7 +48,7 @@ DROP TABLE IF EXISTS contract //
 SHOW WARNINGS//
 
 CREATE  TABLE IF NOT EXISTS contract (
-id INT NOT NULL AUTO_INCREMENT ,
+id BIGINT NOT NULL AUTO_INCREMENT ,
 category VARCHAR(80) NULL ,
 combo_leg_description VARCHAR(30)  NULL ,
 contract_month VARCHAR(6)  NULL ,
@@ -85,7 +85,7 @@ valid_exchanges VARCHAR(200) NULL ,
 version INT NULL,
 created_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
-trade_position_id INT NULL,
+trade_position_id BIGINT NULL,
 PRIMARY KEY (id) ,
 UNIQUE INDEX contract_tradePosition_uq (trade_position_id ASC),
 UNIQUE INDEX contract_uq (sec_type ASC, symbol ASC, EXCHANGE ASC, currency ASC, expiry ASC),
@@ -109,7 +109,7 @@ DROP TABLE IF EXISTS portfolio //
 SHOW WARNINGS//
 
 CREATE  TABLE IF NOT EXISTS portfolio (
-id INT NOT NULL AUTO_INCREMENT ,
+id BIGINT NOT NULL AUTO_INCREMENT ,
 name VARCHAR(45) NOT NULL ,
 alias VARCHAR(45) NULL ,
 allocation_method  VARCHAR(20) NULL ,
@@ -134,7 +134,7 @@ DROP TABLE IF EXISTS account //
 SHOW WARNINGS//
 
 CREATE  TABLE IF NOT EXISTS account (
-id INT NOT NULL AUTO_INCREMENT ,
+id BIGINT NOT NULL AUTO_INCREMENT ,
 account_number VARCHAR(20) NOT NULL ,
 account_type VARCHAR(20) NULL ,
 name VARCHAR(45) NOT NULL ,
@@ -166,12 +166,12 @@ DROP TABLE IF EXISTS portfolioaccount //
 SHOW WARNINGS//
 
 CREATE  TABLE IF NOT EXISTS portfolioaccount (
-id INT NOT NULL AUTO_INCREMENT ,
+id BIGINT NOT NULL AUTO_INCREMENT ,
 version INT NULL,
 created_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
-portfolio_id INT NOT NULL ,
-account_id INT NOT NULL ,
+portfolio_id BIGINT NOT NULL ,
+account_id BIGINT NOT NULL ,
 PRIMARY KEY (id) ,
 INDEX portfolioaccount_account_idx  (account_id ASC) ,
 INDEX portfolioaccount_portfolio_idx  (portfolio_id ASC) ,
@@ -200,7 +200,7 @@ DROP TABLE IF EXISTS tradingday //
 SHOW WARNINGS//
 
 CREATE  TABLE IF NOT EXISTS tradingday (
-id INT NOT NULL AUTO_INCREMENT ,
+id BIGINT NOT NULL AUTO_INCREMENT ,
 open DATETIME NOT NULL ,
 close DATETIME NOT NULL ,
 market_bias VARCHAR(10) NULL ,
@@ -225,15 +225,15 @@ DROP TABLE IF EXISTS strategy //
 SHOW WARNINGS//
 
 CREATE  TABLE IF NOT EXISTS strategy (
-id INT NOT NULL AUTO_INCREMENT ,
+id BIGINT NOT NULL AUTO_INCREMENT ,
 name VARCHAR(45) NOT NULL ,
 description VARCHAR(240) NULL ,
 market_data SMALLINT(1)  NULL ,
 class_Name VARCHAR(100) NOT NULL ,
-strategy_manager_id INT NULL ,
 version INT NULL,
 created_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+strategy_manager_id BIGINT NULL ,
 PRIMARY KEY (id) ,
 UNIQUE INDEX strategy_name_uq (name ASC) ,
 INDEX strategy_strategy_idx (strategy_manager_id ASC) ,
@@ -256,7 +256,7 @@ DROP TABLE IF EXISTS tradestrategy //
 SHOW WARNINGS//
 
 CREATE  TABLE IF NOT EXISTS tradestrategy (
-id INT NOT NULL AUTO_INCREMENT ,
+id BIGINT NOT NULL AUTO_INCREMENT ,
 bar_Size  INT NULL ,
 chart_days INT NULL ,
 status VARCHAR(20) NULL ,
@@ -268,10 +268,10 @@ request_id INT NOT NULL ,
 version INT NULL,
 created_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
-tradingday_id INT NOT NULL ,
-contract_id INT NOT NULL ,
-strategy_id INT NOT NULL ,
-portfolio_id INT NOT NULL ,
+tradingday_id BIGINT NOT NULL ,
+contract_id BIGINT NOT NULL ,
+strategy_id BIGINT NOT NULL ,
+portfolio_id BIGINT NOT NULL ,
 PRIMARY KEY (id) ,
 INDEX tradeStrategy_tradingDay_idx (tradingday_id ASC) ,
 INDEX tradeStrategy_contract_idx  (contract_id ASC) ,
@@ -313,7 +313,7 @@ DROP TABLE IF EXISTS tradeposition //
 SHOW WARNINGS//
 
 CREATE  TABLE IF NOT EXISTS tradeposition (
-id INT NOT NULL AUTO_INCREMENT ,
+id BIGINT NOT NULL AUTO_INCREMENT ,
 open_quantity INT NULL ,
 position_open_date DATETIME(6) NOT NULL ,
 position_close_date DATETIME(6) NULL ,
@@ -327,7 +327,7 @@ total_net_value DECIMAL(10,2) NULL ,
 version INT NULL,
 created_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
-contract_id INT NOT NULL ,
+contract_id BIGINT NOT NULL ,
 PRIMARY KEY (id) ,
 INDEX tradeposition_contract_idx (contract_id ASC) ,
 CONSTRAINT tradeposition_contract_fk
@@ -349,7 +349,7 @@ DROP TABLE IF EXISTS tradeorder //
 SHOW WARNINGS//
 
 CREATE  TABLE IF NOT EXISTS tradeorder (
-id INT NOT NULL AUTO_INCREMENT ,
+id BIGINT NOT NULL AUTO_INCREMENT ,
 action VARCHAR(6) NOT NULL ,
 account_number VARCHAR(20) NULL ,
 all_or_nothing SMALLINT(1)  NULL ,
@@ -393,8 +393,8 @@ order_update_date DATETIME(6) NOT NULL ,
 version INT NULL,
 created_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
-tradestrategy_id INT NOT NULL ,
-trade_position_id INT NULL ,
+tradestrategy_id BIGINT NOT NULL ,
+trade_position_id BIGINT NULL ,
 PRIMARY KEY (id) ,
 INDEX tradeorder_tradestrategy_idx (tradestrategy_id ASC) ,
 INDEX tradeorder_tradeposition_idx (trade_position_id ASC) ,
@@ -423,7 +423,7 @@ DROP TABLE IF EXISTS tradeorderfill //
 SHOW WARNINGS//
 
 CREATE  TABLE IF NOT EXISTS tradeorderfill (
-id INT NOT NULL AUTO_INCREMENT ,
+id BIGINT NOT NULL AUTO_INCREMENT ,
 account_number VARCHAR(20) NULL ,
 average_price DECIMAL(11,3) NULL ,
 commission DECIMAL(11,3) NULL ,
@@ -439,7 +439,7 @@ time DATETIME(6) NOT NULL ,
 version INT NULL,
 created_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
-trade_order_id INT NOT NULL ,
+trade_order_id BIGINT NOT NULL ,
 PRIMARY KEY (id) ,
 INDEX tradeorderfill_order_idx (trade_order_id ASC) ,
 UNIQUE INDEX execid_uq (exec_Id ASC, trade_order_id ASC) ,
@@ -462,7 +462,7 @@ DROP TABLE IF EXISTS candle //
 SHOW WARNINGS//
 
 CREATE  TABLE IF NOT EXISTS candle (
-id INT NOT NULL AUTO_INCREMENT ,
+id BIGINT NOT NULL AUTO_INCREMENT ,
 open DECIMAL(10,2) NULL ,
 high DECIMAL(10,2) NULL ,
 low DECIMAL(10,2) NULL ,
@@ -478,7 +478,7 @@ last_update_date DATETIME(6) NOT NULL ,
 version INT NULL,
 created_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
-contract_id INT NOT NULL ,
+contract_id BIGINT NOT NULL ,
 PRIMARY KEY (id) ,
 INDEX candle_contract_idx (contract_id ASC) ,
 INDEX candle_contractbarsize_idx (contract_id ASC, bar_size ASC) ,
@@ -508,7 +508,7 @@ rule BLOB NULL,
 version INT NOT NULL,
 created_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
-strategy_id INT NOT NULL,
+strategy_id BIGINT NOT NULL,
 PRIMARY KEY (id),
 INDEX rule_stategy_idx (strategy_id ASC),
 UNIQUE INDEX idstrategy_version_uq (strategy_id ASC, version ASC),
@@ -531,17 +531,17 @@ DROP TABLE IF EXISTS indicatorseries //
 SHOW WARNINGS//
 
 CREATE  TABLE IF NOT EXISTS indicatorseries (
-id INT NOT NULL AUTO_INCREMENT,
+id BIGINT NOT NULL AUTO_INCREMENT,
 name VARCHAR(45) NOT NULL ,
 description VARCHAR(100) NULL ,
-TYPE VARCHAR(45) NOT NULL ,
+type VARCHAR(45) NOT NULL ,
 display_series SMALLINT(1) NULL ,
-series_RGB_color INT NULL ,
+series_rgb_color INT NULL ,
 sub_chart SMALLINT(1) NULL ,
 version INT NULL,
 created_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
-strategy_id INT NULL ,
+strategy_id BIGINT NULL ,
 PRIMARY KEY (id) ,
 INDEX indicator_strategy_idx (strategy_id ASC) ,
 UNIQUE INDEX indicatorseries_uq (strategy_id ASC, TYPE ASC, name ASC),
@@ -564,7 +564,7 @@ DROP TABLE IF EXISTS codetype //
 SHOW WARNINGS//
 
 CREATE  TABLE IF NOT EXISTS codetype (
-id INT NOT NULL AUTO_INCREMENT ,
+id BIGINT NOT NULL AUTO_INCREMENT ,
 name VARCHAR(45) NOT NULL ,
 type VARCHAR(45) NOT NULL ,
 description VARCHAR(100) NULL ,
@@ -587,7 +587,7 @@ DROP TABLE IF EXISTS codeattribute //
 SHOW WARNINGS//
 
 CREATE  TABLE IF NOT EXISTS codeattribute (
-id INT NOT NULL AUTO_INCREMENT ,
+id BIGINT NOT NULL AUTO_INCREMENT ,
 name VARCHAR(45) NOT NULL ,
 description VARCHAR(100) NULL ,
 default_value VARCHAR(45) NULL ,
@@ -596,7 +596,7 @@ class_editor_Name VARCHAR(100) NULL ,
 version INT NULL,
 created_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
-code_type_id INT NOT NULL ,
+code_type_id BIGINT NOT NULL ,
 PRIMARY KEY (id) ,
 INDEX codeAttribute_codetype_idx (code_type_id ASC) ,
 CONSTRAINT codeattribute_codetype_fk
@@ -618,14 +618,14 @@ DROP TABLE IF EXISTS codevalue //
 SHOW WARNINGS//
 
 CREATE  TABLE IF NOT EXISTS codevalue (
-id INT NOT NULL AUTO_INCREMENT ,
+id BIGINT NOT NULL AUTO_INCREMENT ,
 code_value VARCHAR(45) NOT NULL ,
 version INT NULL,
 created_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
-code_attribute_id INT NOT NULL ,
-indicator_series_id INT NULL ,
-tradestrategy_id INT NULL ,
+code_attribute_id BIGINT NOT NULL ,
+indicator_series_id BIGINT NULL ,
+tradestrategy_id BIGINT NULL ,
 PRIMARY KEY (id) ,
 INDEX codeValue_codeattribute_idx (code_attribute_id ASC) ,
 INDEX codeValue_indicatorseries_idx (indicator_series_id ASC) ,
@@ -661,7 +661,7 @@ DROP TABLE IF EXISTS domain //
 SHOW WARNINGS//
 
 CREATE  TABLE IF NOT EXISTS domain (
-id INT NOT NULL AUTO_INCREMENT ,
+id BIGINT NOT NULL AUTO_INCREMENT ,
 name VARCHAR(255) NOT NULL ,
 description VARCHAR(100) NULL ,
 version INT NULL,
@@ -683,7 +683,7 @@ DROP TABLE IF EXISTS user //
 SHOW WARNINGS//
 
 CREATE  TABLE IF NOT EXISTS user (
-id INT NOT NULL AUTO_INCREMENT ,
+id BIGINT NOT NULL AUTO_INCREMENT ,
 name VARCHAR(100) NOT NULL ,
 first_name VARCHAR(100)  NULL ,
 last_name VARCHAR(100)  NULL ,
@@ -692,7 +692,7 @@ roles TINYBLOB NULL ,
 version INT NULL,
 created_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
-domain_id INT NOT NULL ,
+domain_id BIGINT NOT NULL ,
 PRIMARY KEY (id) ,
 UNIQUE INDEX user_name_uq (name ASC) ,
 INDEX user_domain_idx (domain_id ASC) ,
@@ -715,7 +715,7 @@ DROP TABLE IF EXISTS role //
 SHOW WARNINGS//
 
 CREATE  TABLE IF NOT EXISTS role (
-id INT NOT NULL AUTO_INCREMENT ,
+id BIGINT NOT NULL AUTO_INCREMENT ,
 name VARCHAR(100) NOT NULL ,
 description VARCHAR(100) NULL ,
 version INT NULL,
@@ -737,12 +737,12 @@ DROP TABLE IF EXISTS userrole //
 SHOW WARNINGS//
 
 CREATE  TABLE IF NOT EXISTS userrole (
-id INT NOT NULL AUTO_INCREMENT ,
+id BIGINT NOT NULL AUTO_INCREMENT ,
 version INT NULL,
 created_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
-user_id INT NOT NULL ,
-role_id INT NOT NULL ,
+user_id BIGINT NOT NULL ,
+role_id BIGINT NOT NULL ,
 PRIMARY KEY (id) ,
 INDEX userrole_role_idx (role_id ASC) ,
 CONSTRAINT userrole_role_fk
@@ -770,14 +770,14 @@ DROP TABLE IF EXISTS employee//
 SHOW WARNINGS//
 
 CREATE  TABLE IF NOT EXISTS employee (
-id INT NOT NULL AUTO_INCREMENT ,
+id BIGINT NOT NULL AUTO_INCREMENT ,
 first_name VARCHAR(100)  NULL ,
 last_name VARCHAR(100)  NULL ,
 description VARCHAR(100)  NULL ,
 version INT NULL ,
 created_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
-user_id INT NOT NULL ,
+user_id BIGINT NOT NULL ,
 PRIMARY KEY (id) ,
 INDEX employee_name_uq (first_name ASC, last_name ASC) ,
 INDEX user_idx (user_id ASC) ,

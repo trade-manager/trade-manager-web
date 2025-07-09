@@ -117,7 +117,7 @@ public class TradestrategyIT {
         tradestrategy = TradestrategyBase.createTestTradestrategy(tradeService, symbol);
         assertNotNull(tradestrategy);
 
-        Integer version = tradestrategyRepository.findVersionById(tradestrategy.getId());
+        Integer version = tradestrategyRepository.findVersionByTradestrategyId(tradestrategy.getId());
         assertNotNull(version);
         _log.info("findVersionById id:{} version: {}", tradestrategy.getId(), version);
     }

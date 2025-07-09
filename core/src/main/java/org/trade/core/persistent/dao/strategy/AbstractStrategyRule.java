@@ -99,7 +99,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
     private final StrategyData strategyData;
     private Tradestrategy tradestrategy = null;
     private TradestrategyOrders tradestrategyOrders = null;
-    private final Integer tradestrategyId;
+    private final Long tradestrategyId;
     private String symbol = null;
     private boolean seriesChanged = false;
     private final Object lockStrategyWorker = new Object();
@@ -116,12 +116,12 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
      * @param tradeService    TradeService
      * @param brokerModel     IBrokerModel
      * @param strategyData    StrategyData
-     * @param idTradestrategy Integer
+     * @param tradestrategyId Integer
      */
-    public AbstractStrategyRule(TradeService tradeService, IBrokerModel brokerModel, StrategyData strategyData, Integer idTradestrategy) {
+    public AbstractStrategyRule(TradeService tradeService, IBrokerModel brokerModel, StrategyData strategyData, Long tradestrategyId) {
 
         this.listenerList = new EventListenerList();
-        this.tradestrategyId = idTradestrategy;
+        this.tradestrategyId = tradestrategyId;
         this.tradeService = tradeService;
         this.brokerModel = brokerModel;
         this.strategyData = strategyData;
