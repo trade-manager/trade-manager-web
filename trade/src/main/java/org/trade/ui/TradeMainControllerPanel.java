@@ -537,7 +537,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                         // tradestrategyId.
 
                         Tradestrategy tradestrategy = tradeService
-                                .findTradestrategyById(Integer.parseInt(openOrder.getOrderReference()));
+                                .findTradestrategyById(Long.parseLong(openOrder.getOrderReference()));
                         int result = JOptionPane.showConfirmDialog(getFrame(),
                                 "Missing order key: " + openOrder.getOrderKey() + " for contract "
                                         + tradestrategy.getContract().getSymbol() + " do you want to save?",
@@ -1518,13 +1518,13 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
     /**
      * Method doTransfer.
      *
-     * @param idTradestrategy Integer
+     * @param tradestrategyId Long
      */
-    public void doTransfer(Integer idTradestrategy) {
+    public void doTransfer(Long tradestrategyId) {
 
-        Tradestrategy tradestrategy = tradingdays.getTradestrategy(idTradestrategy);
+        Tradestrategy tradestrategy = tradingdays.getTradestrategy(tradestrategyId);
         if (null == tradestrategy) {
-            tradestrategy = tradeService.findTradestrategyById(idTradestrategy);
+            tradestrategy = tradeService.findTradestrategyById(tradestrategyId);
         }
         if (null == tradingdays.getTradingday(tradestrategy.getTradingday().getOpen(),
                 tradestrategy.getTradingday().getClose())) {
@@ -1784,7 +1784,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
              * For back test the back tester listens to the strategy for orders
              * being created/completed.
              */
-            strategy.addMessageListener(brokerModel.getBackTestBroker(tradestrategy.getId()));
+            strategy.addMessageListener(brokerModel.getBackTestBroker(tradestrategy.getRequestId()));
         }
         strategy.execute();
         tradingdayPanel.addStrategyWorker(key, strategy);

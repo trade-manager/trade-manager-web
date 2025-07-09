@@ -50,7 +50,7 @@ import java.time.ZonedDateTime;
  *
  */
 @MappedSuperclass
-public abstract class Aspect extends AbstractPersistable<Integer> {
+public abstract class Aspect extends AbstractPersistable<Long> {
 
     @Version
     @Column(name = "version", columnDefinition = "integer DEFAULT 0", nullable = false)

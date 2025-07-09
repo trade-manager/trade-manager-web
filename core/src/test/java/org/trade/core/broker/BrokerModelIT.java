@@ -161,7 +161,7 @@ public class BrokerModelIT extends TradestrategyBase implements IBrokerChangeLis
 
         // Wait for the BackTestBroker to complete. These tests use the testing
         // client from org.trade.brokerclient that runs its own thread.
-        Broker backTestBroker = backTestbrokerModel.getBackTestBroker(tradestrategy.getId());
+        Broker backTestBroker = backTestbrokerModel.getBackTestBroker(tradestrategy.getRequestId());
 
         if (null != backTestBroker) {
             // Ping the broker to see if its completed. Not isConnected always

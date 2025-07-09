@@ -81,7 +81,7 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
         int reSumbittedAt = 20;
         this.startTime = System.currentTimeMillis();
         this.submitTimes.clear();
-        ConcurrentHashMap<Integer, Tradingday> runningContractRequests = new ConcurrentHashMap<>();
+        ConcurrentHashMap<Long, Tradingday> runningContractRequests = new ConcurrentHashMap<>();
 
         // Initialize the progress bar
         setProgress(0);
@@ -147,7 +147,6 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
                                 Tradestrategy tradestrategy = (Tradestrategy) itemTradestrategy.clone();
                                 tradestrategy.setBarSize(getBarSize(tradingday));
                                 tradestrategy.setChartDays(1);
-                                //tradestrategy.setId(this.brokerModel.getNextRequestId());
                                 tradestrategy.setStrategyData(null);
                                 tradestrategy.setStrategyData(StrategyData.create(tradestrategy));
 
@@ -427,12 +426,12 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
      * contracts try to run any that could not be run due to a conflict. Run
      * then in asc date order value.
      *
-     * @param runningContractRequests ConcurrentHashMap<Integer, Tradingday>
+     * @param runningContractRequests ConcurrentHashMap<Long, Tradingday>
      * @param totalSumbitted          int
      * @return int
      */
     private int reProcessTradingdays(Tradingdays tradingdays,
-                                     ConcurrentHashMap<Integer, Tradingday> runningContractRequests, int totalSumbitted) throws Exception {
+                                     ConcurrentHashMap<Long, Tradingday> runningContractRequests, int totalSumbitted) throws Exception {
 
         while (!this.isCancelled() && !runningContractRequests.isEmpty()) {
 
@@ -456,10 +455,10 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
 
             for (Tradingday item : tradingdays.getTradingdays()) {
 
-                for (Integer idTradeingday : runningContractRequests.keySet()) {
+                for (Long tradeingdayId : runningContractRequests.keySet()) {
 
 
-                    Tradingday reProcessTradingday = runningContractRequests.get(idTradeingday);
+                    Tradingday reProcessTradingday = runningContractRequests.get(tradeingdayId);
 
                     if (item.equals(reProcessTradingday)) {
 
@@ -627,12 +626,12 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
      * running add it to the set to be reprocessed later.
      *
      * @param tradingday              Tradingday
-     * @param runningContractRequests ConcurrentHashMap<Integer, Tradingday>
+     * @param runningContractRequests ConcurrentHashMap<Long, Tradingday>
      * @return Tradingday
      */
 
     private Tradingday getTradingdayToProcess(Tradingday tradingday,
-                                              ConcurrentHashMap<Integer, Tradingday> runningContractRequests) throws CloneNotSupportedException {
+                                              ConcurrentHashMap<Long, Tradingday> runningContractRequests) throws CloneNotSupportedException {
 
         if (tradingday.getTradestrategies().isEmpty()) {
             return tradingday;

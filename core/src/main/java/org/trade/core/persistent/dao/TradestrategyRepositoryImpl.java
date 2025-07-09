@@ -36,10 +36,10 @@ public class TradestrategyRepositoryImpl implements TradestrategyRepositoryCusto
     /**
      * Method findVersionById.
      *
-     * @param id Integer
+     * @param tradestrategyId Long
      * @return Integer
      */
-    public Integer findVersionById(Integer id) {
+    public Integer findVersionByTradestrategyId(Long tradestrategyId) {
 
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<TradestrategyLite> query = builder.createQuery(TradestrategyLite.class);
@@ -47,7 +47,7 @@ public class TradestrategyRepositoryImpl implements TradestrategyRepositoryCusto
 
         CriteriaQuery<TradestrategyLite> select = query.multiselect(from.get("id"),
                 from.get("version"));
-        Predicate predicate = builder.equal(from.get("id"), id);
+        Predicate predicate = builder.equal(from.get("id"), tradestrategyId);
         query.where(predicate);
         TypedQuery<TradestrategyLite> typedQuery = entityManager.createQuery(select);
         List<TradestrategyLite> items = typedQuery.getResultList();
@@ -65,7 +65,7 @@ public class TradestrategyRepositoryImpl implements TradestrategyRepositoryCusto
      * @param tradestrategyId Integer
      * @return PositionOrders
      */
-    public TradestrategyOrders findPositionOrdersByTradestrategyId(Integer tradestrategyId) {
+    public TradestrategyOrders findPositionOrdersByTradestrategyId(Long tradestrategyId) {
 
         TradestrategyOrders instance = entityManager.find(TradestrategyOrders.class, tradestrategyId);
 

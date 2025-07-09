@@ -451,7 +451,7 @@ public class TradePosition extends Aspect implements java.io.Serializable {
 
         double unRealizedProfit = 0;
 
-        Integer prevIdTradePosition = null;
+        Long prevIdTradePosition = null;
 
         for (TradeOrder order : getTradeOrders()) {
 
@@ -481,7 +481,7 @@ public class TradePosition extends Aspect implements java.io.Serializable {
     public BigDecimal getRealizedProfit() {
 
         double realizedProfit = 0;
-        Integer prevIdTradePosition = null;
+        Long prevIdTradePosition = null;
 
         for (TradeOrder order : getTradeOrders()) {
 

@@ -89,7 +89,7 @@ public class TradelogDetail extends Aspect implements java.io.Serializable {
     private static final long serialVersionUID = -832064631322873796L;
 
     @Column(name = "tradestrategy_id")
-    private Integer tradestrategyId;
+    private Long tradestrategyId;
 
     @Column(name = "open", length = 19)
     private String open;
@@ -150,7 +150,7 @@ public class TradelogDetail extends Aspect implements java.io.Serializable {
      *
      * @param open               String
      * @param symbol             String
-     * @param tradestrategyId    Integer
+     * @param tradestrategyId    Long
      * @param longShort          String
      * @param tier               String
      * @param marketBias         String
@@ -167,7 +167,7 @@ public class TradelogDetail extends Aspect implements java.io.Serializable {
      * @param commission         BigDecimal
      * @param profitLoss         BigDecimal
      */
-    public TradelogDetail(String open, String symbol, Integer tradestrategyId, String longShort, String tier, String marketBias, String marketBar, String name,
+    public TradelogDetail(String open, String symbol, Long tradestrategyId, String longShort, String tier, String marketBias, String marketBar, String name,
                           String status, String side, String action,
                           BigDecimal stopPrice, String orderStatus, ZonedDateTime filledDate, Integer quantity,
                           BigDecimal averageFilledPrice, BigDecimal commission, BigDecimal profitLoss) {
@@ -197,16 +197,16 @@ public class TradelogDetail extends Aspect implements java.io.Serializable {
      *
      * @return Integer
      */
-    public Integer getTradestrategyId() {
+    public Long getTradestrategyId() {
         return this.tradestrategyId;
     }
 
     /**
      * Method setTradestrategyId.
      *
-     * @param tradestrategyId Integer
+     * @param tradestrategyId Long
      */
-    public void setTradestrategyId(Integer tradestrategyId) {
+    public void setTradestrategyId(Long tradestrategyId) {
         this.tradestrategyId = tradestrategyId;
     }
 

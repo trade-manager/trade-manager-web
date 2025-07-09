@@ -341,7 +341,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
 
             if (this.isHistoricalDataRunning(tradestrategy)) {
 
-                throw new BrokerModelException(tradestrategy.getId(), 3010, "Data request is already in progress for: "
+                throw new BrokerModelException(tradestrategy.getRequestId(), 3010, "Data request is already in progress for: "
                         + tradestrategy.getContract().getSymbol() + " Please wait or cancel.");
             }
 
@@ -370,7 +370,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
 
         } catch (Throwable ex) {
 
-            throw new BrokerModelException(tradestrategy.getId(), 3020, "Error broker data Symbol: "
+            throw new BrokerModelException(tradestrategy.getRequestId(), 3020, "Error broker data Symbol: "
                     + tradestrategy.getContract().getSymbol() + " Msg: " + ex.getMessage());
         }
     }
@@ -1020,7 +1020,9 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
     public void contractDetailsEnd(int reqId) {
 
         if (contractRequests.containsKey(reqId)) {
+
             synchronized (contractRequests) {
+
                 contractRequests.remove(reqId);
             }
         }

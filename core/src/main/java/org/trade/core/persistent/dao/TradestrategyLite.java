@@ -71,7 +71,7 @@ public class TradestrategyLite extends Aspect implements Serializable {
      * @param version Integer
      */
 
-    public TradestrategyLite(Integer id, Integer version) {
+    public TradestrategyLite(Long id, Integer version) {
 
         setId(id);
         this.version = version;

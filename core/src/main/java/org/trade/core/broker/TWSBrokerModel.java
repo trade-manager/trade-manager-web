@@ -338,12 +338,12 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
                                 tradestrategy.getContract().getSecType(), tradestrategy.getContract().getSymbol()));
             } else {
 
-                throw new BrokerModelException(tradestrategy.getId(), 3020,
+                throw new BrokerModelException(tradestrategy.getRequestId(), 3020,
                         "Not conected to TWS historical data cannot be retrieved");
             }
         } catch (Exception ex) {
 
-            throw new BrokerModelException(tradestrategy.getId(), 3020,
+            throw new BrokerModelException(tradestrategy.getRequestId(), 3020,
                     "Error request executions for symbol: " + tradestrategy.getContract().getSymbol() + " Msg: "
                             + ex.getMessage());
         }
@@ -358,7 +358,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
 
                 if (this.isRealtimeBarsRunning(contract)) {
 
-                    throw new BrokerModelException(contract.getId(), 3030,
+                    throw new BrokerModelException(contract.getRequestId(), 3030,
                             "RealtimeBars request is already in progress for: " + contract.getSymbol()
                                     + " Please wait or cancel.");
                 }
@@ -379,12 +379,12 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
 
             } else {
 
-                throw new BrokerModelException(contract.getId(), 3040,
+                throw new BrokerModelException(contract.getRequestId(), 3040,
                         "Not conected to TWS historical data cannot be retrieved");
             }
         } catch (Exception ex) {
 
-            throw new BrokerModelException(contract.getId(), 3050,
+            throw new BrokerModelException(contract.getRequestId(), 3050,
                     "Error broker data Symbol: " + contract.getSymbol() + " Msg: " + ex.getMessage());
         }
     }
@@ -398,7 +398,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
 
                 if (this.isMarketDataRunning(contract)) {
 
-                    throw new BrokerModelException(contract.getId(), 3030,
+                    throw new BrokerModelException(contract.getRequestId(), 3030,
                             "MarketData request is already in progress for: " + contract.getSymbol()
                                     + " Please wait or cancel.");
                 }
@@ -440,12 +440,12 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
                 }
             } else {
 
-                throw new BrokerModelException(contract.getId(), 3080,
+                throw new BrokerModelException(contract.getRequestId(), 3080,
                         "Not conected to TWS contract data cannot be retrieved");
             }
         } catch (Exception ex) {
 
-            throw new BrokerModelException(contract.getId(), 3090,
+            throw new BrokerModelException(contract.getRequestId(), 3090,
                     "Error broker data Symbol: " + contract.getSymbol() + " Msg: " + ex.getMessage());
         }
     }
@@ -458,7 +458,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
 
                 if (this.isHistoricalDataRunning(tradestrategy)) {
 
-                    throw new BrokerModelException(tradestrategy.getId(), 3010,
+                    throw new BrokerModelException(tradestrategy.getRequestId(), 3010,
                             "HistoricalData request is already in progress for: "
                                     + tradestrategy.getContract().getSymbol() + " Please wait or cancel.");
                 }
@@ -863,7 +863,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
                  * only contains executions for tradeOrders that do not exist.
                  */
 
-                if (tradeService.existTradestrategyById(reqId)) {
+                if (tradeService.existTradestrategyByRequestId(reqId)) {
 
                     Tradestrategy tradestrategy = tradeService.findTradestrategyByRequestId(reqId);
                     /*
@@ -1325,6 +1325,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
                 }
             }
         } catch (Exception ex) {
+
             error(reqId, 3210, ex.getMessage());
         }
     }

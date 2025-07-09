@@ -112,7 +112,7 @@ public class TradestrategyBase {
 
                 Tradestrategy instance = tradeService.findTradestrategyById(tradestrategy.getId());
                 instance = tradeService.saveAspect(instance);
-                Hashtable<Integer, TradePosition> tradePositions = new Hashtable<>();
+                Hashtable<Long, TradePosition> tradePositions = new Hashtable<>();
 
                 for (TradeOrder tradeOrder : instance.getTradeOrders()) {
 

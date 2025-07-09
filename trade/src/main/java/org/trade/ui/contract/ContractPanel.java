@@ -138,7 +138,7 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
     private static final SimpleAttributeSet bold = new SimpleAttributeSet();
     private static final SimpleAttributeSet colorRedAttr = new SimpleAttributeSet();
     private static final SimpleAttributeSet colorGreenAttr = new SimpleAttributeSet();
-    private static final Hashtable<Integer, StrategyDataUI> strategyDataTable = new Hashtable();
+    private static final Hashtable<Long, StrategyDataUI> strategyDataTable = new Hashtable();
 
     static {
 
@@ -923,7 +923,7 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
                  */
 
                 TradeOrder prevTradeOrder = null;
-                Integer prevIdTradePosition = null;
+                Long prevIdTradePosition = null;
                 for (TradeOrder order : tradestrategyOrders.getTradeOrders()) {
 
                     if (order.getIsFilled()) {

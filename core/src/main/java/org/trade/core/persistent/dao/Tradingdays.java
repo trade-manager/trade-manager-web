@@ -85,39 +85,43 @@ public class Tradingdays extends Aspect implements java.io.Serializable {
     /**
      * Constructor for Tradingdays.
      *
-     * @param idTradingdays Integer
+     * @param tradingdaysId Long
      */
-    public Tradingdays(Integer idTradingdays) {
-        setId(idTradingdays);
+    public Tradingdays(Long tradingdaysId) {
+
+        setId(tradingdaysId);
     }
 
     /**
      * Constructor for Tradingdays.
      *
-     * @param idTradingdays Integer
+     * @param tradingdaysId Long
      * @param tradingdays   List<Tradingday>
      */
-    public Tradingdays(Integer idTradingdays, List<Tradingday> tradingdays) {
-        super.setId(idTradingdays);
+    public Tradingdays(Long tradingdaysId, List<Tradingday> tradingdays) {
+
+        super.setId(tradingdaysId);
         this.tradingdays.addAll(tradingdays);
     }
 
     /**
-     * Method getIdTradingdays.
+     * Method getTradingdaysId.
      *
-     * @return Integer
+     * @return Long
      */
-    public Integer getIdTradingdays() {
+    public Long getTradingdaysId() {
+
         return this.getId();
     }
 
     /**
-     * Method setIdTradingdays.
+     * Method setTradingdaysId.
      *
-     * @param idTradingdays Integer
+     * @param tradingdaysId Long
      */
-    public void setIdTradingdays(Integer idTradingdays) {
-        super.setId(idTradingdays);
+    public void setTradingdaysId(Long tradingdaysId) {
+
+        super.setId(tradingdaysId);
     }
 
     /**
@@ -126,6 +130,7 @@ public class Tradingdays extends Aspect implements java.io.Serializable {
      * @param tradingday Tradingday
      */
     public void add(Tradingday tradingday) {
+
         this.tradingdays.add(tradingday);
     }
 
@@ -179,6 +184,7 @@ public class Tradingdays extends Aspect implements java.io.Serializable {
      * @return ConcurrentHashMap<Date, Tradingday>
      */
     public List<Tradingday> getTradingdays() {
+
         return this.tradingdays;
     }
 
@@ -188,6 +194,7 @@ public class Tradingdays extends Aspect implements java.io.Serializable {
      * @param tradingdays ConcurrentHashMap<Date,Tradingday>
      */
     public void setTradingdays(List<Tradingday> tradingdays) {
+
         this.tradingdays = Collections.synchronizedList(tradingdays);
     }
 
@@ -281,10 +288,10 @@ public class Tradingdays extends Aspect implements java.io.Serializable {
     /**
      * Method getTradestrategy.
      *
-     * @param idTradestrategy Integer
+     * @param tradestrategyId Long
      * @return Tradestrategy
      */
-    public Tradestrategy getTradestrategy(Integer idTradestrategy) {
+    public Tradestrategy getTradestrategy(Long tradestrategyId) {
 
         synchronized (this.tradingdays) {
 
@@ -292,7 +299,7 @@ public class Tradingdays extends Aspect implements java.io.Serializable {
 
                 for (Tradestrategy tradestrategy : tradingday.getTradestrategies()) {
 
-                    if (tradestrategy.getId().equals(idTradestrategy)) {
+                    if (tradestrategy.getId().equals(tradestrategyId)) {
 
                         return tradestrategy;
                     }

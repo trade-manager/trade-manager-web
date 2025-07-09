@@ -115,10 +115,10 @@ public interface IBrokerModel {
     /**
      * Method getBackTestBroker.
      *
-     * @param idTradestrategy Integer
+     * @param reqId Integer
      * @return Broker
      */
-    Broker getBackTestBroker(Integer idTradestrategy);
+    Broker getBackTestBroker(Integer reqId);
 
     /**
      * Method onSubscribeAccountUpdates.

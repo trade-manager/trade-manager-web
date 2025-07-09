@@ -44,10 +44,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class ClientSocket {
 
-    private static final ConcurrentHashMap<Integer, Broker> backTestBroker = new ConcurrentHashMap<>();
-
     private final TradeService tradeService;
     private final IClientWrapper client;
+    private static final ConcurrentHashMap<Integer, Broker> backTestBroker = new ConcurrentHashMap<>();
 
     public ClientSocket(IClientWrapper client, TradeService tradeService) {
 
