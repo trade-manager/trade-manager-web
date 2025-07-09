@@ -75,7 +75,7 @@ public class ClientSocket {
 
                 PolygonBroker broker = new PolygonBroker(reqId, tradestrategy.getContract(), endDateTime, chartDays,
                         barSizeSetting, client);
-                backTestBroker.put(tradestrategy.getRequestId(), broker);
+                backTestBroker.put(reqId, broker);
                 broker.execute();
             } else {
 
@@ -83,7 +83,7 @@ public class ClientSocket {
 
                     DBBroker backTestBroker = new DBBroker(this.tradeService, tradestrategy.getStrategyData(),
                             tradestrategy.getId(), client);
-                    ClientSocket.backTestBroker.put(tradestrategy.getRequestId(), backTestBroker);
+                    ClientSocket.backTestBroker.put(reqId, backTestBroker);
                     backTestBroker.execute();
                 }
                 client.historicalDataComplete(reqId);
