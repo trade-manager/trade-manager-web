@@ -272,11 +272,13 @@ public class TWSBrokerService extends AbstractBrokerModel {
 
     @Override
     public Integer getNextRequestId() {
+
         return reqId.incrementAndGet();
     }
 
     @Override
-    public Broker getBackTestBroker(Long tradestrategyId) {
+    public Broker getBackTestBroker(Integer tradestrategyReqId) {
+
         return null;
     }
 
@@ -490,6 +492,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
              */
 
             if (controller().client().isConnected()) {
+
                 tradeOrdersExecutions.clear();
                 commissionDetails.clear();
                 executionDetails.clear();
@@ -1172,7 +1175,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
             return tradeService;
         }
 
-        private Integer getReqId() {
+        private Integer getTradestrategyReqId() {
             return this.reqId;
         }
 
@@ -1182,8 +1185,8 @@ public class TWSBrokerService extends AbstractBrokerModel {
 
                 long volume = bar.volume() * 100;
 
-                if (historyDataRequests.containsKey(getReqId())) {
-                    Tradestrategy tradestrategy = historyDataRequests.get(getReqId());
+                if (historyDataRequests.containsKey(getTradestrategyReqId())) {
+                    Tradestrategy tradestrategy = historyDataRequests.get(getTradestrategyReqId());
 
                     ZonedDateTime date;
                     /*
@@ -1228,7 +1231,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
                 }
             } catch (Exception ex) {
 
-                error(getReqId(), 3260, ex.getMessage());
+                error(getTradestrategyReqId(), 3260, ex.getMessage());
             }
         }
 
@@ -1236,11 +1239,11 @@ public class TWSBrokerService extends AbstractBrokerModel {
 
             try {
 
-                Tradestrategy tradestrategy = historyDataRequests.get(getReqId());
+                Tradestrategy tradestrategy = historyDataRequests.get(getTradestrategyReqId());
                 CandleSeries candleSeries = tradestrategy.getStrategyData().getBaseCandleSeries();
                 tradeService.saveCandleSeries(candleSeries);
 
-                _log.debug("HistoricalData complete Req Id: {} Symbol: {} Tradingday: {} candles to saved: {} Contract Tradestrategies size:: {}", getReqId(), tradestrategy.getContract().getSymbol(), tradestrategy.getTradingday().getOpen(), candleSeries.getItemCount(), tradestrategy.getContract().getTradestrategies().size());
+                _log.debug("HistoricalData complete Req Id: {} Symbol: {} Tradingday: {} candles to saved: {} Contract Tradestrategies size:: {}", getTradestrategyReqId(), tradestrategy.getContract().getSymbol(), tradestrategy.getTradingday().getOpen(), candleSeries.getItemCount(), tradestrategy.getContract().getTradestrategies().size());
 
                 /*
                  * The last one has arrived the reqId is the
@@ -1248,7 +1251,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
                  */
 
                 synchronized (historyDataRequests) {
-                    historyDataRequests.remove(getReqId());
+                    historyDataRequests.remove(getTradestrategyReqId());
                     historyDataRequests.notify();
                 }
 
@@ -1277,7 +1280,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
                 }
             } catch (Exception ex) {
 
-                error(getReqId(), 3260, ex.getMessage());
+                error(getTradestrategyReqId(), 3260, ex.getMessage());
             }
         }
     }

@@ -1784,7 +1784,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
              * For back test the back tester listens to the strategy for orders
              * being created/completed.
              */
-            strategy.addMessageListener(brokerModel.getBackTestBroker(tradestrategy.getId()));
+            strategy.addMessageListener(brokerModel.getBackTestBroker(tradestrategy.getRequestId()));
         }
         strategy.execute();
         tradingdayPanel.addStrategyWorker(key, strategy);

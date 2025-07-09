@@ -198,7 +198,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
         this.fireConnectionClosed(true);
     }
 
-    public Broker getBackTestBroker(Long tradestrategyId) {
+    public Broker getBackTestBroker(Integer tradestrategyReqId) {
         return null;
     }
 
@@ -1325,6 +1325,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
                 }
             }
         } catch (Exception ex) {
+
             error(reqId, 3210, ex.getMessage());
         }
     }

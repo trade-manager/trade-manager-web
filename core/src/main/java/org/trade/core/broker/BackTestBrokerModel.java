@@ -180,12 +180,12 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
     /**
      * Method getBackTestBroker.
      *
-     * @param tradestrategyId Long
-     * @see IBrokerModel#getBackTestBroker(Long)
+     * @param tradestrategyReqId Integer
+     * @see IBrokerModel#getBackTestBroker(Integer)
      */
-    public Broker getBackTestBroker(Long tradestrategyId) {
+    public Broker getBackTestBroker(Integer tradestrategyReqId) {
 
-        return client.getBackTestBroker(tradestrategyId);
+        return client.getBackTestBroker(tradestrategyReqId);
     }
 
     /**
@@ -520,7 +520,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
                 historyDataRequests.notify();
             }
         }
-        client.removeBackTestBroker(tradestrategy.getId());
+        client.removeBackTestBroker(tradestrategy.getRequestId());
     }
 
     /**
@@ -536,7 +536,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
             if (contract.equals(tradestrategy.getContract())) {
 
                 contract.removeTradestrategy(tradestrategy);
-                client.removeBackTestBroker(tradestrategy.getId());
+                client.removeBackTestBroker(tradestrategy.getRequestId());
 
                 synchronized (historyDataRequests) {
 
@@ -1020,7 +1020,9 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
     public void contractDetailsEnd(int reqId) {
 
         if (contractRequests.containsKey(reqId)) {
+
             synchronized (contractRequests) {
+
                 contractRequests.remove(reqId);
             }
         }
