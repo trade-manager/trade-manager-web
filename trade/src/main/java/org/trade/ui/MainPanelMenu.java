@@ -57,6 +57,7 @@ public class MainPanelMenu extends BasePanelMenu {
      * @param basePanel BasePanel
      */
     public MainPanelMenu(BasePanel basePanel) {
+
         super(basePanel);
 
         JMenu actionMenu = new JMenu("Action");

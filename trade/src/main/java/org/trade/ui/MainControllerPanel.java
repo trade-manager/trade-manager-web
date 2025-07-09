@@ -56,7 +56,6 @@ public class MainControllerPanel extends TabbedAppPanel {
     public static String version = null;
     public static String date = null;
 
-
     /**
      * The main application controller which interacts between the view and the
      * applications underlying models. This controller also listens to events
