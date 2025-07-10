@@ -100,11 +100,11 @@ public class PosMgrFHXRBHHeikinStrategy extends AbstractStrategyRule {
      * @param tradeService       TradeService
      * @param brokerManagerModel BrokerModel
      * @param strategyData       StrategyData
-     * @param idTradestrategy    Integer
+     * @param tradestrategyId    Long
      */
 
-    public PosMgrFHXRBHHeikinStrategy(TradeService tradeService, IBrokerModel brokerManagerModel, StrategyData strategyData, Integer idTradestrategy) {
-        super(tradeService, brokerManagerModel, strategyData, idTradestrategy);
+    public PosMgrFHXRBHHeikinStrategy(TradeService tradeService, IBrokerModel brokerManagerModel, StrategyData strategyData, Long tradestrategyId) {
+        super(tradeService, brokerManagerModel, strategyData, tradestrategyId);
     }
 
     /**

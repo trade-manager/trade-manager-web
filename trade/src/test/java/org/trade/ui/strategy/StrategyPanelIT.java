@@ -102,7 +102,7 @@ public class StrategyPanelIT {
             if (strategy.getRules().isEmpty()) {
 
                 Rule nextRule = new Rule(strategy, 1, null,
-                        content.getBytes());
+                        content.getBytes(), "test/java");
                 strategy.add(nextRule);
                 nextRule = this.tradeService.saveAspect(nextRule);
             }
@@ -118,6 +118,15 @@ public class StrategyPanelIT {
         File dir = new File(tmpDir);
         StrategyPanel.deleteDir(dir);
         TradestrategyBase.clearDBData(tradeService, tradestrategy);
+
+        List<Rule> rules = tradeService.findRulesAll();
+
+        for (Rule rule : rules) {
+
+            rule.setStrategy(null);
+            rule = tradeService.saveAspect(rule);
+            tradeService.deleteAspect(rule);
+        }
     }
 
     /**
@@ -236,7 +245,13 @@ public class StrategyPanelIT {
             fail("Failed to create broker msg: " + ex.getMessage());
         }
 
-        Integer version = this.tradeService.findRuleByMaxVersion(strategy);
+        Rule latestRule = this.tradeService.findRuleByMaxVersion(strategy);
+        Integer version = 0;
+
+        if (null != latestRule) {
+
+            version = latestRule.getVersion();
+        }
         Rule myRule = null;
 
         for (Rule rule : strategy.getRules()) {
