@@ -100,7 +100,6 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
     private static final long serialVersionUID = 4053737356695023777L;
 
     private static final String TEMP_DIR = "temp";
-
     private final TradeService tradeService;
     private Tree tree = null;
     private JEditorPane sourceText = null;
