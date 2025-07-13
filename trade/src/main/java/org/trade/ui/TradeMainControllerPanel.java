@@ -92,6 +92,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serial;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
@@ -172,6 +173,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                     tradingday.getClose());
 
             if (null != todayTradingday) {
+
                 tradingday = todayTradingday;
             }
 
@@ -1769,13 +1771,14 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                             + tradestrategy.getStrategyData().getBaseCandleSeries().getItemCount());
         }
 
-        Vector<Object> parm = new Vector<>(0);
-        parm.add(brokerModel);
-        parm.add(tradestrategy.getStrategyData());
-        parm.add(tradestrategy.getId());
+        List<Object> param = new ArrayList<>(0);
+        param.add(this.tradeService);
+        param.add(brokerModel);
+        param.add(tradestrategy.getStrategyData());
+        param.add(tradestrategy.getId());
 
         IStrategyRule strategy = (IStrategyRule) dynacode.newProxyInstance(IStrategyRule.class,
-                IStrategyRule.PACKAGE + strategyClassName, parm);
+                IStrategyRule.PACKAGE + strategyClassName, param);
 
         strategy.addMessageListener(this);
 
@@ -1799,7 +1802,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
 
         try {
 
-            Vector<Object> param = new Vector<>();
+            List<Object> param = new ArrayList<>(0);
             param.add(tradeService);
 
             if (null != brokerModel) {

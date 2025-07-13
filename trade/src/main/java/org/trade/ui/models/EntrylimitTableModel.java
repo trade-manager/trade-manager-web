@@ -103,9 +103,11 @@ public class EntrylimitTableModel extends AspectTableModel {
 
         this.m_data = data;
         this.clearAll();
+
         if (!getData().getAspect().isEmpty()) {
 
             for (final Aspect element : getData().getAspect()) {
+
                 final Vector<Object> newRow = new Vector<>();
                 getNewRow(newRow, (Entrylimit) element);
                 rows.add(newRow);
@@ -173,9 +175,12 @@ public class EntrylimitTableModel extends AspectTableModel {
     public void deleteRow(int selectedRow) {
 
         Money startPrice = (Money) this.getValueAt(selectedRow, 0);
+
         for (final Aspect element : getData().getAspect()) {
+
             if (CoreUtils.nullSafeComparator(((Entrylimit) element).getStartPrice(),
                     startPrice.getBigDecimalValue()) == 0) {
+
                 getData().remove(element);
                 getData().setDirty(true);
                 final Vector<Object> currRow = rows.get(selectedRow);
@@ -205,6 +210,7 @@ public class EntrylimitTableModel extends AspectTableModel {
      * @param element Entrylimit
      */
     public void getNewRow(Vector<Object> newRow, Entrylimit element) {
+
         newRow.addElement(new Money(element.getStartPrice()));
         newRow.addElement(new Money(element.getEndPrice()));
         newRow.addElement(new Money(element.getLimitAmount()));

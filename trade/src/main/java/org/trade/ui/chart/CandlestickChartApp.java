@@ -45,6 +45,7 @@ import java.awt.print.PrinterJob;
 import java.io.Serial;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Vector;
@@ -102,7 +103,7 @@ public class CandlestickChartApp extends BasePanel implements IBrokerChangeListe
                 frame = new JFrame();
                 String symbol = "MSFT";
 
-                Vector<Object> param = new Vector<>(0);
+                List<Object> param = new ArrayList<>(0);
                 param.add(tradeService);
                 brokerModel = (IBrokerModel) ClassFactory.getServiceForInterface(IBrokerModel._brokerTest, param, CandlestickChartApp.class);
 

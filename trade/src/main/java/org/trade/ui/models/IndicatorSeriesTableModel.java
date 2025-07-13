@@ -113,6 +113,7 @@ public class IndicatorSeriesTableModel extends TableModel {
         if (!getData().getIndicatorSeries().isEmpty()) {
 
             for (final org.trade.core.persistent.dao.series.indicator.IndicatorSeries element : getData().getIndicatorSeries()) {
+
                 final Vector<Object> newRow = new Vector<>();
                 getNewRow(newRow, element);
                 rows.add(newRow);
@@ -224,9 +225,12 @@ public class IndicatorSeriesTableModel extends TableModel {
 
         String type = ((org.trade.core.valuetype.IndicatorSeries) this.getValueAt(selectedRow, 1)).getCode();
         String name = (String) this.getValueAt(selectedRow, 2);
+
         for (final org.trade.core.persistent.dao.series.indicator.IndicatorSeries element : getData().getIndicatorSeries()) {
+
             if (CoreUtils.nullSafeComparator(element.getName(), name) == 0
                     && CoreUtils.nullSafeComparator(element.getType(), type) == 0) {
+
                 getData().getIndicatorSeries().remove(element);
                 getData().setDirty(true);
                 final Vector<Object> currRow = rows.get(selectedRow);
@@ -247,7 +251,9 @@ public class IndicatorSeriesTableModel extends TableModel {
      * @return IndicatorSeries
      */
     private org.trade.core.persistent.dao.series.indicator.IndicatorSeries getIndicatorSeries(Strategy strategy, String name, String type, String description) {
+
         try {
+
             Vector<Object> parm = new Vector<>();
             parm.add(strategy);
             parm.add(name);

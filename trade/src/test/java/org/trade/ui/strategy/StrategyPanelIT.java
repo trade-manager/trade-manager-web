@@ -5,7 +5,6 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,8 +40,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
+
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -67,13 +67,14 @@ public class StrategyPanelIT {
     private static final String symbol = "IBM-" + TradestrategyBase.getRandomNumber(4);
     private String templateName;
     private String strategyDir;
-    private final String tmpDir = "temp";
+    private final String tmpDir = "../temp";
 
     /**
      * Method setUpBeforeClass.
      */
     @BeforeAll
     public static void setUpBeforeClass() {
+
         System.setProperty("java.awt.headless", "false");
     }
 
@@ -164,24 +165,16 @@ public class StrategyPanelIT {
         assertEquals(content1, sourceText.getText());
     }
 
-    @Disabled
     @Test
-    public void doCompileAndRunStrategy() {
+    public void doCompileAndRunStrategy() throws Exception {
 
-        Vector<Object> param = new Vector<>();
+        List<Object> param = new ArrayList<>();
         param.add(tradeService);
-        IBrokerModel brokerManagerModel = null;
-
-        try {
-
-            brokerManagerModel = (IBrokerModel) ClassFactory
-                    .getServiceForInterface(IBrokerModel._brokerTest, param, this);
-        } catch (Exception ex) {
-
-            fail("Failed to create brokerManagerModel msg: " + ex.getMessage());
-        }
+        IBrokerModel brokerManagerModel = (IBrokerModel) ClassFactory
+                .getServiceForInterface(IBrokerModel._brokerTest, param, this);
 
         param.clear();
+        param.add(this.tradeService);
         param.add(brokerManagerModel);
         param.add(tradestrategy.getStrategyData());
         param.add(tradestrategy.getId());
@@ -221,23 +214,18 @@ public class StrategyPanelIT {
         strategyProxy.cancel();
     }
 
-    @Disabled
     @Test
     public void doCompileRule() {
 
-        Vector<Object> param = new Vector<>();
+        List<Object> param = new ArrayList<>();
         param.add(tradeService);
-        IBrokerModel brokerManagerModel;
+        IBrokerModel brokerManagerModel = null;
         Strategy strategy = null;
 
         try {
 
             brokerManagerModel = (IBrokerModel) ClassFactory
                     .getServiceForInterface(IBrokerModel._brokerTest, param, this);
-            param.clear();
-            param.add(brokerManagerModel);
-            param.add(tradestrategy.getStrategyData());
-            param.add(tradestrategy.getId());
             strategy = this.tradeService
                     .findStrategyById(tradestrategy.getStrategy().getId());
         } catch (Exception ex) {
@@ -252,6 +240,7 @@ public class StrategyPanelIT {
 
             version = latestRule.getVersion();
         }
+
         Rule myRule = null;
 
         for (Rule rule : strategy.getRules()) {
@@ -260,6 +249,7 @@ public class StrategyPanelIT {
                 myRule = rule;
             }
         }
+
         assertNotNull(myRule);
         String fileDir = tmpDir + "/" + IStrategyRule.PACKAGE.replace('.', '/');
         String className = strategy.getClassName() + ".java";
@@ -279,8 +269,13 @@ public class StrategyPanelIT {
 
         _log.info("Ready to create Strategy");
         DynamicCode dynacode = new DynamicCode();
-        dynacode.addSourceDir(new File(tmpDir));
+        assertTrue(dynacode.addSourceDir(new File(tmpDir)));
         IStrategyRule strategyRule = null;
+        param.clear();
+        param.add(tradeService);
+        param.add(brokerManagerModel);
+        param.add(tradestrategy.getStrategyData());
+        param.add(tradestrategy.getId());
 
         try {
 

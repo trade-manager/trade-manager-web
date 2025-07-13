@@ -130,8 +130,11 @@ public class TradelogSummaryTableModel extends TableModel {
 
         this.m_data = data;
         this.clearAll();
+
         if (!getData().getTradelogSummary().isEmpty()) {
+
             for (final TradelogSummary element : getData().getTradelogSummary()) {
+
                 final Vector<Object> newRow = new Vector<>();
                 getNewRow(newRow, element);
                 rows.add(newRow);

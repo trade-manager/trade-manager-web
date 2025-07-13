@@ -37,6 +37,8 @@ Note demo data for 04/23/2025 is not added by default uncomment the file in the 
 4/ To run the old Swing UI. From project dir, cd web, then run
 
 trade>$../mvnw -Dtrade.config=file:../config.properties exec:java
+or
+trade>$java -jar -Dtrade.config=file:../config.properties target/trade-manager-trade-1.0.0-SNAPSHOT.jar
 
 OR the new Spring boot Web app
 

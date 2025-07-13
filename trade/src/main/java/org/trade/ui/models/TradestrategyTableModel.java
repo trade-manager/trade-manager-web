@@ -204,7 +204,9 @@ public class TradestrategyTableModel extends TableModel {
      * @see javax.swing.table.TableModel#setValueAt(Object, int, int)
      */
     public void setValueAt(Object value, int row, int column) {
+
         if (null != value && !value.equals(super.getValueAt(row, column))) {
+
             this.populateDAO(value, row, column);
             Vector<Object> dataRow = rows.get(row);
             dataRow.setElementAt(value, column);
@@ -221,9 +223,12 @@ public class TradestrategyTableModel extends TableModel {
         if (timer.isRunning())
             timer.stop();
         this.m_data = data;
+
         this.clearAll();
         if (null != getData() && null != getData().getTradestrategies() && !getData().getTradestrategies().isEmpty()) {
+
             for (final Tradestrategy element : getData().getTradestrategies()) {
+
                 final Vector<Object> newRow = new Vector<>();
                 getNewRow(newRow, element);
                 rows.add(newRow);
@@ -451,20 +456,30 @@ public class TradestrategyTableModel extends TableModel {
         newRow.addElement(new Date(element.getTradingday().getOpen()));
         newRow.addElement(YesNo.newInstance(element.getTrade()));
         newRow.addElement(element.getContract().getSymbol());
+
         if (null == element.getSide()) {
+
             newRow.addElement(new Side());
         } else {
+
             newRow.addElement(Side.newInstance(element.getSide()));
         }
+
         if (null == element.getTier()) {
+
             newRow.addElement(Tier.newInstance(Decode.NONE));
         } else {
+
             newRow.addElement(Tier.newInstance(element.getTier()));
         }
+
         newRow.addElement(DAOStrategy.newInstance(element.getStrategy().getName()));
+
         if (element.getStrategy().hasStrategyManager()) {
+
             newRow.addElement(DAOStrategyManager.newInstance(element.getStrategy().getStrategyManager().getName()));
         } else {
+
             newRow.addElement(DAOStrategyManager.newInstance(Decode.NONE));
         }
 
@@ -478,20 +493,26 @@ public class TradestrategyTableModel extends TableModel {
          * hibernate and Eager fetch.
          */
         if (null != element.getStrategyData()) {
+
             newRow.addElement(element.getStrategyData().getBaseCandleSeries().getPercentChangeFromClose());
             newRow.addElement(element.getStrategyData().getBaseCandleSeries().getPercentChangeFromOpen());
         } else {
+
             newRow.addElement(new Percent(0));
             newRow.addElement(new Percent(0));
         }
+
         newRow.addElement(element.getTradestrategyStatus());
         newRow.addElement(Currency.newInstance(element.getContract().getCurrency()));
         newRow.addElement(Exchange.newInstance(element.getContract().getExchange()));
         newRow.addElement(Exchange.newInstance(element.getContract().getPrimaryExchange()));
         newRow.addElement(SECType.newInstance(element.getContract().getSecType()));
+
         if (null == element.getContract().getExpiry()) {
+
             newRow.addElement(new Date());
         } else {
+
             newRow.addElement(new Date(element.getContract().getExpiry()));
         }
     }

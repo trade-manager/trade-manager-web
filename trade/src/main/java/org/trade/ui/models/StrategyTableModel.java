@@ -101,8 +101,11 @@ public class StrategyTableModel extends AspectTableModel {
 
         this.m_data = data;
         this.clearAll();
+
         if (!getData().getAspect().isEmpty()) {
+
             for (final Aspect element : getData().getAspect()) {
+
                 final Vector<Object> newRow = new Vector<>();
                 getNewRow(newRow, (Strategy) element);
                 rows.add(newRow);
@@ -163,8 +166,11 @@ public class StrategyTableModel extends AspectTableModel {
     public void deleteRow(int selectedRow) {
 
         String name = (String) this.getValueAt(selectedRow, 0);
+
         for (final Aspect element : getData().getAspect()) {
+
             if (CoreUtils.nullSafeComparator(((Strategy) element).getName(), name) == 0) {
+
                 getData().remove(element);
                 getData().setDirty(true);
                 final Vector<Object> currRow = rows.get(selectedRow);

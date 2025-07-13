@@ -98,8 +98,11 @@ public class PortfolioTableModel extends AspectTableModel {
 
         this.m_data = data;
         this.clearAll();
+
         if (!getData().getAspect().isEmpty()) {
+
             for (final Aspect element : getData().getAspect()) {
+
                 final Vector<Object> newRow = new Vector<>();
                 getNewRow(newRow, (Portfolio) element);
                 rows.add(newRow);
@@ -179,10 +182,15 @@ public class PortfolioTableModel extends AspectTableModel {
      * @param selectedRow int
      */
     public void deleteRow(int selectedRow) {
+
         if (getData().getAspect().size() > 1) {
+
             String name = (String) this.getValueAt(selectedRow, 0);
+
             for (final Aspect element : getData().getAspect()) {
+
                 if (CoreUtils.nullSafeComparator(((Portfolio) element).getName(), name) == 0) {
+
                     getData().remove(element);
                     getData().setDirty(true);
                     final Vector<Object> currRow = rows.get(selectedRow);
@@ -195,6 +203,7 @@ public class PortfolioTableModel extends AspectTableModel {
     }
 
     public void addRow() {
+
         final Portfolio element = new Portfolio();
         getData().getAspect().add(element);
 
@@ -212,14 +221,19 @@ public class PortfolioTableModel extends AspectTableModel {
      * @param element Portfolio
      */
     public void getNewRow(Vector<Object> newRow, Portfolio element) {
+
         newRow.addElement(element.getName());
         newRow.addElement(element.getAlias());
         newRow.addElement(element.getDescription());
+
         if (null == element.getAllocationMethod()) {
+
             newRow.addElement(AllocationMethod.newInstance(Decode.NONE));
         } else {
+
             newRow.addElement(AllocationMethod.newInstance(element.getAllocationMethod()));
         }
+
         newRow.addElement(DAOAccount.newInstance(Decode.NONE));
         newRow.addElement(YesNo.newInstance(element.getIsDefault()));
     }

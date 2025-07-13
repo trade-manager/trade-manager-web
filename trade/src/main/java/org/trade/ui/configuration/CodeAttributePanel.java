@@ -63,21 +63,27 @@ public class CodeAttributePanel extends JPanel {
                 }
 
                 if (null == ((JFormattedTextField) field).getValue()) {
+
                     Vector<Object> parm = new Vector<>();
                     parm.add(codeAttribute.getDefaultValue());
                     Object codeValue = ClassFactory.getCreateClass(codeAttribute.getClassName(), parm, this);
                     ((JFormattedTextField) field).setValue(codeValue);
                 }
             } else {
+
                 Vector<Object> parm = new Vector<>();
                 Object decode = ClassFactory.getCreateClass(codeAttribute.getEditorClassName(), parm, this);
                 boolean valueSet = false;
+
                 if (decode instanceof Decode) {
+
                     field = new DecodeComboBoxEditor(((Decode) decode).getCodesDecodes());
                     field.setInputVerifier(new FormattedTextFieldVerifier());
                     DecodeComboBoxRenderer codeRenderer = new DecodeComboBoxRenderer();
                     ((DecodeComboBoxEditor) field).setRenderer(codeRenderer);
+
                     for (CodeValue value : this.currentCodeValues) {
+
                         if (value.getCodeAttribute().getName().equals(codeAttribute.getName())) {
 
                             ((Decode) decode)
@@ -87,7 +93,9 @@ public class CodeAttributePanel extends JPanel {
                             break;
                         }
                     }
+
                     if (!valueSet) {
+
                         ((Decode) decode).setValue(codeAttribute.getDefaultValue());
                         ((DecodeComboBoxEditor) field).setItem(decode);
                     }

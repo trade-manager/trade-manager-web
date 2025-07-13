@@ -52,7 +52,6 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Vector;
 
 /**
  *
@@ -68,6 +67,7 @@ public final class DynamicCode {
     private final HashMap<String, LoadedClass> loadedClasses = new HashMap<>();
 
     public DynamicCode() {
+
         this(Thread.currentThread().getContextClassLoader());
     }
 
@@ -77,8 +77,8 @@ public final class DynamicCode {
      * @param parentClassLoader ClassLoader
      */
     public DynamicCode(ClassLoader parentClassLoader) {
-        this(extractClasspath(parentClassLoader), parentClassLoader);
 
+        this(extractClasspath(parentClassLoader), parentClassLoader);
     }
 
     /**
@@ -87,6 +87,7 @@ public final class DynamicCode {
      *                          classes
      */
     public DynamicCode(String compileClasspath, ClassLoader parentClassLoader) {
+
         this.compileClasspath = compileClasspath;
         this.parentClassLoader = parentClassLoader;
     }
@@ -99,15 +100,18 @@ public final class DynamicCode {
     public boolean addSourceDir(File srcDir) {
 
         try {
+
             srcDir = srcDir.getCanonicalFile();
-        } catch (IOException e) {
-            // ignore
+        } catch (IOException ex) {
+
+            _log.info("Info: addSourceDir msg: {}", ex.getMessage());
         }
 
         synchronized (sourceDirs) {
 
             // check existence
             for (SourceDir src : sourceDirs) {
+
                 if (src.srcDir.equals(srcDir)) {
                     return false;
                 }
@@ -129,7 +133,9 @@ public final class DynamicCode {
     public Class<?> loadClass(String className) throws Exception {
 
         LoadedClass loadedClass;
+
         synchronized (loadedClasses) {
+
             loadedClass = loadedClasses.get(className);
         }
 
@@ -138,7 +144,9 @@ public final class DynamicCode {
 
             String resource = className.replace('.', '/') + ".java";
             SourceDir src = locateResource(resource);
+
             if (src == null) {
+
                 throw new ClassNotFoundException("DynaCode class not found " + className);
             }
 
@@ -157,6 +165,7 @@ public final class DynamicCode {
 
         // subsequent access
         if (loadedClass.isChanged()) {
+
             // unload and load again
             unload(loadedClass.srcDir);
             return loadClass(className);
@@ -172,8 +181,11 @@ public final class DynamicCode {
      * @return SourceDir
      */
     private SourceDir locateResource(String resource) {
+
         for (SourceDir src : sourceDirs) {
+
             if (new File(src.srcDir, resource).exists()) {
+
                 return src;
             }
         }
@@ -186,8 +198,10 @@ public final class DynamicCode {
      * @param src SourceDir
      */
     private void unload(SourceDir src) {
+
         // clear loaded classes
         synchronized (loadedClasses) {
+
             loadedClasses.values().removeIf(loadedClass -> loadedClass.srcDir == src);
         }
 
@@ -201,12 +215,15 @@ public final class DynamicCode {
      * @return the resource URL, or null if resource not found
      */
     public URL getResource(String resource) {
+
         try {
 
             SourceDir src = locateResource(resource);
             return src == null ? null : new File(src.srcDir, resource).toURI().toURL();
 
-        } catch (MalformedURLException e) {
+        } catch (MalformedURLException ex) {
+
+            _log.info("Info: getResource msg: {}", ex.getMessage());
             // should not happen
             return null;
         }
@@ -225,6 +242,7 @@ public final class DynamicCode {
      *                   for example
      */
     public Object newProxyInstance(Class<?> interfaceClass, String implClassName) throws Exception {
+
         MyInvocationHandler handler = new MyInvocationHandler(implClassName);
         return Proxy.newProxyInstance(interfaceClass.getClassLoader(), new Class[]{interfaceClass}, handler);
     }
@@ -234,11 +252,12 @@ public final class DynamicCode {
      *
      * @param interfaceClass Class<?>
      * @param implClassName  String
-     * @param parm           Vector<Object>
+     * @param parm           List<Object>
      * @return Object
      */
-    public Object newProxyInstance(Class<?> interfaceClass, String implClassName, Vector<Object> parm)
+    public Object newProxyInstance(Class<?> interfaceClass, String implClassName, List<Object> parm)
             throws Exception {
+
         MyInvocationHandler handler = new MyInvocationHandler(implClassName, parm);
         return Proxy.newProxyInstance(interfaceClass.getClassLoader(), new Class[]{interfaceClass}, handler);
     }
@@ -247,12 +266,10 @@ public final class DynamicCode {
      *
      */
     private class SourceDir {
+
         File srcDir;
-
         File binDir;
-
         Javac javac;
-
         URLClassLoader classLoader;
 
         /**
@@ -261,8 +278,8 @@ public final class DynamicCode {
          * @param srcDir File
          */
         SourceDir(File srcDir) {
-            this.srcDir = srcDir;
 
+            this.srcDir = srcDir;
             String subdir = srcDir.getAbsolutePath().replace(':', '_').replace('/', '_').replace('\\', '_');
             this.binDir = new File(System.getProperty("java.io.tmpdir"), "bin/" + subdir);
             this.binDir.mkdirs();
@@ -275,19 +292,31 @@ public final class DynamicCode {
         }
 
         void recreateClassLoader() {
+
             try {
-                classLoader = new URLClassLoader(new URL[]{binDir.toURI().toURL()}, parentClassLoader);
-            } catch (MalformedURLException e) {
-                // should not happen
+
+                URL[] urls = {
+                        binDir.toURI().toURL(),
+                        this.srcDir.toURI().toURL(),
+                        /*,
+                        new URL("file:../core/target/classes/"),
+                        new URL("file:../core/target/trade-manager-core-1.0.0-SNAPSHOT.jar")
+                        */
+                };
+
+                classLoader = new URLClassLoader(urls, parentClassLoader);
+            } catch (MalformedURLException ex) {
+
+                _log.error("Error: recreateClassLoader msg: {}", ex.getMessage());
             }
         }
-
     }
 
     /**
      *
      */
     private static class LoadedClass {
+
         String className;
         SourceDir srcDir;
         File srcFile;
@@ -302,12 +331,12 @@ public final class DynamicCode {
          * @param src       SourceDir
          */
         LoadedClass(String className, SourceDir src) throws Exception {
+
             this.className = className;
             this.srcDir = src;
-
             String path = className.replace('.', '/');
             this.srcFile = new File(src.srcDir, path + ".java");
-            this.binFile = new File(src.binDir, path + ".class");
+            this.binFile = new File(src.srcDir, path + ".class");
 
             compileAndLoadClass();
         }
@@ -324,6 +353,7 @@ public final class DynamicCode {
         void compileAndLoadClass() throws Exception {
 
             if (clazz != null) {
+
                 return; // class already loaded
             }
 
@@ -332,10 +362,11 @@ public final class DynamicCode {
 
             if (binFile.lastModified() < srcFile.lastModified()) {
 
-                error = srcDir.javac.compile(new File[]{srcFile});
+                error = srcDir.javac.compile(List.of(srcFile));
             }
 
             if (error != null) {
+
                 throw new Exception("Failed to compile " + srcFile.getAbsolutePath() + ". Error: " + error);
             }
 
@@ -346,8 +377,9 @@ public final class DynamicCode {
                 // load class success, remember timestamp
                 lastModified = srcFile.lastModified();
 
-            } catch (ClassNotFoundException e) {
-                throw new Exception("Failed to load DynaCode class " + srcFile.getAbsolutePath());
+            } catch (ClassNotFoundException ex) {
+
+                throw new Exception("Failed to load DynaCode class " + srcFile.getAbsolutePath() + " msg: " + ex.getMessage());
             }
         }
     }
@@ -358,25 +390,27 @@ public final class DynamicCode {
     private class MyInvocationHandler implements InvocationHandler {
 
         String backendClassName;
-
         Object backend;
-        Vector<Object> parm;
+        List<Object> parm;
 
         /**
          * Constructor for MyInvocationHandler.
          *
          * @param className String
-         * @param parm      Vector<Object>
+         * @param parm      List<Object>
          */
-        MyInvocationHandler(String className, Vector<Object> parm) throws Exception {
+        MyInvocationHandler(String className, List<Object> parm) throws Exception {
+
             backendClassName = className;
             this.parm = parm;
+
             try {
+
                 Class<?> clz = loadClass(backendClassName);
                 backend = newDynaCodeInstance(clz);
+            } catch (ClassNotFoundException ex) {
 
-            } catch (ClassNotFoundException e) {
-                throw new Exception(e);
+                throw new Exception(ex);
             }
         }
 
@@ -386,14 +420,16 @@ public final class DynamicCode {
          * @param className String
          */
         MyInvocationHandler(String className) throws Exception {
+
             backendClassName = className;
 
             try {
+
                 Class<?> clz = loadClass(backendClassName);
                 backend = newDynaCodeInstance(clz);
+            } catch (ClassNotFoundException ex) {
 
-            } catch (ClassNotFoundException e) {
-                throw new Exception(e);
+                throw new Exception(ex);
             }
         }
 
@@ -411,16 +447,19 @@ public final class DynamicCode {
 
             // check if class has been updated
             Class<?> clz = loadClass(backendClassName);
+
             if (backend.getClass() != clz) {
+
                 backend = newDynaCodeInstance(clz);
             }
 
             try {
+
                 // invoke on backend
                 return method.invoke(backend, args);
+            } catch (InvocationTargetException ex) {
 
-            } catch (InvocationTargetException e) {
-                throw e.getTargetException();
+                throw ex.getTargetException();
             }
         }
 
@@ -431,40 +470,46 @@ public final class DynamicCode {
          * @return Object
          */
         private Object newDynaCodeInstance(Class<?> clz) throws Exception {
+
             try {
+
                 // return clz.newInstance();
                 return getCreateClass(clz, this.parm);
-            } catch (Exception e) {
-                throw new Exception("Failed to new instance of DynaCode class " + clz.getName(), e);
+            } catch (Exception ex) {
+
+                throw new Exception("Failed to new instance of DynaCode class " + clz.getName(), ex);
             }
         }
-
     }
 
     /**
      * Method getCreateClass.
      *
-     * @param clz  Class<?>
-     * @param parm Vector<Object>
+     * @param clz    Class<?>
+     * @param params List<Object>
      * @return Object
      */
-    private static Object getCreateClass(Class<?> clz, Vector<Object> parm) throws
+    private static Object getCreateClass(Class<?> clz, List<Object> params) throws
             InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-        int vectorSize;
-        vectorSize = parm.size();
-        Object instance = null;
 
-        Class<?>[] parms = new Class[vectorSize];
-        Object[] object = new Object[vectorSize];
+        int listSize = params.size();
+        Object instance = null;
+        Class<?>[] paramClasses = new Class[listSize];
+        Object[] object = new Object[listSize];
         StringBuilder classes = new StringBuilder();
         int i = 0;
-        for (Object obj : parm) {
+
+        for (Object obj : params) {
+
             if (classes.isEmpty()) {
+
                 classes.append(obj.getClass().getName());
             } else {
+
                 classes.append(",").append(obj.getClass().getName());
             }
-            parms[i] = obj.getClass();
+
+            paramClasses[i] = obj.getClass();
             object[i] = obj;
             i++;
         }
@@ -472,23 +517,30 @@ public final class DynamicCode {
         Constructor<?> constructor;
 
         try {
-            constructor = clz.getDeclaredConstructor(parms);
+
+            constructor = clz.getDeclaredConstructor(paramClasses);
             instance = constructor.newInstance(object);
         } catch (Exception e) {
 
             _log.debug("Could not find constructor for default parms[{}] will test all constructors.", classes);
             Constructor<?>[] constructors = clz.getConstructors();
+
             for (Constructor<?> constructor2 : constructors) {
+
                 try {
+
                     instance = constructor2.newInstance(object);
                     _log.debug("Found constructor: {} for parms[{}]", constructor2.toGenericString(), classes);
                     break;
                 } catch (Exception ex) {
+
                     _log.info("Constructor: {} failed!!", constructor2.toGenericString());
                 }
             }
         }
+
         if (null == instance) {
+
             instance = clz.getDeclaredConstructor().newInstance();
         }
 
@@ -503,22 +555,28 @@ public final class DynamicCode {
      * @return String
      */
     private static String extractClasspath(ClassLoader cl) {
+
         StringBuilder buf = new StringBuilder();
 
         while (cl != null) {
+
             if (cl instanceof URLClassLoader) {
+
                 URL[] urls = ((URLClassLoader) cl).getURLs();
+
                 for (URL url : urls) {
+
                     if (!buf.isEmpty()) {
+
                         buf.append(File.pathSeparatorChar);
                     }
                     buf.append(url.getFile());
                 }
             }
+
             cl = cl.getParent();
         }
 
         return buf.toString();
     }
-
 }

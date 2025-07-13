@@ -89,9 +89,11 @@ public class CodeAttributeTableModel extends TableModel {
 
         this.m_data = data;
         this.clearAll();
+
         if (!getData().getCodeAttribute().isEmpty()) {
 
             for (final CodeAttribute element : getData().getCodeAttribute()) {
+
                 final Vector<Object> newRow = new Vector<>();
                 getNewRow(newRow, element);
                 rows.add(newRow);
@@ -146,8 +148,11 @@ public class CodeAttributeTableModel extends TableModel {
     public void deleteRow(int selectedRow) {
 
         String name = (String) this.getValueAt(selectedRow, 0);
+
         for (final CodeAttribute element : getData().getCodeAttribute()) {
+
             if (CoreUtils.nullSafeComparator(element.getName(), name) == 0) {
+
                 getData().getCodeAttribute().remove(element);
                 getData().setDirty(true);
                 final Vector<Object> currRow = rows.get(selectedRow);
@@ -169,7 +174,6 @@ public class CodeAttributeTableModel extends TableModel {
 
         // Tell the listeners a new table has arrived.
         this.fireTableRowsInserted(rows.size() - 1, rows.size() - 1);
-
     }
 
     /**
@@ -179,6 +183,7 @@ public class CodeAttributeTableModel extends TableModel {
      * @param element CodeAttribute
      */
     public void getNewRow(Vector<Object> newRow, CodeAttribute element) {
+
         newRow.addElement(element.getName());
         newRow.addElement(element.getDescription());
         newRow.addElement(element.getDefaultValue());

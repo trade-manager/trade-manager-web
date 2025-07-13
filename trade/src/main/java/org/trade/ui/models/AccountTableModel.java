@@ -113,6 +113,7 @@ public class AccountTableModel extends TableModel {
         if (!getData().getAccounts().isEmpty()) {
 
             for (final Account element : getData().getAccounts()) {
+
                 final Vector<Object> newRow = new Vector<>();
                 getNewRow(newRow, element);
                 rows.add(newRow);
@@ -224,48 +225,73 @@ public class AccountTableModel extends TableModel {
      * @param element Account
      */
     public void getNewRow(Vector<Object> newRow, Account element) {
+
         newRow.addElement(element.getName());
         newRow.addElement(element.getAccountNumber());
+
         if (null == element.getAccountType()) {
+
             newRow.addElement(new AccountType());
         } else {
+
             newRow.addElement(AccountType.newInstance(element.getAccountType()));
         }
+
         newRow.addElement(element.getAlias());
         newRow.addElement(Currency.newInstance(element.getCurrency()));
+
         if (null == element.getAvailableFunds()) {
+
             newRow.addElement(new Money(0));
         } else {
+
             newRow.addElement(new Money(element.getAvailableFunds()));
         }
+
         if (null == element.getBuyingPower()) {
+
             newRow.addElement(new Money(0));
         } else {
+
             newRow.addElement(new Money(element.getBuyingPower()));
         }
+
         if (null == element.getCashBalance()) {
+
             newRow.addElement(new Money(0));
         } else {
+
             newRow.addElement(new Money(element.getCashBalance()));
         }
+
         if (null == element.getGrossPositionValue()) {
+
             newRow.addElement(new Money(0));
         } else {
+
             newRow.addElement(new Money(element.getGrossPositionValue()));
         }
         if (null == element.getRealizedPnL()) {
+
             newRow.addElement(new Money(0));
         } else {
+
             newRow.addElement(new Money(element.getRealizedPnL()));
         }
+
         if (null == element.getUnrealizedPnL()) {
+
             newRow.addElement(new Money(0));
         } else {
+
             newRow.addElement(new Money(element.getUnrealizedPnL()));
         }
+
         if (null == element.getUpdateDate()) {
+
             newRow.addElement(new Date());
         } else {
+
             newRow.addElement(new Date(element.getUpdateDate()));
         }
     }

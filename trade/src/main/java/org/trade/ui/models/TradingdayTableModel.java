@@ -133,8 +133,11 @@ public class TradingdayTableModel extends TableModel {
         data.getTradingdays().sort(Tradingday.DATE_ORDER_DESC);
         this.m_data = data;
         this.clearAll();
+
         if (!getData().getTradingdays().isEmpty()) {
+
             for (Tradingday element : getData().getTradingdays()) {
+
                 Vector<Object> newRow = new Vector<>();
                 getNewRow(newRow, element);
                 rows.add(newRow);
@@ -183,7 +186,9 @@ public class TradingdayTableModel extends TableModel {
      * @see javax.swing.table.TableModel#setValueAt(Object, int, int)
      */
     public void setValueAt(Object value, int row, int column) {
+
         if (null != value && !value.equals(super.getValueAt(row, column))) {
+
             this.populateDAO(value, row, column);
             Vector<Object> dataRow = rows.get(row);
             dataRow.setElementAt(value, column);
@@ -241,8 +246,12 @@ public class TradingdayTableModel extends TableModel {
         Date open = (Date) this.getValueAt(selectedRow, 0);
         Date close = (Date) this.getValueAt(selectedRow, 1);
         Tradingday element = getData().getTradingday(open.getZonedDateTime(), close.getZonedDateTime());
-        if (!element.getTradestrategies().isEmpty())
+
+        if (!element.getTradestrategies().isEmpty()) {
+
             element.getTradestrategies().clear();
+        }
+
         getData().remove(element);
         element.setDirty(true);
         final Vector<Object> currRow = rows.get(selectedRow);
@@ -253,12 +262,16 @@ public class TradingdayTableModel extends TableModel {
     public void addRow() {
 
         ZonedDateTime date = TradingCalendar.getDateTimeNowMarketTimeZone();
+
         if (!TradingCalendar.isTradingDay(date)) {
+
             date = TradingCalendar.getNextTradingDay(date);
         }
         Tradingday tradingday = new Tradingday(TradingCalendar.getTradingDayStart(date),
                 TradingCalendar.getTradingDayEnd(date));
+
         while (getData().containsTradingday(tradingday)) {
+
             date = TradingCalendar.getNextTradingDay(date);
             tradingday = new Tradingday(TradingCalendar.getTradingDayStart(date),
                     TradingCalendar.getTradingDayEnd(date));

@@ -84,8 +84,11 @@ public class StrategyParametersTableModel extends AspectTableModel {
 
         this.m_data = data;
         this.clearAll();
+
         if (!getData().getAspect().isEmpty()) {
+
             for (final Aspect element : getData().getAspect()) {
+
                 final Vector<Object> newRow = new Vector<>();
                 getNewRow(newRow, (CodeType) element);
                 rows.add(newRow);

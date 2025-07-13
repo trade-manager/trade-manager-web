@@ -196,7 +196,9 @@ public class TradeOrderTableModel extends TableModel {
      * @see javax.swing.table.TableModel#setValueAt(Object, int, int)
      */
     public void setValueAt(Object value, int row, int column) {
+
         if (null != value && !value.equals(super.getValueAt(row, column))) {
+
             this.populateDAO(value, row, column);
             Vector<Object> dataRow = rows.get(row);
             dataRow.setElementAt(value, column);
@@ -219,10 +221,14 @@ public class TradeOrderTableModel extends TableModel {
      * @param data Tradestrategy
      */
     public void setData(Tradestrategy data) {
+
         this.m_data = data;
         this.clearAll();
+
         if (!getData().getTradeOrders().isEmpty()) {
+
             for (final TradeOrder tradeOrder : getData().getTradeOrders()) {
+
                 final Vector<Object> newRow = new Vector<>();
                 getNewRow(newRow, tradeOrder);
                 rows.add(newRow);
@@ -334,8 +340,11 @@ public class TradeOrderTableModel extends TableModel {
     public void deleteRow(int selectedRow) {
 
         Integer orderKey = ((Quantity) this.getValueAt(selectedRow, 1)).getIntegerValue();
+
         for (final TradeOrder tradeOrder : getData().getTradeOrders()) {
+
             if (CoreUtils.nullSafeComparator(tradeOrder.getOrderKey(), orderKey) == 0) {
+
                 getData().getTradeOrders().remove(tradeOrder);
                 final Vector<Object> currRow = rows.get(selectedRow);
                 rows.remove(currRow);
@@ -351,6 +360,7 @@ public class TradeOrderTableModel extends TableModel {
      * @param element TradeOrder
      */
     public void addRow(TradeOrder element) {
+
         getData().addTradeOrder(element);
         final Vector<Object> newRow = new Vector<>();
         getNewRow(newRow, element);
@@ -359,11 +369,14 @@ public class TradeOrderTableModel extends TableModel {
     }
 
     public void addRow() {
-        final Tradestrategy tradestrategy = getData();
 
+        final Tradestrategy tradestrategy = getData();
         String side = tradestrategy.getSide();
-        if (null == side)
+
+        if (null == side) {
             side = Side.BOT;
+        }
+
         String orderType = OrderType.STPLMT;
         String action = Action.BUY;
         if (Side.SLD.equals(side)) {

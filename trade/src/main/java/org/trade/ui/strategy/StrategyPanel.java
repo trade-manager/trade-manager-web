@@ -87,6 +87,7 @@ import java.io.OutputStream;
 import java.io.Serial;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -313,11 +314,13 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
         try {
 
             setMessageText(null, false, false, null);
+          //  String fileName = TEMP_DIR + "/" + IStrategyRule.PACKAGE.replace('.', '/');
             String fileName = TEMP_DIR + "/" + IStrategyRule.PACKAGE.replace('.', '/');
+
             fileName = fileName + rule.getStrategy().getClassName() + ".java";
             doSaveFile(fileName, this.getContent());
 
-            Vector<Object> param = new Vector<>(0);
+            List<Object> param = new ArrayList<>(0);
             param.add(this.tradeService);
             IBrokerModel brokerManagerModel = (IBrokerModel) ClassFactory.getServiceForInterface(IBrokerModel._brokerTest,
                     param, this);
@@ -328,9 +331,10 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
             candleDataset.addSeries(candleSeries);
             StrategyData strategyData = new StrategyData(rule.getStrategy(), candleDataset);
             param.clear();
+            param.add(this.tradeService);
             param.add(brokerManagerModel);
             param.add(strategyData);
-            param.add(0);
+            param.add( Long.valueOf(0));
             DynamicCode dynacode = new DynamicCode();
             dynacode.addSourceDir(new File(TEMP_DIR));
             dynacode.newProxyInstance(IStrategyRule.class, IStrategyRule.PACKAGE + rule.getStrategy().getClassName(),
@@ -338,6 +342,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
 
             this.setStatusBarMessage("File compiled.", BasePanel.INFORMATION);
         } catch (Exception ex) {
+
             setMessageText("Error compiling strategy: " + rule.getStrategy().getName() + ex.getMessage(), false, true,
                     colorRedAttr);
         }
@@ -539,18 +544,13 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
     }
 
     public synchronized String readFile(String fileName) throws IOException {
-        FileReader fileReader = null;
-        try {
 
-            if ((fileName == null) || fileName.isEmpty()) {
+        try(FileReader fileReader = new FileReader(fileName)) {
+
+            if ((null == fileName) || fileName.isEmpty()) {
                 return null;
             }
-            fileReader = new FileReader(fileName);
             return readInputStream(fileReader);
-        } finally {
-            if (null != fileReader)
-                fileReader.close();
-
         }
     }
 

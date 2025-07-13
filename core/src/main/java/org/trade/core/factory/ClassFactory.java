@@ -43,7 +43,9 @@ import org.trade.core.properties.PropertyNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * Provides a simple class factory. Provide a string name for an interface, and
@@ -65,23 +67,25 @@ public class ClassFactory {
      * @param context      Object
      * @return Object
      */
-    public static Object getServiceForInterface(String theInterface, Vector<Object> param, Object context)
+    public static Object getServiceForInterface(String theInterface, List<Object> param, Object context)
             throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException,
             NoSuchMethodException, InvocationTargetException {
 
         String className = ConfigProperties.getPropAsString(theInterface);
 
         if (className == null) {
+
             throw new PropertyNotFoundException("The interface \"" + theInterface + "\" could not be located.  Check "
                     + "to see if the property file \"" + ConfigProperties.getDeploymentPropertyFileName()
                     + "\" is installed and available.");
         }
+
         Class<?>[] args = new Class[1];
         args[0] = Object.class;
 
         if (null == param) {
 
-            param = new Vector<>();
+            param = new ArrayList<>();
         }
 
         return getCreateClass(className, param, context);
@@ -91,11 +95,11 @@ public class ClassFactory {
      * Method getCreateClass.
      *
      * @param className String
-     * @param param     Vector<Object>
+     * @param param     List<Object>
      * @param context   Object
      * @return Object
      */
-    public static Object getCreateClass(String className, Vector<Object> param, Object context)
+    public static Object getCreateClass(String className, List<Object> param, Object context)
             throws ClassNotFoundException, InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
 
         int vectorSize;

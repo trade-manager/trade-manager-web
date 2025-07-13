@@ -36,11 +36,7 @@
 
 package org.trade.core.util;
 
-import com.sun.tools.javac.Main;
-
 import java.io.File;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -65,6 +61,7 @@ public final class Javac {
      * @param outputdir String
      */
     public Javac(String classpath, String outputdir) {
+
         this.classpath = classpath;
         this.outputdir = outputdir;
     }
@@ -73,16 +70,18 @@ public final class Javac {
      * Compile the given source files.
      *
      * @return null if success; or compilation errors
-     */
-    public String compile(String[] srcFiles) {
-        StringWriter err = new StringWriter();
-        PrintWriter errPrinter = new PrintWriter(err);
 
-        String[] args = buildJavacArgs(srcFiles);
-        int resultCode = Main.compile(args, errPrinter);
-        errPrinter.close();
-        return (resultCode == 0) ? null : err.toString();
+    public String compile(String[] srcFiles) {
+
+    StringWriter err = new StringWriter();
+    PrintWriter errPrinter = new PrintWriter(err);
+
+    String[] args = buildJavacArgs(srcFiles);
+    int resultCode = Main.compile(args, errPrinter);
+    errPrinter.close();
+    return (resultCode == 0) ? null : err.toString();
     }
+     */
 
     /**
      * Method compile.
@@ -90,12 +89,15 @@ public final class Javac {
      * @param srcFiles File[]
      * @return String
      */
-    public String compile(File[] srcFiles) {
-        String[] paths = new String[srcFiles.length];
-        for (int i = 0; i < paths.length; i++) {
-            paths[i] = srcFiles[i].getAbsolutePath();
-        }
-        return compile(paths);
+    public String compile(List<File> srcFiles) {
+
+        // String[] paths = new String[srcFiles.length];
+        // for (int i = 0; i < paths.length; i++) {
+        //     paths[i] = srcFiles[i].getAbsolutePath();
+        // }
+
+        // return compile(paths);
+        return InlineCompiler.doCompile(srcFiles);
     }
 
     /**
