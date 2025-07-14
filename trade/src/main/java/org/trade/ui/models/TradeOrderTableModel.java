@@ -202,7 +202,7 @@ public class TradeOrderTableModel extends TableModel {
 
             this.populateDAO(value, row, column);
             List<Object> dataRow = rows.get(row);
-            dataRow.add(column, value);
+            dataRow.set(column, value);
             fireTableCellUpdated(row, column);
         }
     }

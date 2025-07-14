@@ -57,11 +57,10 @@ public class ExtendedDesktopManager extends DefaultDesktopManager {
      * @param targetPane JDesktopPane
      */
     public ExtendedDesktopManager(JDesktopPane targetPane) {
-        ghostPanel = new JPanel();
 
+        ghostPanel = new JPanel();
         ghostPanel.setOpaque(false);
         ghostPanel.setBorder(BorderFactory.createLineBorder(BORDER_COLOR, BORDER_THICKNESS));
-
         this.targetPane = targetPane;
     }
 
@@ -71,8 +70,8 @@ public class ExtendedDesktopManager extends DefaultDesktopManager {
      * @param f JComponent
      */
     public void beginDraggingFrame(JComponent f) {
-        Rectangle r = f.getBounds();
 
+        Rectangle r = f.getBounds();
         ghostPanel.setBounds(r);
         f.setVisible(false);
         targetPane.add(ghostPanel);

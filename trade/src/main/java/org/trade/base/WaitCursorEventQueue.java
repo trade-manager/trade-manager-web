@@ -48,6 +48,7 @@ public class WaitCursorEventQueue extends EventQueue {
      * @param delay int
      */
     public WaitCursorEventQueue(int delay) {
+
         this.delay = delay;
         waitTimer = new WaitCursorTimer();
         waitTimer.setDaemon(true);
@@ -60,9 +61,11 @@ public class WaitCursorEventQueue extends EventQueue {
      * @param event AWTEvent
      */
     protected void dispatchEvent(AWTEvent event) {
+
         waitTimer.startTimer(event.getSource());
 
         try {
+
             super.dispatchEvent(event);
         } finally {
             waitTimer.stopTimer();

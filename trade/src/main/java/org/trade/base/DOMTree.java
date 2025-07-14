@@ -99,13 +99,13 @@ public class DOMTree extends JTree implements DragSourceListener, DragGestureLis
     /**
      * Stores the selected node info
      */
-    protected TreePath m_selectedTreePath = null;
-    protected DefaultMutableTreeNode m_selectedNode = null;
+    protected TreePath selectedTreePath = null;
+    protected DefaultMutableTreeNode selectedNode = null;
     private static final int AUTOSCROLL_MARGIN = 12;
-    private BufferedImage m_imgGhost; // The 'drag image'
-    private final Point m_ptOffset = new Point(); // Where, in the drag image, the
-    private final DOMTreeModel m_model;
-    private final BasePanel m_basePanel;
+    private BufferedImage imgGhost; // The 'drag image'
+    private final Point ptOffset = new Point(); // Where, in the drag image, the
+    private final DOMTreeModel model;
+    private final BasePanel basePanel;
 
     /**
      * Constructor for DOMTree.
@@ -113,6 +113,7 @@ public class DOMTree extends JTree implements DragSourceListener, DragGestureLis
      * @param basePanel BasePanel
      */
     public DOMTree(BasePanel basePanel) {
+
         this(null, basePanel);
         this.addMouseListener(this);
     }
@@ -123,27 +124,25 @@ public class DOMTree extends JTree implements DragSourceListener, DragGestureLis
      * @param basePanel BasePanel
      */
     public DOMTree(Document document, BasePanel basePanel) {
+
         super();
+        this.basePanel = basePanel;
+        model = new DOMTreeModel(document);
+        this.setModel(model);
+        model.addTreeModelListener(this);
 
-        m_basePanel = basePanel;
-        m_model = new DOMTreeModel(document);
-
-        this.setModel(m_model);
-        m_model.addTreeModelListener(this);
         // set tree properties
         setRootVisible(false);
-
         XMLTreeCellRenderer xMLTreeCellRenderer = new XMLTreeCellRenderer();
-
         setCellRenderer(xMLTreeCellRenderer);
         setCellEditor(new XMLTreeCellEditor(this, xMLTreeCellRenderer));
         this.setEditable(true);
         addTreeSelectionListener(this);
+
         /*
          * Variables needed for DnD
          */
         DragSource m_dragSource = DragSource.getDefaultDragSource();
-
         DragGestureRecognizer dgr = m_dragSource.createDefaultDragGestureRecognizer(this, // DragSource
                 DnDConstants.ACTION_COPY_OR_MOVE, // specifies valid
                 // actions
@@ -154,7 +153,6 @@ public class DOMTree extends JTree implements DragSourceListener, DragGestureLis
          * Eliminates right mouse clicks as valid actions - useful especially if
          * you implement a JPopupMenu for the JTree
          */
-
         dgr.setSourceActions(dgr.getSourceActions() & ~InputEvent.BUTTON3_DOWN_MASK);
 
         /*
@@ -164,21 +162,17 @@ public class DOMTree extends JTree implements DragSourceListener, DragGestureLis
 
         // Also, make this JTree a drag target
         DropTarget dropTarget = new DropTarget(this, new CDropTargetListener());
-
         dropTarget.setDefaultActions(DnDConstants.ACTION_COPY_OR_MOVE);
         // unnecessary, but gives FileManager look
         putClientProperty("JTree.lineStyle", "Angled");
         this.addMouseListener(this);
     }
 
-    //
-    // Public methods
-    //
-
     /**
      * Sets the document. * @param document Document
      */
     public void setDocument(Document document) {
+
         ((DOMTreeModel) getModel()).setDocument(document);
         expandRow(0);
     }
@@ -203,7 +197,7 @@ public class DOMTree extends JTree implements DragSourceListener, DragGestureLis
      * Returns The selected node * @return DefaultMutableTreeNode
      */
     public DefaultMutableTreeNode getSelectedNode() {
-        return m_selectedNode;
+        return selectedNode;
     }
 
     /**
@@ -417,15 +411,15 @@ public class DOMTree extends JTree implements DragSourceListener, DragGestureLis
 
         JPopupMenu popup = new JPopupMenu();
 
-        BaseMenuItem copy = new BaseMenuItem(m_basePanel, BaseUIPropertyCodes.COPY);
+        BaseMenuItem copy = new BaseMenuItem(basePanel, BaseUIPropertyCodes.COPY);
 
         popup.add(copy);
 
-        BaseMenuItem cut = new BaseMenuItem(m_basePanel, BaseUIPropertyCodes.CUT);
+        BaseMenuItem cut = new BaseMenuItem(basePanel, BaseUIPropertyCodes.CUT);
 
         popup.add(cut);
 
-        BaseMenuItem paste = new BaseMenuItem(m_basePanel, BaseUIPropertyCodes.PASTE);
+        BaseMenuItem paste = new BaseMenuItem(basePanel, BaseUIPropertyCodes.PASTE);
 
         popup.add(paste);
         // Try to make the popup lightweight
@@ -526,7 +520,7 @@ public class DOMTree extends JTree implements DragSourceListener, DragGestureLis
             // rectangle origin
             Rectangle raPath = getPathBounds(path);
 
-            m_ptOffset.setLocation(ptDragOrigin.x - raPath.x, ptDragOrigin.y - raPath.y);
+            ptOffset.setLocation(ptDragOrigin.x - raPath.x, ptDragOrigin.y - raPath.y);
 
             // Get the cell renderer (which is a XMLTreeCellRenderer) for the
             // path being dragged
@@ -543,10 +537,10 @@ public class DOMTree extends JTree implements DragSourceListener, DragGestureLis
             lbl.setSize((int) raPath.getWidth(), (int) raPath.getHeight()); // <--
 
             // Get a buffered image of the selection for dragging a ghost image
-            m_imgGhost = new BufferedImage((int) raPath.getWidth(), (int) raPath.getHeight(),
+            imgGhost = new BufferedImage((int) raPath.getWidth(), (int) raPath.getHeight(),
                     BufferedImage.TYPE_INT_ARGB_PRE);
 
-            Graphics2D g2 = m_imgGhost.createGraphics();
+            Graphics2D g2 = imgGhost.createGraphics();
 
             // Ask the cell renderer to paint itself into the BufferedImage
             g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC, 0.5f)); // Make
@@ -568,7 +562,7 @@ public class DOMTree extends JTree implements DragSourceListener, DragGestureLis
             // ghostlike
             g2.setPaint(new GradientPaint(nStartOfText, 0, SystemColor.controlShadow, getWidth(), 0,
                     new Color(255, 255, 255, 0)));
-            g2.fillRect(nStartOfText, 0, getWidth(), m_imgGhost.getHeight());
+            g2.fillRect(nStartOfText, 0, getWidth(), imgGhost.getHeight());
             g2.dispose();
             setSelectionPath(path); // Select this path in the tree
 
@@ -577,12 +571,12 @@ public class DOMTree extends JTree implements DragSourceListener, DragGestureLis
             stringData.setPath(path);
             dragNode.setUserObject(stringData);
 
-            m_selectedTreePath = path;
+            selectedTreePath = path;
 
             // Get the Transferable Object
             Transferable transferable = (Transferable) dragNode.getUserObject();
 
-            e.startDrag(null, m_imgGhost, new Point(5, 5), transferable, this);
+            e.startDrag(null, imgGhost, new Point(5, 5), transferable, this);
         }
     }
 
@@ -633,13 +627,13 @@ public class DOMTree extends JTree implements DragSourceListener, DragGestureLis
      * @see javax.swing.event.TreeSelectionListener#valueChanged(TreeSelectionEvent)
      */
     public void valueChanged(TreeSelectionEvent evt) {
-        m_selectedTreePath = evt.getNewLeadSelectionPath();
+        selectedTreePath = evt.getNewLeadSelectionPath();
 
-        if (m_selectedTreePath == null) {
-            m_selectedNode = null;
+        if (selectedTreePath == null) {
+            selectedNode = null;
             return;
         }
-        m_selectedNode = (DefaultMutableTreeNode) m_selectedTreePath.getLastPathComponent();
+        selectedNode = (DefaultMutableTreeNode) selectedTreePath.getLastPathComponent();
     }
 
     /**
@@ -1003,9 +997,9 @@ public class DOMTree extends JTree implements DragSourceListener, DragGestureLis
                 // ghost image and cue
                 // line
                 // And remember where we are about to draw the new ghost image
-                _raGhost.setRect(pt.x - m_ptOffset.x, pt.y - m_ptOffset.y, m_imgGhost.getWidth(),
-                        m_imgGhost.getHeight());
-                g2.drawImage(m_imgGhost, AffineTransform.getTranslateInstance(_raGhost.getX(), _raGhost.getY()), null);
+                _raGhost.setRect(pt.x - ptOffset.x, pt.y - ptOffset.y, imgGhost.getWidth(),
+                        imgGhost.getHeight());
+                g2.drawImage(imgGhost, AffineTransform.getTranslateInstance(_raGhost.getX(), _raGhost.getY()), null);
             } else
             // Just rub out the last cue line
             {
@@ -1032,12 +1026,12 @@ public class DOMTree extends JTree implements DragSourceListener, DragGestureLis
 
             // Now superimpose the left/right movement indicator if necessary
             if (_nLeftRight > 20) {
-                g2.drawImage(_imgRight, AffineTransform.getTranslateInstance(pt.x - m_ptOffset.x, pt.y - m_ptOffset.y),
+                g2.drawImage(_imgRight, AffineTransform.getTranslateInstance(pt.x - ptOffset.x, pt.y - ptOffset.y),
                         null);
 
                 _nShift = 1;
             } else if (_nLeftRight < -20) {
-                g2.drawImage(_imgLeft, AffineTransform.getTranslateInstance(pt.x - m_ptOffset.x, pt.y - m_ptOffset.y),
+                g2.drawImage(_imgLeft, AffineTransform.getTranslateInstance(pt.x - ptOffset.x, pt.y - ptOffset.y),
                         null);
 
                 _nShift = -1;
@@ -1049,7 +1043,7 @@ public class DOMTree extends JTree implements DragSourceListener, DragGestureLis
             _raGhost = _raGhost.createUnion(_raCueLine);
 
             // Do this if you want to prohibit dropping onto the drag source
-            if (path.equals(m_selectedTreePath)) {
+            if (path.equals(selectedTreePath)) {
                 e.rejectDrag();
             } else {
                 e.acceptDrag(e.getDropAction());
@@ -1098,7 +1092,7 @@ public class DOMTree extends JTree implements DragSourceListener, DragGestureLis
                 // get new parent node
                 Point loc = e.getLocation();
                 TreePath destinationPath = getPathForLocation(loc.x, loc.y);
-                final String msg = testDropTarget(destinationPath, m_selectedTreePath);
+                final String msg = testDropTarget(destinationPath, selectedTreePath);
 
                 if (msg != null) {
                     e.rejectDrop();
@@ -1123,9 +1117,9 @@ public class DOMTree extends JTree implements DragSourceListener, DragGestureLis
                 try {
                     MutableTreeNode selectedTreeNode = getSelectedNode();
 
-                    if (null != m_model.getNode(selectedTreeNode)) {
-                        m_model.insertTextNode(m_model.getNode(selectedTreeNode), newParent);
-                        m_model.removeNodeFromParent(selectedTreeNode);
+                    if (null != model.getNode(selectedTreeNode)) {
+                        model.insertTextNode(model.getNode(selectedTreeNode), newParent);
+                        model.removeNodeFromParent(selectedTreeNode);
                     }
 
                     if (copyAction) {
@@ -1178,7 +1172,7 @@ public class DOMTree extends JTree implements DragSourceListener, DragGestureLis
             Point pt = e.getLocation();
             TreePath path = getClosestPathForLocation(pt.x, pt.y);
 
-            if (path.equals(m_selectedTreePath)) {
+            if (path.equals(selectedTreePath)) {
                 return false;
             }
 
@@ -1214,7 +1208,7 @@ public class DOMTree extends JTree implements DragSourceListener, DragGestureLis
             Point pt = e.getLocation();
             TreePath path = getClosestPathForLocation(pt.x, pt.y);
 
-            if (path.equals(m_selectedTreePath)) {
+            if (path.equals(selectedTreePath)) {
                 return false;
             }
 

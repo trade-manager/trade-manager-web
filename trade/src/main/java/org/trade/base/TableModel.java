@@ -200,7 +200,7 @@ public abstract class TableModel extends AbstractTableModel {
             Object newValue = getColumnDataValue(currValue, value);
             this.populateDAO(newValue, row, column);
             List<Object> dataRow = rows.get(row);
-            dataRow.add(column, newValue);
+            dataRow.set(column, newValue);
             fireTableCellUpdated(row, column);
         }
     }

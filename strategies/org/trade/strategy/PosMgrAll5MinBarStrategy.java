@@ -106,6 +106,7 @@ public class PosMgrAll5MinBarStrategy extends AbstractStrategyRule {
             // + startPeriod);
 
             if (!this.isThereOpenPosition()) {
+
                 _log.info("No open position so Cancel Strategy Mgr Symbol: {} Time:{}", getSymbol(), startPeriod);
                 this.cancel();
                 return;

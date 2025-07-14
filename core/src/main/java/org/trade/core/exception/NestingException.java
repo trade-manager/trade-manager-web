@@ -40,6 +40,7 @@ import java.io.PrintWriter;
 import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -87,6 +88,7 @@ public class NestingException extends Exception {
      * @param message A user-friendly description of the exception.
      */
     public NestingException(String message) {
+
         super(message);
 
         // init member variables
@@ -132,6 +134,7 @@ public class NestingException extends Exception {
      * @param exceptionMessage ExceptionMessage
      */
     public NestingException(ExceptionMessage exceptionMessage) {
+
         this();
         addExceptionMessage(exceptionMessage);
     }
@@ -248,10 +251,10 @@ public class NestingException extends Exception {
         this.exceptionMessages.add(exceptionMessage);
 
         // Here we loop through any outstanding contexts and apply them.
-        ListIterator<ExceptionContext> enumeration = this.exceptionContexts.listIterator();
+        ListIterator<ExceptionContext> iteration = this.exceptionContexts.listIterator();
 
-        while (enumeration.hasNext()) {
-            addExceptionContext(enumeration.next());
+        while (iteration.hasNext()) {
+            addExceptionContext(iteration.next());
         }
     }
 
@@ -262,17 +265,20 @@ public class NestingException extends Exception {
      * @param exceptionContext ExceptionContext
      */
     public void addExceptionMessage(ExceptionMessage exceptionMessage, ExceptionContext exceptionContext) {
+
         addExceptionMessage(exceptionMessage);
         addExceptionContext(exceptionContext);
     }
 
     /**
-     * Adds an enumeration of <code>ExceptionMessages</code> to this exception.
+     * Adds an iteration of <code>ExceptionMessages</code> to this exception.
      *
-     * @param messages The enumeration of <code>ExceptionMessage</code> objects.
+     * @param messages The iteration of <code>ExceptionMessage</code> objects.
      */
     public void addExceptionMessages(ListIterator<?> messages) {
+
         while (messages.hasNext()) {
+
             ExceptionMessage m = (ExceptionMessage) messages.next();
             exceptionMessages.add(m);
         }
@@ -298,10 +304,12 @@ public class NestingException extends Exception {
         ExceptionMessage mostRecent = this.exceptionMessages.getLast();
 
         if (null != mostRecent) {
+
             // There is at least one exception message, so we add the context
             // to the most recent message.
             mostRecent.addExceptionContext(exceptionContext);
         } else {
+
             // There are no exception messages so we hold onto the context
             // in case a message is added later.
             this.exceptionContexts.add(exceptionContext);
@@ -311,13 +319,13 @@ public class NestingException extends Exception {
         // context recursively to any nested exceptions we find.
         if (null != this.nestedException) {
 
-            Enumerator enumeration = this.nestedException.getAllExceptionMessages();
+            Iterator<?> iteration = this.nestedException.getAllExceptionMessages();
 
             ExceptionMessage exceptionMessage;
 
-            while (enumeration.hasNext()) {
+            while (iteration.hasNext()) {
 
-                exceptionMessage = (ExceptionMessage) enumeration.next();
+                exceptionMessage = (ExceptionMessage) iteration.next();
                 exceptionMessage.addExceptionContext(exceptionContext);
             }
         }
@@ -415,7 +423,7 @@ public class NestingException extends Exception {
     }
 
     /**
-     * Obtain an <code>Enumeration</code> of user-friendly messages for this
+     * Obtain an <code>iteration</code> of user-friendly messages for this
      * exception. This does not includes messages from nested exceptions.
      *
      * @return <code>ListIterator</code> of <code>ExceptionMessage</code> objects
@@ -427,14 +435,15 @@ public class NestingException extends Exception {
     }
 
     /**
-     * Obtain an <code>Enumeration</code> of messages for this exception. This
+     * Obtain an <code>iteration</code> of messages for this exception. This
      * includes messages from nested exceptions if any exist.
      *
-     * @return <code>Enumeration</code> of <code>ExceptionMessage</code> objects
+     * @return <code>iteration</code> of <code>ExceptionMessage</code> objects
      * containing exception message text. * @see
      * #getAllUserFriendlyMessages()
      */
-    public Enumerator getAllExceptionMessages() {
+    public Iterator<?> getAllExceptionMessages() {
+
 
         if (nestedException != null) {
 

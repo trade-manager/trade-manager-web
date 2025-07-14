@@ -664,15 +664,15 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
                     setMessageText(methodAttribute + " ", true, false, null);
                     setMessageText(methodName, true, false, bold);
                     setMessageText(" (", true, false, null);
-                    Class<?>[] parms = element.getParameterTypes();
-                    Object[] o = new Object[parms.length];
+                    Class<?>[] classParams = element.getParameterTypes();
+                    Object[] o = new Object[classParams.length];
                     methodAttribute = "";
-                    for (int j = 0; j < parms.length; j++) {
+                    for (int j = 0; j < classParams.length; j++) {
 
-                        Object obj = parms[j];
+                        Object obj = classParams[j];
                         o[j] = obj;
                         methodAttribute = methodAttribute + o[j].toString();
-                        if (j < parms.length - 1) {
+                        if (j < classParams.length - 1) {
                             methodAttribute = methodAttribute + ", ";
                         }
                     }

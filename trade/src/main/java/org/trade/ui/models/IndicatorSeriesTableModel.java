@@ -253,16 +253,16 @@ public class IndicatorSeriesTableModel extends TableModel {
 
         try {
 
-            List<Object> parm = new ArrayList<>();
-            parm.add(strategy);
-            parm.add(name);
-            parm.add(type);
-            parm.add(description);
-            parm.add(false);
-            parm.add(0);
-            parm.add(false);
+            List<Object> params = new ArrayList<>();
+            params.add(strategy);
+            params.add(name);
+            params.add(type);
+            params.add(description);
+            params.add(false);
+            params.add(0);
+            params.add(false);
             String className = "org.trade.strategy.data." + type;
-            return (org.trade.core.persistent.dao.series.indicator.IndicatorSeries) ClassFactory.getCreateClass(className, parm, this);
+            return (org.trade.core.persistent.dao.series.indicator.IndicatorSeries) ClassFactory.getCreateClass(className, params, this);
         } catch (Exception e) {
             /*
              * will only ever happen is IndicatorSeries does not exist.

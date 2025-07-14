@@ -64,15 +64,15 @@ public class CodeAttributePanel extends JPanel {
 
                 if (null == ((JFormattedTextField) field).getValue()) {
 
-                    List<Object> parm = new ArrayList<>();
-                    parm.add(codeAttribute.getDefaultValue());
-                    Object codeValue = ClassFactory.getCreateClass(codeAttribute.getClassName(), parm, this);
+                    List<Object> params = new ArrayList<>();
+                    params.add(codeAttribute.getDefaultValue());
+                    Object codeValue = ClassFactory.getCreateClass(codeAttribute.getClassName(), params, this);
                     ((JFormattedTextField) field).setValue(codeValue);
                 }
             } else {
 
-                List<Object> parm = new ArrayList<>();
-                Object decode = ClassFactory.getCreateClass(codeAttribute.getEditorClassName(), parm, this);
+                List<Object> params = new ArrayList<>();
+                Object decode = ClassFactory.getCreateClass(codeAttribute.getEditorClassName(), params, this);
                 boolean valueSet = false;
 
                 if (decode instanceof Decode) {

@@ -27,6 +27,7 @@ public class Tree extends JTree {
      * @param model DefaultTreeModel
      */
     public Tree(DefaultTreeModel model) {
+
         super(model);
         this.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         this.setRowHeight(18);

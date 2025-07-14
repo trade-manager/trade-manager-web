@@ -59,8 +59,8 @@ public class TabbedCloseButton extends JPanel {
     @Serial
     private static final long serialVersionUID = 8543984162821384818L;
     private final static Logger _log = LoggerFactory.getLogger(TabbedCloseButton.class);
-    protected MessageNotifier m_notifier = new MessageNotifier();
-    private String m_method = null;
+    protected MessageNotifier notifier = new MessageNotifier();
+    private String method = null;
     private Object transferObject = null;
     private final JTabbedPane pane;
 
@@ -230,7 +230,7 @@ public class TabbedCloseButton extends JPanel {
      * @param listener IMessageListener
      */
     public void addMessageListener(IMessageListener listener) {
-        m_notifier.add(listener);
+        notifier.add(listener);
     }
 
     /**
@@ -239,7 +239,7 @@ public class TabbedCloseButton extends JPanel {
      * @param listener IMessageListener
      */
     public void removeMessageListener(IMessageListener listener) {
-        m_notifier.remove(listener);
+        notifier.remove(listener);
     }
 
     /**
@@ -270,7 +270,7 @@ public class TabbedCloseButton extends JPanel {
         if (null != this.transferObject) {
             transferObjects.add(this.transferObject);
         }
-        m_notifier.notifyEvent(new MessageEvent(selection), transferObjects);
+        notifier.notifyEvent(new MessageEvent(selection), transferObjects);
     }
 
     /**
@@ -279,7 +279,7 @@ public class TabbedCloseButton extends JPanel {
      * @param method String
      */
     private void setMethod(String method) {
-        m_method = method;
+        this.method = method;
     }
 
     /**
@@ -288,6 +288,6 @@ public class TabbedCloseButton extends JPanel {
      * @return String
      */
     public String getMethod() {
-        return m_method;
+        return method;
     }
 }

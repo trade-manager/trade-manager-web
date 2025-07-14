@@ -51,7 +51,7 @@ public class MissingPropertiesException extends Exception {
      */
     @Serial
     private static final long serialVersionUID = -5377864368236421685L;
-    private List<String> m_missingProperties = null;
+    private List<String> missingProperties = null;
 
     public MissingPropertiesException() {
         super();
@@ -63,11 +63,13 @@ public class MissingPropertiesException extends Exception {
      * @param p String
      */
     public void addProperty(String p) {
-        if (m_missingProperties == null) {
-            m_missingProperties = new ArrayList<>();
+
+        if (missingProperties == null) {
+
+            missingProperties = new ArrayList<>();
         }
 
-        m_missingProperties.add(p);
+        missingProperties.add(p);
     }
 
     /**
@@ -76,6 +78,7 @@ public class MissingPropertiesException extends Exception {
      * @return String
      */
     public String getMessage() {
+
         StringBuilder message = new StringBuilder("The following properties are missing: ");
         ListIterator<String> missingProperties = getMissingProperties();
 
@@ -110,12 +113,12 @@ public class MissingPropertiesException extends Exception {
      */
     public ListIterator<String> getMissingProperties() {
 
-        if (m_missingProperties == null) {
+        if (missingProperties == null) {
 
-            m_missingProperties = new ArrayList<>();
+            missingProperties = new ArrayList<>();
         }
 
-        return m_missingProperties.listIterator();
+        return missingProperties.listIterator();
     }
 
     /**
@@ -125,19 +128,19 @@ public class MissingPropertiesException extends Exception {
      */
     public String toString() {
 
-        if (m_missingProperties == null) {
+        if (missingProperties == null) {
 
             return "No properties missing";
         }
 
         StringBuilder sb = new StringBuilder("The following [");
-        sb.append(m_missingProperties.size());
+        sb.append(missingProperties.size());
         sb.append("] properties are missing: ");
-        int missingPropSize = m_missingProperties.size();
+        int missingPropSize = missingProperties.size();
 
-        for (int ii = 0; ii < missingPropSize; ii++) {
+        for (int i = 0; i < missingPropSize; i++) {
 
-            sb.append(m_missingProperties.get(ii));
+            sb.append(missingProperties.get(i));
             sb.append(", ");
         }
 

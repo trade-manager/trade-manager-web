@@ -55,10 +55,8 @@ public class BaseMenuItem extends JMenuItem {
     private static final long serialVersionUID = 5816221538464868893L;
 
     private final static Logger _log = LoggerFactory.getLogger(BaseMenuItem.class);
-
-    protected MessageNotifier m_notifier = new MessageNotifier();
-
-    private String m_method = null;
+    protected MessageNotifier notifier = new MessageNotifier();
+    private String method = null;
 
     /**
      * BaseMenuItem() - constructor
@@ -137,7 +135,7 @@ public class BaseMenuItem extends JMenuItem {
      * @param listener IMessageListener
      */
     public void addMessageListener(IMessageListener listener) {
-        m_notifier.add(listener);
+        notifier.add(listener);
     }
 
     /**
@@ -146,7 +144,7 @@ public class BaseMenuItem extends JMenuItem {
      * @param listener IMessageListener
      */
     public void removeMessageListener(IMessageListener listener) {
-        m_notifier.remove(listener);
+        notifier.remove(listener);
     }
 
     /**
@@ -155,7 +153,7 @@ public class BaseMenuItem extends JMenuItem {
      * @param selection String
      */
     protected void messageEvent(String selection) {
-        m_notifier.notifyEvent(new MessageEvent(selection), new ArrayList<>());
+        notifier.notifyEvent(new MessageEvent(selection), new ArrayList<>());
     }
 
     /**
@@ -164,7 +162,7 @@ public class BaseMenuItem extends JMenuItem {
      * @param method String
      */
     private void setMethod(String method) {
-        m_method = method;
+        this.method = method;
     }
 
     /**
@@ -173,6 +171,6 @@ public class BaseMenuItem extends JMenuItem {
      * @return String
      */
     public String getMethod() {
-        return m_method;
+        return method;
     }
 }

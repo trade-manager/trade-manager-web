@@ -88,24 +88,9 @@ public class DOMWriter {
      * "MacUkraine", "SJIS", "Unicode", "UnicodeBig", "UnicodeLittle", "UTF8"};
      */
 
-    /**
-     * Print writer.
-     */
-    // protected PrintWriter m_out = null;
-    protected FileWriter m_out = null;
+    protected FileWriter out = null;
+    protected boolean canonical = false;
 
-    /**
-     * Canonical output.
-     */
-    protected boolean m_canonical = false;
-
-    //
-    // Constructors
-    //
-
-    /**
-     * Default constructor.
-     */
     public DOMWriter() {
     }
 
@@ -119,15 +104,15 @@ public class DOMWriter {
      */
     public void printDocument(String encoding, boolean canonical, String fileName, Node doc)
             throws IOException {
-        m_out = new FileWriter(fileName);
-        m_canonical = canonical;
+        out = new FileWriter(fileName);
+        this.canonical = canonical;
 
         if (null != encoding) {
             DOMWriter.setWriterEncoding(encoding);
         }
 
         print(doc);
-        m_out.close();
+        out.close();
     } // getWriterEncoding
 
     /**
@@ -175,7 +160,7 @@ public class DOMWriter {
 
             // print document
             case Node.DOCUMENT_NODE: {
-                if (!m_canonical) {
+                if (!canonical) {
                     String Encoding = DOMWriter.getWriterEncoding();
 
                     if (Encoding.equalsIgnoreCase("DEFAULT")) {
@@ -184,30 +169,30 @@ public class DOMWriter {
                         Encoding = "UTF-16";
                     }
 
-                    m_out.write("<?xml version=\"1.0\" encoding=\"" + Encoding + "\"?>");
+                    out.write("<?xml version=\"1.0\" encoding=\"" + Encoding + "\"?>");
                 }
 
                 print(((Document) node).getDocumentElement());
-                m_out.flush();
+                out.flush();
 
                 break;
             }
             // print element with attributes
             case Node.ELEMENT_NODE: {
-                m_out.write('<');
-                m_out.write(node.getNodeName());
+                out.write('<');
+                out.write(node.getNodeName());
 
                 Attr[] attrs = sortAttributes(node.getAttributes());
 
                 for (Attr attr : attrs) {
-                    m_out.write(' ');
-                    m_out.write(attr.getNodeName());
-                    m_out.write("=\"");
-                    m_out.write(normalize(attr.getNodeValue()));
-                    m_out.write('"');
+                    out.write(' ');
+                    out.write(attr.getNodeName());
+                    out.write("=\"");
+                    out.write(normalize(attr.getNodeValue()));
+                    out.write('"');
                 }
 
-                m_out.write('>');
+                out.write('>');
 
                 NodeList children = node.getChildNodes();
 
@@ -221,7 +206,7 @@ public class DOMWriter {
             }
             // handle entity reference nodes
             case Node.ENTITY_REFERENCE_NODE: {
-                if (m_canonical) {
+                if (canonical) {
                     NodeList children = node.getChildNodes();
 
                     int len = children.getLength();
@@ -230,56 +215,56 @@ public class DOMWriter {
                         print(children.item(i));
                     }
                 } else {
-                    m_out.write('&');
-                    m_out.write(node.getNodeName());
-                    m_out.write(';');
+                    out.write('&');
+                    out.write(node.getNodeName());
+                    out.write(';');
                 }
 
                 break;
             }
             // print cdata sections
             case Node.CDATA_SECTION_NODE: {
-                if (m_canonical) {
-                    m_out.write(normalize(node.getNodeValue()));
+                if (canonical) {
+                    out.write(normalize(node.getNodeValue()));
                 } else {
-                    m_out.write("<![CDATA[");
-                    m_out.write(node.getNodeValue());
-                    m_out.write("]]>");
+                    out.write("<![CDATA[");
+                    out.write(node.getNodeValue());
+                    out.write("]]>");
                 }
 
                 break;
             }
             // print text
             case Node.TEXT_NODE: {
-                m_out.write(normalize(node.getNodeValue()));
+                out.write(normalize(node.getNodeValue()));
 
                 break;
             }
             // print processing instruction
             case Node.PROCESSING_INSTRUCTION_NODE: {
-                m_out.write("<?");
-                m_out.write(node.getNodeName());
+                out.write("<?");
+                out.write(node.getNodeName());
 
                 String data = node.getNodeValue();
 
                 if ((data != null) && (!data.isEmpty())) {
-                    m_out.write(' ');
-                    m_out.write(data);
+                    out.write(' ');
+                    out.write(data);
                 }
 
-                m_out.write("?>");
+                out.write("?>");
 
                 break;
             }
         }
 
         if (type == Node.ELEMENT_NODE) {
-            m_out.write("</");
-            m_out.write(node.getNodeName());
-            m_out.write('>');
+            out.write("</");
+            out.write(node.getNodeName());
+            out.write('>');
         }
 
-        m_out.flush();
+        out.flush();
     } // print(Node)
 
     /**
@@ -395,7 +380,7 @@ public class DOMWriter {
                 }
                 case '\r':
                 case '\n': {
-                    if (m_canonical) {
+                    if (canonical) {
                         str.append("&#");
                         str.append(Integer.toString(ch));
                         str.append(';');

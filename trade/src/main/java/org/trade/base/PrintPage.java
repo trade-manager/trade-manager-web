@@ -54,13 +54,11 @@ import java.awt.print.PrinterGraphics;
  * @version $Revision: 1.0 $
  */
 public class PrintPage implements Pageable {
-    private int m_NumPagesX;
 
-    private int m_NumPages;
-
-    private Printable m_Painter = null;
-
-    private PageFormat m_Format = null;
+    private int numPagesX;
+    private int numPages;
+    private Printable painter = null;
+    private PageFormat format = null;
 
     /**
      * Create a java.awt.Pageable that will print a canvas over as many pages as
@@ -91,7 +89,7 @@ public class PrintPage implements Pageable {
      * @param painter Printable
      */
     protected void setPrintable(Printable painter) {
-        m_Painter = painter;
+        this.painter = painter;
     }
 
     /**
@@ -100,7 +98,7 @@ public class PrintPage implements Pageable {
      * @param pageFormat PageFormat
      */
     protected void setPageFormat(PageFormat pageFormat) {
-        m_Format = pageFormat;
+        format = pageFormat;
     }
 
     /**
@@ -110,9 +108,9 @@ public class PrintPage implements Pageable {
      * @param height The height, in 1/72nds of an inch, of the vista's canvas.
      */
     protected void setSize(float width, float height) {
-        m_NumPagesX = (int) (((width + m_Format.getImageableWidth()) - 1) / m_Format.getImageableWidth());
-        int m_NumPagesY = (int) (((height + m_Format.getImageableHeight()) - 1) / m_Format.getImageableHeight());
-        m_NumPages = m_NumPagesX * m_NumPagesY;
+        numPagesX = (int) (((width + format.getImageableWidth()) - 1) / format.getImageableWidth());
+        int m_NumPagesY = (int) (((height + format.getImageableHeight()) - 1) / format.getImageableHeight());
+        numPages = numPagesX * m_NumPagesY;
     }
 
     /**
@@ -122,7 +120,7 @@ public class PrintPage implements Pageable {
      * @see java.awt.print.Pageable#getNumberOfPages()
      */
     public int getNumberOfPages() {
-        return m_NumPages;
+        return numPages;
     }
 
     /**
@@ -131,7 +129,7 @@ public class PrintPage implements Pageable {
      * @return PageFormat
      */
     protected PageFormat getPageFormat() {
-        return m_Format;
+        return format;
     }
 
     /**
@@ -145,7 +143,7 @@ public class PrintPage implements Pageable {
      * requested page. * @see java.awt.print.Pageable#getPageFormat(int)
      */
     public PageFormat getPageFormat(int pageIndex) throws IndexOutOfBoundsException {
-        if (pageIndex >= m_NumPages) {
+        if (pageIndex >= numPages) {
             throw new IndexOutOfBoundsException();
         }
 
@@ -170,15 +168,15 @@ public class PrintPage implements Pageable {
      * requested page. * @see java.awt.print.Pageable#getPrintable(int)
      */
     public Printable getPrintable(int pageIndex) throws IndexOutOfBoundsException {
-        if (pageIndex >= m_NumPages) {
+        if (pageIndex >= numPages) {
             throw new IndexOutOfBoundsException();
         }
 
-        double originX = (pageIndex % m_NumPagesX) * m_Format.getImageableWidth();
-        double originY = (pageIndex / (double) m_NumPagesX) * m_Format.getImageableHeight();
+        double originX = (pageIndex % numPagesX) * format.getImageableWidth();
+        double originY = (pageIndex / (double) numPagesX) * format.getImageableHeight();
         Point2D.Double origin = new Point2D.Double(originX, originY);
 
-        return new TranslatedPrintable(m_Painter, origin);
+        return new TranslatedPrintable(painter, origin);
     }
 
     /**

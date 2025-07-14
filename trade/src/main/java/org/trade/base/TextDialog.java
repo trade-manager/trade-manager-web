@@ -52,9 +52,9 @@ public class TextDialog extends JDialog {
     @Serial
     private static final long serialVersionUID = -3288606526317779365L;
 
-    private String m_text = null;
-    private boolean m_cancel = true;
-    private final JComponent m_component;
+    private String text = null;
+    private boolean cancel = true;
+    private final JComponent component;
 
     /**
      * Constructor for TextDialog.
@@ -81,11 +81,11 @@ public class TextDialog extends JDialog {
         } else {
             okButton.setPreferredSize(cancelButton.getPreferredSize());
         }
-        m_component = Objects.requireNonNullElseGet(component, JTextArea::new);
+        this.component = Objects.requireNonNullElseGet(component, JTextArea::new);
         JScrollPane detailArea = new JScrollPane();
         okButton.addActionListener(_ -> {
-            if (m_component instanceof JTextArea) {
-                setText(((JTextArea) m_component).getText().trim());
+            if (this.component instanceof JTextArea) {
+                setText(((JTextArea) this.component).getText().trim());
             }
             setCancel(false);
             dispose();
@@ -105,7 +105,7 @@ public class TextDialog extends JDialog {
         jPanel1.add(cancelButton, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST,
                 GridBagConstraints.HORIZONTAL, new Insets(5, 5, 5, 5), 5, 5));
 
-        detailArea.getViewport().add(m_component, null);
+        detailArea.getViewport().add(this.component, null);
         jPanel2.add(detailArea, BorderLayout.CENTER);
         jPanel1.add(jPanel3, BorderLayout.CENTER);
         jPanel.add(jPanel2, BorderLayout.CENTER);
@@ -161,7 +161,7 @@ public class TextDialog extends JDialog {
      * @return String
      */
     public String getText() {
-        return m_text;
+        return text;
     }
 
     /**
@@ -170,7 +170,7 @@ public class TextDialog extends JDialog {
      * @param text String
      */
     public void setText(String text) {
-        m_text = text;
+        this.text = text;
     }
 
     /**
@@ -179,7 +179,7 @@ public class TextDialog extends JDialog {
      * @return String
      */
     public boolean getCancel() {
-        return m_cancel;
+        return cancel;
     }
 
     /**
@@ -188,6 +188,6 @@ public class TextDialog extends JDialog {
      * @param cancel boolean
      */
     private void setCancel(boolean cancel) {
-        m_cancel = cancel;
+        this.cancel = cancel;
     }
 }

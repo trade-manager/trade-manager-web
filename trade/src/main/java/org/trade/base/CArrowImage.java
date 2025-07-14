@@ -54,14 +54,9 @@ public class CArrowImage extends BufferedImage {
 
     // Constants...
     public static final int ARROW_UP = 0;
-
     public static final int ARROW_DOWN = 1;
-
     public static final int ARROW_LEFT = 2;
-
     public static final int ARROW_RIGHT = 3;
-
-    // Constructor...
 
     /**
      * Constructor for CArrowImage.

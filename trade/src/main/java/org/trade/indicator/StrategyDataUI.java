@@ -107,9 +107,8 @@ public class StrategyDataUI extends Worker {
                      * holder for series and is required by the Chart API.
                      */
                     String datasetName = indicator.getType().replaceAll("Series", "Dataset");
-                    List<Object> parm = new ArrayList<>();
                     indicatorDataset = (IIndicatorDataset) ClassFactory
-                            .getCreateClass(IIndicatorDataset.PACKAGE + "." + datasetName, parm, this);
+                            .getCreateClass(IIndicatorDataset.PACKAGE + "." + datasetName, new ArrayList<>(), this);
                     this.indicators.add(indicatorDataset);
                 }
                 indicatorDataset.addSeries(series);

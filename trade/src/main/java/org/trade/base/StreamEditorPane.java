@@ -78,22 +78,14 @@ public class StreamEditorPane extends JEditorPane implements MouseListener, Acti
     private static final long serialVersionUID = -8068406289677664715L;
 
     private final static Logger _log = LoggerFactory.getLogger(StreamEditorPane.class);
-
     protected UndoableEditListener undoHandler = new UndoHandler();
-
     protected UndoManager undo = new UndoManager();
-
     private final UndoAction undoAction = new UndoAction();
-
     private final RedoAction redoAction = new RedoAction();
-
-    private String m_currFileName = null;
-
-    private int m_startPosition = 0;
-
-    private String m_currDir = null;
-
-    JFileChooser m_fileChooser = new JFileChooser();
+    private String currFileName = null;
+    private int startPosition = 0;
+    private String currDir = null;
+    JFileChooser fileChooser = new JFileChooser();
 
     public StreamEditorPane() {
         this("text/plain");
@@ -214,15 +206,15 @@ public class StreamEditorPane extends JEditorPane implements MouseListener, Acti
         // Make the dialog visible as a modal (default) dialog box.
         ExampleFileFilter filter = new ExampleFileFilter(new String[]{"*"}, "All Files");
 
-        m_fileChooser.addChoosableFileFilter(filter);
+        fileChooser.addChoosableFileFilter(filter);
 
         if (null != getDirName()) {
-            m_fileChooser.setSelectedFile(new File(getDirName() + "//" + getFileName()));
+            fileChooser.setSelectedFile(new File(getDirName() + "//" + getFileName()));
         } else {
-            m_fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
+            fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
         }
 
-        int returnVal = m_fileChooser.showSaveDialog(this.getRootPane());
+        int returnVal = fileChooser.showSaveDialog(this.getRootPane());
 
         // Upon return, getFile() will be null if user cancelled the dialog.
         if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -230,14 +222,14 @@ public class StreamEditorPane extends JEditorPane implements MouseListener, Acti
             // selected a filename to save to.
             // Set the current file name to the user's selection,
             // then do a regular saveFile
-            if (m_fileChooser.getSelectedFile().exists()) {
+            if (fileChooser.getSelectedFile().exists()) {
                 int result = JOptionPane.showConfirmDialog(this.getRootPane(),
                         "File Exists. Do you want to over write ? ", "Warning", JOptionPane.YES_NO_CANCEL_OPTION,
                         JOptionPane.WARNING_MESSAGE);
 
                 if (result == JOptionPane.YES_OPTION) {
-                    setFileName(m_fileChooser.getSelectedFile().getPath());
-                    setCurrentDirectory(m_fileChooser.getCurrentDirectory().toString());
+                    setFileName(fileChooser.getSelectedFile().getPath());
+                    setCurrentDirectory(fileChooser.getCurrentDirectory().toString());
 
                     retSaveAs = saveFileWriter(getFileName());
                 } else if (result == JOptionPane.NO_OPTION) {
@@ -250,8 +242,8 @@ public class StreamEditorPane extends JEditorPane implements MouseListener, Acti
                     retSaveAs = false;
                 }
             } else {
-                setFileName(m_fileChooser.getSelectedFile().getPath());
-                setCurrentDirectory(m_fileChooser.getCurrentDirectory().toString());
+                setFileName(fileChooser.getSelectedFile().getPath());
+                setCurrentDirectory(fileChooser.getCurrentDirectory().toString());
 
                 retSaveAs = saveFileWriter(getFileName());
             }
@@ -273,15 +265,15 @@ public class StreamEditorPane extends JEditorPane implements MouseListener, Acti
         // Make the dialog visible as a modal (default) dialog box.
         ExampleFileFilter filter = new ExampleFileFilter(new String[]{"*"}, "All Files");
 
-        m_fileChooser.addChoosableFileFilter(filter);
+        fileChooser.addChoosableFileFilter(filter);
 
         if (null != getDirName()) {
-            m_fileChooser.setSelectedFile(new File(getDirName() + "//" + getFileName()));
+            fileChooser.setSelectedFile(new File(getDirName() + "//" + getFileName()));
         } else {
-            m_fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
+            fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
         }
 
-        int returnVal = m_fileChooser.showOpenDialog(this.getRootPane());
+        int returnVal = fileChooser.showOpenDialog(this.getRootPane());
 
         // Upon return, getFile() will be null if user cancelled the dialog.
         if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -289,9 +281,9 @@ public class StreamEditorPane extends JEditorPane implements MouseListener, Acti
             // selected a filename to save to.
             // Set the current file name to the user's selection,
             // then do a regular saveFile
-            if (m_fileChooser.getSelectedFile().exists()) {
-                setFileName(m_fileChooser.getSelectedFile().getPath());
-                setCurrentDirectory(m_fileChooser.getCurrentDirectory().toString());
+            if (fileChooser.getSelectedFile().exists()) {
+                setFileName(fileChooser.getSelectedFile().getPath());
+                setCurrentDirectory(fileChooser.getCurrentDirectory().toString());
 
                 retOpenFile = openFileReader(getFileName());
             }
@@ -306,7 +298,7 @@ public class StreamEditorPane extends JEditorPane implements MouseListener, Acti
      * @return String
      */
     private String getDirName() {
-        return m_currDir;
+        return currDir;
     }
 
     /**
@@ -315,7 +307,7 @@ public class StreamEditorPane extends JEditorPane implements MouseListener, Acti
      * @param dir String
      */
     private void setCurrentDirectory(String dir) {
-        m_currDir = dir;
+        currDir = dir;
     }
 
     /**
@@ -324,7 +316,7 @@ public class StreamEditorPane extends JEditorPane implements MouseListener, Acti
      * @return String
      */
     public String getFileName() {
-        return m_currFileName;
+        return currFileName;
     }
 
     /**
@@ -333,7 +325,7 @@ public class StreamEditorPane extends JEditorPane implements MouseListener, Acti
      * @param currFileName String
      */
     public void setFileName(String currFileName) {
-        m_currFileName = currFileName;
+        this.currFileName = currFileName;
     }
 
     /**
@@ -424,9 +416,9 @@ public class StreamEditorPane extends JEditorPane implements MouseListener, Acti
                 this.setSelectionEnd(currstartPosition + findTextUpper.length());
                 this.setSelectionColor(Color.red);
 
-                m_startPosition = currstartPosition + findTextUpper.length() + 1;
+                this.startPosition = currstartPosition + findTextUpper.length() + 1;
             } else {
-                m_startPosition = 0;
+                this.startPosition = 0;
             }
         } catch (BadLocationException e) {
             e.printStackTrace();
@@ -680,7 +672,7 @@ public class StreamEditorPane extends JEditorPane implements MouseListener, Acti
 
         try {
             String text = getDocument().getText(0, getDocument().getLength());
-            int startPosition = text.toUpperCase().indexOf(textToReplace, m_startPosition);
+            int startPosition = text.toUpperCase().indexOf(textToReplace, this.startPosition);
 
             while (startPosition != -1) {
                 this.setSelectionStart(startPosition);
@@ -693,16 +685,16 @@ public class StreamEditorPane extends JEditorPane implements MouseListener, Acti
                 if (option == JOptionPane.YES_OPTION) {
                     this.replaceSelection(replaceText);
 
-                    m_startPosition = startPosition + replaceText.length() + 1;
+                    this.startPosition = startPosition + replaceText.length() + 1;
                 } else {
-                    m_startPosition = startPosition + textToReplace.length() + 1;
+                    this.startPosition = startPosition + textToReplace.length() + 1;
                 }
 
                 text = getDocument().getText(0, getDocument().getLength());
-                startPosition = text.toUpperCase().indexOf(textToReplace, m_startPosition);
+                startPosition = text.toUpperCase().indexOf(textToReplace, this.startPosition);
             }
 
-            m_startPosition = 0;
+            this.startPosition = 0;
         } catch (BadLocationException ex) {
             _log.error("Error replacing text:", ex);
         }
@@ -718,16 +710,16 @@ public class StreamEditorPane extends JEditorPane implements MouseListener, Acti
 
             try {
                 String text = getDocument().getText(0, getDocument().getLength());
-                int startPosition = text.toUpperCase().indexOf(findText, m_startPosition);
+                int startPosition = text.toUpperCase().indexOf(findText, this.startPosition);
 
                 if (startPosition != -1) {
                     this.setSelectionStart(startPosition);
                     this.setSelectionEnd(startPosition + findText.length());
                     this.setSelectionColor(Color.red);
 
-                    m_startPosition = startPosition + findText.length() + 1;
+                    this.startPosition = startPosition + findText.length() + 1;
                 } else {
-                    m_startPosition = 0;
+                    this.startPosition = 0;
                 }
             } catch (BadLocationException ex) {
                 _log.error("Error finding text:", ex);

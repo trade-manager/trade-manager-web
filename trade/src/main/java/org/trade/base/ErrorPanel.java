@@ -61,112 +61,61 @@ public class ErrorPanel extends BasePanel {
     private static final long serialVersionUID = -2624890325384057649L;
 
     JPanel jPanel1 = new JPanel();
-
     JPanel jPanel4 = new JPanel();
-
     JPanel jPanel2 = new JPanel();
-
     JPanel jPanel3 = new JPanel();
-
     BorderLayout borderLayout1 = new BorderLayout();
-
     JPanel jPanel5 = new JPanel();
-
     JPanel jPanel13 = new JPanel();
-
     BorderLayout borderLayout2 = new BorderLayout();
-
     BorderLayout borderLayout3 = new BorderLayout();
-
     BorderLayout borderLayout5 = new BorderLayout();
-
     GridLayout gridLayout1 = new GridLayout();
-
     BorderLayout borderLayout6 = new BorderLayout();
-
     JTextField statusBar = new JTextField();
-
     GridLayout gridLayout2 = new GridLayout();
-
     JPanel jPanel15 = new JPanel();
-
     JScrollPane jScrollPane1 = new JScrollPane();
-
     BorderLayout borderLayout7 = new BorderLayout();
-
     StreamEditorPane jTextArea1 = new StreamEditorPane();
-
     JPanel jPanel16 = new JPanel();
-
     JPanel jPanel17 = new JPanel();
-
     JPanel jPanel10 = new JPanel();
-
     FlowLayout flowLayout5 = new FlowLayout();
-
     JPanel jPanel7 = new JPanel();
-
     GridLayout gridLayout5 = new GridLayout();
-
     GridLayout gridLayout6 = new GridLayout();
-
     FlowLayout flowLayout4 = new FlowLayout();
-
     JPanel jPanel8 = new JPanel();
-
     JPanel jPanel9 = new JPanel();
-
     GridLayout gridLayout7 = new GridLayout();
-
     BorderLayout borderLayout8 = new BorderLayout();
-
     BorderLayout borderLayout9 = new BorderLayout();
-
     JPanel jPanel18 = new JPanel();
-
     JPanel jPanel = new JPanel();
-
     FlowLayout flowLayout1 = new FlowLayout();
-
     GridLayout gridLayout8 = new GridLayout();
-
     GridLayout gridLayout9 = new GridLayout();
-
     BaseButton jButtonPrint = new BaseButton(this, BaseUIPropertyCodes.PRINT);
-
     BaseButton jButtonClose = new BaseButton(this, BaseUIPropertyCodes.CLOSE);
-
     BaseButton jButtonNew = new BaseButton(this, BaseUIPropertyCodes.NEW);
-
     BaseButton jButtonSave = new BaseButton(this, BaseUIPropertyCodes.SAVE);
-
     BaseButton jButtonOpen = new BaseButton(this, BaseUIPropertyCodes.OPEN_FILE);
-
     BaseButton jButtonSaveAs = new BaseButton(this, BaseUIPropertyCodes.SAVE_AS);
-
     BaseButton jButtonHelp = new BaseButton(this, BaseUIPropertyCodes.HELP);
-
     BaseButton jButtonCut = new BaseButton(this, BaseUIPropertyCodes.CUT);
-
     BaseButton jButtonCopy = new BaseButton(this, BaseUIPropertyCodes.COPY);
-
     BaseButton jButtonPaste = new BaseButton(this, BaseUIPropertyCodes.PASTE);
-
     public ImageIcon jpgIcon;
-
     public ImageIcon gifIcon;
-
     JColorChooser colorChooser1 = new JColorChooser();
-
     JFileChooser filer1 = null;
-
     JFrame mainFrame = null;
-
     String currFileName = null; // path plus filename. null means new / untitled
-
     boolean dirty = false; // true means modified text
 
     public ErrorPanel() {
+
         try {
             jbInit();
         } catch (Exception ex) {
@@ -178,6 +127,7 @@ public class ErrorPanel extends BasePanel {
      * Method jbInit.
      */
     void jbInit() {
+
         this.setLayout(borderLayout1);
         jPanel1.setLayout(borderLayout6);
         jPanel4.setLayout(gridLayout1);
@@ -242,6 +192,7 @@ public class ErrorPanel extends BasePanel {
      * doNew() -
      */
     public void doNew() {
+
         // Handle the File|New menu item.
         if (okToAbandon()) {
             // clear the text of the TextArea
@@ -577,11 +528,11 @@ public class ErrorPanel extends BasePanel {
     /**
      * doWindowOpen() -
      *
-     * @param parm Object
+     * @param params Object
      */
-    public void doWindowOpen(Object parm) {
-        if (parm instanceof String) {
-            jTextArea1.setText((String) parm);
+    public void doWindowOpen(Object params) {
+        if (params instanceof String) {
+            jTextArea1.setText((String) params);
         }
     }
 

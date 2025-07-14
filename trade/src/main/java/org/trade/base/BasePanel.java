@@ -64,10 +64,10 @@ public abstract class BasePanel extends JPanel implements IMessageListener {
     public static final int PROGRESS = 4;
     private static final int CLEAR = 0;
     private static BasePanelMenu menuBar = null;
-    private static Frame m_frame = null;
-    private static JTextField m_statusBar = null;
-    private static JProgressBar m_progressBar = null;
-    private boolean m_isSelected = false;
+    private static Frame frame = null;
+    private static JTextField statusBar = null;
+    private static JProgressBar progressBar = null;
+    private boolean isSelected = false;
 
     public BasePanel() {
 
@@ -82,7 +82,7 @@ public abstract class BasePanel extends JPanel implements IMessageListener {
      */
     public void setSelected(boolean selected) {
 
-        m_isSelected = selected;
+        isSelected = selected;
     }
 
     /**
@@ -92,7 +92,7 @@ public abstract class BasePanel extends JPanel implements IMessageListener {
      */
     public boolean isSelected() {
 
-        return m_isSelected;
+        return isSelected;
     }
 
     /**
@@ -102,9 +102,9 @@ public abstract class BasePanel extends JPanel implements IMessageListener {
      */
     public void setStatusBar(JTextField statusBar) {
 
-        if (m_statusBar == null) {
+        if (BasePanel.statusBar == null) {
 
-            m_statusBar = statusBar;
+            BasePanel.statusBar = statusBar;
         }
     }
 
@@ -115,9 +115,9 @@ public abstract class BasePanel extends JPanel implements IMessageListener {
      */
     public void setProgressBar(JProgressBar progressBar) {
 
-        if (m_progressBar == null) {
+        if (BasePanel.progressBar == null) {
 
-            m_progressBar = progressBar;
+            BasePanel.progressBar = progressBar;
         }
     }
 
@@ -128,7 +128,7 @@ public abstract class BasePanel extends JPanel implements IMessageListener {
      */
     public static JProgressBar getProgressBar() {
 
-        return m_progressBar;
+        return progressBar;
     }
 
     public void clearStatusBarMessage() {
@@ -147,42 +147,42 @@ public abstract class BasePanel extends JPanel implements IMessageListener {
         switch (state) {
             case 0: {
 
-                m_statusBar.setBackground(Color.white);
-                m_statusBar.setText("");
+                statusBar.setBackground(Color.white);
+                statusBar.setText("");
                 break;
             }
             case 1: {
 
                 _log.info(message);
-                m_statusBar.setBackground(Color.green);
+                statusBar.setBackground(Color.green);
                 break;
             }
             case 2: {
 
                 _log.warn(message);
-                m_statusBar.setBackground(Color.yellow);
+                statusBar.setBackground(Color.yellow);
                 break;
             }
             case 3: {
 
                 _log.error(message);
-                m_statusBar.setBackground(Color.red);
+                statusBar.setBackground(Color.red);
                 break;
             }
             case 4: {
 
-                m_statusBar.setBackground(Color.yellow);
+                statusBar.setBackground(Color.yellow);
                 break;
             }
             default: {
 
-                m_statusBar.setBackground(Color.white);
+                statusBar.setBackground(Color.white);
             }
         }
 
         if ((message != null) && (state != BasePanel.CLEAR)) {
 
-            m_statusBar.setText(message);
+            statusBar.setText(message);
         }
     }
 
@@ -193,33 +193,34 @@ public abstract class BasePanel extends JPanel implements IMessageListener {
      */
     protected Frame getFrame() {
 
-        if (m_frame == null) {
+        if (frame == null) {
 
             Component parent = this;
+
             while ((parent != null) && !(parent instanceof JFrame)) {
 
                 parent = parent.getParent();
             }
-            m_frame = (Frame) parent;
+            frame = (Frame) parent;
         }
-        return m_frame;
+        return frame;
     }
 
     /**
      * Method handleEvent.
      *
      * @param e    MessageEvent
-     * @param parm List<Object>
+     * @param params List<Object>
      * @see IMessageListener#handleEvent(MessageEvent, List
      * <Object>)
      */
-    public void handleEvent(MessageEvent e, List<Object> parm) {
+    public void handleEvent(MessageEvent e, List<Object> params) {
 
-        if ((e.getSource() instanceof String method) && m_isSelected) {
+        if ((e.getSource() instanceof String method) && isSelected) {
 
             // _log.info("Fire Method: " + method + " in Class: "
             // + this.getClass().getName());
-            doFireMethod(method, parm);
+            doFireMethod(method, params);
         }
     }
 
@@ -240,26 +241,25 @@ public abstract class BasePanel extends JPanel implements IMessageListener {
      * Method doFireMethod.
      *
      * @param methodName String
-     * @param parm       List<Object>
+     * @param params       List<Object>
      */
-    protected synchronized void doFireMethod(String methodName, List<Object> parm) {
+    protected synchronized void doFireMethod(String methodName, List<Object> params) {
 
-        int ListSize;
-        ListSize = parm.size();
-        Class<?>[] parms = new Class[ListSize];
-        Object[] objects = new Object[ListSize];
+        int listSize = params.size();
+        Class<?>[] classParams = new Class[listSize];
+        Object[] objects = new Object[listSize];
         StringBuilder classes = new StringBuilder();
 
-        for (Object object : parm) {
+        for (Object object : params) {
 
             classes.append(object.getClass().getName()).append("\n");
-            parms[parm.indexOf(object)] = object.getClass();
-            objects[parm.indexOf(object)] = object;
+            classParams[params.indexOf(object)] = object.getClass();
+            objects[params.indexOf(object)] = object;
         }
 
         try {
 
-            Method method = Reflector.findMethod(this.getClass(), methodName, parms);
+            Method method = Reflector.findMethod(this.getClass(), methodName, classParams);
 
             if (null != method) {
 
@@ -268,7 +268,7 @@ public abstract class BasePanel extends JPanel implements IMessageListener {
         } catch (Exception e) {
 
             // Do nothing this panel is not actively listening for this event
-            _log.error("Exception in reflection BasePanel method: {} Parms #: {} Method {} Parms class: {} not found in class: {} Error Msg: {}", methodName, ListSize, methodName, classes, this.getClass().getName(), e.getMessage());
+            _log.error("Exception in reflection BasePanel method: {} Params #: {} Method {} Params class: {} not found in class: {} Error Msg: {}", methodName, listSize, methodName, classes, this.getClass().getName(), e.getMessage());
             setStatusBarMessage(e.getMessage(), ERROR);
         }
     }

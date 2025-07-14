@@ -53,9 +53,8 @@ public class BaseComboBox extends JComboBox<Decode> {
     @Serial
     private static final long serialVersionUID = -6866452735597474525L;
 
-    private String m_method = null;
-
-    protected MessageNotifier m_notifier = new MessageNotifier();
+    private String method = null;
+    protected MessageNotifier notifier = new MessageNotifier();
 
     /**
      * CustomButton() - constructor
@@ -107,7 +106,7 @@ public class BaseComboBox extends JComboBox<Decode> {
      * @param listener IMessageListener
      */
     public void addMessageListener(IMessageListener listener) {
-        m_notifier.add(listener);
+        notifier.add(listener);
     }
 
     /**
@@ -116,7 +115,7 @@ public class BaseComboBox extends JComboBox<Decode> {
      * @param listener IMessageListener
      */
     public void removeMessageListener(IMessageListener listener) {
-        m_notifier.remove(listener);
+        notifier.remove(listener);
     }
 
     /**
@@ -125,7 +124,7 @@ public class BaseComboBox extends JComboBox<Decode> {
      * @param selection String
      */
     protected void messageEvent(String selection) {
-        m_notifier.notifyEvent(new MessageEvent(selection), new ArrayList<>());
+        notifier.notifyEvent(new MessageEvent(selection), new ArrayList<>());
     }
 
     /**
@@ -143,7 +142,7 @@ public class BaseComboBox extends JComboBox<Decode> {
      * @param method String
      */
     private void setMethod(String method) {
-        m_method = method;
+        this.method = method;
     }
 
     /**
@@ -152,6 +151,6 @@ public class BaseComboBox extends JComboBox<Decode> {
      * @return String
      */
     private String getMethod() {
-        return m_method;
+        return method;
     }
 }

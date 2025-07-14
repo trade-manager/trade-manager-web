@@ -115,6 +115,7 @@ public class Table extends JTable implements MouseListener, ActionListener {
         int columns = this.getTableHeader().getColumnModel().getColumnCount();
 
         for (int i = 0; i < columns; i++) {
+
             TableColumn thc = this.getTableHeader().getColumnModel().getColumn(i);
             thc.setMinWidth((thc.getHeaderValue().toString().length() * 6) + 10);
         }

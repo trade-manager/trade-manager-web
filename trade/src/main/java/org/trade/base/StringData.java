@@ -57,18 +57,15 @@ public class StringData implements Transferable, ClipboardOwner, Serializable {
     private static final long serialVersionUID = 553277135583406304L;
 
     private static final int STRING = 0;
-
     private static final int PLAIN_TEXT = 1;
-
     public static final DataFlavor TREEPATH_FLAVOR = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType, "TreePath");
 
     private static final DataFlavor[] flavors = {DataFlavor.stringFlavor, DataFlavor.getTextPlainUnicodeFlavor(),
             TREEPATH_FLAVOR // deprecated
     };
 
-    private final String m_data;
-
-    private TreePath m_path = null;
+    private final String data;
+    private TreePath path = null;
 
     /**
      * Creates a Transferable capable of transferring the specified String.
@@ -76,7 +73,7 @@ public class StringData implements Transferable, ClipboardOwner, Serializable {
      * @param data String
      */
     public StringData(String data) {
-        m_data = data;
+        this.data = data;
     }
 
     /**
@@ -85,7 +82,7 @@ public class StringData implements Transferable, ClipboardOwner, Serializable {
      * @param path TreePath
      */
     public void setPath(TreePath path) {
-        m_path = path;
+        this.path = path;
     }
 
     /**
@@ -143,12 +140,12 @@ public class StringData implements Transferable, ClipboardOwner, Serializable {
      */
     public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException {
         if (flavor.equals(flavors[STRING])) {
-            return new StringData(m_data);
+            return new StringData(data);
         } else if (flavor.equals(flavors[PLAIN_TEXT])) {
-            return new StringReader(m_data);
+            return new StringReader(data);
         } else if (flavor.isMimeTypeEqual(TREEPATH_FLAVOR.getMimeType())) // DataFlavor.javaJVMLocalObjectMimeType))
         {
-            return m_path;
+            return path;
         } else {
             throw new UnsupportedFlavorException(flavor);
         }
@@ -171,6 +168,6 @@ public class StringData implements Transferable, ClipboardOwner, Serializable {
      * @return String
      */
     public String toString() {
-        return m_data;
+        return data;
     }
 }

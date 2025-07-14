@@ -56,39 +56,39 @@ class Enumerator implements Iterator<Object> {
     /**
      * Constructor for Enumerator.
      *
-     * @param enumeration Iterator<?>
+     * @param iterator Iterator<?>
      */
-    Enumerator(Iterator<?> enumeration) {
-        mine = enumeration;
+    Enumerator(Iterator<?> iterator) {
+        mine = iterator;
     }
 
     /**
      * Method appendEnumeration.
      *
-     * @param enumeration Iterator<?>
+     * @param iterator Iterator<?>
      */
-    void appendEnumeration(Iterator<?> enumeration) {
+    void appendEnumeration(Iterator<?> iterator) {
 
         if (next == null) {
 
-            next = new Enumerator(enumeration);
+            next = new Enumerator(iterator);
         } else {
-            next.appendEnumeration(enumeration);
+            next.appendEnumeration(iterator);
         }
     }
 
     /**
      * Method prependEnumeration.
      *
-     * @param enumeration Enumeration<?>
+     * @param iterator Iterator<?>
      */
-    void prependEnumeration(Iterator<?> enumeration) {
+    void prependEnumeration(Iterator<?> iterator) {
 
         Enumerator e = new Enumerator();
         e.mine = mine;
         e.next = next;
         next = e;
-        mine = enumeration;
+        mine = iterator;
     }
 
     /**

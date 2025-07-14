@@ -237,11 +237,11 @@ public abstract class TabbedAppPanel extends BasePanel implements ChangeListener
      *
      * @param tabIndex int
      * @param event    MessageEvent
-     * @param parm     List<Object>
+     * @param params     List<Object>
      */
-    public void setSelectPanel(int tabIndex, MessageEvent event, List<Object> parm) {
+    public void setSelectPanel(int tabIndex, MessageEvent event, List<Object> params) {
         setSelectPanel(tabIndex);
-        this.currBasePanel.handleEvent(event, parm);
+        this.currBasePanel.handleEvent(event, params);
     }
 
     /**

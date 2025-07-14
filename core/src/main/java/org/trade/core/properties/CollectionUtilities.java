@@ -53,6 +53,7 @@ import java.util.Properties;
  * @author : Simon Allen
  */
 public class CollectionUtilities {
+
     private CollectionUtilities() {
     }
 
@@ -63,52 +64,26 @@ public class CollectionUtilities {
      * @return Properties
      */
     public static Properties read(String filepath) throws FileNotFoundException {
+
         Properties rval;
-        BufferedInputStream bis = null;
 
-        try {
-            File file = new File(filepath);
+        try (BufferedInputStream bis = new BufferedInputStream(new FileInputStream(filepath))) {
 
-            bis = new BufferedInputStream(new FileInputStream(file));
             rval = new Properties();
-
             rval.load(bis);
-
             return rval;
-        } catch (IOException _) {
-        } finally {
-            if (bis != null) {
-                try {
-                    bis.close();
-                } catch (IOException _) {
-                }
+        } catch (IOException ex) {
 
-                bis = null;
+            // try relative to java.home
+            try (BufferedInputStream bis = new BufferedInputStream(new FileInputStream(System.getProperty("java.home") + File.separator + filepath))) {
+
+                rval = new Properties();
+                rval.load(bis);
+                return rval;
+            } catch (IOException ex1) {
+                throw new FileNotFoundException("Property file " + filepath + " not found msg: " + ex1.getMessage());
             }
         }
-
-        // try relative to java.home
-        try {
-            File file = new File(System.getProperty("java.home") + File.separator + filepath);
-
-            bis = new BufferedInputStream(new FileInputStream(file));
-            rval = new Properties();
-
-            rval.load(bis);
-
-            return rval;
-        } catch (IOException _) {
-        } finally {
-            if (bis != null) {
-                try {
-                    bis.close();
-                } catch (IOException _) {
-                }
-
-            }
-        }
-
-        throw new FileNotFoundException("Property file " + filepath + " not found");
     }
 
     /**
@@ -118,10 +93,8 @@ public class CollectionUtilities {
      * @param theProperties Properties
      */
     public static void write(String filepath, Properties theProperties) throws IOException { // put
-        // filepath
-        // as
-        // a
-        // comment
+
+        // filepat has a comment
         write(filepath, theProperties, filepath);
     }
 
@@ -133,19 +106,10 @@ public class CollectionUtilities {
      * @param propComments  String
      */
     public static void write(String filepath, Properties theProperties, String propComments) throws IOException {
-        BufferedOutputStream bos = null;
 
-        try {
-            File file = new File(filepath);
-
-            bos = new BufferedOutputStream(new FileOutputStream(file));
+        try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(filepath))) {
 
             theProperties.store(bos, propComments);
-        } finally {
-            if (bos != null) {
-                bos.close();
-
-            }
         }
     }
 
@@ -156,15 +120,20 @@ public class CollectionUtilities {
      * @param p      Properties
      */
     public static void checkProperties(String[] myKeys, Properties p) throws MissingPropertiesException {
+
         if ((myKeys == null) || (p == null)) {
+
             return;
         }
 
         MissingPropertiesException mpe = null;
 
         for (String myKey : myKeys) {
+
             if (!p.containsKey(myKey)) {
+
                 if (mpe == null) {
+
                     mpe = new MissingPropertiesException();
                 }
 
@@ -175,7 +144,6 @@ public class CollectionUtilities {
         if (mpe != null) {
             throw mpe;
         }
-
     }
 
     /**
@@ -200,9 +168,11 @@ public class CollectionUtilities {
         Iterator<String> enumKey = superset.keys().asIterator();
 
         while (enumKey.hasNext()) {
+
             key = enumKey.next();
 
             if (key.startsWith(tag)) {
+
                 result.put(key, superset.get(key));
             }
         }
@@ -221,7 +191,9 @@ public class CollectionUtilities {
      * @param destination Dictionary<Object,Object>
      */
     public static void copyOverwrite(Dictionary<Object, Object> source, Dictionary<Object, Object> destination) {
+
         if ((destination == null) || (source == null)) {
+
             throw new IllegalArgumentException(
                     "Invalid arguments specified : source = " + source + " destination = " + destination);
         }
@@ -230,8 +202,8 @@ public class CollectionUtilities {
         Iterator<Object> enumKey = source.keys().asIterator();
 
         while (enumKey.hasNext()) {
-            key = enumKey.next();
 
+            key = enumKey.next();
             destination.put(key, source.get(key));
         }
     }
@@ -251,9 +223,9 @@ public class CollectionUtilities {
         StringBuilder result = new StringBuilder();
 
         while (keys.hasNext()) {
+
             key = keys.next();
             value = dict.get(key);
-
             result.append(key.toString());
             result.append(" = ");
             result.append(value.toString());
@@ -264,29 +236,19 @@ public class CollectionUtilities {
     }
 
     /**
-     * Method main.
-     *
-     * @param args String[]
-     */
-    public static void main(String[] args) {
-        try {
-            Properties p = CollectionUtilities.read(args[0]);
-
-            System.out.println(p);
-        } catch (Exception _) {
-        }
-    }
-
-    /**
      * Method n2sort.
      *
      * @param index String[]
      * @param asc   boolean
      */
     public static void n2sort(String[] index, boolean asc) {
+
         for (int i = 0; i < index.length; i++) {
+
             for (int j = i + 1; j < index.length; j++) {
+
                 if (compare(index[i], index[j], asc) == -1) {
+
                     swap(i, j, index);
                 }
             }
@@ -301,8 +263,8 @@ public class CollectionUtilities {
      * @param index String[]
      */
     private static void swap(int i, int j, String[] index) {
-        String tmp = index[i];
 
+        String tmp = index[i];
         index[i] = index[j];
         index[j] = tmp;
     }
@@ -316,15 +278,18 @@ public class CollectionUtilities {
      * @return int
      */
     private static int compare(String row1, String row2, boolean asc) {
+
         int result = row1.compareTo(row2);
         int returnVal;
 
         if (result < 0) {
+
             returnVal = -1;
         } else if (result != 0) // result > 0
         {
             returnVal = 1;
         } else {
+
             returnVal = 0;
         }
 

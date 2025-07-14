@@ -47,11 +47,8 @@ import java.util.Iterator;
 public class ExampleFileFilter extends FileFilter {
 
     private Hashtable<String, ExampleFileFilter> filters;
-
     private String description = null;
-
     private String fullDescription = null;
-
     private boolean useExtensionsInDescription = true;
 
     /**
