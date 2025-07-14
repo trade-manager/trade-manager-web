@@ -76,7 +76,7 @@ public class TradelogSummaryTableModel extends TableModel {
             "Simple sharpe ratio (sum $wins/#wins)/(sum $loss/#loss)", null, null, null, null, null, null, null, null,
             null, null};
 
-    private TradelogReport m_data = null;
+    private TradelogReport data = null;
 
     /**
      * OrderModel() -
@@ -118,7 +118,7 @@ public class TradelogSummaryTableModel extends TableModel {
      * @return TradelogReport
      */
     public TradelogReport getData() {
-        return m_data;
+        return data;
     }
 
     /**
@@ -129,7 +129,7 @@ public class TradelogSummaryTableModel extends TableModel {
 
     public void setData(TradelogReport data) {
 
-        this.m_data = data;
+        this.data = data;
         this.clearAll();
 
         if (!getData().getTradelogSummary().isEmpty()) {

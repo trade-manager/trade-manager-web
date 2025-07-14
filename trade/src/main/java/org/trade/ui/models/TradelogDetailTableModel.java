@@ -83,7 +83,7 @@ public class TradelogDetailTableModel extends TableModel {
     public static final String COMMISION = "Comms";
     public static final String PROFIT_LOSS = "Net P/L Amt";
 
-    private TradelogReport m_data = null;
+    private TradelogReport data = null;
 
     /**
      * OrderModel() -
@@ -128,7 +128,7 @@ public class TradelogDetailTableModel extends TableModel {
      * @return TradelogReport
      */
     public TradelogReport getData() {
-        return m_data;
+        return data;
     }
 
     /**
@@ -138,7 +138,7 @@ public class TradelogDetailTableModel extends TableModel {
      */
     public void setData(TradelogReport data) {
 
-        this.m_data = data;
+        this.data = data;
         this.clearAll();
 
         if (!getData().getTradelogDetail().isEmpty()) {

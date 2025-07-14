@@ -86,7 +86,7 @@ public class TradeOrderTableModel extends TableModel {
     private static final String[] columnHeaderToolTip = {null, "System generated key", "Buy/Sell/Short", null, null,
             null, "Stop/Mkt price", "Transmit to mkt in TWS", null,
             "One Cancels Another(OCA) id must be unique for day", null, null, null, null, "FA account assignment"};
-    private Tradestrategy m_data = null;
+    private Tradestrategy data = null;
 
     public TradeOrderTableModel() {
         super(columnHeaderToolTip);
@@ -213,7 +213,7 @@ public class TradeOrderTableModel extends TableModel {
      * @return Tradestrategy
      */
     public Tradestrategy getData() {
-        return m_data;
+        return data;
     }
 
     /**
@@ -223,7 +223,7 @@ public class TradeOrderTableModel extends TableModel {
      */
     public void setData(Tradestrategy data) {
 
-        this.m_data = data;
+        this.data = data;
         this.clearAll();
 
         if (!getData().getTradeOrders().isEmpty()) {
