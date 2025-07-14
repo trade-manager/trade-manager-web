@@ -87,9 +87,10 @@ import java.io.OutputStream;
 import java.io.Serial;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
-import java.util.Vector;
 
 /**
  *
@@ -100,7 +101,6 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
     private static final long serialVersionUID = 4053737356695023777L;
 
     private static final String TEMP_DIR = "temp";
-
     private final TradeService tradeService;
     private Tree tree = null;
     private JEditorPane sourceText = null;
@@ -114,6 +114,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
     private List<Strategy> strategies = null;
     private Rule currentRule = null;
     private SimpleAttributeSet colorRedAttr = null;
+    private static final HashMap<String, String> filesMap = new HashMap<>();
 
     /**
      * Constructor for StrategyPanel.
@@ -130,6 +131,10 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
 
                 getMenu().addMessageListener(this);
             }
+            filesMap.put("java", "text/java");
+            filesMap.put("js", "text/javascript");
+            filesMap.put("txt", "text/rtf");
+            String[] files = filesMap.keySet().toArray(new String[0]);
 
             this.setLayout(new BorderLayout());
             colorRedAttr = new SimpleAttributeSet();
@@ -257,7 +262,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
                     }
                 }
                 compileButton.setTransferObject(rule);
-                setContent(null);
+                setContent(null, (null == currentRule ? null : currentRule.getContentType()));
                 messageText.setText(null);
 
                 try {
@@ -276,7 +281,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
                             + " Please compile and save the strategy.", BasePanel.INFORMATION);
 
                 }
-                setContent(new String(rule.getRule()));
+                setContent(new String(rule.getRule()), rule.getContentType());
                 commentText.setText(rule.getComment());
                 commentText.setCaretPosition(0);
                 messageText.setCaretPosition(0);
@@ -308,11 +313,13 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
         try {
 
             setMessageText(null, false, false, null);
+            //  String fileName = TEMP_DIR + "/" + IStrategyRule.PACKAGE.replace('.', '/');
             String fileName = TEMP_DIR + "/" + IStrategyRule.PACKAGE.replace('.', '/');
+
             fileName = fileName + rule.getStrategy().getClassName() + ".java";
             doSaveFile(fileName, this.getContent());
 
-            Vector<Object> param = new Vector<>(0);
+            List<Object> param = new ArrayList<>(0);
             param.add(this.tradeService);
             IBrokerModel brokerManagerModel = (IBrokerModel) ClassFactory.getServiceForInterface(IBrokerModel._brokerTest,
                     param, this);
@@ -323,9 +330,10 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
             candleDataset.addSeries(candleSeries);
             StrategyData strategyData = new StrategyData(rule.getStrategy(), candleDataset);
             param.clear();
+            param.add(this.tradeService);
             param.add(brokerManagerModel);
             param.add(strategyData);
-            param.add(0);
+            param.add(Long.valueOf(0));
             DynamicCode dynacode = new DynamicCode();
             dynacode.addSourceDir(new File(TEMP_DIR));
             dynacode.newProxyInstance(IStrategyRule.class, IStrategyRule.PACKAGE + rule.getStrategy().getClassName(),
@@ -333,6 +341,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
 
             this.setStatusBarMessage("File compiled.", BasePanel.INFORMATION);
         } catch (Exception ex) {
+
             setMessageText("Error compiling strategy: " + rule.getStrategy().getName() + ex.getMessage(), false, true,
                     colorRedAttr);
         }
@@ -364,7 +373,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
 
                 DefaultMutableTreeNode node = (DefaultMutableTreeNode) Objects.requireNonNull(tree.getSelectionPath())
                         .getLastPathComponent();
-                setContent(readFile(fileName));
+                setContent(readFile(fileName), filesMap.get(getExtension(fileName)));
                 commentText.setText(null);
 
                 if (node.getUserObject() instanceof Strategy) {
@@ -414,8 +423,15 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
 
             if (result == JOptionPane.YES_OPTION) {
 
-                Integer version = this.tradeService.findRuleByMaxVersion(this.currentRule.getStrategy());
-                Rule nextRule = new Rule(this.currentRule.getStrategy(), (version + 1), commentText.getText(), getContent().getBytes());
+                Rule latestRule = this.tradeService.findRuleByMaxVersion(this.currentRule.getStrategy());
+                Integer version = 0;
+
+                if (null != latestRule) {
+
+                    version = latestRule.getVersion();
+                }
+
+                Rule nextRule = new Rule(this.currentRule.getStrategy(), version, commentText.getText(), getContent().getBytes(), latestRule.getContentType());
                 this.currentRule.getStrategy().add(nextRule);
                 this.tradeService.saveAspect(nextRule);
                 doSaveFile(fileNameSource, getContent());
@@ -429,7 +445,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
                 this.currentRule.setComment(orginalRule.getComment());
                 this.currentRule.setRule(orginalRule.getRule());
 
-                this.setContent(new String(this.currentRule.getRule()));
+                this.setContent(new String(this.currentRule.getRule()), this.currentRule.getContentType());
                 commentText.setText(this.currentRule.getComment());
             } else {
 
@@ -453,14 +469,16 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
     }
 
     public void doNew(final Strategy strategy) {
+
         try {
 
             String templateName = ConfigProperties.getPropAsString("trade.strategy.template");
             String fileName = strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/') + templateName + ".java";
 
             commentText.setText(null);
-            setContent(readFile(fileName));
-            setContent((getContent().replaceAll(templateName, strategy.getClassName())));
+            String contentType = filesMap.get(getExtension(fileName));
+            setContent(readFile(fileName), contentType);
+            setContent((getContent().replaceAll(templateName, strategy.getClassName())), contentType);
             createRule(strategy);
 
         } catch (Exception ex) {
@@ -469,22 +487,36 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
     }
 
     public void doDelete() {
+
         try {
+
             if (this.currentRule == null) {
+
                 this.setStatusBarMessage("Please select a rule to be deleted.", BasePanel.INFORMATION);
                 return;
             }
 
             int result = JOptionPane.showConfirmDialog(this.getFrame(), "Do you want to delete selected rule?",
                     "Information", JOptionPane.YES_NO_OPTION);
+
             if (result == JOptionPane.YES_OPTION) {
+
                 for (Strategy strategy : this.strategies) {
+
                     if (strategy.getId().equals(this.currentRule.getStrategy().getId())) {
+
                         strategy.getRules().remove(this.currentRule);
                         this.tradeService.deleteAspect(this.currentRule);
                     }
                 }
-                Integer version = this.tradeService.findRuleByMaxVersion(this.currentRule.getStrategy());
+
+                Rule latestRule = this.tradeService.findRuleByMaxVersion(this.currentRule.getStrategy());
+                Integer version = 0;
+
+                if (null != latestRule) {
+
+                    version = latestRule.getVersion();
+                }
 
                 if (Objects.equals(version, this.currentRule.getVersion()) && version > 1) {
 
@@ -511,18 +543,13 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
     }
 
     public synchronized String readFile(String fileName) throws IOException {
-        FileReader fileReader = null;
-        try {
 
-            if ((fileName == null) || fileName.isEmpty()) {
+        try (FileReader fileReader = new FileReader(fileName)) {
+
+            if ((null == fileName) || fileName.isEmpty()) {
                 return null;
             }
-            fileReader = new FileReader(fileName);
             return readInputStream(fileReader);
-        } finally {
-            if (null != fileReader)
-                fileReader.close();
-
         }
     }
 
@@ -552,12 +579,19 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
                 if (strategy.getRules().isEmpty()) {
 
                     Rule nextRule = new Rule(strategy, 1, comments,
-                            content.getBytes());
+                            content.getBytes(), filesMap.get(getExtension(fileNameCode)));
                     strategy.add(nextRule);
                     this.tradeService.saveAspect(nextRule);
                 } else {
 
-                    Integer version = this.tradeService.findRuleByMaxVersion(strategy);
+                    Rule latestRule = this.tradeService.findRuleByMaxVersion(strategy);
+                    Integer version = 0;
+
+                    if (null != latestRule) {
+
+                        version = latestRule.getVersion();
+                    }
+
                     for (Rule rule : strategy.getRules()) {
 
                         if (rule.getVersion().equals(version)) {
@@ -608,11 +642,10 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
                 // Do nothing.
             }
         }
+
         if (!getMessageText().isEmpty()) {
             setMessageText("Re deploy rule to fix this problem.", true, true, colorRedAttr);
         }
-
-
     }
 
     private void addClassDefinition(Class<?> theClass, String title, Document doc) {
@@ -631,15 +664,15 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
                     setMessageText(methodAttribute + " ", true, false, null);
                     setMessageText(methodName, true, false, bold);
                     setMessageText(" (", true, false, null);
-                    Class<?>[] parms = element.getParameterTypes();
-                    Object[] o = new Object[parms.length];
+                    Class<?>[] classParams = element.getParameterTypes();
+                    Object[] o = new Object[classParams.length];
                     methodAttribute = "";
-                    for (int j = 0; j < parms.length; j++) {
+                    for (int j = 0; j < classParams.length; j++) {
 
-                        Object obj = parms[j];
+                        Object obj = classParams[j];
                         o[j] = obj;
                         methodAttribute = methodAttribute + o[j].toString();
-                        if (j < parms.length - 1) {
+                        if (j < classParams.length - 1) {
                             methodAttribute = methodAttribute + ", ";
                         }
                     }
@@ -684,40 +717,62 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
     }
 
     private void refreshTree() throws ValueTypeException {
+
         DefaultMutableTreeNode treeNodeSelected = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
         strategyTreeModel.setData(this.strategies);
+
         // Expand the tree
         for (int i = 0; i < tree.getRowCount(); i++) {
+
             tree.expandRow(i);
         }
-        if (null == treeNodeSelected)
+
+        if (null == treeNodeSelected) {
+
             return;
+        }
 
         TreePath path = tree.findTreePathByObject(treeNodeSelected.getUserObject());
 
         if (null != path) {
+
             tree.setSelectionPath(path);
             tree.scrollPathToVisible(path);
         }
     }
 
-    private void setContent(String content) {
+    private void setContent(String content, String contentType) {
+
         sourceText.setText(null);
+
+        if (null != contentType) {
+
+            sourceText.setContentType(contentType);
+        }
+
         if (null != content) {
+
             sourceText.setText(content);
             sourceText.setCaretPosition(0);
         }
     }
 
     private void setMessageText(String content, boolean append, boolean newLine, SimpleAttributeSet attrSet) {
-        if (!append)
+
+        if (!append) {
             messageText.setText(null);
+        }
+
         if (null != content) {
+
             Document doc = messageText.getDocument();
+
             try {
+
                 doc.insertString(doc.getLength(), content, attrSet);
-                if (newLine)
+                if (newLine) {
                     doc.insertString(doc.getLength(), "\n", null);
+                }
             } catch (BadLocationException ex1) {
                 this.setErrorMessage("Exception setting messge: ", ex1.getMessage(), ex1);
             }
@@ -753,51 +808,64 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
 
     private void createRule(final Strategy strategy) throws ServiceException, ValueTypeException {
 
-        Integer version = this.tradeService.findRuleByMaxVersion(strategy);
-        Rule nextRule = new Rule(strategy, (version + 1), commentText.getText(),
-                getContent().getBytes()
-        );
+        Rule latestRule = this.tradeService.findRuleByMaxVersion(strategy);
+        Integer version = 0;
+
+        if (null != latestRule) {
+
+            version = latestRule.getVersion() + 1;
+        }
+        Rule nextRule = new Rule(strategy, version, commentText.getText(),
+                getContent().getBytes(), latestRule.getContentType());
         strategy.add(nextRule);
         refreshTree();
         TreePath path = tree.findTreePathByObject(nextRule);
+
         if (null != path) {
+
             tree.setSelectionPath(path);
             tree.scrollPathToVisible(path);
         }
     }
 
-    public static class JavaFilter extends FileFilter {
+    public static String getExtension(String fileName) {
 
-        public final static String java = "java";
+
+        int dotIndex = fileName.lastIndexOf('.');
+
+        if (dotIndex >= 0 && dotIndex < fileName.length() - 1) {
+
+            return fileName.substring(dotIndex + 1);
+        } else {
+
+            return ".txt";
+        }
+    }
+
+    public static class JavaFilter extends FileFilter {
 
         // Accept all directories and all csv files.
 
         /**
          * Method accept.
          *
-         * @param f File
+         * @param file File
          * @return boolean
          */
-        public boolean accept(File f) {
-            if (f.isDirectory()) {
+        public boolean accept(File file) {
+
+            if (file.isDirectory()) {
                 return true;
             }
-            String extension = getExtension(f);
+
+            String extension = getExtension(file.getName());
+
             if (extension != null) {
-                return extension.equals(java);
+
+
+                return filesMap.containsKey(extension);
             }
             return false;
-        }
-
-        public String getExtension(File f) {
-            String ext = null;
-            String s = f.getName();
-            int i = s.lastIndexOf('.');
-
-            if ((i > 0) && (i < (s.length() - 1))) {
-                ext = s.substring(i + 1).toLowerCase();
-            }
-            return ext;
         }
 
         public String getDescription() {

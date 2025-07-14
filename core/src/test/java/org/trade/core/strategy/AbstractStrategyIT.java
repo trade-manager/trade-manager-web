@@ -39,7 +39,6 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,7 +81,8 @@ import java.io.File;
 import java.io.Serial;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -126,7 +126,7 @@ public class AbstractStrategyIT {
         // m_brokerModel = (IBrokerModel)
         // ClassFactory.getServiceForInterface(
         // IBrokerModel._brokerTest, this);
-        Vector<Object> param = new Vector<>();
+        List<Object> param = new ArrayList<>();
         param.add(tradeService);
         brokerModel = (IBrokerModel) ClassFactory.getServiceForInterface(IBrokerModel._brokerTest, param, this);
         templateName = ConfigProperties.getPropAsString("trade.strategy.template");
@@ -168,22 +168,21 @@ public class AbstractStrategyIT {
     public static void tearDownAfterClass() {
     }
 
-    @Disabled
     @Test
     public void entryRuleNoEntryByRT() {
 
         try {
 
             tradestrategy.setTrade(true);
-            Vector<Object> parm = new Vector<>(0);
-            parm.add(tradeService);
-            parm.add(brokerModel);
-            parm.add(tradestrategy.getStrategyData());
-            parm.add(tradestrategy.getId());
+            List<Object> param = new ArrayList<>();
+            param.add(tradeService);
+            param.add(brokerModel);
+            param.add(tradestrategy.getStrategyData());
+            param.add(tradestrategy.getId());
             DynamicCode dynacode = new DynamicCode();
             dynacode.addSourceDir(new File(strategyDir));
             IStrategyRule strategyProxy = (IStrategyRule) dynacode.newProxyInstance(IStrategyRule.class,
-                    IStrategyRule.PACKAGE + templateName, parm);
+                    IStrategyRule.PACKAGE + templateName, param);
             strategyProxy.execute();
 
             do {

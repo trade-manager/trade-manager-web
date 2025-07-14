@@ -45,12 +45,10 @@ import java.util.Hashtable;
  * @version $Id: ExampleFileChooser.java,v 1.1 2001/10/18 01:32:16 simon Exp $
  */
 public class ExampleFileChooser extends FileView {
+
     private final Hashtable<String, Icon> icons = new Hashtable<>(5);
-
     private final Hashtable<File, String> fileNames = new Hashtable<>(5);
-
     private final Hashtable<File, String> fileDescriptions = new Hashtable<>(5);
-
     private final Hashtable<String, String> typeDescriptions = new Hashtable<>(5);
 
     /**

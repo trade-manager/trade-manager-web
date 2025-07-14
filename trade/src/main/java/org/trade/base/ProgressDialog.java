@@ -51,11 +51,11 @@ public class ProgressDialog extends JDialog {
     private static final long serialVersionUID = -4399430258481031373L;
 
     private final static Logger _log = LoggerFactory.getLogger(ProgressDialog.class);
-
     private static final JTextField jTextFieldStatus = new JTextField();
     private static final JProgressBar jProgressBar1 = new JProgressBar();
 
     public ProgressDialog() {
+
         super(new Frame(), "Please wait .....", false);
 
         try {

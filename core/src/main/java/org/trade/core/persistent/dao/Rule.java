@@ -44,11 +44,11 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 import org.trade.core.dao.Aspect;
 import org.trade.core.util.CoreUtils;
 
 import java.io.Serial;
+import java.io.Serializable;
 import java.util.Comparator;
 import java.util.Objects;
 
@@ -61,7 +61,7 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "rule")
-public class Rule extends Aspect implements java.io.Serializable {
+public class Rule extends Aspect implements Serializable {
 
     /**
      *
@@ -76,11 +76,11 @@ public class Rule extends Aspect implements java.io.Serializable {
     @Column(name = "rule")
     private byte[] rule;
 
-    @Transient
-    private boolean dirty = false;
+    @Column(name = "content_type", length = 20, nullable = false)
+    private String contentType = "text/java";
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "strategy_id", nullable = false)
+    @JoinColumn(name = "strategy_id", nullable = true)
     private Strategy strategy;
 
     public Rule() {
@@ -104,17 +104,19 @@ public class Rule extends Aspect implements java.io.Serializable {
     /**
      * Constructor for Rule.
      *
-     * @param strategy Strategy
-     * @param version  Integer
-     * @param comment  String
-     * @param rule     byte[]
+     * @param strategy    Strategy
+     * @param version     Integer
+     * @param comment     String
+     * @param rule        byte[]
+     * @param contentType String
      */
-    public Rule(Strategy strategy, Integer version, String comment, byte[] rule) {
+    public Rule(Strategy strategy, Integer version, String comment, byte[] rule, String contentType) {
 
         this.strategy = strategy;
         this.version = version;
         this.comment = comment;
         this.rule = rule;
+        this.contentType = contentType;
     }
 
     /**
@@ -172,21 +174,21 @@ public class Rule extends Aspect implements java.io.Serializable {
     }
 
     /**
-     * Method isDirty.
+     * Method getContentType.
      *
-     * @return boolean
+     * @return String
      */
-    public boolean isDirty() {
-        return dirty;
+    public String getContentType() {
+        return contentType;
     }
 
     /**
-     * Method setDirty.
+     * Method setContentType.
      *
-     * @param dirty boolean
+     * @param contentType String
      */
-    public void setDirty(boolean dirty) {
-        this.dirty = dirty;
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
     }
 
     /**
@@ -208,11 +210,14 @@ public class Rule extends Aspect implements java.io.Serializable {
      */
     public boolean equals(Object objectToCompare) {
 
-        if (super.equals(objectToCompare))
+        if (super.equals(objectToCompare)) {
             return true;
+        }
 
         if (objectToCompare instanceof Rule) {
+
             if (null == this.getId() || null == this.getVersion()) {
+
                 return false;
             }
 

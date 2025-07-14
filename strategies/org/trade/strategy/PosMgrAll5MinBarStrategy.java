@@ -72,11 +72,11 @@ public class PosMgrAll5MinBarStrategy extends AbstractStrategyRule {
      * @param tradeService       TradeService
      * @param brokerManagerModel BrokerModel
      * @param strategyData       StrategyData
-     * @param idTradestrategy    Integer
+     * @param tradestrategyId    Long
      */
 
-    public PosMgrAll5MinBarStrategy(TradeService tradeService, IBrokerModel brokerManagerModel, StrategyData strategyData, Integer idTradestrategy) {
-        super(tradeService, brokerManagerModel, strategyData, idTradestrategy);
+    public PosMgrAll5MinBarStrategy(TradeService tradeService, IBrokerModel brokerManagerModel, StrategyData strategyData, Long tradestrategyId) {
+        super(tradeService, brokerManagerModel, strategyData, tradestrategyId);
     }
 
     /*
@@ -106,6 +106,7 @@ public class PosMgrAll5MinBarStrategy extends AbstractStrategyRule {
             // + startPeriod);
 
             if (!this.isThereOpenPosition()) {
+
                 _log.info("No open position so Cancel Strategy Mgr Symbol: {} Time:{}", getSymbol(), startPeriod);
                 this.cancel();
                 return;

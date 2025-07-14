@@ -118,6 +118,7 @@ public class TradeServiceIT {
 
     private static Tradestrategy tradestrategy;
     private static final String symbol = "IBM-" + TradestrategyBase.getRandomNumber(4);
+    private static final String comment = "TEST-" + TradestrategyBase.getRandomNumber(8);
     private Integer clientId;
 
     /**
@@ -816,7 +817,7 @@ public class TradeServiceIT {
     }
 
     @Test
-    public void fFindTradeOrderByMaxKey() {
+    public void findTradeOrderByMaxKey() {
 
         Integer result = this.tradeService.findTradeOrderByMaxKey();
         assertNotNull(result);
@@ -882,30 +883,44 @@ public class TradeServiceIT {
     @Test
     public void saveRule() {
 
-        Integer version = this.tradeService.findRuleByMaxVersion(tradestrategy.getStrategy()) + 1;
-        Rule rule = new Rule(tradestrategy.getStrategy(), version, "Test");
-        Aspect result = this.tradeService.saveAspect(rule);
-        assertNotNull(result);
+        String content = "Blah Blah";
+        Rule rule = new Rule(tradestrategy.getStrategy(), 0, comment, content.getBytes(), "text/javascript");
+        rule = this.tradeService.saveAspect(rule);
+        assertNotNull(rule);
+        rule = this.tradeService.findRuleByMaxVersion(tradestrategy.getStrategy());
+        assertNotNull(rule.getId());
+        assertEquals("text/javascript", rule.getContentType());
+        rule.setStrategy(null);
+        rule = this.tradeService.saveAspect(rule);
         this.tradeService.deleteAspect(rule);
     }
 
     @Test
     public void findRuleById() {
 
-        Integer version = this.tradeService.findRuleByMaxVersion(tradestrategy.getStrategy()) + 1;
-        Rule rule = new Rule(tradestrategy.getStrategy(), version, "Test");
-        Aspect resultAspect = this.tradeService.saveAspect(rule);
-        assertNotNull(resultAspect);
-        Rule result = this.tradeService.findRuleById(resultAspect.getId());
-        assertNotNull(result);
+        Rule latestRule = this.tradeService.findRuleByMaxVersion(tradestrategy.getStrategy());
+        Integer version = 0;
+
+        if (null != latestRule) {
+
+            version = latestRule.getVersion() + 1;
+        }
+
+        Rule rule = new Rule(tradestrategy.getStrategy(), version, comment);
+        rule = this.tradeService.saveAspect(rule);
+        assertNotNull(rule);
+        rule = this.tradeService.findRuleById(rule.getId());
+        assertNotNull(rule);
+        rule.setStrategy(null);
+        rule = this.tradeService.saveAspect(rule);
         this.tradeService.deleteAspect(rule);
     }
 
     @Test
     public void findRuleByMaxVersion() {
 
-        Integer result = this.tradeService.findRuleByMaxVersion(tradestrategy.getStrategy());
-        assertNotNull(result);
+        Rule latestRule = this.tradeService.findRuleByMaxVersion(tradestrategy.getStrategy());
+        assertNull(latestRule);
     }
 
     @Test
@@ -926,11 +941,20 @@ public class TradeServiceIT {
     @Test
     public void removeRule() {
 
-        Integer version = this.tradeService.findRuleByMaxVersion(tradestrategy.getStrategy()) + 1;
-        Rule rule = new Rule(tradestrategy.getStrategy(), version, "Test");
-        Rule resultAspect = this.tradeService.saveAspect(rule);
-        assertNotNull(resultAspect);
-        this.tradeService.deleteAspect(resultAspect);
+        Rule latestRule = this.tradeService.findRuleByMaxVersion(tradestrategy.getStrategy());
+        Integer version = 0;
+
+        if (null != latestRule) {
+
+            version = latestRule.getVersion() + 1;
+        }
+
+        Rule rule = new Rule(tradestrategy.getStrategy(), version, comment);
+        rule = this.tradeService.saveAspect(rule);
+        assertNotNull(rule);
+        rule.setStrategy(null);
+        rule = this.tradeService.saveAspect(rule);
+        this.tradeService.deleteAspect(rule);
     }
 
     @Test

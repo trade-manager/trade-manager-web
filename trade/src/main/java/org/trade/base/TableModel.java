@@ -38,7 +38,7 @@ package org.trade.base;
 import javax.swing.table.AbstractTableModel;
 import java.io.Serial;
 import java.util.ArrayList;
-import java.util.Vector;
+import java.util.List;
 
 /**
  *
@@ -50,7 +50,7 @@ public abstract class TableModel extends AbstractTableModel {
     protected String[] columnNames = {};
     protected String[] columnHeaderToolTip = {};
     protected Class<?>[] columnTypes = {};
-    protected ArrayList<Vector<Object>> rows = new ArrayList<>(0);
+    protected ArrayList<List<Object>> rows = new ArrayList<>(0);
 
     public TableModel() {
     }
@@ -80,7 +80,7 @@ public abstract class TableModel extends AbstractTableModel {
     public void clearAll() {
         int rowSize = rows.size() - 1;
         if (rowSize > -1) {
-            rows.forEach(Vector::clear);
+            rows.forEach(List::clear);
             rows.clear();
             this.fireTableRowsDeleted(0, rowSize);
         }
@@ -174,9 +174,11 @@ public abstract class TableModel extends AbstractTableModel {
      * @see javax.swing.table.TableModel#getValueAt(int, int)
      */
     public Object getValueAt(int row, int column) {
+
         if (!rows.isEmpty()) {
-            Vector<Object> value = rows.get(row);
-            return value.elementAt(column);
+
+            List<Object> value = rows.get(row);
+            return value.get(column);
         }
         return null;
     }
@@ -190,12 +192,15 @@ public abstract class TableModel extends AbstractTableModel {
      * @see javax.swing.table.TableModel#setValueAt(Object, int, int)
      */
     public void setValueAt(Object value, int row, int column) {
+
         Object currValue = getValueAt(row, column);
+
         if (null != value && !value.equals(currValue)) {
+
             Object newValue = getColumnDataValue(currValue, value);
             this.populateDAO(newValue, row, column);
-            Vector<Object> dataRow = rows.get(row);
-            dataRow.setElementAt(newValue, column);
+            List<Object> dataRow = rows.get(row);
+            dataRow.set(column, newValue);
             fireTableCellUpdated(row, column);
         }
     }

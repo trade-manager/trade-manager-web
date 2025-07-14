@@ -883,9 +883,21 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
         return ruleRepository.findById(ruleId).isPresent() ? ruleRepository.findById(ruleId).get() : null;
     }
 
-    public Integer findRuleByMaxVersion(final Strategy strategy) {
+    public List<Rule> findRulesAll() {
 
-        return ruleRepository.findByMaxVersion(strategy);
+        return ruleRepository.findAll();
+    }
+
+    public Rule findRuleByMaxVersion(final Strategy strategy) {
+
+        Integer version = ruleRepository.findByMaxVersion(strategy);
+        List<Rule> rules = ruleRepository.findByStrategyAndVersion(strategy, version);
+
+        if (!rules.isEmpty()) {
+
+            return rules.getFirst();
+        }
+        return null;
     }
 
     public Strategy findStrategyById(final Long id) {

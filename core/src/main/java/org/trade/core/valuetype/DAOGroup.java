@@ -38,7 +38,8 @@ package org.trade.core.valuetype;
 import org.trade.core.persistent.dao.Portfolio;
 
 import java.io.Serial;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -59,26 +60,37 @@ public class DAOGroup extends DAODecode {
     /**
      * Method getCodesDecodes.
      *
-     * @return Vector<Decode>
+     * @return List<Decode>
      */
 
-    public Vector<Decode> getCodesDecodes() throws ValueTypeException {
-        final Vector<Decode> decodes = new Vector<>();
-        final Vector<Decode> decodesAll = super.getCodesDecodes();
+    public List<Decode> getCodesDecodes() throws ValueTypeException {
+
+        final List<Decode> decodes = new ArrayList<>();
+        final List<Decode> decodesAll = super.getCodesDecodes();
+
         for (final Decode decode : decodesAll) {
+
             final Portfolio portfolio = (Portfolio) decode.getObject();
+
             if (null != portfolio.getAllocationMethod()) {
+
                 Integer value = null;
+
                 try {
+
                     value = Integer.parseInt(portfolio.getAllocationMethod());
                 } catch (NumberFormatException ex) {
                     // Do nothing
                 }
+
                 if (null == value) {
+
                     decodes.add(decode);
                 }
             } else {
+
                 if (Decode.NONE.equals(decode.getDisplayName())) {
+
                     decodes.add(decode);
                 }
             }
@@ -93,6 +105,7 @@ public class DAOGroup extends DAODecode {
      * @return DAOTradeAccount
      */
     public static DAOGroup newInstance(String displayName) {
+
         final DAOGroup returnInstance = new DAOGroup();
         returnInstance.setDisplayName(displayName);
         return returnInstance;

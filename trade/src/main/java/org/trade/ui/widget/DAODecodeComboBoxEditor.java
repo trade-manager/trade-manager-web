@@ -48,7 +48,8 @@ import java.awt.event.FocusListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.Serial;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Simon Allen
@@ -63,18 +64,18 @@ public class DAODecodeComboBoxEditor extends JComboBox<Decode> implements ComboB
     private static final long serialVersionUID = -1626795772462262674L;
 
     protected transient DAODecode originalValue;
-    protected transient Vector<ActionListener> listeners;
+    protected transient List<ActionListener> listeners;
 
     /**
      * Constructor for DAODecodeComboBoxEditor.
      *
-     * @param model Vector<?>
+     * @param model List<?>
      */
-    public DAODecodeComboBoxEditor(Vector<Decode> model) {
-        super(model);
+    public DAODecodeComboBoxEditor(List<Decode> model) {
+        super(model.toArray(new Decode[0]));
         this.addItemListener(this);
         this.addFocusListener(this);
-        listeners = new Vector<>();
+        listeners = new ArrayList<>();
     }
 
     /**
@@ -128,7 +129,7 @@ public class DAODecodeComboBoxEditor extends JComboBox<Decode> implements ComboB
      * @see javax.swing.ComboBoxEditor#addActionListener(ActionListener)
      */
     public void addActionListener(ActionListener l) {
-        listeners.addElement(l);
+        listeners.add(l);
     }
 
     /**
@@ -137,7 +138,7 @@ public class DAODecodeComboBoxEditor extends JComboBox<Decode> implements ComboB
      * @see javax.swing.ComboBoxEditor#removeActionListener(ActionListener)
      */
     public void removeActionListener(ActionListener l) {
-        listeners.removeElement(l);
+        listeners.remove(l);
     }
 
     protected void fireEditingCanceled() {
@@ -151,14 +152,14 @@ public class DAODecodeComboBoxEditor extends JComboBox<Decode> implements ComboB
 
         ChangeEvent ce = new ChangeEvent(this);
         for (int i = listeners.size(); i >= 0; i--) {
-            ((CellEditorListener) listeners.elementAt(i)).editingCanceled(ce);
+            ((CellEditorListener) listeners.get(i)).editingCanceled(ce);
         }
     }
 
     protected void fireEditingStopped() {
         ChangeEvent ce = new ChangeEvent(this);
         for (int i = listeners.size() - 1; i >= 0; i--) {
-            ((CellEditorListener) listeners.elementAt(i)).editingStopped(ce);
+            ((CellEditorListener) listeners.get(i)).editingStopped(ce);
         }
     }
 

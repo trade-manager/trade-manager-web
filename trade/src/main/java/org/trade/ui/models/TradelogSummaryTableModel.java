@@ -45,7 +45,8 @@ import org.trade.core.valuetype.Quantity;
 
 import javax.swing.event.TableModelEvent;
 import java.io.Serial;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -130,9 +131,12 @@ public class TradelogSummaryTableModel extends TableModel {
 
         this.m_data = data;
         this.clearAll();
+
         if (!getData().getTradelogSummary().isEmpty()) {
+
             for (final TradelogSummary element : getData().getTradelogSummary()) {
-                final Vector<Object> newRow = new Vector<>();
+
+                final List<Object> newRow = new ArrayList<>();
                 getNewRow(newRow, element);
                 rows.add(newRow);
             }
@@ -218,10 +222,13 @@ public class TradelogSummaryTableModel extends TableModel {
     public void deleteRow(int selectedRow) {
 
         int i = 0;
+
         for (final TradelogSummary element : getData().getTradelogSummary()) {
+
             if (i == selectedRow) {
+
                 getData().getTradelogSummary().remove(element);
-                final Vector<Object> currRow = rows.get(selectedRow);
+                final List<Object> currRow = rows.get(selectedRow);
                 rows.remove(currRow);
                 this.fireTableRowsDeleted(selectedRow, selectedRow);
                 break;
@@ -238,7 +245,7 @@ public class TradelogSummaryTableModel extends TableModel {
     public void addRow(TradelogSummary element) {
 
         getData().getTradelogSummary().add(element);
-        final Vector<Object> newRow = new Vector<>();
+        final List<Object> newRow = new ArrayList<>();
 
         getNewRow(newRow, element);
         rows.add(newRow);
@@ -250,7 +257,7 @@ public class TradelogSummaryTableModel extends TableModel {
     public void addRow() {
         final TradelogSummary element = new TradelogSummary();
         getData().getTradelogSummary().add(element);
-        final Vector<Object> newRow = new Vector<>();
+        final List<Object> newRow = new ArrayList<>();
         getNewRow(newRow, element);
         rows.add(newRow);
 
@@ -261,23 +268,23 @@ public class TradelogSummaryTableModel extends TableModel {
     /**
      * Method getNewRow.
      *
-     * @param newRow  Vector<Object>
+     * @param newRow  List<Object>
      * @param element TradelogSummary
      */
-    public void getNewRow(Vector<Object> newRow, TradelogSummary element) {
+    public void getNewRow(List<Object> newRow, TradelogSummary element) {
 
-        newRow.addElement(element.getPeriod());
-        newRow.addElement(new Percent(element.getBattingAverage()));
-        newRow.addElement(new Decimal(element.getSimpleSharpeRatio(), 2));
-        newRow.addElement(new Money(element.getGrossProfitLoss()));
-        newRow.addElement(new Quantity(element.getQuantity()));
-        newRow.addElement(new Money(element.getCommission()));
-        newRow.addElement(new Money(element.getNetProfitLoss()));
-        newRow.addElement(new Quantity(element.getWinCount()));
-        newRow.addElement(new Money(element.getProfitAmount()));
-        newRow.addElement(new Quantity(element.getLossCount()));
-        newRow.addElement(new Money(element.getLossAmount()));
-        newRow.addElement(new Quantity(element.getPositionCount()));
-        newRow.addElement(new Quantity(element.getTradestrategyCount()));
+        newRow.add(element.getPeriod());
+        newRow.add(new Percent(element.getBattingAverage()));
+        newRow.add(new Decimal(element.getSimpleSharpeRatio(), 2));
+        newRow.add(new Money(element.getGrossProfitLoss()));
+        newRow.add(new Quantity(element.getQuantity()));
+        newRow.add(new Money(element.getCommission()));
+        newRow.add(new Money(element.getNetProfitLoss()));
+        newRow.add(new Quantity(element.getWinCount()));
+        newRow.add(new Money(element.getProfitAmount()));
+        newRow.add(new Quantity(element.getLossCount()));
+        newRow.add(new Money(element.getLossAmount()));
+        newRow.add(new Quantity(element.getPositionCount()));
+        newRow.add(new Quantity(element.getTradestrategyCount()));
     }
 }

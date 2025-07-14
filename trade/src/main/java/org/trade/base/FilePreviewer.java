@@ -54,7 +54,6 @@ public class FilePreviewer extends JComponent implements PropertyChangeListener 
     private static final long serialVersionUID = 2163573903688220675L;
 
     ImageIcon thumbnail = null;
-
     File f = null;
 
     /**

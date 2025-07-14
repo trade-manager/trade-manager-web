@@ -52,7 +52,8 @@ import org.trade.core.valuetype.TradestrategyStatus;
 
 import javax.swing.event.TableModelEvent;
 import java.io.Serial;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -139,9 +140,12 @@ public class TradelogDetailTableModel extends TableModel {
 
         this.m_data = data;
         this.clearAll();
+
         if (!getData().getTradelogDetail().isEmpty()) {
+
             for (final TradelogDetail element : getData().getTradelogDetail()) {
-                final Vector<Object> newRow = new Vector<>();
+
+                final List<Object> newRow = new ArrayList<>();
                 getNewRow(newRow, element);
                 rows.add(newRow);
             }
@@ -243,13 +247,16 @@ public class TradelogDetailTableModel extends TableModel {
 
         int i = 0;
         for (final TradelogDetail element : getData().getTradelogDetail()) {
+
             if (i == selectedRow) {
+
                 getData().getTradelogDetail().remove(element);
-                final Vector<Object> currRow = rows.get(selectedRow);
+                final List<Object> currRow = rows.get(selectedRow);
                 rows.remove(currRow);
                 this.fireTableRowsDeleted(selectedRow, selectedRow);
                 break;
             }
+
             i++;
         }
     }
@@ -262,7 +269,7 @@ public class TradelogDetailTableModel extends TableModel {
     public void addRow(TradelogDetail element) {
 
         getData().getTradelogDetail().add(element);
-        final Vector<Object> newRow = new Vector<>();
+        final List<Object> newRow = new ArrayList<>();
 
         getNewRow(newRow, element);
         rows.add(newRow);
@@ -275,7 +282,7 @@ public class TradelogDetailTableModel extends TableModel {
 
         final TradelogDetail element = new TradelogDetail();
         getData().getTradelogDetail().add(element);
-        final Vector<Object> newRow = new Vector<>();
+        final List<Object> newRow = new ArrayList<>();
 
         getNewRow(newRow, element);
         rows.add(newRow);
@@ -287,89 +294,89 @@ public class TradelogDetailTableModel extends TableModel {
     /**
      * Method getNewRow.
      *
-     * @param newRow  Vector<Object>
+     * @param newRow  List<Object>
      * @param element TradelogDetail
      */
-    public void getNewRow(Vector<Object> newRow, TradelogDetail element) {
+    public void getNewRow(List<Object> newRow, TradelogDetail element) {
 
-        newRow.addElement(element.getOpen());
+        newRow.add(element.getOpen());
         if (null == element.getSymbol()) {
-            newRow.addElement("");
+            newRow.add("");
         } else {
-            newRow.addElement(element.getSymbol());
+            newRow.add(element.getSymbol());
         }
         if (null == element.getLongShort()) {
-            newRow.addElement(new Side());
+            newRow.add(new Side());
         } else {
-            newRow.addElement(Side.newInstance(element.getLongShort()));
+            newRow.add(Side.newInstance(element.getLongShort()));
         }
 
         if (null == element.getTier()) {
-            newRow.addElement(new Tier());
+            newRow.add(new Tier());
         } else {
-            newRow.addElement(Tier.newInstance(element.getTier()));
+            newRow.add(Tier.newInstance(element.getTier()));
         }
         if (null == element.getMarketBias()) {
-            newRow.addElement(new MarketBar());
+            newRow.add(new MarketBar());
         } else {
-            newRow.addElement(MarketBar.newInstance((element.getMarketBias())));
+            newRow.add(MarketBar.newInstance((element.getMarketBias())));
         }
         if (null == element.getMarketBar()) {
-            newRow.addElement(new MarketBar());
+            newRow.add(new MarketBar());
         } else {
-            newRow.addElement(MarketBar.newInstance((element.getMarketBar())));
+            newRow.add(MarketBar.newInstance((element.getMarketBar())));
         }
         if (null == element.getName()) {
-            newRow.addElement("");
+            newRow.add("");
         } else {
-            newRow.addElement(DAOStrategy.newInstance(element.getName()));
+            newRow.add(DAOStrategy.newInstance(element.getName()));
         }
         if (null == element.getStatus()) {
-            newRow.addElement(new TradestrategyStatus());
+            newRow.add(new TradestrategyStatus());
         } else {
-            newRow.addElement(TradestrategyStatus.newInstance((element.getStatus())));
+            newRow.add(TradestrategyStatus.newInstance((element.getStatus())));
         }
         if (null == element.getSide()) {
-            newRow.addElement(new Side());
+            newRow.add(new Side());
         } else {
-            newRow.addElement(Side.newInstance((element.getSide())));
+            newRow.add(Side.newInstance((element.getSide())));
         }
         if (null == element.getAction()) {
-            newRow.addElement(new Action());
+            newRow.add(new Action());
         } else {
-            newRow.addElement(Action.newInstance(element.getAction()));
+            newRow.add(Action.newInstance(element.getAction()));
         }
         if (null == element.getStopPrice()) {
-            newRow.addElement(new Money());
+            newRow.add(new Money());
         } else {
-            newRow.addElement(new Money(element.getStopPrice()));
+            newRow.add(new Money(element.getStopPrice()));
         }
         if (null == element.getOrderStatus()) {
-            newRow.addElement(new OrderStatus());
+            newRow.add(new OrderStatus());
         } else {
-            newRow.addElement(OrderStatus.newInstance(element.getOrderStatus()));
+            newRow.add(OrderStatus.newInstance(element.getOrderStatus()));
         }
         if (null == element.getFilledDate()) {
-            newRow.addElement(new Date());
+            newRow.add(new Date());
         } else {
-            newRow.addElement(new Date(element.getFilledDate()));
+            newRow.add(new Date(element.getFilledDate()));
         }
-        newRow.addElement(new Quantity(element.getQuantity()));
+        newRow.add(new Quantity(element.getQuantity()));
 
         if (null == element.getAverageFilledPrice()) {
-            newRow.addElement(new Decimal(3));
+            newRow.add(new Decimal(3));
         } else {
-            newRow.addElement(new Decimal(element.getAverageFilledPrice(), 3));
+            newRow.add(new Decimal(element.getAverageFilledPrice(), 3));
         }
         if (null == element.getCommission()) {
-            newRow.addElement(new Money());
+            newRow.add(new Money());
         } else {
-            newRow.addElement(new Money(element.getCommission()));
+            newRow.add(new Money(element.getCommission()));
         }
         if (null == element.getProfitLoss()) {
-            newRow.addElement(new Money());
+            newRow.add(new Money());
         } else {
-            newRow.addElement(new Money(element.getProfitLoss()));
+            newRow.add(new Money(element.getProfitLoss()));
         }
     }
 }

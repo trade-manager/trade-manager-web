@@ -56,15 +56,9 @@ import java.text.MessageFormat;
  */
 public class ComponentPrintService extends PrintPage implements Printable {
 
-    private double m_ScaleX;
-
-    private double m_ScaleY;
-
-    /**
-     * The Swing component to print.
-     */
-    private Component m_component = null;
-
+    private double scaleX;
+    private double scaleY;
+    private Component component = null;
     private Throwable printError;
 
     /**
@@ -75,6 +69,7 @@ public class ComponentPrintService extends PrintPage implements Printable {
      *               printed.
      */
     public ComponentPrintService(Component c, PageFormat format) {
+
         setPageFormat(format);
         setPrintable(this);
         setComponent(c);
@@ -82,9 +77,7 @@ public class ComponentPrintService extends PrintPage implements Printable {
         /*
          * Tell the Vista we subclassed the size of the canvas.
          */
-
         Rectangle componentBounds = c.getBounds(null);
-
         setSize(componentBounds.width, componentBounds.height);
         setScale(1, 1);
     }
@@ -95,7 +88,7 @@ public class ComponentPrintService extends PrintPage implements Printable {
      * @param c Component
      */
     protected void setComponent(Component c) {
-        m_component = c;
+        component = c;
     }
 
     /**
@@ -105,13 +98,13 @@ public class ComponentPrintService extends PrintPage implements Printable {
      * @param scaleY double
      */
     protected void setScale(double scaleX, double scaleY) {
-        m_ScaleX = scaleX;
-        m_ScaleY = scaleY;
+        this.scaleX = scaleX;
+        this.scaleY = scaleY;
     }
 
     public void scaleToFitX() {
         PageFormat format = getPageFormat();
-        Rectangle componentBounds = m_component.getBounds(null);
+        Rectangle componentBounds = component.getBounds(null);
         double scaleX = format.getImageableWidth() / componentBounds.width;
         double scaleY = scaleX;
 
@@ -123,7 +116,7 @@ public class ComponentPrintService extends PrintPage implements Printable {
 
     public void scaleToFitY() {
         PageFormat format = getPageFormat();
-        Rectangle componentBounds = m_component.getBounds(null);
+        Rectangle componentBounds = component.getBounds(null);
         double scaleY = format.getImageableHeight() / componentBounds.height;
         double scaleX = scaleY;
 
@@ -140,7 +133,7 @@ public class ComponentPrintService extends PrintPage implements Printable {
      */
     public void scaleToFit(boolean useSymmetricScaling) {
         PageFormat format = getPageFormat();
-        Rectangle componentBounds = m_component.getBounds(null);
+        Rectangle componentBounds = component.getBounds(null);
         double scaleX = format.getImageableWidth() / componentBounds.width;
         double scaleY = format.getImageableHeight() / componentBounds.height;
 
@@ -176,14 +169,14 @@ public class ComponentPrintService extends PrintPage implements Printable {
 
         g2.translate(pageFormat.getImageableX(), pageFormat.getImageableY());
 
-        Rectangle componentBounds = m_component.getBounds(null);
+        Rectangle componentBounds = component.getBounds(null);
 
         g2.translate(-componentBounds.x, -componentBounds.y);
-        g2.scale(m_ScaleX, m_ScaleY);
+        g2.scale(scaleX, scaleY);
 
-        boolean wasBuffered = disableDoubleBuffering(m_component);
-        m_component.printAll(g2);
-        restoreDoubleBuffering(m_component, wasBuffered);
+        boolean wasBuffered = disableDoubleBuffering(component);
+        component.printAll(g2);
+        restoreDoubleBuffering(component, wasBuffered);
         return PAGE_EXISTS;
     }
 

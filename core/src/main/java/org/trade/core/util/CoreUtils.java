@@ -47,8 +47,8 @@ import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -74,10 +74,9 @@ public class CoreUtils {
         int count = 0;
 
         while ((index = replaceIn.indexOf(toReplace, index + 1)) != -1) {
+
             int bufIndex = index + (count * netLength);
-
             buf.replace(bufIndex, bufIndex + replaceLength, replaceWith);
-
             count++;
         }
 
@@ -92,10 +91,9 @@ public class CoreUtils {
      * @return String
      */
     public static String escapeJava(String unescaped) {
+
         String escaped = replace(unescaped, "\\", "\\\\");
-
         escaped = replace(escaped, "\"", "\\\"");
-
         return escaped;
     }
 
@@ -116,6 +114,7 @@ public class CoreUtils {
         final Method[] method = aspect.getClass().getDeclaredMethods();
 
         for (final Method element : method) {
+
             final String methodName = element.getName();
 
             if ("GET".equalsIgnoreCase(methodName.substring(0, 3))) {
@@ -125,21 +124,24 @@ public class CoreUtils {
                 final Object[] o = new Object[parms.length];
 
                 for (int j = 0; j < parms.length; j++) {
+
                     final Object obj = parms[j];
                     o[j] = obj;
                 }
+
                 Object returnValue = element.invoke(aspect, o);
 
                 if (null == returnValue) {
+
                     returnValue = "null";
                 }
                 if (decodeConvertion
                         && returnValue.getClass().getSuperclass().getName().equals(Decode.class.getName())) {
+
                     returnValue = ((Decode) returnValue).getCode();
                 }
                 attributeList.put(methodName.substring(3), returnValue);
             }
-
         }
 
         return attributeList;
@@ -155,39 +157,46 @@ public class CoreUtils {
      */
 
     public static String toFormattedXMLString(Aspect aspect) throws InvocationTargetException, IllegalAccessException {
+
         Hashtable<String, Object> attributeList;
         StringBuilder returnStringBuf;
         String returnString = null;
         String attributeName;
 
         if (null != (attributeList = getAllAttribueValues(aspect, true))) {
-            returnStringBuf = new StringBuilder();
 
+            returnStringBuf = new StringBuilder();
             String className = aspect.getClass().getName();
             final StringTokenizer spaceTokens = new StringTokenizer(className, ".");
+
             while (spaceTokens.hasMoreTokens()) {
+
                 className = spaceTokens.nextToken();
             }
 
             returnStringBuf.append("<").append(className).append("> \n");
-
             final String[] index = new String[attributeList.size()];
-            final Enumeration<String> enumAttr = attributeList.keys();
+            final Iterator<String> enumAttr = attributeList.keys().asIterator();
             int i = 0;
 
-            while (enumAttr.hasMoreElements()) {
-                index[i++] = enumAttr.nextElement();
+            while (enumAttr.hasNext()) {
+
+                index[i++] = enumAttr.next();
             }
 
             CollectionUtilities.n2sort(index, true);
 
             for (final String element : index) {
+
                 attributeName = element;
                 // if we get a list do toXMLString on it
 
                 if (attributeList.get(attributeName) instanceof ArrayList) {
+
                     @SuppressWarnings("unchecked") final List<Aspect> list = (List<Aspect>) attributeList.get(attributeName);
+
                     for (Aspect aspect1 : list) {
+
                         returnStringBuf.append(toFormattedXMLString(aspect1));
                     }
                 } else if (attributeList.get(attributeName).getClass().getSuperclass().getName()
@@ -225,11 +234,11 @@ public class CoreUtils {
             returnStringBuf = new StringBuilder();
 
             final String[] index = new String[attributeList.size()];
-            final Enumeration<String> enumAttr = attributeList.keys();
+            final Iterator<String> enumAttr = attributeList.keys().asIterator();
             int i = 0;
 
-            while (enumAttr.hasMoreElements()) {
-                index[i++] = enumAttr.nextElement();
+            while (enumAttr.hasNext()) {
+                index[i++] = enumAttr.next();
             }
 
             CollectionUtilities.n2sort(index, true);

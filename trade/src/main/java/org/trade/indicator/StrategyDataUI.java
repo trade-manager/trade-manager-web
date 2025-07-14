@@ -50,7 +50,6 @@ import org.trade.indicator.candle.CandleItem;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 /**
  *
@@ -91,7 +90,7 @@ public class StrategyDataUI extends Worker {
                  * trade strategy.
                  */
 
-                Vector<Object> params = indicator.getParam(indicator.getType());
+                List<Object> params = indicator.getParam(indicator.getType());
                 IndicatorSeries series = (IndicatorSeries) ClassFactory
                         .getCreateClass(IIndicatorDataset.PACKAGE + "." + indicator.getType(), params, this);
 
@@ -108,9 +107,8 @@ public class StrategyDataUI extends Worker {
                      * holder for series and is required by the Chart API.
                      */
                     String datasetName = indicator.getType().replaceAll("Series", "Dataset");
-                    Vector<Object> parm = new Vector<>();
                     indicatorDataset = (IIndicatorDataset) ClassFactory
-                            .getCreateClass(IIndicatorDataset.PACKAGE + "." + datasetName, parm, this);
+                            .getCreateClass(IIndicatorDataset.PACKAGE + "." + datasetName, new ArrayList<>(), this);
                     this.indicators.add(indicatorDataset);
                 }
                 indicatorDataset.addSeries(series);

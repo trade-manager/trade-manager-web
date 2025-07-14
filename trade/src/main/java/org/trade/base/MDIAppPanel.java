@@ -62,17 +62,14 @@ public abstract class MDIAppPanel extends BasePanel
     private static final long serialVersionUID = 8405644422808736326L;
 
     private final static Logger _log = LoggerFactory.getLogger(MDIAppPanel.class);
-
     private final ExtendedDesktopPane m_desktopPane = new ExtendedDesktopPane();
-
-    protected JInternalFrame m_internalFrame = null;
-    private final JPanel m_menuPanel = new JPanel();
-
-    public String m_title = null;
+    protected JInternalFrame internalFrame = null;
+    private final JPanel menuPanel = new JPanel();
+    public String title = null;
     private static final int layer = 1;
     private static int frameCount = 0;
     protected JInternalFrame currentIFrame = null;
-    private final PrintController m_printJob = new PrintController();
+    private final PrintController printJob = new PrintController();
 
     /**
      * Constructor for MDIAppPanel.
@@ -85,7 +82,7 @@ public abstract class MDIAppPanel extends BasePanel
 
             this.setLayout(new BorderLayout());
 
-            m_menuPanel.setLayout(new BorderLayout());
+            menuPanel.setLayout(new BorderLayout());
             m_desktopPane.setDesktopManager(new ExtendedDesktopManager(m_desktopPane));
 
             JPanel jPanel1 = new JPanel(new BorderLayout());
@@ -114,7 +111,7 @@ public abstract class MDIAppPanel extends BasePanel
             jPanel4.add(m_desktopPane, BorderLayout.CENTER);
             jPanel1.add(jPanel4, BorderLayout.CENTER);
             jPanel1.add(jPanel3, BorderLayout.SOUTH);
-            jPanel1.add(m_menuPanel, BorderLayout.NORTH);
+            jPanel1.add(menuPanel, BorderLayout.NORTH);
             this.add(jPanel1, BorderLayout.CENTER);
             this.setStatusBar(jTextFieldStatus);
             this.setProgressBar(progressBar);
@@ -130,8 +127,8 @@ public abstract class MDIAppPanel extends BasePanel
      * @param menu BasePanelMenu
      */
     public void setMenu(BasePanelMenu menu) {
-        m_menuPanel.removeAll();
-        m_menuPanel.add(menu, BorderLayout.NORTH);
+        menuPanel.removeAll();
+        menuPanel.add(menu, BorderLayout.NORTH);
         super.setMenu(menu);
     }
 
@@ -237,7 +234,7 @@ public abstract class MDIAppPanel extends BasePanel
      * @param comp Component
      */
     protected void printComponent(Component comp) {
-        m_printJob.printComponent(getFrame(), comp, null);
+        printJob.printComponent(getFrame(), comp, null);
     }
 
     public void doClose() {

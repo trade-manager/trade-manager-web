@@ -44,8 +44,9 @@ import org.trade.core.valuetype.MarketBar;
 
 import java.io.Serial;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.Vector;
 
 /**
  *
@@ -84,11 +85,11 @@ public class TradingdayTableModel extends TableModel {
                     + "<b>-NRB TT</b>=Red narrow range bar with topping tail<br>" + "<b>-WRB</b>=Red wide range bar<br>"
                     + "<b>Darling Doji</b>=Green cross</html>"};
 
-    private Tradingdays m_data = null;
+    private Tradingdays data = null;
 
     public TradingdayTableModel() {
-        super(columnHeaderToolTip);
 
+        super(columnHeaderToolTip);
         columnNames = new String[5];
         columnNames[0] = OPEN;
         columnNames[1] = CLOSE;
@@ -103,7 +104,7 @@ public class TradingdayTableModel extends TableModel {
      * @return Tradingdays
      */
     public Tradingdays getData() {
-        return m_data;
+        return data;
     }
 
     /**
@@ -131,11 +132,14 @@ public class TradingdayTableModel extends TableModel {
      */
     public void setData(Tradingdays data) {
         data.getTradingdays().sort(Tradingday.DATE_ORDER_DESC);
-        this.m_data = data;
+        this.data = data;
         this.clearAll();
+
         if (!getData().getTradingdays().isEmpty()) {
+
             for (Tradingday element : getData().getTradingdays()) {
-                Vector<Object> newRow = new Vector<>();
+
+                List<Object> newRow = new ArrayList<>();
                 getNewRow(newRow, element);
                 rows.add(newRow);
             }
@@ -183,10 +187,12 @@ public class TradingdayTableModel extends TableModel {
      * @see javax.swing.table.TableModel#setValueAt(Object, int, int)
      */
     public void setValueAt(Object value, int row, int column) {
+
         if (null != value && !value.equals(super.getValueAt(row, column))) {
+
             this.populateDAO(value, row, column);
-            Vector<Object> dataRow = rows.get(row);
-            dataRow.setElementAt(value, column);
+            List<Object> dataRow = rows.get(row);
+            dataRow.set(column, value);
             fireTableCellUpdated(row, column);
         }
     }
@@ -241,11 +247,15 @@ public class TradingdayTableModel extends TableModel {
         Date open = (Date) this.getValueAt(selectedRow, 0);
         Date close = (Date) this.getValueAt(selectedRow, 1);
         Tradingday element = getData().getTradingday(open.getZonedDateTime(), close.getZonedDateTime());
-        if (!element.getTradestrategies().isEmpty())
+
+        if (!element.getTradestrategies().isEmpty()) {
+
             element.getTradestrategies().clear();
+        }
+
         getData().remove(element);
         element.setDirty(true);
-        final Vector<Object> currRow = rows.get(selectedRow);
+        final List<Object> currRow = rows.get(selectedRow);
         rows.remove(currRow);
         this.fireTableRowsDeleted(selectedRow, selectedRow);
     }
@@ -253,18 +263,22 @@ public class TradingdayTableModel extends TableModel {
     public void addRow() {
 
         ZonedDateTime date = TradingCalendar.getDateTimeNowMarketTimeZone();
+
         if (!TradingCalendar.isTradingDay(date)) {
+
             date = TradingCalendar.getNextTradingDay(date);
         }
         Tradingday tradingday = new Tradingday(TradingCalendar.getTradingDayStart(date),
                 TradingCalendar.getTradingDayEnd(date));
+
         while (getData().containsTradingday(tradingday)) {
+
             date = TradingCalendar.getNextTradingDay(date);
             tradingday = new Tradingday(TradingCalendar.getTradingDayStart(date),
                     TradingCalendar.getTradingDayEnd(date));
         }
         getData().add(tradingday);
-        Vector<Object> newRow = new Vector<>();
+        List<Object> newRow = new ArrayList<>();
         getNewRow(newRow, tradingday);
         rows.add(newRow);
         this.fireTableRowsInserted(rows.size() - 1, rows.size() - 1);
@@ -273,26 +287,26 @@ public class TradingdayTableModel extends TableModel {
     /**
      * Method getNewRow.
      *
-     * @param newRow  Vector<Object>
+     * @param newRow  List<Object>
      * @param element Tradingday
      */
-    public void getNewRow(Vector<Object> newRow, Tradingday element) {
-        newRow.addElement(new Date(element.getOpen()));
-        newRow.addElement(new Date(element.getClose()));
+    public void getNewRow(List<Object> newRow, Tradingday element) {
+        newRow.add(new Date(element.getOpen()));
+        newRow.add(new Date(element.getClose()));
         if (null == element.getMarketGap()) {
-            newRow.addElement(new MarketBar());
+            newRow.add(new MarketBar());
         } else {
-            newRow.addElement(MarketBar.newInstance((element.getMarketGap())));
+            newRow.add(MarketBar.newInstance((element.getMarketGap())));
         }
         if (null == element.getMarketBias()) {
-            newRow.addElement(new MarketBar());
+            newRow.add(new MarketBar());
         } else {
-            newRow.addElement(MarketBar.newInstance((element.getMarketBias())));
+            newRow.add(MarketBar.newInstance((element.getMarketBias())));
         }
         if (null == element.getMarketBar()) {
-            newRow.addElement(new MarketBar());
+            newRow.add(new MarketBar());
         } else {
-            newRow.addElement(MarketBar.newInstance((element.getMarketBar())));
+            newRow.add(MarketBar.newInstance((element.getMarketBar())));
         }
     }
 }

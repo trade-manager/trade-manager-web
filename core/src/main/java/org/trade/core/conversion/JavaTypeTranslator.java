@@ -35,9 +35,10 @@
  */
 package org.trade.core.conversion;
 
-import java.util.Enumeration;
+import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.Vector;
+import java.util.List;
+import java.util.ListIterator;
 
 /**
  * This class is used to convert values of one type to another type. It
@@ -66,16 +67,14 @@ public class JavaTypeTranslator {
      * values are the actual converter instances used by the JavaTypeTranslator.
      */
     private static final Hashtable<Class<?>, Hashtable<Class<?>, IJavaTypeConverter>> m_converters = new Hashtable<>();
-
-    private static final Hashtable<?, ?> m_noBaseConverters = new Hashtable<>();
-
-    private static final Vector<Object> m_dynConverters = new Vector<>();
+    private static final Hashtable<?, ?> noBaseConverters = new Hashtable<>();
+    private static final List<Object> dynConverters = new ArrayList<>();
 
     /**
      * Flag indicating whether supertype conversions are supported by the
      * JavaTypeTranslator. True is the default.
      */
-    private static boolean m_allowSupertypeConversions = true;
+    private static boolean allowSupertypeConversions = true;
 
     static {
         // when the class is loaded register a number of
@@ -156,7 +155,7 @@ public class JavaTypeTranslator {
 
         // No base converters registered to deal with the conversion
         if (innerTable == null) {
-            innerTable = m_noBaseConverters;
+            innerTable = noBaseConverters;
         }
 
         boolean topClass = true;
@@ -177,13 +176,13 @@ public class JavaTypeTranslator {
                 }
             }
 
-            if (m_allowSupertypeConversions) {
+            if (allowSupertypeConversions) {
                 // Try the registered dynamic converters
                 if (topClass) {
                     // Check the Dynamic Converters
-                    Enumeration<Object> en = m_dynConverters.elements();
-                    while (en.hasMoreElements()) {
-                        IJavaDynamicTypeConverter dc = (IJavaDynamicTypeConverter) en.nextElement();
+                    ListIterator<Object> en = dynConverters.listIterator();
+                    while (en.hasNext()) {
+                        IJavaDynamicTypeConverter dc = (IJavaDynamicTypeConverter) en.next();
 
                         if (dc.supportsConversion(targetType, sourceValue)) {
                             // The first matching dynamic converter will be used
@@ -250,8 +249,8 @@ public class JavaTypeTranslator {
      * @param theConverter the converter instance to register
      */
     public static void registerDynamicTypeConverter(IJavaDynamicTypeConverter theConverter) {
-        if (!m_dynConverters.contains(theConverter)) {
-            m_dynConverters.addElement(theConverter);
+        if (!dynConverters.contains(theConverter)) {
+            dynConverters.add(theConverter);
         }
     }
 
@@ -267,7 +266,7 @@ public class JavaTypeTranslator {
      *                        they are not.
      */
     public static void setAllowSupertypeConversions(boolean allowSupertypes) {
-        m_allowSupertypeConversions = allowSupertypes;
+        allowSupertypeConversions = allowSupertypes;
     }
 
     /**
@@ -282,6 +281,6 @@ public class JavaTypeTranslator {
      * false indicates they are not. True is the default.
      */
     public static boolean isAllowSupertypeConversions() {
-        return m_allowSupertypeConversions;
+        return allowSupertypeConversions;
     }
 }

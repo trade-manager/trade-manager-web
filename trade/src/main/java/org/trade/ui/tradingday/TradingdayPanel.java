@@ -84,7 +84,6 @@ import java.text.NumberFormat;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Objects;
-import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -302,15 +301,15 @@ public class TradingdayPanel extends BasePanel {
         try {
 
             DecodeTableEditor portfolioEditor = new DecodeTableEditor(
-                    new JComboBox<>((new DAOPortfolio()).getCodesDecodes()));
+                    new JComboBox<>((new DAOPortfolio()).getCodesDecodes().toArray(new Decode[0])));
             tradestrategyTable.setDefaultEditor(DAOPortfolio.class, portfolioEditor);
 
             DecodeTableEditor strategyEditor = new DecodeTableEditor(
-                    new JComboBox<>((new DAOStrategy()).getCodesDecodes()));
+                    new JComboBox<>((new DAOStrategy()).getCodesDecodes().toArray(new Decode[0])));
             tradestrategyTable.setDefaultEditor(DAOStrategy.class, strategyEditor);
 
             DecodeTableEditor strategyManagerEditor = new DecodeTableEditor(
-                    new JComboBox<>((new DAOStrategyManager()).getCodesDecodes()));
+                    new JComboBox<>((new DAOStrategyManager()).getCodesDecodes().toArray(new Decode[0])));
             tradestrategyTable.setDefaultEditor(DAOStrategyManager.class, strategyManagerEditor);
 
             resetStrategyComboBox(strategyFromEditorComboBox);
@@ -1099,8 +1098,8 @@ public class TradingdayPanel extends BasePanel {
 
     private void resetStrategyComboBox(DAODecodeComboBoxEditor editorComboBox) throws ValueTypeException {
 
-        Vector<Decode> codesNew = ((new DAOStrategy()).getCodesDecodes());
-        DefaultComboBoxModel<Decode> model = new DefaultComboBoxModel<>(codesNew);
+        List<Decode> codesNew = ((new DAOStrategy()).getCodesDecodes());
+        DefaultComboBoxModel<Decode> model = new DefaultComboBoxModel<>(codesNew.toArray(new Decode[0]));
         editorComboBox.setModel(model);
         editorComboBox.setRenderer(new DecodeComboBoxRenderer());
     }

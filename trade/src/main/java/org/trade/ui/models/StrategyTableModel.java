@@ -44,7 +44,8 @@ import org.trade.core.valuetype.Decode;
 import org.trade.core.valuetype.YesNo;
 
 import java.io.Serial;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -101,9 +102,12 @@ public class StrategyTableModel extends AspectTableModel {
 
         this.m_data = data;
         this.clearAll();
+
         if (!getData().getAspect().isEmpty()) {
+
             for (final Aspect element : getData().getAspect()) {
-                final Vector<Object> newRow = new Vector<>();
+
+                final List<Object> newRow = new ArrayList<>();
                 getNewRow(newRow, (Strategy) element);
                 rows.add(newRow);
             }
@@ -163,11 +167,14 @@ public class StrategyTableModel extends AspectTableModel {
     public void deleteRow(int selectedRow) {
 
         String name = (String) this.getValueAt(selectedRow, 0);
+
         for (final Aspect element : getData().getAspect()) {
+
             if (CoreUtils.nullSafeComparator(((Strategy) element).getName(), name) == 0) {
+
                 getData().remove(element);
                 getData().setDirty(true);
-                final Vector<Object> currRow = rows.get(selectedRow);
+                final List<Object> currRow = rows.get(selectedRow);
                 rows.remove(currRow);
                 this.fireTableRowsDeleted(selectedRow, selectedRow);
                 break;
@@ -180,7 +187,7 @@ public class StrategyTableModel extends AspectTableModel {
         final Strategy element = new Strategy();
         getData().getAspect().add(element);
         getData().setDirty(true);
-        final Vector<Object> newRow = new Vector<>();
+        final List<Object> newRow = new ArrayList<>();
         getNewRow(newRow, element);
         rows.add(newRow);
         // Tell the listeners a new table has arrived.
@@ -190,23 +197,23 @@ public class StrategyTableModel extends AspectTableModel {
     /**
      * Method getNewRow.
      *
-     * @param newRow  Vector<Object>
+     * @param newRow  List<Object>
      * @param element Strategy
      */
-    public void getNewRow(Vector<Object> newRow, Strategy element) {
+    public void getNewRow(List<Object> newRow, Strategy element) {
 
-        newRow.addElement(element.getName());
-        newRow.addElement(element.getDescription());
-        newRow.addElement(element.getClassName());
+        newRow.add(element.getName());
+        newRow.add(element.getDescription());
+        newRow.add(element.getClassName());
         if (element.hasStrategyManager()) {
-            newRow.addElement(DAOStrategyManager.newInstance(element.getStrategyManager().getName()));
+            newRow.add(DAOStrategyManager.newInstance(element.getStrategyManager().getName()));
         } else {
-            newRow.addElement(DAOStrategyManager.newInstance(Decode.NONE));
+            newRow.add(DAOStrategyManager.newInstance(Decode.NONE));
         }
         if (null == element.getMarketData()) {
-            newRow.addElement(new YesNo());
+            newRow.add(new YesNo());
         } else {
-            newRow.addElement(YesNo.newInstance(element.getMarketData()));
+            newRow.add(YesNo.newInstance(element.getMarketData()));
         }
     }
 }

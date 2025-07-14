@@ -37,8 +37,8 @@ package org.trade.base;
 
 import javax.swing.filechooser.FileFilter;
 import java.io.File;
-import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Iterator;
 
 /**
  * @author Simon Allen
@@ -47,11 +47,8 @@ import java.util.Hashtable;
 public class ExampleFileFilter extends FileFilter {
 
     private Hashtable<String, ExampleFileFilter> filters;
-
     private String description = null;
-
     private String fullDescription = null;
-
     private boolean useExtensionsInDescription = true;
 
     /**
@@ -201,22 +198,28 @@ public class ExampleFileFilter extends FileFilter {
      * @return String
      */
     public String getDescription() {
+
         if (fullDescription == null) {
+
             if ((description == null) || isExtensionListInDescription()) {
+
                 if (description != null) {
+
                     fullDescription = description;
                 }
 
                 fullDescription += " (";
 
                 // build the description from the extension list
-                Enumeration<String> extensions = filters.keys();
+                Iterator<String> extensions = filters.keys().asIterator();
 
                 if (extensions != null) {
-                    fullDescription += "." + extensions.nextElement();
 
-                    while (extensions.hasMoreElements()) {
-                        fullDescription += ", " + extensions.nextElement();
+                    fullDescription += "." + extensions.next();
+
+                    while (extensions.hasNext()) {
+
+                        fullDescription += ", " + extensions.next();
                     }
                 }
 
@@ -236,6 +239,7 @@ public class ExampleFileFilter extends FileFilter {
      * @param description String
      */
     public void setDescription(String description) {
+
         this.description = description;
         fullDescription = null;
     }

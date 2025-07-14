@@ -41,7 +41,8 @@ import org.slf4j.LoggerFactory;
 import javax.swing.*;
 import java.awt.*;
 import java.io.Serial;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -53,8 +54,8 @@ public class BaseButton extends JButton {
     @Serial
     private static final long serialVersionUID = -47827936580637959L;
     private final static Logger _log = LoggerFactory.getLogger(BaseButton.class);
-    protected MessageNotifier m_notifier = new MessageNotifier();
-    private String m_method = null;
+    protected MessageNotifier notifier = new MessageNotifier();
+    private String method = null;
     private Object transferObject = null;
 
     /**
@@ -153,7 +154,7 @@ public class BaseButton extends JButton {
      * @param listener IMessageListener
      */
     public void addMessageListener(IMessageListener listener) {
-        m_notifier.add(listener);
+        notifier.add(listener);
     }
 
     /**
@@ -162,7 +163,7 @@ public class BaseButton extends JButton {
      * @param listener IMessageListener
      */
     public void remove(IMessageListener listener) {
-        m_notifier.remove(listener);
+        notifier.remove(listener);
     }
 
     /**
@@ -189,11 +190,14 @@ public class BaseButton extends JButton {
      * @param selection String
      */
     protected void messageEvent(String selection) {
-        Vector<Object> transferObjects = new Vector<>();
+
+        List<Object> transferObjects = new ArrayList<>();
+
         if (null != this.transferObject) {
+
             transferObjects.add(this.transferObject);
         }
-        m_notifier.notifyEvent(new MessageEvent(selection), transferObjects);
+        notifier.notifyEvent(new MessageEvent(selection), transferObjects);
     }
 
     /**
@@ -202,7 +206,7 @@ public class BaseButton extends JButton {
      * @param method String
      */
     private void setMethod(String method) {
-        m_method = method;
+        this.method = method;
     }
 
     /**
@@ -211,6 +215,6 @@ public class BaseButton extends JButton {
      * @return String
      */
     public String getMethod() {
-        return m_method;
+        return method;
     }
 }

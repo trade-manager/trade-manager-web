@@ -55,8 +55,9 @@ import org.trade.core.valuetype.YesNo;
 
 import javax.swing.event.TableModelEvent;
 import java.io.Serial;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.Vector;
 
 /**
  *
@@ -196,10 +197,12 @@ public class TradeOrderTableModel extends TableModel {
      * @see javax.swing.table.TableModel#setValueAt(Object, int, int)
      */
     public void setValueAt(Object value, int row, int column) {
+
         if (null != value && !value.equals(super.getValueAt(row, column))) {
+
             this.populateDAO(value, row, column);
-            Vector<Object> dataRow = rows.get(row);
-            dataRow.setElementAt(value, column);
+            List<Object> dataRow = rows.get(row);
+            dataRow.set(column, value);
             fireTableCellUpdated(row, column);
         }
     }
@@ -219,11 +222,15 @@ public class TradeOrderTableModel extends TableModel {
      * @param data Tradestrategy
      */
     public void setData(Tradestrategy data) {
+
         this.m_data = data;
         this.clearAll();
+
         if (!getData().getTradeOrders().isEmpty()) {
+
             for (final TradeOrder tradeOrder : getData().getTradeOrders()) {
-                final Vector<Object> newRow = new Vector<>();
+
+                final List<Object> newRow = new ArrayList<>();
                 getNewRow(newRow, tradeOrder);
                 rows.add(newRow);
             }
@@ -334,10 +341,13 @@ public class TradeOrderTableModel extends TableModel {
     public void deleteRow(int selectedRow) {
 
         Integer orderKey = ((Quantity) this.getValueAt(selectedRow, 1)).getIntegerValue();
+
         for (final TradeOrder tradeOrder : getData().getTradeOrders()) {
+
             if (CoreUtils.nullSafeComparator(tradeOrder.getOrderKey(), orderKey) == 0) {
+
                 getData().getTradeOrders().remove(tradeOrder);
-                final Vector<Object> currRow = rows.get(selectedRow);
+                final List<Object> currRow = rows.get(selectedRow);
                 rows.remove(currRow);
                 this.fireTableRowsDeleted(selectedRow, selectedRow);
                 break;
@@ -351,19 +361,23 @@ public class TradeOrderTableModel extends TableModel {
      * @param element TradeOrder
      */
     public void addRow(TradeOrder element) {
+
         getData().addTradeOrder(element);
-        final Vector<Object> newRow = new Vector<>();
+        final List<Object> newRow = new ArrayList<>();
         getNewRow(newRow, element);
         rows.add(newRow);
         this.fireTableRowsInserted(rows.size() - 1, rows.size() - 1);
     }
 
     public void addRow() {
-        final Tradestrategy tradestrategy = getData();
 
+        final Tradestrategy tradestrategy = getData();
         String side = tradestrategy.getSide();
-        if (null == side)
+
+        if (null == side) {
             side = Side.BOT;
+        }
+
         String orderType = OrderType.STPLMT;
         String action = Action.BUY;
         if (Side.SLD.equals(side)) {
@@ -406,7 +420,7 @@ public class TradeOrderTableModel extends TableModel {
         tradeOrder.setStatus(OrderStatus.UNSUBMIT);
         tradestrategy.addTradeOrder(tradeOrder);
 
-        final Vector<Object> newRow = new Vector<>();
+        final List<Object> newRow = new ArrayList<>();
         getNewRow(newRow, tradeOrder);
         rows.add(newRow);
 
@@ -418,62 +432,78 @@ public class TradeOrderTableModel extends TableModel {
     /**
      * Method getNewRow.
      *
-     * @param newRow  Vector<Object>
+     * @param newRow  List<Object>
      * @param element TradeOrder
      */
-    public void getNewRow(Vector<Object> newRow, TradeOrder element) {
+    public void getNewRow(List<Object> newRow, TradeOrder element) {
 
-        newRow.addElement(element.getTradestrategy().getContract().getSymbol());
-        newRow.addElement(new Quantity(element.getOrderKey()));
+        newRow.add(element.getTradestrategy().getContract().getSymbol());
+        newRow.add(new Quantity(element.getOrderKey()));
+
         if (null == element.getAction()) {
-            newRow.addElement(new Action());
+
+            newRow.add(new Action());
         } else {
-            newRow.addElement(Action.newInstance(element.getAction()));
+
+            newRow.add(Action.newInstance(element.getAction()));
         }
         if (null == element.getOrderType()) {
-            newRow.addElement(new OrderType());
+
+            newRow.add(new OrderType());
         } else {
-            newRow.addElement(OrderType.newInstance(element.getOrderType()));
+            newRow.add(OrderType.newInstance(element.getOrderType()));
         }
 
-        newRow.addElement(new Quantity(element.getQuantity()));
-        newRow.addElement(new Money(element.getLimitPrice()));
-        newRow.addElement(new Money(element.getAuxPrice()));
-        newRow.addElement(YesNo.newInstance(element.getTransmit()));
+        newRow.add(new Quantity(element.getQuantity()));
+        newRow.add(new Money(element.getLimitPrice()));
+        newRow.add(new Money(element.getAuxPrice()));
+        newRow.add(YesNo.newInstance(element.getTransmit()));
+
         if (null == element.getStatus()) {
-            newRow.addElement(new OrderStatus());
+
+            newRow.add(new OrderStatus());
         } else {
-            newRow.addElement(OrderStatus.newInstance(element.getStatus()));
+
+            newRow.add(OrderStatus.newInstance(element.getStatus()));
         }
+
         if (null == element.getOcaGroupName()) {
-            newRow.addElement("");
+
+            newRow.add("");
         } else {
-            newRow.addElement(element.getOcaGroupName());
+            newRow.add(element.getOcaGroupName());
         }
+
         if (null == element.getAverageFilledPrice()) {
-            newRow.addElement(new Decimal(3));
+
+            newRow.add(new Decimal(3));
         } else {
-            newRow.addElement(new Decimal(element.getAverageFilledPrice(), 3));
+
+            newRow.add(new Decimal(element.getAverageFilledPrice(), 3));
         }
+
         if (null == element.getFilledDate()) {
-            newRow.addElement(new Date());
+
+            newRow.add(new Date());
         } else {
-            newRow.addElement(new Date(element.getFilledDate()));
+
+            newRow.add(new Date(element.getFilledDate()));
         }
-        newRow.addElement(new Quantity(element.getFilledQuantity()));
-        newRow.addElement(new Money(element.getStopPrice()));
+
+        newRow.add(new Quantity(element.getFilledQuantity()));
+        newRow.add(new Money(element.getStopPrice()));
         TradeOrder tradeOrder = new TradeOrder();
 
         if (null == element.getFAProfile()) {
 
-            newRow.addElement(tradeOrder);
+            newRow.add(tradeOrder);
         } else {
 
             tradeOrder.setFAProfile(element.getFAProfile());
             tradeOrder.setFAGroup(element.getFAGroup());
             tradeOrder.setFAMethod(element.getFAMethod());
             tradeOrder.setFAPercent(element.getFAPercent());
-            newRow.addElement(tradeOrder);
+            newRow.add(tradeOrder);
         }
     }
 }

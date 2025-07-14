@@ -13,10 +13,10 @@ import javax.swing.JFormattedTextField.AbstractFormatter;
 import java.awt.*;
 import java.io.Serial;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Objects;
-import java.util.Vector;
 
 public class CodeAttributePanel extends JPanel {
 
@@ -63,21 +63,27 @@ public class CodeAttributePanel extends JPanel {
                 }
 
                 if (null == ((JFormattedTextField) field).getValue()) {
-                    Vector<Object> parm = new Vector<>();
-                    parm.add(codeAttribute.getDefaultValue());
-                    Object codeValue = ClassFactory.getCreateClass(codeAttribute.getClassName(), parm, this);
+
+                    List<Object> params = new ArrayList<>();
+                    params.add(codeAttribute.getDefaultValue());
+                    Object codeValue = ClassFactory.getCreateClass(codeAttribute.getClassName(), params, this);
                     ((JFormattedTextField) field).setValue(codeValue);
                 }
             } else {
-                Vector<Object> parm = new Vector<>();
-                Object decode = ClassFactory.getCreateClass(codeAttribute.getEditorClassName(), parm, this);
+
+                List<Object> params = new ArrayList<>();
+                Object decode = ClassFactory.getCreateClass(codeAttribute.getEditorClassName(), params, this);
                 boolean valueSet = false;
+
                 if (decode instanceof Decode) {
+
                     field = new DecodeComboBoxEditor(((Decode) decode).getCodesDecodes());
                     field.setInputVerifier(new FormattedTextFieldVerifier());
                     DecodeComboBoxRenderer codeRenderer = new DecodeComboBoxRenderer();
                     ((DecodeComboBoxEditor) field).setRenderer(codeRenderer);
+
                     for (CodeValue value : this.currentCodeValues) {
+
                         if (value.getCodeAttribute().getName().equals(codeAttribute.getName())) {
 
                             ((Decode) decode)
@@ -87,11 +93,14 @@ public class CodeAttributePanel extends JPanel {
                             break;
                         }
                     }
+
                     if (!valueSet) {
+
                         ((Decode) decode).setValue(codeAttribute.getDefaultValue());
                         ((DecodeComboBoxEditor) field).setItem(decode);
                     }
                 } else {
+
                     continue;
                 }
             }

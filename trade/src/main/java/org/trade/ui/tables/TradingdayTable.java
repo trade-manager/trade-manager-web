@@ -38,6 +38,7 @@ package org.trade.ui.tables;
 import org.trade.base.Table;
 import org.trade.base.TableModel;
 import org.trade.core.util.time.TradingCalendar;
+import org.trade.core.valuetype.Decode;
 import org.trade.core.valuetype.MarketBar;
 import org.trade.core.valuetype.ValueTypeException;
 import org.trade.ui.widget.DateEditor;
@@ -69,9 +70,10 @@ public class TradingdayTable extends Table {
      * @param model TableModel
      */
     public TradingdayTable(TableModel model) throws ValueTypeException {
+
         super(model);
         DecodeTableEditor marketBarEditor = new DecodeTableEditor(
-                new JComboBox<>((new MarketBar()).getCodesDecodes()));
+                new JComboBox<>((new MarketBar()).getCodesDecodes().toArray(new Decode[0])));
         this.setDefaultEditor(MarketBar.class, marketBarEditor);
         DateRenderer rDate = new DateRenderer(DATETIMEFORMAT);
         DateEditor eDate = new DateEditor(new DateField(DATETIMEFORMAT),

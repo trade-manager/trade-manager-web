@@ -378,7 +378,6 @@ public interface TradeService extends AspectService {
     TradelogReport findTradelogReport(Portfolio portfolio, ZonedDateTime start, ZonedDateTime end, boolean filter,
                                       String symbol, BigDecimal winLossAmount) throws IOException;
 
-
     /**
      * @param contract
      * @param startDate
@@ -412,12 +411,19 @@ public interface TradeService extends AspectService {
     Rule findRuleById(Long ruleId);
 
     /**
+     * Method findRulesAll.
+     *
+     * @return List<Rule>
+     */
+    List<Rule> findRulesAll();
+
+    /**
      * Method findRuleByMaxVersion.
      *
      * @param strategy Strategy
-     * @return Integer
+     * @return Rule
      */
-    Integer findRuleByMaxVersion(Strategy strategy);
+    Rule findRuleByMaxVersion(Strategy strategy);
 
     /**
      * Method findStrategyById.
@@ -441,14 +447,6 @@ public interface TradeService extends AspectService {
      * @return List<Strategy>
      */
     List<Strategy> findStrategies();
-
-    /**
-     * Method saveAspect.
-     *
-     * @param instance Aspect
-     * @return Aspect
-     */
-    // <T extends Aspect> T findAspectById1(T instance);
 
     /**
      * Method findAspectById.

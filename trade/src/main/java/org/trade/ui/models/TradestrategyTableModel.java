@@ -66,8 +66,9 @@ import javax.swing.*;
 import java.io.Serial;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.Vector;
 
 /**
  *
@@ -204,10 +205,12 @@ public class TradestrategyTableModel extends TableModel {
      * @see javax.swing.table.TableModel#setValueAt(Object, int, int)
      */
     public void setValueAt(Object value, int row, int column) {
+
         if (null != value && !value.equals(super.getValueAt(row, column))) {
+
             this.populateDAO(value, row, column);
-            Vector<Object> dataRow = rows.get(row);
-            dataRow.setElementAt(value, column);
+            List<Object> dataRow = rows.get(row);
+            dataRow.set(column, value);
             fireTableCellUpdated(row, column);
         }
     }
@@ -221,10 +224,13 @@ public class TradestrategyTableModel extends TableModel {
         if (timer.isRunning())
             timer.stop();
         this.m_data = data;
+
         this.clearAll();
         if (null != getData() && null != getData().getTradestrategies() && !getData().getTradestrategies().isEmpty()) {
+
             for (final Tradestrategy element : getData().getTradestrategies()) {
-                final Vector<Object> newRow = new Vector<>();
+
+                final List<Object> newRow = new ArrayList<>();
                 getNewRow(newRow, element);
                 rows.add(newRow);
             }
@@ -241,6 +247,7 @@ public class TradestrategyTableModel extends TableModel {
      * @param column int
      */
     public void populateDAO(Object value, int row, int column) {
+
         Tradestrategy element = getData().getTradestrategies().get(row);
 
         switch (column) {
@@ -369,7 +376,7 @@ public class TradestrategyTableModel extends TableModel {
 
                 getData().getTradestrategies().remove(element);
                 getData().setDirty(true);
-                final Vector<Object> currRow = rows.get(selectedRow);
+                final List<Object> currRow = rows.get(selectedRow);
                 rows.remove(currRow);
                 this.fireTableRowsDeleted(selectedRow, selectedRow);
                 break;
@@ -430,7 +437,7 @@ public class TradestrategyTableModel extends TableModel {
             tradestrategy.setPortfolio(portfolio);
 
             getData().getTradestrategies().add(tradestrategy);
-            Vector<Object> newRow = new Vector<>();
+            List<Object> newRow = new ArrayList<>();
 
             getNewRow(newRow, tradestrategy);
             rows.add(newRow);
@@ -443,56 +450,72 @@ public class TradestrategyTableModel extends TableModel {
     /**
      * Method getNewRow.
      *
-     * @param newRow  Vector<Object>
+     * @param newRow  List<Object>
      * @param element Tradestrategy
      */
-    public void getNewRow(Vector<Object> newRow, Tradestrategy element) {
+    public void getNewRow(List<Object> newRow, Tradestrategy element) {
 
-        newRow.addElement(new Date(element.getTradingday().getOpen()));
-        newRow.addElement(YesNo.newInstance(element.getTrade()));
-        newRow.addElement(element.getContract().getSymbol());
+        newRow.add(new Date(element.getTradingday().getOpen()));
+        newRow.add(YesNo.newInstance(element.getTrade()));
+        newRow.add(element.getContract().getSymbol());
+
         if (null == element.getSide()) {
-            newRow.addElement(new Side());
+
+            newRow.add(new Side());
         } else {
-            newRow.addElement(Side.newInstance(element.getSide()));
-        }
-        if (null == element.getTier()) {
-            newRow.addElement(Tier.newInstance(Decode.NONE));
-        } else {
-            newRow.addElement(Tier.newInstance(element.getTier()));
-        }
-        newRow.addElement(DAOStrategy.newInstance(element.getStrategy().getName()));
-        if (element.getStrategy().hasStrategyManager()) {
-            newRow.addElement(DAOStrategyManager.newInstance(element.getStrategy().getStrategyManager().getName()));
-        } else {
-            newRow.addElement(DAOStrategyManager.newInstance(Decode.NONE));
+
+            newRow.add(Side.newInstance(element.getSide()));
         }
 
-        newRow.addElement(DAOPortfolio.newInstance(element.getPortfolio().getName()));
-        newRow.addElement(BarSize.newInstance(element.getBarSize()));
-        newRow.addElement(ChartDays.newInstance(element.getChartDays()));
-        newRow.addElement(new Money(element.getRiskAmount()));
+        if (null == element.getTier()) {
+
+            newRow.add(Tier.newInstance(Decode.NONE));
+        } else {
+
+            newRow.add(Tier.newInstance(element.getTier()));
+        }
+
+        newRow.add(DAOStrategy.newInstance(element.getStrategy().getName()));
+
+        if (element.getStrategy().hasStrategyManager()) {
+
+            newRow.add(DAOStrategyManager.newInstance(element.getStrategy().getStrategyManager().getName()));
+        } else {
+
+            newRow.add(DAOStrategyManager.newInstance(Decode.NONE));
+        }
+
+        newRow.add(DAOPortfolio.newInstance(element.getPortfolio().getName()));
+        newRow.add(BarSize.newInstance(element.getBarSize()));
+        newRow.add(ChartDays.newInstance(element.getChartDays()));
+        newRow.add(new Money(element.getRiskAmount()));
         /*
          * TODO If the id is null then this element has not been saved and so
          * the DatasetContainer cannot be created. This is due to an issue with
          * hibernate and Eager fetch.
          */
         if (null != element.getStrategyData()) {
-            newRow.addElement(element.getStrategyData().getBaseCandleSeries().getPercentChangeFromClose());
-            newRow.addElement(element.getStrategyData().getBaseCandleSeries().getPercentChangeFromOpen());
+
+            newRow.add(element.getStrategyData().getBaseCandleSeries().getPercentChangeFromClose());
+            newRow.add(element.getStrategyData().getBaseCandleSeries().getPercentChangeFromOpen());
         } else {
-            newRow.addElement(new Percent(0));
-            newRow.addElement(new Percent(0));
+
+            newRow.add(new Percent(0));
+            newRow.add(new Percent(0));
         }
-        newRow.addElement(element.getTradestrategyStatus());
-        newRow.addElement(Currency.newInstance(element.getContract().getCurrency()));
-        newRow.addElement(Exchange.newInstance(element.getContract().getExchange()));
-        newRow.addElement(Exchange.newInstance(element.getContract().getPrimaryExchange()));
-        newRow.addElement(SECType.newInstance(element.getContract().getSecType()));
+
+        newRow.add(element.getTradestrategyStatus());
+        newRow.add(Currency.newInstance(element.getContract().getCurrency()));
+        newRow.add(Exchange.newInstance(element.getContract().getExchange()));
+        newRow.add(Exchange.newInstance(element.getContract().getPrimaryExchange()));
+        newRow.add(SECType.newInstance(element.getContract().getSecType()));
+
         if (null == element.getContract().getExpiry()) {
-            newRow.addElement(new Date());
+
+            newRow.add(new Date());
         } else {
-            newRow.addElement(new Date(element.getContract().getExpiry()));
+
+            newRow.add(new Date(element.getContract().getExpiry()));
         }
     }
 }

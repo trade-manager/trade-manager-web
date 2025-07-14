@@ -7,7 +7,7 @@ import javax.swing.*;
 import javax.swing.tree.TreeSelectionModel;
 import java.awt.*;
 import java.io.Serial;
-import java.util.Vector;
+import java.util.List;
 
 public class SimpleXMLTreeViewPanel extends BasePanel {
 
@@ -38,7 +38,7 @@ public class SimpleXMLTreeViewPanel extends BasePanel {
     String fname = null;
 
     // DOMTree m_tree = null;
-    Vector<String> textLine = null;
+    List<String> textLine = null;
 
     // DOMParserSaveEncoding parser = null;
     Image openFolder;

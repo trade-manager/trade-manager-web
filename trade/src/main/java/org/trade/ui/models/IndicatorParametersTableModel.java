@@ -42,7 +42,8 @@ import org.trade.core.persistent.dao.IndicatorParameters;
 import org.trade.core.util.CoreUtils;
 
 import java.io.Serial;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -84,9 +85,12 @@ public class IndicatorParametersTableModel extends AspectTableModel {
 
         this.m_data = data;
         this.clearAll();
+
         if (!getData().getAspect().isEmpty()) {
+
             for (final Aspect element : getData().getAspect()) {
-                final Vector<Object> newRow = new Vector<>();
+
+                final List<Object> newRow = new ArrayList<>();
                 getNewRow(newRow, (CodeType) element);
                 rows.add(newRow);
             }
@@ -128,11 +132,14 @@ public class IndicatorParametersTableModel extends AspectTableModel {
     public void deleteRow(int selectedRow) {
 
         String name = (String) this.getValueAt(selectedRow, 0);
+
         for (final Aspect element : getData().getAspect()) {
+
             if (CoreUtils.nullSafeComparator(((CodeType) element).getName(), name) == 0) {
+
                 getData().remove(element);
                 getData().setDirty(true);
-                final Vector<Object> currRow = rows.get(selectedRow);
+                final List<Object> currRow = rows.get(selectedRow);
                 rows.remove(currRow);
                 this.fireTableRowsDeleted(selectedRow, selectedRow);
                 break;
@@ -145,7 +152,7 @@ public class IndicatorParametersTableModel extends AspectTableModel {
         final IndicatorParameters element = new IndicatorParameters("", CodeType.IndicatorParameters, "");
         getData().add(element);
         getData().setDirty(true);
-        final Vector<Object> newRow = new Vector<>();
+        final List<Object> newRow = new ArrayList<>();
         getNewRow(newRow, element);
         rows.add(newRow);
         // Tell the listeners a new table has arrived.
@@ -155,12 +162,12 @@ public class IndicatorParametersTableModel extends AspectTableModel {
     /**
      * Method getNewRow.
      *
-     * @param newRow  Vector<Object>
+     * @param newRow  List<Object>
      * @param element CodeType
      */
-    public void getNewRow(Vector<Object> newRow, CodeType element) {
-        newRow.addElement(element.getName());
-        newRow.addElement(element.getDescription());
+    public void getNewRow(List<Object> newRow, CodeType element) {
 
+        newRow.add(element.getName());
+        newRow.add(element.getDescription());
     }
 }

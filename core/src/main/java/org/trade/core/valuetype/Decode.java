@@ -44,8 +44,9 @@ import org.trade.core.lookup.PropertiesLookup;
 import org.trade.core.util.CoreUtils;
 
 import java.io.Serial;
+import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Vector;
+import java.util.List;
 
 /**
  * This class purpose is to represent a base class for a specialized CodeDecode
@@ -104,11 +105,11 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
      * Default Constructor
      *
      * @param codeDecodeType String
-     * @param columnNames    Vector<String>
-     * @param values         Vector<Object>
+     * @param columnNames    List<String>
+     * @param values         List<Object>
      * @param identifier     String
      */
-    public Decode(String codeDecodeType, Vector<String> columnNames, Vector<Object> values, String identifier) {
+    public Decode(String codeDecodeType, List<String> columnNames, List<Object> values, String identifier) {
 
         fCodeDecodeType = codeDecodeType;
         fCodeDecodeIdentifier = identifier;
@@ -119,10 +120,10 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
      * Default Constructor
      *
      * @param codeDecodeType String
-     * @param columnNames    Vector<String>
-     * @param values         Vector<Object>
+     * @param columnNames    List<String>
+     * @param values         List<Object>
      */
-    public Decode(String codeDecodeType, Vector<String> columnNames, Vector<Object> values) {
+    public Decode(String codeDecodeType, List<String> columnNames, List<Object> values) {
 
         fCodeDecodeType = codeDecodeType;
         fCodeDecodeIdentifier = CODE_DECODE_IDENTIFIER;
@@ -408,10 +409,11 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
     /**
      * Method getCodesDecodes.
      *
-     * @return Vector<Decode>
+     * @return List<Decode>
      */
-    public Vector<Decode> getCodesDecodes() throws ValueTypeException {
-        Vector<Decode> decodes = new Vector<>();
+    public List<Decode> getCodesDecodes() throws ValueTypeException {
+
+        List<Decode> decodes = new ArrayList<>();
 
         try {
             final int columns = getLookup().getColumnCount();

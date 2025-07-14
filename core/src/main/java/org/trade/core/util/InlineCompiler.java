@@ -36,11 +36,17 @@
 
 package org.trade.core.util;
 
-import com.sun.tools.javac.Main;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.tools.Diagnostic;
+import javax.tools.DiagnosticCollector;
+import javax.tools.JavaCompiler;
+import javax.tools.JavaFileObject;
+import javax.tools.StandardJavaFileManager;
+import javax.tools.ToolProvider;
 import java.io.File;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -48,7 +54,9 @@ import java.util.List;
 /**
  *
  */
-public final class Javac {
+public final class InlineCompiler {
+
+    private final static Logger _log = LoggerFactory.getLogger(InlineCompiler.class);
 
     private String classpath;
     private String outputdir;
@@ -64,25 +72,12 @@ public final class Javac {
      * @param classpath String
      * @param outputdir String
      */
-    public Javac(String classpath, String outputdir) {
+    public InlineCompiler(String classpath, String outputdir) {
+
         this.classpath = classpath;
         this.outputdir = outputdir;
     }
 
-    /**
-     * Compile the given source files.
-     *
-     * @return null if success; or compilation errors
-     */
-    public String compile(String[] srcFiles) {
-        StringWriter err = new StringWriter();
-        PrintWriter errPrinter = new PrintWriter(err);
-
-        String[] args = buildJavacArgs(srcFiles);
-        int resultCode = Main.compile(args, errPrinter);
-        errPrinter.close();
-        return (resultCode == 0) ? null : err.toString();
-    }
 
     /**
      * Method compile.
@@ -90,12 +85,38 @@ public final class Javac {
      * @param srcFiles File[]
      * @return String
      */
-    public String compile(File[] srcFiles) {
-        String[] paths = new String[srcFiles.length];
-        for (int i = 0; i < paths.length; i++) {
-            paths[i] = srcFiles[i].getAbsolutePath();
+    public String compile(List<File> srcFiles) {
+
+        StringBuffer results = new StringBuffer();
+        DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
+        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+        try (StandardJavaFileManager fileManager = compiler.getStandardFileManager(diagnostics, null, null)) {
+
+            // This sets up the class path that the compiler will use.
+            // I've added the .jar file that contains the DoStuff interface within in it...
+            List<String> optionList = new ArrayList<>();
+            optionList.add("-classpath");
+            optionList.add(System.getProperty("java.class.path") + File.pathSeparator + "dist/InlineCompiler.jar");
+
+            Iterable<? extends JavaFileObject> compilationUnit = fileManager.getJavaFileObjectsFromFiles(srcFiles);
+            JavaCompiler.CompilationTask task = compiler.getTask(null, fileManager, diagnostics, optionList, null, compilationUnit);
+
+            if (!task.call()) {
+
+                for (Diagnostic<? extends JavaFileObject> diagnostic : diagnostics.getDiagnostics()) {
+
+                    results.append("Error on line " + diagnostic.getLineNumber() + " in " + diagnostic.getSource().toUri());
+                    _log.error("Error on line {} in {}", diagnostic.getLineNumber(), diagnostic.getSource().toUri());
+                    System.out.format("Error on line %d in %s%n", diagnostic.getLineNumber(), diagnostic.getSource().toUri());
+                }
+                return results.toString();
+            }
+
+        } catch (IOException exp) {
+
+            _log.error("Error: doCompile msg: {}", exp.getMessage());
         }
-        return compile(paths);
+        return null;
     }
 
     /**

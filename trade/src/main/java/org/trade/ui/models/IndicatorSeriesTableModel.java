@@ -52,7 +52,6 @@ import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Vector;
 
 /**
  *
@@ -113,7 +112,8 @@ public class IndicatorSeriesTableModel extends TableModel {
         if (!getData().getIndicatorSeries().isEmpty()) {
 
             for (final org.trade.core.persistent.dao.series.indicator.IndicatorSeries element : getData().getIndicatorSeries()) {
-                final Vector<Object> newRow = new Vector<>();
+
+                final List<Object> newRow = new ArrayList<>();
                 getNewRow(newRow, element);
                 rows.add(newRow);
             }
@@ -208,7 +208,7 @@ public class IndicatorSeriesTableModel extends TableModel {
     public void replaceRow(org.trade.core.persistent.dao.series.indicator.IndicatorSeries newElement, int selectedRow) {
 
         getData().getIndicatorSeries().set(selectedRow, newElement);
-        final Vector<Object> newRow = new Vector<>();
+        final List<Object> newRow = new ArrayList<>();
         getNewRow(newRow, newElement);
         rows.set(selectedRow, newRow);
         // Tell the listeners a new table has arrived.
@@ -224,12 +224,15 @@ public class IndicatorSeriesTableModel extends TableModel {
 
         String type = ((org.trade.core.valuetype.IndicatorSeries) this.getValueAt(selectedRow, 1)).getCode();
         String name = (String) this.getValueAt(selectedRow, 2);
+
         for (final org.trade.core.persistent.dao.series.indicator.IndicatorSeries element : getData().getIndicatorSeries()) {
+
             if (CoreUtils.nullSafeComparator(element.getName(), name) == 0
                     && CoreUtils.nullSafeComparator(element.getType(), type) == 0) {
+
                 getData().getIndicatorSeries().remove(element);
                 getData().setDirty(true);
-                final Vector<Object> currRow = rows.get(selectedRow);
+                final List<Object> currRow = rows.get(selectedRow);
                 rows.remove(currRow);
                 this.fireTableRowsDeleted(selectedRow, selectedRow);
                 break;
@@ -247,17 +250,19 @@ public class IndicatorSeriesTableModel extends TableModel {
      * @return IndicatorSeries
      */
     private org.trade.core.persistent.dao.series.indicator.IndicatorSeries getIndicatorSeries(Strategy strategy, String name, String type, String description) {
+
         try {
-            Vector<Object> parm = new Vector<>();
-            parm.add(strategy);
-            parm.add(name);
-            parm.add(type);
-            parm.add(description);
-            parm.add(false);
-            parm.add(0);
-            parm.add(false);
+
+            List<Object> params = new ArrayList<>();
+            params.add(strategy);
+            params.add(name);
+            params.add(type);
+            params.add(description);
+            params.add(false);
+            params.add(0);
+            params.add(false);
             String className = "org.trade.strategy.data." + type;
-            return (org.trade.core.persistent.dao.series.indicator.IndicatorSeries) ClassFactory.getCreateClass(className, parm, this);
+            return (org.trade.core.persistent.dao.series.indicator.IndicatorSeries) ClassFactory.getCreateClass(className, params, this);
         } catch (Exception e) {
             /*
              * will only ever happen is IndicatorSeries does not exist.
@@ -274,7 +279,7 @@ public class IndicatorSeriesTableModel extends TableModel {
                 indicatorName);
         getData().getIndicatorSeries().add(element);
         getData().setDirty(true);
-        final Vector<Object> newRow = new Vector<>();
+        final List<Object> newRow = new ArrayList<>();
         getNewRow(newRow, Objects.requireNonNull(element));
         rows.add(newRow);
         // Tell the listeners a new table has arrived.
@@ -284,48 +289,48 @@ public class IndicatorSeriesTableModel extends TableModel {
     /**
      * Method getNewRow.
      *
-     * @param newRow  Vector<Object>
+     * @param newRow  List<Object>
      * @param element IndicatorSeries
      */
-    public void getNewRow(Vector<Object> newRow, org.trade.core.persistent.dao.series.indicator.IndicatorSeries element) {
+    public void getNewRow(List<Object> newRow, org.trade.core.persistent.dao.series.indicator.IndicatorSeries element) {
 
         if (null == element.getStrategy()) {
-            newRow.addElement(DAOStrategy.newInstance());
+            newRow.add(DAOStrategy.newInstance());
         } else {
-            newRow.addElement(DAOStrategy.newInstance(element.getStrategy().getName()));
+            newRow.add(DAOStrategy.newInstance(element.getStrategy().getName()));
         }
 
         if (null == element.getType()) {
-            newRow.addElement(org.trade.core.valuetype.IndicatorSeries.newInstance());
+            newRow.add(org.trade.core.valuetype.IndicatorSeries.newInstance());
         } else {
-            newRow.addElement(org.trade.core.valuetype.IndicatorSeries.newInstance(element.getType()));
+            newRow.add(org.trade.core.valuetype.IndicatorSeries.newInstance(element.getType()));
         }
-        newRow.addElement(element.getName());
-        newRow.addElement(element.getDescription());
+        newRow.add(element.getName());
+        newRow.add(element.getDescription());
         if (null == element.getDisplaySeries()) {
-            newRow.addElement(YesNo.newInstance(YesNo.NO));
+            newRow.add(YesNo.newInstance(YesNo.NO));
         } else {
-            newRow.addElement(YesNo.newInstance(element.getDisplaySeries()));
+            newRow.add(YesNo.newInstance(element.getDisplaySeries()));
         }
         if (null == element.getSubChart()) {
-            newRow.addElement(YesNo.newInstance(YesNo.NO));
+            newRow.add(YesNo.newInstance(YesNo.NO));
         } else {
-            newRow.addElement(YesNo.newInstance(element.getSubChart()));
+            newRow.add(YesNo.newInstance(element.getSubChart()));
         }
         if (null == element.getSeriesRGBColor()) {
-            newRow.addElement(new Color(0));
+            newRow.add(new Color(0));
         } else {
-            newRow.addElement(new Color(element.getSeriesRGBColor()));
+            newRow.add(new Color(element.getSeriesRGBColor()));
         }
 
         if (null == element.getCodeValues()) {
-            newRow.addElement(new Aspects());
+            newRow.add(new Aspects());
         } else {
             Aspects aspect = new Aspects();
             for (CodeValue code : element.getCodeValues()) {
                 aspect.add(code);
             }
-            newRow.addElement(aspect);
+            newRow.add(aspect);
         }
     }
 }

@@ -36,7 +36,7 @@
 package org.trade.base;
 
 import javax.swing.event.EventListenerList;
-import java.util.Vector;
+import java.util.List;
 
 /**
  * @author Simon Allen
@@ -87,13 +87,13 @@ public class MessageNotifier {
      * notifyEvent() -
      *
      * @param e    MessageEvent
-     * @param parm Vector<Object>
+     * @param params List<Object>
      */
-    public void notifyEvent(MessageEvent e, Vector<Object> parm) {
+    public void notifyEvent(MessageEvent e, List<Object> params) {
         Object[] listenerList = this.listeners.getListenerList();
         for (int i = listenerList.length - 2; i >= 0; i -= 2) {
             if (listenerList[i] == IMessageListener.class) {
-                ((IMessageListener) listenerList[i + 1]).handleEvent(e, parm);
+                ((IMessageListener) listenerList[i + 1]).handleEvent(e, params);
             }
         }
     }

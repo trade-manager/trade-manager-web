@@ -42,7 +42,8 @@ import org.trade.core.persistent.dao.StrategyParameters;
 import org.trade.core.util.CoreUtils;
 
 import java.io.Serial;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -84,9 +85,12 @@ public class StrategyParametersTableModel extends AspectTableModel {
 
         this.m_data = data;
         this.clearAll();
+
         if (!getData().getAspect().isEmpty()) {
+
             for (final Aspect element : getData().getAspect()) {
-                final Vector<Object> newRow = new Vector<>();
+
+                final List<Object> newRow = new ArrayList<>();
                 getNewRow(newRow, (CodeType) element);
                 rows.add(newRow);
             }
@@ -132,7 +136,7 @@ public class StrategyParametersTableModel extends AspectTableModel {
             if (CoreUtils.nullSafeComparator(((CodeType) element).getName(), name) == 0) {
                 getData().remove(element);
                 getData().setDirty(true);
-                final Vector<Object> currRow = rows.get(selectedRow);
+                final List<Object> currRow = rows.get(selectedRow);
                 rows.remove(currRow);
                 this.fireTableRowsDeleted(selectedRow, selectedRow);
                 break;
@@ -145,7 +149,7 @@ public class StrategyParametersTableModel extends AspectTableModel {
         final StrategyParameters element = new StrategyParameters("", CodeType.StrategyParameters, "");
         getData().add(element);
         getData().setDirty(true);
-        final Vector<Object> newRow = new Vector<>();
+        final List<Object> newRow = new ArrayList<>();
         getNewRow(newRow, element);
         rows.add(newRow);
         // Tell the listeners a new table has arrived.
@@ -155,12 +159,12 @@ public class StrategyParametersTableModel extends AspectTableModel {
     /**
      * Method getNewRow.
      *
-     * @param newRow  Vector<Object>
+     * @param newRow  List<Object>
      * @param element CodeType
      */
-    public void getNewRow(Vector<Object> newRow, CodeType element) {
-        newRow.addElement(element.getName());
-        newRow.addElement(element.getDescription());
+    public void getNewRow(List<Object> newRow, CodeType element) {
+        newRow.add(element.getName());
+        newRow.add(element.getDescription());
 
     }
 }

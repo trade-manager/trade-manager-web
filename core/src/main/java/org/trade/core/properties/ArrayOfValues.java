@@ -41,6 +41,7 @@ package org.trade.core.properties;
  * @author Simon Allen
  */
 public class ArrayOfValues {
+
     private final Object[] array;
 
     /**

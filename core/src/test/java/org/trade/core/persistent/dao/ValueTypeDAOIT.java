@@ -54,8 +54,8 @@ import org.trade.core.valuetype.DAOStrategyManager;
 import org.trade.core.valuetype.Decode;
 import org.trade.core.valuetype.Money;
 
-import java.util.Enumeration;
-import java.util.Vector;
+import java.util.List;
+import java.util.ListIterator;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
@@ -105,13 +105,13 @@ public class ValueTypeDAOIT {
     public void dOAStrategies() throws Exception {
 
         DAOStrategy strategies = new DAOStrategy();
-        Vector<Decode> decodes = strategies.getCodesDecodes();
-        Enumeration<Decode> eDecodes = decodes.elements();
+        List<Decode> decodes = strategies.getCodesDecodes();
+        ListIterator<Decode> eDecodes = decodes.listIterator();
         assertFalse(decodes.isEmpty());
 
-        while (eDecodes.hasMoreElements()) {
+        while (eDecodes.hasNext()) {
 
-            Decode decode = eDecodes.nextElement();
+            Decode decode = eDecodes.next();
             _log.info("TYPE:{}", decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._TYPE));
             _log.info("CODE:{}", decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._CODE));
             _log.info("DISPLAY_NAME:{}", decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._DISPLAY_NAME));
@@ -121,11 +121,11 @@ public class ValueTypeDAOIT {
         DAOStrategyManager strategyManagers = new DAOStrategyManager();
         decodes = strategyManagers.getCodesDecodes();
         assertFalse(decodes.isEmpty());
-        eDecodes = decodes.elements();
+        eDecodes = decodes.listIterator();
 
-        while (eDecodes.hasMoreElements()) {
+        while (eDecodes.hasNext()) {
 
-            Decode decode = eDecodes.nextElement();
+            Decode decode = eDecodes.next();
             _log.info("TYPE:{}", decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._TYPE));
             _log.info("CODE:{}", decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._CODE));
             _log.info("DISPLAY_NAME:{}", decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._DISPLAY_NAME));
@@ -137,13 +137,13 @@ public class ValueTypeDAOIT {
     public void dOAEntryLimit() throws Exception {
 
         DAOEntryLimit entryLimits = new DAOEntryLimit();
-        Vector<Decode> decodes = entryLimits.getCodesDecodes();
+        List<Decode> decodes = entryLimits.getCodesDecodes();
         assertFalse(decodes.isEmpty());
-        Enumeration<Decode> eDecodes = decodes.elements();
+        ListIterator<Decode> eDecodes = decodes.listIterator();
 
-        while (eDecodes.hasMoreElements()) {
+        while (eDecodes.hasNext()) {
 
-            Decode decode = eDecodes.nextElement();
+            Decode decode = eDecodes.next();
             _log.info("TYPE:{}", decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._TYPE));
             _log.info("CODE:{}", decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._CODE));
             _log.info("DISPLAY_NAME:{}", decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._DISPLAY_NAME));
@@ -157,13 +157,13 @@ public class ValueTypeDAOIT {
     public void chartDays() throws Exception {
 
         ChartDays DAOValues = new ChartDays();
-        Vector<Decode> decodes = DAOValues.getCodesDecodes();
+        List<Decode> decodes = DAOValues.getCodesDecodes();
         assertFalse(decodes.isEmpty());
-        Enumeration<Decode> eDecodes = decodes.elements();
+        ListIterator<Decode> eDecodes = decodes.listIterator();
 
-        while (eDecodes.hasMoreElements()) {
+        while (eDecodes.hasNext()) {
 
-            Decode decode = eDecodes.nextElement();
+            Decode decode = eDecodes.next();
             _log.info("TYPE:{}", decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._TYPE));
             _log.info("CODE:{}", decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._CODE));
             _log.info("DISPLAY_NAME:{}", decode.getValue(DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._DISPLAY_NAME));

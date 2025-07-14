@@ -38,7 +38,8 @@ package org.trade.core.valuetype;
 import org.trade.core.persistent.dao.Portfolio;
 
 import java.io.Serial;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -59,13 +60,13 @@ public class DAOProfile extends DAODecode {
     /**
      * Method getCodesDecodes.
      *
-     * @return Vector<Decode>
+     * @return List<Decode>
      */
 
-    public Vector<Decode> getCodesDecodes() throws ValueTypeException {
+    public List<Decode> getCodesDecodes() throws ValueTypeException {
 
-        final Vector<Decode> decodes = new Vector<>();
-        final Vector<Decode> decodesAll = super.getCodesDecodes();
+        final List<Decode> decodes = new ArrayList<>();
+        final List<Decode> decodesAll = super.getCodesDecodes();
 
         for (final Decode decode : decodesAll) {
 

@@ -36,8 +36,9 @@
 package org.trade.core.properties;
 
 import java.io.Serial;
-import java.util.Enumeration;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ListIterator;
 
 /**
  * Exception thrown by PropertyUtils class.
@@ -50,7 +51,7 @@ public class MissingPropertiesException extends Exception {
      */
     @Serial
     private static final long serialVersionUID = -5377864368236421685L;
-    private Vector<String> m_missingProperties = null;
+    private List<String> missingProperties = null;
 
     public MissingPropertiesException() {
         super();
@@ -62,11 +63,13 @@ public class MissingPropertiesException extends Exception {
      * @param p String
      */
     public void addProperty(String p) {
-        if (m_missingProperties == null) {
-            m_missingProperties = new Vector<>();
+
+        if (missingProperties == null) {
+
+            missingProperties = new ArrayList<>();
         }
 
-        m_missingProperties.addElement(p);
+        missingProperties.add(p);
     }
 
     /**
@@ -75,22 +78,28 @@ public class MissingPropertiesException extends Exception {
      * @return String
      */
     public String getMessage() {
+
         StringBuilder message = new StringBuilder("The following properties are missing: ");
-        Enumeration<String> missingProperties = getMissingProperties();
+        ListIterator<String> missingProperties = getMissingProperties();
 
         if (null == missingProperties) {
+
             message.append("No properties missing!");
         } else {
+
             boolean first = true;
 
-            while (missingProperties.hasMoreElements()) {
+            while (missingProperties.hasNext()) {
+
                 if (first) {
+
                     first = false;
                 } else {
+
                     message.append(", ");
                 }
 
-                message.append(missingProperties.nextElement());
+                message.append(missingProperties.next());
             }
         }
 
@@ -100,14 +109,16 @@ public class MissingPropertiesException extends Exception {
     /**
      * Method getMissingProperties.
      *
-     * @return Enumeration<String>
+     * @return ListIterator<String>
      */
-    public Enumeration<String> getMissingProperties() {
-        if (m_missingProperties == null) {
-            m_missingProperties = new Vector<>();
+    public ListIterator<String> getMissingProperties() {
+
+        if (missingProperties == null) {
+
+            missingProperties = new ArrayList<>();
         }
 
-        return m_missingProperties.elements();
+        return missingProperties.listIterator();
     }
 
     /**
@@ -116,24 +127,24 @@ public class MissingPropertiesException extends Exception {
      * @return String
      */
     public String toString() {
-        if (m_missingProperties == null) {
+
+        if (missingProperties == null) {
+
             return "No properties missing";
         }
 
         StringBuilder sb = new StringBuilder("The following [");
-
-        sb.append(m_missingProperties.size());
+        sb.append(missingProperties.size());
         sb.append("] properties are missing: ");
+        int missingPropSize = missingProperties.size();
 
-        int missingPropSize = m_missingProperties.size();
+        for (int i = 0; i < missingPropSize; i++) {
 
-        for (int ii = 0; ii < missingPropSize; ii++) {
-            sb.append(m_missingProperties.elementAt(ii));
+            sb.append(missingProperties.get(i));
             sb.append(", ");
         }
 
         sb.append('.');
-
         return sb.toString();
     }
 }

@@ -35,10 +35,11 @@
  */
 package org.trade.core.properties;
 
+import java.util.ArrayList;
 import java.util.Dictionary;
-import java.util.Enumeration;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.Properties;
-import java.util.Vector;
 
 /**
  * This class parses a template substituting keys inclosed in "#(" and ")#".
@@ -53,31 +54,20 @@ import java.util.Vector;
  * @author Simon Allen
  */
 public class TemplateParser {
-    private char m_leftBracket = '(';
 
-    private char m_rightBracket = ')';
-
-    private char m_delimiter = '#';
-
-    private boolean m_insertMissingTags = false;
-
+    private char leftBracket = '(';
+    private char rightBracket = ')';
+    private char delimiter = '#';
+    private boolean insertMissingTags = false;
     private final String BEGIN_FOR_EACH = "BEGIN_FOR_EACH";
-
     private final String END_FOR_EACH = "END_FOR_EACH";
-
     private final String m_template;
-
     private final Dictionary<?, ?> m_tags;
-
-    private int m_lastParsedCharPosition = 0;
-
-    private final int m_lastCharPosition;
-
-    private int m_iterationNumber = -1;
-
-    private final StringBuffer m_errorMessages = new StringBuffer();
-
-    private final Vector<String> m_missingKeys = new Vector<>();
+    private int lastParsedCharPosition = 0;
+    private final int lastCharPosition;
+    private int iterationNumber = -1;
+    private final StringBuffer errorMessages = new StringBuffer();
+    private final List<String> missingKeys = new ArrayList<>();
 
     /**
      * @param template - the template.
@@ -91,7 +81,7 @@ public class TemplateParser {
 
         m_template = template;
         m_tags = tags;
-        m_lastCharPosition = m_template.length() - 1;
+        lastCharPosition = m_template.length() - 1;
     }
 
     /**
@@ -105,7 +95,7 @@ public class TemplateParser {
      * @param option boolean
      */
     public void setInsertMissingTags(boolean option) {
-        m_insertMissingTags = option;
+        insertMissingTags = option;
     }
 
     /**
@@ -118,8 +108,8 @@ public class TemplateParser {
      * @param right char
      */
     public void setBrackets(char left, char right) {
-        m_leftBracket = left;
-        m_rightBracket = right;
+        leftBracket = left;
+        rightBracket = right;
     }
 
     /**
@@ -131,7 +121,7 @@ public class TemplateParser {
      * @param delimiter char
      */
     public void setDelimiter(char delimiter) {
-        m_delimiter = delimiter;
+        this.delimiter = delimiter;
     }
 
     /**
@@ -141,65 +131,76 @@ public class TemplateParser {
      * @return String
      */
     public String parseTemplate() {
-        StringBuilder parsedTemplate = new StringBuilder();
 
-        m_errorMessages.setLength(0);
-        m_missingKeys.removeAllElements();
+        StringBuilder parsedTemplate = new StringBuilder();
+        errorMessages.setLength(0);
+        missingKeys.clear();
 
         while (true) {
+
             NextToken result = getNextToken();
 
             if (!result.finishedParsing()) {
+
                 if (result.foundToken()) {
+
                     parsedTemplate.append(
                             m_template, result.getLastParsedPosition(), result.getPositionBeforeKey() + 1);
 
                     if (result.getMissingTag() == null) {
+
                         if (!result.getKey().endsWith("[]")) {
+
                             parsedTemplate.append(result.getValue());
                         } else {
+
                             try {
+
                                 Object[] array = result.getArrayOfValues();
 
-                                if ((m_iterationNumber >= 0) && (m_iterationNumber < array.length)) {
-                                    parsedTemplate.append(array[m_iterationNumber].toString());
+                                if ((iterationNumber >= 0) && (iterationNumber < array.length)) {
+                                    parsedTemplate.append(array[iterationNumber].toString());
                                 }
                             } catch (Exception e) {
-                                m_missingKeys.addElement(result.getKey());
+
+                                missingKeys.add(result.getKey());
                                 addErrorMessage("Key " + result.getKey() + " not found in the parameters. Iteration # "
-                                        + m_iterationNumber);
+                                        + iterationNumber);
                             }
                         }
                     } else {
+
                         if (BEGIN_FOR_EACH.equals(result.getKey())) {
+
                             String parsedSubtemplate = processForEachSubtemplate(result);
 
                             if (parsedSubtemplate == null) {
-                                m_missingKeys.addElement(END_FOR_EACH);
+
+                                missingKeys.add(END_FOR_EACH);
                                 addErrorMessage("Tag " + END_FOR_EACH + " not found in the template.");
                             } else {
+
                                 parsedTemplate.append(parsedSubtemplate);
                             }
                         } else {
-                            if (m_insertMissingTags) {
+
+                            if (insertMissingTags) {
                                 parsedTemplate.append(result.getMissingTag());
                             }
 
-                            m_missingKeys.addElement(result.getKey());
+                            missingKeys.add(result.getKey());
                             addErrorMessage("Key " + result.getKey() + " not found in parameters.");
                         }
                     }
-                } else
-                // result.getFoundToken() == false
-                {
+                } else {
+                    // result.getFoundToken() == false
                     // This will happen when we find a pair of # characters
                     // which don't enclose a key #(key)#
                     parsedTemplate
                             .append(m_template, result.getLastParsedPosition(), result.getParsedPosition());
                 }
-            } else
-            // If finished parsing append the rest of the template
-            {
+            } else {
+                // If finished parsing append the rest of the template
                 parsedTemplate.append(m_template, result.getLastParsedPosition(), result.getParsedPosition());
 
                 break;
@@ -216,20 +217,24 @@ public class TemplateParser {
      * @return Properties
      */
     public Properties findTemplateTags() {
-        Properties tags = new Properties();
 
-        m_errorMessages.setLength(0);
-        m_missingKeys.removeAllElements();
+        Properties tags = new Properties();
+        errorMessages.setLength(0);
+        missingKeys.clear();
 
         while (true) {
+
             NextToken result = getNextToken();
 
             if (!result.finishedParsing()) {
+
                 if (result.foundToken() && !BEGIN_FOR_EACH.equals(result.getKey())
                         && !END_FOR_EACH.equals(result.getKey())) {
+
                     tags.put(result.getKey(), result.getKey());
                 }
             } else {
+
                 break;
             }
         }
@@ -244,48 +249,53 @@ public class TemplateParser {
      * @return NextToken
      */
     public NextToken getNextToken() {
+
         int delimiterPosition;
         int nextDelimiterPosition = -1;
         NextToken result = new NextToken();
 
-        delimiterPosition = m_template.indexOf(m_delimiter, m_lastParsedCharPosition);
+        delimiterPosition = m_template.indexOf(delimiter, lastParsedCharPosition);
 
         if (delimiterPosition != -1) {
-            nextDelimiterPosition = m_template.indexOf(m_delimiter, delimiterPosition + 1);
+
+            nextDelimiterPosition = m_template.indexOf(delimiter, delimiterPosition + 1);
         }
 
         if ((delimiterPosition == -1) || (nextDelimiterPosition == -1)) {
-            result.setLastParsedPosition(m_lastParsedCharPosition);
-            result.setParsedPosition(m_lastCharPosition + 1);
+
+            result.setLastParsedPosition(lastParsedCharPosition);
+            result.setParsedPosition(lastCharPosition + 1);
             result.setFoundToken(false);
             result.setFinishedParsing(true);
-
             return (result);
         } else {
+
             int leftBracketPosition = delimiterPosition + 1;
             int rightBracketPosition = nextDelimiterPosition - 1;
 
             if ((leftBracketPosition < rightBracketPosition)
-                    && (m_template.charAt(leftBracketPosition) == m_leftBracket)
-                    && (m_template.charAt(rightBracketPosition) == m_rightBracket)) {
+                    && (m_template.charAt(leftBracketPosition) == leftBracket)
+                    && (m_template.charAt(rightBracketPosition) == rightBracket)) {
+
                 // We have correct syntax element : #(key)#
                 String key = m_template.substring(leftBracketPosition + 1, rightBracketPosition);
-
                 result.setKey(key);
-
                 Object value = m_tags.get(key);
 
                 if (value != null) {
+
                     result.setValue(value);
-                } // If key not found #(key)# is ignored and nothing is
+                }
+
+                // If key not found #(key)# is ignored and nothing is
                 // inserted in it's place in the output
                 else {
 
-                    String missingTag = String.valueOf(m_delimiter) +
-                            m_leftBracket +
+                    String missingTag = String.valueOf(delimiter) +
+                            leftBracket +
                             key +
-                            m_rightBracket +
-                            m_delimiter;
+                            rightBracket +
+                            delimiter;
                     result.setMissingTag(missingTag);
                 }
 
@@ -293,18 +303,21 @@ public class TemplateParser {
                 result.setPositionBeforeKey(delimiterPosition - 1);
                 result.setFoundToken(true);
             } else {
+
                 result.setFoundToken(false);
             }
 
-            result.setLastParsedPosition(m_lastParsedCharPosition);
+            result.setLastParsedPosition(lastParsedCharPosition);
 
             if (result.foundToken()) {
-                m_lastParsedCharPosition = nextDelimiterPosition + 1;
+
+                lastParsedCharPosition = nextDelimiterPosition + 1;
             } else {
-                m_lastParsedCharPosition = nextDelimiterPosition - 1;
+
+                lastParsedCharPosition = nextDelimiterPosition - 1;
             }
 
-            result.setParsedPosition(m_lastParsedCharPosition);
+            result.setParsedPosition(lastParsedCharPosition);
             result.setFinishedParsing(false);
         }
 
@@ -318,6 +331,7 @@ public class TemplateParser {
      * @return String
      */
     private String processForEachSubtemplate(NextToken beginToken) {
+
         NextToken endToken;
         StringBuilder result = new StringBuilder();
         int numberOfIterations = 0;
@@ -326,15 +340,18 @@ public class TemplateParser {
             endToken = getNextToken();
 
             if ((endToken != null) && (endToken.getKey() != null) && endToken.getKey().endsWith("[]")) {
+
                 try {
+
                     Object[] array = endToken.getArrayOfValues();
 
                     if ((array != null) && (array.length > numberOfIterations)) {
+
                         numberOfIterations = array.length;
                     }
-                } catch (Exception _) // A class cast exception can happen
-                // here
-                {
+                } catch (Exception _) {
+                    // A class cast exception can happen
+                    // here
                 }
             }
         } while ((endToken != null) && !END_FOR_EACH.equals(endToken.getKey()));
@@ -349,6 +366,7 @@ public class TemplateParser {
         String parsedSubtemplate;
 
         for (int i = 0; i < numberOfIterations; i++) {
+
             parser = new TemplateParser(subtemplate, m_tags);
 
             parser.setIterationNumber(i);
@@ -363,24 +381,19 @@ public class TemplateParser {
             }
         }
 
-        if ((numberOfIterations == 0) && m_insertMissingTags) // if insert
-        // missing
-        // tags is true
-        // insert
-        // subtemplate into
-        // the output
-        {
-            result.append(m_delimiter);
-            result.append(m_leftBracket);
+        if ((numberOfIterations == 0) && insertMissingTags) {
+            // if insert missing tags is true insert subtemplate into the output
+            result.append(delimiter);
+            result.append(leftBracket);
             result.append(BEGIN_FOR_EACH);
-            result.append(m_rightBracket);
-            result.append(m_delimiter);
+            result.append(rightBracket);
+            result.append(delimiter);
             result.append(subtemplate);
-            result.append(m_delimiter);
-            result.append(m_leftBracket);
+            result.append(delimiter);
+            result.append(leftBracket);
             result.append(END_FOR_EACH);
-            result.append(m_rightBracket);
-            result.append(m_delimiter);
+            result.append(rightBracket);
+            result.append(delimiter);
         }
 
         return result.toString();
@@ -393,25 +406,17 @@ public class TemplateParser {
      * @version $Revision: 1.0 $
      */
     public static class NextToken {
-        private String m_key = null;
 
-        private Object m_value = null;
-
-        private Object[] m_arrayOfValues = null;
-
-        private String m_missingTag = null;
-
-        private boolean m_foundToken = false;
-
-        private boolean m_finishedParsing = false;
-
-        private int m_parsedPosition = 0;
-
-        private int m_lastParsedPosition = 0;
-
-        private int m_positionBeforeKey = -1;
-
-        private int m_positionAfterKey = -1;
+        private String key = null;
+        private Object value = null;
+        private Object[] arrayOfValues = null;
+        private String missingTag = null;
+        private boolean foundToken = false;
+        private boolean finishedParsing = false;
+        private int parsedPosition = 0;
+        private int lastParsedPosition = 0;
+        private int positionBeforeKey = -1;
+        private int positionAfterKey = -1;
 
         /**
          * Method setFoundToken.
@@ -419,7 +424,7 @@ public class TemplateParser {
          * @param foundToken boolean
          */
         public void setFoundToken(boolean foundToken) {
-            m_foundToken = foundToken;
+            this.foundToken = foundToken;
         }
 
         /**
@@ -428,7 +433,7 @@ public class TemplateParser {
          * @return boolean
          */
         public boolean foundToken() {
-            return (m_foundToken);
+            return (foundToken);
         }
 
         /**
@@ -437,7 +442,7 @@ public class TemplateParser {
          * @param finishedParsing boolean
          */
         public void setFinishedParsing(boolean finishedParsing) {
-            m_finishedParsing = finishedParsing;
+            this.finishedParsing = finishedParsing;
         }
 
         /**
@@ -446,7 +451,7 @@ public class TemplateParser {
          * @return boolean
          */
         public boolean finishedParsing() {
-            return (m_finishedParsing);
+            return (finishedParsing);
         }
 
         /**
@@ -455,7 +460,7 @@ public class TemplateParser {
          * @return int
          */
         public int getParsedPosition() {
-            return (m_parsedPosition);
+            return (parsedPosition);
         }
 
         /**
@@ -464,7 +469,7 @@ public class TemplateParser {
          * @param position int
          */
         public void setParsedPosition(int position) {
-            m_parsedPosition = position;
+            parsedPosition = position;
         }
 
         /**
@@ -473,7 +478,7 @@ public class TemplateParser {
          * @return int
          */
         public int getLastParsedPosition() {
-            return (m_lastParsedPosition);
+            return (lastParsedPosition);
         }
 
         /**
@@ -482,7 +487,7 @@ public class TemplateParser {
          * @param position int
          */
         public void setLastParsedPosition(int position) {
-            m_lastParsedPosition = position;
+            lastParsedPosition = position;
         }
 
         /**
@@ -491,7 +496,7 @@ public class TemplateParser {
          * @return int
          */
         public int getPositionBeforeKey() {
-            return (m_positionBeforeKey);
+            return (positionBeforeKey);
         }
 
         /**
@@ -500,7 +505,7 @@ public class TemplateParser {
          * @param position int
          */
         public void setPositionBeforeKey(int position) {
-            m_positionBeforeKey = position;
+            positionBeforeKey = position;
         }
 
         /**
@@ -509,7 +514,7 @@ public class TemplateParser {
          * @return int
          */
         public int getPositionAfterKey() {
-            return (m_positionAfterKey);
+            return (positionAfterKey);
         }
 
         /**
@@ -518,7 +523,7 @@ public class TemplateParser {
          * @param position int
          */
         public void setPositionAfterKey(int position) {
-            m_positionAfterKey = position;
+            positionAfterKey = position;
         }
 
         /**
@@ -527,7 +532,7 @@ public class TemplateParser {
          * @return String
          */
         public String getKey() {
-            return (m_key);
+            return (key);
         }
 
         /**
@@ -536,7 +541,7 @@ public class TemplateParser {
          * @param key String
          */
         public void setKey(String key) {
-            m_key = key;
+            this.key = key;
         }
 
         /**
@@ -545,7 +550,7 @@ public class TemplateParser {
          * @return String
          */
         public String getMissingTag() {
-            return (m_missingTag);
+            return (missingTag);
         }
 
         /**
@@ -554,7 +559,7 @@ public class TemplateParser {
          * @param tag String
          */
         public void setMissingTag(String tag) {
-            m_missingTag = tag;
+            missingTag = tag;
         }
 
         /**
@@ -563,7 +568,7 @@ public class TemplateParser {
          * @return Object
          */
         public Object getValue() {
-            return (m_value);
+            return (value);
         }
 
         /**
@@ -572,13 +577,13 @@ public class TemplateParser {
          * @param value Object
          */
         public void setValue(Object value) {
-            if (value instanceof Vector<?> v) {
+            if (value instanceof List<?> v) {
 
-                m_arrayOfValues = v.toArray();
+                arrayOfValues = v.toArray();
             } else if (value instanceof ArrayOfValues) {
-                m_arrayOfValues = ((ArrayOfValues) value).getValues();
+                arrayOfValues = ((ArrayOfValues) value).getValues();
             } else {
-                m_value = value;
+                this.value = value;
             }
         }
 
@@ -588,7 +593,7 @@ public class TemplateParser {
          * @return Object[]
          */
         public Object[] getArrayOfValues() {
-            return (m_arrayOfValues);
+            return (arrayOfValues);
         }
     }
 
@@ -598,7 +603,7 @@ public class TemplateParser {
      * @param iterationNumber int
      */
     private void setIterationNumber(int iterationNumber) {
-        m_iterationNumber = iterationNumber;
+        this.iterationNumber = iterationNumber;
     }
 
     /**
@@ -607,7 +612,7 @@ public class TemplateParser {
      * @return String with error messages
      */
     public String getErrorMessages() {
-        return m_errorMessages.toString();
+        return errorMessages.toString();
     }
 
     /**
@@ -616,11 +621,12 @@ public class TemplateParser {
      * @param message String
      */
     private void addErrorMessage(String message) {
+
         if (message != null) {
-            m_errorMessages.append(message);
+            errorMessages.append(message);
         }
 
-        m_errorMessages.append("\r\n");
+        errorMessages.append("\r\n");
     }
 
     /**
@@ -630,7 +636,7 @@ public class TemplateParser {
      *
      * @return Enumeration of missing parameter's names.
      */
-    public Enumeration<String> getMissingParameters() {
-        return m_missingKeys.elements();
+    public ListIterator<String> getMissingParameters() {
+        return missingKeys.listIterator();
     }
 }

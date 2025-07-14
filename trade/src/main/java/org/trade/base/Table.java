@@ -100,7 +100,7 @@ public class Table extends JTable implements MouseListener, ActionListener {
 
     private static final String DATEFORMAT = "MM/dd/yyyy";
     private boolean popupMenu = true;
-    private String m_pngDefaultDir = null;
+    private String pngDefaultDir = null;
 
     /**
      * Constructor for Table.
@@ -115,6 +115,7 @@ public class Table extends JTable implements MouseListener, ActionListener {
         int columns = this.getTableHeader().getColumnModel().getColumnCount();
 
         for (int i = 0; i < columns; i++) {
+
             TableColumn thc = this.getTableHeader().getColumnModel().getColumn(i);
             thc.setMinWidth((thc.getHeaderValue().toString().length() * 6) + 10);
         }
@@ -233,14 +234,19 @@ public class Table extends JTable implements MouseListener, ActionListener {
      * @return JTableHeader
      */
     protected JTableHeader createDefaultTableHeader() {
+
         return new JTableHeader(columnModel) {
+
             @Serial
             private static final long serialVersionUID = -2667248411137081167L;
 
             public String getToolTipText(MouseEvent e) {
+
                 java.awt.Point p = e.getPoint();
                 int index = columnModel.getColumnIndexAtX(p.x);
+
                 if (index > -1) {
+
                     int realIndex = columnModel.getColumn(index).getModelIndex();
                     return ((TableModel) this.getTable().getModel()).getColumnHeaderToolTip(realIndex);
                 }
@@ -257,7 +263,9 @@ public class Table extends JTable implements MouseListener, ActionListener {
     public void createPopup(Point point) {
 
         JPopupMenu popup = new JPopupMenu();
+
         if (popupMenu) {
+
             JMenuItem addMenuItem = popup.add(new JMenuItem("Add"));
             addMenuItem.addActionListener(this);
 
@@ -267,6 +275,7 @@ public class Table extends JTable implements MouseListener, ActionListener {
             JMenuItem clearAllMenuItem = popup.add(new JMenuItem("ClearAll"));
             clearAllMenuItem.addActionListener(this);
         }
+
         JMenuItem printMenuItem = popup.add(new JMenuItem("Print"));
         printMenuItem.addActionListener(this);
 
@@ -277,7 +286,6 @@ public class Table extends JTable implements MouseListener, ActionListener {
         point = getSuitableLocation(point, popup.getPreferredSize(), this);
 
         popup.show(this, point.x, point.y);
-
     }
 
     /**
@@ -286,22 +294,30 @@ public class Table extends JTable implements MouseListener, ActionListener {
      * @param evt ActionEvent
      */
     public void actionPerformed(ActionEvent evt) {
+
         JMenuItem mi = (JMenuItem) evt.getSource();
 
         if (mi.getActionCommand().equals("Delete")) {
+
             delete();
         } else if (mi.getActionCommand().equals("Add")) {
+
             add();
         } else if (mi.getActionCommand().equals("ClearAll")) {
+
             clearAll();
         } else if (mi.getActionCommand().equals("Print")) {
+
             try {
+
                 print();
             } catch (PrinterException e) {
                 // Do nothing ...
             }
         } else if (mi.getActionCommand().equals("Save As")) {
+
             try {
+
                 saveAs();
             } catch (IOException e) {
                 // Do nothing ...
@@ -437,11 +453,11 @@ public class Table extends JTable implements MouseListener, ActionListener {
         ExampleFileFilter filter = new ExampleFileFilter(new String[]{"png"}, "PNG Files");
         // Start in the curr dir
 
-        if (null == m_pngDefaultDir) {
-            m_pngDefaultDir = System.getProperty("user.dir");
+        if (null == pngDefaultDir) {
+            pngDefaultDir = System.getProperty("user.dir");
         }
 
-        JFileChooser filer1 = new JFileChooser(m_pngDefaultDir);
+        JFileChooser filer1 = new JFileChooser(pngDefaultDir);
         ExampleFileChooser fileView = new ExampleFileChooser();
         filer1.setFileView(fileView);
         filer1.addChoosableFileFilter(filter);

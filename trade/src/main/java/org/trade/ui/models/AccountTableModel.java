@@ -45,7 +45,8 @@ import org.trade.core.valuetype.Date;
 import org.trade.core.valuetype.Money;
 
 import java.io.Serial;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -113,7 +114,8 @@ public class AccountTableModel extends TableModel {
         if (!getData().getAccounts().isEmpty()) {
 
             for (final Account element : getData().getAccounts()) {
-                final Vector<Object> newRow = new Vector<>();
+
+                final List<Object> newRow = new ArrayList<>();
                 getNewRow(newRow, element);
                 rows.add(newRow);
             }
@@ -198,7 +200,7 @@ public class AccountTableModel extends TableModel {
 
                 getData().getAccounts().remove(element);
                 getData().setDirty(true);
-                final Vector<Object> currRow = rows.get(selectedRow);
+                final List<Object> currRow = rows.get(selectedRow);
                 rows.remove(currRow);
                 this.fireTableRowsDeleted(selectedRow, selectedRow);
                 break;
@@ -210,7 +212,7 @@ public class AccountTableModel extends TableModel {
 
         final Account account = new Account();
         getData().getAccounts().add(account);
-        final Vector<Object> newRow = new Vector<>();
+        final List<Object> newRow = new ArrayList<>();
         getNewRow(newRow, account);
         rows.add(newRow);
         // Tell the listeners a new table has arrived.
@@ -220,53 +222,78 @@ public class AccountTableModel extends TableModel {
     /**
      * Method getNewRow.
      *
-     * @param newRow  Vector<Object>
+     * @param newRow  List<Object>
      * @param element Account
      */
-    public void getNewRow(Vector<Object> newRow, Account element) {
-        newRow.addElement(element.getName());
-        newRow.addElement(element.getAccountNumber());
+    public void getNewRow(List<Object> newRow, Account element) {
+
+        newRow.add(element.getName());
+        newRow.add(element.getAccountNumber());
+
         if (null == element.getAccountType()) {
-            newRow.addElement(new AccountType());
+
+            newRow.add(new AccountType());
         } else {
-            newRow.addElement(AccountType.newInstance(element.getAccountType()));
+
+            newRow.add(AccountType.newInstance(element.getAccountType()));
         }
-        newRow.addElement(element.getAlias());
-        newRow.addElement(Currency.newInstance(element.getCurrency()));
+
+        newRow.add(element.getAlias());
+        newRow.add(Currency.newInstance(element.getCurrency()));
+
         if (null == element.getAvailableFunds()) {
-            newRow.addElement(new Money(0));
+
+            newRow.add(new Money(0));
         } else {
-            newRow.addElement(new Money(element.getAvailableFunds()));
+
+            newRow.add(new Money(element.getAvailableFunds()));
         }
+
         if (null == element.getBuyingPower()) {
-            newRow.addElement(new Money(0));
+
+            newRow.add(new Money(0));
         } else {
-            newRow.addElement(new Money(element.getBuyingPower()));
+
+            newRow.add(new Money(element.getBuyingPower()));
         }
+
         if (null == element.getCashBalance()) {
-            newRow.addElement(new Money(0));
+
+            newRow.add(new Money(0));
         } else {
-            newRow.addElement(new Money(element.getCashBalance()));
+
+            newRow.add(new Money(element.getCashBalance()));
         }
+
         if (null == element.getGrossPositionValue()) {
-            newRow.addElement(new Money(0));
+
+            newRow.add(new Money(0));
         } else {
-            newRow.addElement(new Money(element.getGrossPositionValue()));
+
+            newRow.add(new Money(element.getGrossPositionValue()));
         }
         if (null == element.getRealizedPnL()) {
-            newRow.addElement(new Money(0));
+
+            newRow.add(new Money(0));
         } else {
-            newRow.addElement(new Money(element.getRealizedPnL()));
+
+            newRow.add(new Money(element.getRealizedPnL()));
         }
+
         if (null == element.getUnrealizedPnL()) {
-            newRow.addElement(new Money(0));
+
+            newRow.add(new Money(0));
         } else {
-            newRow.addElement(new Money(element.getUnrealizedPnL()));
+
+            newRow.add(new Money(element.getUnrealizedPnL()));
         }
+
         if (null == element.getUpdateDate()) {
-            newRow.addElement(new Date());
+
+            newRow.add(new Date());
         } else {
-            newRow.addElement(new Date(element.getUpdateDate()));
+
+            newRow.add(new Date(element.getUpdateDate()));
         }
     }
 }

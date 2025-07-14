@@ -1124,7 +1124,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
 
                 /*
                  * The last one has arrived the reqId is the
-                 * tradeStrategyId. Remove this from the processing vector.
+                 * tradeStrategyId. Remove this from the processing List.
                  */
                 synchronized (historyDataRequests) {
 

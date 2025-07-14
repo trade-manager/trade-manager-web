@@ -44,6 +44,7 @@ import java.util.Properties;
  * @version $Id: PrintController.java,v 1.3 2001/10/22 18:57:58 simon Exp $
  */
 public class PrintController {
+
     Properties props = new Properties();
 
     public PrintController() {

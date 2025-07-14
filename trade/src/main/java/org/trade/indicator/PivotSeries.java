@@ -276,7 +276,7 @@ public class PivotSeries extends IndicatorSeries {
             return;
 
         PivotItem dataItem = null;
-        Hashtable<Long, Pair> userDataVector = new Hashtable<>();
+        Hashtable<Long, Pair> userDataList = new Hashtable<>();
         DAOEntryLimit entryLimits = new DAOEntryLimit();
 
         boolean pivot = false;
@@ -305,14 +305,14 @@ public class PivotSeries extends IndicatorSeries {
                  */
 
                 long time = (((CandlePeriod) candleItem.getPeriod()).getDaySerialIndex());
-                userDataVector.put(time, new Pair(time, candleItem.getVwap()));
+                userDataList.put(time, new Pair(time, candleItem.getVwap()));
             }
 
             /*
              * Calculate the new y points with the curve.
              */
             if (this.getQuadratic()) {
-                calcPivot.calculatePivot(new ArrayList<>(userDataVector.values()));
+                calcPivot.calculatePivot(new ArrayList<>(userDataList.values()));
             }
 
             CandleItem prevCandle = null;
@@ -326,8 +326,8 @@ public class PivotSeries extends IndicatorSeries {
                      * Set the side based on the Vwap
                      */
                     if (null == side) {
-                        if ((userDataVector
-                                .get(((CandlePeriod) candle.getPeriod()).getDaySerialIndex()).y) < (userDataVector
+                        if ((userDataList
+                                .get(((CandlePeriod) candle.getPeriod()).getDaySerialIndex()).y) < (userDataList
                                 .get(((CandlePeriod) prevCandle.getPeriod()).getDaySerialIndex()).y)) {
                             side = Side.BOT;
                             pivotSide = Side.BOT;
@@ -360,8 +360,8 @@ public class PivotSeries extends IndicatorSeries {
                             .getDayOfYear()) {
 
                         if (side.equals(Side.BOT)) {
-                            if ((userDataVector
-                                    .get(((CandlePeriod) candle.getPeriod()).getDaySerialIndex()).y) < (userDataVector
+                            if ((userDataList
+                                    .get(((CandlePeriod) candle.getPeriod()).getDaySerialIndex()).y) < (userDataList
                                     .get(((CandlePeriod) prevCandle.getPeriod()).getDaySerialIndex()).y)) {
                                 if (this.getSide()) {
 
@@ -377,8 +377,8 @@ public class PivotSeries extends IndicatorSeries {
                                 }
                             }
                         } else {
-                            if ((userDataVector
-                                    .get(((CandlePeriod) candle.getPeriod()).getDaySerialIndex()).y) > (userDataVector
+                            if ((userDataList
+                                    .get(((CandlePeriod) candle.getPeriod()).getDaySerialIndex()).y) > (userDataList
                                     .get(((CandlePeriod) prevCandle.getPeriod()).getDaySerialIndex()).y)) {
                                 if (this.getSide()) {
                                     if (i == (startBar - middleBar)) {

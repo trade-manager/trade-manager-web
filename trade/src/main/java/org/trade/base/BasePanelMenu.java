@@ -39,7 +39,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ContainerEvent;
 import java.io.Serial;
-import java.util.Vector;
+import java.util.ArrayList;
 
 /**
  *
@@ -88,7 +88,7 @@ public class BasePanelMenu extends JPanel {
     protected BaseButton helpButton;
     protected BaseButton printButton;
 
-    protected MessageNotifier m_notifier = new MessageNotifier();
+    protected MessageNotifier notifier = new MessageNotifier();
 
     /**
      * Constructor for BasePanelMenu.
@@ -254,7 +254,7 @@ public class BasePanelMenu extends JPanel {
      * @param listener IMessageListener
      */
     public void addMessageListener(IMessageListener listener) {
-        m_notifier.add(listener);
+        notifier.add(listener);
     }
 
     /**
@@ -263,7 +263,7 @@ public class BasePanelMenu extends JPanel {
      * @param listener IMessageListener
      */
     public void removeMessageListener(IMessageListener listener) {
-        m_notifier.remove(listener);
+        notifier.remove(listener);
     }
 
     /**
@@ -299,7 +299,7 @@ public class BasePanelMenu extends JPanel {
      * @param selection String
      */
     public void messageEvent(String selection) {
-        m_notifier.notifyEvent(new MessageEvent(selection), new Vector<>());
+        notifier.notifyEvent(new MessageEvent(selection), new ArrayList<>());
     }
 
     /**
