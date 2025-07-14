@@ -68,7 +68,7 @@ public class PortfolioTableModel extends AspectTableModel {
 
     private static final String[] columnHeaderToolTip = {null, null, null, "The account that is subscribed to", null};
 
-    private Aspects m_data = null;
+    private Aspects data = null;
 
     public PortfolioTableModel() {
         super(columnHeaderToolTip);
@@ -87,7 +87,7 @@ public class PortfolioTableModel extends AspectTableModel {
      * @return Aspects
      */
     public Aspects getData() {
-        return m_data;
+        return data;
     }
 
     /**
@@ -97,7 +97,7 @@ public class PortfolioTableModel extends AspectTableModel {
      */
     public void setData(Aspects data) {
 
-        this.m_data = data;
+        this.data = data;
         this.clearAll();
 
         if (!getData().getAspect().isEmpty()) {

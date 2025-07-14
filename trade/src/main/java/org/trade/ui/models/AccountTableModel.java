@@ -74,7 +74,7 @@ public class AccountTableModel extends TableModel {
     private static final String[] columnHeaderToolTip = {null, null, "Use Corp for FA accounts", null, null, null,
             null, null, null, null, null, null};
 
-    private Portfolio m_data = null;
+    private Portfolio data = null;
 
     public AccountTableModel() {
         super(columnHeaderToolTip);
@@ -99,7 +99,7 @@ public class AccountTableModel extends TableModel {
      * @return Aspects
      */
     public Portfolio getData() {
-        return m_data;
+        return data;
     }
 
     /**
@@ -109,7 +109,7 @@ public class AccountTableModel extends TableModel {
      */
     public void setData(Portfolio data) {
 
-        this.m_data = data;
+        this.data = data;
         this.clearAll();
         if (!getData().getAccounts().isEmpty()) {
 

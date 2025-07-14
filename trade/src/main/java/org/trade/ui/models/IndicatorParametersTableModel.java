@@ -57,7 +57,7 @@ public class IndicatorParametersTableModel extends AspectTableModel {
     private static final String NAME = "Indicator Name*";
     private static final String DESCRIPTION = "Description";
 
-    Aspects m_data = null;
+    Aspects data = null;
 
     public IndicatorParametersTableModel() {
 
@@ -73,7 +73,7 @@ public class IndicatorParametersTableModel extends AspectTableModel {
      * @return Aspects
      */
     public Aspects getData() {
-        return m_data;
+        return data;
     }
 
     /**
@@ -83,7 +83,7 @@ public class IndicatorParametersTableModel extends AspectTableModel {
      */
     public void setData(Aspects data) {
 
-        this.m_data = data;
+        this.data = data;
         this.clearAll();
 
         if (!getData().getAspect().isEmpty()) {

@@ -75,7 +75,7 @@ public class IndicatorSeriesTableModel extends TableModel {
             "Specific name for this indicator i.e. 20-MA", null, "If checked display on the main chart",
             "If checked display this indicator as a sub-chart i.e Y-axis not $", null, null};
 
-    Strategy m_data = null;
+    Strategy data = null;
 
     public IndicatorSeriesTableModel() {
         super(columnHeaderToolTip);
@@ -97,7 +97,7 @@ public class IndicatorSeriesTableModel extends TableModel {
      * @return Strategy
      */
     public Strategy getData() {
-        return m_data;
+        return data;
     }
 
     /**
@@ -107,7 +107,7 @@ public class IndicatorSeriesTableModel extends TableModel {
      */
     public void setData(Strategy data) {
 
-        this.m_data = data;
+        this.data = data;
         this.clearAll();
         if (!getData().getIndicatorSeries().isEmpty()) {
 

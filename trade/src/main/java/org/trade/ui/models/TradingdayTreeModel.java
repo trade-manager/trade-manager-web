@@ -57,7 +57,7 @@ public class TradingdayTreeModel extends DefaultTreeModel implements Serializabl
     private static final long serialVersionUID = -5543286790183657148L;
 
     static DefaultMutableTreeNode m_root = new DefaultMutableTreeNode("Tradingdays");
-    private final Hashtable<MutableTreeNode, Object> m_nodeMap = new Hashtable<>();
+    private final Hashtable<MutableTreeNode, Object> nodeMap = new Hashtable<>();
 
     /**
      * Constructor for TradingdayTreeModel.
@@ -77,7 +77,7 @@ public class TradingdayTreeModel extends DefaultTreeModel implements Serializabl
      */
     public void setData(Tradingdays tradingdays) throws ValueTypeException {
         ((DefaultMutableTreeNode) getRoot()).removeAllChildren();
-        m_nodeMap.clear();
+        nodeMap.clear();
         buildTree(tradingdays);
         fireTreeStructureChanged(this, new Object[]{getRoot()}, new int[0], new Object[0]);
     }
@@ -89,7 +89,7 @@ public class TradingdayTreeModel extends DefaultTreeModel implements Serializabl
      */
     private void buildTree(Tradingdays tradingdays) {
 
-        m_nodeMap.put(m_root, m_root.getRoot());
+        nodeMap.put(m_root, m_root.getRoot());
 
         tradingdays.getTradingdays().sort(Tradingday.DATE_ORDER_DESC);
         for (Tradingday tradingday : tradingdays.getTradingdays()) {
@@ -107,7 +107,7 @@ public class TradingdayTreeModel extends DefaultTreeModel implements Serializabl
 
         MutableTreeNode tradingdayNode = new DefaultMutableTreeNode(tradingday);
         m_root.add(tradingdayNode);
-        m_nodeMap.put(tradingdayNode, tradingday);
+        nodeMap.put(tradingdayNode, tradingday);
         int childStrategy = 0;
         int childContract = 0;
         Side side = Side.newInstance("");
@@ -118,12 +118,12 @@ public class TradingdayTreeModel extends DefaultTreeModel implements Serializabl
                 side = trdestrategySide;
                 childContract = 0;
                 tradstrategyNode = new DefaultMutableTreeNode(side);
-                m_nodeMap.put(tradstrategyNode, side);
+                nodeMap.put(tradstrategyNode, side);
                 tradingdayNode.insert(tradstrategyNode, childStrategy);
                 childStrategy++;
             }
             MutableTreeNode contractNode = new DefaultMutableTreeNode(tradestrategy);
-            m_nodeMap.put(contractNode, tradestrategy);
+            nodeMap.put(contractNode, tradestrategy);
             tradstrategyNode.insert(contractNode, childContract);
             childContract++;
 
@@ -137,6 +137,6 @@ public class TradingdayTreeModel extends DefaultTreeModel implements Serializabl
      * @return Object
      */
     public Object getNode(Object treeNode) {
-        return m_nodeMap.get(treeNode);
+        return nodeMap.get(treeNode);
     }
 }

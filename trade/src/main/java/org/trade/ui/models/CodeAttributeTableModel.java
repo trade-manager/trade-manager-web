@@ -60,7 +60,7 @@ public class CodeAttributeTableModel extends TableModel {
     private static final String CLASS_NAME = "Data Type*";
     private static final String CLASS_EDITOR_NAME = "Data Type Editor";
 
-    CodeType m_data = null;
+    CodeType data = null;
 
     public CodeAttributeTableModel() {
 
@@ -78,7 +78,7 @@ public class CodeAttributeTableModel extends TableModel {
      * @return CodeType
      */
     public CodeType getData() {
-        return m_data;
+        return data;
     }
 
     /**
@@ -88,7 +88,7 @@ public class CodeAttributeTableModel extends TableModel {
      */
     public void setData(CodeType data) {
 
-        this.m_data = data;
+        this.data = data;
         this.clearAll();
 
         if (!getData().getCodeAttribute().isEmpty()) {
@@ -166,7 +166,7 @@ public class CodeAttributeTableModel extends TableModel {
 
     public void addRow() {
 
-        final CodeAttribute element = new CodeAttribute(this.m_data, "", "", null, "", null);
+        final CodeAttribute element = new CodeAttribute(this.data, "", "", null, "", null);
         getData().getCodeAttribute().add(element);
         getData().setDirty(true);
         final List<Object> newRow = new ArrayList<>();

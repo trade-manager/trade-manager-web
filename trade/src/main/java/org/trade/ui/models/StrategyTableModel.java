@@ -71,7 +71,7 @@ public class StrategyTableModel extends AspectTableModel {
                     + "This will cause the strategy to fire if last price<br>"
                     + "falls outside the currents bars H/L</html>"};
 
-    private Aspects m_data = null;
+    private Aspects data = null;
 
     public StrategyTableModel() {
         super(columnHeaderToolTip);
@@ -90,7 +90,7 @@ public class StrategyTableModel extends AspectTableModel {
      * @return Aspects
      */
     public Aspects getData() {
-        return m_data;
+        return data;
     }
 
     /**
@@ -100,7 +100,7 @@ public class StrategyTableModel extends AspectTableModel {
      */
     public void setData(Aspects data) {
 
-        this.m_data = data;
+        this.data = data;
         this.clearAll();
 
         if (!getData().getAspect().isEmpty()) {

@@ -124,7 +124,7 @@ public class TradestrategyTableModel extends TableModel {
             "<html>Tradestrategy status<br>" + "Note this is updated by the application</html>", null, null, null,
             "<html>Expiry date for future contracts<br>" + "Format MM/YYYY</html>"};
 
-    private Tradingday m_data = null;
+    private Tradingday data = null;
     private final Timer timer;
 
     public TradestrategyTableModel() {
@@ -171,7 +171,7 @@ public class TradestrategyTableModel extends TableModel {
      * @return Tradingday
      */
     public Tradingday getData() {
-        return this.m_data;
+        return this.data;
     }
 
     /**
@@ -223,7 +223,7 @@ public class TradestrategyTableModel extends TableModel {
     public void setData(Tradingday data) {
         if (timer.isRunning())
             timer.stop();
-        this.m_data = data;
+        this.data = data;
 
         this.clearAll();
         if (null != getData() && null != getData().getTradestrategies() && !getData().getTradestrategies().isEmpty()) {

@@ -71,7 +71,7 @@ public class EntrylimitTableModel extends AspectTableModel {
             "The max % of margin to use for a trade", "Rounding of shares on a calculated open position",
             "# cents before/after whole/half number to round over/under", "The min H/L between pivots"};
 
-    private Aspects m_data = null;
+    private Aspects data = null;
 
     public EntrylimitTableModel() {
         super(columnHeaderToolTip);
@@ -92,7 +92,7 @@ public class EntrylimitTableModel extends AspectTableModel {
      * @return Aspects
      */
     public Aspects getData() {
-        return m_data;
+        return data;
     }
 
     /**
@@ -102,7 +102,7 @@ public class EntrylimitTableModel extends AspectTableModel {
      */
     public void setData(Aspects data) throws Exception {
 
-        this.m_data = data;
+        this.data = data;
         this.clearAll();
 
         if (!getData().getAspect().isEmpty()) {
