@@ -100,6 +100,7 @@ public class CodeAttributePanel extends JPanel {
                         ((DecodeComboBoxEditor) field).setItem(decode);
                     }
                 } else {
+
                     continue;
                 }
             }

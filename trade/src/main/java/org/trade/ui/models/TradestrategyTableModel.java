@@ -247,6 +247,7 @@ public class TradestrategyTableModel extends TableModel {
      * @param column int
      */
     public void populateDAO(Object value, int row, int column) {
+
         Tradestrategy element = getData().getTradestrategies().get(row);
 
         switch (column) {

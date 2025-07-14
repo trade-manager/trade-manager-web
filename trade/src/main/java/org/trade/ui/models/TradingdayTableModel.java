@@ -85,11 +85,11 @@ public class TradingdayTableModel extends TableModel {
                     + "<b>-NRB TT</b>=Red narrow range bar with topping tail<br>" + "<b>-WRB</b>=Red wide range bar<br>"
                     + "<b>Darling Doji</b>=Green cross</html>"};
 
-    private Tradingdays m_data = null;
+    private Tradingdays data = null;
 
     public TradingdayTableModel() {
-        super(columnHeaderToolTip);
 
+        super(columnHeaderToolTip);
         columnNames = new String[5];
         columnNames[0] = OPEN;
         columnNames[1] = CLOSE;
@@ -104,7 +104,7 @@ public class TradingdayTableModel extends TableModel {
      * @return Tradingdays
      */
     public Tradingdays getData() {
-        return m_data;
+        return data;
     }
 
     /**
@@ -132,7 +132,7 @@ public class TradingdayTableModel extends TableModel {
      */
     public void setData(Tradingdays data) {
         data.getTradingdays().sort(Tradingday.DATE_ORDER_DESC);
-        this.m_data = data;
+        this.data = data;
         this.clearAll();
 
         if (!getData().getTradingdays().isEmpty()) {

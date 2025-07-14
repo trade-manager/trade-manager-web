@@ -110,10 +110,14 @@ public class ClassFactory {
         Object[] object = new Object[ListSize];
         StringBuilder classes = new StringBuilder();
         int i = 0;
+
         for (Object obj : param) {
+
             if (classes.isEmpty()) {
+
                 classes.append(obj.getClass().getName());
             } else {
+
                 classes.append(",").append(obj.getClass().getName());
             }
             params[i] = obj.getClass();

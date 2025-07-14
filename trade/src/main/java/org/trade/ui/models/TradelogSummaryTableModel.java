@@ -222,8 +222,11 @@ public class TradelogSummaryTableModel extends TableModel {
     public void deleteRow(int selectedRow) {
 
         int i = 0;
+
         for (final TradelogSummary element : getData().getTradelogSummary()) {
+
             if (i == selectedRow) {
+
                 getData().getTradelogSummary().remove(element);
                 final List<Object> currRow = rows.get(selectedRow);
                 rows.remove(currRow);

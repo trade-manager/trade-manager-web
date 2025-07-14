@@ -70,6 +70,7 @@ public class TradingdayTable extends Table {
      * @param model TableModel
      */
     public TradingdayTable(TableModel model) throws ValueTypeException {
+
         super(model);
         DecodeTableEditor marketBarEditor = new DecodeTableEditor(
                 new JComboBox<>((new MarketBar()).getCodesDecodes().toArray(new Decode[0])));

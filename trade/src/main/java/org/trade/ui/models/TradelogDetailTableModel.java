@@ -247,13 +247,16 @@ public class TradelogDetailTableModel extends TableModel {
 
         int i = 0;
         for (final TradelogDetail element : getData().getTradelogDetail()) {
+
             if (i == selectedRow) {
+
                 getData().getTradelogDetail().remove(element);
                 final List<Object> currRow = rows.get(selectedRow);
                 rows.remove(currRow);
                 this.fireTableRowsDeleted(selectedRow, selectedRow);
                 break;
             }
+
             i++;
         }
     }
