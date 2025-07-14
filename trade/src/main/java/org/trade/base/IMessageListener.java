@@ -36,7 +36,7 @@
 package org.trade.base;
 
 import java.util.EventListener;
-import java.util.Vector;
+import java.util.List;
 
 /**
  * @author Simon Allen
@@ -47,7 +47,7 @@ public interface IMessageListener extends EventListener {
      * Method handleEvent.
      *
      * @param e    MessageEvent
-     * @param parm Vector<Object>
+     * @param parm List<Object>
      */
-    void handleEvent(MessageEvent e, Vector<Object> parm);
+    void handleEvent(MessageEvent e, List<Object> parm);
 }

@@ -102,12 +102,12 @@ public class ClassFactory {
     public static Object getCreateClass(String className, List<Object> param, Object context)
             throws ClassNotFoundException, InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
 
-        int vectorSize;
-        vectorSize = param.size();
+        int ListSize;
+        ListSize = param.size();
         Object instance = null;
 
-        Class<?>[] params = new Class[vectorSize];
-        Object[] object = new Object[vectorSize];
+        Class<?>[] params = new Class[ListSize];
+        Object[] object = new Object[ListSize];
         StringBuilder classes = new StringBuilder();
         int i = 0;
         for (Object obj : param) {

@@ -43,7 +43,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Dictionary;
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Properties;
 
 /**
@@ -189,16 +189,18 @@ public class CollectionUtilities {
      * @param result   Dictionary<String,Object>
      */
     public static void getSubset(Dictionary<String, Object> superset, String tag, Dictionary<String, Object> result) {
+
         if ((result == null) || (tag == null) || (superset == null)) {
+
             throw new IllegalArgumentException(
                     "Invalid arguments specified : superset = " + superset + " tag = " + tag + " result = " + result);
         }
 
         String key;
-        Enumeration<String> enumKey = superset.keys();
+        Iterator<String> enumKey = superset.keys().asIterator();
 
-        while (enumKey.hasMoreElements()) {
-            key = enumKey.nextElement();
+        while (enumKey.hasNext()) {
+            key = enumKey.next();
 
             if (key.startsWith(tag)) {
                 result.put(key, superset.get(key));
@@ -225,10 +227,10 @@ public class CollectionUtilities {
         }
 
         Object key;
-        Enumeration<Object> enumKey = source.keys();
+        Iterator<Object> enumKey = source.keys().asIterator();
 
-        while (enumKey.hasMoreElements()) {
-            key = enumKey.nextElement();
+        while (enumKey.hasNext()) {
+            key = enumKey.next();
 
             destination.put(key, source.get(key));
         }
@@ -243,12 +245,13 @@ public class CollectionUtilities {
      * @return : String.
      */
     public static String dictionaryToString(Dictionary<Object, Object> dict) {
-        Enumeration<Object> keys = dict.keys();
+
+        Iterator<Object> keys = dict.keys().asIterator();
         Object key, value;
         StringBuilder result = new StringBuilder();
 
-        while (keys.hasMoreElements()) {
-            key = keys.nextElement();
+        while (keys.hasNext()) {
+            key = keys.next();
             value = dict.get(key);
 
             result.append(key.toString());

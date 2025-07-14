@@ -39,6 +39,7 @@ import org.trade.base.Table;
 import org.trade.base.TableModel;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.Action;
+import org.trade.core.valuetype.Decode;
 import org.trade.core.valuetype.OCAType;
 import org.trade.core.valuetype.OrderStatus;
 import org.trade.core.valuetype.OrderType;
@@ -77,19 +78,19 @@ public class TradeOrderTable extends Table {
         super(model);
 
         DecodeTableEditor actionEditor = new DecodeTableEditor(
-                new JComboBox<>((new Action()).getCodesDecodes()));
+                new JComboBox<>((new Action()).getCodesDecodes().toArray(new Decode[0])));
         DecodeTableEditor oCATypeEditor = new DecodeTableEditor(
-                new JComboBox<>((new OCAType()).getCodesDecodes()));
+                new JComboBox<>((new OCAType()).getCodesDecodes().toArray(new Decode[0])));
         DecodeTableEditor orderTypeEditor = new DecodeTableEditor(
-                new JComboBox<>((new OrderType()).getCodesDecodes()));
+                new JComboBox<>((new OrderType()).getCodesDecodes().toArray(new Decode[0])));
         DecodeTableEditor overrideConstraintsEditor = new DecodeTableEditor(
-                new JComboBox<>((new OverrideConstraints()).getCodesDecodes()));
+                new JComboBox<>((new OverrideConstraints()).getCodesDecodes().toArray(new Decode[0])));
         DecodeTableEditor timeInForceEditor = new DecodeTableEditor(
-                new JComboBox<>((new TimeInForce()).getCodesDecodes()));
+                new JComboBox<>((new TimeInForce()).getCodesDecodes().toArray(new Decode[0])));
         DecodeTableEditor triggerMethodEditor = new DecodeTableEditor(
-                new JComboBox<>((new TriggerMethod()).getCodesDecodes()));
+                new JComboBox<>((new TriggerMethod()).getCodesDecodes().toArray(new Decode[0])));
         DecodeTableEditor orderStatusEditor = new DecodeTableEditor(
-                new JComboBox<>((new OrderStatus()).getCodesDecodes()));
+                new JComboBox<>((new OrderStatus()).getCodesDecodes().toArray(new Decode[0])));
 
         String OCA_MASK = "AAAAAA";
         String OCA_VALIDCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";

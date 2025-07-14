@@ -39,7 +39,8 @@ import org.trade.core.valuetype.Decode;
 
 import javax.swing.*;
 import java.io.Serial;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Simon Allen
@@ -61,12 +62,12 @@ public class BaseComboBox extends JComboBox<Decode> {
      *
      * @param p      BasePanel
      * @param UICode String
-     * @param items  Vector<Object>
+     * @param items  List<Object>
      */
 
-    public BaseComboBox(BasePanel p, String UICode, Vector<Decode> items) {
-        super(items);
+    public BaseComboBox(BasePanel p, String UICode, List<Decode> items) {
 
+        super(items.toArray(new Decode[0]));
         jbInit(p, UICode);
     }
 
@@ -124,7 +125,7 @@ public class BaseComboBox extends JComboBox<Decode> {
      * @param selection String
      */
     protected void messageEvent(String selection) {
-        m_notifier.notifyEvent(new MessageEvent(selection), new Vector<>());
+        m_notifier.notifyEvent(new MessageEvent(selection), new ArrayList<>());
     }
 
     /**

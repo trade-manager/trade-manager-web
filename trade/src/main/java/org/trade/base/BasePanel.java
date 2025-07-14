@@ -43,7 +43,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.Serial;
 import java.lang.reflect.Method;
-import java.util.Vector;
+import java.util.List;
 
 /**
  * @author Simon Allen
@@ -209,11 +209,11 @@ public abstract class BasePanel extends JPanel implements IMessageListener {
      * Method handleEvent.
      *
      * @param e    MessageEvent
-     * @param parm Vector<Object>
-     * @see IMessageListener#handleEvent(MessageEvent, Vector
+     * @param parm List<Object>
+     * @see IMessageListener#handleEvent(MessageEvent, List
      * <Object>)
      */
-    public void handleEvent(MessageEvent e, Vector<Object> parm) {
+    public void handleEvent(MessageEvent e, List<Object> parm) {
 
         if ((e.getSource() instanceof String method) && m_isSelected) {
 
@@ -240,14 +240,14 @@ public abstract class BasePanel extends JPanel implements IMessageListener {
      * Method doFireMethod.
      *
      * @param methodName String
-     * @param parm       Vector<Object>
+     * @param parm       List<Object>
      */
-    protected synchronized void doFireMethod(String methodName, Vector<Object> parm) {
+    protected synchronized void doFireMethod(String methodName, List<Object> parm) {
 
-        int vectorSize;
-        vectorSize = parm.size();
-        Class<?>[] parms = new Class[vectorSize];
-        Object[] objects = new Object[vectorSize];
+        int ListSize;
+        ListSize = parm.size();
+        Class<?>[] parms = new Class[ListSize];
+        Object[] objects = new Object[ListSize];
         StringBuilder classes = new StringBuilder();
 
         for (Object object : parm) {
@@ -268,7 +268,7 @@ public abstract class BasePanel extends JPanel implements IMessageListener {
         } catch (Exception e) {
 
             // Do nothing this panel is not actively listening for this event
-            _log.error("Exception in reflection BasePanel method: {} Parms #: {} Method {} Parms class: {} not found in class: {} Error Msg: {}", methodName, vectorSize, methodName, classes, this.getClass().getName(), e.getMessage());
+            _log.error("Exception in reflection BasePanel method: {} Parms #: {} Method {} Parms class: {} not found in class: {} Error Msg: {}", methodName, ListSize, methodName, classes, this.getClass().getName(), e.getMessage());
             setStatusBarMessage(e.getMessage(), ERROR);
         }
     }

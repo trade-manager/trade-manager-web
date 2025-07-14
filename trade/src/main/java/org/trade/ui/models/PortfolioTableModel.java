@@ -46,7 +46,8 @@ import org.trade.core.valuetype.Decode;
 import org.trade.core.valuetype.YesNo;
 
 import java.io.Serial;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -103,7 +104,7 @@ public class PortfolioTableModel extends AspectTableModel {
 
             for (final Aspect element : getData().getAspect()) {
 
-                final Vector<Object> newRow = new Vector<>();
+                final List<Object> newRow = new ArrayList<>();
                 getNewRow(newRow, (Portfolio) element);
                 rows.add(newRow);
             }
@@ -193,7 +194,7 @@ public class PortfolioTableModel extends AspectTableModel {
 
                     getData().remove(element);
                     getData().setDirty(true);
-                    final Vector<Object> currRow = rows.get(selectedRow);
+                    final List<Object> currRow = rows.get(selectedRow);
                     rows.remove(currRow);
                     this.fireTableRowsDeleted(selectedRow, selectedRow);
                     break;
@@ -207,7 +208,7 @@ public class PortfolioTableModel extends AspectTableModel {
         final Portfolio element = new Portfolio();
         getData().getAspect().add(element);
 
-        final Vector<Object> newRow = new Vector<>();
+        final List<Object> newRow = new ArrayList<>();
         getNewRow(newRow, element);
         rows.add(newRow);
         // Tell the listeners a new table has arrived.
@@ -217,24 +218,24 @@ public class PortfolioTableModel extends AspectTableModel {
     /**
      * Method getNewRow.
      *
-     * @param newRow  Vector<Object>
+     * @param newRow  List<Object>
      * @param element Portfolio
      */
-    public void getNewRow(Vector<Object> newRow, Portfolio element) {
+    public void getNewRow(List<Object> newRow, Portfolio element) {
 
-        newRow.addElement(element.getName());
-        newRow.addElement(element.getAlias());
-        newRow.addElement(element.getDescription());
+        newRow.add(element.getName());
+        newRow.add(element.getAlias());
+        newRow.add(element.getDescription());
 
         if (null == element.getAllocationMethod()) {
 
-            newRow.addElement(AllocationMethod.newInstance(Decode.NONE));
+            newRow.add(AllocationMethod.newInstance(Decode.NONE));
         } else {
 
-            newRow.addElement(AllocationMethod.newInstance(element.getAllocationMethod()));
+            newRow.add(AllocationMethod.newInstance(element.getAllocationMethod()));
         }
 
-        newRow.addElement(DAOAccount.newInstance(Decode.NONE));
-        newRow.addElement(YesNo.newInstance(element.getIsDefault()));
+        newRow.add(DAOAccount.newInstance(Decode.NONE));
+        newRow.add(YesNo.newInstance(element.getIsDefault()));
     }
 }

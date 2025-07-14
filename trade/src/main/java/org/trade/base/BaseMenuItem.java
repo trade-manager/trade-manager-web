@@ -41,7 +41,7 @@ import org.slf4j.LoggerFactory;
 import javax.swing.*;
 import java.awt.*;
 import java.io.Serial;
-import java.util.Vector;
+import java.util.ArrayList;
 
 /**
  * @author Simon Allen
@@ -155,7 +155,7 @@ public class BaseMenuItem extends JMenuItem {
      * @param selection String
      */
     protected void messageEvent(String selection) {
-        m_notifier.notifyEvent(new MessageEvent(selection), new Vector<>());
+        m_notifier.notifyEvent(new MessageEvent(selection), new ArrayList<>());
     }
 
     /**

@@ -36,7 +36,7 @@
 package org.trade.core.valuetype;
 
 import java.io.Serial;
-import java.util.Vector;
+import java.util.List;
 
 /**
  * This class is suppose to represent a base class for a specialized CodeDecode
@@ -68,10 +68,10 @@ public class BaseDecode extends Decode {
      * Default Constructor
      *
      * @param codeDecodeType String
-     * @param columnNames    Vector<String>
-     * @param values         Vector<Object>
+     * @param columnNames    List<String>
+     * @param values         List<Object>
      */
-    public BaseDecode(String codeDecodeType, Vector<String> columnNames, Vector<Object> values) {
+    public BaseDecode(String codeDecodeType, List<String> columnNames, List<Object> values) {
         super(codeDecodeType, columnNames, values, BASE_DECODE_IDENTIFIER);
     }
 

@@ -91,7 +91,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
-import java.util.Vector;
 
 /**
  *
@@ -314,7 +313,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
         try {
 
             setMessageText(null, false, false, null);
-          //  String fileName = TEMP_DIR + "/" + IStrategyRule.PACKAGE.replace('.', '/');
+            //  String fileName = TEMP_DIR + "/" + IStrategyRule.PACKAGE.replace('.', '/');
             String fileName = TEMP_DIR + "/" + IStrategyRule.PACKAGE.replace('.', '/');
 
             fileName = fileName + rule.getStrategy().getClassName() + ".java";
@@ -334,7 +333,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
             param.add(this.tradeService);
             param.add(brokerManagerModel);
             param.add(strategyData);
-            param.add( Long.valueOf(0));
+            param.add(Long.valueOf(0));
             DynamicCode dynacode = new DynamicCode();
             dynacode.addSourceDir(new File(TEMP_DIR));
             dynacode.newProxyInstance(IStrategyRule.class, IStrategyRule.PACKAGE + rule.getStrategy().getClassName(),
@@ -545,7 +544,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
 
     public synchronized String readFile(String fileName) throws IOException {
 
-        try(FileReader fileReader = new FileReader(fileName)) {
+        try (FileReader fileReader = new FileReader(fileName)) {
 
             if ((null == fileName) || fileName.isEmpty()) {
                 return null;

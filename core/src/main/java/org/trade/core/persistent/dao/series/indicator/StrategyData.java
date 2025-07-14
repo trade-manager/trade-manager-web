@@ -53,7 +53,6 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Vector;
 
 /**
  *
@@ -114,9 +113,9 @@ public class StrategyData extends Worker {
                      * holder for series and is required by the Chart API.
                      */
                     String datasetName = indicator.getType().replaceAll("Series", "Dataset");
-                    Vector<Object> parm = new Vector<>();
+                    List<Object> params = new ArrayList<>(0);
                     indicatorDataset = (IIndicatorDataset) ClassFactory
-                            .getCreateClass(IIndicatorDataset.PACKAGE + "." + datasetName, parm, this);
+                            .getCreateClass(IIndicatorDataset.PACKAGE + "." + datasetName, params, this);
                     this.indicators.add(indicatorDataset);
                 }
                 indicatorDataset.addSeries(series);

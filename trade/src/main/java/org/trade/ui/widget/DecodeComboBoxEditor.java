@@ -47,7 +47,8 @@ import java.awt.event.FocusListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.Serial;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Simon Allen
@@ -62,19 +63,20 @@ public class DecodeComboBoxEditor extends JComboBox<Decode> implements ComboBoxE
     private static final long serialVersionUID = -1626795772462262674L;
 
     protected transient Decode originalValue;
-    protected transient Vector<ActionListener> listeners;
+    protected transient List<ActionListener> listeners;
 
     /**
      * Constructor for DecodeComboBoxEditor.
      *
-     * @param model Vector<?>
+     * @param model List<?>
      */
 
-    public DecodeComboBoxEditor(Vector<Decode> model) {
-        super(model);
+    public DecodeComboBoxEditor(List<Decode> model) {
+
+        super(model.toArray(new Decode[0]));
         this.addItemListener(this);
         this.addFocusListener(this);
-        listeners = new Vector<>();
+        listeners = new ArrayList<>();
     }
 
     /**
@@ -128,7 +130,7 @@ public class DecodeComboBoxEditor extends JComboBox<Decode> implements ComboBoxE
      * @see javax.swing.ComboBoxEditor#addActionListener(ActionListener)
      */
     public void addActionListener(ActionListener l) {
-        listeners.addElement(l);
+        listeners.add(l);
     }
 
     /**
@@ -137,13 +139,17 @@ public class DecodeComboBoxEditor extends JComboBox<Decode> implements ComboBoxE
      * @see javax.swing.ComboBoxEditor#removeActionListener(ActionListener)
      */
     public void removeActionListener(ActionListener l) {
-        listeners.removeElement(l);
+        listeners.remove(l);
     }
 
     protected void fireEditingCanceled() {
+
         for (int i = 0; i < this.getItemCount(); i++) {
+
             Decode d = this.getItemAt(i);
+
             if (d.equals(originalValue)) {
+
                 setSelectedItem(originalValue);
                 break;
             }
@@ -152,7 +158,8 @@ public class DecodeComboBoxEditor extends JComboBox<Decode> implements ComboBoxE
         ChangeEvent ce = new ChangeEvent(this);
 
         for (int i = listeners.size(); i >= 0; i--) {
-            ((CellEditorListener) listeners.elementAt(i)).editingCanceled(ce);
+
+            ((CellEditorListener) listeners.get(i)).editingCanceled(ce);
         }
     }
 
@@ -160,7 +167,8 @@ public class DecodeComboBoxEditor extends JComboBox<Decode> implements ComboBoxE
         ChangeEvent ce = new ChangeEvent(this);
 
         for (int i = listeners.size() - 1; i >= 0; i--) {
-            ((CellEditorListener) listeners.elementAt(i)).editingStopped(ce);
+
+            ((CellEditorListener) listeners.get(i)).editingStopped(ce);
         }
     }
 

@@ -45,7 +45,7 @@ import org.trade.core.util.time.RegularTimePeriod;
 
 import java.io.Serial;
 import java.math.BigDecimal;
-import java.util.Vector;
+import java.util.List;
 
 /**
  * Volume-Weighted Average Price (VWAP) is exactly what it sounds like: the
@@ -201,7 +201,7 @@ public class VwapSeries extends IndicatorSeries {
     }
 
     @Transient
-    public Vector<Object> getParam(String type) {
+    public List<Object> getParam(String type) {
 
         return super.getParam(type);
     }

@@ -79,8 +79,8 @@ import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.io.Serial;
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Objects;
-import java.util.Vector;
 
 /**
  *
@@ -345,8 +345,8 @@ public class PortfolioPanel extends BasePanel implements ChangeListener, ItemLis
 
     private void resetPortfolioComboBox(final DAODecodeComboBoxEditor editorComboBox) throws ValueTypeException {
 
-        Vector<Decode> codesNew = ((new DAOPortfolio()).getCodesDecodes());
-        DefaultComboBoxModel<Decode> model = new DefaultComboBoxModel<>(codesNew);
+        List<Decode> codesNew = ((new DAOPortfolio()).getCodesDecodes());
+        DefaultComboBoxModel<Decode> model = new DefaultComboBoxModel<>(codesNew.toArray(new Decode[0]));
         editorComboBox.setModel(model);
         editorComboBox.setItem(DAOPortfolio.newInstance());
         editorComboBox.setRenderer(new DecodeComboBoxRenderer());

@@ -40,7 +40,6 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.io.StringWriter;
 import java.util.Arrays;
-import java.util.Enumeration;
 
 /**
  * This class is used to hold generic routines for manipulating exceptions.
@@ -130,11 +129,11 @@ public class ExceptionUtil implements Serializable {
 
             // Construct the lines in the stack trace that display the
             // user-friendly messages.
-            Enumeration<?> enumeration = nestingException.getAllExceptionMessages();
-            while (enumeration.hasMoreElements()) {
+            Enumerator enumeration = nestingException.getAllExceptionMessages();
+            while (enumeration.hasNext()) {
 
                 ExceptionMessage exceptionMessage;
-                exceptionMessage = (ExceptionMessage) enumeration.nextElement();
+                exceptionMessage = (ExceptionMessage) enumeration.next();
 
                 buf.append('\t');
                 buf.append(exceptionMessage.getExceptionCode());

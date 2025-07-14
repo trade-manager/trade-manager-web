@@ -38,8 +38,8 @@ package org.trade.core.valuetype;
 import org.trade.core.persistent.dao.Entrylimit;
 
 import java.io.Serial;
-import java.util.Enumeration;
-import java.util.Vector;
+import java.util.List;
+import java.util.ListIterator;
 
 /**
  *
@@ -76,15 +76,21 @@ public class DAOEntryLimit extends DAODecode {
      */
     public Entrylimit getValue(Money price) {
 
-        Vector<Decode> decodes;
+        List<Decode> decodes;
+
         try {
+
             decodes = this.getCodesDecodes();
-            final Enumeration<Decode> enumDAODecode = decodes.elements();
-            while (enumDAODecode.hasMoreElements()) {
-                final Decode decode = enumDAODecode.nextElement();
+            final ListIterator<Decode> enumDAODecode = decodes.listIterator();
+
+            while (enumDAODecode.hasNext()) {
+
+                final Decode decode = enumDAODecode.next();
                 final Entrylimit entryLimit = (Entrylimit) decode.getObject();
+
                 if ((entryLimit.getStartPrice().subtract(price.getBigDecimalValue()).doubleValue() <= 0)
                         && (entryLimit.getEndPrice().subtract(price.getBigDecimalValue()).doubleValue() >= 0)) {
+
                     return entryLimit;
                 }
             }

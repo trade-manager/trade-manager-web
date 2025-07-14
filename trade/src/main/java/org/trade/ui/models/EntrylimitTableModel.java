@@ -44,7 +44,8 @@ import org.trade.core.valuetype.Percent;
 import org.trade.core.valuetype.Quantity;
 
 import java.io.Serial;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -108,7 +109,7 @@ public class EntrylimitTableModel extends AspectTableModel {
 
             for (final Aspect element : getData().getAspect()) {
 
-                final Vector<Object> newRow = new Vector<>();
+                final List<Object> newRow = new ArrayList<>();
                 getNewRow(newRow, (Entrylimit) element);
                 rows.add(newRow);
             }
@@ -183,7 +184,7 @@ public class EntrylimitTableModel extends AspectTableModel {
 
                 getData().remove(element);
                 getData().setDirty(true);
-                final Vector<Object> currRow = rows.get(selectedRow);
+                final List<Object> currRow = rows.get(selectedRow);
                 rows.remove(currRow);
                 this.fireTableRowsDeleted(selectedRow, selectedRow);
                 break;
@@ -196,7 +197,7 @@ public class EntrylimitTableModel extends AspectTableModel {
         final Entrylimit element = new Entrylimit();
         getData().getAspect().add(element);
         getData().setDirty(true);
-        final Vector<Object> newRow = new Vector<>();
+        final List<Object> newRow = new ArrayList<>();
         getNewRow(newRow, element);
         rows.add(newRow);
         // Tell the listeners a new table has arrived.
@@ -206,18 +207,18 @@ public class EntrylimitTableModel extends AspectTableModel {
     /**
      * Method getNewRow.
      *
-     * @param newRow  Vector<Object>
+     * @param newRow  List<Object>
      * @param element Entrylimit
      */
-    public void getNewRow(Vector<Object> newRow, Entrylimit element) {
+    public void getNewRow(List<Object> newRow, Entrylimit element) {
 
-        newRow.addElement(new Money(element.getStartPrice()));
-        newRow.addElement(new Money(element.getEndPrice()));
-        newRow.addElement(new Money(element.getLimitAmount()));
-        newRow.addElement(new Percent(element.getPercentOfPrice()));
-        newRow.addElement(new Percent(element.getPercentOfMargin()));
-        newRow.addElement(new Quantity(element.getShareRound()));
-        newRow.addElement(new Money(element.getPriceRound()));
-        newRow.addElement(new Money(element.getPivotRange()));
+        newRow.add(new Money(element.getStartPrice()));
+        newRow.add(new Money(element.getEndPrice()));
+        newRow.add(new Money(element.getLimitAmount()));
+        newRow.add(new Percent(element.getPercentOfPrice()));
+        newRow.add(new Percent(element.getPercentOfMargin()));
+        newRow.add(new Quantity(element.getShareRound()));
+        newRow.add(new Money(element.getPriceRound()));
+        newRow.add(new Money(element.getPivotRange()));
     }
 }

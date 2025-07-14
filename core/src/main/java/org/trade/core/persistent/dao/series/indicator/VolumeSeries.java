@@ -45,7 +45,7 @@ import org.trade.core.persistent.dao.series.indicator.volume.VolumeItem;
 import org.trade.core.util.time.RegularTimePeriod;
 
 import java.io.Serial;
-import java.util.Vector;
+import java.util.List;
 
 /**
  * A list of (RegularTimePeriod, open, high, low, close) data items.
@@ -241,10 +241,10 @@ public class VolumeSeries extends IndicatorSeries {
     }
 
     @Transient
-    public Vector<Object> getParam(String type) {
+    public List<Object> getParam(String type) {
 
-        Vector<Object> parms = super.getParam(type);
-        parms.add(getBarWidthInMilliseconds());
-        return parms;
+        List<Object> params = super.getParam(type);
+        params.add(getBarWidthInMilliseconds());
+        return params;
     }
 }

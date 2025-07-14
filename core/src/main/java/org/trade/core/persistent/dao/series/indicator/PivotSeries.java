@@ -56,7 +56,7 @@ import java.io.Serial;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.Vector;
+import java.util.List;
 
 /**
  * A list of (RegularTimePeriod, open, high, low, close) data items.
@@ -285,7 +285,7 @@ public class PivotSeries extends IndicatorSeries {
             return;
 
         PivotItem dataItem = null;
-        Hashtable<Long, Pair> userDataVector = new Hashtable<>();
+        Hashtable<Long, Pair> userDataList = new Hashtable<>();
         DAOEntryLimit entryLimits = new DAOEntryLimit();
 
         boolean pivot = false;
@@ -313,14 +313,14 @@ public class PivotSeries extends IndicatorSeries {
                  */
 
                 long time = (((CandlePeriod) candleItem.getPeriod()).getDaySerialIndex());
-                userDataVector.put(time, new Pair(time, candleItem.getVwap()));
+                userDataList.put(time, new Pair(time, candleItem.getVwap()));
             }
 
             /*
              * Calculate the new y points with the curve.
              */
             if (this.getQuadratic()) {
-                calcPivot.calculatePivot(new ArrayList<>(userDataVector.values()));
+                calcPivot.calculatePivot(new ArrayList<>(userDataList.values()));
             }
 
             CandleItem prevCandle = null;
@@ -334,8 +334,8 @@ public class PivotSeries extends IndicatorSeries {
                      * Set the side based on the Vwap
                      */
                     if (null == side) {
-                        if ((userDataVector
-                                .get(((CandlePeriod) candle.getPeriod()).getDaySerialIndex()).y) < (userDataVector
+                        if ((userDataList
+                                .get(((CandlePeriod) candle.getPeriod()).getDaySerialIndex()).y) < (userDataList
                                 .get(((CandlePeriod) prevCandle.getPeriod()).getDaySerialIndex()).y)) {
                             side = Side.BOT;
                             pivotSide = Side.BOT;
@@ -368,8 +368,8 @@ public class PivotSeries extends IndicatorSeries {
                             .getDayOfYear()) {
 
                         if (side.equals(Side.BOT)) {
-                            if ((userDataVector
-                                    .get(((CandlePeriod) candle.getPeriod()).getDaySerialIndex()).y) < (userDataVector
+                            if ((userDataList
+                                    .get(((CandlePeriod) candle.getPeriod()).getDaySerialIndex()).y) < (userDataList
                                     .get(((CandlePeriod) prevCandle.getPeriod()).getDaySerialIndex()).y)) {
                                 if (this.getSide()) {
 
@@ -385,8 +385,8 @@ public class PivotSeries extends IndicatorSeries {
                                 }
                             }
                         } else {
-                            if ((userDataVector
-                                    .get(((CandlePeriod) candle.getPeriod()).getDaySerialIndex()).y) > (userDataVector
+                            if ((userDataList
+                                    .get(((CandlePeriod) candle.getPeriod()).getDaySerialIndex()).y) > (userDataList
                                     .get(((CandlePeriod) prevCandle.getPeriod()).getDaySerialIndex()).y)) {
                                 if (this.getSide()) {
                                     if (i == (startBar - middleBar)) {
@@ -488,12 +488,12 @@ public class PivotSeries extends IndicatorSeries {
     }
 
     @Transient
-    public Vector<Object> getParam(String type) {
+    public List<Object> getParam(String type) {
 
-        Vector<Object> parms = super.getParam(type);
-        parms.add(getSide());
-        parms.add(getQuadratic());
-        parms.add(getBars());
-        return parms;
+        List<Object> params = super.getParam(type);
+        params.add(getSide());
+        params.add(getQuadratic());
+        params.add(getBars());
+        return params;
     }
 }

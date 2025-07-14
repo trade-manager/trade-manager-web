@@ -48,7 +48,7 @@ import org.trade.core.util.time.RegularTimePeriod;
 import java.io.Serial;
 import java.math.BigDecimal;
 import java.util.LinkedList;
-import java.util.Vector;
+import java.util.List;
 
 /**
  * Developed by Gerald Appel in the late seventies, the Moving Average
@@ -551,12 +551,12 @@ public class MACDSeries extends IndicatorSeries {
     }
 
     @Transient
-    public Vector<Object> getParam(String type) {
+    public List<Object> getParam(String type) {
 
-        Vector<Object> parms = super.getParam(type);
-        parms.add(getFastLength());
-        parms.add(getSlowLength());
-        parms.add(getSignalSmoothing());
-        return parms;
+        List<Object> params = super.getParam(type);
+        params.add(getFastLength());
+        params.add(getSlowLength());
+        params.add(getSignalSmoothing());
+        return params;
     }
 }

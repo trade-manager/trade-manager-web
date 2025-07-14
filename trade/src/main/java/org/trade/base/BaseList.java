@@ -37,7 +37,8 @@ package org.trade.base;
 
 import javax.swing.*;
 import java.io.Serial;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Simon Allen
@@ -60,11 +61,11 @@ public class BaseList extends JList<Object> {
      *
      * @param p      BasePanel
      * @param UICode String
-     * @param items  Vector<Object>
+     * @param items  List<Object>
      */
-    public BaseList(BasePanel p, String UICode, Vector<Object> items) {
-        super(items);
+    public BaseList(BasePanel p, String UICode, List<Object> items) {
 
+        super(items.toArray(new Object[0]));
         jbInit(p, UICode);
     }
 
@@ -122,7 +123,7 @@ public class BaseList extends JList<Object> {
      * @param selection String
      */
     protected void messageEvent(String selection) {
-        m_notifier.notifyEvent(new MessageEvent(selection), new Vector<>());
+        m_notifier.notifyEvent(new MessageEvent(selection), new ArrayList<>());
     }
 
     /**

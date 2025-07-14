@@ -1,3 +1,39 @@
+/* ===========================================================
+ * TradeManager : An application to trade strategies for the Java(tm) platform
+ * ===========================================================
+ *
+ * (C) Copyright 2011-2011, by Simon Allen and Contributors.
+ *
+ * Project Info:  org.trade
+ *
+ * This library is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation; either version 2.1 of the License, or
+ * (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public
+ * License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301,
+ * USA.
+ *
+ * [Java is a trademark or registered trademark of Oracle, Inc.
+ * in the United States and other countries.]
+ *
+ * (C) Copyright 2011-2011, by Simon Allen and Contributors.
+ *
+ * Original Author:  Simon Allen;
+ * Contributor(s):   -;
+ *
+ * Changes
+ * -------
+ *
+ */
+
 package org.trade.core.util;
 
 import org.slf4j.Logger;
@@ -11,16 +47,45 @@ import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-public class InlineCompiler {
+/**
+ *
+ */
+public final class InlineCompiler {
 
     private final static Logger _log = LoggerFactory.getLogger(InlineCompiler.class);
 
-    public static String doCompile(List<File> files) {
+    private String classpath;
+    private String outputdir;
+    private String sourcepath;
+    private String bootclasspath;
+    private String extdirs;
+    private String encoding;
+    private String target;
+
+    /**
+     * Constructor for Javac.
+     *
+     * @param classpath String
+     * @param outputdir String
+     */
+    public InlineCompiler(String classpath, String outputdir) {
+
+        this.classpath = classpath;
+        this.outputdir = outputdir;
+    }
+
+
+    /**
+     * Method compile.
+     *
+     * @param srcFiles File[]
+     * @return String
+     */
+    public String compile(List<File> srcFiles) {
 
         StringBuffer results = new StringBuffer();
         DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
@@ -33,7 +98,7 @@ public class InlineCompiler {
             optionList.add("-classpath");
             optionList.add(System.getProperty("java.class.path") + File.pathSeparator + "dist/InlineCompiler.jar");
 
-            Iterable<? extends JavaFileObject> compilationUnit = fileManager.getJavaFileObjectsFromFiles(files);
+            Iterable<? extends JavaFileObject> compilationUnit = fileManager.getJavaFileObjectsFromFiles(srcFiles);
             JavaCompiler.CompilationTask task = compiler.getTask(null, fileManager, diagnostics, optionList, null, compilationUnit);
 
             if (!task.call()) {
@@ -54,27 +119,173 @@ public class InlineCompiler {
         return null;
     }
 
-    public static Object loadClass(String className) {
+    /**
+     * Method buildJavacArgs.
+     *
+     * @param srcFiles String[]
+     * @return String[]
+     */
+    private String[] buildJavacArgs(String[] srcFiles) {
+        List<String> args = new ArrayList<>();
 
-        // Create a new custom class loader, pointing to the directory that contains the compiled
-        // classes, this should point to the top of the package structure!
-        try (URLClassLoader classLoader = new URLClassLoader(new URL[]{new File("./").toURI().toURL()})) {
-
-            // Load the class from the classloader by name....
-            _log.info("Info: className: {}", className);
-            Class<?> loadedClass = classLoader.loadClass(className);
-
-            // Create a new instance...
-            return loadedClass.getDeclaredConstructor().newInstance();
-        } catch (Exception ex) {
-
-            _log.error("Error: doRun msg: {}", ex.getMessage());
+        if (classpath != null) {
+            args.add("-classpath");
+            args.add(classpath);
         }
-        return null;
+        if (outputdir != null) {
+            args.add("-d");
+            args.add(outputdir);
+        }
+        if (sourcepath != null) {
+            args.add("-sourcepath");
+            args.add(sourcepath);
+        }
+        if (bootclasspath != null) {
+            args.add("-bootclasspath");
+            args.add(bootclasspath);
+        }
+        if (extdirs != null) {
+            args.add("-extdirs");
+            args.add(extdirs);
+        }
+        if (encoding != null) {
+            args.add("-encoding");
+            args.add(encoding);
+        }
+        if (target != null) {
+            args.add("-target");
+            args.add(target);
+        }
+
+        Collections.addAll(args, srcFiles);
+
+        return args.toArray(new String[0]);
     }
 
-    public interface DoStuff {
-
-        void doStuff();
+    /**
+     * Method getBootclasspath.
+     *
+     * @return String
+     */
+    public String getBootclasspath() {
+        return bootclasspath;
     }
+
+    /**
+     * Method setBootclasspath.
+     *
+     * @param bootclasspath String
+     */
+    public void setBootclasspath(String bootclasspath) {
+        this.bootclasspath = bootclasspath;
+    }
+
+    /**
+     * Method getClasspath.
+     *
+     * @return String
+     */
+    public String getClasspath() {
+        return classpath;
+    }
+
+    /**
+     * Method setClasspath.
+     *
+     * @param classpath String
+     */
+    public void setClasspath(String classpath) {
+        this.classpath = classpath;
+    }
+
+    /**
+     * Method getEncoding.
+     *
+     * @return String
+     */
+    public String getEncoding() {
+        return encoding;
+    }
+
+    /**
+     * Method setEncoding.
+     *
+     * @param encoding String
+     */
+    public void setEncoding(String encoding) {
+        this.encoding = encoding;
+    }
+
+    /**
+     * Method getExtdirs.
+     *
+     * @return String
+     */
+    public String getExtdirs() {
+        return extdirs;
+    }
+
+    /**
+     * Method setExtdirs.
+     *
+     * @param extdirs String
+     */
+    public void setExtdirs(String extdirs) {
+        this.extdirs = extdirs;
+    }
+
+    /**
+     * Method getOutputdir.
+     *
+     * @return String
+     */
+    public String getOutputdir() {
+        return outputdir;
+    }
+
+    /**
+     * Method setOutputdir.
+     *
+     * @param outputdir String
+     */
+    public void setOutputdir(String outputdir) {
+        this.outputdir = outputdir;
+    }
+
+    /**
+     * Method getSourcepath.
+     *
+     * @return String
+     */
+    public String getSourcepath() {
+        return sourcepath;
+    }
+
+    /**
+     * Method setSourcepath.
+     *
+     * @param sourcepath String
+     */
+    public void setSourcepath(String sourcepath) {
+        this.sourcepath = sourcepath;
+    }
+
+    /**
+     * Method getTarget.
+     *
+     * @return String
+     */
+    public String getTarget() {
+        return target;
+    }
+
+    /**
+     * Method setTarget.
+     *
+     * @param target String
+     */
+    public void setTarget(String target) {
+        this.target = target;
+    }
+
 }

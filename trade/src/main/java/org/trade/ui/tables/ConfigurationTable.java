@@ -77,18 +77,18 @@ public class ConfigurationTable extends Table {
         super(model);
 
         DecodeTableEditor currencyEditor = new DecodeTableEditor(
-                new JComboBox<>((new Currency()).getCodesDecodes()));
+                new JComboBox<>((new Currency()).getCodesDecodes().toArray(new Decode[0])));
         DecodeTableEditor accountTypeEditor = new DecodeTableEditor(
-                new JComboBox<>((new AccountType()).getCodesDecodes()));
+                new JComboBox<>((new AccountType()).getCodesDecodes().toArray(new Decode[0])));
         DateRenderer rDate = new DateRenderer(DATETIMEFORMAT);
         DateEditor eDate = new DateEditor(new DateField(DATETIMEFORMAT),
                 new org.trade.core.valuetype.Date(TradingCalendar.getDateTimeNowMarketTimeZone()), DATETIMEFORMAT,
                 Calendar.MINUTE);
         DecodeTableEditor dataTypeEditor = new DecodeTableEditor(
-                new JComboBox<>((new DataType()).getCodesDecodes()));
+                new JComboBox<>((new DataType()).getCodesDecodes().toArray(new Decode[0])));
 
         JComboBox<Decode> indicatorComboBoxEditor = new JComboBox<>(
-                (new IndicatorSeries()).getCodesDecodes());
+                (new IndicatorSeries()).getCodesDecodes().toArray(new Decode[0]));
         ListCellRenderer<Object> indicatorRenderer = new DefaultListCellRenderer() {
             @Serial
             private static final long serialVersionUID = -3146015541332720784L;
@@ -113,13 +113,13 @@ public class ConfigurationTable extends Table {
         DecodeTableEditor indicatorSeriesEditor = new DecodeTableEditor(indicatorComboBoxEditor);
 
         JComboBox<Decode> strategyManagerComboBox = new JComboBox<>(
-                (new DAOStrategyManager()).getCodesDecodes());
+                (new DAOStrategyManager()).getCodesDecodes().toArray(new Decode[0]));
         DecodeTableEditor dAOStrategyManagerEditor = new DecodeTableEditor(strategyManagerComboBox);
         JComboBox<Decode> daoAccountComboBox = new JComboBox<>(
-                (new DAOAccount()).getCodesDecodes());
+                (new DAOAccount()).getCodesDecodes().toArray(new Decode[0]));
         DecodeTableEditor dAOAccountEditor = new DecodeTableEditor(daoAccountComboBox);
         JComboBox<Decode> allocationMethodComboBox = new JComboBox<>(
-                (new AllocationMethod()).getCodesDecodes());
+                (new AllocationMethod()).getCodesDecodes().toArray(new Decode[0]));
         DecodeTableEditor allocationMethodEditor = new DecodeTableEditor(allocationMethodComboBox);
         this.setDefaultEditor(Currency.class, currencyEditor);
         this.setDefaultEditor(AllocationMethod.class, allocationMethodEditor);

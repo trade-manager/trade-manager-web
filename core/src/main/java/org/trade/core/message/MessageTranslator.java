@@ -45,13 +45,15 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Dictionary;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.MissingResourceException;
 import java.util.Objects;
 import java.util.PropertyResourceBundle;
 import java.util.StringTokenizer;
-import java.util.Vector;
 
 /**
  * This class represnets the data and methods necessary to take exception codes
@@ -544,12 +546,11 @@ public class MessageTranslator {
 
         int nbrTokens = tokenizer.countTokens();
         int counter = 0;
-        Vector<String> returnVector = new Vector<>();
+        List<String> returnList = new ArrayList<>();
         StringBuilder buf = new StringBuilder();
 
-        for (int i = 0; i < nbrTokens; i++)
-        // while (nbrTokens-- > 0)
-        {
+        for (int i = 0; i < nbrTokens; i++) {
+            // while (nbrTokens-- > 0)
             String token = tokenizer.nextToken();
 
             // This is not a parameter.
@@ -560,7 +561,7 @@ public class MessageTranslator {
 
             } else {
                 // We have a parameter.
-                returnVector.addElement(token);
+                returnList.add(token);
 
                 // Remove the parameter markup and replace it with a number inside curly
                 // braces for the MessageFormat to replace with paramaters
@@ -571,10 +572,10 @@ public class MessageTranslator {
 
         mf.applyPattern(buf.toString());
 
-        if (!returnVector.isEmpty()) {
+        if (!returnList.isEmpty()) {
 
-            String[] namedIndexes = new String[returnVector.size()];
-            returnVector.copyInto(namedIndexes);
+            String[] namedIndexes = new String[returnList.size()];
+            Collections.addAll(returnList, namedIndexes);
             return namedIndexes;
         } else {
 

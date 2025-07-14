@@ -37,6 +37,7 @@
 package org.trade.ui.widget;
 
 public class ComboItem {
+
     private final Object value;
     private final String label;
 
@@ -70,8 +71,9 @@ public class ComboItem {
      */
     public String toString() {
 
-        if (null == this.label)
+        if (null == this.label) {
             return this.value.toString();
+        }
         return this.label;
     }
 }

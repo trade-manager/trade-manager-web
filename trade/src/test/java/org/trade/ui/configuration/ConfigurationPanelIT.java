@@ -55,7 +55,8 @@ import org.trade.core.valuetype.CalculationType;
 import org.trade.core.valuetype.DAOStrategy;
 import org.trade.indicator.IndicatorSeries;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -111,13 +112,13 @@ class ConfigurationPanelIT {
                 "java.lang.Integer", null);
         CodeValue codeValue = new CodeValue(codeAttribute, "20");
 
-        Vector<Object> param = new Vector<>();
-        param.add(codeValue.getCodeValue());
+        List<Object> params = new ArrayList<>(0);
+        params.add(codeValue.getCodeValue());
         Integer value = null;
 
         try {
 
-            value = (Integer) ClassFactory.getCreateClass(codeValue.getCodeAttribute().getClassName(), param,
+            value = (Integer) ClassFactory.getCreateClass(codeValue.getCodeAttribute().getClassName(), params,
                     this);
         } catch (Exception ex) {
 
@@ -135,13 +136,13 @@ class ConfigurationPanelIT {
                 "java.lang.Boolean", null);
         CodeValue codeValue = new CodeValue(codeAttribute, "true");
 
-        Vector<Object> param = new Vector<>();
-        param.add(codeValue.getCodeValue());
+        List<Object> params = new ArrayList<>(0);
+        params.add(codeValue.getCodeValue());
         Boolean value = null;
 
         try {
 
-            value = (Boolean) ClassFactory.getCreateClass(codeValue.getCodeAttribute().getClassName(), param,
+            value = (Boolean) ClassFactory.getCreateClass(codeValue.getCodeAttribute().getClassName(), params,
                     this);
         } catch (Exception ex) {
 
@@ -159,13 +160,13 @@ class ConfigurationPanelIT {
                 "java.lang.String", null);
         CodeValue codeValue = new CodeValue(codeAttribute, "Simple");
 
-        Vector<Object> param = new Vector<>();
-        param.add(codeValue.getCodeValue());
+        List<Object> params = new ArrayList<>(0);
+        params.add(codeValue.getCodeValue());
         String value = null;
 
         try {
 
-            value = (String) ClassFactory.getCreateClass(codeValue.getCodeAttribute().getClassName(), param,
+            value = (String) ClassFactory.getCreateClass(codeValue.getCodeAttribute().getClassName(), params,
                     this);
         } catch (Exception ex) {
 
@@ -183,12 +184,12 @@ class ConfigurationPanelIT {
                 "org.trade.core.valuetype.CalculationType", null);
         CodeValue codeValue = new CodeValue(codeAttribute, CalculationType.LINEAR);
 
-        Vector<Object> param = new Vector<>();
+        List<Object> params = new ArrayList<>(0);
         CalculationType value = null;
         // param.add(codeValue.getCodeValue());
         try {
             value = (CalculationType) ClassFactory
-                    .getCreateClass(codeValue.getCodeAttribute().getClassName(), param, this);
+                    .getCreateClass(codeValue.getCodeAttribute().getClassName(), params, this);
         } catch (Exception ex) {
 
             fail("Failed to create value msg: " + ex.getMessage());
@@ -203,20 +204,20 @@ class ConfigurationPanelIT {
 
         final String packageName = "org.trade.indicator.";
         Strategy strategy = (Strategy) DAOStrategy.newInstance().getObject();
-        Vector<Object> param = new Vector<>();
-        param.add(strategy);
-        param.add("20-SMA");
-        param.add(IndicatorSeries.MovingAverageSeries);
-        param.add("20 Simple Moving Average");
-        param.add(false);
-        param.add(0);
-        param.add(false);
+        List<Object> params = new ArrayList<>(0);
+        params.add(strategy);
+        params.add("20-SMA");
+        params.add(IndicatorSeries.MovingAverageSeries);
+        params.add("20 Simple Moving Average");
+        params.add(false);
+        params.add(0);
+        params.add(false);
         String className = packageName + IndicatorSeries.MovingAverageSeries;
         IndicatorSeries value = null;
 
         try {
 
-            value = (IndicatorSeries) ClassFactory.getCreateClass(className, param, this);
+            value = (IndicatorSeries) ClassFactory.getCreateClass(className, params, this);
         } catch (Exception ex) {
 
             fail("Failed to create value msg: " + ex.getMessage());

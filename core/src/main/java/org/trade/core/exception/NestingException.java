@@ -38,9 +38,10 @@ package org.trade.core.exception;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
 import java.io.Serial;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.Enumeration;
-import java.util.Vector;
+import java.util.List;
+import java.util.ListIterator;
 
 /**
  * This class represents an exception capable of containing other exceptions. It
@@ -68,8 +69,8 @@ public class NestingException extends Exception {
     public String exception;
     public String seedClassName;
     private NestingException nestedException;
-    private final Vector<ExceptionMessage> exceptionMessages = new Vector<>();
-    private Vector<ExceptionContext> exceptionContexts = new Vector<>();
+    private final List<ExceptionMessage> exceptionMessages = new ArrayList<>();
+    private List<ExceptionContext> exceptionContexts = new ArrayList<>();
     private final Date timeStamp = new Date();
     private String stackTrace = null;
 
@@ -207,13 +208,13 @@ public class NestingException extends Exception {
     private void assimilateContext(NestingException nestingException) {
 
         // Get the contexts to be added if any.
-        Enumeration<ExceptionContext> enumExeptions = nestingException.getExceptionContexts();
+        ListIterator<ExceptionContext> enumExeptions = nestingException.getExceptionContexts();
 
-        if (enumExeptions.hasMoreElements()) {
+        if (enumExeptions.hasNext()) {
 
             // Add each of the contexts to this
-            while (enumExeptions.hasMoreElements()) {
-                addExceptionContext(enumExeptions.nextElement());
+            while (enumExeptions.hasNext()) {
+                addExceptionContext(enumExeptions.next());
             }
 
             // Clear the context of the nesting exception.
@@ -224,16 +225,16 @@ public class NestingException extends Exception {
     /**
      * Method getExceptionContexts.
      *
-     * @return Enumeration<ExceptionContext>
+     * @return ListIterator<ExceptionContext>
      */
-    private Enumeration<ExceptionContext> getExceptionContexts() {
+    private ListIterator<ExceptionContext> getExceptionContexts() {
 
-        return exceptionContexts.elements();
+        return exceptionContexts.listIterator();
     }
 
     private void clearContexts() {
 
-        exceptionContexts = new Vector<>(1);
+        exceptionContexts = new ArrayList<>(1);
     }
 
     /**
@@ -244,14 +245,13 @@ public class NestingException extends Exception {
      */
     public void addExceptionMessage(ExceptionMessage exceptionMessage) {
 
-        this.exceptionMessages.addElement(exceptionMessage);
+        this.exceptionMessages.add(exceptionMessage);
 
         // Here we loop through any outstanding contexts and apply them.
-        Enumeration<ExceptionContext> enumeration;
-        enumeration = this.exceptionContexts.elements();
+        ListIterator<ExceptionContext> enumeration = this.exceptionContexts.listIterator();
 
-        while (enumeration.hasMoreElements()) {
-            addExceptionContext(enumeration.nextElement());
+        while (enumeration.hasNext()) {
+            addExceptionContext(enumeration.next());
         }
     }
 
@@ -271,10 +271,10 @@ public class NestingException extends Exception {
      *
      * @param messages The enumeration of <code>ExceptionMessage</code> objects.
      */
-    public void addExceptionMessages(Enumeration<?> messages) {
-        while (messages.hasMoreElements()) {
-            ExceptionMessage m = (ExceptionMessage) messages.nextElement();
-            exceptionMessages.addElement(m);
+    public void addExceptionMessages(ListIterator<?> messages) {
+        while (messages.hasNext()) {
+            ExceptionMessage m = (ExceptionMessage) messages.next();
+            exceptionMessages.add(m);
         }
     }
 
@@ -295,7 +295,7 @@ public class NestingException extends Exception {
      */
     public void addExceptionContext(ExceptionContext exceptionContext) {
 
-        ExceptionMessage mostRecent = this.exceptionMessages.lastElement();
+        ExceptionMessage mostRecent = this.exceptionMessages.getLast();
 
         if (null != mostRecent) {
             // There is at least one exception message, so we add the context
@@ -304,20 +304,20 @@ public class NestingException extends Exception {
         } else {
             // There are no exception messages so we hold onto the context
             // in case a message is added later.
-            this.exceptionContexts.addElement(exceptionContext);
+            this.exceptionContexts.add(exceptionContext);
         }
 
         // Regardless of whether we cached the context we will apply the
         // context recursively to any nested exceptions we find.
         if (null != this.nestedException) {
 
-            Enumeration<?> enumeration = this.nestedException.getAllExceptionMessages();
+            Enumerator enumeration = this.nestedException.getAllExceptionMessages();
 
             ExceptionMessage exceptionMessage;
 
-            while (enumeration.hasMoreElements()) {
+            while (enumeration.hasNext()) {
 
-                exceptionMessage = (ExceptionMessage) enumeration.nextElement();
+                exceptionMessage = (ExceptionMessage) enumeration.next();
                 exceptionMessage.addExceptionContext(exceptionContext);
             }
         }
@@ -345,7 +345,7 @@ public class NestingException extends Exception {
      */
     public void addExceptionMessage(ExceptionCode code, String message, NestingException nestingException) {
 
-        this.exceptionMessages.addElement(new ExceptionMessage(code, message));
+        this.exceptionMessages.add(new ExceptionMessage(code, message));
         assimilateContext(nestingException);
     }
 
@@ -357,7 +357,7 @@ public class NestingException extends Exception {
      */
     public void addExceptionMessage(ExceptionMessage userFriendlyMessage, NestingException nestingException) {
 
-        this.exceptionMessages.addElement(userFriendlyMessage);
+        this.exceptionMessages.add(userFriendlyMessage);
         assimilateContext(nestingException);
     }
 
@@ -368,7 +368,7 @@ public class NestingException extends Exception {
      */
     public void removeExceptionMessage(ExceptionMessage message) {
 
-        this.exceptionMessages.removeElement(message);
+        this.exceptionMessages.remove(message);
     }
 
     /**
@@ -378,17 +378,17 @@ public class NestingException extends Exception {
      */
     public void removeExceptionMessages(ExceptionCode code) {
 
-        Vector<ExceptionMessage> remove = new Vector<>();
+        List<ExceptionMessage> remove = new ArrayList<>();
         int i;
         int nbrMessages = this.exceptionMessages.size();
 
         for (i = 0; i < nbrMessages; i++) {
 
-            ExceptionMessage msg = this.exceptionMessages.elementAt(i);
+            ExceptionMessage msg = this.exceptionMessages.get(i);
 
             if (msg.getExceptionCode().equals(code)) {
 
-                remove.addElement(msg);
+                remove.add(msg);
             }
         }
 
@@ -396,7 +396,7 @@ public class NestingException extends Exception {
 
         for (i = 0; i < removeSize; i++) {
 
-            removeExceptionMessage(remove.elementAt(i));
+            removeExceptionMessage(remove.get(i));
         }
     }
 
@@ -418,12 +418,12 @@ public class NestingException extends Exception {
      * Obtain an <code>Enumeration</code> of user-friendly messages for this
      * exception. This does not includes messages from nested exceptions.
      *
-     * @return <code>Enumeration</code> of <code>ExceptionMessage</code> objects
+     * @return <code>ListIterator</code> of <code>ExceptionMessage</code> objects
      * containing user-friendly text.
      */
-    protected Enumeration<ExceptionMessage> getExceptionMessages() {
+    protected ListIterator<ExceptionMessage> getExceptionMessages() {
 
-        return this.exceptionMessages.elements();
+        return this.exceptionMessages.listIterator();
     }
 
     /**
@@ -434,16 +434,16 @@ public class NestingException extends Exception {
      * containing exception message text. * @see
      * #getAllUserFriendlyMessages()
      */
-    public Enumeration<?> getAllExceptionMessages() {
+    public Enumerator getAllExceptionMessages() {
 
         if (nestedException != null) {
 
             Enumerator enumMsg = (Enumerator) this.nestedException.getAllExceptionMessages();
-            enumMsg.prependEnumeration(this.exceptionMessages.elements());
+            enumMsg.prependEnumeration(this.exceptionMessages.listIterator());
             return enumMsg;
         } else {
 
-            return new Enumerator(this.exceptionMessages.elements());
+            return new Enumerator(this.exceptionMessages.listIterator());
         }
     }
 

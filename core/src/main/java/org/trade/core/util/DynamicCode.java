@@ -269,7 +269,7 @@ public final class DynamicCode {
 
         File srcDir;
         File binDir;
-        Javac javac;
+        InlineCompiler inlineCompiler;
         URLClassLoader classLoader;
 
         /**
@@ -285,7 +285,7 @@ public final class DynamicCode {
             this.binDir.mkdirs();
 
             // prepare compiler
-            this.javac = new Javac(compileClasspath.replace("%20", " "), binDir.getAbsolutePath());
+            this.inlineCompiler = new InlineCompiler(compileClasspath.replace("%20", " "), binDir.getAbsolutePath());
 
             // class loader
             recreateClassLoader();
@@ -362,7 +362,7 @@ public final class DynamicCode {
 
             if (binFile.lastModified() < srcFile.lastModified()) {
 
-                error = srcDir.javac.compile(List.of(srcFile));
+                error = srcDir.inlineCompiler.compile(List.of(srcFile));
             }
 
             if (error != null) {

@@ -38,10 +38,11 @@ package org.trade.core.lookup;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.valuetype.Decode;
 
-import java.util.Enumeration;
+import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.Objects;
-import java.util.Vector;
 
 /**
  * Implementation of the ILookupServiceProvider interface that uses the
@@ -76,63 +77,72 @@ public class PropertyFileLookupServiceProvider implements ILookupServiceProvider
         ILookup lookup = getCachedLookup(lookupName, qualifier);
 
         if (null == lookup) {
+
             try {
 
-                Vector<String> colNames = new Vector<>();
-                Enumeration<?> en = ConfigProperties.getPropAsEnumeration(lookupName + "_PropertyFile");
+                List<String> colNames = new ArrayList<>();
+                ListIterator<?> en = ConfigProperties.getPropAsEnumeration(lookupName + "_PropertyFile");
 
-                while (en.hasMoreElements()) {
-                    colNames.addElement((String) en.nextElement());
+                while (en.hasNext()) {
+
+                    colNames.add((String) en.next());
                 }
 
-                // Have all of the columns - want to get a vector for each
+                // Have all of the columns - want to get a List for each
                 // column value
-                Vector<Enumeration<?>> colRows = new Vector<>();
+                List<ListIterator<?>> colRows = new ArrayList<>();
                 int i;
                 int colNamesSize = colNames.size();
 
                 for (i = 0; i < colNamesSize; i++) {
-                    colRows.addElement(ConfigProperties.getPropAsEnumeration(colNames.elementAt(i)));
+
+                    colRows.add(ConfigProperties.getPropAsEnumeration(colNames.get(i)));
                 }
 
-                // Now construct a Vector Vector - representing the table of
+                // Now construct a List List - representing the table of
                 // data
                 boolean exit = false;
                 /*
                  * Add the None selected row.
                  */
-                Vector<Vector<Object>> rows = new Vector<>();
+                List<List<Object>> rows = new ArrayList<>();
+
                 if (optional) {
-                    Vector<Object> newRowNone = new Vector<>();
+
+                    List<Object> newRowNone = new ArrayList<>();
+
                     for (i = 0; i < colRows.size(); i++) {
-                        Object qualVal = qualifier.getValue(colNames.elementAt(i));
+
+                        Object qualVal = qualifier.getValue(colNames.get(i));
                         newRowNone.add(Objects.requireNonNullElse(qualVal, Decode.NONE));
                     }
                     rows.add(newRowNone);
                 }
+
                 do {
-                    Vector<Object> row = new Vector<>();
+
+                    List<Object> row = new ArrayList<>();
                     boolean foundOne = false;
                     boolean addIt = true;
                     int colRowsSize = colRows.size();
 
                     for (i = 0; i < colRowsSize; i++) {
                         Object value = null;
-                        en = colRows.elementAt(i);
+                        en = colRows.get(i);
 
-                        if (en.hasMoreElements()) {
+                        if (en.hasNext()) {
                             foundOne = true;
-                            value = en.nextElement();
-                            row.addElement(value);
+                            value = en.next();
+                            row.add(value);
                         } else {
                             // Represent an empty value
-                            row.addElement("");
+                            row.add("");
                         }
 
                         // Check to see if the returned lookup is to be
                         // constrained
                         if (foundOne && (qualifier != null)) {
-                            Object qualVal = qualifier.getValue(colNames.elementAt(i));
+                            Object qualVal = qualifier.getValue(colNames.get(i));
 
                             if (null != qualVal) {
                                 if (!qualVal.equals(value)) {
@@ -144,7 +154,7 @@ public class PropertyFileLookupServiceProvider implements ILookupServiceProvider
 
                     if (foundOne) {
                         if (addIt) {
-                            rows.addElement(row);
+                            rows.add(row);
                         }
                     } else {
                         exit = true;

@@ -50,7 +50,6 @@ import java.io.Serial;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 /**
  *
@@ -72,8 +71,10 @@ public class FilterBackTestPane extends JPanel {
     public FilterBackTestPane(ZonedDateTime startDate, ZonedDateTime endDate,
                               List<Tradestrategy> strategyBarSizeChartHistItems, List<Tradestrategy> contractItems) {
 
-        Vector<ComboItem> items = new Vector<>();
+        List<ComboItem> items = new ArrayList<>();
+
         for (Tradestrategy item : strategyBarSizeChartHistItems) {
+
             String label = item.getStrategy().getName() + " " + BarSize.newInstance(item.getBarSize()).getDisplayName()
                     + " " + ChartDays.newInstance(item.getChartDays()).getDisplayName();
             ComboItem comboItem = new ComboItem(item, label.trim());
@@ -81,12 +82,15 @@ public class FilterBackTestPane extends JPanel {
         }
 
         DefaultListModel<ComboItem> listModel = new DefaultListModel<>();
+        listModel.add(0, comboItemAll);
+        int i = 1;
 
-        listModel.addElement(comboItemAll);
         for (Tradestrategy item : contractItems) {
+
             String label = item.getContract().getSymbol();
             ComboItem comboItem = new ComboItem(item, label);
-            listModel.addElement(comboItem);
+            listModel.add(i, comboItem);
+            i++;
         }
 
         JLabel dateStartLabel = new JLabel("From Date: ");
@@ -112,7 +116,7 @@ public class FilterBackTestPane extends JPanel {
         spinnerEnd.setEditor(de1);
         spinnerEnd.setValue((new Date(endDate)).getDate());
 
-        strategyBarSizeChartHistComboBox = new JComboBox<>(items);
+        strategyBarSizeChartHistComboBox = new JComboBox<>(items.toArray(new ComboItem[0]));
         strategyBarSizeChartHistComboBox.setRenderer(new DecodeComboBoxRenderer());
         strategyBarSizeChartHistComboBox.setEditable(true);
 

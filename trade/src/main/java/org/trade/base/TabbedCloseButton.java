@@ -45,7 +45,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.Serial;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -265,7 +266,7 @@ public class TabbedCloseButton extends JPanel {
      * @param selection String
      */
     protected void messageEvent(String selection) {
-        Vector<Object> transferObjects = new Vector<>();
+        List<Object> transferObjects = new ArrayList<>();
         if (null != this.transferObject) {
             transferObjects.add(this.transferObject);
         }

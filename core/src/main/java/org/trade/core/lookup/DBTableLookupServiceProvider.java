@@ -43,10 +43,10 @@ import org.trade.core.util.Reflector;
 import org.trade.core.valuetype.Decode;
 
 import java.lang.reflect.Method;
-import java.util.Enumeration;
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.Vector;
+import java.util.ListIterator;
 
 /**
  * Implementation of the ILookupServiceProvider interface that uses the
@@ -97,33 +97,33 @@ public class DBTableLookupServiceProvider implements ILookupServiceProvider {
 
             try {
 
-                Vector<Vector<Object>> rows = new Vector<>();
-                Vector<String> colNames = new Vector<>();
-                Enumeration<?> en = ConfigProperties.getPropAsEnumeration(lookupName + "_DBTable");
+                List<List<Object>> rows = new ArrayList<>();
+                List<String> colNames = new ArrayList<>();
+                ListIterator<?> en = ConfigProperties.getPropAsEnumeration(lookupName + "_DBTable");
 
-                while (en.hasMoreElements()) {
+                while (en.hasNext()) {
 
-                    colNames.addElement((String) en.nextElement());
+                    colNames.add((String) en.next());
                 }
 
-                // Have all of the columns - want to get a vector for each
+                // Have all of the columns - want to get a List for each
                 // column value
-                Vector<Enumeration<?>> colRows = new Vector<>();
+                List<ListIterator<?>> colRows = new ArrayList<>();
                 int i;
                 int colNamesSize = colNames.size();
 
                 for (i = 0; i < colNamesSize; i++) {
 
-                    colRows.addElement(ConfigProperties.getPropAsEnumeration(colNames.elementAt(i)));
+                    colRows.add(ConfigProperties.getPropAsEnumeration(colNames.get(i)));
                 }
 
-                // Now construct a Vector Vector - representing the table of
+                // Now construct a List List - representing the table of
                 // data
                 boolean exit = false;
 
                 do {
 
-                    Vector<Object> row = new Vector<>();
+                    List<Object> row = new ArrayList<>();
                     boolean foundOne = false;
                     boolean addIt = true;
                     int colRowsSize = colRows.size();
@@ -131,24 +131,24 @@ public class DBTableLookupServiceProvider implements ILookupServiceProvider {
                     for (i = 0; i < colRowsSize; i++) {
 
                         Object value = null;
-                        en = colRows.elementAt(i);
+                        en = colRows.get(i);
 
-                        if (en.hasMoreElements()) {
+                        if (en.hasNext()) {
 
                             foundOne = true;
-                            value = en.nextElement();
-                            row.addElement(value);
+                            value = en.next();
+                            row.add(value);
                         } else {
 
                             // Represent an empty value
-                            row.addElement("");
+                            row.add("");
                         }
 
                         // Check to see if the returned lookup is to be
                         // constrained
                         if (foundOne && (qualifier != null)) {
 
-                            Object qualVal = qualifier.getValue(colNames.elementAt(i));
+                            Object qualVal = qualifier.getValue(colNames.get(i));
 
                             if (null != qualVal) {
 
@@ -164,7 +164,7 @@ public class DBTableLookupServiceProvider implements ILookupServiceProvider {
 
                         if (addIt) {
 
-                            rows.addElement(row);
+                            rows.add(row);
                         }
                     } else {
 
@@ -181,21 +181,21 @@ public class DBTableLookupServiceProvider implements ILookupServiceProvider {
 
                 for (i = 0; i < rowsSize; i++) {
 
-                    Vector<Object> row = rows.elementAt(i);
+                    List<Object> row = rows.get(i);
                     int rowSize = row.size();
 
                     for (int y = 0; y < rowSize; y++) {
 
-                        if ("DAO_DECODE_TYPE".equals(colNames.elementAt(y))) {
+                        if ("DAO_DECODE_TYPE".equals(colNames.get(y))) {
 
-                            type = (String) row.elementAt(y);
+                            type = (String) row.get(y);
 
-                        } else if ("DAO_DECODE_CODE".equals(colNames.elementAt(y))) {
+                        } else if ("DAO_DECODE_CODE".equals(colNames.get(y))) {
 
-                            dao = (String) row.elementAt(y);
-                        } else if ("DAO_DECODE_DISPLAY_NAME".equals(colNames.elementAt(y))) {
+                            dao = (String) row.get(y);
+                        } else if ("DAO_DECODE_DISPLAY_NAME".equals(colNames.get(y))) {
 
-                            methodName = (String) row.elementAt(y);
+                            methodName = (String) row.get(y);
                         }
                     }
                     // Clear the first row and add the objects and display name
@@ -206,7 +206,7 @@ public class DBTableLookupServiceProvider implements ILookupServiceProvider {
                      */
                     if (optional) {
 
-                        Vector<Object> newRowNone = new Vector<>();
+                        List<Object> newRowNone = new ArrayList<>();
                         Class<?> clazz = Class.forName(dao);
                         Object daoObjectNone = clazz.getDeclaredConstructor().newInstance();
                         newRowNone.add(type);
@@ -228,7 +228,7 @@ public class DBTableLookupServiceProvider implements ILookupServiceProvider {
 
                             if (null != displayNameValue) {
 
-                                Vector<Object> newRow = new Vector<>();
+                                List<Object> newRow = new ArrayList<>();
                                 newRow.add(type);
                                 newRow.add(daoObject);
                                 newRow.add(displayNameValue);

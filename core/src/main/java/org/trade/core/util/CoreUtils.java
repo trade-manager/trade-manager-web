@@ -47,8 +47,8 @@ import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -172,11 +172,11 @@ public class CoreUtils {
             returnStringBuf.append("<").append(className).append("> \n");
 
             final String[] index = new String[attributeList.size()];
-            final Enumeration<String> enumAttr = attributeList.keys();
+            final Iterator<String> enumAttr = attributeList.keys().asIterator();
             int i = 0;
 
-            while (enumAttr.hasMoreElements()) {
-                index[i++] = enumAttr.nextElement();
+            while (enumAttr.hasNext()) {
+                index[i++] = enumAttr.next();
             }
 
             CollectionUtilities.n2sort(index, true);
@@ -225,11 +225,11 @@ public class CoreUtils {
             returnStringBuf = new StringBuilder();
 
             final String[] index = new String[attributeList.size()];
-            final Enumeration<String> enumAttr = attributeList.keys();
+            final Iterator<String> enumAttr = attributeList.keys().asIterator();
             int i = 0;
 
-            while (enumAttr.hasMoreElements()) {
-                index[i++] = enumAttr.nextElement();
+            while (enumAttr.hasNext()) {
+                index[i++] = enumAttr.next();
             }
 
             CollectionUtilities.n2sort(index, true);

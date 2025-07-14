@@ -71,9 +71,10 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.io.Serial;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ListIterator;
 import java.util.Objects;
-import java.util.Vector;
 
 /**
  *
@@ -357,7 +358,7 @@ public class ConfigurationPanel extends BasePanel {
         try {
 
             m_aspects = tradeService.findByClassName("org.trade.persistent.dao." + refTableClass);
-            Vector<Object> parm = new Vector<>();
+            List<Object> parm = new ArrayList<>();
             tableModel = (AspectTableModel) ClassFactory
                     .getCreateClass("org.trade.ui.models." + refTableClass + "TableModel", parm, this);
             tableModel.setData(m_aspects);

@@ -49,7 +49,7 @@ import org.trade.core.valuetype.CalculationType;
 import java.io.Serial;
 import java.math.BigDecimal;
 import java.util.LinkedList;
-import java.util.Vector;
+import java.util.List;
 
 /**
  * A list of (RegularTimePeriod, open, high, low, close) data items.
@@ -365,13 +365,13 @@ public class MovingAverageSeries extends IndicatorSeries {
     }
 
     @Transient
-    public Vector<Object> getParam(String type) {
+    public List<Object> getParam(String type) {
 
-        Vector<Object> parms = super.getParam(type);
-        parms.add(getMAType());
-        parms.add(getLength());
-        parms.add(getPriceSource());
-        return parms;
+        List<Object> params = super.getParam(type);
+        params.add(getMAType());
+        params.add(getLength());
+        params.add(getPriceSource());
+        return params;
     }
 
     /**

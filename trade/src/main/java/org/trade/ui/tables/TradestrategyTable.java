@@ -105,33 +105,33 @@ public class TradestrategyTable extends Table {
         this.getColumn("Expiry").setCellEditor(eDate);
         this.getColumn("Expiry").setCellRenderer(rDate);
         DecodeTableEditor currencyEditor = new DecodeTableEditor(
-                new JComboBox<>((new Currency()).getCodesDecodes()));
+                new JComboBox<>((new Currency()).getCodesDecodes().toArray(new Decode[0])));
         DecodeTableEditor exchangeEditor = new DecodeTableEditor(
-                new JComboBox<>((new Exchange()).getCodesDecodes()));
+                new JComboBox<>((new Exchange()).getCodesDecodes().toArray(new Decode[0])));
         DecodeTableEditor sECIdTypeEditor = new DecodeTableEditor(
-                new JComboBox<>((new SECIdType()).getCodesDecodes()));
+                new JComboBox<>((new SECIdType()).getCodesDecodes().toArray(new Decode[0])));
         DecodeTableEditor sECTypeEditor = new DecodeTableEditor(
-                new JComboBox<>((new SECType()).getCodesDecodes()));
+                new JComboBox<>((new SECType()).getCodesDecodes().toArray(new Decode[0])));
         DecodeTableEditor sideEditor = new DecodeTableEditor(
-                new JComboBox<>((new Side()).getCodesDecodes()));
+                new JComboBox<>((new Side()).getCodesDecodes().toArray(new Decode[0])));
         DecodeTableEditor tradestrategyStatusEditor = new DecodeTableEditor(
-                new JComboBox<>((new TradestrategyStatus()).getCodesDecodes()));
+                new JComboBox<>((new TradestrategyStatus()).getCodesDecodes().toArray(new Decode[0])));
         DecodeTableEditor tierEditor = new DecodeTableEditor(
-                new JComboBox<>((new Tier()).getCodesDecodes()));
+                new JComboBox<>((new Tier()).getCodesDecodes().toArray(new Decode[0])));
 
         DAOStrategyRenderer dAOStrategyRenderer = new DAOStrategyRenderer(strategyWorkers);
         DAOStrategyManagerRenderer dAOStrategyManagerRenderer = new DAOStrategyManagerRenderer(strategyWorkers);
         DecodeTableEditor strategyEditor = new DecodeTableEditor(
-                new JComboBox<>((new DAOStrategy()).getCodesDecodes()));
+                new JComboBox<>((new DAOStrategy()).getCodesDecodes().toArray(new Decode[0])));
         JComboBox<Decode> strategyManagerComboBox = new JComboBox<>(
-                (new DAOStrategyManager()).getCodesDecodes());
+                (new DAOStrategyManager()).getCodesDecodes().toArray(new Decode[0]));
         DecodeTableEditor strategyManagerEditor = new DecodeTableEditor(strategyManagerComboBox);
         DecodeTableEditor portfolioEditor = new DecodeTableEditor(
-                new JComboBox<>((new DAOPortfolio()).getCodesDecodes()));
+                new JComboBox<>((new DAOPortfolio()).getCodesDecodes().toArray(new Decode[0])));
         DecodeTableEditor chartDaysEditor = new DecodeTableEditor(
-                new JComboBox<>((new ChartDays()).getCodesDecodes()));
+                new JComboBox<>((new ChartDays()).getCodesDecodes().toArray(new Decode[0])));
         DecodeTableEditor barSizeEditor = new DecodeTableEditor(
-                new JComboBox<>((new BarSize()).getCodesDecodes()));
+                new JComboBox<>((new BarSize()).getCodesDecodes().toArray(new Decode[0])));
 
         StringEditor eString = new StringEditor(new StringField(new MaskFormatter(MASK), VALID_CHARS, PLACE_HOLDER));
         this.setDefaultEditor(String.class, eString);

@@ -44,8 +44,9 @@ import org.trade.core.valuetype.MarketBar;
 
 import java.io.Serial;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.Vector;
 
 /**
  *
@@ -138,7 +139,7 @@ public class TradingdayTableModel extends TableModel {
 
             for (Tradingday element : getData().getTradingdays()) {
 
-                Vector<Object> newRow = new Vector<>();
+                List<Object> newRow = new ArrayList<>();
                 getNewRow(newRow, element);
                 rows.add(newRow);
             }
@@ -190,8 +191,8 @@ public class TradingdayTableModel extends TableModel {
         if (null != value && !value.equals(super.getValueAt(row, column))) {
 
             this.populateDAO(value, row, column);
-            Vector<Object> dataRow = rows.get(row);
-            dataRow.setElementAt(value, column);
+            List<Object> dataRow = rows.get(row);
+            dataRow.add(column, value);
             fireTableCellUpdated(row, column);
         }
     }
@@ -254,7 +255,7 @@ public class TradingdayTableModel extends TableModel {
 
         getData().remove(element);
         element.setDirty(true);
-        final Vector<Object> currRow = rows.get(selectedRow);
+        final List<Object> currRow = rows.get(selectedRow);
         rows.remove(currRow);
         this.fireTableRowsDeleted(selectedRow, selectedRow);
     }
@@ -277,7 +278,7 @@ public class TradingdayTableModel extends TableModel {
                     TradingCalendar.getTradingDayEnd(date));
         }
         getData().add(tradingday);
-        Vector<Object> newRow = new Vector<>();
+        List<Object> newRow = new ArrayList<>();
         getNewRow(newRow, tradingday);
         rows.add(newRow);
         this.fireTableRowsInserted(rows.size() - 1, rows.size() - 1);
@@ -286,26 +287,26 @@ public class TradingdayTableModel extends TableModel {
     /**
      * Method getNewRow.
      *
-     * @param newRow  Vector<Object>
+     * @param newRow  List<Object>
      * @param element Tradingday
      */
-    public void getNewRow(Vector<Object> newRow, Tradingday element) {
-        newRow.addElement(new Date(element.getOpen()));
-        newRow.addElement(new Date(element.getClose()));
+    public void getNewRow(List<Object> newRow, Tradingday element) {
+        newRow.add(new Date(element.getOpen()));
+        newRow.add(new Date(element.getClose()));
         if (null == element.getMarketGap()) {
-            newRow.addElement(new MarketBar());
+            newRow.add(new MarketBar());
         } else {
-            newRow.addElement(MarketBar.newInstance((element.getMarketGap())));
+            newRow.add(MarketBar.newInstance((element.getMarketGap())));
         }
         if (null == element.getMarketBias()) {
-            newRow.addElement(new MarketBar());
+            newRow.add(new MarketBar());
         } else {
-            newRow.addElement(MarketBar.newInstance((element.getMarketBias())));
+            newRow.add(MarketBar.newInstance((element.getMarketBias())));
         }
         if (null == element.getMarketBar()) {
-            newRow.addElement(new MarketBar());
+            newRow.add(new MarketBar());
         } else {
-            newRow.addElement(MarketBar.newInstance((element.getMarketBar())));
+            newRow.add(MarketBar.newInstance((element.getMarketBar())));
         }
     }
 }

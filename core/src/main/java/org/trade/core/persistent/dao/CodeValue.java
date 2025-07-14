@@ -47,8 +47,8 @@ import org.trade.core.factory.ClassFactory;
 import org.trade.core.persistent.dao.series.indicator.IndicatorSeries;
 
 import java.io.Serial;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 
 /**
@@ -209,10 +209,10 @@ public class CodeValue extends Aspect implements java.io.Serializable {
 
             if (name.equals(value.getCodeAttribute().getName())) {
 
-                Vector<Object> parm = new Vector<>();
-                parm.add(value.getCodeValue());
-                // codeValue = ClassFactory.getCreateClass(value.getCodeAttribute().getClassName(), parm, CodeAttributePanel.class);
-                return ClassFactory.getCreateClass(value.getCodeAttribute().getClassName(), parm,
+                List<Object> params = new ArrayList<>(0);
+                params.add(value.getCodeValue());
+                // codeValue = ClassFactory.getCreateClass(value.getCodeAttribute().getClassName(), params, CodeAttributePanel.class);
+                return ClassFactory.getCreateClass(value.getCodeAttribute().getClassName(), params,
                         CodeValue.class);
             }
         }

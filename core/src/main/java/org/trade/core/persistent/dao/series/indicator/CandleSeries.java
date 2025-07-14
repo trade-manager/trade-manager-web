@@ -56,7 +56,7 @@ import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.LinkedList;
-import java.util.Vector;
+import java.util.List;
 
 /**
  * A list of (RegularTimePeriod, open, high, low, close) data items.
@@ -920,12 +920,12 @@ public class CandleSeries extends IndicatorSeries {
     }
 
     @Transient
-    public Vector<Object> getParam(String type) {
+    public List<Object> getParam(String type) {
 
-        Vector<Object> parms = super.getParam(type);
-        parms.add(this.getContract());
-        parms.add(this.getBarSize());
-        return parms;
+        List<Object> params = super.getParam(type);
+        params.add(this.getContract());
+        params.add(this.getBarSize());
+        return params;
     }
 
     /**

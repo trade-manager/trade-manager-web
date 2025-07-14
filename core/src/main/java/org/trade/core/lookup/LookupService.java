@@ -38,7 +38,8 @@ package org.trade.core.lookup;
 import org.trade.core.ApplicationContextProvider;
 import org.trade.core.persistent.TradeService;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Simon Allen
@@ -48,7 +49,7 @@ public class LookupService {
     //
     // Private Attributes
     //
-    private static final Vector<ILookupServiceProvider> _providers = new Vector<>();
+    private static final List<ILookupServiceProvider> _providers = new ArrayList<>();
 
     static {
 
@@ -74,7 +75,7 @@ public class LookupService {
 
         for (int i = 0; i < providersSize; i++) {
 
-            lookup = _providers.elementAt(i).getLookup(lookupName, qualifier, optional);
+            lookup = _providers.get(i).getLookup(lookupName, qualifier, optional);
 
             if (null != lookup) {
                 // Have found a ILookup - don't care if another provider can
@@ -93,7 +94,7 @@ public class LookupService {
     public static void addLookupServiceProvider(ILookupServiceProvider provider) {
 
         if (!_providers.contains(provider)) {
-            _providers.addElement(provider);
+            _providers.add(provider);
         }
     }
 
@@ -104,6 +105,6 @@ public class LookupService {
      */
     public static void removeLookupServiceProvider(ILookupServiceProvider provider) {
 
-        _providers.removeElement(provider);
+        _providers.remove(provider);
     }
 }

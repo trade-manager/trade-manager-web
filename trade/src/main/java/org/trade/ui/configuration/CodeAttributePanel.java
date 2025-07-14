@@ -13,10 +13,10 @@ import javax.swing.JFormattedTextField.AbstractFormatter;
 import java.awt.*;
 import java.io.Serial;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Objects;
-import java.util.Vector;
 
 public class CodeAttributePanel extends JPanel {
 
@@ -64,14 +64,14 @@ public class CodeAttributePanel extends JPanel {
 
                 if (null == ((JFormattedTextField) field).getValue()) {
 
-                    Vector<Object> parm = new Vector<>();
+                    List<Object> parm = new ArrayList<>();
                     parm.add(codeAttribute.getDefaultValue());
                     Object codeValue = ClassFactory.getCreateClass(codeAttribute.getClassName(), parm, this);
                     ((JFormattedTextField) field).setValue(codeValue);
                 }
             } else {
 
-                Vector<Object> parm = new Vector<>();
+                List<Object> parm = new ArrayList<>();
                 Object decode = ClassFactory.getCreateClass(codeAttribute.getEditorClassName(), parm, this);
                 boolean valueSet = false;
 

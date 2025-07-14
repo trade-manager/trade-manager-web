@@ -60,7 +60,8 @@ import org.trade.core.util.time.TradingCalendar;
 
 import javax.swing.*;
 import java.time.ZonedDateTime;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -116,9 +117,9 @@ public class TWSBrokerModelIT implements IBrokerChangeListener {
         Integer clientId = ConfigProperties.getPropAsInt("trade.tws.clientId");
         Integer port = Integer.valueOf(ConfigProperties.getPropAsString("trade.tws.port"));
         String host = ConfigProperties.getPropAsString("trade.tws.host");
-        Vector<Object> param = new Vector<>();
-        param.add(tradeService);
-        tWSBrokerModel = (IBrokerModel) ClassFactory.getServiceForInterface(_broker, param, this);
+        List<Object> params = new ArrayList<>(0);
+        params.add(tradeService);
+        tWSBrokerModel = (IBrokerModel) ClassFactory.getServiceForInterface(_broker, params, this);
         tWSBrokerModel.addMessageListener(this);
         tWSBrokerModel.onConnect(host, port, clientId);
         timerRunning = new AtomicInteger(0);

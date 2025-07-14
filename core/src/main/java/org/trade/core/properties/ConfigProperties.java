@@ -45,13 +45,16 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.Scanner;
 import java.util.StringTokenizer;
-import java.util.Vector;
 import java.util.regex.Pattern;
 
 /**
@@ -150,26 +153,29 @@ public class ConfigProperties {
      * Method getPropAsEnumeration.
      *
      * @param keyRoot String
-     * @return Enumeration<String>
+     * @return ListIterator<String>
      */
-    public static Enumeration<String> getPropAsEnumeration(String keyRoot) throws IOException {
+    public static ListIterator<String> getPropAsEnumeration(String keyRoot) throws IOException {
 
-        Vector<String> resVec;
+        List<String> resVec;
         int iNumEntries = getPropAsInt(keyRoot + "_NumOfItems");
         StringBuilder key = new StringBuilder(keyRoot);
         int keyLen = keyRoot.length();
 
-        resVec = new Vector<>(iNumEntries);
+        resVec = new ArrayList<>(iNumEntries);
 
         for (int iCount = 1; iCount < (iNumEntries + 1); iCount++) {
+
             String val = getPropAsString(key.append("_").append(iCount).toString());
             key.setLength(keyLen); // reset key
+
             if (null != val) {
-                resVec.addElement(val);
+
+                resVec.add(val);
             }
         }
 
-        return resVec.elements();
+        return resVec.listIterator();
     }
 
     /**
@@ -221,14 +227,15 @@ public class ConfigProperties {
      * @return Properties
      */
     private static Properties getSetOfProperties(String keyRoot, Dictionary<?, ?> keyNames) throws IOException {
-        Enumeration<?> enumKey = keyNames.keys();
+
+        Iterator<?> enumKey = keyNames.keys().asIterator();
         Properties result = new Properties();
 
-        while (enumKey.hasMoreElements()) {
+        while (enumKey.hasNext()) {
             String key;
             String value;
 
-            key = (String) enumKey.nextElement();
+            key = (String) enumKey.next();
 
             boolean mandatory = MANDATORY_PROPERTY.equals(keyNames.get(key));
 

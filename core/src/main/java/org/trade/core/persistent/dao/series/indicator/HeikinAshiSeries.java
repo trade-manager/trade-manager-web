@@ -47,7 +47,7 @@ import org.trade.core.util.time.RegularTimePeriod;
 
 import java.io.Serial;
 import java.time.ZonedDateTime;
-import java.util.Vector;
+import java.util.List;
 
 /**
  * Heikin-Ashi Candlesticks are an offshoot from Japanese candlesticks.
@@ -289,7 +289,7 @@ public class HeikinAshiSeries extends IndicatorSeries {
     }
 
     @Transient
-    public Vector<Object> getParam(String type) {
+    public List<Object> getParam(String type) {
 
         return super.getParam(type);
     }

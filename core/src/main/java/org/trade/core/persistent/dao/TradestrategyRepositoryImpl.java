@@ -153,7 +153,7 @@ public class TradestrategyRepositoryImpl implements TradestrategyRepositoryCusto
      *
      * @param fromOpen ZonedDateTime
      * @param toOpen   ZonedDateTime
-     * @return Vector<ComboItem>
+     * @return List<ComboItem>
      */
     public List<Tradestrategy> findTradestrategyDistinctByDateRange(ZonedDateTime fromOpen, ZonedDateTime toOpen) {
 
@@ -192,7 +192,7 @@ public class TradestrategyRepositoryImpl implements TradestrategyRepositoryCusto
      *
      * @param fromOpen ZonedDateTime
      * @param toOpen   ZonedDateTime
-     * @return Vector<ComboItem>
+     * @return List<ComboItem>
      */
     public List<Tradestrategy> findTradestrategyContractDistinctByDateRange(ZonedDateTime fromOpen,
                                                                             ZonedDateTime toOpen) {

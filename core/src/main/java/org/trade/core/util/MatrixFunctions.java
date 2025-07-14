@@ -35,8 +35,8 @@
  */
 package org.trade.core.util;
 
-import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Iterator;
 
 /**
  * @author Simon Allen
@@ -67,14 +67,17 @@ public final class MatrixFunctions {
     /**
      * Method updateXYPairs.
      *
-     * @param userDataVector Hashtable<Long,Pair>
-     * @param terms          double[]
+     * @param userDataList Hashtable<Long,Pair>
+     * @param terms        double[]
      * @return boolean
      */
-    public static synchronized boolean updateXYPairs(Hashtable<Long, Pair> userDataVector, double[] terms) {
+    public static synchronized boolean updateXYPairs(Hashtable<Long, Pair> userDataList, double[] terms) {
+
         boolean updated = false;
-        for (Enumeration<Pair> enumPairs = userDataVector.elements(); enumPairs.hasMoreElements(); ) {
-            Pair pair = enumPairs.nextElement();
+
+        for (Iterator<Pair> enumPairs = userDataList.values().iterator(); enumPairs.hasNext(); ) {
+
+            Pair pair = enumPairs.next();
             pair.y = fx(pair.x, terms);
             updated = true;
         }

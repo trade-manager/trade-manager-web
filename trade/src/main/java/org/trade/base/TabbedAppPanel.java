@@ -45,7 +45,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.io.Serial;
-import java.util.Vector;
+import java.util.List;
 
 /**
  *
@@ -237,9 +237,9 @@ public abstract class TabbedAppPanel extends BasePanel implements ChangeListener
      *
      * @param tabIndex int
      * @param event    MessageEvent
-     * @param parm     Vector<Object>
+     * @param parm     List<Object>
      */
-    public void setSelectPanel(int tabIndex, MessageEvent event, Vector<Object> parm) {
+    public void setSelectPanel(int tabIndex, MessageEvent event, List<Object> parm) {
         setSelectPanel(tabIndex);
         this.currBasePanel.handleEvent(event, parm);
     }
