@@ -608,7 +608,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
     }
 
     /**
-     * Method onPlaceOrd
+     * Method onPlaceOrder
      *
      * @param contract   Contract
      * @param tradeOrder TradeOrder
@@ -622,19 +622,23 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
             synchronized (tradeOrder) {
 
                 if (null == tradeOrder.getOrderKey()) {
+
                     tradeOrder.setOrderKey(getNextRequestId());
                 }
+
                 if (null == tradeOrder.getClientId()) {
+
                     tradeOrder.setClientId(999);
                 }
-                TradeOrder transientInstance = tradeService.saveTradeOrder(tradeOrder);
-                // Debug logging
-                _log.debug("Order Placed Key: {}", transientInstance.getOrderKey());
-                TWSBrokerModel.logContract(TWSBrokerModel.getIBContract(contract));
-                TWSBrokerModel.logTradeOrder(TWSBrokerModel.getIBOrder(transientInstance));
-                return transientInstance;
-            }
+                tradeOrder.setStatus(OrderStatus.UNSUBMIT);
+                TradeOrder instance = tradeService.saveTradeOrder(tradeOrder);
 
+                // Debug logging
+                _log.debug("Order Placed Key: {}", instance.getOrderKey());
+                TWSBrokerModel.logContract(TWSBrokerModel.getIBContract(contract));
+                TWSBrokerModel.logTradeOrder(TWSBrokerModel.getIBOrder(instance));
+                return instance;
+            }
         } catch (Exception ex) {
 
             throw new BrokerModelException(tradeOrder.getOrderKey(), 3030,
@@ -712,7 +716,6 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
 
                 this.fireTradeOrderFilled(updatedOrder);
             }
-
         } catch (Exception ex) {
             error(reqId, 3160, "Errors saving execution: " + ex.getMessage());
         }
@@ -742,8 +745,10 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
 
         try {
 
-            TradeOrder transientInstance = tradeService.findTradeOrderByKey(tradeOrder.getOrderKey());
-            if (null == transientInstance) {
+            TradeOrder instance = tradeService.findTradeOrderByKey(tradeOrder.getOrderKey());
+
+            if (null == instance) {
+
                 error(orderId, 3170, "Warning Order not found for Order Key: " + orderId + " make sure Client ID: " + 0
                         + " is not the master in TWS. On openOrder update.");
                 return;
@@ -753,26 +758,26 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
              * Check to see if anything has changed as this method gets fired
              * twice on order fills.
              */
+            if (BackTestBrokerModel.updateTradeOrder(tradeOrder, orderState, instance)) {
 
-            if (BackTestBrokerModel.updateTradeOrder(tradeOrder, orderState, transientInstance)) {
+                if (OrderStatus.FILLED.equals(instance.getStatus())) {
 
-                if (OrderStatus.FILLED.equals(transientInstance.getStatus())) {
-
-                    _log.debug("Order Key: {} filled.", transientInstance.getOrderKey());
+                    _log.debug("Order Key: {} filled.", instance.getOrderKey());
                     BackTestBrokerModel.logOrderState(orderState);
                     BackTestBrokerModel.logTradeOrder(tradeOrder);
 
-                    TradeOrder updatedOrder = tradeService.saveTradeOrder(transientInstance);
+                    TradeOrder updatedOrder = tradeService.saveTradeOrder(instance);
 
                     if (updatedOrder.hasTradePosition() && !updatedOrder.getTradePosition().isOpen()) {
                         // Let the controller know a position was closed
                         this.firePositionClosed(updatedOrder.getTradePosition());
                     }
                 } else {
-                    _log.debug("Order key: {} state changed. Status:{}", transientInstance.getOrderKey(), orderState.status);
+                    _log.debug("Order key: {} state changed. Status:{}", instance.getOrderKey(), orderState.status);
                     BackTestBrokerModel.logOrderState(orderState);
                     BackTestBrokerModel.logTradeOrder(tradeOrder);
-                    TradeOrder updatedOrder = tradeService.saveTradeOrder(transientInstance);
+                    TradeOrder updatedOrder = tradeService.saveTradeOrder(instance);
+
                     if (OrderStatus.CANCELLED.equals(updatedOrder.getStatus())) {
                         // Let the controller know a position was closed
                         this.fireTradeOrderCancelled(updatedOrder);

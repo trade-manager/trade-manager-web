@@ -294,8 +294,18 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
         return tradestrategyRepository.findTradestrategyLiteByTradestrategy(tradestrategy);
     }
 
+    @Transactional
     public TradePosition findTradePositionById(final Long id) {
-        return tradePositionRepository.findById(id).isPresent() ? tradePositionRepository.findById(id).get() : null;
+
+        Optional<TradePosition> tradePosition = tradePositionRepository.findById(id);
+
+        if (tradePosition.isPresent()) {
+
+            tradePosition.get().getTradeOrders().size();
+            return tradePosition.get();
+        }
+
+        return null;
     }
 
     @Transactional

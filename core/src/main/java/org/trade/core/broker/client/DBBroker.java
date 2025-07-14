@@ -309,7 +309,7 @@ public class DBBroker extends Broker {
 
         // Free some memory!!
         this.tradestrategy.setStrategyData(null);
-        _log.debug("BackTestBroker done for: {} idTradestrategy: {}", tradestrategy.getContract().getSymbol(), this.tradestrategy.getId());
+        _log.debug("BackTestBroker done for: {} tradestrategyId: {}", tradestrategy.getContract().getSymbol(), this.tradestrategy.getId());
     }
 
     /**

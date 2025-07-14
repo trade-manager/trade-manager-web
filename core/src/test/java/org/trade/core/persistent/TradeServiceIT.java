@@ -179,11 +179,11 @@ public class TradeServiceIT {
 
             tradingday.addTradestrategy(tradestrategy);
             this.tradeService.saveTradingday(tradingday);
-            _log.info("testTradingdaysSave IdTradeStrategy:{}", tradestrategy.getId());
+            _log.info("testTradingdaysSave tradestrategyId:{}", tradestrategy.getId());
         }
         tradingday.getTradestrategies().remove(tradestrategy);
         tradingday = this.tradeService.saveTradingday(tradingday);
-        _log.info("testTradingdaysRemoce IdTradeStrategy:{}", tradestrategy.getId());
+        _log.info("testTradingdaysRemoce tradestrategyId:{}", tradestrategy.getId());
         assertNotNull(tradingday.getId());
         Optional<Contract> contractOpt = this.tradeService.findContractBySymbol(symbol);
         assertTrue(contractOpt.isPresent());
@@ -742,12 +742,12 @@ public class TradeServiceIT {
         assertNotNull(resultTrade);
         TradestrategyOrders positionOrders = this.tradeService
                 .findPositionOrdersByTradestrategyId(tradestrategy.getId());
-        _log.info("testFindVersionById IdTradeStrategy:{} version: {}", positionOrders.getId(), positionOrders.getVersion());
+        _log.info("testFindVersionById tradestrategyId:{} version: {}", positionOrders.getId(), positionOrders.getVersion());
         TradestrategyOrders result = this.tradeService.saveAspect(positionOrders);
 
-        _log.info("testFindVersionById IdTradeStrategy:{} version: {}", result.getId(), result.getVersion());
+        _log.info("testFindVersionById tradestrategyId:{} version: {}", result.getId(), result.getVersion());
         result = this.tradeService.refreshPositionOrdersByTradestrategyId(positionOrders);
-        _log.info("testFindVersionById IdTradeStrategy:{} prev version: {} current version: {}", result.getId(), positionOrders.getVersion(), result.getVersion());
+        _log.info("testFindVersionById tradestrategyId:{} prev version: {} current version: {}", result.getId(), positionOrders.getVersion(), result.getVersion());
         assertNotNull(result);
     }
 

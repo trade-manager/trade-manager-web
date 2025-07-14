@@ -115,10 +115,10 @@ public class TradePositionIT {
         instance = tradeService.saveAspect(instance);
 
         assertNotNull(instance.getId());
-        _log.info("testAddTradePosition IdTradeStrategy: {}IdTradePosition: {}", tradestrategy.getId(), instance.getId());
+        _log.info("testAddTradePosition tradestrategyId: {}IdTradePosition: {}", tradestrategy.getId(), instance.getId());
 
         tradeService.deleteAspect(instance);
-        _log.info("testDeleteTradePosition IdTradeStrategy: {}", tradestrategy.getId());
+        _log.info("testDeleteTradePosition tradestrategyId: {}", tradestrategy.getId());
         instance = tradeService.findTradePositionById(instance.getId());
         assertNull(instance);
     }

@@ -947,12 +947,9 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
                     prevTradeOrder = order;
                 }
                 if (null != prevIdTradePosition) {
-                    TradePosition tradePosition = this.tradeService.findTradePositionById(prevIdTradePosition);
 
-                    unRealizedPL = tradePosition
-                            .getUnRealizedProfit(
-                                    tradestrategy.getStrategyData().getBaseCandleSeries().getContract().getLastPrice())
-                            .doubleValue();
+                    TradePosition tradePosition = this.tradeService.findTradePositionById(prevIdTradePosition);
+                    unRealizedPL = tradePosition.getUnRealizedProfit(tradestrategy.getStrategyData().getBaseCandleSeries().getContract().getLastPrice()).doubleValue();
                     realizedPL = tradePosition.getRealizedProfit().doubleValue();
                     netValue = tradePosition.getTotalNetValue().doubleValue();
                     openQuantity = String.valueOf(Math.abs(tradePosition.getOpenQuantity()));

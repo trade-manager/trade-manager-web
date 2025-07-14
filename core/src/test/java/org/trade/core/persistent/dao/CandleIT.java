@@ -169,7 +169,7 @@ public class CandleIT {
             // Should do nothing
             tradeService.saveCandleSeries(tradestrategy.getStrategyData().getBaseCandleSeries());
 
-            _log.info("addCandleSeries IdTradeStrategy: {}", tradestrategy.getId());
+            _log.info("addCandleSeries tradestrategyId: {}", tradestrategy.getId());
             CandleItem candleItem = (CandleItem) tradestrategy.getStrategyData().getBaseCandleSeries().getDataItem(0);
             assertNotNull(candleItem.getCandle().getId());
 

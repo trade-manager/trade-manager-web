@@ -277,7 +277,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
             this.tradestrategy.setStrategyData(this.strategyData);
             this.symbol = this.tradestrategy.getContract().getSymbol();
 
-            _log.info("Starting strategyClass: {} engine doInBackground Symbol: {} idTradestrategy: {} Tradingday Date: {}", this.getClass().getName(), this.symbol, this.tradestrategyId, this.tradestrategy.getTradingday().getOpen());
+            _log.info("Starting strategyClass: {} engine doInBackground Symbol: {} tradestrategyId: {} Tradingday Date: {}", this.getClass().getName(), this.symbol, this.tradestrategyId, this.tradestrategy.getTradingday().getOpen());
 
             /*
              * Process the current candle if there is one on startup.
@@ -380,7 +380,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
                         this.fireStrategyStarted(this.getClass().getSimpleName(), this.tradestrategy);
                         listeningCandles = true;
 
-                        _log.info("Started strategyClass: {} engine doInBackground Symbol: {} idTradestrategy: {}", this.getClass().getName(), this.symbol, this.tradestrategyId);
+                        _log.info("Started strategyClass: {} engine doInBackground Symbol: {} tradestrategyId: {}", this.getClass().getName(), this.symbol, this.tradestrategyId);
                     } else {
                         this.fireRuleComplete(this.tradestrategy);
                     }
@@ -440,7 +440,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
         this.fireStrategyComplete(this.getClass().getSimpleName(), this.tradestrategy);
         removeAllMessageListener();
         this.strategyData.getBaseCandleSeries().removeChangeListener(this);
-        _log.info("Rule engine done: {} class: {} idTradestrategy: {} Tradingday Date: {}", getSymbol(), this.getClass().getSimpleName(), this.tradestrategy.getId(), this.tradestrategy.getTradingday().getOpen());
+        _log.info("Rule engine done: {} class: {} tradestrategyId: {} Tradingday Date: {}", getSymbol(), this.getClass().getSimpleName(), this.tradestrategy.getId(), this.tradestrategy.getTradingday().getOpen());
     }
 
     /**
@@ -676,7 +676,6 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
              */
             entryPrice = addPennyAndRoundStop(entryPrice.doubleValue(), side, action, 0.01);
             double risk = getTradestrategy().getRiskAmount().doubleValue();
-
             double stop = entryPrice.doubleValue() - stopPrice.doubleValue();
 
             // Round to round value
@@ -703,8 +702,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
                 quantity = 10;
             }
 
-            Money limitPrice = new Money(
-                    (Side.BOT.equals(side) ? (entryPrice.doubleValue() + entrylimit.getLimitAmount().doubleValue())
+            Money limitPrice = new Money((Side.BOT.equals(side) ? (entryPrice.doubleValue() + entrylimit.getLimitAmount().doubleValue())
                             : (entryPrice.doubleValue() - entrylimit.getLimitAmount().doubleValue())));
             TradeOrder tradeOrder = new TradeOrder(this.getTradestrategy(), action, OrderType.STPLMT, quantity,
                     entryPrice.getBigDecimalValue(), limitPrice.getBigDecimalValue(), this.getOrderCreateDate());
@@ -731,13 +729,15 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
                     }
                 }
             }
+
             tradeOrder = getBrokerManager().onPlaceOrder(getTradestrategy().getContract(), tradeOrder);
             this.getTradestrategyOrders().addTradeOrder(tradeOrder);
             return tradeOrder;
-
         } catch (BrokerModelException ex) {
+
             throw new StrategyRuleException(1, 520, "Error submitting new tradeOrder to broker: " + ex.getMessage());
         } catch (Exception ex) {
+
             throw new StrategyRuleException(1, 320, "Error create risk open tradeOrder : " + ex.getMessage());
         }
     }

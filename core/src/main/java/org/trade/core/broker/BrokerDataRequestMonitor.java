@@ -180,7 +180,6 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
              */
 
             totalSumbitted = reProcessTradingdays(this.tradingdays, runningContractRequests, totalSumbitted);
-
         } catch (InterruptedException ex) {
             // Do nothing
             _log.error("doInBackground interrupted Msg: {}", ex.getMessage());

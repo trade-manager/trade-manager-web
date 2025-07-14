@@ -66,6 +66,7 @@ public class CandleRepositoryImpl implements CandleRepositoryCustom {
             Predicate predicate = builder.equal(from.get("barSize"), barSize);
             predicates.add(predicate);
         }
+
         query.where(predicates.toArray(new Predicate[]{}));
         query.orderBy(builder.asc(from.get("startPeriod")));
         TypedQuery<Candle> typedQuery = entityManager.createQuery(query);

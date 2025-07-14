@@ -53,10 +53,11 @@ public class TradestrategyRepositoryImpl implements TradestrategyRepositoryCusto
         List<TradestrategyLite> items = typedQuery.getResultList();
 
         if (!items.isEmpty()) {
+
             return items.getFirst().getVersion();
         }
-        return null;
 
+        return null;
     }
 
     /**
@@ -67,9 +68,7 @@ public class TradestrategyRepositoryImpl implements TradestrategyRepositoryCusto
      */
     public TradestrategyOrders findPositionOrdersByTradestrategyId(Long tradestrategyId) {
 
-        TradestrategyOrders instance = entityManager.find(TradestrategyOrders.class, tradestrategyId);
-
-        return instance;
+        return entityManager.find(TradestrategyOrders.class, tradestrategyId);
     }
 
     /**
@@ -82,7 +81,9 @@ public class TradestrategyRepositoryImpl implements TradestrategyRepositoryCusto
 
         Tradestrategy tradestrategy = null;
         TradeOrder instance = entityManager.find(TradeOrder.class, tradeOrder.getId());
+
         if (null != instance) {
+
             tradestrategy = instance.getTradestrategy();
             tradestrategy.getContract();
         }
