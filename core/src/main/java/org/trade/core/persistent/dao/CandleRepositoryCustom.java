@@ -11,5 +11,4 @@ public interface CandleRepositoryCustom {
                                                        ZonedDateTime endPeriod, Integer barSize);
 
     Long findCandleCount(Contract contract);
-
 }

@@ -181,7 +181,7 @@ public class AspectServiceIT {
         // values in it by reading them from form object
         String className = "org.trade.core.persistent.dao.Strategy";
         String fieldName = "name";
-        String indicatorName = "5minBarGap";
+        String indicatorName = "5MinGapBar";
         _log.info("Find Aspects by className: {}, fieldName: {}, value: {}", className, fieldName, indicatorName);
 
         Aspects instance = tradeService.findByClassNameAndFieldName(className, fieldName, indicatorName);

@@ -5,3 +5,5 @@ at the 5min low +/- 1c. The STP order take an initial risk of 1R.
 ever they are calculated..
 
 3/ Close any open positions at 15:58.
+
+4/ Close open position at 15:58 with stop 1R.

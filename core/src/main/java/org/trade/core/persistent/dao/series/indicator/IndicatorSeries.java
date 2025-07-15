@@ -87,6 +87,7 @@ public abstract class IndicatorSeries extends ComparableObjectSeries implements 
     /*
      * These names must match the names of the classes for that series.
      */
+    public static final String INDICATOR_PACKAGE ="org.trade.core.persistent.dao.series.indicator.";
     public static final String MovingAverageSeries = MovingAverageSeries.class.getSimpleName();
     public static final String PivotSeries = PivotSeries.class.getSimpleName();
     public static final String HeikinAshiSeries = HeikinAshiSeries.class.getSimpleName();

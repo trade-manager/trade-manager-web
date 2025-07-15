@@ -204,11 +204,11 @@ public class PolygonBroker extends Broker {
                 return true;
             } else {
 
-                _log.error("Error: PolygonBroker::setContractDetails  request to URL: {}, no results found: {}, contractObj: {}", strUrl, response.statusCode(), contractObj);
+                _log.error("Error: PolygonBroker::setContractDetails request for symbol: {}, to URL: {}, no results found: {}, contractObj: {}", contract.getSymbol(), strUrl, response.statusCode(), contractObj);
             }
         } else {
 
-            _log.error("Error: PolygonBroker::setContractDetails request to URL: {}, failed with status code: {}", strUrl, response.statusCode());
+            _log.error("Error: PolygonBroker::setContractDetails request for symbol: {}, to URL: {}, failed with status code: {}", contract.getSymbol(), strUrl, response.statusCode());
         }
         return false;
     }
@@ -274,11 +274,11 @@ public class PolygonBroker extends Broker {
                 }
             } else {
 
-                _log.error("Error: PolygonBroker::setPriceDataIntraday  request to URL: {}, no results found: {}, contractObj: {}", strUrl, response.statusCode(), contractObj);
+                _log.error("Error: PolygonBroker::setPriceDataIntraday request to URL: {}, no results found: {}, contractObj: {}", strUrl, response.statusCode(), contractObj);
             }
         } else {
 
-            _log.error("Error: PolygonBroker::setPriceDataIntraday request to URL: {}, failed with status code: {}, msg: {}", strUrl, response.statusCode(), response.body());
+            _log.error("Error: PolygonBroker::setPriceDataIntraday request for symbol: {} to URL: {}, failed with status code: {}, msg: {}", symbol, strUrl, response.statusCode(), response.body());
         }
     }
 
@@ -352,7 +352,7 @@ public class PolygonBroker extends Broker {
             }
         } else {
 
-            _log.error("Error: PolygonBroker::setPriceDataDay  request to URL: {}, failed with status code: {}", strUrl, response.statusCode());
+            _log.error("Error: PolygonBroker::setPriceDataDay request for symbol: {} to URL: {}, failed with status code: {}", symbol, strUrl, response.statusCode());
         }
     }
 }

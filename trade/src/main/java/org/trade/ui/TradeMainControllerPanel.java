@@ -421,11 +421,13 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                  * deleted between runs.
                  */
                 tradingdays.getTradingdays().sort(Tradingday.DATE_ORDER_DESC);
+
                 if (tradingdays.getTradingdays().isEmpty()) {
                     return;
                 }
-                ZonedDateTime toOpen = tradingdays.getTradingdays().getFirst().getOpen();
-                ZonedDateTime fromOpen = tradingdays.getTradingdays().getLast()
+
+                ZonedDateTime fromOpen = tradingdays.getTradingdays().getFirst().getOpen();
+                ZonedDateTime toOpen = tradingdays.getTradingdays().getLast()
                         .getOpen();
                 List<Tradestrategy> strategyBarSizeChartHistItems = tradeService
                         .findTradestrategyDistinctByDateRange(fromOpen, toOpen);

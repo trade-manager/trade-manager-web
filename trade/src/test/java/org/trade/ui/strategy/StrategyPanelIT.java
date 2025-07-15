@@ -137,7 +137,7 @@ public class StrategyPanelIT {
     }
 
     @Test
-    public void jEditorPaneTextEquals() {
+    public void checkStrategyFileEqualsRuleContent() {
 
         DefaultSyntaxKit.initKit();
         JEditorPane sourceText = new JEditorPane();

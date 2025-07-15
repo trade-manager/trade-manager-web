@@ -420,7 +420,6 @@ public class CandlestickChartApp extends BasePanel implements IBrokerChangeListe
         try {
 
             brokerModel.setBrokerDataOnly(brokerDataOnly);
-
             Tradingday tradingday = tradestrategy.getTradingday();
 
             if (Tradingdays.hasTradeOrders(tradingday) && !brokerDataOnly) {

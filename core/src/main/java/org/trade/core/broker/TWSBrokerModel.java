@@ -88,8 +88,10 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
     // All Use orderKey as key
     private static final ConcurrentHashMap<Integer, TradeOrder> openOrders = new ConcurrentHashMap<>();
     private static final ConcurrentHashMap<Integer, TradeOrder> tradeOrdersExecutions = new ConcurrentHashMap<>();
+
     // Use execId as key
     private static final ConcurrentHashMap<String, Execution> executionDetails = new ConcurrentHashMap<>();
+
     // Use commsReport.m_execId as key
     private static final ConcurrentHashMap<String, CommissionReport> commissionDetails = new ConcurrentHashMap<>();
 
@@ -97,7 +99,6 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
     private final AtomicInteger reqId;
     private AtomicInteger orderKey = null;
     private Integer clientId = null;
-
     private static final int SCALE = 5;
     private static final int minOrderId = 100000;
 

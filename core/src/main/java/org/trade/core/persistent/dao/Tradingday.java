@@ -43,6 +43,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import org.trade.core.dao.Aspect;
@@ -56,6 +57,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Random;
 
 
 /**
@@ -89,9 +91,20 @@ public class Tradingday extends Aspect implements Serializable, Cloneable {
     @Column(name = "market_bar", length = 10)
     private String marketBar;
 
+    // Use for Interactive broker data requests API are int reqId
+    @Column(name = "request_id", unique = true)
+    private Integer requestId;
+
     @OneToMany(mappedBy = "tradingday", fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
     @OrderBy("side ASC, id ASC")
     private List<Tradestrategy> tradestrategies = new ArrayList<>(0);
+
+
+    @PrePersist
+    public void initializeRequestId() {
+
+        getRequestId();
+    }
 
     public Tradingday() {
     }
@@ -127,6 +140,25 @@ public class Tradingday extends Aspect implements Serializable, Cloneable {
         this.marketGap = marketGap;
         this.marketBar = marketBar;
         this.tradestrategies = tradestrategies;
+    }
+
+    /**
+     * Method getRequestId.
+     *
+     * @return Integer
+     */
+    public Integer getRequestId() {
+
+        if (this.requestId == null) {
+
+            Random random = new Random();
+            int min = 1;
+            int max = 1000000000;
+            // Formula: random.nextInt(max - min + 1) + min
+            this.requestId = random.nextInt(max - min + 1) + min;
+        }
+
+        return this.requestId;
     }
 
     /**

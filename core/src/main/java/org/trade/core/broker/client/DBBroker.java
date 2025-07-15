@@ -74,7 +74,6 @@ public class DBBroker extends Broker {
     private final static Logger _log = LoggerFactory.getLogger(DBBroker.class);
 
     private final TradeService tradeService;
-
     private final StrategyData strategyData;
     private Tradestrategy tradestrategy = null;
     private final Long tradestrategyId;
@@ -124,17 +123,11 @@ public class DBBroker extends Broker {
             this.strategyData.clearBaseCandleDataset();
             this.tradestrategy.setStrategyData(this.strategyData);
 
-            ZonedDateTime endDate = TradingCalendar.getDateAtTime(
-                    TradingCalendar.getPrevTradingDay(tradestrategy.getTradingday().getClose()),
-                    tradestrategy.getTradingday().getClose());
-            ZonedDateTime startDate = TradingCalendar.addTradingDays(tradestrategy.getTradingday().getClose(),
+            ZonedDateTime endDate = tradestrategy.getTradingday().getClose();
+            ZonedDateTime startDate = TradingCalendar.addTradingDays(tradestrategy.getTradingday().getOpen(),
                     (-1 * (tradestrategy.getChartDays() - 1)));
-            startDate = TradingCalendar.getDateAtTime(startDate, tradestrategy.getTradingday().getOpen());
-            endDate = TradingCalendar.addTradingDays(endDate, -1);
 
             List<Candle> candles;
-            List<Candle> candlesTradingday;
-            candles = this.getCandles(this.tradestrategy, startDate, endDate, this.tradestrategy.getBarSize());
 
             if (_backTestBarSize > 0) {
 
@@ -142,19 +135,16 @@ public class DBBroker extends Broker {
                  * Try and find the candles in the database with the matching
                  * barSize or the next lowest.
                  */
-                candlesTradingday = this.getCandles(this.tradestrategy, this.tradestrategy.getTradingday().getOpen(),
-                        this.tradestrategy.getTradingday().getOpen(), _backTestBarSize);
+                candles = this.getCandles(this.tradestrategy, startDate, endDate, _backTestBarSize);
 
-                if (candlesTradingday.isEmpty()) {
-                    _log.warn("No backTestBarSize = {} data available for {} and Tradingday: {} will use barSize = {} data if avaialble.", _backTestBarSize, this.tradestrategy.getContract().getSymbol(), this.tradestrategy.getTradingday().getOpen(), this.tradestrategy.getBarSize());
-                    candlesTradingday = this.getCandles(this.tradestrategy,
-                            this.tradestrategy.getTradingday().getOpen(), this.tradestrategy.getTradingday().getOpen(),
-                            this.tradestrategy.getBarSize());
+                if (candles.isEmpty()) {
+
+                    _log.warn(" No data available for backTestBarSize = {}, ymbol: {}, startDate: {}, endDate: {}, will use barSize = {} data if available.", _backTestBarSize, this.tradestrategy.getContract().getSymbol(), startDate, endDate, this.tradestrategy.getBarSize());
+                    candles = this.getCandles(this.tradestrategy, startDate, endDate, this.tradestrategy.getBarSize());
                 }
             } else {
 
-                candlesTradingday = this.getCandles(this.tradestrategy, this.tradestrategy.getTradingday().getOpen(),
-                        this.tradestrategy.getTradingday().getOpen(), this.tradestrategy.getBarSize());
+                candles = this.getCandles(this.tradestrategy, startDate, endDate, this.tradestrategy.getBarSize());
             }
 
             /*
@@ -168,17 +158,15 @@ public class DBBroker extends Broker {
                 }
             }
 
-            if (candlesTradingday.isEmpty()) {
+            if (candles.isEmpty()) {
 
-                _log.warn("No data available to run a backtest for Symbol: {} and Tradingday: {}", this.tradestrategy.getContract().getSymbol(), this.tradestrategy.getTradingday().getOpen());
+                _log.warn("No data available to run a backtest for symbol: {}, start: {}, end: {}, barSize: {}", this.tradestrategy.getContract().getSymbol(), startDate, endDate, this.tradestrategy.getBarSize());
                 /*
                  * Poke the strategy this will kill it as there is no data.
                  */
                 this.tradestrategy.getStrategyData().getBaseCandleSeries().fireSeriesChanged();
             } else {
 
-                candles.addAll(candlesTradingday);
-                candlesTradingday.clear();
                 /*
                  * Populate any child datasets.
                  */
@@ -256,8 +244,7 @@ public class DBBroker extends Broker {
                      * the trade that we weren't stopped out on the entry
                      * candle.
                      */
-                    positionOrders = tradeService
-                            .findPositionOrdersByTradestrategyId(this.tradestrategyId);
+                    positionOrders = tradeService.findPositionOrdersByTradestrategyId(this.tradestrategyId);
 
                     if (this.tradestrategy.getStrategy().hasStrategyManager()) {
 
@@ -274,10 +261,8 @@ public class DBBroker extends Broker {
 
                         if (!this.tradestrategy.getStrategyData().getBaseCandleSeries().isEmpty()) {
 
-                            CandleItem candleItem = (CandleItem) this.tradestrategy.getStrategyData()
-                                    .getBaseCandleSeries().getDataItem(
-                                            this.tradestrategy.getStrategyData().getBaseCandleSeries().getItemCount()
-                                                    - 1);
+                            CandleItem candleItem = (CandleItem) this.tradestrategy.getStrategyData().getBaseCandleSeries().getDataItem(
+                                    this.tradestrategy.getStrategyData().getBaseCandleSeries().getItemCount() - 1);
 
                             if (!candleItem.isSide(positionOrders.getOpenTradePosition().getSide())) {
 
@@ -285,8 +270,7 @@ public class DBBroker extends Broker {
                                  * Refresh the orders as the other thread may
                                  * have added orders that need to be filled.
                                  */
-                                positionOrders = tradeService
-                                        .findPositionOrdersByTradestrategyId(this.tradestrategyId);
+                                positionOrders = tradeService.findPositionOrdersByTradestrategyId(this.tradestrategyId);
                                 filledOrders(this.tradestrategy.getContract(), positionOrders, candle);
                             }
                         }
@@ -322,9 +306,10 @@ public class DBBroker extends Broker {
 
         brokerModel.onCancelRealtimeBars(this.tradestrategy);
         brokerModel.onCancelBrokerData(this.tradestrategy);
+
         // Free some memory!!
         this.tradestrategy.setStrategyData(null);
-        _log.debug("BackTestBroker done for: {} idTradestrategy: {}", tradestrategy.getContract().getSymbol(), this.tradestrategy.getId());
+        _log.debug("BackTestBroker done for: {} tradestrategyId: {}", tradestrategy.getContract().getSymbol(), this.tradestrategy.getId());
     }
 
     /**
@@ -350,9 +335,9 @@ public class DBBroker extends Broker {
                 OrderState orderState = new OrderState();
                 orderState.status = OrderStatus.SUBMITTED;
                 this.brokerModel.openOrder(order.getOrderKey(), contract, order, orderState);
+
                 /*
-                 * TODO we should read the orders back after any call to the
-                 * broker interface.
+                 * TODO we should read the orders back after any call to the broker interface.
                  */
                 order.setStatus(OrderStatus.SUBMITTED);
             }
@@ -487,6 +472,7 @@ public class DBBroker extends Broker {
             if (null != order.getAuxPrice()) {
 
                 if (null == trailAmount) {
+
                     trailAmount = order.getAuxPrice();
                     trailLimitOffsetAmount = order.getLimitPrice();
                     order.setAuxPrice((Action.SELL.equals(order.getAction()) ? candle.getClose().subtract(trailAmount)
@@ -672,7 +658,9 @@ public class DBBroker extends Broker {
     private void createOrderExecution(Contract contract, TradeOrder order, BigDecimal filledPrice, ZonedDateTime date) {
 
         double commission = order.getQuantity() * 0.005d;
+
         if (commission < 1) {
+
             commission = 1;
         }
 
@@ -787,7 +775,7 @@ public class DBBroker extends Broker {
      */
 
     private List<Candle> getCandles(Tradestrategy tradestrategy, ZonedDateTime startDate, ZonedDateTime endDate,
-                                    int barSize) throws ServiceException {
+                                    int barSize) {
 
         List<Candle> candles = new ArrayList<>(0);
         int[] barSizes = {3600, 1800, 900, 300, 120, 60, 30};
@@ -798,11 +786,12 @@ public class DBBroker extends Broker {
                 /*
                  * Only go for barSize that are whole integer divisible.
                  */
-                if ((Math.floor(
-                        tradestrategy.getBarSize() / (double) size) == (tradestrategy.getBarSize() / (double) size))) {
-                    candles = tradeService.findCandlesByContractDateRangeBarSize(
-                            tradestrategy.getContract(), startDate, endDate, size);
+                if ((Math.floor(tradestrategy.getBarSize() / (double) size) == (tradestrategy.getBarSize() / (double) size))) {
+
+                    candles = tradeService.findCandlesByContractDateRangeBarSize(tradestrategy.getContract(), startDate, endDate, size);
+
                     if (!candles.isEmpty()) {
+
                         break;
                     }
                 }
