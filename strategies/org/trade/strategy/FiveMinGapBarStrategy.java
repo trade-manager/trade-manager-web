@@ -105,6 +105,7 @@ public class FiveMinGapBarStrategy extends AbstractStrategyRule {
      */
 
     public FiveMinGapBarStrategy(TradeService tradeService, IBrokerModel brokerManagerModel, StrategyData strategyData, Long tradestrategyId) {
+
         super(tradeService, brokerManagerModel, strategyData, tradestrategyId);
     }
 
@@ -120,6 +121,7 @@ public class FiveMinGapBarStrategy extends AbstractStrategyRule {
 
             // Get the current candle
             CandleItem currentCandleItem = this.getCurrentCandle();
+
             // AbstractStrategyRule.logCandle(this,
             // currentCandleItem.getCandle());
             ZonedDateTime startPeriod = currentCandleItem.getPeriod().getStart();
@@ -145,6 +147,7 @@ public class FiveMinGapBarStrategy extends AbstractStrategyRule {
                         this.cancelOrder(this.getOpenPositionOrder());
                     }
                 }
+
                 this.cancel();
                 return;
             }
@@ -180,6 +183,7 @@ public class FiveMinGapBarStrategy extends AbstractStrategyRule {
                     // AbstractStrategyRule
                     // .logCandle(this, prevCandleItem.getCandle());
                 }
+
                 if (CoreUtils.isBetween(Objects.requireNonNull(prevCandleItem).getOpen(), prevCandleItem.getClose(),
                         prevCandleItem.getVwap())) {
 
@@ -246,13 +250,14 @@ public class FiveMinGapBarStrategy extends AbstractStrategyRule {
                     // }
 
                 } else {
+
                     _log.info("Rule 9:35 5min bar outside % limits. Symbol: {} Time: {}", getSymbol(), startPeriod);
                     updateTradestrategyStatus(TradestrategyStatus.PERCENT);
                     // Kill this process we are done!
                     this.cancel();
                 }
-
             } else {
+
                 if (startPeriod.isBefore(this.getTradestrategy().getTradingday().getOpen().plusMinutes(120))
                         && startPeriod.isAfter(this.getTradestrategy().getTradingday().getOpen().plusMinutes(5))) {
                     CandleItem firstCandle = this.getCandle(TradingCalendar.getDateAtTime(startPeriod,
@@ -263,7 +268,9 @@ public class FiveMinGapBarStrategy extends AbstractStrategyRule {
                      */
 
                     if (firstCandle.getSide()) {
+
                         if (currentCandleItem.getVwap() < firstCandle.getLow()) {
+
                             // updateTradestrategyStatus(TradestrategyStatus.FIVE_MIN_LOW_BROKEN);
                             // this.cancelAllOrders();
                             // // No trade we timed out
@@ -274,6 +281,7 @@ public class FiveMinGapBarStrategy extends AbstractStrategyRule {
                     } else {
 
                         if (currentCandleItem.getVwap() > firstCandle.getHigh()) {
+
                             // updateTradestrategyStatus(TradestrategyStatus.FIVE_MIN_HIGH_BROKEN);
                             // this.cancelAllOrders();
                             // // No trade we timed out
@@ -286,9 +294,12 @@ public class FiveMinGapBarStrategy extends AbstractStrategyRule {
             }
 
             if (!startPeriod.isBefore(this.getTradestrategy().getTradingday().getOpen().plusMinutes(120))) {
+
                 _log.info("Rule 11:30:00 bar, time out unfilled open position Symbol: {} Time: {}", getSymbol(), startPeriod);
+
                 if (!this.isThereOpenPosition()
                         && !TradestrategyStatus.CANCELLED.equals(getTradestrategy().getStatus())) {
+
                     updateTradestrategyStatus(TradestrategyStatus.TO);
                     this.cancelAllOrders();
                     // No trade we timed out
@@ -297,6 +308,7 @@ public class FiveMinGapBarStrategy extends AbstractStrategyRule {
                 this.cancel();
             }
         } catch (StrategyRuleException ex) {
+
             _log.error("Error  runRule exception: {}", ex.getMessage(), ex);
             error(1, 10, "Error  runRule exception: " + ex.getMessage());
         }
