@@ -215,6 +215,15 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
     }
 
     /**
+     * Method setRequestId.
+     *
+     * @param requestId Integer
+     */
+    public void setRequestId(Integer requestId) {
+        this.requestId = requestId;
+    }
+
+    /**
      * Method getBarSize.
      *
      * @return Integer

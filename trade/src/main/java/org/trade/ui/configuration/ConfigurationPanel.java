@@ -76,6 +76,8 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Objects;
 
+import static org.trade.core.persistent.TradeService.PERSISTENT_PACKAGE;
+
 /**
  *
  */
@@ -214,7 +216,7 @@ public class ConfigurationPanel extends BasePanel {
 
             this.setStatusBarMessage("Save in progress ...", BasePanel.INFORMATION);
             int selectedRow = configTable.getSelectedRow();
-            String className = "org.trade.persistent.dao."
+            String className = "org.trade.core.persistent.dao."
                     + ((ReferenceTable) Objects.requireNonNull(refTableEditorComboBox.getSelectedItem())).getCode();
 
             for (ListIterator<Aspect> itemIter = aspects.getAspect().listIterator(); itemIter.hasNext(); ) {
@@ -373,7 +375,7 @@ public class ConfigurationPanel extends BasePanel {
 
         try {
 
-            aspects = tradeService.findByClassName("org.trade.persistent.dao." + refTableClass);
+            aspects = tradeService.findByClassName(PERSISTENT_PACKAGE + refTableClass);
             List<Object> params = new ArrayList<>();
             tableModel = (AspectTableModel) ClassFactory
                     .getCreateClass("org.trade.ui.models." + refTableClass + "TableModel", params, this);
