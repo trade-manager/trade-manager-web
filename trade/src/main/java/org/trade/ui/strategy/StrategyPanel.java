@@ -810,13 +810,16 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
 
         Rule latestRule = this.tradeService.findRuleByMaxVersion(strategy);
         Integer version = 0;
+        String contentType = "text/java";
 
         if (null != latestRule) {
 
             version = latestRule.getVersion() + 1;
+            contentType = latestRule.getContentType();
         }
+
         Rule nextRule = new Rule(strategy, version, commentText.getText(),
-                getContent().getBytes(), latestRule.getContentType());
+                getContent().getBytes(), contentType);
         strategy.add(nextRule);
         refreshTree();
         TreePath path = tree.findTreePathByObject(nextRule);

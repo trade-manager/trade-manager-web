@@ -97,7 +97,7 @@ public class StrategyRuleTemplate extends AbstractStrategyRule {
      * TradePosition is associated to the Contract with the 1 to 1 relationship
      * from Contract to TradePosition. The TradeOrder that opened the
      * TradePosition is marked as the open order @see
-     * org.trade.persistent.dao.TradeOrder.getIsOpenPosition()
+     * TradeOrder.getIsOpenPosition()
      * <p>
      * TradePosition will have the Side set to either BOT/SLD i.e. Long/Short.
      * If an open position changes from Long to Short dues to an over Sell/Buy

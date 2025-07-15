@@ -51,7 +51,6 @@ INSERT INTO strategy (id, name, description, market_data, class_name, strategy_m
 INSERT INTO strategy (id, name, description, market_data, class_name, strategy_manager_id, version) VALUES (2, '5MinSideGapBar', 'Enter a tier 1-3 gap via expectd Side after first 5min bar and stop @ 5min high/low',1, 'FiveMinSideGapBarStrategy',23,0)//
 INSERT INTO strategy (id, name, description, market_data, class_name, strategy_manager_id, version) VALUES (3, '5MinWRBGapBar', 'Enter a tier 1-3 gap in first 5min WRB bar direction, and stop @ 55% of high/low',1, 'FiveMinWRBGapBarStrategy',22,0)//
 INSERT INTO strategy (id, name, description, market_data, class_name, strategy_manager_id, version) VALUES (4, 'HeikinAshiTrailPosMgr', 'Get and trail an open position on the current time frame using Hiekin-Ashi bars',1, 'PosMgrHeikinAshiTrailStrategy',null,0)//
-
 COMMIT//
 
 INSERT INTO codetype (id, name, type, description, version) VALUES(1,'MovingAverage','IndicatorParameters','Moving Average',0)//
@@ -65,7 +64,6 @@ INSERT INTO codetype (id, name, type, description, version) VALUES(8,'Stochastic
 INSERT INTO codetype (id, name, type, description, version) VALUES(9,'MoneyFlowIndex','IndicatorParameters','Money Flow Index',0)//
 INSERT INTO codetype (id, name, type, description, version) VALUES(10,'MACD','IndicatorParameters','MACD',0)//
 INSERT INTO codetype (id, name, type, description, version) VALUES(11,'Vostro','IndicatorParameters','Vostro Indicator',0)//
-
 COMMIT//
 
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id, version) VALUES(1,'Length','The length of the Moving Average','10','java.lang.Integer',null, 1,0) //
@@ -101,7 +99,6 @@ INSERT INTO codeattribute (id, name, description, default_value, class_name, cla
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id, version) VALUES(31,'Vostro Range','The range +/- to indicate a Vostro','8.0','java.math.BigDecimal',null, 11,0) //
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id, version) VALUES(32,'Price Source','Price source used for calculations','5','java.lang.Integer', 'org.trade.core.valuetype.PriceSource',11,0)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id, version) VALUES(33,'Price Source','Price source used for calculations','1','java.lang.Integer', 'org.trade.core.valuetype.PriceSource',1,0)//
-
 COMMIT//
 
 INSERT INTO indicatorseries (id, name, type, description, display_series, series_RGB_color, sub_chart, strategy_id, version) VALUES(1,'SMA-20','MovingAverageSeries','Simple 20 period Moving Average',1,-52429,0,1,0) //
@@ -138,7 +135,6 @@ INSERT INTO indicatorseries (id, name, type, description, display_series, series
 INSERT INTO indicatorseries (id, name, type, description, display_series, series_RGB_color, sub_chart, strategy_id, version) VALUES(28,'Pivot','PivotSeries','5 Bar Pivots',1,0,0,20,0) //
 INSERT INTO indicatorseries (id, name, type, description, display_series, series_RGB_color, sub_chart, strategy_id, version) VALUES(29,'HeikinAshi','HeikinAshiSeries','HeikinAshi bars used for trail stops',0,0,0,20,0) //
 INSERT INTO indicatorseries (id, name, type, description, display_series, series_RGB_color, sub_chart, strategy_id, version) VALUES(30,'Volume','VolumeSeries','Volume',1,1,1,20,0) //
-
 COMMIT//
 
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id, version) VALUES(1,'20',1,1,0) //
@@ -190,7 +186,6 @@ INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id, v
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id, version) VALUES(47,'false',3,28,0) //
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id, version) VALUES(48,'true',4,28,0) //
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id, version) VALUES(49,'5',5,28,0)//
-
 COMMIT//
 
 INSERT INTO entrylimit (id,start_price,end_price,limit_amount, percent_of_price, percent_of_margin, share_round, pivot_range, price_round, version) VALUES (1,'0','8','0.02','0.06','0','100','0.05', '0.05',0)//
@@ -202,10 +197,8 @@ INSERT INTO entrylimit (id,start_price,end_price,limit_amount, percent_of_price,
 INSERT INTO entrylimit (id,start_price,end_price,limit_amount, percent_of_price, percent_of_margin, share_round, pivot_range, price_round, version) VALUES (7,'140.01','300','0.15','0.02','0','10', '0.25', '0.25',0)//
 INSERT INTO entrylimit (id,start_price,end_price,limit_amount, percent_of_price, percent_of_margin, share_round, pivot_range, price_round, version) VALUES (8,'300.01','1000','0.15','0.02','0','10', '0.25', '0.30',0)//
 INSERT INTO entrylimit (id,start_price,end_price,limit_amount, percent_of_price, percent_of_margin, share_round, pivot_range, price_round, version) VALUES (9,'1000.01','3000','0.30','0.02','0','10', '0.5', '0.50',0)//
-
 COMMIT//
 
 
-INSERT INTO portfolio (id, name, alias, description, is_default, version) VALUES (1, 'Paper','Paper Account','Paper trading account', 1, 0)//
-
+INSERT INTO portfolio (id, name, alias, description, is_default, version) VALUES (1, 'Paper', 'Paper Account','Paper trading account', 1, 0)//
 COMMIT//

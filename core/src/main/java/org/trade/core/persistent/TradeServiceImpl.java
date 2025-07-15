@@ -927,7 +927,8 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
 
     public Aspects findByClassName(String aspectClassName) throws ClassNotFoundException {
 
-        if ("org.trade.persistent.dao.Strategy".equals(aspectClassName)) {
+        if ((PERSISTENT_PACKAGE + "Strategy").equals(aspectClassName)) {
+
             /*
              * Relationship Strategy -> IndicatorSeries is LAZY so we need
              * to call size() on Rule/IndicatorSeries.
@@ -941,7 +942,8 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
             }
             aspects.setDirty(false);
             return aspects;
-        } else if ("org.trade.persistent.dao.Portfolio".equals(aspectClassName)) {
+        } else if ((PERSISTENT_PACKAGE + "Portfolio").equals(aspectClassName)) {
+
             /*
              * Relationship Portfolio -> PortfolioAccount is LAZY so we
              * need to call size() on PortfolioAccount.
