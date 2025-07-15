@@ -1,1 +1,1 @@
-Blah Blah
+1/ Template strategy use as a base for other strategies.

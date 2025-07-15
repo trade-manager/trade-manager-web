@@ -113,7 +113,7 @@ public class TradePosition extends Aspect implements java.io.Serializable {
     @Column(name = "total_net_value", precision = 10)
     private BigDecimal totalNetValue;
 
-    @OneToMany(mappedBy = "tradePosition", fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH,
+    @OneToMany(mappedBy = "tradePosition", fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH,
             CascadeType.REMOVE})
     private List<TradeOrder> tradeOrders = new ArrayList<>(0);
 

@@ -262,7 +262,7 @@ public class DBBroker extends Broker {
                         if (!this.tradestrategy.getStrategyData().getBaseCandleSeries().isEmpty()) {
 
                             CandleItem candleItem = (CandleItem) this.tradestrategy.getStrategyData().getBaseCandleSeries().getDataItem(
-                                            this.tradestrategy.getStrategyData().getBaseCandleSeries().getItemCount() - 1);
+                                    this.tradestrategy.getStrategyData().getBaseCandleSeries().getItemCount() - 1);
 
                             if (!candleItem.isSide(positionOrders.getOpenTradePosition().getSide())) {
 

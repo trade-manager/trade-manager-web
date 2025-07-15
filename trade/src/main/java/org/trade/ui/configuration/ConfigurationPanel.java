@@ -209,45 +209,61 @@ public class ConfigurationPanel extends BasePanel {
      */
 
     public void doSave() {
+
         try {
+
             this.setStatusBarMessage("Save in progress ...", BasePanel.INFORMATION);
             int selectedRow = configTable.getSelectedRow();
             String className = "org.trade.persistent.dao."
                     + ((ReferenceTable) Objects.requireNonNull(refTableEditorComboBox.getSelectedItem())).getCode();
 
             for (ListIterator<Aspect> itemIter = aspects.getAspect().listIterator(); itemIter.hasNext(); ) {
+
                 Aspect item = itemIter.next();
 
                 if (item.isDirty()) {
 
                     item = tradeService.saveAspect(item);
-                }
 
-                /*
-                 * Replace the aspect with the mergedAspect then update the
-                 * tables and select the row for the saved data.
-                 */
-                itemIter.set(item);
+                    /*
+                     * Replace the aspect with the mergedAspect then update the
+                     * tables and select the row for the saved data.
+                     */
+                    itemIter.set(item);
+                }
             }
+
             aspects.setDirty(false);
             Aspects aspects = tradeService.findByClassName(className);
+
             for (Aspect currAspect : aspects.getAspect()) {
+
                 boolean exists = false;
                 for (Aspect aspect : this.aspects.getAspect()) {
+
                     if (currAspect.getId().equals(aspect.getId())) {
+
                         exists = true;
                         break;
                     }
                 }
-                if (!exists)
+
+                if (!exists) {
+
                     tradeService.deleteAspect(currAspect);
+                }
             }
+
             DBTableLookupServiceProvider.clearLookup();
             doRefresh();
-            if (selectedRow > -1)
+
+            if (selectedRow > -1) {
+
                 configTable.setRowSelectionInterval(selectedRow, selectedRow);
+            }
+
             this.setStatusBarMessage(
-                    "Save complete. Note for changed to take effect the Tradinday Tab Search must be re-run.",
+                    "Save complete. Note for changed to take effect the Tradingday Tab Search must be re-run.",
                     BasePanel.INFORMATION);
         } catch (Exception ex) {
             this.setErrorMessage("Error saving item.", ex.getMessage(), ex);

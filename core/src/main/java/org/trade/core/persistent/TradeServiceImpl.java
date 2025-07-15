@@ -301,7 +301,6 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
 
         if (tradePosition.isPresent()) {
 
-            tradePosition.get().getTradeOrders().size();
             return tradePosition.get();
         }
 

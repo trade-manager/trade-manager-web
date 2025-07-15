@@ -107,8 +107,8 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
     @Column(name = "override_constraints", nullable = false)
     private Integer overrideConstraints;
 
-    @Column(name = "status", length = 45)
-    private String status;
+    @Column(name = "status", length = 45, nullable = false)
+    private String status = OrderStatus.UNSUBMIT;
 
     @Column(name = "stop_price", precision = 10)
     private BigDecimal stopPrice;

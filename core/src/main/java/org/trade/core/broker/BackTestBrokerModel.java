@@ -630,7 +630,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
 
                     tradeOrder.setClientId(999);
                 }
-                tradeOrder.setStatus(OrderStatus.UNSUBMIT);
+
                 TradeOrder instance = tradeService.saveTradeOrder(tradeOrder);
 
                 // Debug logging

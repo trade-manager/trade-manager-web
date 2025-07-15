@@ -96,10 +96,6 @@ public class Strategy extends Aspect implements Serializable, Cloneable {
     @OneToMany(mappedBy = "strategy", fetch = FetchType.EAGER, orphanRemoval = true, cascade = {CascadeType.ALL})
     private List<IndicatorSeries> indicators = new ArrayList<>(0);
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "strategy_manager_id")
-    private List<Strategy> strategies = new ArrayList<>(0);
-
     public Strategy() {
     }
 
@@ -145,7 +141,6 @@ public class Strategy extends Aspect implements Serializable, Cloneable {
         this.marketData = marketData;
         this.tradestrategies = tradestrategies;
         this.rules = rules;
-        this.strategies = strategies;
         this.className = className;
     }
 
@@ -283,24 +278,6 @@ public class Strategy extends Aspect implements Serializable, Cloneable {
      */
     public void setIndicatorSeries(List<IndicatorSeries> indicators) {
         this.indicators = indicators;
-    }
-
-    /**
-     * Method getStrategies.
-     *
-     * @return List<Strategy>
-     */
-    public List<Strategy> getStrategies() {
-        return this.strategies;
-    }
-
-    /**
-     * Method setStrategies.
-     *
-     * @param strategies List<Strategy>
-     */
-    public void setStrategies(List<Strategy> strategies) {
-        this.strategies = strategies;
     }
 
     /**

@@ -71,7 +71,7 @@ public final class MatrixFunctions {
      * Method updateXYPairs.
      *
      * @param userDataTable Hashtable<Long,Pair>
-     * @param terms        double[]
+     * @param terms         double[]
      * @return boolean
      */
     public static synchronized boolean updateXYPairs(Hashtable<Long, Pair> userDataTable, double[] terms) {

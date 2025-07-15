@@ -53,6 +53,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static org.trade.core.persistent.dao.series.indicator.IndicatorSeries.INDICATOR_PACKAGE;
+
 /**
  *
  */
@@ -261,7 +263,7 @@ public class IndicatorSeriesTableModel extends TableModel {
             params.add(false);
             params.add(0);
             params.add(false);
-            String className = "org.trade.strategy.data." + type;
+            String className = INDICATOR_PACKAGE + type;
             return (org.trade.core.persistent.dao.series.indicator.IndicatorSeries) ClassFactory.getCreateClass(className, params, this);
         } catch (Exception e) {
             /*

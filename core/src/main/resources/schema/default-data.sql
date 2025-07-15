@@ -46,11 +46,11 @@ COMMIT//
 INSERT INTO strategy (id, name, description, market_data, class_name, version) VALUES (20, 'FHxRBHyR+Heikin', 'Sell front/back half at x/yR or trail BH with Heikin-Ashi bars over xR', 1, 'PosMgrFHXRBHHeikinStrategy',0)//
 INSERT INTO strategy (id, name, description, class_name, version) VALUES (21, 'AllOrNothing', 'Close open position at 15:58 with stop 1R', 'PosMgrAllOrNothingStrategy',0)//
 INSERT INTO strategy (id, name, description, class_name, version) VALUES (22, 'All5MinBar', 'Trails whole pos on 5min bars after 9:40', 'PosMgrAll5MinBarStrategy',0)//
-INSERT INTO strategy (id, name, description, class_name, version) VALUES (23, 'FHxRBHyR', 'Sell front half at xR and bacl half at yR', 'PosMgrFHXRBHYRStrategy',0)//
-INSERT INTO strategy (id, name, description, market_data, class_name, strategy_manager_id, version) VALUES (1, '5minBarGap', 'Enter a tier 1-3 gap in first 5min bar direction, and stop @ 5min high/low',1, 'FiveMinGapBarStrategy',23,0)//
-INSERT INTO strategy (id, name, description, market_data, class_name, strategy_manager_id, version) VALUES (2, '5minSideBarGap', 'Enter a tier 1-3 gap via expectd Side after first 5min bar and stop @ 5min high/low',1, 'FiveMinSideGapBarStrategy',23,0)//
-INSERT INTO strategy (id, name, description, market_data, class_name, strategy_manager_id, version) VALUES (3, '5minWRBBarGap', 'Enter a tier 1-3 gap in first 5min WRB bar direction, and stop @ 55% of high/low',1, 'FiveMinWRBGapBarStrategy',22,0)//
-INSERT INTO strategy (id, name, description, market_data, class_name, strategy_manager_id, version) VALUES (4, 'PosMgrHeikinAshiTrail', 'Get and trail an open position on the current time frame using Hiekin-Ashi bars',1, 'PosMgrHeikinAshiTrailStrategy',null,0)//
+INSERT INTO strategy (id, name, description, class_name, version) VALUES (23, 'FHxRBHyR', 'Sell front half at xR and back half at yR', 'PosMgrFHXRBHYRStrategy',0)//
+INSERT INTO strategy (id, name, description, market_data, class_name, strategy_manager_id, version) VALUES (1, '5MinGapBar', 'Enter a tier 1-3 gap in first 5min bar direction, and stop @ 5min high/low',1, 'FiveMinGapBarStrategy',23,0)//
+INSERT INTO strategy (id, name, description, market_data, class_name, strategy_manager_id, version) VALUES (2, '5MinSideGapBar', 'Enter a tier 1-3 gap via expectd Side after first 5min bar and stop @ 5min high/low',1, 'FiveMinSideGapBarStrategy',23,0)//
+INSERT INTO strategy (id, name, description, market_data, class_name, strategy_manager_id, version) VALUES (3, '5MinWRBGapBar', 'Enter a tier 1-3 gap in first 5min WRB bar direction, and stop @ 55% of high/low',1, 'FiveMinWRBGapBarStrategy',22,0)//
+INSERT INTO strategy (id, name, description, market_data, class_name, strategy_manager_id, version) VALUES (4, 'HeikinAshiTrailPosMgr', 'Get and trail an open position on the current time frame using Hiekin-Ashi bars',1, 'PosMgrHeikinAshiTrailStrategy',null,0)//
 
 COMMIT//
 

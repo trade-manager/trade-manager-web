@@ -703,7 +703,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
             }
 
             Money limitPrice = new Money((Side.BOT.equals(side) ? (entryPrice.doubleValue() + entrylimit.getLimitAmount().doubleValue())
-                            : (entryPrice.doubleValue() - entrylimit.getLimitAmount().doubleValue())));
+                    : (entryPrice.doubleValue() - entrylimit.getLimitAmount().doubleValue())));
             TradeOrder tradeOrder = new TradeOrder(this.getTradestrategy(), action, OrderType.STPLMT, quantity,
                     entryPrice.getBigDecimalValue(), limitPrice.getBigDecimalValue(), this.getOrderCreateDate());
 

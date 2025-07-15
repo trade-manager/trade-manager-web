@@ -81,7 +81,7 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
         int reSumbittedAt = 20;
         this.startTime = System.currentTimeMillis();
         this.submitTimes.clear();
-        ConcurrentHashMap<Long, Tradingday> runningContractRequests = new ConcurrentHashMap<>();
+        ConcurrentHashMap<Integer, Tradingday> runningContractRequests = new ConcurrentHashMap<>();
 
         // Initialize the progress bar
         setProgress(0);
@@ -425,12 +425,12 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
      * contracts try to run any that could not be run due to a conflict. Run
      * then in asc date order value.
      *
-     * @param runningContractRequests ConcurrentHashMap<Long, Tradingday>
+     * @param runningContractRequests ConcurrentHashMap<Integer, Tradingday>
      * @param totalSumbitted          int
      * @return int
      */
     private int reProcessTradingdays(Tradingdays tradingdays,
-                                     ConcurrentHashMap<Long, Tradingday> runningContractRequests, int totalSumbitted) throws Exception {
+                                     ConcurrentHashMap<Integer, Tradingday> runningContractRequests, int totalSumbitted) throws Exception {
 
         while (!this.isCancelled() && !runningContractRequests.isEmpty()) {
 
@@ -454,10 +454,9 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
 
             for (Tradingday item : tradingdays.getTradingdays()) {
 
-                for (Long tradeingdayId : runningContractRequests.keySet()) {
+                for (Integer reuestId : runningContractRequests.keySet()) {
 
-
-                    Tradingday reProcessTradingday = runningContractRequests.get(tradeingdayId);
+                    Tradingday reProcessTradingday = runningContractRequests.get(reuestId);
 
                     if (item.equals(reProcessTradingday)) {
 
@@ -625,23 +624,25 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
      * running add it to the set to be reprocessed later.
      *
      * @param tradingday              Tradingday
-     * @param runningContractRequests ConcurrentHashMap<Long, Tradingday>
+     * @param runningContractRequests ConcurrentHashMap<Integer, Tradingday>
      * @return Tradingday
      */
 
     private Tradingday getTradingdayToProcess(Tradingday tradingday,
-                                              ConcurrentHashMap<Long, Tradingday> runningContractRequests) throws CloneNotSupportedException {
+                                              ConcurrentHashMap<Integer, Tradingday> runningContractRequests) throws CloneNotSupportedException {
 
         if (tradingday.getTradestrategies().isEmpty()) {
+
             return tradingday;
         }
 
         tradingday.getTradestrategies().sort(Tradestrategy.TRADINGDAY_CONTRACT);
         Tradingday reProcessTradingday;
 
-        if (runningContractRequests.containsKey(tradingday.getId())) {
+        // Use the tradestrategy.tradingday id as the Tradingday could be a dummy where the use select a tradestrategy from the list
+        if (runningContractRequests.containsKey(tradingday.getRequestId())) {
 
-            reProcessTradingday = runningContractRequests.get(tradingday.getId());
+            reProcessTradingday = runningContractRequests.get(tradingday.getRequestId());
         } else {
 
             reProcessTradingday = (Tradingday) tradingday.clone();
@@ -682,12 +683,12 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
 
         if (reProcessTradingday.getTradestrategies().isEmpty()) {
 
-            runningContractRequests.remove(reProcessTradingday.getId());
+            runningContractRequests.remove(reProcessTradingday.getRequestId());
         }
 
         if (!reProcessTradingday.getTradestrategies().isEmpty()) {
 
-            runningContractRequests.put(reProcessTradingday.getId(), reProcessTradingday);
+            runningContractRequests.put(reProcessTradingday.getRequestId(), reProcessTradingday);
         }
         return toProcessTradingday;
     }
