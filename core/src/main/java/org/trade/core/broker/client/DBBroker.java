@@ -743,7 +743,7 @@ public class DBBroker extends Broker {
 
                 if (indicatorCandles.isEmpty()) {
 
-                    _log.warn("No data available for {} and Tradingday: {} to {} and barSize: {}", childTradestrategy.getContract().getSymbol(), startDate, endDate, childTradestrategy.getBarSize());
+                    _log.warn("No data available for symbol: {}, startDate: {}, endDate {}, barSize: {}", childTradestrategy.getContract().getSymbol(), startDate, endDate, childTradestrategy.getBarSize());
                 } else {
 
                     StrategyData strategyData = StrategyData.create(childTradestrategy);
