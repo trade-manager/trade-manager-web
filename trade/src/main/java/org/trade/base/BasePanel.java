@@ -209,7 +209,7 @@ public abstract class BasePanel extends JPanel implements IMessageListener {
     /**
      * Method handleEvent.
      *
-     * @param e    MessageEvent
+     * @param e      MessageEvent
      * @param params List<Object>
      * @see IMessageListener#handleEvent(MessageEvent, List
      * <Object>)
@@ -241,7 +241,7 @@ public abstract class BasePanel extends JPanel implements IMessageListener {
      * Method doFireMethod.
      *
      * @param methodName String
-     * @param params       List<Object>
+     * @param params     List<Object>
      */
     protected synchronized void doFireMethod(String methodName, List<Object> params) {
 

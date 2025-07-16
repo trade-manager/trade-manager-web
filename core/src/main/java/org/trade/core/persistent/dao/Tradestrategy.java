@@ -49,7 +49,6 @@ import org.trade.core.dao.Aspect;
 import org.trade.core.factory.ClassFactory;
 import org.trade.core.persistent.dao.series.indicator.StrategyData;
 import org.trade.core.util.CoreUtils;
-import org.trade.core.valuetype.TradestrategyStatus;
 
 import java.io.Serial;
 import java.io.Serializable;
