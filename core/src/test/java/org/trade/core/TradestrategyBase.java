@@ -222,7 +222,7 @@ public class TradestrategyBase {
         }
 
         Random random = new Random();
-        
+
         // Generates a number between min (inclusive) and max (inclusive)
         Integer number = random.nextInt((mutiplier - 1) + 1);
         return String.format("%0" + length + "d", number);
