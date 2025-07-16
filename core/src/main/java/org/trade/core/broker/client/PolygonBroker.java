@@ -103,24 +103,16 @@ public class PolygonBroker extends Broker {
             if (setContractDetails(contract)) {
 
                 this.brokerModel.contractDetails(contract.getRequestId(), contract);
-
                 ZonedDateTime endDate = TradingCalendar.getZonedDateTimeFromDateTimeString(this.endDateTime,
                         "yyyyMMdd HH:mm:ss");
+                endDate = TradingCalendar.getTradingDayEnd(endDate);
                 ChartDays chartDays = ChartDays.newInstance();
                 chartDays.setDisplayName(this.chartDays);
+                ZonedDateTime startDate = TradingCalendar.addTradingDays(TradingCalendar.getTradingDayStart(endDate),
+                        (-1 * (Integer.parseInt(chartDays.getCode()) - 1)));
 
                 BarSize barSize = BarSize.newInstance();
                 barSize.setDisplayName(this.barSize);
-
-                ZonedDateTime startDate = endDate.minusDays(Integer.parseInt(chartDays.getCode()) - 1);
-
-                if (TradingCalendar.isTradingDay(startDate)) {
-
-                    startDate = TradingCalendar.getTradingDayStart(startDate);
-                } else {
-
-                    startDate = TradingCalendar.getPrevTradingDay(startDate);
-                }
 
                 if (BarSize.DAY == Integer.parseInt(barSize.getValue())) {
 

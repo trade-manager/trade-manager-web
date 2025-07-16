@@ -790,7 +790,6 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
             }
 
             this.saveAspect(tradePosition);
-
         } else {
 
             if (allOrdersCancelled) {

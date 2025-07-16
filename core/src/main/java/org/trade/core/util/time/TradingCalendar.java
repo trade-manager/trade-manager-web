@@ -516,6 +516,7 @@ public class TradingCalendar {
      * @return ZonedDateTime
      */
     public static ZonedDateTime getPrevTradingDay(ZonedDateTime tradingDay) {
+
         ZonedDateTime prevTradingDay = TradingCalendar.getTradingDayStart(tradingDay);
         do {
             prevTradingDay = prevTradingDay.minusDays(1);

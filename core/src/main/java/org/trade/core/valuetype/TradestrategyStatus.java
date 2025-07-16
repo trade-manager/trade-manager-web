@@ -68,6 +68,7 @@ public class TradestrategyStatus extends Decode {
      * @return TradestrategyStatus
      */
     public static TradestrategyStatus newInstance(String value) {
+
         final TradestrategyStatus returnInstance = new TradestrategyStatus();
         returnInstance.setValue(value);
         return returnInstance;
@@ -79,9 +80,9 @@ public class TradestrategyStatus extends Decode {
      * @return TradestrategyStatus
      */
     public static TradestrategyStatus newInstance() {
+
         final TradestrategyStatus returnInstance = new TradestrategyStatus();
         returnInstance.setDefaultCode();
         return returnInstance;
     }
-
 }

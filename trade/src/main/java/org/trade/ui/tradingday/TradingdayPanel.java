@@ -298,24 +298,22 @@ public class TradingdayPanel extends BasePanel {
     }
 
     public void doWindowActivated() {
+
         try {
 
             DecodeTableEditor portfolioEditor = new DecodeTableEditor(
                     new JComboBox<>((new DAOPortfolio()).getCodesDecodes().toArray(new Decode[0])));
             tradestrategyTable.setDefaultEditor(DAOPortfolio.class, portfolioEditor);
-
             DecodeTableEditor strategyEditor = new DecodeTableEditor(
                     new JComboBox<>((new DAOStrategy()).getCodesDecodes().toArray(new Decode[0])));
             tradestrategyTable.setDefaultEditor(DAOStrategy.class, strategyEditor);
-
             DecodeTableEditor strategyManagerEditor = new DecodeTableEditor(
                     new JComboBox<>((new DAOStrategyManager()).getCodesDecodes().toArray(new Decode[0])));
             tradestrategyTable.setDefaultEditor(DAOStrategyManager.class, strategyManagerEditor);
-
             resetStrategyComboBox(strategyFromEditorComboBox);
             resetStrategyComboBox(strategyToEditorComboBox);
-
         } catch (ValueTypeException ex) {
+
             this.setErrorMessage("Error activating window.", ex.getMessage(), ex);
         }
     }
@@ -326,11 +324,15 @@ public class TradingdayPanel extends BasePanel {
      * @return boolean
      */
     public boolean doWindowDeActivated() {
+
         if (tradingdays.isDirty()) {
+
             setStatusBarMessage("Please Save or Refresh as changed are pending", BasePanel.WARNING);
             return false;
         }
+
         if (null != deleteProgressMonitor) {
+
             return deleteProgressMonitor.isDone();
         }
         return true;
@@ -372,9 +374,10 @@ public class TradingdayPanel extends BasePanel {
      * @param tradestrategy the Tradestrategy that you would like to delete trade orders
      *                      for.
      */
-
     public void doDelete(final Tradestrategy tradestrategy) {
+
         try {
+
             int result = JOptionPane.showConfirmDialog(this.getFrame(),
                     "Do you want to delete order for the selected Tradestrategy?", "Information",
                     JOptionPane.YES_NO_OPTION);
@@ -387,8 +390,8 @@ public class TradingdayPanel extends BasePanel {
                 tradingdays.add(tradingday);
                 deleteTradeOrders(tradingdays);
             }
-
         } catch (Exception ex) {
+
             this.setErrorMessage("Error deleting TradeOrders.", ex.getMessage(), ex);
         }
     }
@@ -399,6 +402,7 @@ public class TradingdayPanel extends BasePanel {
      */
 
     public void doSave() {
+
         try {
 
             this.setStatusBarMessage("Save in progress ...", BasePanel.INFORMATION);
@@ -425,13 +429,16 @@ public class TradingdayPanel extends BasePanel {
                         tradeService.saveTradingday(tradingday);
                     }
                 }
-                if (dirty)
+
+                if (dirty) {
                     doRefresh();
+                }
+
                 clearStatusBarMessage();
                 getFrame().setCursor(Cursor.getDefaultCursor());
             });
-
         } catch (Exception ex) {
+
             this.setErrorMessage("Error saving Trade Strategies.", ex.getMessage(), ex);
         }
     }
@@ -449,16 +456,15 @@ public class TradingdayPanel extends BasePanel {
         try {
 
             this.clearStatusBarMessage();
-
             ZonedDateTime startDate = TradingCalendar
                     .getZonedDateTimeFromMilli(((java.util.Date) spinnerStart.getValue()).getTime());
             startDate = TradingCalendar.getDateAtTime(startDate, 0, 0, 0);
-
             ZonedDateTime endDate = TradingCalendar
                     .getZonedDateTimeFromMilli(((java.util.Date) spinnerEnd.getValue()).getTime());
             endDate = TradingCalendar.getDateAtTime(endDate, 23, 59, 59);
 
             if (endDate.isBefore(startDate)) {
+
                 startDate = TradingCalendar.getDateAtTime(endDate, 0, 0, 0);
                 spinnerStart.setValue((new Date(startDate)).getDate());
             }
@@ -497,10 +503,13 @@ public class TradingdayPanel extends BasePanel {
                         BasePanel.INFORMATION);
 
             } else {
+
                 for (Tradingday tradingday : tradingdays.getTradingdays()) {
+
                     this.tradingdays.add(tradingday);
                 }
             }
+
             tradingdayModel.setData(this.tradingdays);
             RowSorter<?> rsDetail = tradingdayTable.getRowSorter();
             rsDetail.setSortKeys(null);
@@ -515,6 +524,7 @@ public class TradingdayPanel extends BasePanel {
 
                 tradestrategyModel.setData(new Tradingday());
             }
+
             tradestrategyTable.enablePopupMenu(true);
             enableTradestrategyButtons(null);
         } catch (Exception ex) {
@@ -532,16 +542,20 @@ public class TradingdayPanel extends BasePanel {
         try {
 
             if (tradingdays.isDirty()) {
+
                 this.setStatusBarMessage("Please save or refresh before running strategy ...\n", BasePanel.WARNING);
                 return;
             }
+
             /*
              * Check to see if any of the selected trading days has open
              * positions. If they do kill the strategy worker before deleting
              * trades.
              */
             for (Tradingday tradingday : tradingdays.getTradingdays()) {
+
                 if (Tradingdays.hasTradeOrders(tradingday)) {
+
                     JOptionPane.showMessageDialog(this.getFrame(),
                             "Tradingday: " + tradingday.getOpen()
                                     + " has trades. Please delete all trades before re-asigning strategies.",
@@ -555,24 +569,26 @@ public class TradingdayPanel extends BasePanel {
                     JOptionPane.YES_NO_OPTION);
 
             if (result == JOptionPane.YES_OPTION) {
+
                 this.setStatusBarMessage("Reassign in progress ...\n", BasePanel.INFORMATION);
                 Strategy fromStrategy = ((Strategy) ((DAOStrategy) Objects.requireNonNull(strategyFromEditorComboBox.getSelectedItem()))
                         .getObject());
                 Strategy toStrategy = ((Strategy) ((DAOStrategy) Objects.requireNonNull(strategyToEditorComboBox.getSelectedItem()))
                         .getObject());
-
                 final ReAssignProgressMonitor reAssignProgressMonitor = new ReAssignProgressMonitor(
                         tradeService, tradingdays, fromStrategy, toStrategy);
                 reAssignProgressMonitor.addPropertyChangeListener(evt -> {
+
                     if ("progress".equals(evt.getPropertyName())) {
+
                         int progress = (Integer) evt.getNewValue();
                         setProgressBarProgress(progress, reAssignProgressMonitor);
                     }
                 });
                 reAssignProgressMonitor.execute();
             }
-
         } catch (Exception ex) {
+
             this.setErrorMessage("Error re-assigning Strategies.", ex.getMessage(), ex);
         }
     }
@@ -583,15 +599,20 @@ public class TradingdayPanel extends BasePanel {
      * @param tradingday Tradingday the selected tradingday to be refreshed.
      */
     public void doRefresh(final Tradingday tradingday) {
+
         try {
+
             this.clearStatusBarMessage();
             Tradingday currentTradingday = tradingdays.getTradingday(tradingday.getOpen(), tradingday.getClose());
+
             if (null != currentTradingday && null != currentTradingday.getId()) {
+
                 Tradingday instance = tradeService.findTradingdayById(currentTradingday.getId());
                 instance.populateStrategyData(currentTradingday);
                 tradingdays.replaceTradingday(instance);
             }
         } catch (Exception ex) {
+
             this.setErrorMessage("Error finding Tradingday.", ex.getMessage(), ex);
         }
     }
@@ -602,28 +623,37 @@ public class TradingdayPanel extends BasePanel {
      * @param tradingday Tradingday the selected tradingday to be refreshed.
      */
     public void doRefreshTradingdayTable(final Tradingday tradingday) {
+
         try {
+
             this.clearStatusBarMessage();
             int selectedRow = tradingdayTable.getSelectedRow();
             tradingdayModel.setData(tradingdays);
+
             for (int i = 0; i < tradingdayModel.getRowCount(); i++) {
+
                 ZonedDateTime open = ((Date) tradingdayModel.getValueAt(i, 0))
                         .getZonedDateTime();
                 ZonedDateTime close = ((Date) tradingdayModel.getValueAt(i, 1))
                         .getZonedDateTime();
+
                 if (tradingday.getOpen().equals(open) && tradingday.getClose().equals(close)) {
+
                     selectedRow = tradingdayTable.convertRowIndexToView(i);
                     break;
                 }
             }
 
             if (selectedRow > -1) {
+
                 tradingdayTable.setRowSelectionInterval(selectedRow, selectedRow);
             } else {
+
                 tradingdayTable.setRowSelectionInterval(0, 0);
                 enableTradestrategyButtons(null);
             }
         } catch (Exception ex) {
+
             this.setErrorMessage("Error refreshing Tradingday.", ex.getMessage(), ex);
         }
     }
@@ -633,8 +663,11 @@ public class TradingdayPanel extends BasePanel {
      * pressed.
      */
     public void doRefresh() {
+
         int row = tradingdayTable.getSelectedRow();
+
         if (row > -1) {
+
             Date openDate = (Date) tradingdayModel
                     .getValueAt(tradingdayTable.convertRowIndexToModel(row), 0);
             Date closeDate = (Date) tradingdayModel
@@ -652,7 +685,9 @@ public class TradingdayPanel extends BasePanel {
      */
 
     public void doProperties() {
+
         if (null != transferButton.getTransferObject()) {
+
             transferButton.doClick();
         }
     }
@@ -668,7 +703,6 @@ public class TradingdayPanel extends BasePanel {
             this.setStatusBarMessage(
                     "CSV file format is: SYM,Symbol,SMART,BOT/SLD(opt),DATE(MM/dd/yyyy) (opt), Tier(Opt), Mkt Bias(opt), Mkt Bar(opt), Mkt Gap(opt)",
                     BasePanel.INFORMATION);
-
             JFileChooser fileView = new JFileChooser();
             fileView.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
             fileView.addChoosableFileFilter(new CVSFilter());
