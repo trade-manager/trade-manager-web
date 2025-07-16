@@ -127,9 +127,6 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
     @Transient
     private StrategyData strategyData = null;
 
-    @Transient
-    private TradestrategyStatus tradestrategyStatus = null;
-
     public Tradestrategy() {
     }
 
@@ -284,16 +281,6 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
     public void setStatus(String status) {
 
         this.status = status;
-        this.tradestrategyStatus = TradestrategyStatus.newInstance(status);
-    }
-
-    /**
-     * Method getTradestrategyStatus.
-     *
-     * @return TradestrategyStatus
-     */
-    public TradestrategyStatus getTradestrategyStatus() {
-        return this.tradestrategyStatus;
     }
 
     /**

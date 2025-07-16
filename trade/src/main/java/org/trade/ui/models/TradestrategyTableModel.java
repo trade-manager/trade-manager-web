@@ -155,7 +155,9 @@ public class TradestrategyTableModel extends TableModel {
          * strategy and status fields.
          */
         timer = new Timer(5000, _ -> {
+
             for (int i = 0; i < getRowCount(); i++) {
+
                 fireTableCellUpdated(i, 5);
                 fireTableCellUpdated(i, 6);
                 fireTableCellUpdated(i, 11);
@@ -185,8 +187,11 @@ public class TradestrategyTableModel extends TableModel {
     public boolean isCellEditable(int row, int column) {
 
         Tradestrategy element = getData().getTradestrategies().get(row);
+
         if (null != element) {
+
             if (!element.getTradeOrders().isEmpty()) {
+
                 return false;
             }
         }
@@ -221,11 +226,14 @@ public class TradestrategyTableModel extends TableModel {
      * @param data Tradingday
      */
     public void setData(Tradingday data) {
-        if (timer.isRunning())
-            timer.stop();
-        this.data = data;
 
+        if (timer.isRunning()) {
+            timer.stop();
+        }
+
+        this.data = data;
         this.clearAll();
+
         if (null != getData() && null != getData().getTradestrategies() && !getData().getTradestrategies().isEmpty()) {
 
             for (final Tradestrategy element : getData().getTradestrategies()) {
@@ -256,55 +264,69 @@ public class TradestrategyTableModel extends TableModel {
                 break;
             }
             case 1: {
+
                 element.setTrade(Boolean.valueOf(((YesNo) value).getCode()));
                 break;
             }
             case 2: {
+
                 element.getContract().setSymbol(((String) value).trim().toUpperCase());
                 break;
             }
             case 3: {
+
                 element.setSide(((Side) value).getCode());
                 break;
             }
             case 4: {
+
                 if (!Decode.NONE.equals(((Tier) value).getDisplayName())) {
+
                     element.setTier(((Tier) value).getCode());
                 } else {
+
                     element.setTier(null);
                 }
                 break;
             }
             case 5: {
+
                 final Strategy strategy = (Strategy) ((DAOStrategy) value).getObject();
                 element.setStrategy(strategy);
 
                 if (strategy.hasStrategyManager()) {
+
                     this.setValueAt(DAOStrategyManager.newInstance(strategy.getStrategyManager().getName()), row,
                             column + 1);
                 } else {
+
                     this.setValueAt(DAOStrategyManager.newInstance(Decode.NONE), row, column + 1);
                 }
                 break;
             }
             case 6: {
+
                 element.getStrategy().setStrategyManager((Strategy) ((DAOStrategyManager) value).getObject());
                 break;
             }
             case 7: {
+
                 Portfolio portfolio = (Portfolio) ((DAOPortfolio) value).getObject();
                 element.setPortfolio(portfolio);
                 break;
             }
             case 8: {
+
                 element.setBarSize(Integer.valueOf(((BarSize) value).getValue()));
                 break;
             }
             case 9: {
+
                 element.setChartDays(Integer.valueOf(((ChartDays) value).getCode()));
                 break;
             }
             case 10: {
+
                 element.setRiskAmount(((Money) value).getBigDecimalValue());
                 break;
             }
@@ -315,26 +337,32 @@ public class TradestrategyTableModel extends TableModel {
                 break;
             }
             case 13: {
+
                 element.setStatus(((TradestrategyStatus) value).getCode());
                 break;
             }
             case 14: {
+
                 element.getContract().setCurrency(((Currency) value).getCode());
                 break;
             }
             case 15: {
+
                 element.getContract().setExchange(((Exchange) value).getCode());
                 break;
             }
             case 16: {
+
                 element.getContract().setPrimaryExchange(((Exchange) value).getCode());
                 break;
             }
             case 17: {
+
                 element.getContract().setSecType(((SECType) value).getCode());
                 break;
             }
             case 18: {
+
                 ZonedDateTime zonedDateTime = ((Date) value).getZonedDateTime();
                 zonedDateTime = zonedDateTime.plusMonths(1);
                 zonedDateTime = zonedDateTime.minusDays(1);
@@ -394,7 +422,9 @@ public class TradestrategyTableModel extends TableModel {
         int chartDays = ChartDays.TWO_DAYS;
         Integer barSize = BarSize.FIVE_MIN;
         int riskAmount = 0;
+
         if (null != tradingday) {
+
             try {
 
                 chartDays = ConfigProperties.getPropAsInt("trade.backfill.duration");
@@ -407,12 +437,17 @@ public class TradestrategyTableModel extends TableModel {
 
                 riskAmount = ConfigProperties.getPropAsInt("trade.risk");
                 strategyName = ConfigProperties.getPropAsString("trade.strategy.default");
-                if (!DAOStrategy.newInstance(strategyName).isValid())
+
+                if (!DAOStrategy.newInstance(strategyName).isValid()) {
+
                     strategyName = DAOStrategy.newInstance().getCode();
+                }
 
                 if (null != strategyName) {
+
                     strategy = (Strategy) DAOStrategy.newInstance(strategyName).getObject();
                 }
+
                 tradestrategy = Tradingdays
                         .parseContractLine(ConfigProperties.getPropAsString("trade.tradingtab.default.add"));
 
@@ -504,7 +539,7 @@ public class TradestrategyTableModel extends TableModel {
             newRow.add(new Percent(0));
         }
 
-        newRow.add(element.getTradestrategyStatus());
+        newRow.add(TradestrategyStatus.newInstance(element.getStatus()));
         newRow.add(Currency.newInstance(element.getContract().getCurrency()));
         newRow.add(Exchange.newInstance(element.getContract().getExchange()));
         newRow.add(Exchange.newInstance(element.getContract().getPrimaryExchange()));

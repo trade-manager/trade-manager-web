@@ -608,8 +608,10 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
      */
     private ChartPanel createChartPanel(Tradestrategy tradestrategy) throws ServiceException {
 
-        ZonedDateTime startDate;
-        ZonedDateTime endDate;
+        ZonedDateTime endDate = tradestrategy.getTradingday().getClose();
+        ZonedDateTime startDate = TradingCalendar.addTradingDays(TradingCalendar.getTradingDayStart(endDate),
+                (-1 * (tradestrategy.getChartDays() - 1)));
+
         StrategyDataUI strategyDataUI = null;
 
         if (!strategyDataTable.contains(tradestrategy.getContract().getId())) {
@@ -628,12 +630,6 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
 
         if (strategyDataUI.getBaseCandleSeries().isEmpty()) {
 
-            endDate = TradingCalendar.getDateAtTime(
-                    TradingCalendar.addTradingDays(tradestrategy.getTradingday().getClose(), backfillOffsetDays),
-                    tradestrategy.getTradingday().getClose());
-            startDate = endDate.minusDays((tradestrategy.getChartDays() - 1));
-            startDate = TradingCalendar.getPrevTradingDay(startDate);
-            startDate = TradingCalendar.getDateAtTime(startDate, tradestrategy.getTradingday().getOpen());
             List<Candle> candles = this.tradeService.findCandlesByContractDateRangeBarSize(
                     tradestrategy.getContract(), startDate, endDate, tradestrategy.getBarSize());
 

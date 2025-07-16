@@ -171,7 +171,7 @@ public class DBBroker extends Broker {
                  * Populate any child datasets.
                  */
                 populateIndicatorCandleSeries(tradestrategy, this.tradestrategy.getTradingday().getOpen(),
-                        this.tradestrategy.getTradingday().getOpen());
+                        this.tradestrategy.getTradingday().getClose());
 
             }
 
