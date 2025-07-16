@@ -86,7 +86,7 @@ public class MessageNotifier {
     /**
      * notifyEvent() -
      *
-     * @param e    MessageEvent
+     * @param e      MessageEvent
      * @param params List<Object>
      */
     public void notifyEvent(MessageEvent e, List<Object> params) {

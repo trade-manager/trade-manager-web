@@ -46,7 +46,7 @@ public interface IMessageListener extends EventListener {
     /**
      * Method handleEvent.
      *
-     * @param e    MessageEvent
+     * @param e      MessageEvent
      * @param params List<Object>
      */
     void handleEvent(MessageEvent e, List<Object> params);

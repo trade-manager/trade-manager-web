@@ -68,6 +68,7 @@ public interface TradeService extends AspectService {
 
 
     public static final String PERSISTENT_PACKAGE = "org.trade.core.persistent.dao.";
+
     /**
      * @param entities
      */

@@ -164,7 +164,7 @@ public class ConfigurationPanel extends BasePanel {
             this.add(jSplitPane1, BorderLayout.CENTER);
 
         } catch (Exception ex) {
-        
+
             this.setErrorMessage("Error during initialization.", ex.getMessage(), ex);
         }
     }
@@ -178,13 +178,13 @@ public class ConfigurationPanel extends BasePanel {
      * @return boolean
      */
     public boolean doWindowDeActivated() {
-    
+
         if (aspects.isDirty()) {
-        
+
             setStatusBarMessage("Please Save or Refresh as changed are pending", BasePanel.WARNING);
             return false;
         }
-        
+
         return true;
     }
 
@@ -243,7 +243,7 @@ public class ConfigurationPanel extends BasePanel {
             for (Aspect currAspect : aspects.getAspect()) {
 
                 boolean exists = false;
-                
+
                 for (Aspect aspect : this.aspects.getAspect()) {
 
                     if (currAspect.getId().equals(aspect.getId())) {
@@ -286,15 +286,15 @@ public class ConfigurationPanel extends BasePanel {
      * Method doRefresh This is fired when the Refresh button is pressed.
      */
     public void doRefresh() {
-    
+
         try {
-        
+
             this.addReferenceTablePanel(((ReferenceTable) Objects.requireNonNull(refTableEditorComboBox.getSelectedItem())).getCode());
         } catch (Exception ex) {
-        
+
             this.setErrorMessage("Error finding item.", ex.getMessage(), ex);
         } finally {
-        
+
             clearStatusBarMessage();
         }
     }
@@ -313,16 +313,16 @@ public class ConfigurationPanel extends BasePanel {
      * @param series IndicatorSeries
      */
     public void doProperties(final IndicatorSeries series) {
-    
+
         try {
-        
+
             this.clearStatusBarMessage();
             String indicatorName = series.getType().substring(0, series.getType().indexOf("Series"));
             CodeType codeType = tradeService.findCodeTypeByNameType(indicatorName,
                     CodeType.IndicatorParameters);
-                    
+
             if (null == codeType) {
-            
+
                 this.setStatusBarMessage("There are no properties for this Indicator ...", BasePanel.INFORMATION);
             } else {
 
@@ -331,28 +331,28 @@ public class ConfigurationPanel extends BasePanel {
                         codeAttributePanel);
                 dialog.setLocationRelativeTo(this);
                 dialog.setVisible(true);
-                
+
                 if (!dialog.getCancel()) {
-                
+
                     /*
                      * Populate the code values from the fields.
                      */
                     for (CodeValue value : codeAttributePanel.getCodeValues()) {
-                    
+
                         series.setDirty(true);
-                        
+
                         if (null == value.getIndicatorSeries()) {
-                        
+
                             value.setIndicatorSeries(series);
                         }
                     }
                 }
             }
         } catch (Exception ex) {
-        
+
             setErrorMessage("Error getting Indicator properties.", ex.getMessage(), ex);
         } finally {
-        
+
             this.getFrame().setCursor(Cursor.getDefaultCursor());
         }
     }
@@ -370,11 +370,11 @@ public class ConfigurationPanel extends BasePanel {
          */
 
         public void valueChanged(ListSelectionEvent event) {
-        
+
             if (!event.getValueIsAdjusting()) {
 
                 ListSelectionModel model = (ListSelectionModel) event.getSource();
-                
+
                 if (model.getLeadSelectionIndex() > -1) {
 
                     Aspect transferObject = tableModel.getData().getAspect()
@@ -431,11 +431,11 @@ public class ConfigurationPanel extends BasePanel {
          * @see ListSelectionListener#valueChanged(ListSelectionEvent)
          */
         public void valueChanged(ListSelectionEvent event) {
-        
+
             if (!event.getValueIsAdjusting()) {
 
                 ListSelectionModel model = (ListSelectionModel) event.getSource();
-                
+
                 if (model.getLeadSelectionIndex() > -1) {
 
                     IndicatorSeries transferObject = ((IndicatorSeriesTableModel) tableModelChild).getData()
@@ -454,12 +454,12 @@ public class ConfigurationPanel extends BasePanel {
      * @param aspect Aspect
      */
     private void setChildPanel(final Aspect aspect) {
-    
+
         try {
-        
+
             switch (aspect) {
                 case Strategy strategy -> {
-                
+
                     tableModelChild = new IndicatorSeriesTableModel();
                     ((IndicatorSeriesTableModel) tableModelChild).setData(strategy);
                     tableChild = new ConfigurationTable(tableModelChild);
@@ -469,20 +469,20 @@ public class ConfigurationPanel extends BasePanel {
                     tableChild.setDefaultEditor(Aspects.class, new ButtonEditor(propertiesButton));
                 }
                 case CodeType codeType -> {
-                
+
                     tableModelChild = new CodeAttributeTableModel();
                     ((CodeAttributeTableModel) tableModelChild).setData(codeType);
                     tableChild = new ConfigurationTable(tableModelChild);
                 }
                 case Portfolio portfolio -> {
-                
+
                     tableModelChild = new AccountTableModel();
                     ((AccountTableModel) tableModelChild).setData(portfolio);
                     tableChild = new ConfigurationTable(tableModelChild);
                 }
                 case null, default -> tableChild = new ConfigurationTable(null);
             }
-            
+
             tableChild.setFont(new Font("Monospaced", Font.PLAIN, 12));
             tableChild.setPreferredScrollableViewportSize(new Dimension(300, 200));
             tableChild.setFillsViewportHeight(true);
@@ -490,7 +490,7 @@ public class ConfigurationPanel extends BasePanel {
             jScrollPane1.getViewport().add(tableChild, BorderLayout.CENTER);
             jScrollPane1.setBorder(new BevelBorder(BevelBorder.LOWERED));
         } catch (Exception ex) {
-        
+
             this.setErrorMessage("Error deleting Strategy.", ex.getMessage(), ex);
         }
     }
