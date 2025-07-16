@@ -102,7 +102,6 @@ public class TradestrategyBase {
 
             contract = new Contract(SECType.STOCK, symbol, Exchange.SMART, Currency.USD, null, null);
             contract = tradeService.saveAspect(contract);
-
         } else {
 
             tradestrategy = tradeService.findTradestrategyByUniqueKeys(open, strategy.getName(),
@@ -131,6 +130,7 @@ public class TradestrategyBase {
                 for (TradePosition tradePosition : tradePositions.values()) {
 
                     tradePosition = tradeService.findTradePositionById(tradePosition.getId());
+
                     /*
                      * Remove the open trade position from contract if this is a
                      * tradePosition to be deleted.
@@ -172,7 +172,6 @@ public class TradestrategyBase {
      */
     public static void clearDBData(TradeService tradeService, Tradestrategy tradestrategy) throws Exception {
 
-
         if (null == tradestrategy || null == tradestrategy.getId()) {
 
             return;
@@ -211,8 +210,6 @@ public class TradestrategyBase {
                 }
             }
         }
-
-
     }
 
     public static String getRandomNumber(int length) {
@@ -223,8 +220,11 @@ public class TradestrategyBase {
 
             mutiplier = mutiplier * 10;
         }
+
         Random random = new Random();
-        Integer number = random.nextInt((mutiplier - 1) + 1); // Generates a number between min (inclusive) and max (inclusive)
+        
+        // Generates a number between min (inclusive) and max (inclusive)
+        Integer number = random.nextInt((mutiplier - 1) + 1);
         return String.format("%0" + length + "d", number);
     }
 }
