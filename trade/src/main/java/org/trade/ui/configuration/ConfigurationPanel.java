@@ -271,6 +271,7 @@ public class ConfigurationPanel extends BasePanel {
                     "Save complete. Note for changed to take effect the Tradingday Tab Search must be re-run.",
                     BasePanel.INFORMATION);
         } catch (Exception ex) {
+
             this.setErrorMessage("Error saving item.", ex.getMessage(), ex);
         }
     }

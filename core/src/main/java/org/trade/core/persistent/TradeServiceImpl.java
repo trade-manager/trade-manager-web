@@ -185,7 +185,6 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
         return tradelogReport;
     }
 
-
     public Account findAccountById(final Long id) {
         return accountRepository.findById(id).isPresent() ? accountRepository.findById(id).get() : null;
     }
@@ -195,7 +194,6 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
 
         return accountRepository.findByAccountNumber(accountNumber);
     }
-
 
     public Tradingday findTradingdayById(final Long tradingdayId) {
         return tradingdayRepository.findById(tradingdayId).isPresent() ? tradingdayRepository.findById(tradingdayId).get() : null;
@@ -280,6 +278,7 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
 
             return tradestrategy;
         }
+
         return null;
     }
 
@@ -331,10 +330,12 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
             return portfolio;
 
         }
+
         return null;
     }
 
     public Portfolio findPortfolioDefault() {
+
         return portfolioRepository.findDefault();
     }
 
@@ -377,7 +378,6 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
     public List<Tradestrategy> findAllTradestrategies() {
 
         return tradestrategyRepository.findAll();
-
     }
 
     public Tradestrategy findTradestrategyByUniqueKeys(final ZonedDateTime open, final String strategy,
@@ -445,6 +445,7 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
                 transientInstance.getContract().setTradePosition(null);
                 getAspectRepository().save(transientInstance.getContract());
             }
+
             this.deleteAspect(tradePosition);
         }
 
@@ -518,7 +519,6 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
 
             candle.setContract(contract.get());
             newCandles.add(candle);
-            //this.saveAspect(candle);
         }
 
         this.saveAllAspects(newCandles);
@@ -599,6 +599,7 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
 
             instance.setContract(contract);
         }
+
         return this.saveAspect(instance);
     }
 
@@ -665,6 +666,7 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
                     tradePosition.addTradeOrder(tradeOrder);
                     tradePosition = this.saveAspect(tradePosition);
                 }
+
                 tradeOrder.setTradePosition(tradePosition);
             } else {
                 /*
@@ -715,6 +717,7 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
             }
             totalCommission = totalCommission + (order.getCommission() == null ? 0 : order.getCommission().doubleValue());
         }
+
         /*
          * totalFilledQuantity has changed for the trade update the trade
          * values.
@@ -869,6 +872,7 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
                 tradeOrder.setAverageFilledPrice(avgFillPrice);
                 tradeOrder.setFilledQuantity(filledQuantity);
                 tradeOrder.setFilledDate(filledDate);
+
                 /*
                  * If the commission amount is greater than the TradeOrder
                  * commission set this amount. Note tradeOrder commission
@@ -883,6 +887,7 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
                 tradeOrder.setOrderUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
             }
         }
+
         return saveTradeOrder(tradeOrder);
     }
 
@@ -905,13 +910,13 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
 
             return rules.getFirst();
         }
+
         return null;
     }
 
     public Strategy findStrategyById(final Long id) {
 
         return strategyRepository.findById(id).isPresent() ? strategyRepository.findById(id).get() : null;
-
     }
 
     public Strategy findStrategyByName(String name) {
@@ -939,6 +944,7 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
 
                 aspects.add(item);
             }
+
             aspects.setDirty(false);
             return aspects;
         } else if ((PERSISTENT_PACKAGE + "Portfolio").equals(aspectClassName)) {
@@ -954,20 +960,13 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
 
                 aspects.add(item);
             }
+
             aspects.setDirty(false);
             return aspects;
         } else {
             return super.findByClassName(aspectClassName);
         }
     }
-
-    /*
-public <T extends Aspect> T findAspectById(T instance){
-
-    Optional<T> aspect = (Optional<T>) getAspectRepository().findById(instance.getId());
-    return aspect.get();
-}
-*/
 
     public Aspect findAspectById(final Aspect aspect) throws ClassNotFoundException {
 
@@ -986,12 +985,10 @@ public <T extends Aspect> T findAspectById(T instance){
         return getAspectRepository().save(instance);
     }
 
-
     public <S extends Aspect> List<S> saveAllAspects(final Iterable<S> entities) {
 
         return getAspectRepository().saveAll(entities);
     }
-
 
     public <T extends Aspect> T saveAspect(final T instance, boolean overrideVersion) {
 
@@ -1010,7 +1007,6 @@ public <T extends Aspect> T findAspectById(T instance){
                 getAspectRepository().save(item);
             }
         }
-
     }
 
     public CodeType findCodeTypeByNameType(String name, String type) {
