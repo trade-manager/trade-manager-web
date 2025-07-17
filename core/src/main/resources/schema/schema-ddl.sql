@@ -506,14 +506,15 @@ CREATE  TABLE IF NOT EXISTS rule (
 id INT NOT NULL AUTO_INCREMENT,
 comment TEXT NULL,
 rule BLOB NULL,
+rule_version INT NOT NULL,
 content_type VARCHAR(20) NOT NULL ,
 version INT NOT NULL,
 created_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
-strategy_id BIGINT NULL,
+strategy_id BIGINT NOT NULL,
 PRIMARY KEY (id),
 INDEX rule_stategy_idx (strategy_id ASC),
-UNIQUE INDEX idstrategy_version_uq (strategy_id ASC, version ASC),
+UNIQUE INDEX idstrategy_version_uq (strategy_id ASC, rule_version ASC),
 CONSTRAINT rule_stategy_fk
 FOREIGN KEY (strategy_id )
 REFERENCES strategy (id )

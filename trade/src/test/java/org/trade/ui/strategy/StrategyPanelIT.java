@@ -103,8 +103,8 @@ public class StrategyPanelIT {
 
                 Rule nextRule = new Rule(strategy, 1, null,
                         content.getBytes(), "test/java");
-                strategy.add(nextRule);
-                nextRule = this.tradeService.saveAspect(nextRule);
+                strategy.getRules().add(nextRule);
+                strategy = this.tradeService.saveAspect(strategy);
             }
         }
     }
@@ -117,16 +117,19 @@ public class StrategyPanelIT {
 
         File dir = new File(tmpDir);
         StrategyPanel.deleteDir(dir);
-        TradestrategyBase.clearDBData(tradeService, tradestrategy);
+        List<Strategy> strategies = this.tradeService.findStrategies();
+        assertNotNull(strategies);
 
-        List<Rule> rules = tradeService.findRulesAll();
+        for (Strategy strategy : strategies) {
 
-        for (Rule rule : rules) {
+            if (!strategy.getRules().isEmpty()) {
 
-            rule.setStrategy(null);
-            rule = tradeService.saveAspect(rule);
-            tradeService.deleteAspect(rule);
+                strategy.getRules().clear();
+                strategy = this.tradeService.saveAspect(strategy);
+            }
         }
+
+        TradestrategyBase.clearDBData(tradeService, tradestrategy);
     }
 
     /**
@@ -233,18 +236,18 @@ public class StrategyPanelIT {
         }
 
         Rule latestRule = this.tradeService.findRuleByMaxVersion(strategy);
-        Integer version = 0;
+        Integer version = 1;
 
         if (null != latestRule) {
 
-            version = latestRule.getVersion();
+            version = latestRule.getRuleVersion();
         }
 
         Rule myRule = null;
 
         for (Rule rule : strategy.getRules()) {
 
-            if (version.equals(rule.getVersion())) {
+            if (version.equals(rule.getRuleVersion())) {
                 myRule = rule;
             }
         }
@@ -340,7 +343,7 @@ public class StrategyPanelIT {
             myrule = new Rule();
             myrule.setStrategy(strategy);
         }
-        myrule.setComment("Test Ver: " + myrule.getVersion());
+        myrule.setComment("Test Ver: " + myrule.getRuleVersion());
         StreamEditorPane textArea = new StreamEditorPane("text/rtf");
         new JScrollPane(textArea);
         String fileDir = strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/');

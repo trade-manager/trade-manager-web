@@ -903,7 +903,7 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
 
     public Rule findRuleByMaxVersion(final Strategy strategy) {
 
-        Integer version = ruleRepository.findByMaxVersion(strategy);
+        Integer version = ruleRepository.findByMaxRuleVersion(strategy);
         List<Rule> rules = ruleRepository.findByStrategyAndVersion(strategy, version);
 
         if (!rules.isEmpty()) {
@@ -914,19 +914,44 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
         return null;
     }
 
+    @Transactional
     public Strategy findStrategyById(final Long id) {
 
-        return strategyRepository.findById(id).isPresent() ? strategyRepository.findById(id).get() : null;
+        Optional<Strategy> strategy = strategyRepository.findById(id);
+        if (strategy.isPresent()) {
+
+            strategy.get().getRules().size();
+            return strategy.get();
+        }
+
+        return null;
     }
 
+    @Transactional
     public Strategy findStrategyByName(String name) {
 
-        return strategyRepository.findByName(name);
+        Strategy strategy = strategyRepository.findByName(name);
+
+        if (null != strategy) {
+
+            strategy.getRules().size();
+            return strategy;
+        }
+
+        return null;
     }
 
+    @Transactional
     public List<Strategy> findStrategies() {
 
-        return strategyRepository.findAll();
+        List<Strategy> strategies = strategyRepository.findAll();
+
+        for (Strategy strategy : strategies) {
+
+            strategy.getRules().size();
+        }
+
+        return strategies;
     }
 
     public Aspects findByClassName(String aspectClassName) throws ClassNotFoundException {
