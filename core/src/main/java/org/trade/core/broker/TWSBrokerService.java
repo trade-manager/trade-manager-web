@@ -406,11 +406,11 @@ public class TWSBrokerService extends AbstractBrokerModel {
                 controller().reqHistoricalData(TWSBrokerModel.getIBContract(tradestrategy.getContract()), endDateTime, chartDays, Types.DurationUnit.DAY, Types.BarSize.valueOf(BarSize.newInstance(tradestrategy.getBarSize()).getCode()),
                         Types.WhatToShow.valueOf(backfillWhatToShow), (backfillUseRTH == 1), new HistoricalDataHandler(this, tradestrategy.getRequestId()));
 
-//                controller().client().reqHistoricalData(tradestrategy.getId(),
-//                        TWSBrokerModel.getIBContract(tradestrategy.getContract()), endDateTime,
-//                        ChartDays.newInstance(chartDays).getDisplayName(),
-//                        BarSize.newInstance(tradestrategy.getBarSize()).getDisplayName(), backfillWhatToShow,
-//                        backfillUseRTH, backfillDateFormat, chartOptions);
+                controller().client().reqHistoricalData(tradestrategy.getRequestId(),
+                        TWSBrokerModel.getIBContract(tradestrategy.getContract()), endDateTime,
+                        ChartDays.newInstance(chartDays).getDisplayName(),
+                        BarSize.newInstance(tradestrategy.getBarSize()).getDisplayName(), backfillWhatToShow,
+                        backfillUseRTH, backfillDateFormat, chartOptions);
 
             } else {
                 throw new BrokerModelException(tradestrategy.getRequestId(), 3100,
@@ -535,9 +535,9 @@ public class TWSBrokerService extends AbstractBrokerModel {
                                 tradestrategy.getContract().getSecType(), tradestrategy.getContract().getSymbol())
                         , new TradeReportHandler(this, reqId));
 
-//                controller().client().reqExecutions(reqId,
-//                        TWSBrokerModel.getIBExecutionFilter(clientId, tradestrategy.getTradingday().getOpen(),
-//                                tradestrategy.getContract().getSecType(), tradestrategy.getContract().getSymbol()));
+                //controller().client().reqExecutions(reqId,
+                //        TWSBrokerModel.getIBExecutionFilter(clientId, tradestrategy.getTradingday().getOpen(),
+                //                tradestrategy.getContract().getSecType(), tradestrategy.getContract().getSymbol()));
             } else {
                 throw new BrokerModelException(tradestrategy.getRequestId(), 3020,
                         "Not conected to TWS historical data cannot be retrieved");
