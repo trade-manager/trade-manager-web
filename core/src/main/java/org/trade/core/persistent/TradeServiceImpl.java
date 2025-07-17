@@ -413,13 +413,13 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
          * Refresh the trade strategy as orders across tradePosition could
          * have been deleted if this is a bulk delete of tradestrategies.
          */
-        Tradestrategy transientInstance = tradestrategyRepository.findById(Objects.requireNonNull(instance.getId())).get();
-        transientInstance.setStatus(null);
-        getAspectRepository().save(transientInstance);
+        Tradestrategy tradestrategy = tradestrategyRepository.findById(Objects.requireNonNull(instance.getId())).get();
+        tradestrategy.setStatus(null);
+        getAspectRepository().save(tradestrategy);
 
         Hashtable<Long, TradePosition> tradePositions = new Hashtable<>();
 
-        for (TradeOrder tradeOrder : transientInstance.getTradeOrders()) {
+        for (TradeOrder tradeOrder : tradestrategy.getTradeOrders()) {
 
             if (tradeOrder.hasTradePosition()) {
 
@@ -440,16 +440,16 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
              * Remove the open trade position from contract if this is a
              * tradePosition to be deleted.
              */
-            if (tradePosition.equals(transientInstance.getContract().getTradePosition())) {
+            if (tradePosition.equals(tradestrategy.getContract().getTradePosition())) {
 
-                transientInstance.getContract().setTradePosition(null);
-                getAspectRepository().save(transientInstance.getContract());
+                tradestrategy.getContract().setTradePosition(null);
+                getAspectRepository().save(tradestrategy.getContract());
             }
 
             this.deleteAspect(tradePosition);
         }
 
-        transientInstance.getTradeOrders().clear();
+        tradestrategy.getTradeOrders().clear();
     }
 
     public TradeOrder findTradeOrderByKey(final Integer orderKey) {

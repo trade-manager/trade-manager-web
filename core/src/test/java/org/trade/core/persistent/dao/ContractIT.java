@@ -114,18 +114,18 @@ public class ContractIT {
 
         // Create new instance of Strategy and set
         // values in it by reading them from form object
-        Contract transientInstance = new Contract(SECType.STOCK, "QQQ", Exchange.SMART, Currency.USD, expiry, new BigDecimal(1));
+        Contract instance = new Contract(SECType.STOCK, "QQQ", Exchange.SMART, Currency.USD, expiry, new BigDecimal(1));
 
-        transientInstance = tradeService.saveAspect(transientInstance);
-        _log.info("Contract added Id:{}", transientInstance.getId());
+        instance = tradeService.saveAspect(instance);
+        _log.info("Contract added Id:{}", instance.getId());
 
-        List<Contract> contracts = contractRepository.findContractByUniqueKey(transientInstance.getSecType(),
-                transientInstance.getSymbol(), transientInstance.getExchange(), transientInstance.getCurrency(),
+        List<Contract> contracts = contractRepository.findContractByUniqueKey(instance.getSecType(),
+                instance.getSymbol(), instance.getExchange(), instance.getCurrency(),
                 expiry);
         assertFalse(contracts.isEmpty());
 
         tradeService.deleteAspect(contracts.getFirst());
-        _log.info("Contract deleted Id:{}", transientInstance.getId());
+        _log.info("Contract deleted Id:{}", instance.getId());
     }
 
     @Test
@@ -138,20 +138,20 @@ public class ContractIT {
         expiry = expiry.plusMonths(1);
 
         _log.info("Expiry Date: {}", expiry);
-        Contract transientInstance = new Contract(SECType.FUTURE, "ES", Exchange.SMART, Currency.USD, expiry,
+        Contract instance = new Contract(SECType.FUTURE, "ES", Exchange.SMART, Currency.USD, expiry,
                 new BigDecimal(50));
-        transientInstance = tradeService.saveAspect(transientInstance);
-        _log.info("Contract added Id:{}", transientInstance.getId());
+        instance = tradeService.saveAspect(instance);
+        _log.info("Contract added Id:{}", instance.getId());
 
         expiry = expiry.plusDays(1);
         _log.info("Expiry Date: {}", expiry);
-        List<Contract> contracts = contractRepository.findContractByUniqueKey(transientInstance.getSecType(),
-                transientInstance.getSymbol(), transientInstance.getExchange(), transientInstance.getCurrency(),
+        List<Contract> contracts = contractRepository.findContractByUniqueKey(instance.getSecType(),
+                instance.getSymbol(), instance.getExchange(), instance.getCurrency(),
                 expiry);
         assertFalse(contracts.isEmpty());
-        _log.info("Contract added Id:{}", transientInstance.getId());
+        _log.info("Contract added Id:{}", instance.getId());
 
         tradeService.deleteAspect(contracts.getFirst());
-        _log.info("Contract deleted Id:{}", transientInstance.getId());
+        _log.info("Contract deleted Id:{}", instance.getId());
     }
 }

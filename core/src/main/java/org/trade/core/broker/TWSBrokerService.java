@@ -1094,8 +1094,8 @@ public class TWSBrokerService extends AbstractBrokerModel {
 
         public void orderStatus(com.ib.client.OrderStatus status, double filled, double remaining, double avgFillPrice, long permId, int parentId, double lastFillPrice, int clientId, String whyHeld) {
             try {
-                TradeOrder transientInstance = getPersistentModel().findTradeOrderByKey(getOrderKey());
-                if (null == transientInstance) {
+                TradeOrder instance = getPersistentModel().findTradeOrderByKey(getOrderKey());
+                if (null == instance) {
                     error(getOrderKey(), 3170, "Warning Order not found for Order Key: " + getOrderKey() + " make sure Client ID: "
                             + clientId + " is not the master in TWS. On orderStatus update.");
                     return;
@@ -1105,45 +1105,45 @@ public class TWSBrokerService extends AbstractBrokerModel {
                  * twice on order fills.
                  */
                 boolean changed = false;
-                if (CoreUtils.nullSafeComparator(transientInstance.getStatus(), status.name().toUpperCase()) != 0) {
-                    transientInstance.setStatus(status.name().toUpperCase());
+                if (CoreUtils.nullSafeComparator(instance.getStatus(), status.name().toUpperCase()) != 0) {
+                    instance.setStatus(status.name().toUpperCase());
                     changed = true;
                 }
-                if (CoreUtils.nullSafeComparator(transientInstance.getWhyHeld(), whyHeld) != 0) {
-                    transientInstance.setWhyHeld(whyHeld);
+                if (CoreUtils.nullSafeComparator(instance.getWhyHeld(), whyHeld) != 0) {
+                    instance.setWhyHeld(whyHeld);
                     changed = true;
                 }
                 /*
                  * If filled qty is greater than current filled qty set the new
                  * value.
                  */
-                if (CoreUtils.nullSafeComparator((int) filled, transientInstance.getFilledQuantity()) == 1) {
+                if (CoreUtils.nullSafeComparator((int) filled, instance.getFilledQuantity()) == 1) {
                     if (filled > 0) {
-                        transientInstance.setAverageFilledPrice(new BigDecimal(avgFillPrice));
-                        transientInstance.setFilledQuantity((int) filled);
+                        instance.setAverageFilledPrice(new BigDecimal(avgFillPrice));
+                        instance.setFilledQuantity((int) filled);
                         changed = true;
                     }
                 }
 
                 if (changed) {
-                    transientInstance.setOrderUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
-                    transientInstance.setStatus(status.name().toUpperCase());
-                    transientInstance.setWhyHeld(whyHeld);
+                    instance.setOrderUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
+                    instance.setStatus(status.name().toUpperCase());
+                    instance.setWhyHeld(whyHeld);
                     _log.debug("Order Status changed. Status: {}", status);
                     logOrderStatus(getOrderKey(), status.name(), filled, remaining, avgFillPrice, permId, parentId,
                             lastFillPrice, clientId, whyHeld);
 
-                    boolean isFilled = transientInstance.getIsFilled();
-                    transientInstance = getPersistentModel().saveTradeOrder(transientInstance);
+                    boolean isFilled = instance.getIsFilled();
+                    instance = getPersistentModel().saveTradeOrder(instance);
 
-                    if (OrderStatus.CANCELLED.equals(transientInstance.getStatus())) {
+                    if (OrderStatus.CANCELLED.equals(instance.getStatus())) {
                         // Let the controller know a position was closed
-                        getBrokerModel().fireTradeOrderCancelled(transientInstance);
+                        getBrokerModel().fireTradeOrderCancelled(instance);
                     } else {
-                        getBrokerModel().fireTradeOrderStatusChanged(transientInstance);
+                        getBrokerModel().fireTradeOrderStatusChanged(instance);
                         // Let the controller know an order was filled
-                        if (transientInstance.getIsFilled() && !isFilled)
-                            getBrokerModel().fireTradeOrderFilled(transientInstance);
+                        if (instance.getIsFilled() && !isFilled)
+                            getBrokerModel().fireTradeOrderFilled(instance);
                     }
                 }
             } catch (Exception ex) {
@@ -1677,10 +1677,10 @@ public class TWSBrokerService extends AbstractBrokerModel {
             try {
 
                 logExecution(execution);
-                TradeOrder transientInstance = getPersistentModel()
+                TradeOrder instance = getPersistentModel()
                         .findTradeOrderByKey(Math.abs(execution.orderId()));
 
-                if (null == transientInstance) {
+                if (null == instance) {
 
                     /*
                      * If the executionDetails is null and the order does not exist
@@ -1698,26 +1698,26 @@ public class TWSBrokerService extends AbstractBrokerModel {
                  * We already have this order fill.
                  */
 
-                if (transientInstance.existTradeOrderfill(execution.execId())) {
+                if (instance.existTradeOrderfill(execution.execId())) {
                     return;
                 }
 
                 TradeOrderfill tradeOrderfill = new TradeOrderfill();
                 populateTradeOrderfill(execution, tradeOrderfill);
-                tradeOrderfill.setTradeOrder(transientInstance);
-                transientInstance.addTradeOrderfill(tradeOrderfill);
-                transientInstance.setAverageFilledPrice(tradeOrderfill.getAveragePrice());
-                transientInstance.setFilledQuantity(tradeOrderfill.getCumulativeQuantity());
-                transientInstance.setFilledDate(tradeOrderfill.getTime());
-                boolean isFilled = transientInstance.getIsFilled();
-                transientInstance = getPersistentModel().saveTradeOrderfill(transientInstance);
+                tradeOrderfill.setTradeOrder(instance);
+                instance.addTradeOrderfill(tradeOrderfill);
+                instance.setAverageFilledPrice(tradeOrderfill.getAveragePrice());
+                instance.setFilledQuantity(tradeOrderfill.getCumulativeQuantity());
+                instance.setFilledDate(tradeOrderfill.getTime());
+                boolean isFilled = instance.getIsFilled();
+                instance = getPersistentModel().saveTradeOrderfill(instance);
 
                 // Let the controller know an order was filled
-                if (transientInstance.getIsFilled() && !isFilled) {
-                    getBrokerModel().fireTradeOrderFilled(transientInstance);
+                if (instance.getIsFilled() && !isFilled) {
+                    getBrokerModel().fireTradeOrderFilled(instance);
                 }
 
-                tradeOrdersExecutions.put(transientInstance.getOrderKey(), transientInstance);
+                tradeOrdersExecutions.put(instance.getOrderKey(), instance);
                 _log.error("execDetails tradeOrdersExecutions reqId: {}", getReqId());
 
             } catch (Exception ex) {
@@ -1884,13 +1884,13 @@ public class TWSBrokerService extends AbstractBrokerModel {
 
                             tradeOrder.setCommission(new BigDecimal(totalComms));
                             tradeOrder = getPersistentModel().saveTradeOrderfill(tradeOrder);
-                            TradeOrder transientInstance = getPersistentModel()
+                            TradeOrder instance = getPersistentModel()
                                     .findTradeOrderByKey(tradeOrder.getOrderKey());
 
                             // Let the controller know an order was filled
                             if (tradeOrder.getIsFilled()) {
 
-                                getBrokerModel().fireTradeOrderFilled(transientInstance);
+                                getBrokerModel().fireTradeOrderFilled(instance);
                             }
                         }
                     }
@@ -1910,12 +1910,12 @@ public class TWSBrokerService extends AbstractBrokerModel {
             try {
 
                 logCommissionReport(commissionReport);
-                TradeOrderfill transientInstance = getPersistentModel().findTradeOrderfillByExecId(commissionReport.m_execId);
+                TradeOrderfill instance = getPersistentModel().findTradeOrderfillByExecId(commissionReport.m_execId);
 
-                if (null != transientInstance) {
+                if (null != instance) {
 
                     TradeOrder tradeOrder = getPersistentModel()
-                            .findTradeOrderByKey(transientInstance.getTradeOrder().getOrderKey());
+                            .findTradeOrderByKey(instance.getTradeOrder().getOrderKey());
 
                     for (TradeOrderfill tradeOrderfill : tradeOrder.getTradeOrderfills()) {
 
