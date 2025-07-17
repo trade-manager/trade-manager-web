@@ -76,11 +76,14 @@ public class Rule extends Aspect implements Serializable {
     @Column(name = "rule")
     private byte[] rule;
 
+    @Column(name = "rule_version", columnDefinition = "integer DEFAULT 0", nullable = false)
+    protected Integer ruleVersion;
+
     @Column(name = "content_type", length = 20, nullable = false)
     private String contentType = "text/java";
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "strategy_id", nullable = true)
+    @JoinColumn(name = "strategy_id", nullable = false)
     private Strategy strategy;
 
     public Rule() {
@@ -91,13 +94,13 @@ public class Rule extends Aspect implements Serializable {
      * Constructor for Rule.
      *
      * @param strategy Strategy
-     * @param version  Integer
+     * @param ruleVersion  Integer
      * @param comment  String
      */
-    public Rule(Strategy strategy, Integer version, String comment) {
+    public Rule(Strategy strategy, Integer ruleVersion, String comment) {
 
         this.strategy = strategy;
-        this.version = version;
+        this.ruleVersion = ruleVersion;
         this.comment = comment;
     }
 
@@ -105,15 +108,15 @@ public class Rule extends Aspect implements Serializable {
      * Constructor for Rule.
      *
      * @param strategy    Strategy
-     * @param version     Integer
+     * @param ruleVersion     Integer
      * @param comment     String
      * @param rule        byte[]
      * @param contentType String
      */
-    public Rule(Strategy strategy, Integer version, String comment, byte[] rule, String contentType) {
+    public Rule(Strategy strategy, Integer ruleVersion, String comment, byte[] rule, String contentType) {
 
         this.strategy = strategy;
-        this.version = version;
+        this.ruleVersion = ruleVersion;
         this.comment = comment;
         this.rule = rule;
         this.contentType = contentType;
@@ -174,6 +177,24 @@ public class Rule extends Aspect implements Serializable {
     }
 
     /**
+     * Method getRuleVersion.
+     *
+     * @return Integer
+     */
+    public Integer getRuleVersion() {
+        return this.ruleVersion;
+    }
+
+    /**
+     * Method getRuleVersion.
+     *
+     * @param ruleVersion Integer
+     */
+    public void setRuleVersion(Integer ruleVersion) {
+        this.ruleVersion = ruleVersion;
+    }
+
+    /**
      * Method getContentType.
      *
      * @return String
@@ -197,10 +218,10 @@ public class Rule extends Aspect implements Serializable {
      * @return String
      */
     public String toString() {
-        return "Version-" + this.getVersion();
+        return "Version-" + this.getRuleVersion();
     }
 
-    public static final Comparator<Rule> VERSION_ORDER = (o1, o2) -> CoreUtils.nullSafeComparator(o1.getVersion(), o2.getVersion());
+    public static final Comparator<Rule> VERSION_ORDER = (o1, o2) -> CoreUtils.nullSafeComparator(o1.getRuleVersion(), o2.getRuleVersion());
 
     /**
      * Method equals.
@@ -216,13 +237,13 @@ public class Rule extends Aspect implements Serializable {
 
         if (objectToCompare instanceof Rule) {
 
-            if (null == this.getId() || null == this.getVersion()) {
+            if (null == this.getId() || null == this.getRuleVersion()) {
 
                 return false;
             }
 
             return Objects.equals(this.getStrategy().getId(), ((Rule) objectToCompare).getStrategy().getId())
-                    && this.getVersion().equals(((Rule) objectToCompare).getVersion());
+                    && this.getRuleVersion().equals(((Rule) objectToCompare).getRuleVersion());
 
         }
         return false;

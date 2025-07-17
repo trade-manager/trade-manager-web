@@ -27,13 +27,13 @@ public class RuleRepositoryImpl implements RuleRepositoryCustom {
      * @param strategy Strategy
      * @return Integer
      */
-    public Integer findByMaxVersion(Strategy strategy) {
+    public Integer findByMaxRuleVersion(Strategy strategy) {
 
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Object> query = builder.createQuery();
         Root<Rule> from = query.from(Rule.class);
 
-        Expression<Integer> id = from.get("version");
+        Expression<Integer> id = from.get("ruleVersion");
         Expression<Integer> minExpression = builder.max(id);
         CriteriaQuery<Object> select = query.select(minExpression);
 

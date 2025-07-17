@@ -88,9 +88,9 @@ public interface TradeService extends AspectService {
     /**
      * Method saveTrading.
      *
-     * @param transientInstance Tradingday
+     * @param instance Tradingday
      */
-    Tradingday saveTradingday(Tradingday transientInstance);
+    Tradingday saveTradingday(Tradingday instance);
 
     /**
      * Method savePortfolio.

@@ -138,6 +138,13 @@ public class TradeServiceIT {
     @AfterEach
     public void tearDown() throws Exception {
 
+        // Delete any rules
+        Strategy strategy = tradestrategy.getStrategy();
+
+        // Lazy initialize the rules.
+        strategy = this.tradeService.findStrategyById(strategy.getId());
+        strategy.getRules().clear();
+        this.tradeService.saveAspect(strategy);
         TradestrategyBase.clearDBData(tradeService, tradestrategy);
     }
 
@@ -884,36 +891,37 @@ public class TradeServiceIT {
     public void saveRule() {
 
         String content = "Blah Blah";
-        Rule rule = new Rule(tradestrategy.getStrategy(), 0, comment, content.getBytes(), "text/javascript");
-        rule = this.tradeService.saveAspect(rule);
-        assertNotNull(rule);
-        rule = this.tradeService.findRuleByMaxVersion(tradestrategy.getStrategy());
-        assertNotNull(rule.getId());
+        Strategy strategy = tradestrategy.getStrategy();
+        strategy = this.tradeService.findStrategyById(strategy.getId());
+        Rule rule = new Rule(strategy, 0, comment, content.getBytes(), "text/javascript");
+        strategy.getRules().add(rule);
+        strategy = this.tradeService.saveAspect(strategy);
+        rule = this.tradeService.findRuleByMaxVersion(strategy);
+        assertEquals(0, rule.getRuleVersion());
         assertEquals("text/javascript", rule.getContentType());
-        rule.setStrategy(null);
-        rule = this.tradeService.saveAspect(rule);
-        this.tradeService.deleteAspect(rule);
     }
 
     @Test
     public void findRuleById() {
 
-        Rule latestRule = this.tradeService.findRuleByMaxVersion(tradestrategy.getStrategy());
+        Strategy strategy = tradestrategy.getStrategy();
+        strategy = this.tradeService.findStrategyById(strategy.getId());
+        Rule rule = new Rule(strategy, 0, comment);
+        strategy.getRules().add(rule);
+        strategy = this.tradeService.saveAspect(strategy);
+        Rule latestRule = this.tradeService.findRuleByMaxVersion(strategy);
         Integer version = 0;
 
         if (null != latestRule) {
 
-            version = latestRule.getVersion() + 1;
+            version = latestRule.getRuleVersion() + 1;
         }
 
-        Rule rule = new Rule(tradestrategy.getStrategy(), version, comment);
-        rule = this.tradeService.saveAspect(rule);
-        assertNotNull(rule);
-        rule = this.tradeService.findRuleById(rule.getId());
-        assertNotNull(rule);
-        rule.setStrategy(null);
-        rule = this.tradeService.saveAspect(rule);
-        this.tradeService.deleteAspect(rule);
+        rule = new Rule(strategy, version, comment);
+        strategy.getRules().add(rule);
+        strategy = this.tradeService.saveAspect(strategy);
+        rule = strategy.getRules().getLast();
+        assertEquals(1, rule.getRuleVersion());
     }
 
     @Test
@@ -941,20 +949,23 @@ public class TradeServiceIT {
     @Test
     public void removeRule() {
 
-        Rule latestRule = this.tradeService.findRuleByMaxVersion(tradestrategy.getStrategy());
+        Strategy strategy = tradestrategy.getStrategy();
+        strategy = this.tradeService.findStrategyById(strategy.getId());
+        Rule latestRule = this.tradeService.findRuleByMaxVersion(strategy);
         Integer version = 0;
 
         if (null != latestRule) {
 
-            version = latestRule.getVersion() + 1;
+            version = latestRule.getRuleVersion() + 1;
         }
 
-        Rule rule = new Rule(tradestrategy.getStrategy(), version, comment);
-        rule = this.tradeService.saveAspect(rule);
-        assertNotNull(rule);
-        rule.setStrategy(null);
-        rule = this.tradeService.saveAspect(rule);
-        this.tradeService.deleteAspect(rule);
+        Rule rule = new Rule(strategy, version, comment);
+        strategy.getRules().add(rule);
+        strategy = this.tradeService.saveAspect(strategy);
+        rule = strategy.getRules().getFirst();
+        assertEquals(0, rule.getRuleVersion());
+        strategy.getRules().clear();
+        this.tradeService.saveAspect(strategy);
     }
 
     @Test

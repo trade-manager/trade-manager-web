@@ -814,9 +814,9 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
 
         try {
 
-            TradeOrder transientInstance = tradeService.findTradeOrderByKey(orderId);
+            TradeOrder instance = tradeService.findTradeOrderByKey(orderId);
 
-            if (null == transientInstance) {
+            if (null == instance) {
                 error(orderId, 3170, "Warning Order not found for Order Key: " + orderId + " make sure Client ID: " + 0
                         + " is not the master in TWS. On orderStatus update.");
                 return;
@@ -827,41 +827,41 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
              */
             boolean changed = false;
 
-            if (CoreUtils.nullSafeComparator(transientInstance.getStatus(), status.toUpperCase()) != 0) {
+            if (CoreUtils.nullSafeComparator(instance.getStatus(), status.toUpperCase()) != 0) {
 
-                transientInstance.setStatus(status.toUpperCase());
+                instance.setStatus(status.toUpperCase());
                 changed = true;
             }
-            if (CoreUtils.nullSafeComparator(transientInstance.getWhyHeld(), whyHeld) != 0) {
+            if (CoreUtils.nullSafeComparator(instance.getWhyHeld(), whyHeld) != 0) {
 
-                transientInstance.setWhyHeld(whyHeld);
+                instance.setWhyHeld(whyHeld);
                 changed = true;
             }
             /*
              * If filled qty is greater than current filled qty set the new
              * value.
              */
-            if (CoreUtils.nullSafeComparator(filled, transientInstance.getFilledQuantity()) == 1) {
+            if (CoreUtils.nullSafeComparator(filled, instance.getFilledQuantity()) == 1) {
 
                 if (filled > 0) {
 
-                    transientInstance.setAverageFilledPrice(new BigDecimal(avgFillPrice));
-                    transientInstance.setFilledQuantity(filled);
+                    instance.setAverageFilledPrice(new BigDecimal(avgFillPrice));
+                    instance.setFilledQuantity(filled);
                     changed = true;
                 }
             }
 
             if (changed) {
 
-                transientInstance.setOrderUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
-                transientInstance.setStatus(status.toUpperCase());
-                transientInstance.setWhyHeld(whyHeld);
+                instance.setOrderUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
+                instance.setStatus(status.toUpperCase());
+                instance.setWhyHeld(whyHeld);
                 _log.debug("Order Status changed. Status: {}", status);
                 TWSBrokerModel.logOrderStatus(orderId, status, filled, remaining, avgFillPrice, permId, parentId,
                         lastFillPrice, clientId, whyHeld);
 
-                boolean isFilled = transientInstance.getIsFilled();
-                TradeOrder updatedOrder = tradeService.saveTradeOrder(transientInstance);
+                boolean isFilled = instance.getIsFilled();
+                TradeOrder updatedOrder = tradeService.saveTradeOrder(instance);
 
                 if (OrderStatus.CANCELLED.equals(updatedOrder.getStatus())) {
 

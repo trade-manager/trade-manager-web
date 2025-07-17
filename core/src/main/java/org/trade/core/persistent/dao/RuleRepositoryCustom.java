@@ -1,7 +1,9 @@
 package org.trade.core.persistent.dao;
 
 
+import java.util.List;
+
 public interface RuleRepositoryCustom {
 
-    Integer findByMaxVersion(Strategy strategy);
+    Integer findByMaxRuleVersion(Strategy strategy);
 }

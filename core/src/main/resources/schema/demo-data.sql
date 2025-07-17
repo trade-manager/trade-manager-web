@@ -15788,12 +15788,9 @@ INSERT INTO `candle` VALUES
 /*!40000 ALTER TABLE `candle` ENABLE KEYS *///
 UNLOCK TABLES//
 
-
-
 --
 -- Dumping data for table `contract`
 --
-
 LOCK TABLES `contract` WRITE//
 /*!40000 ALTER TABLE `contract` DISABLE KEYS *///
 INSERT INTO `contract` VALUES
@@ -15904,7 +15901,6 @@ UNLOCK TABLES//
 --
 -- Dumping data for table `tradeorder`
 --
-
 LOCK TABLES `tradeorder` WRITE//
 /*!40000 ALTER TABLE `tradeorder` DISABLE KEYS *///
 INSERT INTO `tradeorder` VALUES
@@ -16235,11 +16231,9 @@ INSERT INTO `tradeorder` VALUES
 /*!40000 ALTER TABLE `tradeorder` ENABLE KEYS *///
 UNLOCK TABLES//
 
-
 --
 -- Dumping data for table `tradeorderfill`
 --
-
 LOCK TABLES `tradeorderfill` WRITE//
 /*!40000 ALTER TABLE `tradeorderfill` DISABLE KEYS *///
 INSERT INTO `tradeorderfill` VALUES
@@ -16424,11 +16418,9 @@ INSERT INTO `tradeorderfill` VALUES
 /*!40000 ALTER TABLE `tradeorderfill` ENABLE KEYS *///
 UNLOCK TABLES//
 
-
 --
 -- Dumping data for table `tradeposition`
 --
-
 LOCK TABLES `tradeposition` WRITE//
 /*!40000 ALTER TABLE `tradeposition` DISABLE KEYS *///
 INSERT INTO `tradeposition` VALUES
@@ -16495,11 +16487,9 @@ INSERT INTO `tradeposition` VALUES
 /*!40000 ALTER TABLE `tradeposition` ENABLE KEYS *///
 UNLOCK TABLES//
 
-
 --
 -- Dumping data for table `tradestrategy`
 --
-
 LOCK TABLES `tradestrategy` WRITE//
 /*!40000 ALTER TABLE `tradestrategy` DISABLE KEYS *///
 INSERT INTO `tradestrategy` VALUES
@@ -16609,15 +16599,12 @@ UNLOCK TABLES//
 --
 -- Dumping data for table `tradingday`
 --
-
 LOCK TABLES `tradingday` WRITE//
 /*!40000 ALTER TABLE `tradingday` DISABLE KEYS *///
 INSERT INTO `tradingday` VALUES
 (952,'2025-04-24 06:30:00','2025-04-24 13:00:00','+NRB','+NRB','+NRB',76503049,0,'2025-07-16 09:41:49.744000','2025-07-16 09:41:49.744000')//
 /*!40000 ALTER TABLE `tradingday` ENABLE KEYS *///
 UNLOCK TABLES//
-
-
 
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE *///
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE *///

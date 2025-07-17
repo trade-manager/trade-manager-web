@@ -389,10 +389,12 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
     public void doSave() {
 
         try {
+
             /*
-             * Check to see if the rule has change and its not a new rule.
+             * Check to see if the rule has change and it is not a new rule.
              */
             if (this.currentRule == null) {
+
                 this.setStatusBarMessage("Please select a rule to be saved.", BasePanel.INFORMATION);
                 return;
             }
@@ -404,6 +406,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
                     if (null != this.currentRule.getComment() && this.currentRule.getComment().equals(getComments())) {
 
                         if (null != this.currentRule.getId()) {
+
                             return;
                         }
                     }
@@ -424,27 +427,26 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
             if (result == JOptionPane.YES_OPTION) {
 
                 Rule latestRule = this.tradeService.findRuleByMaxVersion(this.currentRule.getStrategy());
-                Integer version = 0;
+                Integer version = 1;
 
                 if (null != latestRule) {
 
-                    version = latestRule.getVersion();
+                    version = latestRule.getRuleVersion();
                 }
 
                 Rule nextRule = new Rule(this.currentRule.getStrategy(), version, commentText.getText(), getContent().getBytes(), latestRule.getContentType());
-                this.currentRule.getStrategy().add(nextRule);
+                this.currentRule.getStrategy().getRules().add(nextRule);
                 this.tradeService.saveAspect(nextRule);
                 doSaveFile(fileNameSource, getContent());
                 doSaveFile(fileNameComments, getComments());
+
                 /*
                  * Now find and reset the original rule back to before the
                  * changes made.
                  */
-
                 Rule orginalRule = tradeService.findRuleById(this.currentRule.getId());
                 this.currentRule.setComment(orginalRule.getComment());
                 this.currentRule.setRule(orginalRule.getRule());
-
                 this.setContent(new String(this.currentRule.getRule()), this.currentRule.getContentType());
                 commentText.setText(this.currentRule.getComment());
             } else {
@@ -506,19 +508,19 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
                     if (strategy.getId().equals(this.currentRule.getStrategy().getId())) {
 
                         strategy.getRules().remove(this.currentRule);
-                        this.tradeService.deleteAspect(this.currentRule);
+                        strategy = this.tradeService.saveAspect(strategy);
                     }
                 }
 
                 Rule latestRule = this.tradeService.findRuleByMaxVersion(this.currentRule.getStrategy());
-                Integer version = 0;
+                Integer version = 1;
 
                 if (null != latestRule) {
 
-                    version = latestRule.getVersion();
+                    version = latestRule.getRuleVersion();
                 }
 
-                if (Objects.equals(version, this.currentRule.getVersion()) && version > 1) {
+                if (Objects.equals(version, this.currentRule.getRuleVersion()) && version > 1) {
 
                     setMessageText("File system is out of sync with DB please re deploy the latest version.", false,
                             true, colorRedAttr);
@@ -580,7 +582,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
 
                     Rule nextRule = new Rule(strategy, 1, comments,
                             content.getBytes(), filesMap.get(getExtension(fileNameCode)));
-                    strategy.add(nextRule);
+                    strategy.getRules().add(nextRule);
                     this.tradeService.saveAspect(nextRule);
                 } else {
 
@@ -589,12 +591,12 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
 
                     if (null != latestRule) {
 
-                        version = latestRule.getVersion();
+                        version = latestRule.getRuleVersion();
                     }
 
                     for (Rule rule : strategy.getRules()) {
 
-                        if (rule.getVersion().equals(version)) {
+                        if (rule.getRuleVersion().equals(version)) {
 
                             /*
                              * Load and save the file in the DB if there is
@@ -656,8 +658,11 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
             setMessageText(title, true, true, bold);
 
             Method[] method = theClass.getDeclaredMethods();
+
             for (Method element : method) {
+
                 if (element.getModifiers() == Modifier.PUBLIC) {
+
                     Class<?> returnType = element.getReturnType();
                     String methodName = element.getName();
                     String methodAttribute = returnType.getName();
@@ -667,12 +672,16 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
                     Class<?>[] classParams = element.getParameterTypes();
                     Object[] o = new Object[classParams.length];
                     methodAttribute = "";
+
                     for (int j = 0; j < classParams.length; j++) {
+
 
                         Object obj = classParams[j];
                         o[j] = obj;
                         methodAttribute = methodAttribute + o[j].toString();
+
                         if (j < classParams.length - 1) {
+
                             methodAttribute = methodAttribute + ", ";
                         }
                     }
@@ -681,6 +690,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
             }
             setMessageText("", true, true, null);
         } catch (Exception ex) {
+
             setMessageText("Error compiling strategy: " + theClass.getName() + ex.getMessage(), false, true,
                     colorRedAttr);
         }
@@ -697,6 +707,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
             String line;
 
             while ((line = bufferedReader.readLine()) != null) {
+
                 sb.append(line).append(newLine);
             }
             return sb.toString();
@@ -809,18 +820,18 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
     private void createRule(final Strategy strategy) throws ServiceException, ValueTypeException {
 
         Rule latestRule = this.tradeService.findRuleByMaxVersion(strategy);
-        Integer version = 0;
+        Integer version = 1;
         String contentType = "text/java";
 
         if (null != latestRule) {
 
-            version = latestRule.getVersion() + 1;
+            version = latestRule.getRuleVersion() + 1;
             contentType = latestRule.getContentType();
         }
 
         Rule nextRule = new Rule(strategy, version, commentText.getText(),
                 getContent().getBytes(), contentType);
-        strategy.add(nextRule);
+        strategy.getRules().add(nextRule);
         refreshTree();
         TreePath path = tree.findTreePathByObject(nextRule);
 
