@@ -200,7 +200,7 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
     }
 
     public Tradingday findTradingdayByOpenCloseDate(final ZonedDateTime openDate, final ZonedDateTime closeDate) {
-        return tradingdayRepository.findByOpenCloseDate(openDate, closeDate);
+        return tradingdayRepository.findByOpenCloseDateOrderByOpenDesc(openDate, closeDate);
     }
 
     public Contract findContractById(final Long id) {
@@ -467,9 +467,17 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
         return tradeOrderRepository.findByMaxKey();
     }
 
+   // @Transactional
     public Tradingdays findTradingdaysByDateRange(final ZonedDateTime startDate, final ZonedDateTime endDate) {
 
-        return tradingdayRepository.findTradingdaysByDateRange(startDate, endDate);
+        Tradingdays tradingdays = tradingdayRepository.findTradingdaysByDateRangeOrderByOpenDesc(startDate, endDate);
+
+       // for(Tradingday Tradingday : tradingdays.getTradingdays()){
+
+      //      Tradingday.getTradestrategies().size();
+
+      //  }
+        return tradingdays;
     }
 
     public List<Candle> findCandlesByContractDateRangeBarSize(final Contract contract, final ZonedDateTime startDate,
@@ -550,37 +558,12 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
 
             if (null != contract) {
 
-                tradestrategy.setContract(contract);
-            }
-        }
-
-        instance = this.saveAspect(instance);
-
-        List<Tradestrategy> tradestrategies = tradingdayRepository.findTradestrategyByTradingday(instance);
-
-        for (Tradestrategy tradestrategy : tradestrategies) {
-
-            boolean exists = false;
-
-            for (Tradestrategy newTradestrategy : instance.getTradestrategies()) {
-
-                if (newTradestrategy.equals(tradestrategy)) {
-
-                    exists = true;
-                    break;
-                }
-            }
-
-            if (!exists) {
-
-                if (tradestrategy.getTradeOrders().isEmpty()) {
-
-                    this.deleteAspect(tradestrategy);
-                }
+               tradestrategy.setContract(contract);
             }
         }
 
         instance.setDirty(false);
+        instance = this.saveAspect(instance);
         return instance;
     }
 
