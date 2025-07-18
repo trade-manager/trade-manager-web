@@ -117,7 +117,7 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
     @JoinColumn(name = "tradingday_id", nullable = false)
     private Tradingday tradingday;
 
-    @OneToMany(mappedBy = "tradestrategy", fetch = FetchType.EAGER, orphanRemoval = true, cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "tradestrategy", fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
     private List<TradeOrder> tradeOrders = new ArrayList<>(0);
 
     @OneToMany(mappedBy = "tradestrategy", fetch = FetchType.LAZY, cascade = {CascadeType.ALL})

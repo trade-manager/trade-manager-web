@@ -470,14 +470,7 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
    // @Transactional
     public Tradingdays findTradingdaysByDateRange(final ZonedDateTime startDate, final ZonedDateTime endDate) {
 
-        Tradingdays tradingdays = tradingdayRepository.findTradingdaysByDateRangeOrderByOpenDesc(startDate, endDate);
-
-       // for(Tradingday Tradingday : tradingdays.getTradingdays()){
-
-      //      Tradingday.getTradestrategies().size();
-
-      //  }
-        return tradingdays;
+        return tradingdayRepository.findTradingdaysByDateRangeOrderByOpenDesc(startDate, endDate);
     }
 
     public List<Candle> findCandlesByContractDateRangeBarSize(final Contract contract, final ZonedDateTime startDate,
@@ -548,6 +541,7 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
 
                 tradestrategy.setStrategy(strategy);
             }
+
             /*
              * Check to see if the contract exists if it does merge and
              * set the new persisted one. If no persist the contract.
