@@ -49,9 +49,9 @@ public class Aspects implements java.io.Serializable {
      */
     @Serial
     private static final long serialVersionUID = 3388042483785305102L;
-    private Integer idAspects;
+    private Long aspectsId;
     private boolean dirty = false;
-    private List<Aspect> aspect = new ArrayList<>(0);
+    private List<Aspect> aspects = new ArrayList<>(0);
 
     public Aspects() {
     }
@@ -59,49 +59,53 @@ public class Aspects implements java.io.Serializable {
     /**
      * Constructor for Aspects.
      *
-     * @param idAspects Integer
+     * @param aspectsId Long
      */
-    public Aspects(Integer idAspects) {
-        this.idAspects = idAspects;
+    public Aspects(Long aspectsId) {
+
+        this.aspectsId = aspectsId;
     }
 
     /**
      * Constructor for Aspects.
      *
-     * @param aspect List<Aspect>
+     * @param aspects List<Aspect>
      */
-    public Aspects(List<Aspect> aspect) {
-        this.aspect = aspect;
+    public Aspects(List<Aspect> aspects) {
+
+        this.aspects = aspects;
     }
 
     /**
      * Constructor for Aspects.
      *
-     * @param idAspects Integer
-     * @param aspect    List<Aspect>
+     * @param aspectsId Long
+     * @param aspects    List<Aspect>
      */
-    public Aspects(Integer idAspects, List<Aspect> aspect) {
+    public Aspects(Long aspectsId, List<Aspect> aspects) {
 
-        this.idAspects = idAspects;
-        this.aspect = aspect;
+        this.aspectsId = aspectsId;
+        this.aspects = aspects;
     }
 
     /**
-     * Method getIdAspects.
+     * Method getAspectsId.
      *
-     * @return Integer
+     * @return Long
      */
-    public Integer getIdAspects() {
-        return this.idAspects;
+    public Long getAspectsId() {
+
+        return this.aspectsId;
     }
 
     /**
-     * Method setIdAspects.
+     * Method setAspectsId.
      *
-     * @param idAspects Integer
+     * @param aspectsId Long
      */
-    public void setIdAspects(Integer idAspects) {
-        this.idAspects = idAspects;
+    public void setAspectsId(Long aspectsId) {
+
+        this.aspectsId = aspectsId;
     }
 
     /**
@@ -110,7 +114,8 @@ public class Aspects implements java.io.Serializable {
      * @param aspect Aspect
      */
     public void add(Aspect aspect) {
-        this.aspect.add(aspect);
+
+        this.aspects.add(aspect);
     }
 
     /**
@@ -119,16 +124,18 @@ public class Aspects implements java.io.Serializable {
      * @param aspect Aspect
      */
     public void remove(Aspect aspect) {
-        this.aspect.remove(aspect);
+
+        this.aspects.remove(aspect);
     }
 
     /**
-     * Method getAspect.
+     * Method getAspects.
      *
      * @return List<Aspect>
      */
-    public List<Aspect> getAspect() {
-        return this.aspect;
+    public List<Aspect> getAspects() {
+
+        return this.aspects;
     }
 
     /**
@@ -137,6 +144,7 @@ public class Aspects implements java.io.Serializable {
      * @param dirty boolean
      */
     public void setDirty(boolean dirty) {
+
         this.dirty = dirty;
     }
 
@@ -147,16 +155,19 @@ public class Aspects implements java.io.Serializable {
      */
     public boolean isDirty() {
 
-        for (Aspect aspect : this.getAspect()) {
+        for (Aspect aspect : this.getAspects()) {
 
             if (aspect.isDirty()) {
+
                 return true;
             }
         }
+
         return this.dirty;
     }
 
     public void clear() {
-        getAspect().clear();
+
+        getAspects().clear();
     }
 }

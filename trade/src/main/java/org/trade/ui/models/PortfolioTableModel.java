@@ -100,9 +100,9 @@ public class PortfolioTableModel extends AspectTableModel {
         this.data = data;
         this.clearAll();
 
-        if (!getData().getAspect().isEmpty()) {
+        if (!getData().getAspects().isEmpty()) {
 
-            for (final Aspect element : getData().getAspect()) {
+            for (final Aspect element : getData().getAspects()) {
 
                 final List<Object> newRow = new ArrayList<>();
                 getNewRow(newRow, (Portfolio) element);
@@ -121,7 +121,7 @@ public class PortfolioTableModel extends AspectTableModel {
      */
     public void populateDAO(Object value, int row, int column) {
 
-        final Portfolio element = (Portfolio) getData().getAspect().get(row);
+        final Portfolio element = (Portfolio) getData().getAspects().get(row);
 
         switch (column) {
             case 0: {
@@ -161,7 +161,7 @@ public class PortfolioTableModel extends AspectTableModel {
                 break;
             }
             case 5: {
-                for (Aspect item : getData().getAspect()) {
+                for (Aspect item : getData().getAspects()) {
                     Portfolio portfolio = (Portfolio) item;
                     if (!portfolio.getName().equals(element.getName()) && portfolio.getIsDefault()) {
                         portfolio.setIsDefault(false);
@@ -184,11 +184,11 @@ public class PortfolioTableModel extends AspectTableModel {
      */
     public void deleteRow(int selectedRow) {
 
-        if (getData().getAspect().size() > 1) {
+        if (getData().getAspects().size() > 1) {
 
             String name = (String) this.getValueAt(selectedRow, 0);
 
-            for (final Aspect element : getData().getAspect()) {
+            for (final Aspect element : getData().getAspects()) {
 
                 if (CoreUtils.nullSafeComparator(((Portfolio) element).getName(), name) == 0) {
 
@@ -206,7 +206,7 @@ public class PortfolioTableModel extends AspectTableModel {
     public void addRow() {
 
         final Portfolio element = new Portfolio();
-        getData().getAspect().add(element);
+        getData().getAspects().add(element);
 
         final List<Object> newRow = new ArrayList<>();
         getNewRow(newRow, element);

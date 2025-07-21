@@ -221,7 +221,7 @@ public class ConfigurationPanel extends BasePanel {
             int selectedRow = configTable.getSelectedRow();
             String className = PERSISTENT_PACKAGE + ((ReferenceTable) Objects.requireNonNull(refTableEditorComboBox.getSelectedItem())).getCode();
 
-            for (ListIterator<Aspect> itemIter = aspects.getAspect().listIterator(); itemIter.hasNext(); ) {
+            for (ListIterator<Aspect> itemIter = aspects.getAspects().listIterator(); itemIter.hasNext(); ) {
 
                 Aspect item = itemIter.next();
 
@@ -240,11 +240,11 @@ public class ConfigurationPanel extends BasePanel {
             aspects.setDirty(false);
             Aspects aspects = tradeService.findByClassName(className);
 
-            for (Aspect currAspect : aspects.getAspect()) {
+            for (Aspect currAspect : aspects.getAspects()) {
 
                 boolean exists = false;
 
-                for (Aspect aspect : this.aspects.getAspect()) {
+                for (Aspect aspect : this.aspects.getAspects()) {
 
                     if (currAspect.getId().equals(aspect.getId())) {
 
@@ -378,7 +378,7 @@ public class ConfigurationPanel extends BasePanel {
 
                 if (model.getLeadSelectionIndex() > -1) {
 
-                    Aspect transferObject = tableModel.getData().getAspect()
+                    Aspect transferObject = tableModel.getData().getAspects()
                             .get(configTable.convertRowIndexToModel(model.getLeadSelectionIndex()));
                     propertiesButton.setEnabled(false);
                     setChildPanel(transferObject);
@@ -411,7 +411,7 @@ public class ConfigurationPanel extends BasePanel {
             jScrollPane.setBorder(new BevelBorder(BevelBorder.LOWERED));
             jScrollPane.addMouseListener(configTable);
 
-            if (!aspects.getAspect().isEmpty()) {
+            if (!aspects.getAspects().isEmpty()) {
 
                 configTable.setRowSelectionInterval(0, 0);
             }

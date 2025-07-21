@@ -131,7 +131,7 @@ public class TWSFinancialAccountRequestIT {
         final Aspects aspects = (Aspects) request.fromXML(Thread.currentThread().getContextClassLoader()
                 .getResourceAsStream("broker/request/aliasesEmpty.xml"));
 
-        assertTrue(aspects.getAspect().isEmpty());
+        assertTrue(aspects.getAspects().isEmpty());
     }
 
     @Test
@@ -141,9 +141,9 @@ public class TWSFinancialAccountRequestIT {
         final Aspects aspects = (Aspects) request.fromXML(Thread.currentThread().getContextClassLoader()
                 .getResourceAsStream("broker/request/aliases.xml"));
 
-        assertFalse(aspects.getAspect().isEmpty());
+        assertFalse(aspects.getAspects().isEmpty());
 
-        for (Aspect aspect : aspects.getAspect()) {
+        for (Aspect aspect : aspects.getAspects()) {
 
             Account item = (Account) aspect;
 
@@ -165,9 +165,9 @@ public class TWSFinancialAccountRequestIT {
         final Aspects aspects = (Aspects) request.fromXML(Thread.currentThread().getContextClassLoader()
                 .getResourceAsStream("broker/request/aliases1.xml"));
 
-        assertFalse(aspects.getAspect().isEmpty());
+        assertFalse(aspects.getAspects().isEmpty());
 
-        for (Aspect aspect : aspects.getAspect()) {
+        for (Aspect aspect : aspects.getAspects()) {
 
             Account item = (Account) aspect;
 
@@ -189,7 +189,7 @@ public class TWSFinancialAccountRequestIT {
         final Aspects aspects = (Aspects) request.fromXML(Thread.currentThread().getContextClassLoader()
                 .getResourceAsStream("broker/request/allocationEmpty.xml"));
 
-        assertTrue(aspects.getAspect().isEmpty());
+        assertTrue(aspects.getAspects().isEmpty());
     }
 
     @Test
@@ -199,9 +199,9 @@ public class TWSFinancialAccountRequestIT {
         final Aspects aspects = (Aspects) request.fromXML(Thread.currentThread().getContextClassLoader()
                 .getResourceAsStream("broker/request/allocation.xml"));
 
-        assertFalse(aspects.getAspect().isEmpty());
+        assertFalse(aspects.getAspects().isEmpty());
 
-        for (Aspect aspect : aspects.getAspect()) {
+        for (Aspect aspect : aspects.getAspects()) {
 
             Portfolio item = (Portfolio) aspect;
 
@@ -220,9 +220,9 @@ public class TWSFinancialAccountRequestIT {
         final Aspects aspects = (Aspects) request.fromXML(Thread.currentThread().getContextClassLoader()
                 .getResourceAsStream("broker/request/allocation1.xml"));
 
-        assertFalse(aspects.getAspect().isEmpty());
+        assertFalse(aspects.getAspects().isEmpty());
 
-        for (Aspect aspect : aspects.getAspect()) {
+        for (Aspect aspect : aspects.getAspects()) {
 
             Portfolio item = (Portfolio) aspect;
 
@@ -243,9 +243,9 @@ public class TWSFinancialAccountRequestIT {
         portfolio.getAccounts().add(account1);
         aspects.add(portfolio);
 
-        assertFalse(aspects.getAspect().isEmpty());
+        assertFalse(aspects.getAspects().isEmpty());
 
-        for (Aspect aspect : aspects.getAspect()) {
+        for (Aspect aspect : aspects.getAspects()) {
 
             Portfolio item = (Portfolio) aspect;
 
@@ -264,7 +264,7 @@ public class TWSFinancialAccountRequestIT {
         final Aspects aspects = (Aspects) request.fromXML(Thread.currentThread().getContextClassLoader()
                 .getResourceAsStream("broker/request/groupsEmpty.xml"));
 
-        assertTrue(aspects.getAspect().isEmpty());
+        assertTrue(aspects.getAspects().isEmpty());
     }
 
     @Test
@@ -274,9 +274,9 @@ public class TWSFinancialAccountRequestIT {
         final Aspects aspects = (Aspects) request.fromXML(Thread.currentThread().getContextClassLoader()
                 .getResourceAsStream("broker/request/groups.xml"));
 
-        assertFalse(aspects.getAspect().isEmpty());
+        assertFalse(aspects.getAspects().isEmpty());
 
-        for (Aspect aspect : aspects.getAspect()) {
+        for (Aspect aspect : aspects.getAspects()) {
 
             Portfolio item = (Portfolio) aspect;
 
@@ -301,9 +301,9 @@ public class TWSFinancialAccountRequestIT {
         final Aspects aspects = (Aspects) request.fromXML(Thread.currentThread().getContextClassLoader()
                 .getResourceAsStream("broker/request/groups1.xml"));
 
-        assertFalse(aspects.getAspect().isEmpty());
+        assertFalse(aspects.getAspects().isEmpty());
 
-        for (Aspect aspect : aspects.getAspect()) {
+        for (Aspect aspect : aspects.getAspects()) {
 
             Portfolio item = (Portfolio) aspect;
 
