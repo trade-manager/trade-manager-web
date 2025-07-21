@@ -227,37 +227,44 @@ public class TWSBrokerService extends AbstractBrokerModel {
                 || (code == 321) || (code == 3170)) {
 
             if (((code > 1999) && (code < 3000))) {
+
                 _log.info(errorMsg);
                 brokerModelException = new BrokerModelException(3, code, errorMsg);
             } else if (code == 202 || code == 201 || code == 3170) {
+
                 _log.warn(errorMsg);
                 brokerModelException = new BrokerModelException(2, code, errorMsg);
             } else if (code == 321) {
+
                 _log.info(errorMsg);
                 return;
             } else {
+
                 _log.warn(errorMsg);
                 brokerModelException = new BrokerModelException(2, code, errorMsg);
             }
-
         } else {
 
             if (realTimeBarsRequests.containsKey(id)) {
+
                 synchronized (realTimeBarsRequests) {
+
                     realTimeBarsRequests.remove(id);
                 }
             }
 
             if (marketDataRequests.containsKey(id)) {
+
                 synchronized (marketDataRequests) {
+
                     marketDataRequests.remove(id);
                 }
             }
 
             _log.error(errorMsg);
             brokerModelException = new BrokerModelException(1, code, errorMsg);
-
         }
+
         this.fireBrokerError(brokerModelException);
 
         /*
@@ -266,6 +273,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
          * test mode.
          */
         if (502 == code) {
+
             this.fireConnectionClosed(false);
         }
     }
