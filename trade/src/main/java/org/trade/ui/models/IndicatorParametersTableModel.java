@@ -86,9 +86,9 @@ public class IndicatorParametersTableModel extends AspectTableModel {
         this.data = data;
         this.clearAll();
 
-        if (!getData().getAspect().isEmpty()) {
+        if (!getData().getAspects().isEmpty()) {
 
-            for (final Aspect element : getData().getAspect()) {
+            for (final Aspect element : getData().getAspects()) {
 
                 final List<Object> newRow = new ArrayList<>();
                 getNewRow(newRow, (CodeType) element);
@@ -107,7 +107,7 @@ public class IndicatorParametersTableModel extends AspectTableModel {
      */
     public void populateDAO(Object value, int row, int column) {
 
-        final CodeType element = (CodeType) getData().getAspect().get(row);
+        final CodeType element = (CodeType) getData().getAspects().get(row);
 
         switch (column) {
             case 0: {
@@ -133,7 +133,7 @@ public class IndicatorParametersTableModel extends AspectTableModel {
 
         String name = (String) this.getValueAt(selectedRow, 0);
 
-        for (final Aspect element : getData().getAspect()) {
+        for (final Aspect element : getData().getAspects()) {
 
             if (CoreUtils.nullSafeComparator(((CodeType) element).getName(), name) == 0) {
 

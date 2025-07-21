@@ -115,7 +115,7 @@ public class TradingdayIT {
 
         ZonedDateTime open = TradingCalendar.getTradingDayStart(
                 TradingCalendar.getPrevTradingDay(TradingCalendar.getDateTimeNowMarketTimeZone()));
-        tradingday = tradingdayRepository.findByOpenCloseDate(open,
+        tradingday = tradingdayRepository.findByOpenCloseDateOrderByOpenDesc(open,
                 TradingCalendar.getTradingDayEnd(open));
         if (null == tradingday) {
             tradingday = Tradingday.newInstance(open);
@@ -134,7 +134,7 @@ public class TradingdayIT {
 
         ZonedDateTime open = TradingCalendar.getTradingDayStart(
                 TradingCalendar.getPrevTradingDay(TradingCalendar.getDateTimeNowMarketTimeZone()));
-        tradingday = tradingdayRepository.findByOpenCloseDate(open,
+        tradingday = tradingdayRepository.findByOpenCloseDateOrderByOpenDesc(open,
                 TradingCalendar.getTradingDayEnd(open));
         if (null == tradingday) {
             tradingday = Tradingday.newInstance(open);

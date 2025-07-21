@@ -93,9 +93,9 @@ public class Rule extends Aspect implements Serializable {
     /**
      * Constructor for Rule.
      *
-     * @param strategy Strategy
-     * @param ruleVersion  Integer
-     * @param comment  String
+     * @param strategy    Strategy
+     * @param ruleVersion Integer
+     * @param comment     String
      */
     public Rule(Strategy strategy, Integer ruleVersion, String comment) {
 
@@ -108,7 +108,7 @@ public class Rule extends Aspect implements Serializable {
      * Constructor for Rule.
      *
      * @param strategy    Strategy
-     * @param ruleVersion     Integer
+     * @param ruleVersion Integer
      * @param comment     String
      * @param rule        byte[]
      * @param contentType String

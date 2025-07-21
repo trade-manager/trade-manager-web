@@ -105,9 +105,9 @@ public class EntrylimitTableModel extends AspectTableModel {
         this.data = data;
         this.clearAll();
 
-        if (!getData().getAspect().isEmpty()) {
+        if (!getData().getAspects().isEmpty()) {
 
-            for (final Aspect element : getData().getAspect()) {
+            for (final Aspect element : getData().getAspects()) {
 
                 final List<Object> newRow = new ArrayList<>();
                 getNewRow(newRow, (Entrylimit) element);
@@ -127,7 +127,7 @@ public class EntrylimitTableModel extends AspectTableModel {
      */
     public void populateDAO(Object value, int row, int column) {
 
-        final Entrylimit element = (Entrylimit) getData().getAspect().get(row);
+        final Entrylimit element = (Entrylimit) getData().getAspects().get(row);
 
         switch (column) {
             case 0: {
@@ -177,7 +177,7 @@ public class EntrylimitTableModel extends AspectTableModel {
 
         Money startPrice = (Money) this.getValueAt(selectedRow, 0);
 
-        for (final Aspect element : getData().getAspect()) {
+        for (final Aspect element : getData().getAspects()) {
 
             if (CoreUtils.nullSafeComparator(((Entrylimit) element).getStartPrice(),
                     startPrice.getBigDecimalValue()) == 0) {
@@ -195,7 +195,7 @@ public class EntrylimitTableModel extends AspectTableModel {
     public void addRow() {
 
         final Entrylimit element = new Entrylimit();
-        getData().getAspect().add(element);
+        getData().getAspects().add(element);
         getData().setDirty(true);
         final List<Object> newRow = new ArrayList<>();
         getNewRow(newRow, element);

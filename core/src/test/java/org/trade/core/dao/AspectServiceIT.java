@@ -136,9 +136,9 @@ public class AspectServiceIT {
 
         Aspects aspects = tradeService.findByClassName(className);
         assertNotNull(aspects);
-        assertFalse(aspects.getAspect().isEmpty());
+        assertFalse(aspects.getAspects().isEmpty());
 
-        for (Aspect aspect : aspects.getAspect()) {
+        for (Aspect aspect : aspects.getAspects()) {
 
             _log.info("Aspect added Id: {}", aspect.getId());
         }
@@ -187,7 +187,7 @@ public class AspectServiceIT {
         Aspects instance = tradeService.findByClassNameAndFieldName(className, fieldName, indicatorName);
         assertNotNull(instance);
 
-        for (Aspect aspect : instance.getAspect()) {
+        for (Aspect aspect : instance.getAspects()) {
 
             _log.info("Aspect added Id = {}", aspect.getId());
         }

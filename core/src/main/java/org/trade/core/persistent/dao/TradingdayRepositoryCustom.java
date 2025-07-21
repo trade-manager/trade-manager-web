@@ -6,9 +6,9 @@ import java.util.List;
 
 public interface TradingdayRepositoryCustom {
 
-    Tradingdays findTradingdaysByDateRange(ZonedDateTime startDate, ZonedDateTime endDate);
+    Tradingdays findTradingdaysByDateRangeOrderByOpenDesc(ZonedDateTime startDate, ZonedDateTime endDate);
 
-    Tradingday findByOpenCloseDate(ZonedDateTime openDate, ZonedDateTime closeDate);
+    Tradingday findByOpenCloseDateOrderByOpenDesc(ZonedDateTime openDate, ZonedDateTime closeDate);
 
     List<Tradestrategy> findTradestrategyByTradingday(Tradingday tradingday);
 }

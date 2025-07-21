@@ -185,10 +185,10 @@ public class TradeServiceIT {
         } else {
 
             tradingday.addTradestrategy(tradestrategy);
-            this.tradeService.saveTradingday(tradingday);
+            tradingday = this.tradeService.saveTradingday(tradingday);
             _log.info("testTradingdaysSave tradestrategyId:{}", tradestrategy.getId());
         }
-        tradingday.getTradestrategies().remove(tradestrategy);
+        tradingday.getTradestrategies().remove(tradingday.getTradestrategies().getLast());
         tradingday = this.tradeService.saveTradingday(tradingday);
         _log.info("testTradingdaysRemoce tradestrategyId:{}", tradestrategy.getId());
         assertNotNull(tradingday.getId());

@@ -188,7 +188,7 @@ public class IndicatorSeriesTableModel extends TableModel {
             }
             case 7: {
                 List<CodeValue> code = new ArrayList<>();
-                for (Aspect aspect : ((Aspects) value).getAspect()) {
+                for (Aspect aspect : ((Aspects) value).getAspects()) {
                     code.add((CodeValue) aspect);
                 }
                 if (!code.isEmpty())

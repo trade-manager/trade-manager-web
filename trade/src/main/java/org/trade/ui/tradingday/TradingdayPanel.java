@@ -431,6 +431,7 @@ public class TradingdayPanel extends BasePanel {
                 }
 
                 if (dirty) {
+
                     doRefresh();
                 }
 

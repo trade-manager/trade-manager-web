@@ -1761,7 +1761,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
                     final TWSAccountAliasRequest request = new TWSAccountAliasRequest();
                     final Aspects aspects = (Aspects) request.fromXML(inputSource);
 
-                    for (Aspect aspect : aspects.getAspect()) {
+                    for (Aspect aspect : aspects.getAspects()) {
 
                         Account item = (Account) aspect;
                         Account account = tradeService.findAccountByAccountNumber(item.getAccountNumber());
@@ -1780,7 +1780,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
                     _log.debug("Profiles: /n{}", xml);
                     final TWSAllocationRequest request = new TWSAllocationRequest();
                     final Aspects aspects = (Aspects) request.fromXML(inputSource);
-                    for (Aspect aspect : aspects.getAspect()) {
+                    for (Aspect aspect : aspects.getAspects()) {
                         tradeService.savePortfolio((Portfolio) aspect);
                     }
                     this.fireFAAccountsCompleted();
@@ -1792,7 +1792,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
                     final TWSGroupRequest request = new TWSGroupRequest();
                     final Aspects aspects = (Aspects) request.fromXML(inputSource);
 
-                    for (Aspect aspect : aspects.getAspect()) {
+                    for (Aspect aspect : aspects.getAspects()) {
 
                         tradeService.savePortfolio((Portfolio) aspect);
                     }

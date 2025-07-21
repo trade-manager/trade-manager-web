@@ -103,9 +103,9 @@ public class StrategyTableModel extends AspectTableModel {
         this.data = data;
         this.clearAll();
 
-        if (!getData().getAspect().isEmpty()) {
+        if (!getData().getAspects().isEmpty()) {
 
-            for (final Aspect element : getData().getAspect()) {
+            for (final Aspect element : getData().getAspects()) {
 
                 final List<Object> newRow = new ArrayList<>();
                 getNewRow(newRow, (Strategy) element);
@@ -124,7 +124,7 @@ public class StrategyTableModel extends AspectTableModel {
      */
     public void populateDAO(Object value, int row, int column) {
 
-        final Strategy element = (Strategy) getData().getAspect().get(row);
+        final Strategy element = (Strategy) getData().getAspects().get(row);
 
         switch (column) {
             case 0: {
@@ -168,7 +168,7 @@ public class StrategyTableModel extends AspectTableModel {
 
         String name = (String) this.getValueAt(selectedRow, 0);
 
-        for (final Aspect element : getData().getAspect()) {
+        for (final Aspect element : getData().getAspects()) {
 
             if (CoreUtils.nullSafeComparator(((Strategy) element).getName(), name) == 0) {
 
@@ -185,7 +185,7 @@ public class StrategyTableModel extends AspectTableModel {
     public void addRow() {
 
         final Strategy element = new Strategy();
-        getData().getAspect().add(element);
+        getData().getAspects().add(element);
         getData().setDirty(true);
         final List<Object> newRow = new ArrayList<>();
         getNewRow(newRow, element);

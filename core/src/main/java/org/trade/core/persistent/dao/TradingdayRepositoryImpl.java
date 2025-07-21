@@ -29,7 +29,7 @@ public class TradingdayRepositoryImpl implements TradingdayRepositoryCustom {
      * @param endDate   ZonedDateTime
      * @return Tradingdays
      */
-    public Tradingdays findTradingdaysByDateRange(ZonedDateTime startDate, ZonedDateTime endDate) {
+    public Tradingdays findTradingdaysByDateRangeOrderByOpenDesc(ZonedDateTime startDate, ZonedDateTime endDate) {
 
 
         Tradingdays tradingdays = new Tradingdays();
@@ -78,7 +78,7 @@ public class TradingdayRepositoryImpl implements TradingdayRepositoryCustom {
      * @param closeDate ZonedDateTime
      * @return Tradingday
      */
-    public Tradingday findByOpenCloseDate(ZonedDateTime openDate, ZonedDateTime closeDate) {
+    public Tradingday findByOpenCloseDateOrderByOpenDesc(ZonedDateTime openDate, ZonedDateTime closeDate) {
 
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Tradingday> query = builder.createQuery(Tradingday.class);

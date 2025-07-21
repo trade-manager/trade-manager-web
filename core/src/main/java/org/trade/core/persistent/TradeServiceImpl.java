@@ -186,28 +186,32 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
     }
 
     public Account findAccountById(final Long id) {
+
         return accountRepository.findById(id).isPresent() ? accountRepository.findById(id).get() : null;
     }
 
-    @Transactional
     public Account findAccountByAccountNumber(String accountNumber) {
 
         return accountRepository.findByAccountNumber(accountNumber);
     }
 
     public Tradingday findTradingdayById(final Long tradingdayId) {
+
         return tradingdayRepository.findById(tradingdayId).isPresent() ? tradingdayRepository.findById(tradingdayId).get() : null;
     }
 
     public Tradingday findTradingdayByOpenCloseDate(final ZonedDateTime openDate, final ZonedDateTime closeDate) {
-        return tradingdayRepository.findByOpenCloseDate(openDate, closeDate);
+
+        return tradingdayRepository.findByOpenCloseDateOrderByOpenDesc(openDate, closeDate);
     }
 
     public Contract findContractById(final Long id) {
+
         return contractRepository.findById(id).isPresent() ? contractRepository.findById(id).get() : null;
     }
 
     public TradeOrder findTradeOrderById(final Long id) {
+
         return tradeOrderRepository.findById(id).isPresent() ? tradeOrderRepository.findById(id).get() : null;
     }
 
@@ -293,7 +297,6 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
         return tradestrategyRepository.findTradestrategyLiteByTradestrategy(tradestrategy);
     }
 
-    @Transactional
     public TradePosition findTradePositionById(final Long id) {
 
         Optional<TradePosition> tradePosition = tradePositionRepository.findById(id);
@@ -316,6 +319,7 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
             portfolio.get().getTradestrategies().size();
             return portfolio.get();
         }
+
         return null;
     }
 
@@ -328,7 +332,6 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
 
             portfolio.getAccounts().size();
             return portfolio;
-
         }
 
         return null;
@@ -416,7 +419,6 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
         Tradestrategy tradestrategy = tradestrategyRepository.findById(Objects.requireNonNull(instance.getId())).get();
         tradestrategy.setStatus(null);
         getAspectRepository().save(tradestrategy);
-
         Hashtable<Long, TradePosition> tradePositions = new Hashtable<>();
 
         for (TradeOrder tradeOrder : tradestrategy.getTradeOrders()) {
@@ -436,6 +438,7 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
         for (TradePosition tradePosition : tradePositions.values()) {
 
             tradePosition = this.findTradePositionById(tradePosition.getId());
+
             /*
              * Remove the open trade position from contract if this is a
              * tradePosition to be deleted.
@@ -469,7 +472,7 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
 
     public Tradingdays findTradingdaysByDateRange(final ZonedDateTime startDate, final ZonedDateTime endDate) {
 
-        return tradingdayRepository.findTradingdaysByDateRange(startDate, endDate);
+        return tradingdayRepository.findTradingdaysByDateRangeOrderByOpenDesc(startDate, endDate);
     }
 
     public List<Candle> findCandlesByContractDateRangeBarSize(final Contract contract, final ZonedDateTime startDate,
@@ -540,6 +543,7 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
 
                 tradestrategy.setStrategy(strategy);
             }
+
             /*
              * Check to see if the contract exists if it does merge and
              * set the new persisted one. If no persist the contract.
@@ -550,37 +554,12 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
 
             if (null != contract) {
 
-                tradestrategy.setContract(contract);
-            }
-        }
-
-        instance = this.saveAspect(instance);
-
-        List<Tradestrategy> tradestrategies = tradingdayRepository.findTradestrategyByTradingday(instance);
-
-        for (Tradestrategy tradestrategy : tradestrategies) {
-
-            boolean exists = false;
-
-            for (Tradestrategy newTradestrategy : instance.getTradestrategies()) {
-
-                if (newTradestrategy.equals(tradestrategy)) {
-
-                    exists = true;
-                    break;
-                }
-            }
-
-            if (!exists) {
-
-                if (tradestrategy.getTradeOrders().isEmpty()) {
-
-                    this.deleteAspect(tradestrategy);
-                }
+               tradestrategy.setContract(contract);
             }
         }
 
         instance.setDirty(false);
+        instance = this.saveAspect(instance);
         return instance;
     }
 
@@ -627,14 +606,13 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
         }
 
         Long tradestrategyId = tradeOrder.getTradestrategy().getId();
+        TradePosition tradePosition;
+        TradestrategyOrders tradestrategyOrders = null;
 
         /*
          * If the filled qty is > 0 and we have no TradePosition then create
          * one.
          */
-        TradePosition tradePosition;
-        TradestrategyOrders tradestrategyOrders = null;
-
         if (!tradeOrder.hasTradePosition()) {
 
             if (CoreUtils.nullSafeComparator(tradeOrder.getFilledQuantity(), 0) == 1) {
@@ -651,6 +629,7 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
                         tradePosition.addTradeOrder(tradeOrder);
                     }
                 } else {
+
                     /*
                      * Note Order status can be fired before execDetails
                      * this could result in a new tradeposition. OrderStatus
@@ -669,6 +648,7 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
 
                 tradeOrder.setTradePosition(tradePosition);
             } else {
+
                 /*
                  * If the order has not been filled, and it has no
                  * TradePosition this is the first order that has just been
@@ -677,6 +657,7 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
                 return this.saveAspect(tradeOrder);
             }
         } else {
+
             tradePosition = this.findTradePositionById(tradeOrder.getTradePosition().getId());
             tradeOrder.setTradePosition(tradePosition);
         }
@@ -715,6 +696,7 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
                 totalSellValue = totalSellValue + (order.getAverageFilledPrice().doubleValue()
                         * order.getFilledQuantity().doubleValue());
             }
+
             totalCommission = totalCommission + (order.getCommission() == null ? 0 : order.getCommission().doubleValue());
         }
 
@@ -811,6 +793,7 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
                     }
                 }
             }
+
             /*
              * If the commissions (note these are updated by the orderState
              * event after the order may have been filled) have changed
@@ -997,9 +980,9 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
 
         Aspects aspects = this.findByClassNameAndFieldName(aspect.getClass().getName(), "Id", Objects.requireNonNull(aspect.getId()).toString());
 
-        if (!aspects.getAspect().isEmpty()) {
+        if (!aspects.getAspects().isEmpty()) {
 
-            return aspects.getAspect().getFirst();
+            return aspects.getAspects().getFirst();
         }
 
         return null;

@@ -101,7 +101,6 @@ public class TradestrategyBase {
         if (null == contract) {
 
             contract = new Contract(SECType.STOCK, symbol, Exchange.SMART, Currency.USD, null, null);
-            contract = tradeService.saveAspect(contract);
         } else {
 
             tradestrategy = tradeService.findTradestrategyByUniqueKeys(open, strategy.getName(),
@@ -161,8 +160,7 @@ public class TradestrategyBase {
                 true, ChartDays.TWO_DAYS, BarSize.FIVE_MIN);
         tradingday.addTradestrategy(tradestrategy);
         tradingday = tradeService.saveTradingday(tradingday);
-        Tradestrategy instance = tradeService.findTradestrategyByUniqueKeys(tradingday.getOpen(), strategy.getName(), contract,
-                portfolio.getName());
+        Tradestrategy instance = tradingday.getTradestrategies().getLast();
         instance.setStrategyData(StrategyData.create(instance));
         return instance;
     }
