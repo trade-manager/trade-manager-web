@@ -82,6 +82,7 @@ import java.io.Serial;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
@@ -513,7 +514,9 @@ public class TradingdayPanel extends BasePanel {
 
             tradingdayModel.setData(this.tradingdays);
             RowSorter<?> rsDetail = tradingdayTable.getRowSorter();
-            rsDetail.setSortKeys(null);
+            List<RowSorter.SortKey> sortKeys = new ArrayList<>();
+            sortKeys.add(new RowSorter.SortKey(0, SortOrder.DESCENDING));
+            rsDetail.setSortKeys(sortKeys);
             RowSorter<?> rsSummary = tradestrategyTable.getRowSorter();
             rsSummary.setSortKeys(null);
 

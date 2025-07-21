@@ -80,7 +80,7 @@ public class Aspects implements java.io.Serializable {
      * Constructor for Aspects.
      *
      * @param aspectsId Long
-     * @param aspects    List<Aspect>
+     * @param aspects   List<Aspect>
      */
     public Aspects(Long aspectsId, List<Aspect> aspects) {
 

@@ -554,7 +554,7 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
 
             if (null != contract) {
 
-               tradestrategy.setContract(contract);
+                tradestrategy.setContract(contract);
             }
         }
 
