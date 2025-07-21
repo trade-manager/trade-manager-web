@@ -186,6 +186,7 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
     }
 
     public Account findAccountById(final Long id) {
+
         return accountRepository.findById(id).isPresent() ? accountRepository.findById(id).get() : null;
     }
 
@@ -196,18 +197,22 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
     }
 
     public Tradingday findTradingdayById(final Long tradingdayId) {
+
         return tradingdayRepository.findById(tradingdayId).isPresent() ? tradingdayRepository.findById(tradingdayId).get() : null;
     }
 
     public Tradingday findTradingdayByOpenCloseDate(final ZonedDateTime openDate, final ZonedDateTime closeDate) {
+
         return tradingdayRepository.findByOpenCloseDateOrderByOpenDesc(openDate, closeDate);
     }
 
     public Contract findContractById(final Long id) {
+
         return contractRepository.findById(id).isPresent() ? contractRepository.findById(id).get() : null;
     }
 
     public TradeOrder findTradeOrderById(final Long id) {
+
         return tradeOrderRepository.findById(id).isPresent() ? tradeOrderRepository.findById(id).get() : null;
     }
 
