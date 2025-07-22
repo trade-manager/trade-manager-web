@@ -152,6 +152,7 @@ public class PolygonBroker extends Broker {
 
         // create a request
         HttpResponse<String> response;
+        contract.setDirty(false);
 
         try (HttpClient client = HttpClient.newHttpClient()) {
 
@@ -170,6 +171,7 @@ public class PolygonBroker extends Broker {
             JSONObject resultObj = contractObj.optJSONObject("results");
 
             if (null != resultObj) {
+
                 String name = resultObj.getString("name");
 
                 if (CoreUtils.nullSafeComparator(contract.getLongName(), name) != 0) {
@@ -187,12 +189,14 @@ public class PolygonBroker extends Broker {
                 }
 
                 String exchange = resultObj.getString("primary_exchange");
+                exchange = Exchange.newInstance(exchange).getCode();
 
                 if (CoreUtils.nullSafeComparator(contract.getPrimaryExchange(), exchange) != 0) {
 
                     contract.setPrimaryExchange(Exchange.newInstance(exchange).getCode());
                     contract.setDirty(true);
                 }
+
                 return true;
             } else {
 
@@ -202,6 +206,7 @@ public class PolygonBroker extends Broker {
 
             _log.error("Error: PolygonBroker::setContractDetails request for symbol: {}, to URL: {}, failed with status code: {}", contract.getSymbol(), strUrl, response.statusCode());
         }
+
         return false;
     }
 

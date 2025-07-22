@@ -160,10 +160,8 @@ public class TradeServiceIT {
 
         Strategy strategy = (Strategy) DAOStrategy.newInstance().getObject();
         Portfolio portfolio = (Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
-
         final String symbol = "TEST-" + TradestrategyBase.getRandomNumber(4);
         Contract contract = new Contract(SECType.STOCK, symbol, Exchange.SMART, Currency.USD, null, null);
-
         ZonedDateTime open = TradingCalendar.getTradingDayStart(
                 TradingCalendar.getPrevTradingDay(TradingCalendar.getDateTimeNowMarketTimeZone()));
         ZonedDateTime close = TradingCalendar.getTradingDayEnd(open);
@@ -188,6 +186,7 @@ public class TradeServiceIT {
             tradingday = this.tradeService.saveTradingday(tradingday);
             _log.info("testTradingdaysSave tradestrategyId:{}", tradestrategy.getId());
         }
+
         tradingday.getTradestrategies().remove(tradingday.getTradestrategies().getLast());
         tradingday = this.tradeService.saveTradingday(tradingday);
         _log.info("testTradingdaysRemoce tradestrategyId:{}", tradestrategy.getId());
@@ -205,12 +204,12 @@ public class TradeServiceIT {
 
         if (!positionOrders.hasOpenTradePosition()) {
 
-            TradePosition tradePosition = new TradePosition(tradestrategy.getContract(),
+            TradePosition tradePosition = new TradePosition(tradestrategy.getContractLite(),
                     TradingCalendar.getDateTimeNowMarketTimeZone(), Side.BOT);
 
-            tradePosition = this.tradeService.saveTradePosition(tradePosition);
-            tradestrategy.getContract().setTradePosition(tradePosition);
-            tradestrategy.setContract(this.tradeService.saveAspect(tradestrategy.getContract()));
+            tradePosition = this.tradeService.saveAspect(tradePosition);
+            tradestrategy.getContractLite().setTradePosition(tradePosition);
+            tradestrategy.setContractLite(this.tradeService.saveAspect(tradestrategy.getContractLite()));
             positionOrders = this.tradeService
                     .findPositionOrdersByTradestrategyId(tradestrategy.getId());
 
@@ -625,15 +624,6 @@ public class TradeServiceIT {
     }
 
     @Test
-    public void saveTradePosition() {
-
-        TradePosition tradePosition = new TradePosition(tradestrategy.getContract(),
-                TradingCalendar.getDateTimeNowMarketTimeZone(), Side.BOT);
-        TradePosition result = this.tradeService.saveTradePosition(tradePosition);
-        assertNotNull(result.getId());
-    }
-
-    @Test
     public void saveCandleSeries() throws Exception {
 
         CandleSeries candleSeries = new CandleSeries(tradestrategy.getStrategyData().getBaseCandleSeries(),
@@ -714,9 +704,9 @@ public class TradeServiceIT {
     @Test
     public void findTradePositionById() {
 
-        TradePosition tradePosition = new TradePosition(tradestrategy.getContract(),
+        TradePosition tradePosition = new TradePosition(tradestrategy.getContractLite(),
                 TradingCalendar.getDateTimeNowMarketTimeZone(), Side.BOT);
-        TradePosition resultTrade = this.tradeService.saveTradePosition(tradePosition);
+        TradePosition resultTrade = this.tradeService.saveAspect(tradePosition);
         TradePosition result = this.tradeService.findTradePositionById(resultTrade.getId());
         assertNotNull(result);
     }
@@ -724,10 +714,10 @@ public class TradeServiceIT {
     @Test
     public void findPositionOrdersByTradestrategyId() {
 
-        TradePosition tradePosition = new TradePosition(tradestrategy.getContract(),
+        TradePosition tradePosition = new TradePosition(tradestrategy.getContractLite(),
                 TradingCalendar.getDateTimeNowMarketTimeZone(), Side.BOT);
 
-        TradePosition resultTrade = this.tradeService.saveTradePosition(tradePosition);
+        TradePosition resultTrade = this.tradeService.saveAspect(tradePosition);
         resultTrade.getContract().setTradePosition(resultTrade);
         resultTrade.setContract(this.tradeService.saveAspect(resultTrade.getContract()));
         assertNotNull(resultTrade);
@@ -742,14 +732,16 @@ public class TradeServiceIT {
     @Test
     public void refreshPositionOrdersByTradestrategyId() {
 
-        TradePosition tradePosition = new TradePosition(tradestrategy.getContract(),
+        TradePosition tradePosition = new TradePosition(tradestrategy.getContractLite(),
                 TradingCalendar.getDateTimeNowMarketTimeZone(), Side.BOT);
-        tradestrategy.getContract().setTradePosition(tradePosition);
-        TradePosition resultTrade = this.tradeService.saveTradePosition(tradePosition);
+        tradestrategy.getContractLite().setTradePosition(tradePosition);
+        TradePosition resultTrade = this.tradeService.saveAspect(tradePosition);
         assertNotNull(resultTrade);
+
         TradestrategyOrders positionOrders = this.tradeService
                 .findPositionOrdersByTradestrategyId(tradestrategy.getId());
         _log.info("testFindVersionById tradestrategyId:{} version: {}", positionOrders.getId(), positionOrders.getVersion());
+
         TradestrategyOrders result = this.tradeService.saveAspect(positionOrders);
 
         _log.info("testFindVersionById tradestrategyId:{} version: {}", result.getId(), result.getVersion());
@@ -761,9 +753,9 @@ public class TradeServiceIT {
     @Test
     public void removeTradingdayTradeOrders() {
 
-        TradePosition tradePosition = new TradePosition(tradestrategy.getContract(),
+        TradePosition tradePosition = new TradePosition(tradestrategy.getContractLite(),
                 TradingCalendar.getDateTimeNowMarketTimeZone(), Side.BOT);
-        this.tradeService.saveTradePosition(tradePosition);
+        this.tradeService.saveAspect(tradePosition);
         Tradingday result = this.tradeService
                 .findTradingdayById(tradestrategy.getTradingday().getId());
         assertNotNull(result);
@@ -771,15 +763,38 @@ public class TradeServiceIT {
     }
 
     @Test
+    public void saveTradePosition() {
+
+        TradePosition tradePosition = new TradePosition(tradestrategy.getContractLite(),
+                TradingCalendar.getDateTimeNowMarketTimeZone(), Side.BOT);
+        TradePosition result = this.tradeService.saveAspect(tradePosition);
+        assertNotNull(result.getId());
+    }
+
+    @Test
     public void removeTradestrategyTradeOrders() {
 
-        TradePosition tradePosition = new TradePosition(tradestrategy.getContract(),
-                TradingCalendar.getDateTimeNowMarketTimeZone(), Side.BOT);
-        this.tradeService.saveTradePosition(tradePosition);
-        Tradestrategy result = this.tradeService
+        BigDecimal price = new BigDecimal("100.00");
+        TradeOrder tradeOrder = new TradeOrder(tradestrategy, Action.BUY, OrderType.STPLMT, 1000, price,
+                price.add(new BigDecimal(4)), TradingCalendar.getDateTimeNowMarketTimeZone());
+        tradeOrder.setOrderKey((BigDecimal.valueOf(Math.random() * 1000000)).intValue());
+        tradeOrder = this.tradeService.saveTradeOrder(tradeOrder);
+
+        TradeOrderfill orderfill = new TradeOrderfill(tradeOrder, "Paper", price,
+                tradeOrder.getQuantity(), "ISLAND", "1a", price, tradeOrder.getQuantity(),
+                tradestrategy.getSide(), TradingCalendar.getDateTimeNowMarketTimeZone());
+        tradeOrder.addTradeOrderfill(orderfill);
+        tradeOrder = this.tradeService.saveTradeOrderfill(tradeOrder);
+
+        tradestrategy = this.tradeService
                 .findTradestrategyById(tradestrategy.getId());
-        assertNotNull(result);
-        this.tradeService.deleteTradestrategyTradeOrders(result);
+        assertNotNull(tradestrategy);
+        this.tradeService.deleteTradestrategyTradeOrders(tradestrategy);
+        tradestrategy = this.tradeService
+                .findTradestrategyById(tradestrategy.getId());
+        assertTrue(tradestrategy.getTradeOrders().isEmpty());
+        assertFalse(tradestrategy.isThereOpenTradePosition());
+        assertNull(tradestrategy.getContractLite().getTradePosition());
     }
 
     @Test
@@ -789,9 +804,9 @@ public class TradeServiceIT {
         TradeOrder tradeOrder = new TradeOrder(tradestrategy, Action.BUY, OrderType.STPLMT, 1000, price,
                 price.add(new BigDecimal(4)), TradingCalendar.getDateTimeNowMarketTimeZone());
         tradeOrder.setOrderKey((BigDecimal.valueOf(Math.random() * 1000000)).intValue());
-        TradeOrder resultTradeOrder = this.tradeService.saveTradeOrder(tradeOrder);
-        TradeOrder result = this.tradeService.findTradeOrderById(resultTradeOrder.getId());
-        assertNotNull(result);
+        tradeOrder = this.tradeService.saveTradeOrder(tradeOrder);
+        tradeOrder = this.tradeService.findTradeOrderById(tradeOrder.getId());
+        assertNotNull(tradeOrder);
     }
 
     @Test

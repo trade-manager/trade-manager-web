@@ -50,7 +50,6 @@ import org.trade.core.persistent.dao.CandleRepository;
 import org.trade.core.persistent.dao.CodeType;
 import org.trade.core.persistent.dao.CodeTypeRepository;
 import org.trade.core.persistent.dao.Contract;
-import org.trade.core.persistent.dao.ContractLite;
 import org.trade.core.persistent.dao.ContractRepository;
 import org.trade.core.persistent.dao.Portfolio;
 import org.trade.core.persistent.dao.PortfolioRepository;
@@ -202,7 +201,7 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
 
     public Tradingday findTradingdayByOpenCloseDate(final ZonedDateTime openDate, final ZonedDateTime closeDate) {
 
-        return tradingdayRepository.findByOpenCloseDateOrderByOpenDesc(openDate, closeDate);
+        return tradingdayRepository.findByOpenCloseDateOrderByOpenAsc(openDate, closeDate);
     }
 
     public Contract findContractById(final Long id) {
@@ -417,8 +416,6 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
          * have been deleted if this is a bulk delete of tradestrategies.
          */
         Tradestrategy tradestrategy = tradestrategyRepository.findById(Objects.requireNonNull(instance.getId())).get();
-        tradestrategy.setStatus(null);
-        getAspectRepository().save(tradestrategy);
         Hashtable<Long, TradePosition> tradePositions = new Hashtable<>();
 
         for (TradeOrder tradeOrder : tradestrategy.getTradeOrders()) {
@@ -428,31 +425,33 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
                 tradePositions.put(tradeOrder.getTradePosition().getId(),
                         tradeOrder.getTradePosition());
             }
+        }
 
-            if (null != tradeOrder.getId()) {
+        /*
+         * Remove the open trade position from contract.
+         */
+        if (null != tradestrategy.getContractLite().getTradePosition()) {
 
-                this.deleteAspect(tradeOrder);
-            }
+            tradestrategy.getContractLite().setTradePosition(null);
+            getAspectRepository().save(tradestrategy.getContractLite());
+        }
+
+        if (null != tradestrategy.getStatus() || !tradestrategy.getTradeOrders().isEmpty()) {
+
+            tradestrategy.setStatus(null);
+            tradestrategy.getTradeOrders().clear();
+            getAspectRepository().save(tradestrategy);
         }
 
         for (TradePosition tradePosition : tradePositions.values()) {
 
             tradePosition = this.findTradePositionById(tradePosition.getId());
 
-            /*
-             * Remove the open trade position from contract if this is a
-             * tradePosition to be deleted.
-             */
-            if (tradePosition.equals(tradestrategy.getContract().getTradePosition())) {
+            if (null != tradePosition) {
 
-                tradestrategy.getContract().setTradePosition(null);
-                getAspectRepository().save(tradestrategy.getContract());
+                this.deleteAspect(tradePosition);
             }
-
-            this.deleteAspect(tradePosition);
         }
-
-        tradestrategy.getTradeOrders().clear();
     }
 
     public TradeOrder findTradeOrderByKey(final Integer orderKey) {
@@ -472,7 +471,7 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
 
     public Tradingdays findTradingdaysByDateRange(final ZonedDateTime startDate, final ZonedDateTime endDate) {
 
-        return tradingdayRepository.findTradingdaysByDateRangeOrderByOpenDesc(startDate, endDate);
+        return tradingdayRepository.findTradingdaysByDateRangeOrderByOpenAsc(startDate, endDate);
     }
 
     public List<Candle> findCandlesByContractDateRangeBarSize(final Contract contract, final ZonedDateTime startDate,
@@ -563,30 +562,12 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
         return instance;
     }
 
-    /**
-     * Method saveTradePosition.
-     *
-     * @param instance TradePosition
-     * @return TradePosition
-     */
-    @Transactional
-    public TradePosition saveTradePosition(TradePosition instance) {
-
-        ContractLite contract = contractRepository.findContractLiteById(instance.getContract().getId());
-
-        if (null != contract) {
-
-            instance.setContract(contract);
-        }
-
-        return this.saveAspect(instance);
-    }
-
-    @Transactional
+    // READ_UNCOMMITTED, READ_COMMITTED, REPEATABLE_READ, SERIALIZABLE
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public TradeOrder saveTradeOrder(final TradeOrder tradeOrder) {
 
         /*
-         * This is a new order set the status to UNSUBMIT
+         * This is a filled order.
          */
         if (!tradeOrder.getIsFilled()
                 && CoreUtils.nullSafeComparator(tradeOrder.getQuantity(), tradeOrder.getFilledQuantity()) == 0) {
@@ -739,7 +720,7 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
 
                 if (openQuantity == 0) {
 
-                    tradePosition.setPositionCloseDate(tradeOrder.getFilledDate());
+                    tradePosition.setCloseDate(tradeOrder.getFilledDate());
                     tradePosition.getContract().setTradePosition(null);
                     tradePosition.setContract(this.saveAspect(tradePosition.getContract()));
                 }
@@ -766,15 +747,15 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
                     if (!Objects.equals(item.getTradestrategyLite().getId(), tradestrategyOrders.getId())) {
 
                         item.getTradestrategyLite().setStatus(TradestrategyStatus.CLOSED);
-                        this.saveAspect(item.getTradestrategyLite());
+                        item.setTradestrategyLite(this.saveAspect(item.getTradestrategyLite()));
                     }
                 }
 
                 tradestrategyOrders.setStatus(TradestrategyStatus.CLOSED);
-                this.saveAspect(tradestrategyOrders);
+                tradestrategyOrders = this.saveAspect(tradestrategyOrders);
             }
 
-            this.saveAspect(tradePosition);
+            tradePosition = this.saveAspect(tradePosition);
         } else {
 
             if (allOrdersCancelled) {
@@ -802,14 +783,13 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
             if (CoreUtils.nullSafeComparator(comms.getBigDecimalValue(), tradePosition.getTotalCommission()) == 1) {
 
                 tradePosition.setTotalCommission(comms.getBigDecimalValue());
-                this.saveAspect(tradePosition);
+                tradePosition = this.saveAspect(tradePosition);
             }
         }
 
         return this.saveAspect(tradeOrder);
     }
 
-    @Transactional
     public TradeOrder saveTradeOrderfill(final TradeOrder tradeOrder) {
 
         ZonedDateTime filledDate = null;

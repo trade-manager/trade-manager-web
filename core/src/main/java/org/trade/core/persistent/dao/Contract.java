@@ -41,11 +41,9 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
@@ -200,16 +198,11 @@ public class Contract extends Aspect implements Serializable, Cloneable {
     @Transient
     private List<Tradestrategy> tradestrategies = Collections.synchronizedList(new ArrayList<>(0));
 
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "trade_position_id", insertable = false)
-    private TradePosition tradePosition;
-
     @OneToMany(mappedBy = "contract", fetch = FetchType.LAZY)
     private List<TradePosition> tradePositions = new ArrayList<>(0);
 
     @OneToMany(mappedBy = "contract", fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH, CascadeType.REMOVE})
     private List<Candle> candles = new ArrayList<>(0);
-
 
     @PrePersist
     public void initializeRequestId() {
@@ -944,24 +937,6 @@ public class Contract extends Aspect implements Serializable, Cloneable {
      */
     public void setTradestrategies(List<Tradestrategy> tradestrategies) {
         this.tradestrategies = tradestrategies;
-    }
-
-    /**
-     * Method getTradePosition.
-     *
-     * @return TradePosition
-     */
-    public TradePosition getTradePosition() {
-        return this.tradePosition;
-    }
-
-    /**
-     * Method setTradePosition.
-     *
-     * @param tradePosition TradePosition
-     */
-    public void setTradePosition(TradePosition tradePosition) {
-        this.tradePosition = tradePosition;
     }
 
     /**

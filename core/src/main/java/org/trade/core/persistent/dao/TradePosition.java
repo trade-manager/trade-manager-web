@@ -83,8 +83,8 @@ public class TradePosition extends Aspect implements java.io.Serializable {
     @Serial
     private static final long serialVersionUID = 715993951200025530L;
 
-    @Column(name = "position_open_date", nullable = false)
-    private ZonedDateTime positionOpenDate;
+    @Column(name = "open_date", nullable = false)
+    private ZonedDateTime openDate;
 
     @Column(name = "side", nullable = false, length = 3)
     private String side;
@@ -92,8 +92,8 @@ public class TradePosition extends Aspect implements java.io.Serializable {
     @Column(name = "open_quantity")
     private Integer openQuantity = 0;
 
-    @Column(name = "position_close_date")
-    private ZonedDateTime positionCloseDate;
+    @Column(name = "close_date")
+    private ZonedDateTime closeDate;
 
     @Column(name = "total_commission", precision = 10)
     private BigDecimal totalCommission;
@@ -131,31 +131,17 @@ public class TradePosition extends Aspect implements java.io.Serializable {
      * @param positionOpenDate Date
      * @param side             String
      */
-    public TradePosition(Contract contract, ZonedDateTime positionOpenDate, String side) {
-
-        this.contract = new ContractLite(contract.getId());
-        this.positionOpenDate = positionOpenDate;
-        this.side = side;
-    }
-
-    /**
-     * Constructor for TradePosition.
-     *
-     * @param contract         Contract
-     * @param positionOpenDate Date
-     * @param side             String
-     */
     public TradePosition(ContractLite contract, ZonedDateTime positionOpenDate, String side) {
 
         this.contract = contract;
-        this.positionOpenDate = positionOpenDate;
+        this.openDate = positionOpenDate;
         this.side = side;
     }
 
     /**
      * Constructor for TradePosition.
      *
-     * @param contract          Contract
+     * @param contract          ContractLite
      * @param positionOpenDate  ZonedDateTime
      * @param positionCloseDate ZonedDateTime
      * @param openQuantity      Integer
@@ -167,14 +153,14 @@ public class TradePosition extends Aspect implements java.io.Serializable {
      * @param totalNetValue     BigDecimal
      * @param tradeOrders       List<TradeOrder>
      */
-    public TradePosition(Contract contract, ZonedDateTime positionOpenDate, ZonedDateTime positionCloseDate,
+    public TradePosition(ContractLite contract, ZonedDateTime positionOpenDate, ZonedDateTime positionCloseDate,
                          Integer openQuantity, String side, BigDecimal totalCommission, Integer totalBuyQuantity,
                          BigDecimal totalBuyValue, Integer totalSellQuantity, BigDecimal totalSellValue, BigDecimal totalNetValue,
                          List<TradeOrder> tradeOrders) {
 
-        this.contract = new ContractLite(contract.getId());
-        this.positionOpenDate = positionOpenDate;
-        this.positionCloseDate = positionCloseDate;
+        this.contract = contract;
+        this.openDate = positionOpenDate;
+        this.closeDate = positionCloseDate;
         this.openQuantity = openQuantity;
         this.side = side;
         this.totalCommission = totalCommission;
@@ -209,17 +195,17 @@ public class TradePosition extends Aspect implements java.io.Serializable {
      *
      * @return ZonedDateTime
      */
-    public ZonedDateTime getPositionOpenDate() {
-        return this.positionOpenDate;
+    public ZonedDateTime getOpenDate() {
+        return this.openDate;
     }
 
     /**
      * Method setPositionOpenDate.
      *
-     * @param positionOpenDate ZonedDateTime
+     * @param openDate ZonedDateTime
      */
-    public void setPositionOpenDate(ZonedDateTime positionOpenDate) {
-        this.positionOpenDate = positionOpenDate;
+    public void setOpenDate(ZonedDateTime openDate) {
+        this.openDate = openDate;
     }
 
     /**
@@ -227,17 +213,17 @@ public class TradePosition extends Aspect implements java.io.Serializable {
      *
      * @return ZonedDateTime
      */
-    public ZonedDateTime getPositionCloseDate() {
-        return this.positionCloseDate;
+    public ZonedDateTime getCloseDate() {
+        return this.closeDate;
     }
 
     /**
      * Method setPositionCloseDate.
      *
-     * @param positionCloseDate ZonedDateTime
+     * @param closeDate ZonedDateTime
      */
-    public void setPositionCloseDate(ZonedDateTime positionCloseDate) {
-        this.positionCloseDate = positionCloseDate;
+    public void setCloseDate(ZonedDateTime closeDate) {
+        this.closeDate = closeDate;
     }
 
     /**
@@ -528,8 +514,8 @@ public class TradePosition extends Aspect implements java.io.Serializable {
     public String toString() {
 
         return "TradePosition Id: " + this.getId() + " Version: " + this.getVersion()
-                + " positionOpenDate: " + this.getPositionOpenDate() + " positionCloseDate: "
-                + this.getPositionCloseDate() + " Side: " + this.getSide() + " Open Qty: " + this.getOpenQuantity()
+                + " positionOpenDate: " + this.getOpenDate() + " positionCloseDate: "
+                + this.getCloseDate() + " Side: " + this.getSide() + " Open Qty: " + this.getOpenQuantity()
                 + " Total Buy qty: " + this.getTotalBuyQuantity() + " Total Buy Value: "
                 + new Money(this.getTotalBuyValue()) + " Total Sell qty: " + this.getTotalSellQuantity()
                 + " Total Sell Value: " + new Money(this.getTotalSellValue()) + " Total Comm: "

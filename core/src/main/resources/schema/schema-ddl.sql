@@ -316,8 +316,8 @@ SHOW WARNINGS//
 CREATE  TABLE IF NOT EXISTS tradeposition (
 id BIGINT NOT NULL AUTO_INCREMENT ,
 open_quantity INT NULL ,
-position_open_date DATETIME(6) NOT NULL ,
-position_close_date DATETIME(6) NULL ,
+open_date DATETIME(6) NOT NULL ,
+close_date DATETIME(6) NULL ,
 side VARCHAR(3) NOT NULL ,
 total_commission DECIMAL(10,2) NULL ,
 total_buy_quantity INT NULL ,

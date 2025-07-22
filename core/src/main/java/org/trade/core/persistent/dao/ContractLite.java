@@ -64,15 +64,12 @@ public class ContractLite extends Aspect implements Serializable, Cloneable {
     @Serial
     private static final long serialVersionUID = 5691902477608387034L;
 
+    // Holds the current open position. Not there can only be one at a time!
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "trade_position_id", insertable = false)
     private TradePosition tradePosition;
 
     public ContractLite() {
-    }
-
-    public ContractLite(Long id) {
-        setId(id);
     }
 
     /**

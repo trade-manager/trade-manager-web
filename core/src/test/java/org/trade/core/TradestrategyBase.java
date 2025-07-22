@@ -38,6 +38,7 @@ package org.trade.core;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.Account;
 import org.trade.core.persistent.dao.Contract;
+import org.trade.core.persistent.dao.ContractLite;
 import org.trade.core.persistent.dao.Portfolio;
 import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.TradeOrder;
@@ -134,10 +135,10 @@ public class TradestrategyBase {
                      * Remove the open trade position from contract if this is a
                      * tradePosition to be deleted.
                      */
-                    if (tradePosition.equals(instance.getContract().getTradePosition())) {
+                    if (tradePosition.equals(instance.getContractLite().getTradePosition())) {
 
-                        instance.getContract().setTradePosition(null);
-                        instance.setContract(tradeService.saveAspect(instance.getContract()));
+                        instance.getContractLite().setTradePosition(null);
+                        instance.setContractLite(tradeService.saveAspect(instance.getContractLite()));
                     }
                     tradeService.deleteAspect(tradePosition);
                 }
@@ -161,6 +162,7 @@ public class TradestrategyBase {
         tradingday.addTradestrategy(tradestrategy);
         tradingday = tradeService.saveTradingday(tradingday);
         Tradestrategy instance = tradingday.getTradestrategies().getLast();
+        instance = tradeService.findTradestrategyById(instance);
         instance.setStrategyData(StrategyData.create(instance));
         return instance;
     }
@@ -181,17 +183,17 @@ public class TradestrategyBase {
 
             for (Tradestrategy tradestrategy0 : tradingday.getTradestrategies()) {
 
-                Contract contract = tradestrategy0.getContract();
+                ContractLite contractLite = tradestrategy0.getContractLite();
                 Portfolio portfolio = tradestrategy0.getPortfolio();
                 tradeService.deleteAspect(tradingday);
 
-                if (null != contract.getTradePosition()) {
+                if (null != contractLite.getTradePosition()) {
 
-                    contract.setTradePosition(null);
-                    contract = tradeService.saveAspect(contract);
+                    contractLite.setTradePosition(null);
+                    contractLite = tradeService.saveAspect(contractLite);
                 }
 
-                tradeService.deleteAspect(contract);
+                tradeService.deleteAspect(contractLite);
                 portfolio = tradeService.findPortfolioById(portfolio.getId());
 
                 List<Account> accounts = portfolio.getAccounts();

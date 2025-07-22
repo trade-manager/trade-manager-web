@@ -167,9 +167,9 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
                             }
                         }
                     }
+
                     totalSumbitted = processTradingday(getTradingdayToProcess(tradingday, runningContractRequests),
                             totalSumbitted);
-
                 }
             }
 
@@ -178,12 +178,13 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
              * could not be run due to a conflict. Run then in asc date order
              * value.
              */
-
             totalSumbitted = reProcessTradingdays(this.tradingdays, runningContractRequests, totalSumbitted);
         } catch (InterruptedException ex) {
+
             // Do nothing
             _log.error("doInBackground interrupted Msg: {}", ex.getMessage());
         } catch (Exception ex) {
+
             _log.error("Error getting history data Msg: {}", ex.getMessage());
             this.firePropertyChange("error", "OK", ex);
         } finally {
@@ -204,6 +205,7 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
                     }
                 }
             }
+
             setProgress(100);
             Duration duration = Duration.ofSeconds(((System.currentTimeMillis() - this.startTime) / 1000));
             message = "Completed total contracts processed: " + totalSumbitted + " in: "
@@ -639,7 +641,7 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
         tradingday.getTradestrategies().sort(Tradestrategy.TRADINGDAY_CONTRACT);
         Tradingday reProcessTradingday;
 
-        // Use the tradestrategy.tradingday id as the Tradingday could be a dummy where the use select a tradestrategy from the list
+        // Use the tradestrategy.tradingday request id as the Tradingday could be a dummy where the use select a tradestrategy from the list
         if (runningContractRequests.containsKey(tradingday.getRequestId())) {
 
             reProcessTradingday = runningContractRequests.get(tradingday.getRequestId());
@@ -690,6 +692,7 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
 
             runningContractRequests.put(reProcessTradingday.getRequestId(), reProcessTradingday);
         }
+
         return toProcessTradingday;
     }
 

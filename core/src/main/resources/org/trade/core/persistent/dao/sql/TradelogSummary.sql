@@ -44,7 +44,7 @@ if(dataD.quantity = 0 , dataD.loss_count, 0) as loss_count,
 dataD.position_count as position_count,
 dataD.tradestrategy_count as tradestrategy_count
 from(select
-date_format(tradeposition.position_close_date , '%Y/%m') as period,
+date_format(tradeposition.close_date , '%Y/%m') as period,
 contract.symbol,
 tradeposition.id,
 sum(ifnull(tradeorder.quantity,0))  as quantity_total,
@@ -65,7 +65,7 @@ where tradeorder.is_filled =1
 and tradeposition.open_quantity = 0
 and tradestrategy.trade = 1
 and (isnull(:symbol) or contract.symbol = :symbol)
-and tradeposition.position_close_date between :start and :end
+and tradeposition.close_date between :start and :end
 and portfolio.id = :portfolioId
 group by
 period,
@@ -122,7 +122,7 @@ if(dataD.quantity = 0 , dataD.loss_count, 0) as loss_count,
 dataD.position_count as position_count,
 dataD.tradestrategy_count as tradestrategy_count
 from(select
-date_format(tradeposition.position_close_date , '%Y/%m') as period,
+date_format(tradeposition.close_date , '%Y/%m') as period,
 contract.symbol,
 tradeposition.id,
 sum(ifnull(tradeorder.quantity,0))  as quantity_total,
@@ -143,7 +143,7 @@ where tradeorder.is_filled =1
 and tradeposition.open_quantity = 0
 and tradestrategy.trade = 1
 and (isnull(:symbol) or contract.symbol = :symbol)
-and tradeposition.position_close_date between :start and :end
+and tradeposition.close_date between :start and :end
 and portfolio.id = :portfolioId
 group by
 period,
