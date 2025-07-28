@@ -189,14 +189,14 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
             this.firePropertyChange("error", "OK", ex);
         } finally {
 
-            synchronized (this.brokerModel.getHistoricalData()) {
+            synchronized (this.brokerModel.getHistoryDataRequests()) {
 
-                while ((!this.brokerModel.getHistoricalData().isEmpty()) && !this.isCancelled()) {
+                while ((!this.brokerModel.getHistoryDataRequests().isEmpty()) && !this.isCancelled()) {
 
                     try {
 
-                        this.brokerModel.getHistoricalData().wait();
-                        int percent = (int) (((double) (getGrandTotal() - this.brokerModel.getHistoricalData().size())
+                        this.brokerModel.getHistoryDataRequests().wait();
+                        int percent = (int) (((double) (getGrandTotal() - this.brokerModel.getHistoryDataRequests().size())
                                 / getGrandTotal()) * 100d);
                         setProgress(percent);
                     } catch (InterruptedException ex) {
@@ -226,7 +226,7 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
     private int submitBrokerRequest(Tradestrategy tradestrategy, ZonedDateTime endDate, int totalSumbitted)
             throws InterruptedException, BrokerModelException {
 
-        if (this.brokerModel.isHistoricalDataRunning(tradestrategy.getContract()) || this.isCancelled()) {
+        if (this.brokerModel.isHistoricalDataRequestRunning(tradestrategy.getContract()) || this.isCancelled()) {
 
             _log.error("submitBrokerRequest contract already running: {} endDate: {} barSize: {} chartDays: {}", tradestrategy.getContract().getSymbol(), endDate, tradestrategy.getBarSize(), tradestrategy.getChartDays());
             return totalSumbitted;
@@ -256,7 +256,7 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
             incrementGrandTotal();
         }
 
-        int percent = (int) (((double) (totalSumbitted - this.brokerModel.getHistoricalData().size()) / getGrandTotal())
+        int percent = (int) (((double) (totalSumbitted - this.brokerModel.getHistoryDataRequests().size()) / getGrandTotal())
                 * 100d);
         setProgress(percent);
 
@@ -303,11 +303,11 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
                     // Update the message every 5 seconds
                     if (timerRunning.get() % (5 * 1000) == 0) {
 
-                        percent = (int) (((double) (totalSumbitted - this.brokerModel.getHistoricalData().size()) / getGrandTotal())
+                        percent = (int) (((double) (totalSumbitted - this.brokerModel.getHistoryDataRequests().size()) / getGrandTotal())
                                 * 100d);
                         setProgress(percent);
                         Duration duration = Duration.ofSeconds((periodSeconds - 1) + ((periodSeconds - 1) * (Math.round((Math.floor(getGrandTotal() / numberPerPeriod) - Math.floor(totalSumbitted / numberPerPeriod))))));
-                        publish("Please wait " + String.format(durationFormat, duration.toHoursPart(), duration.toMinutesPart(), duration.toSecondsPart()) + message + " Completed: " + (totalSumbitted - this.brokerModel.getHistoricalData().size()) + ", of: " + getGrandTotal());
+                        publish("Please wait " + String.format(durationFormat, duration.toHoursPart(), duration.toMinutesPart(), duration.toSecondsPart()) + message + " Completed: " + (totalSumbitted - this.brokerModel.getHistoryDataRequests().size()) + ", of: " + getGrandTotal());
                     }
                     lockCoreUtilsTest.wait();
                 }
@@ -324,11 +324,11 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
          */
         if (!this.isCancelled()) {
 
-            synchronized (this.brokerModel.getHistoricalData()) {
+            synchronized (this.brokerModel.getHistoryDataRequests()) {
 
-                while (this.brokerModel.getHistoricalData().size() > 8) {
+                while (this.brokerModel.getHistoryDataRequests().size() > 8) {
 
-                    this.brokerModel.getHistoricalData().wait();
+                    this.brokerModel.getHistoryDataRequests().wait();
                 }
             }
         }
@@ -442,12 +442,12 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
              */
             if (!this.isCancelled()) {
 
-                synchronized (this.brokerModel.getHistoricalData()) {
+                synchronized (this.brokerModel.getHistoryDataRequests()) {
 
-                    while (!this.brokerModel.getHistoricalData().isEmpty()) {
+                    while (!this.brokerModel.getHistoryDataRequests().isEmpty()) {
 
-                        this.brokerModel.getHistoricalData().wait();
-                        int percent = (int) (((double) (totalSumbitted - this.brokerModel.getHistoricalData().size())
+                        this.brokerModel.getHistoryDataRequests().wait();
+                        int percent = (int) (((double) (totalSumbitted - this.brokerModel.getHistoryDataRequests().size())
                                 / getGrandTotal()) * 100d);
                         setProgress(percent);
                     }
@@ -578,7 +578,7 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
 
         for (Tradestrategy tradestrategy : tradingday.getTradestrategies()) {
 
-            if (!this.brokerModel.isRealtimeBarsRunning(tradestrategy)) {
+            if (!this.brokerModel.isRealtimeBarsRequestRunning(tradestrategy)) {
 
                 /*
                  * Fire all the requests to TWS to get chart data After data has
@@ -655,7 +655,7 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
 
         for (Tradestrategy tradestrategy : tradingday.getTradestrategies()) {
 
-            if (this.brokerModel.isHistoricalDataRunning(tradestrategy.getContract())) {
+            if (this.brokerModel.isHistoricalDataRequestRunning(tradestrategy.getContract())) {
 
                 if (!reProcessTradingday.existTradestrategy(tradestrategy)) {
                     reProcessTradingday.addTradestrategy(tradestrategy);

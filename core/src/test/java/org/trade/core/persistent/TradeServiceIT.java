@@ -397,7 +397,7 @@ public class TradeServiceIT {
                 if (OrderType.STP.equals(tradeOrderOcaSubmit.getOrderType())) {
 
                     Execution executionOCA = new Execution();
-                    executionOCA.side(positionOrders.getContract().getTradePosition().getSide());
+                    executionOCA.side(positionOrders.getContractLite().getTradePosition().getSide());
                     executionOCA.time(TradingCalendar
                             .getFormattedDate(TradingCalendar.getDateTimeNowMarketTimeZone(), "yyyyMMdd HH:mm:ss"));
                     executionOCA.exchange("ISLAND");
@@ -718,15 +718,15 @@ public class TradeServiceIT {
                 TradingCalendar.getDateTimeNowMarketTimeZone(), Side.BOT);
 
         TradePosition resultTrade = this.tradeService.saveAspect(tradePosition);
-        resultTrade.getContract().setTradePosition(resultTrade);
-        resultTrade.setContract(this.tradeService.saveAspect(resultTrade.getContract()));
+        resultTrade.getContractLite().setTradePosition(resultTrade);
+        resultTrade.setContractLite(this.tradeService.saveAspect(resultTrade.getContractLite()));
         assertNotNull(resultTrade);
 
         TradestrategyOrders result = this.tradeService
                 .findPositionOrdersByTradestrategyId(tradestrategy.getId());
         assertNotNull(result);
-        resultTrade.getContract().setTradePosition(null);
-        resultTrade.setContract(this.tradeService.saveAspect(resultTrade.getContract()));
+        resultTrade.getContractLite().setTradePosition(null);
+        resultTrade.setContractLite(this.tradeService.saveAspect(resultTrade.getContractLite()));
     }
 
     @Test

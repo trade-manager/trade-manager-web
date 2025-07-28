@@ -117,9 +117,9 @@ public class TradePosition extends Aspect implements java.io.Serializable {
             CascadeType.REMOVE})
     private List<TradeOrder> tradeOrders = new ArrayList<>(0);
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH})
     @JoinColumn(name = "contract_id", nullable = false)
-    private ContractLite contract;
+    private ContractLite contractLite;
 
     public TradePosition() {
     }
@@ -133,7 +133,7 @@ public class TradePosition extends Aspect implements java.io.Serializable {
      */
     public TradePosition(ContractLite contract, ZonedDateTime positionOpenDate, String side) {
 
-        this.contract = contract;
+        this.contractLite = contract;
         this.openDate = positionOpenDate;
         this.side = side;
     }
@@ -158,7 +158,7 @@ public class TradePosition extends Aspect implements java.io.Serializable {
                          BigDecimal totalBuyValue, Integer totalSellQuantity, BigDecimal totalSellValue, BigDecimal totalNetValue,
                          List<TradeOrder> tradeOrders) {
 
-        this.contract = contract;
+        this.contractLite = contract;
         this.openDate = positionOpenDate;
         this.closeDate = positionCloseDate;
         this.openQuantity = openQuantity;
@@ -177,17 +177,17 @@ public class TradePosition extends Aspect implements java.io.Serializable {
      *
      * @return ContractLite
      */
-    public ContractLite getContract() {
-        return this.contract;
+    public ContractLite getContractLite() {
+        return this.contractLite;
     }
 
     /**
      * Method setContract.
      *
-     * @param contract ContractLite
+     * @param contractLite ContractLite
      */
-    public void setContract(ContractLite contract) {
-        this.contract = contract;
+    public void setContractLite(ContractLite contractLite) {
+        this.contractLite = contractLite;
     }
 
     /**
@@ -404,7 +404,7 @@ public class TradePosition extends Aspect implements java.io.Serializable {
      */
     @Transient
     public boolean isOpen() {
-        return this.equals(this.getContract().getTradePosition());
+        return this.equals(this.getContractLite().getTradePosition());
     }
 
     /**
@@ -447,7 +447,7 @@ public class TradePosition extends Aspect implements java.io.Serializable {
                         || !prevIdTradePosition.equals(order.getTradePosition().getId())) {
 
                     prevIdTradePosition = order.getTradePosition().getId();
-                    if (order.getTradePosition().equals(order.getTradePosition().getContract().getTradePosition())) {
+                    if (order.getTradePosition().equals(order.getTradePosition().getContractLite().getTradePosition())) {
                         unRealizedProfit = order.getTradePosition().getTotalNetValue().doubleValue()
                                 + (order.getTradePosition().getOpenQuantity() * lastPrice.doubleValue());
 

@@ -198,7 +198,7 @@ public class Contract extends Aspect implements Serializable, Cloneable {
     @Transient
     private List<Tradestrategy> tradestrategies = Collections.synchronizedList(new ArrayList<>(0));
 
-    @OneToMany(mappedBy = "contract", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "contractLite", fetch = FetchType.LAZY)
     private List<TradePosition> tradePositions = new ArrayList<>(0);
 
     @OneToMany(mappedBy = "contract", fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH, CascadeType.REMOVE})

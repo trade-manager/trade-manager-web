@@ -126,12 +126,23 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
     }
 
     /**
+     * Method getContractRequests.
+     *
+     * @return ConcurrentHashMap<Integer, Contract>
+     * @see IBrokerModel#getContractRequests()
+     */
+    public ConcurrentHashMap<Integer, Contract> getContractRequests() {
+
+        return contractRequests;
+    }
+    /**
      * Method getHistoricalData.
      *
      * @return ConcurrentHashMap<Integer, Tradestrategy>
-     * @see IBrokerModel#getHistoricalData()
+     * @see IBrokerModel#getHistoryDataRequests()
      */
-    public ConcurrentHashMap<Integer, Tradestrategy> getHistoricalData() {
+    public ConcurrentHashMap<Integer, Tradestrategy> getHistoryDataRequests() {
+
         return historyDataRequests;
     }
 
@@ -339,7 +350,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
 
         try {
 
-            if (this.isHistoricalDataRunning(tradestrategy)) {
+            if (this.isHistoricalDataRequestRunning(tradestrategy)) {
 
                 throw new BrokerModelException(tradestrategy.getRequestId(), 3010, "Data request is already in progress for: "
                         + tradestrategy.getContract().getSymbol() + " Please wait or cancel.");
@@ -367,7 +378,6 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
                         BarSize.newInstance(tradestrategy.getBarSize()).getDisplayName(), backfillWhatToShow,
                         backfillUseRTH, backfillDateFormat);
             }
-
         } catch (Throwable ex) {
 
             throw new BrokerModelException(tradestrategy.getRequestId(), 3020, "Error broker data Symbol: "
@@ -380,9 +390,9 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
      *
      * @param contract Contract
      * @return boolean
-     * @see IBrokerModel#isHistoricalDataRunning(Contract)
+     * @see IBrokerModel#isHistoricalDataRequestRunning(Contract)
      */
-    public boolean isHistoricalDataRunning(Contract contract) {
+    public boolean isHistoricalDataRequestRunning(Contract contract) {
 
         for (Tradestrategy item : historyDataRequests.values()) {
 
@@ -399,7 +409,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
      * @param tradestrategy Tradestrategy
      * @return boolean
      */
-    public boolean isHistoricalDataRunning(Tradestrategy tradestrategy) {
+    public boolean isHistoricalDataRequestRunning(Tradestrategy tradestrategy) {
 
         return historyDataRequests.containsKey(tradestrategy.getRequestId());
     }
@@ -409,9 +419,9 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
      *
      * @param contract Contract
      * @return boolean
-     * @see IBrokerModel#isRealtimeBarsRunning(Contract)
+     * @see IBrokerModel#isRealtimeBarsRequestRunning(Contract)
      */
-    public boolean isRealtimeBarsRunning(Contract contract) {
+    public boolean isRealtimeBarsRequestRunning(Contract contract) {
 
         return realTimeBarsRequests.containsKey(contract.getRequestId());
     }
@@ -422,7 +432,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
      * @param tradestrategy Tradestrategy
      * @return boolean
      */
-    public boolean isRealtimeBarsRunning(Tradestrategy tradestrategy) {
+    public boolean isRealtimeBarsRequestRunning(Tradestrategy tradestrategy) {
 
         if (realTimeBarsRequests.containsKey(tradestrategy.getContract().getRequestId())) {
 
@@ -443,9 +453,9 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
      *
      * @param contract Contract
      * @return boolean
-     * @see IBrokerModel#isRealtimeBarsRunning(Contract)
+     * @see IBrokerModel#isRealtimeBarsRequestRunning(Contract)
      */
-    public boolean isMarketDataRunning(Contract contract) {
+    public boolean isMarketDataRequestRunning(Contract contract) {
         return false;
     }
 
@@ -455,7 +465,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
      * @param tradestrategy Tradestrategy
      * @return boolean
      */
-    public boolean isMarketDataRunning(Tradestrategy tradestrategy) {
+    public boolean isMarketDataRequestRunning(Tradestrategy tradestrategy) {
         return false;
     }
 
@@ -915,6 +925,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
 
         String symbol = "N/A";
         BrokerModelException brokerModelException;
+
         if (contractRequests.containsKey(id)) {
 
             symbol = contractRequests.get(id).getSymbol();
@@ -922,6 +933,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
                 contractRequests.remove(id);
             }
         }
+
         if (historyDataRequests.containsKey(id)) {
 
             symbol = historyDataRequests.get(id).getContract().getSymbol();
@@ -1153,7 +1165,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
                     if (tradestrategy.getTradingday().getClose()
                             .isAfter(TradingCalendar.getDateTimeNowMarketTimeZone())) {
 
-                        if (!this.isRealtimeBarsRunning(tradestrategy.getContract())) {
+                        if (!this.isRealtimeBarsRequestRunning(tradestrategy.getContract())) {
 
                             tradestrategy.getContract().addTradestrategy(tradestrategy);
                             this.onReqRealTimeBars(tradestrategy.getContract(),

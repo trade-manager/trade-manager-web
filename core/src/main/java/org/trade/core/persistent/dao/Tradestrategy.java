@@ -719,7 +719,7 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
         for (TradeOrder tradeOrder : this.getTradeOrders()) {
 
             if (tradeOrder.getIsFilled() && tradeOrder.getTradePosition()
-                    .equals(tradeOrder.getTradePosition().getContract().getTradePosition())) {
+                    .equals(tradeOrder.getTradePosition().getContractLite().getTradePosition())) {
 
                 return true;
             }

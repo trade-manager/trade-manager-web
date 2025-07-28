@@ -69,7 +69,7 @@ public class TradestrategyOrders extends Aspect implements Serializable {
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH})
     @JoinColumn(name = "contract_id", insertable = false, updatable = false, nullable = false)
-    private ContractLite contract;
+    private ContractLite contractLite;
 
     @OneToMany(mappedBy = "tradestrategy", fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH})
     private List<TradeOrder> tradeOrders = new ArrayList<>(0);
@@ -82,17 +82,17 @@ public class TradestrategyOrders extends Aspect implements Serializable {
      *
      * @return ContractLite
      */
-    public ContractLite getContract() {
-        return this.contract;
+    public ContractLite getContractLite() {
+        return this.contractLite;
     }
 
     /**
      * Method setContract.
      *
-     * @param contract ContractId
+     * @param contractLite ContractId
      */
-    public void setContract(ContractLite contract) {
-        this.contract = contract;
+    public void setContractLite(ContractLite contractLite) {
+        this.contractLite = contractLite;
     }
 
     /**
@@ -147,7 +147,7 @@ public class TradestrategyOrders extends Aspect implements Serializable {
      */
     @Transient
     public TradePosition getOpenTradePosition() {
-        return this.getContract().getTradePosition();
+        return this.getContractLite().getTradePosition();
     }
 
     /**

@@ -209,7 +209,7 @@ public interface IBrokerModel {
      * @param contract Contract
      * @return boolean
      */
-    boolean isHistoricalDataRunning(Contract contract);
+    boolean isHistoricalDataRequestRunning(Contract contract);
 
     /**
      * Method isRealtimeBarsRunning.
@@ -217,7 +217,7 @@ public interface IBrokerModel {
      * @param tradestrategy Tradestrategy
      * @return boolean
      */
-    boolean isRealtimeBarsRunning(Tradestrategy tradestrategy);
+    boolean isRealtimeBarsRequestRunning(Tradestrategy tradestrategy);
 
     /**
      * Method isRealtimeBarsRunning.
@@ -225,7 +225,7 @@ public interface IBrokerModel {
      * @param contract Contract
      * @return boolean
      */
-    boolean isRealtimeBarsRunning(Contract contract);
+    boolean isRealtimeBarsRequestRunning(Contract contract);
 
     /**
      * Method isMarketDataRunning.
@@ -233,7 +233,7 @@ public interface IBrokerModel {
      * @param tradestrategy Tradestrategy
      * @return boolean
      */
-    boolean isMarketDataRunning(Tradestrategy tradestrategy);
+    boolean isMarketDataRequestRunning(Tradestrategy tradestrategy);
 
     /**
      * Method isMarketDataRunning.
@@ -241,7 +241,7 @@ public interface IBrokerModel {
      * @param contract Contract
      * @return boolean
      */
-    boolean isMarketDataRunning(Contract contract);
+    boolean isMarketDataRequestRunning(Contract contract);
 
     /**
      * Method isHistoricalDataRunning.
@@ -249,7 +249,7 @@ public interface IBrokerModel {
      * @param tradestrategy Tradestrategy
      * @return boolean
      */
-    boolean isHistoricalDataRunning(Tradestrategy tradestrategy);
+    boolean isHistoricalDataRequestRunning(Tradestrategy tradestrategy);
 
     /**
      * Method isAccountUpdatesRunning.
@@ -318,11 +318,18 @@ public interface IBrokerModel {
     void onContractDetails(Contract contract) throws BrokerModelException;
 
     /**
+     * Method getContractRequests.
+     *
+     * @return ConcurrentHashMap<Integer, Contract>
+     */
+    ConcurrentHashMap<Integer, Contract> getContractRequests();
+
+    /**
      * Method getHistoricalData.
      *
      * @return ConcurrentHashMap<Integer, Tradestrategy>
      */
-    ConcurrentHashMap<Integer, Tradestrategy> getHistoricalData();
+    ConcurrentHashMap<Integer, Tradestrategy> getHistoryDataRequests();
 
     /**
      * Method onPlaceOrder.

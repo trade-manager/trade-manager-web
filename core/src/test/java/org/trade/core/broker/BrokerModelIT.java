@@ -420,7 +420,7 @@ public class BrokerModelIT extends TradestrategyBase implements IBrokerChangeLis
 
         tradestrategy.getContract().addTradestrategy(tradestrategy);
         backTestbrokerModel.onReqRealTimeBars(tradestrategy.getContract(), false);
-        assertFalse(backTestbrokerModel.isRealtimeBarsRunning(tradestrategy));
+        assertFalse(backTestbrokerModel.isRealtimeBarsRequestRunning(tradestrategy));
     }
 
     @Test
@@ -440,7 +440,7 @@ public class BrokerModelIT extends TradestrategyBase implements IBrokerChangeLis
     public void isRealtimeBarsRunning() {
 
         backTestbrokerModel.onCancelRealtimeBars(tradestrategy);
-        assertFalse(backTestbrokerModel.isRealtimeBarsRunning(tradestrategy));
+        assertFalse(backTestbrokerModel.isRealtimeBarsRequestRunning(tradestrategy));
 
     }
 
@@ -457,35 +457,35 @@ public class BrokerModelIT extends TradestrategyBase implements IBrokerChangeLis
     public void isHistoricalDataRunningTradestrategy() {
 
         backTestbrokerModel.onCancelBrokerData(tradestrategy);
-        assertFalse(backTestbrokerModel.isHistoricalDataRunning(tradestrategy));
+        assertFalse(backTestbrokerModel.isHistoricalDataRequestRunning(tradestrategy));
     }
 
     @Test
     public void isHistoricalDataRunningContract() {
 
         backTestbrokerModel.onCancelBrokerData(tradestrategy.getContract());
-        assertFalse(backTestbrokerModel.isHistoricalDataRunning(tradestrategy.getContract()));
+        assertFalse(backTestbrokerModel.isHistoricalDataRequestRunning(tradestrategy.getContract()));
     }
 
     @Test
     public void onCancelAllRealtimeData() {
 
         backTestbrokerModel.onCancelAllRealtimeData();
-        assertFalse(backTestbrokerModel.isRealtimeBarsRunning(tradestrategy));
+        assertFalse(backTestbrokerModel.isRealtimeBarsRequestRunning(tradestrategy));
     }
 
     @Test
     public void onCancelRealtimeBars() {
 
         backTestbrokerModel.onCancelRealtimeBars(tradestrategy);
-        assertFalse(backTestbrokerModel.isRealtimeBarsRunning(tradestrategy));
+        assertFalse(backTestbrokerModel.isRealtimeBarsRequestRunning(tradestrategy));
     }
 
     @Test
     public void onCancelBrokerData() {
 
         backTestbrokerModel.onCancelBrokerData(tradestrategy);
-        assertFalse(backTestbrokerModel.isHistoricalDataRunning(tradestrategy));
+        assertFalse(backTestbrokerModel.isHistoricalDataRequestRunning(tradestrategy));
     }
 
     @Test
@@ -503,7 +503,7 @@ public class BrokerModelIT extends TradestrategyBase implements IBrokerChangeLis
     @Test
     public void getHistoricalData() {
 
-        ConcurrentHashMap<Integer, Tradestrategy> historicalDataList = backTestbrokerModel.getHistoricalData();
+        ConcurrentHashMap<Integer, Tradestrategy> historicalDataList = backTestbrokerModel.getHistoryDataRequests();
         assertNotNull(historicalDataList);
     }
 
