@@ -570,8 +570,6 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public TradeOrder saveTradeOrder(TradeOrder tradeOrder) {
 
-        int codePosition = 0;
-
         try {
             /*
              * This is a filled order.
@@ -629,19 +627,9 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
                                 (Action.BUY.equals(tradeOrder.getAction()) ? Side.BOT : Side.SLD));
                         tradeOrder.setIsOpenPosition(true);
                         tradestrategyOrders.setStatus(TradestrategyStatus.OPEN);
-                        codePosition = 1;
                         tradestrategyOrders = this.saveAspect(tradestrategyOrders);
-                        codePosition = 2;
                         tradePosition = this.saveAspect(tradePosition);
                         tradePosition.addTradeOrder(tradeOrder);
-
-                        // Set the contract up with this as the open position.
-                        if (null == tradePosition.getContractLite().getTradePosition()) {
-
-                            tradePosition.getContractLite().setTradePosition(tradePosition);
-                            codePosition = 3;
-                            tradePosition.setContractLite(this.saveAspect(tradePosition.getContractLite()));
-                        }
                     }
 
                     tradeOrder.setTradePosition(tradePosition);
@@ -659,9 +647,6 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
                 tradePosition = this.findTradePositionById(tradeOrder.getTradePosition().getId());
                 tradeOrder.setTradePosition(tradePosition);
             }
-
-            codePosition = 4;
-            tradeOrder = saveAspect(tradeOrder);
 
             boolean allOrdersCancelled = true;
             int totalBuyQuantity = 0;
@@ -745,14 +730,12 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
                         if (null != tradePosition.getContractLite().getTradePosition()) {
 
                             tradePosition.getContractLite().setTradePosition(null);
-                            codePosition = 5;
                             tradePosition.setContractLite(this.saveAspect(tradePosition.getContractLite()));
                         }
                     }
                 } else {
 
                     tradePosition.getContractLite().setTradePosition(tradePosition);
-                    codePosition = 6;
                     tradePosition.setContractLite(this.saveAspect(tradePosition.getContractLite()));
                 }
 
@@ -773,16 +756,14 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
                         if (!Objects.equals(item.getTradestrategyLite().getId(), tradestrategyOrders.getId())) {
 
                             item.getTradestrategyLite().setStatus(TradestrategyStatus.CLOSED);
-                            codePosition = 7;
                             item.setTradestrategyLite(this.saveAspect(item.getTradestrategyLite()));
                         }
                     }
 
                     tradestrategyOrders.setStatus(TradestrategyStatus.CLOSED);
-                    codePosition = 8;
                     tradestrategyOrders = this.saveAspect(tradestrategyOrders);
                 }
-                codePosition = 9;
+
                 tradePosition = this.saveAspect(tradePosition);
             } else {
 
@@ -798,7 +779,6 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
                         if (null == tradestrategyOrders.getStatus()) {
 
                             tradestrategyOrders.setStatus(TradestrategyStatus.CANCELLED);
-                            codePosition = 10;
                             this.saveAspect(tradestrategyOrders);
                         }
                     }
@@ -812,13 +792,14 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
                 if (CoreUtils.nullSafeComparator(comms.getBigDecimalValue(), tradePosition.getTotalCommission()) == 1) {
 
                     tradePosition.setTotalCommission(comms.getBigDecimalValue());
-                    codePosition = 11;
                     tradePosition = this.saveAspect(tradePosition);
                 }
             }
+
+            tradeOrder =  saveAspect(tradeOrder);
         } catch (Exception ex) {
 
-            _log.error("Error: saving tradeOrder {}, codePosition: {}, msg: {}", tradeOrder.getId(), codePosition, ex.getMessage());
+            _log.error("Error: saving tradeOrder {}, msg: {}", tradeOrder.getId(), ex.getMessage());
         }
 
         return tradeOrder;
