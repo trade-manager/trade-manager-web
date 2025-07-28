@@ -810,11 +810,6 @@ public class TWSBrokerService extends AbstractBrokerModel {
     }
 
     @Override
-    public ConcurrentHashMap<Integer, Contract> getContractRequests() {
-        return contractRequests;
-    }
-
-    @Override
     public TradeOrder onPlaceOrder(Contract contract, TradeOrder tradeOrder) throws BrokerModelException {
         try {
             if (controller().client().isConnected()) {

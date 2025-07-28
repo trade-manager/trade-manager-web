@@ -318,13 +318,6 @@ public interface IBrokerModel {
     void onContractDetails(Contract contract) throws BrokerModelException;
 
     /**
-     * Method getContractRequests.
-     *
-     * @return ConcurrentHashMap<Integer, Contract>
-     */
-    ConcurrentHashMap<Integer, Contract> getContractRequests();
-
-    /**
      * Method getHistoricalData.
      *
      * @return ConcurrentHashMap<Integer, Tradestrategy>

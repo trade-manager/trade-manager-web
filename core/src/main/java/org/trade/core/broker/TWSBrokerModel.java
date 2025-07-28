@@ -164,11 +164,6 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
         return client.isConnected();
     }
 
-
-    public ConcurrentHashMap<Integer, Contract> getContractRequests() {
-        return contractRequests;
-    }
-
     public ConcurrentHashMap<Integer, Tradestrategy> getHistoryDataRequests() {
         return historyDataRequests;
     }
