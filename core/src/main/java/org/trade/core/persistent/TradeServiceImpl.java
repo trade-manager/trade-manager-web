@@ -292,7 +292,7 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
     public boolean existTradestrategyByRequestId(final Integer requestId) {
 
         Tradestrategy instance = tradestrategyRepository.findByRequestId(requestId);
-        return instance == null ? false : true;
+        return instance != null;
     }
 
     public TradestrategyLite findTradestrategyLiteByTradestrategy(final Tradestrategy tradestrategy) {
@@ -304,12 +304,8 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
 
         Optional<TradePosition> tradePosition = tradePositionRepository.findById(id);
 
-        if (tradePosition.isPresent()) {
+        return tradePosition.orElse(null);
 
-            return tradePosition.get();
-        }
-
-        return null;
     }
 
     @Transactional
@@ -367,13 +363,7 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
 
             Account current = this.findAccountByAccountNumber(account.getAccountNumber());
 
-            if (null != current) {
-
-                accounts.add(current);
-            } else {
-
-                accounts.add(account);
-            }
+            accounts.add(Objects.requireNonNullElse(current, account));
         }
 
         instance.getAccounts().clear();
@@ -512,7 +502,7 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
             Candle candle = candleItem.getCandle();
             List<Candle> candles = candleRepository.findCandlesByContractDateRangeBarSize(contract.get(), candle.getStartPeriod(), candle.getEndPeriod(), candle.getBarSize());
 
-            if (!candles.isEmpty() && candles.size() == 1) {
+            if (candles.size() == 1) {
 
                 if (candle.equals(candles.getFirst())) {
 
@@ -572,7 +562,7 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
 
         try {
             /*
-             * This is a filled order.
+             * This is a new order set the status to UNSUBMIT
              */
             if (!tradeOrder.getIsFilled()
                     && CoreUtils.nullSafeComparator(tradeOrder.getQuantity(), tradeOrder.getFilledQuantity()) == 0) {
@@ -596,7 +586,7 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
             TradestrategyOrders tradestrategyOrders = null;
 
             /*
-             * If the filled qty is > 0, and we have no TradePosition then create
+             * If the filled qty is > 0 and we have no TradePosition then create
              * one.
              */
             if (!tradeOrder.hasTradePosition()) {
@@ -628,8 +618,8 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
                         tradeOrder.setIsOpenPosition(true);
                         tradestrategyOrders.setStatus(TradestrategyStatus.OPEN);
                         tradestrategyOrders = this.saveAspect(tradestrategyOrders);
-                        tradePosition = this.saveAspect(tradePosition);
                         tradePosition.addTradeOrder(tradeOrder);
+                        tradePosition = this.saveAspect(tradePosition);
                     }
 
                     tradeOrder.setTradePosition(tradePosition);
@@ -726,12 +716,8 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
                     if (openQuantity == 0) {
 
                         tradePosition.setCloseDate(tradeOrder.getFilledDate());
-
-                        if (null != tradePosition.getContractLite().getTradePosition()) {
-
-                            tradePosition.getContractLite().setTradePosition(null);
-                            tradePosition.setContractLite(this.saveAspect(tradePosition.getContractLite()));
-                        }
+                        tradePosition.getContractLite().setTradePosition(null);
+                        tradePosition.setContractLite(this.saveAspect(tradePosition.getContractLite()));
                     }
                 } else {
 
@@ -756,15 +742,15 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
                         if (!Objects.equals(item.getTradestrategyLite().getId(), tradestrategyOrders.getId())) {
 
                             item.getTradestrategyLite().setStatus(TradestrategyStatus.CLOSED);
-                            item.setTradestrategyLite(this.saveAspect(item.getTradestrategyLite()));
+                            this.saveAspect(item.getTradestrategyLite());
                         }
                     }
 
                     tradestrategyOrders.setStatus(TradestrategyStatus.CLOSED);
-                    tradestrategyOrders = this.saveAspect(tradestrategyOrders);
+                    this.saveAspect(tradestrategyOrders);
                 }
 
-                tradePosition = this.saveAspect(tradePosition);
+                this.saveAspect(tradePosition);
             } else {
 
                 if (allOrdersCancelled) {
@@ -792,11 +778,11 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
                 if (CoreUtils.nullSafeComparator(comms.getBigDecimalValue(), tradePosition.getTotalCommission()) == 1) {
 
                     tradePosition.setTotalCommission(comms.getBigDecimalValue());
-                    tradePosition = this.saveAspect(tradePosition);
+                    this.saveAspect(tradePosition);
                 }
             }
 
-            tradeOrder =  saveAspect(tradeOrder);
+            return this.saveAspect(tradeOrder);
         } catch (Exception ex) {
 
             _log.error("Error: saving tradeOrder {}, msg: {}", tradeOrder.getId(), ex.getMessage());
