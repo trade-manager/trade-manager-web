@@ -655,9 +655,11 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
 
         for (Tradestrategy tradestrategy : tradingday.getTradestrategies()) {
 
-            if (this.brokerModel.isHistoricalDataRequestRunning(tradestrategy.getContract())) {
+            if (this.brokerModel.isHistoricalDataRequestRunning(tradestrategy.getContract()) ||
+                    this.brokerModel.isRealtimeBarsRequestRunning(tradestrategy.getContract())) {
 
                 if (!reProcessTradingday.existTradestrategy(tradestrategy)) {
+
                     reProcessTradingday.addTradestrategy(tradestrategy);
                 }
             } else {

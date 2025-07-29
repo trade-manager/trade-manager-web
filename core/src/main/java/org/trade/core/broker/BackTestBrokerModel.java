@@ -316,6 +316,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
      * @param mktData  boolean
      */
     public void onReqRealTimeBars(Contract contract, boolean mktData) {
+
     }
 
     /**
@@ -363,6 +364,10 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
                         BarSize.newInstance(tradestrategy.getBarSize()).getDisplayName(), backfillWhatToShow,
                         backfillUseRTH, backfillDateFormat);
             } else {
+
+                // Running a strategy and getting the historical data. realTimeBarsRequests is used to
+                // Stop the same contract for different days running at the same time.
+                realTimeBarsRequests.put(tradestrategy.getContract().getRequestId(), tradestrategy.getContract());
                 client.reqHistoricalData(tradestrategy.getRequestId(), tradestrategy, null,
                         ChartDays.newInstance(tradestrategy.getChartDays()).getDisplayName(),
                         BarSize.newInstance(tradestrategy.getBarSize()).getDisplayName(), backfillWhatToShow,

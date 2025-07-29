@@ -560,235 +560,228 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public TradeOrder saveTradeOrder(TradeOrder tradeOrder) {
 
-        try {
-            /*
-             * This is a new order set the status to UNSUBMIT
-             */
-            if (!tradeOrder.getIsFilled()
-                    && CoreUtils.nullSafeComparator(tradeOrder.getQuantity(), tradeOrder.getFilledQuantity()) == 0) {
+        /*
+         * This is a new order set the status to UNSUBMIT
+         */
+        if (!tradeOrder.getIsFilled()
+                && CoreUtils.nullSafeComparator(tradeOrder.getQuantity(), tradeOrder.getFilledQuantity()) == 0) {
 
-                tradeOrder.setIsFilled(true);
-                tradeOrder.setStatus(OrderStatus.FILLED);
-            }
+            tradeOrder.setIsFilled(true);
+            tradeOrder.setStatus(OrderStatus.FILLED);
+        }
 
-            /*
-             * If a partial filled order is cancelled mark the order as filled.
-             */
-            if (OrderStatus.CANCELLED.equals(tradeOrder.getStatus()) && !tradeOrder.getIsFilled()
-                    && CoreUtils.nullSafeComparator(tradeOrder.getFilledQuantity(), 0) == 1) {
+        /*
+         * If a partial filled order is cancelled mark the order as filled.
+         */
+        if (OrderStatus.CANCELLED.equals(tradeOrder.getStatus()) && !tradeOrder.getIsFilled()
+                && CoreUtils.nullSafeComparator(tradeOrder.getFilledQuantity(), 0) == 1) {
 
-                tradeOrder.setIsFilled(true);
-                tradeOrder.setStatus(OrderStatus.FILLED);
-            }
+            tradeOrder.setIsFilled(true);
+            tradeOrder.setStatus(OrderStatus.FILLED);
+        }
 
-            Long tradestrategyId = tradeOrder.getTradestrategy().getId();
-            TradePosition tradePosition;
-            TradestrategyOrders tradestrategyOrders = null;
+        Long tradestrategyId = tradeOrder.getTradestrategy().getId();
+        TradePosition tradePosition;
+        TradestrategyOrders tradestrategyOrders = null;
 
-            /*
-             * If the filled qty is > 0 and we have no TradePosition then create
-             * one.
-             */
-            if (!tradeOrder.hasTradePosition()) {
+        /*
+         * If the filled qty is > 0 and we have no TradePosition then create
+         * one.
+         */
+        if (!tradeOrder.hasTradePosition()) {
 
-                if (CoreUtils.nullSafeComparator(tradeOrder.getFilledQuantity(), 0) == 1) {
+            if (CoreUtils.nullSafeComparator(tradeOrder.getFilledQuantity(), 0) == 1) {
 
-                    tradestrategyOrders = this.findPositionOrdersByTradestrategyId(tradestrategyId);
+                tradestrategyOrders = this.findPositionOrdersByTradestrategyId(tradestrategyId);
 
-                    if (tradestrategyOrders.hasOpenTradePosition()) {
+                if (tradestrategyOrders.hasOpenTradePosition()) {
 
-                        tradePosition = this.findTradePositionById(
-                                tradestrategyOrders.getContractLite().getTradePosition().getId());
+                    tradePosition = this.findTradePositionById(
+                            tradestrategyOrders.getContractLite().getTradePosition().getId());
 
-                        if (!tradePosition.containsTradeOrder(tradeOrder)) {
+                    if (!tradePosition.containsTradeOrder(tradeOrder)) {
 
-                            tradePosition.addTradeOrder(tradeOrder);
-                        }
-                    } else {
-
-                        /*
-                         * Note Order status can be fired before execDetails
-                         * this could result in a new tradeposition. OrderStatus
-                         * does not contain the filled date so we must set it
-                         * here.
-                         */
-                        ZonedDateTime positionOpenDate = tradeOrder.getFilledDate();
-                        tradePosition = new TradePosition(tradestrategyOrders.getContractLite(), positionOpenDate,
-                                (Action.BUY.equals(tradeOrder.getAction()) ? Side.BOT : Side.SLD));
-                        tradeOrder.setIsOpenPosition(true);
-                        tradestrategyOrders.setStatus(TradestrategyStatus.OPEN);
-                        tradestrategyOrders = this.saveAspect(tradestrategyOrders);
                         tradePosition.addTradeOrder(tradeOrder);
-                        tradePosition = this.saveAspect(tradePosition);
                     }
-
-                    tradeOrder.setTradePosition(tradePosition);
                 } else {
 
                     /*
-                     * If the order has not been filled, and it has no
-                     * TradePosition this is the first order that has just been
-                     * update.
+                     * Note Order status can be fired before execDetails
+                     * this could result in a new tradeposition. OrderStatus
+                     * does not contain the filled date so we must set it
+                     * here.
                      */
-                    return this.saveAspect(tradeOrder);
+                    ZonedDateTime positionOpenDate = tradeOrder.getFilledDate();
+                    tradePosition = new TradePosition(tradestrategyOrders.getContractLite(), positionOpenDate,
+                            (Action.BUY.equals(tradeOrder.getAction()) ? Side.BOT : Side.SLD));
+                    tradeOrder.setIsOpenPosition(true);
+                    tradestrategyOrders.setStatus(TradestrategyStatus.OPEN);
+                    tradestrategyOrders = this.saveAspect(tradestrategyOrders);
+                    tradePosition.addTradeOrder(tradeOrder);
+                    tradePosition = this.saveAspect(tradePosition);
                 }
+
+                tradeOrder.setTradePosition(tradePosition);
             } else {
 
-                tradePosition = this.findTradePositionById(tradeOrder.getTradePosition().getId());
-                tradeOrder.setTradePosition(tradePosition);
-            }
-
-            boolean allOrdersCancelled = true;
-            int totalBuyQuantity = 0;
-            int totalSellQuantity = 0;
-            double totalCommission = 0;
-            double totalBuyValue = 0;
-            double totalSellValue = 0;
-
-            for (TradeOrder order : tradePosition.getTradeOrders()) {
-
-                if (order.getOrderKey().equals(tradeOrder.getOrderKey())) {
-
-                    order = tradeOrder;
-                }
-
                 /*
-                 * If all orders are cancelled and not filled then we need to
-                 * update the tradestrategy status to cancelled.
+                 * If the order has not been filled, and it has no
+                 * TradePosition this is the first order that has just been
+                 * update.
                  */
-                if (!OrderStatus.CANCELLED.equals(order.getStatus())) {
+                return this.saveAspect(tradeOrder);
+            }
+        } else {
 
-                    allOrdersCancelled = false;
-                }
+            tradePosition = this.findTradePositionById(tradeOrder.getTradePosition().getId());
+            tradeOrder.setTradePosition(tradePosition);
+        }
 
-                if (Action.BUY.equals(order.getAction())) {
+        boolean allOrdersCancelled = true;
+        int totalBuyQuantity = 0;
+        int totalSellQuantity = 0;
+        double totalCommission = 0;
+        double totalBuyValue = 0;
+        double totalSellValue = 0;
 
-                    totalBuyQuantity = totalBuyQuantity + order.getFilledQuantity();
-                    totalBuyValue = totalBuyValue + (order.getAverageFilledPrice().doubleValue()
-                            * order.getFilledQuantity().doubleValue());
-                } else {
+        for (TradeOrder order : tradePosition.getTradeOrders()) {
 
-                    totalSellQuantity = totalSellQuantity + order.getFilledQuantity();
-                    totalSellValue = totalSellValue + (order.getAverageFilledPrice().doubleValue()
-                            * order.getFilledQuantity().doubleValue());
-                }
+            if (order.getOrderKey().equals(tradeOrder.getOrderKey())) {
 
-                totalCommission = totalCommission + (order.getCommission() == null ? 0 : order.getCommission().doubleValue());
+                order = tradeOrder;
             }
 
             /*
-             * totalFilledQuantity has changed for the trade update the trade
-             * values.
+             * If all orders are cancelled and not filled then we need to
+             * update the tradestrategy status to cancelled.
              */
-            Money comms = new Money(totalCommission);
+            if (!OrderStatus.CANCELLED.equals(order.getStatus())) {
 
-            if (CoreUtils.nullSafeComparator(totalBuyQuantity, tradePosition.getTotalBuyQuantity()) != 0
-                    || CoreUtils.nullSafeComparator(totalSellQuantity,
-                    tradePosition.getTotalSellQuantity()) != 0) {
+                allOrdersCancelled = false;
+            }
 
-                int openQuantity = totalBuyQuantity - totalSellQuantity;
-                tradePosition.setOpenQuantity(openQuantity);
-                tradePosition.setTotalBuyQuantity(totalBuyQuantity);
-                tradePosition.setTotalBuyValue(
-                        (new BigDecimal(totalBuyValue)).setScale(SCALE_5, RoundingMode.HALF_EVEN));
-                tradePosition.setTotalSellQuantity(totalSellQuantity);
-                tradePosition.setTotalSellValue(
-                        (new BigDecimal(totalSellValue)).setScale(SCALE_5, RoundingMode.HALF_EVEN));
-                tradePosition.setTotalNetValue(
-                        (new BigDecimal(totalSellValue - totalBuyValue)).setScale(SCALE_5, RoundingMode.HALF_EVEN));
-                tradePosition.setTotalCommission(comms.getBigDecimalValue());
+            if (Action.BUY.equals(order.getAction())) {
 
-                if (openQuantity > 0) {
+                totalBuyQuantity = totalBuyQuantity + order.getFilledQuantity();
+                totalBuyValue = totalBuyValue + (order.getAverageFilledPrice().doubleValue()
+                        * order.getFilledQuantity().doubleValue());
+            } else {
 
-                    tradePosition.setSide(Side.BOT);
-                }
+                totalSellQuantity = totalSellQuantity + order.getFilledQuantity();
+                totalSellValue = totalSellValue + (order.getAverageFilledPrice().doubleValue()
+                        * order.getFilledQuantity().doubleValue());
+            }
 
-                if (openQuantity < 0) {
+            totalCommission = totalCommission + (order.getCommission() == null ? 0 : order.getCommission().doubleValue());
+        }
 
-                    tradePosition.setSide(Side.SLD);
-                }
+        /*
+         * totalFilledQuantity has changed for the trade update the trade
+         * values.
+         */
+        Money comms = new Money(totalCommission);
 
-                /*
-                 * Position should be closed if openQuantity = 0
-                 */
-                if (tradePosition.equals(tradePosition.getContractLite().getTradePosition())) {
+        if (CoreUtils.nullSafeComparator(totalBuyQuantity, tradePosition.getTotalBuyQuantity()) != 0
+                || CoreUtils.nullSafeComparator(totalSellQuantity,
+                tradePosition.getTotalSellQuantity()) != 0) {
 
-                    if (openQuantity == 0) {
+            int openQuantity = totalBuyQuantity - totalSellQuantity;
+            tradePosition.setOpenQuantity(openQuantity);
+            tradePosition.setTotalBuyQuantity(totalBuyQuantity);
+            tradePosition.setTotalBuyValue(
+                    (new BigDecimal(totalBuyValue)).setScale(SCALE_5, RoundingMode.HALF_EVEN));
+            tradePosition.setTotalSellQuantity(totalSellQuantity);
+            tradePosition.setTotalSellValue(
+                    (new BigDecimal(totalSellValue)).setScale(SCALE_5, RoundingMode.HALF_EVEN));
+            tradePosition.setTotalNetValue(
+                    (new BigDecimal(totalSellValue - totalBuyValue)).setScale(SCALE_5, RoundingMode.HALF_EVEN));
+            tradePosition.setTotalCommission(comms.getBigDecimalValue());
 
-                        tradePosition.setCloseDate(tradeOrder.getFilledDate());
-                        tradePosition.getContractLite().setTradePosition(null);
-                        tradePosition.setContractLite(this.saveAspect(tradePosition.getContractLite()));
-                    }
-                } else {
+            if (openQuantity > 0) {
 
-                    tradePosition.getContractLite().setTradePosition(tradePosition);
+                tradePosition.setSide(Side.BOT);
+            }
+
+            if (openQuantity < 0) {
+
+                tradePosition.setSide(Side.SLD);
+            }
+
+            /*
+             * Position should be closed if openQuantity = 0
+             */
+            if (tradePosition.equals(tradePosition.getContractLite().getTradePosition())) {
+
+                if (openQuantity == 0) {
+
+                    tradePosition.setCloseDate(tradeOrder.getFilledDate());
+                    tradePosition.getContractLite().setTradePosition(null);
                     tradePosition.setContractLite(this.saveAspect(tradePosition.getContractLite()));
                 }
+            } else {
 
-                // Partial fills case.
+                tradePosition.getContractLite().setTradePosition(tradePosition);
+                tradePosition.setContractLite(this.saveAspect(tradePosition.getContractLite()));
+            }
+
+            // Partial fills case.
+            if (null == tradestrategyOrders) {
+
+                tradestrategyOrders = this.findPositionOrdersByTradestrategyId(tradestrategyId);
+            }
+
+            if (!tradePosition.isOpen() && !TradestrategyStatus.CLOSED.equals(tradestrategyOrders.getStatus())) {
+
+                /*
+                 * Now update all the tradestrategies as there could be many
+                 * if the position is across multiple days.
+                 */
+                for (TradeOrder item : tradePosition.getTradeOrders()) {
+
+                    if (!Objects.equals(item.getTradestrategyLite().getId(), tradestrategyOrders.getId())) {
+
+                        item.getTradestrategyLite().setStatus(TradestrategyStatus.CLOSED);
+                        this.saveAspect(item.getTradestrategyLite());
+                    }
+                }
+
+                tradestrategyOrders.setStatus(TradestrategyStatus.CLOSED);
+                this.saveAspect(tradestrategyOrders);
+            }
+
+            this.saveAspect(tradePosition);
+        } else {
+
+            if (allOrdersCancelled) {
+
                 if (null == tradestrategyOrders) {
 
                     tradestrategyOrders = this.findPositionOrdersByTradestrategyId(tradestrategyId);
                 }
 
-                if (!tradePosition.isOpen() && !TradestrategyStatus.CLOSED.equals(tradestrategyOrders.getStatus())) {
+                if (!TradestrategyStatus.CANCELLED.equals(tradestrategyOrders.getStatus())) {
 
-                    /*
-                     * Now update all the tradestrategies as there could be many
-                     * if the position is across multiple days.
-                     */
-                    for (TradeOrder item : tradePosition.getTradeOrders()) {
+                    if (null == tradestrategyOrders.getStatus()) {
 
-                        if (!Objects.equals(item.getTradestrategyLite().getId(), tradestrategyOrders.getId())) {
-
-                            item.getTradestrategyLite().setStatus(TradestrategyStatus.CLOSED);
-                            this.saveAspect(item.getTradestrategyLite());
-                        }
+                        tradestrategyOrders.setStatus(TradestrategyStatus.CANCELLED);
+                        this.saveAspect(tradestrategyOrders);
                     }
-
-                    tradestrategyOrders.setStatus(TradestrategyStatus.CLOSED);
-                    this.saveAspect(tradestrategyOrders);
-                }
-
-                this.saveAspect(tradePosition);
-            } else {
-
-                if (allOrdersCancelled) {
-
-                    if (null == tradestrategyOrders) {
-
-                        tradestrategyOrders = this.findPositionOrdersByTradestrategyId(tradestrategyId);
-                    }
-
-                    if (!TradestrategyStatus.CANCELLED.equals(tradestrategyOrders.getStatus())) {
-
-                        if (null == tradestrategyOrders.getStatus()) {
-
-                            tradestrategyOrders.setStatus(TradestrategyStatus.CANCELLED);
-                            this.saveAspect(tradestrategyOrders);
-                        }
-                    }
-                }
-
-                /*
-                 * If the commissions (note these are updated by the orderState
-                 * event after the order may have been filled) have changed
-                 * update the trade.
-                 */
-                if (CoreUtils.nullSafeComparator(comms.getBigDecimalValue(), tradePosition.getTotalCommission()) == 1) {
-
-                    tradePosition.setTotalCommission(comms.getBigDecimalValue());
-                    this.saveAspect(tradePosition);
                 }
             }
 
-            return this.saveAspect(tradeOrder);
-        } catch (Exception ex) {
+            /*
+             * If the commissions (note these are updated by the orderState
+             * event after the order may have been filled) have changed
+             * update the trade.
+             */
+            if (CoreUtils.nullSafeComparator(comms.getBigDecimalValue(), tradePosition.getTotalCommission()) == 1) {
 
-            _log.error("Error: saving tradeOrder {}, msg: {}", tradeOrder.getId(), ex.getMessage());
+                tradePosition.setTotalCommission(comms.getBigDecimalValue());
+                this.saveAspect(tradePosition);
+            }
         }
 
-        return tradeOrder;
+        return this.saveAspect(tradeOrder);
     }
 
     public TradeOrder saveTradeOrderfill(final TradeOrder tradeOrder) {

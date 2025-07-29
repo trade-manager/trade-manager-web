@@ -376,7 +376,6 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
 
                     onReqMarketData(contract, genericTicklist, false);
                 }
-
             } else {
 
                 throw new BrokerModelException(contract.getRequestId(), 3040,
