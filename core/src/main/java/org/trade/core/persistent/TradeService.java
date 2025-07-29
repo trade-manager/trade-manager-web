@@ -110,14 +110,6 @@ public interface TradeService extends AspectService {
     TradeOrder saveTradeOrder(TradeOrder instance);
 
     /**
-     * Method saveTradePosition.
-     *
-     * @param instance TradePosition
-     * @return TradePosition
-     */
-    TradePosition saveTradePosition(TradePosition instance);
-
-    /**
      * Method saveTradeOrderfill.
      *
      * @param tradeOrder TradeOrder

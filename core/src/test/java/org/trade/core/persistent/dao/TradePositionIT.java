@@ -108,10 +108,10 @@ public class TradePositionIT {
     @Test
     public void addRemoveTradePosition() {
 
-        TradePosition instance = new TradePosition(tradestrategy.getContract(),
+        TradePosition instance = new TradePosition(tradestrategy.getContractLite(),
                 TradingCalendar.getDateTimeNowMarketTimeZone(), Side.BOT);
 
-        instance = tradeService.saveTradePosition(instance);
+        instance = tradeService.saveAspect(instance);
 
         assertNotNull(instance.getId());
         _log.info("testAddTradePosition tradestrategyId: {}IdTradePosition: {}", tradestrategy.getId(), instance.getId());

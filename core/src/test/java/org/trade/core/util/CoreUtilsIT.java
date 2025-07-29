@@ -82,7 +82,6 @@ public class CoreUtilsIT {
 
     private final static Logger _log = LoggerFactory.getLogger(CoreUtilsIT.class);
 
-
     private static final int SCALE = 5;
     private AtomicInteger timerRunning = null;
     private final Object lockCoreUtilsTest = new Object();
@@ -146,8 +145,11 @@ public class CoreUtilsIT {
     @Test
     public void nullSafe() {
 
-        int returnVal = CoreUtils.nullSafeComparator(null, BigDecimal.valueOf(1.23));
-        assertEquals(-1, returnVal);
+        int returnVal = CoreUtils.nullSafeComparator(BigDecimal.valueOf(1.25), BigDecimal.valueOf(1.24));
+        assertEquals(1, returnVal);
+
+        returnVal = CoreUtils.nullSafeComparator(1, 0);
+        assertEquals(1, returnVal);
 
         returnVal = CoreUtils.nullSafeComparator(BigDecimal.valueOf(1.23), null);
         assertEquals(1, returnVal);
@@ -158,11 +160,20 @@ public class CoreUtilsIT {
         returnVal = CoreUtils.nullSafeComparator(null, null);
         assertEquals(0, returnVal);
 
-        returnVal = CoreUtils.nullSafeComparator(BigDecimal.valueOf(1.23), BigDecimal.valueOf(1.24));
+        returnVal = CoreUtils.nullSafeComparator(0, 0);
+        assertEquals(0, returnVal);
+
+        returnVal = CoreUtils.nullSafeComparator(BigDecimal.valueOf(1.23), BigDecimal.valueOf(1.23));
+        assertEquals(0, returnVal);
+
+        returnVal = CoreUtils.nullSafeComparator(BigDecimal.valueOf(-1.23), BigDecimal.valueOf(-1.23));
+        assertEquals(0, returnVal);
+
+        returnVal = CoreUtils.nullSafeComparator(null, BigDecimal.valueOf(1.23));
         assertEquals(-1, returnVal);
 
-        returnVal = CoreUtils.nullSafeComparator(BigDecimal.valueOf(1.25), BigDecimal.valueOf(1.24));
-        assertEquals(1, returnVal);
+        returnVal = CoreUtils.nullSafeComparator(BigDecimal.valueOf(1.23), BigDecimal.valueOf(1.24));
+        assertEquals(-1, returnVal);
 
         returnVal = CoreUtils.nullSafeComparator(null, 1);
         assertEquals(-1, returnVal);
@@ -170,11 +181,6 @@ public class CoreUtilsIT {
         returnVal = CoreUtils.nullSafeComparator(null, 0);
         assertEquals(-1, returnVal);
 
-        returnVal = CoreUtils.nullSafeComparator(0, 0);
-        assertEquals(0, returnVal);
-
-        returnVal = CoreUtils.nullSafeComparator(1, 0);
-        assertEquals(1, returnVal);
 
         Money avgFilledPrice = new Money(186.75);
         Money lastPrice = new Money(186.78);

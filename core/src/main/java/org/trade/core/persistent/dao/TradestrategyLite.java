@@ -64,13 +64,12 @@ public class TradestrategyLite extends Aspect implements Serializable {
     }
 
     /**
-     * Constructor for TradestrategyLite. Need for filterexd query that just
+     * Constructor for TradestrategyLite. Need for filtered query that just
      * gets the current version
      *
      * @param id      Integer
      * @param version Integer
      */
-
     public TradestrategyLite(Long id, Integer version) {
 
         setId(id);

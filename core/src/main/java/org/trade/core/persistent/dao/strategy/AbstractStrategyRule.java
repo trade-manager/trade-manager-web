@@ -1403,7 +1403,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
      */
     private ZonedDateTime getOrderCreateDate() {
         ZonedDateTime createDate = TradingCalendar.getDateTimeNowMarketTimeZone();
-        if (!brokerModel.isRealtimeBarsRunning(this.tradestrategy)) {
+        if (!brokerModel.isRealtimeBarsRequestRunning(this.tradestrategy)) {
             if (null != this.getCurrentCandle())
                 createDate = this.getCurrentCandle().getPeriod().getStart();
         }

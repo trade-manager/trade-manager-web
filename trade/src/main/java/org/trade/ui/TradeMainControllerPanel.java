@@ -562,7 +562,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                             if (!openTradeOrders.containsKey(todayTradeOrder.getOrderKey())) {
                                 todayTradeOrder.setStatus(OrderStatus.CANCELLED);
                                 todayTradeOrder.setOrderUpdateDate(TradingCalendar.getDateTimeNowMarketTimeZone());
-                                tradeService.saveTradeOrder(todayTradeOrder);
+                                todayTradeOrder = tradeService.saveTradeOrder(todayTradeOrder);
                             }
                         }
                     }
@@ -1373,7 +1373,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
     public void doCancel(final Tradestrategy tradestrategy) {
         try {
 
-            if (brokerModel.isRealtimeBarsRunning(tradestrategy)) {
+            if (brokerModel.isRealtimeBarsRequestRunning(tradestrategy)) {
 
                 brokerModel.onCancelRealtimeBars(tradestrategy);
                 this.setStatusBarMessage(
@@ -1645,7 +1645,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                             return;
                         }
 
-                        if (brokerModel.isRealtimeBarsRunning(tradestrategy)) {
+                        if (brokerModel.isRealtimeBarsRequestRunning(tradestrategy)) {
 
                             int result = JOptionPane.showConfirmDialog(this.getFrame(),
                                     "A real time data request is already running for Symbol: "

@@ -281,13 +281,16 @@ public class DBBroker extends Broker {
                      * that got us into this position to close.
                      */
                     synchronized (lockBackTestWorker) {
+
                         while (strategiesRunning.get() > 1) {
+
                             lockBackTestWorker.wait();
                         }
                     }
                 }
 
                 if (strategiesRunning.get() == 0 && !positionOrders.hasOpenTradePosition()) {
+
                     break;
                 }
             }
@@ -298,6 +301,9 @@ public class DBBroker extends Broker {
         } catch (Exception ex) {
 
             _log.error("Error BackTestBroker Symbol: {} Msg: {}", this.tradestrategy.getContract().getSymbol(), ex.getMessage(), ex);
+        } finally {
+
+            brokerModel.onCancelRealtimeBars(this.tradestrategy.getContract());
         }
         return null;
     }

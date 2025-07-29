@@ -54,7 +54,7 @@ where tradestrategy.trade = 1
 and tradeposition.open_quantity = 0
 and (0 = :filter and  tradeorder.is_filled = 1)
 and (isnull(:symbol) or contract.symbol = :symbol)
-and tradeposition.position_close_date between :start and :end
+and tradeposition.close_date between :start and :end
 and portfolio.id = :portfolioId
 union all
 select
@@ -91,7 +91,7 @@ where tradestrategy.trade = 1
 and tradeposition.open_quantity = 0
 and (0 = :filter and tradeorder.is_filled = 1)
 and (isnull(:symbol) or contract.symbol = :symbol)
-and tradeposition.position_close_date between :start and :end
+and tradeposition.close_date between :start and :end
 and portfolio.id = :portfolioId
 group by
 contract.symbol,

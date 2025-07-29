@@ -86,6 +86,8 @@ public class ClientSocket {
                     ClientSocket.backTestBroker.put(reqId, backTestBroker);
                     backTestBroker.execute();
                 }
+
+                // This release the backTestBroker to execute the strategy.
                 client.historicalDataComplete(reqId);
             }
         } catch (Exception ex) {
@@ -137,5 +139,6 @@ public class ClientSocket {
      * @param useRTH     boolean
      */
     public void reqRealTimeBars(int reqId, Contract contract, int barSize, String whatToShow, boolean useRTH) {
+
     }
 }

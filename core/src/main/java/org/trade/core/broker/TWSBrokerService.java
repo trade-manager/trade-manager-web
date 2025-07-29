@@ -227,37 +227,44 @@ public class TWSBrokerService extends AbstractBrokerModel {
                 || (code == 321) || (code == 3170)) {
 
             if (((code > 1999) && (code < 3000))) {
+
                 _log.info(errorMsg);
                 brokerModelException = new BrokerModelException(3, code, errorMsg);
             } else if (code == 202 || code == 201 || code == 3170) {
+
                 _log.warn(errorMsg);
                 brokerModelException = new BrokerModelException(2, code, errorMsg);
             } else if (code == 321) {
+
                 _log.info(errorMsg);
                 return;
             } else {
+
                 _log.warn(errorMsg);
                 brokerModelException = new BrokerModelException(2, code, errorMsg);
             }
-
         } else {
 
             if (realTimeBarsRequests.containsKey(id)) {
+
                 synchronized (realTimeBarsRequests) {
+
                     realTimeBarsRequests.remove(id);
                 }
             }
 
             if (marketDataRequests.containsKey(id)) {
+
                 synchronized (marketDataRequests) {
+
                     marketDataRequests.remove(id);
                 }
             }
 
             _log.error(errorMsg);
             brokerModelException = new BrokerModelException(1, code, errorMsg);
-
         }
+
         this.fireBrokerError(brokerModelException);
 
         /*
@@ -266,6 +273,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
          * test mode.
          */
         if (502 == code) {
+
             this.fireConnectionClosed(false);
         }
     }
@@ -367,7 +375,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
         try {
 
             if (controller().client().isConnected()) {
-                if (this.isHistoricalDataRunning(tradestrategy)) {
+                if (this.isHistoricalDataRequestRunning(tradestrategy)) {
                     throw new BrokerModelException(tradestrategy.getRequestId(), 3010,
                             "HistoricalData request is already in progress for: "
                                     + tradestrategy.getContract().getSymbol() + " Please wait or cancel.");
@@ -427,7 +435,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
         try {
             if (controller().client().isConnected()) {
 
-                if (this.isRealtimeBarsRunning(contract)) {
+                if (this.isRealtimeBarsRequestRunning(contract)) {
                     throw new BrokerModelException(contract.getRequestId(), 3030,
                             "RealtimeBars request is already in progress for: " + contract.getSymbol()
                                     + " Please wait or cancel.");
@@ -462,7 +470,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
     public void onReqMarketData(Contract contract, String genericTicklist, boolean snapshot) throws BrokerModelException {
         try {
             if (controller().client().isConnected()) {
-                if (this.isMarketDataRunning(contract)) {
+                if (this.isMarketDataRequestRunning(contract)) {
                     throw new BrokerModelException(contract.getRequestId(), 3030,
                             "MarketData request is already in progress for: " + contract.getSymbol()
                                     + " Please wait or cancel.");
@@ -550,7 +558,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
     }
 
     @Override
-    public boolean isHistoricalDataRunning(Contract contract) {
+    public boolean isHistoricalDataRequestRunning(Contract contract) {
         for (Tradestrategy item : historyDataRequests.values()) {
             if (contract.equals(item.getContract())) {
                 return true;
@@ -560,7 +568,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
     }
 
     @Override
-    public boolean isRealtimeBarsRunning(Tradestrategy tradestrategy) {
+    public boolean isRealtimeBarsRequestRunning(Tradestrategy tradestrategy) {
 
         if (realTimeBarsRequests.containsKey(tradestrategy.getContract().getRequestId())) {
 
@@ -577,7 +585,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
     }
 
     @Override
-    public boolean isRealtimeBarsRunning(Contract contract) {
+    public boolean isRealtimeBarsRequestRunning(Contract contract) {
         if (controller().client().isConnected()) {
             return realTimeBarsRequests.containsKey(contract.getRequestId());
         }
@@ -585,7 +593,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
     }
 
     @Override
-    public boolean isMarketDataRunning(Tradestrategy tradestrategy) {
+    public boolean isMarketDataRequestRunning(Tradestrategy tradestrategy) {
 
         if (marketDataRequests.containsKey(tradestrategy.getContract().getRequestId())) {
 
@@ -602,7 +610,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
     }
 
     @Override
-    public boolean isMarketDataRunning(Contract contract) {
+    public boolean isMarketDataRequestRunning(Contract contract) {
         if (controller().client().isConnected()) {
             return marketDataRequests.containsKey(contract.getRequestId());
         }
@@ -610,7 +618,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
     }
 
     @Override
-    public boolean isHistoricalDataRunning(Tradestrategy tradestrategy) {
+    public boolean isHistoricalDataRequestRunning(Tradestrategy tradestrategy) {
         return historyDataRequests.containsKey(tradestrategy.getRequestId());
     }
 
@@ -797,7 +805,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
     }
 
     @Override
-    public ConcurrentHashMap<Integer, Tradestrategy> getHistoricalData() {
+    public ConcurrentHashMap<Integer, Tradestrategy> getHistoryDataRequests() {
         return historyDataRequests;
     }
 
@@ -1266,7 +1274,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
                     if (tradestrategy.getTradingday().getClose()
                             .isAfter(TradingCalendar.getDateTimeNowMarketTimeZone())) {
 
-                        if (!getBrokerModel().isRealtimeBarsRunning(tradestrategy.getContract())) {
+                        if (!getBrokerModel().isRealtimeBarsRequestRunning(tradestrategy.getContract())) {
 
                             tradestrategy.getContract().addTradestrategy(tradestrategy);
                             getBrokerModel().onReqRealTimeBars(tradestrategy.getContract(),
@@ -1332,7 +1340,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
                             if (TradingCalendar.isMarketHours(tradestrategy.getTradingday().getOpen(),
                                     tradestrategy.getTradingday().getClose(), date)) {
 
-                                if (!getBrokerModel().isMarketDataRunning(contract)) {
+                                if (!getBrokerModel().isMarketDataRequestRunning(contract)) {
 
                                     BigDecimal price = BigDecimal.valueOf(bar.close()).setScale(SCALE, RoundingMode.HALF_EVEN);
                                     strategyData.getBaseCandleSeries().getContract().setLastAskPrice(price);

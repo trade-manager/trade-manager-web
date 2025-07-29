@@ -35,6 +35,8 @@
  */
 package org.trade.core.persistent;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -50,7 +52,6 @@ import org.trade.core.persistent.dao.CandleRepository;
 import org.trade.core.persistent.dao.CodeType;
 import org.trade.core.persistent.dao.CodeTypeRepository;
 import org.trade.core.persistent.dao.Contract;
-import org.trade.core.persistent.dao.ContractLite;
 import org.trade.core.persistent.dao.ContractRepository;
 import org.trade.core.persistent.dao.Portfolio;
 import org.trade.core.persistent.dao.PortfolioRepository;
@@ -101,6 +102,8 @@ import java.util.Optional;
  */
 @Service
 public class TradeServiceImpl extends AspectServiceImpl implements TradeService {
+
+    private final static Logger _log = LoggerFactory.getLogger(TradeServiceImpl.class);
 
     @Autowired
     private AspectRepository aspectRepository;
@@ -202,7 +205,7 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
 
     public Tradingday findTradingdayByOpenCloseDate(final ZonedDateTime openDate, final ZonedDateTime closeDate) {
 
-        return tradingdayRepository.findByOpenCloseDateOrderByOpenDesc(openDate, closeDate);
+        return tradingdayRepository.findByOpenCloseDateOrderByOpenAsc(openDate, closeDate);
     }
 
     public Contract findContractById(final Long id) {
@@ -289,7 +292,7 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
     public boolean existTradestrategyByRequestId(final Integer requestId) {
 
         Tradestrategy instance = tradestrategyRepository.findByRequestId(requestId);
-        return instance == null ? false : true;
+        return instance != null;
     }
 
     public TradestrategyLite findTradestrategyLiteByTradestrategy(final Tradestrategy tradestrategy) {
@@ -301,12 +304,8 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
 
         Optional<TradePosition> tradePosition = tradePositionRepository.findById(id);
 
-        if (tradePosition.isPresent()) {
+        return tradePosition.orElse(null);
 
-            return tradePosition.get();
-        }
-
-        return null;
     }
 
     @Transactional
@@ -364,13 +363,7 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
 
             Account current = this.findAccountByAccountNumber(account.getAccountNumber());
 
-            if (null != current) {
-
-                accounts.add(current);
-            } else {
-
-                accounts.add(account);
-            }
+            accounts.add(Objects.requireNonNullElse(current, account));
         }
 
         instance.getAccounts().clear();
@@ -417,8 +410,6 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
          * have been deleted if this is a bulk delete of tradestrategies.
          */
         Tradestrategy tradestrategy = tradestrategyRepository.findById(Objects.requireNonNull(instance.getId())).get();
-        tradestrategy.setStatus(null);
-        getAspectRepository().save(tradestrategy);
         Hashtable<Long, TradePosition> tradePositions = new Hashtable<>();
 
         for (TradeOrder tradeOrder : tradestrategy.getTradeOrders()) {
@@ -428,31 +419,33 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
                 tradePositions.put(tradeOrder.getTradePosition().getId(),
                         tradeOrder.getTradePosition());
             }
+        }
 
-            if (null != tradeOrder.getId()) {
+        /*
+         * Remove the open trade position from contract.
+         */
+        if (null != tradestrategy.getContractLite().getTradePosition()) {
 
-                this.deleteAspect(tradeOrder);
-            }
+            tradestrategy.getContractLite().setTradePosition(null);
+            getAspectRepository().save(tradestrategy.getContractLite());
+        }
+
+        if (null != tradestrategy.getStatus() || !tradestrategy.getTradeOrders().isEmpty()) {
+
+            tradestrategy.setStatus(null);
+            tradestrategy.getTradeOrders().clear();
+            getAspectRepository().save(tradestrategy);
         }
 
         for (TradePosition tradePosition : tradePositions.values()) {
 
             tradePosition = this.findTradePositionById(tradePosition.getId());
 
-            /*
-             * Remove the open trade position from contract if this is a
-             * tradePosition to be deleted.
-             */
-            if (tradePosition.equals(tradestrategy.getContract().getTradePosition())) {
+            if (null != tradePosition) {
 
-                tradestrategy.getContract().setTradePosition(null);
-                getAspectRepository().save(tradestrategy.getContract());
+                this.deleteAspect(tradePosition);
             }
-
-            this.deleteAspect(tradePosition);
         }
-
-        tradestrategy.getTradeOrders().clear();
     }
 
     public TradeOrder findTradeOrderByKey(final Integer orderKey) {
@@ -472,7 +465,7 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
 
     public Tradingdays findTradingdaysByDateRange(final ZonedDateTime startDate, final ZonedDateTime endDate) {
 
-        return tradingdayRepository.findTradingdaysByDateRangeOrderByOpenDesc(startDate, endDate);
+        return tradingdayRepository.findTradingdaysByDateRangeOrderByOpenAsc(startDate, endDate);
     }
 
     public List<Candle> findCandlesByContractDateRangeBarSize(final Contract contract, final ZonedDateTime startDate,
@@ -509,7 +502,7 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
             Candle candle = candleItem.getCandle();
             List<Candle> candles = candleRepository.findCandlesByContractDateRangeBarSize(contract.get(), candle.getStartPeriod(), candle.getEndPeriod(), candle.getBarSize());
 
-            if (!candles.isEmpty() && candles.size() == 1) {
+            if (candles.size() == 1) {
 
                 if (candle.equals(candles.getFirst())) {
 
@@ -554,7 +547,7 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
 
             if (null != contract) {
 
-               tradestrategy.setContract(contract);
+                tradestrategy.setContract(contract);
             }
         }
 
@@ -563,27 +556,9 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
         return instance;
     }
 
-    /**
-     * Method saveTradePosition.
-     *
-     * @param instance TradePosition
-     * @return TradePosition
-     */
-    @Transactional
-    public TradePosition saveTradePosition(TradePosition instance) {
-
-        ContractLite contract = contractRepository.findContractLiteById(instance.getContract().getId());
-
-        if (null != contract) {
-
-            instance.setContract(contract);
-        }
-
-        return this.saveAspect(instance);
-    }
-
-    @Transactional
-    public TradeOrder saveTradeOrder(final TradeOrder tradeOrder) {
+    // READ_UNCOMMITTED, READ_COMMITTED, REPEATABLE_READ, SERIALIZABLE
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
+    public TradeOrder saveTradeOrder(TradeOrder tradeOrder) {
 
         /*
          * This is a new order set the status to UNSUBMIT
@@ -622,7 +597,7 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
                 if (tradestrategyOrders.hasOpenTradePosition()) {
 
                     tradePosition = this.findTradePositionById(
-                            tradestrategyOrders.getContract().getTradePosition().getId());
+                            tradestrategyOrders.getContractLite().getTradePosition().getId());
 
                     if (!tradePosition.containsTradeOrder(tradeOrder)) {
 
@@ -637,7 +612,7 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
                      * here.
                      */
                     ZonedDateTime positionOpenDate = tradeOrder.getFilledDate();
-                    tradePosition = new TradePosition(tradestrategyOrders.getContract(), positionOpenDate,
+                    tradePosition = new TradePosition(tradestrategyOrders.getContractLite(), positionOpenDate,
                             (Action.BUY.equals(tradeOrder.getAction()) ? Side.BOT : Side.SLD));
                     tradeOrder.setIsOpenPosition(true);
                     tradestrategyOrders.setStatus(TradestrategyStatus.OPEN);
@@ -735,18 +710,18 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
             /*
              * Position should be closed if openQuantity = 0
              */
-            if (tradePosition.equals(tradePosition.getContract().getTradePosition())) {
+            if (tradePosition.equals(tradePosition.getContractLite().getTradePosition())) {
 
                 if (openQuantity == 0) {
 
-                    tradePosition.setPositionCloseDate(tradeOrder.getFilledDate());
-                    tradePosition.getContract().setTradePosition(null);
-                    tradePosition.setContract(this.saveAspect(tradePosition.getContract()));
+                    tradePosition.setCloseDate(tradeOrder.getFilledDate());
+                    tradePosition.getContractLite().setTradePosition(null);
+                    tradePosition.setContractLite(this.saveAspect(tradePosition.getContractLite()));
                 }
             } else {
 
-                tradePosition.getContract().setTradePosition(tradePosition);
-                tradePosition.setContract(this.saveAspect(tradePosition.getContract()));
+                tradePosition.getContractLite().setTradePosition(tradePosition);
+                tradePosition.setContractLite(this.saveAspect(tradePosition.getContractLite()));
             }
 
             // Partial fills case.
@@ -809,7 +784,6 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
         return this.saveAspect(tradeOrder);
     }
 
-    @Transactional
     public TradeOrder saveTradeOrderfill(final TradeOrder tradeOrder) {
 
         ZonedDateTime filledDate = null;
