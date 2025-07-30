@@ -147,6 +147,7 @@ public class DBBroker extends Broker {
                 candles = this.getCandles(this.tradestrategy, startDate, endDate, this.tradestrategy.getBarSize());
             }
 
+            brokerModel.historicalDataComplete(this.tradestrategy.getRequestId());
             /*
              * Wait for the strategy to start.
              */
@@ -160,10 +161,10 @@ public class DBBroker extends Broker {
 
             if (candles.isEmpty()) {
 
-                _log.warn("No data available to run a backtest for symbol: {}, start: {}, end: {}, barSize: {}", this.tradestrategy.getContract().getSymbol(), startDate, endDate, this.tradestrategy.getBarSize());
                 /*
                  * Poke the strategy this will kill it as there is no data.
                  */
+                _log.warn("No data available to run a backtest for symbol: {}, start: {}, end: {}, barSize: {}", this.tradestrategy.getContract().getSymbol(), startDate, endDate, this.tradestrategy.getBarSize());
                 this.tradestrategy.getStrategyData().getBaseCandleSeries().fireSeriesChanged();
             } else {
 
@@ -172,7 +173,6 @@ public class DBBroker extends Broker {
                  */
                 populateIndicatorCandleSeries(tradestrategy, this.tradestrategy.getTradingday().getOpen(),
                         this.tradestrategy.getTradingday().getClose());
-
             }
 
             TradestrategyOrders positionOrders;
@@ -203,11 +203,13 @@ public class DBBroker extends Broker {
                  * Wait for the candle to be processed by the strategy.
                  */
                 synchronized (lockBackTestWorker) {
+
                     /*
                      * Wait for the rule to be completed by the strategy. note
                      * this worker is listening to the strategy worker.
                      */
                     while ((strategiesRunning.get() > 0) && (ruleComplete.get() < 1)) {
+
                         lockBackTestWorker.wait();
                     }
                 }
@@ -303,7 +305,8 @@ public class DBBroker extends Broker {
             _log.error("Error BackTestBroker Symbol: {} Msg: {}", this.tradestrategy.getContract().getSymbol(), ex.getMessage(), ex);
         } finally {
 
-            brokerModel.onCancelRealtimeBars(this.tradestrategy.getContract());
+            //brokerModel.onCancelRealtimeBars(this.tradestrategy.getContract());
+            //brokerModel.historicalDataComplete(this.tradestrategy.getRequestId());
         }
         return null;
     }

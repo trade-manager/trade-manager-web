@@ -459,14 +459,20 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
 
                         Tradingday tradingday = (Tradingday) itemTradingday.clone();
                         for (Tradestrategy item : itemTradingday.getTradestrategies()) {
+
                             if (tradestrategy.getBarSize().equals(item.getBarSize())
                                     && tradestrategy.getChartDays().equals(item.getChartDays())
                                     && tradestrategy.getStrategy().equals(item.getStrategy())) {
+
                                 if (contracts.isEmpty()) {
+
                                     tradingday.addTradestrategy(item);
                                 } else {
+
                                     for (Contract contract : contracts) {
+
                                         if (contract.equals(item.getContract())) {
+
                                             tradingday.addTradestrategy(item);
                                             break;
                                         }
@@ -474,7 +480,9 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                                 }
                             }
                         }
+
                         if (!tradingday.getTradestrategies().isEmpty()) {
+
                             tradingdays.add(tradingday);
                         }
                     }
@@ -750,15 +758,17 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
 
                     TradePosition currTradePosition = tradeService
                             .findTradePositionById(tradePosition.getId());
+
                     for (TradeOrder tradeOrder : currTradePosition.getTradeOrders()) {
+
                         Tradestrategy tradestrategy = tradeService
                                 .findTradestrategyById(tradeOrder.getTradestrategyLite().getId());
                         tradingdays.getTradestrategy(tradestrategy.getId())
                                 .setStatus(tradestrategy.getStatus());
                         contractPanel.doRefresh(tradestrategy);
                     }
-
                 } catch (Exception ex) {
+
                     setErrorMessage("Error position closed: ", ex.getMessage(), ex);
                 }
             });
@@ -773,13 +783,15 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
     public void strategyComplete(String strategyClassName, Tradestrategy tradestrategy) {
 
         try {
+
             if (brokerModel.isConnected()) {
+
                 tradestrategy = tradeService.findTradestrategyById(tradestrategy.getId());
                 tradingdays.getTradestrategy(tradestrategy.getId()).setStatus(tradestrategy.getStatus());
                 contractPanel.doRefresh(tradestrategy);
             }
-            tradingdayPanel.removeStrategyWorker(strategyClassName + tradestrategy.getId());
 
+            tradingdayPanel.removeStrategyWorker(strategyClassName + tradestrategy.getId());
         } catch (Exception ex) {
             this.setErrorMessage("Error strategyComplete : ", ex.getMessage(), ex);
         }
@@ -1762,6 +1774,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
 
         // Only allow one strategy worker per tradestrategy
         if (tradingdayPanel.isStrategyWorkerRunning(key)) {
+
             throw new StrategyRuleException(1, 100,
                     "Strategy already running: " + strategyClassName + " Symbol: "
                             + tradestrategy.getContract().getSymbol() + " Key: " + key + " seriesCount: "
@@ -1773,19 +1786,19 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
         param.add(brokerModel);
         param.add(tradestrategy.getStrategyData());
         param.add(tradestrategy.getId());
-
         IStrategyRule strategy = (IStrategyRule) dynacode.newProxyInstance(IStrategyRule.class,
                 IStrategyRule.PACKAGE + strategyClassName, param);
-
         strategy.addMessageListener(this);
 
         if (!brokerModel.isConnected()) {
+
             /*
              * For back test the back tester listens to the strategy for orders
              * being created/completed.
              */
             strategy.addMessageListener(brokerModel.getBackTestBroker(tradestrategy.getRequestId()));
         }
+
         strategy.execute();
         tradingdayPanel.addStrategyWorker(key, strategy);
     }

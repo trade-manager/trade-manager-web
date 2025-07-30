@@ -81,7 +81,6 @@ public class PosMgrFHXRBHYRStrategy extends AbstractStrategyRule {
      * <p>
      * 7/ Close any open positions at 15:58.
      */
-
     @Serial
     private static final long serialVersionUID = -6717691162128305191L;
     private final static Logger _log = LoggerFactory.getLogger(PosMgrFHXRBHYRStrategy.class);
@@ -98,8 +97,8 @@ public class PosMgrFHXRBHYRStrategy extends AbstractStrategyRule {
      * @param strategyData       StrategyData
      * @param tradestrategyId    Long
      */
-
     public PosMgrFHXRBHYRStrategy(TradeService tradeService, IBrokerModel brokerManagerModel, StrategyData strategyData, Long tradestrategyId) {
+
         super(tradeService, brokerManagerModel, strategyData, tradestrategyId);
     }
 
@@ -125,8 +124,8 @@ public class PosMgrFHXRBHYRStrategy extends AbstractStrategyRule {
              * Get the current open trade. If no trade is open this Strategy
              * will be closed down.
              */
-
             if (!this.isThereOpenPosition()) {
+
                 _log.info("No open position so Cancel Strategy Mgr Symbol: {} Time:{}", getSymbol(), startPeriod);
                 this.cancel();
                 return;
@@ -142,6 +141,7 @@ public class PosMgrFHXRBHYRStrategy extends AbstractStrategyRule {
              * covered.
              */
             if (this.isThereOpenPosition() && !this.isPositionCovered()) {
+
                 /*
                  * Position has been opened and not covered submit the target
                  * and stop orders for the open quantity. Two targets at 2R and
@@ -153,15 +153,13 @@ public class PosMgrFHXRBHYRStrategy extends AbstractStrategyRule {
                 Integer quantity = this.getOpenPositionOrder().getFilledQuantity();
                 Integer tgt1Qty = quantity / 2;
                 Integer tgt2Qty = quantity - tgt1Qty;
+
                 // Integer tgt3Qty = quantity - (tgt1Qty + tgt2Qty);
-
                 createStopAndTargetOrder(getOpenPositionOrder(), 2, new Money(0.01), 2, new Money(0.01), tgt1Qty, true);
-
                 createStopAndTargetOrder(getOpenPositionOrder(), 2, new Money(0.01), 2, new Money(0.01), tgt2Qty, true);
                 // createStopAndTargetOrder(getOpenPositionOrder(),
                 // 2,0.01,4,0.01, tgt3Qty, true);
                 _log.info("Open position submit Stop/Tgt orders created Symbol: {} Time:{}", getSymbol(), startPeriod);
-
             }
 
             /*
@@ -369,6 +367,7 @@ public class PosMgrFHXRBHYRStrategy extends AbstractStrategyRule {
             // }
             // }
             // }
+
             /*
              * Manage the stop orders if the current bars Vwap crosses the Vwap
              * of the first 5min bar then move the stop price ( currently -2R)
@@ -383,7 +382,9 @@ public class PosMgrFHXRBHYRStrategy extends AbstractStrategyRule {
                         TradingCalendar.getDateAtTime(startPeriod, this.getTradestrategy().getTradingday().getOpen()));
 
                 if (Side.BOT.equals(getOpenTradePosition().getSide())) {
+
                     if (currentCandleItem.getVwap() < firstCandle.getVwap()) {
+
                         Money stopPrice = addPennyAndRoundStop(
                                 this.getOpenPositionOrder().getAverageFilledPrice().doubleValue(),
                                 getOpenTradePosition().getSide(), Action.SELL, 0.01);
@@ -393,6 +394,7 @@ public class PosMgrFHXRBHYRStrategy extends AbstractStrategyRule {
                 } else {
 
                     if (currentCandleItem.getVwap() > firstCandle.getVwap()) {
+
                         Money stopPrice = addPennyAndRoundStop(
                                 this.getOpenPositionOrder().getAverageFilledPrice().doubleValue(),
                                 getOpenTradePosition().getSide(), Action.BUY, 0.01);
@@ -412,24 +414,30 @@ public class PosMgrFHXRBHYRStrategy extends AbstractStrategyRule {
                 String action = Action.SELL;
                 double avgPrice = this.getOpenTradePosition().getTotalBuyValue().doubleValue()
                         / this.getOpenTradePosition().getTotalBuyQuantity().doubleValue();
-
                 CandleItem prevCandleItem = null;
+
                 if (getCurrentCandleCount() > 0) {
+
                     prevCandleItem = (CandleItem) candleSeries.getDataItem(getCurrentCandleCount() - 1);
                     // AbstractStrategyRule
                     // .logCandle(this, prevCandleItem.getCandle());
                 }
 
-                if (avgPrice < Objects.requireNonNull(prevCandleItem).getLow())
+                if (avgPrice < Objects.requireNonNull(prevCandleItem).getLow()) {
+
                     avgPrice = prevCandleItem.getLow();
+                }
 
                 if (Side.SLD.equals(getOpenTradePosition().getSide())) {
+
                     action = Action.BUY;
                     avgPrice = this.getOpenTradePosition().getTotalSellValue().doubleValue()
                             / this.getOpenTradePosition().getTotalSellQuantity().doubleValue();
 
-                    if (avgPrice > prevCandleItem.getHigh())
+                    if (avgPrice > prevCandleItem.getHigh()) {
+
                         avgPrice = prevCandleItem.getHigh();
+                    }
                 }
 
                 Money stopPrice = addPennyAndRoundStop(avgPrice, getOpenTradePosition().getSide(), action, 0.01);
@@ -441,12 +449,16 @@ public class PosMgrFHXRBHYRStrategy extends AbstractStrategyRule {
              */
 
             if (null != getTargetOneOrder()) {
+
                 if (this.getTargetOneOrder().getIsFilled() && newBar) {
 
                     _log.info("Rule move stop to b.e. after target one hit Symbol: {} Time: {}", getSymbol(), startPeriod);
                     String action = Action.SELL;
-                    if (Side.SLD.equals(getOpenTradePosition().getSide()))
+
+                    if (Side.SLD.equals(getOpenTradePosition().getSide())) {
                         action = Action.BUY;
+                    }
+
                     Money newStop = addPennyAndRoundStop(this.getTargetOneOrder().getAverageFilledPrice().doubleValue(),
                             getOpenTradePosition().getSide(), action, 0.01);
 
@@ -461,11 +473,14 @@ public class PosMgrFHXRBHYRStrategy extends AbstractStrategyRule {
              * one minute bars.
              */
             if (null != getTargetOneOrder()) {
+
                 if (this.getTargetOneOrder().getIsFilled()) {
 
                     Money newStop = getOneMinuteTrailStop(candleSeries, this.getStopPriceMinUnfilled(),
                             currentCandleItem);
+
                     if (!newStop.equals(new Money(this.getStopPriceMinUnfilled()))) {
+
                         _log.info("PositionManagerStrategy OneMinuteTrail: {} Trail Price: {} Time: {} Side: {}", getSymbol(), newStop, startPeriod, this.getOpenTradePosition().getSide());
                         // moveStopOCAPrice(newStop, true);
                     }
@@ -478,11 +493,13 @@ public class PosMgrFHXRBHYRStrategy extends AbstractStrategyRule {
              */
             if (!currentCandleItem.getLastUpdateDate()
                     .isBefore(this.getTradestrategy().getTradingday().getClose().minusMinutes(2))) {
+
                 cancelOrdersClosePosition(true);
                 _log.info("PositionManagerStrategy 15:58:00 done: {} Time: {}", getSymbol(), startPeriod);
                 this.cancel();
             }
         } catch (StrategyRuleException ex) {
+
             _log.error("Error Position User exception: {}", ex.getMessage(), ex);
             error(1, 40, "Error Position User exception: " + ex.getLocalizedMessage());
         }
@@ -495,13 +512,18 @@ public class PosMgrFHXRBHYRStrategy extends AbstractStrategyRule {
      *
      * @return TradeOrder target one tradeOrder.
      */
-
     public TradeOrder getTargetOneOrder() {
+
         if (this.isThereOpenPosition()) {
+
             this.getTradestrategyOrders().getTradeOrders().sort(TradeOrder.ORDER_KEY);
+
             for (TradeOrder tradeOrder : this.getTradestrategyOrders().getTradeOrders()) {
+
                 if (!tradeOrder.getIsOpenPosition()) {
+
                     if (OrderType.LMT.equals(tradeOrder.getOrderType()) && null != tradeOrder.getOcaGroupName()) {
+
                         return tradeOrder;
                     }
                 }
@@ -521,28 +543,35 @@ public class PosMgrFHXRBHYRStrategy extends AbstractStrategyRule {
      * @return Money new stop or orginal if not trail.
      * @throws StrategyRuleException ex
      */
-
     public Money getOneMinuteTrailStop(CandleSeries candleSeries, Money stopPrice, CandleItem currentCandle)
             throws StrategyRuleException {
 
-        if (!(59 == currentCandle.getLastUpdateDate().getSecond()))
+        if (!(59 == currentCandle.getLastUpdateDate().getSecond())) {
             return stopPrice;
+        }
 
         if (Side.BOT.equals(this.getOpenTradePosition().getSide())) {
 
-            if (stopPrice.isLessThan(new Money(candleSeries.getPreviousRollingCandle().getVwap())))
-                return new Money(candleSeries.getPreviousRollingCandle().getVwap());
+            if (stopPrice.isLessThan(new Money(candleSeries.getPreviousRollingCandle().getVwap()))) {
 
-            if (candleSeries.getPreviousRollingCandle().getVwap() < candleSeries.getRollingCandle().getVwap())
                 return new Money(candleSeries.getPreviousRollingCandle().getVwap());
+            }
 
+            if (candleSeries.getPreviousRollingCandle().getVwap() < candleSeries.getRollingCandle().getVwap()) {
+
+                return new Money(candleSeries.getPreviousRollingCandle().getVwap());
+            }
         } else {
 
-            if (stopPrice.isGreaterThan(new Money(candleSeries.getPreviousRollingCandle().getVwap())))
-                return new Money(candleSeries.getPreviousRollingCandle().getVwap());
+            if (stopPrice.isGreaterThan(new Money(candleSeries.getPreviousRollingCandle().getVwap()))) {
 
-            if (candleSeries.getPreviousRollingCandle().getVwap() > candleSeries.getRollingCandle().getVwap())
                 return new Money(candleSeries.getPreviousRollingCandle().getVwap());
+            }
+
+            if (candleSeries.getPreviousRollingCandle().getVwap() > candleSeries.getRollingCandle().getVwap()) {
+
+                return new Money(candleSeries.getPreviousRollingCandle().getVwap());
+            }
         }
 
         // if (Side.BOT.equals(this.getOpenTradePosition().getSide())) {

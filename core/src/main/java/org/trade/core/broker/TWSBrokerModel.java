@@ -168,7 +168,6 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
         return historyDataRequests;
     }
 
-
     public void onConnect(String host, Integer port, Integer clientId) {
 
         this.clientId = clientId;

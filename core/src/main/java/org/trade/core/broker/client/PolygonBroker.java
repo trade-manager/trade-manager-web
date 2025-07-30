@@ -132,6 +132,7 @@ public class PolygonBroker extends Broker {
             _log.debug("Debug: PolygonBroker::doInBackground finished ReqId: {} Symbol: {}", this.reqId, this.contract.getSymbol());
             this.brokerModel.contractDetailsEnd(contract.getRequestId());
             this.brokerModel.historicalDataComplete(this.reqId);
+            this.brokerModel.onCancelBrokerData(contract);
         }
         return null;
     }
@@ -335,6 +336,7 @@ public class PolygonBroker extends Broker {
                 }
 
                 Collections.reverse(candles);
+
                 for (Candle candle : candles) {
 
                     long millis = TradingCalendar.geMillisFromZonedDateTime(candle.getStartPeriod());

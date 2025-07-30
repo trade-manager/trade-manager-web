@@ -367,7 +367,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
 
                 // Running a strategy and getting the historical data. realTimeBarsRequests is used to
                 // Stop the same contract for different days running at the same time.
-                realTimeBarsRequests.put(tradestrategy.getContract().getRequestId(), tradestrategy.getContract());
+                //realTimeBarsRequests.put(tradestrategy.getContract().getRequestId(), tradestrategy.getContract());
                 client.reqHistoricalData(tradestrategy.getRequestId(), tradestrategy, null,
                         ChartDays.newInstance(tradestrategy.getChartDays()).getDisplayName(),
                         BarSize.newInstance(tradestrategy.getBarSize()).getDisplayName(), backfillWhatToShow,
@@ -532,7 +532,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
      * Method onCancelBrokerData.
      *
      * @param contract Contract
-     * @see IBrokerModel#onCancelRealtimeBars(Contract)
+     * @see IBrokerModel#onCancelBrokerData(Contract)
      */
     public void onCancelBrokerData(Contract contract) {
 
@@ -563,7 +563,9 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
         if (realTimeBarsRequests.containsKey(contract.getRequestId())) {
 
             synchronized (realTimeBarsRequests) {
+
                 realTimeBarsRequests.remove(contract.getRequestId());
+                realTimeBarsRequests.notify();
             }
         }
     }
@@ -589,9 +591,9 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
             }
 
             if (contract.getTradestrategies().isEmpty()) {
+
                 onCancelRealtimeBars(contract);
             }
-
         }
     }
 
@@ -987,6 +989,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
 
                 synchronized (realTimeBarsRequests) {
                     realTimeBarsRequests.remove(id);
+                    realTimeBarsRequests.notify();
                 }
             }
 
@@ -1140,16 +1143,6 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
                 _log.debug("HistoricalData complete Req Id: {}, Symbol: {}, Tradingday: {}, candles to saved: {}, Contract Tradestrategies size:: {}", reqId, tradestrategy.getContract().getSymbol(), tradestrategy.getTradingday().getOpen(), candleSeries.getItemCount(), tradestrategy.getContract().getTradestrategies().size());
 
                 /*
-                 * The last one has arrived the reqId is the
-                 * tradeStrategyId. Remove this from the processing List.
-                 */
-                synchronized (historyDataRequests) {
-
-                    historyDataRequests.remove(reqId);
-                    historyDataRequests.notify();
-                }
-
-                /*
                  * Check to see if the trading day is today and this
                  * strategy is selected to trade and that the market is open
                  */
@@ -1166,15 +1159,18 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
                             this.onReqRealTimeBars(tradestrategy.getContract(),
                                     tradestrategy.getStrategy().getMarketData());
                         } else {
+
                             Contract contract = realTimeBarsRequests.get(tradestrategy.getContract().getRequestId());
                             contract.addTradestrategy(tradestrategy);
                         }
                     }
                 }
             } else {
+
                 _log.error("HistoricalDataComplete request not found for Req Id: {}", reqId);
             }
         } catch (Exception ex) {
+
             error(reqId, 3260, "Error: HistoricalDataComplete msg: " + ex.getMessage());
         }
     }
