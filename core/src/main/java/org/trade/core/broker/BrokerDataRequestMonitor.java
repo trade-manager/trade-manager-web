@@ -256,10 +256,8 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
             incrementGrandTotal();
         }
 
-        int percent = (int) (((double) (totalSumbitted - this.brokerModel.getHistoryDataRequests().size()) / getGrandTotal())
-                * 100d);
+        int percent = (int) (((double) (totalSumbitted - this.brokerModel.getHistoryDataRequests().size()) / getGrandTotal()) * 100d);
         setProgress(percent);
-
         double numberPerPeriod = 0;
         int periodSeconds = 0;
         String message = "";
@@ -309,6 +307,7 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
                         Duration duration = Duration.ofSeconds((periodSeconds - 1) + ((periodSeconds - 1) * (Math.round((Math.floor(getGrandTotal() / numberPerPeriod) - Math.floor(totalSumbitted / numberPerPeriod))))));
                         publish("Please wait " + String.format(durationFormat, duration.toHoursPart(), duration.toMinutesPart(), duration.toSecondsPart()) + message + " Completed: " + (totalSumbitted - this.brokerModel.getHistoryDataRequests().size()) + ", of: " + getGrandTotal());
                     }
+
                     lockCoreUtilsTest.wait();
                 }
             }
@@ -332,6 +331,7 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
                 }
             }
         }
+
         return totalSumbitted;
     }
 
@@ -557,7 +557,6 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
         childSeries.setSecType(series.getSecType());
         childSeries.setCurrency(series.getCurrency());
         childSeries.setExchange(series.getExchange());
-
         return indicatorTradestrategy;
     }
 
@@ -655,8 +654,7 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
 
         for (Tradestrategy tradestrategy : tradingday.getTradestrategies()) {
 
-            if (this.brokerModel.isHistoricalDataRequestRunning(tradestrategy.getContract()) ||
-                    this.brokerModel.isRealtimeBarsRequestRunning(tradestrategy.getContract())) {
+            if (this.brokerModel.isHistoricalDataRequestRunning(tradestrategy.getContract())) {
 
                 if (!reProcessTradingday.existTradestrategy(tradestrategy)) {
 
@@ -781,6 +779,7 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
                  */
                 total = total + contracts.size();
                 contracts.clear();
+
                 /*
                  * Get the total for lower barsize timeframes.
                  */
