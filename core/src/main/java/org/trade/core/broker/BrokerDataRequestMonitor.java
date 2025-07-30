@@ -226,7 +226,7 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
     private int submitBrokerRequest(Tradestrategy tradestrategy, ZonedDateTime endDate, int totalSumbitted)
             throws InterruptedException, BrokerModelException {
 
-        if (this.brokerModel.isHistoricalDataRequestRunning(tradestrategy.getContract()) || this.brokerModel.isRealtimeBarsRequestRunning(tradestrategy.getContract()) || this.isCancelled()) {
+        if (this.brokerModel.isHistoricalDataRequestRunning(tradestrategy.getContract()) || this.isCancelled()) {
 
             _log.error("submitBrokerRequest contract already running: {} endDate: {} barSize: {} chartDays: {}", tradestrategy.getContract().getSymbol(), endDate, tradestrategy.getBarSize(), tradestrategy.getChartDays());
             return totalSumbitted;

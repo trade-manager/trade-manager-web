@@ -147,7 +147,9 @@ public class DBBroker extends Broker {
                 candles = this.getCandles(this.tradestrategy, startDate, endDate, this.tradestrategy.getBarSize());
             }
 
+            // Trigger the main controller to execute the strategy.
             brokerModel.historicalDataComplete(this.tradestrategy.getRequestId());
+
             /*
              * Wait for the strategy to start.
              */
@@ -303,11 +305,8 @@ public class DBBroker extends Broker {
         } catch (Exception ex) {
 
             _log.error("Error BackTestBroker Symbol: {} Msg: {}", this.tradestrategy.getContract().getSymbol(), ex.getMessage(), ex);
-        } finally {
-
-            //brokerModel.onCancelRealtimeBars(this.tradestrategy.getContract());
-            //brokerModel.historicalDataComplete(this.tradestrategy.getRequestId());
         }
+
         return null;
     }
 
