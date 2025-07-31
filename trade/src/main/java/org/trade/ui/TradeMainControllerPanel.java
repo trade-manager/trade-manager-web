@@ -1676,8 +1676,8 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                         if (brokerDataOnly && !brokerModel.isConnected()) {
 
                             ZonedDateTime endDate = tradestrategy.getTradingday().getClose();
-                            ZonedDateTime startDate = TradingCalendar.addTradingDays(TradingCalendar.getTradingDayStart(endDate),
-                                    (-1 * (tradestrategy.getChartDays() - 1)));
+                            ZonedDateTime startDate = TradingCalendar.addTradingDays(tradestrategy.getTradingday().getOpen(),
+                                    (-1 * (tradestrategy.getChartDays())));
 
                             List<Candle> candles = tradeService.findCandlesByContractDateRangeBarSize(
                                     tradestrategy.getContract(), startDate, endDate,

@@ -223,7 +223,7 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
      * @param totalSumbitted int
      * @return int
      */
-    private int submitBrokerRequest(Tradestrategy tradestrategy, ZonedDateTime endDate, int totalSumbitted)
+    private int submitBrokerRequest(Tradestrategy tradestrategy, ZonedDateTime startDate, ZonedDateTime endDate, int totalSumbitted)
             throws InterruptedException, BrokerModelException {
 
         if (this.brokerModel.isHistoricalDataRequestRunning(tradestrategy.getContract()) || this.isCancelled()) {
@@ -243,7 +243,7 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
             contractRequests.remove(tradestrategy.getContract().getSymbol());
         }
 
-        this.brokerModel.onBrokerData(tradestrategy, endDate);
+        this.brokerModel.onBrokerData(tradestrategy, startDate, endDate);
         totalSumbitted++;
         hasSubmittedInSeconds();
 
@@ -584,7 +584,7 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
                  * been retrieved save the data Only allow a maximum of 60
                  * requests in a 10min period to avoid TWS pacing errors
                  */
-                totalSumbitted = submitBrokerRequest(tradestrategy, tradingday.getClose(), totalSumbitted);
+                totalSumbitted = submitBrokerRequest(tradestrategy, tradingday.getOpen(), tradingday.getClose(), totalSumbitted);
             }
         }
 

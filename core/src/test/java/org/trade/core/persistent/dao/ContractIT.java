@@ -60,6 +60,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  *
@@ -78,6 +79,8 @@ public class ContractIT {
     private ContractRepository contractRepository;
 
     private static ZonedDateTime expiry;
+    private static Contract contract;
+
 
     /**
      * Method setUpBeforeClass.
@@ -100,6 +103,12 @@ public class ContractIT {
      */
     @AfterEach
     public void tearDown() {
+
+        if (null != contract) {
+
+            tradeService.deleteAspect(contract);
+            contract = null;
+        }
     }
 
     /**
@@ -114,18 +123,15 @@ public class ContractIT {
 
         // Create new instance of Strategy and set
         // values in it by reading them from form object
-        Contract instance = new Contract(SECType.STOCK, "QQQ", Exchange.SMART, Currency.USD, expiry, new BigDecimal(1));
+        contract = new Contract(SECType.STOCK, "QQQ", Exchange.SMART, Currency.USD, expiry, new BigDecimal(1));
 
-        instance = tradeService.saveAspect(instance);
-        _log.info("Contract added Id:{}", instance.getId());
+        contract = tradeService.saveAspect(contract);
+        _log.info("Contract added Id:{}", contract.getId());
 
-        List<Contract> contracts = contractRepository.findContractByUniqueKey(instance.getSecType(),
-                instance.getSymbol(), instance.getExchange(), instance.getCurrency(),
+        List<Contract> contracts = contractRepository.findContractByUniqueKey(contract.getSecType(),
+                contract.getSymbol(), contract.getExchange(), contract.getCurrency(),
                 expiry);
         assertFalse(contracts.isEmpty());
-
-        tradeService.deleteAspect(contracts.getFirst());
-        _log.info("Contract deleted Id:{}", instance.getId());
     }
 
     @Test
@@ -138,20 +144,17 @@ public class ContractIT {
         expiry = expiry.plusMonths(1);
 
         _log.info("Expiry Date: {}", expiry);
-        Contract instance = new Contract(SECType.FUTURE, "ES", Exchange.SMART, Currency.USD, expiry,
+        contract = new Contract(SECType.FUTURE, "ES", Exchange.SMART, Currency.USD, expiry,
                 new BigDecimal(50));
-        instance = tradeService.saveAspect(instance);
-        _log.info("Contract added Id:{}", instance.getId());
+        contract = tradeService.saveAspect(contract);
+        _log.info("Contract added Id:{}", contract.getId());
 
-        expiry = expiry.plusDays(1);
+        // Expiry is monthly based
+        expiry = expiry.plusMonths(2);
         _log.info("Expiry Date: {}", expiry);
-        List<Contract> contracts = contractRepository.findContractByUniqueKey(instance.getSecType(),
-                instance.getSymbol(), instance.getExchange(), instance.getCurrency(),
+        List<Contract> contracts = contractRepository.findContractByUniqueKey(contract.getSecType(),
+                contract.getSymbol(), contract.getExchange(), contract.getCurrency(),
                 expiry);
-        assertFalse(contracts.isEmpty());
-        _log.info("Contract added Id:{}", instance.getId());
-
-        tradeService.deleteAspect(contracts.getFirst());
-        _log.info("Contract deleted Id:{}", instance.getId());
+        assertTrue(contracts.isEmpty());
     }
 }

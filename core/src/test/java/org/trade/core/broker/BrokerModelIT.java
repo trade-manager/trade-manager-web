@@ -298,7 +298,7 @@ public class BrokerModelIT extends TradestrategyBase implements IBrokerChangeLis
         StrategyData.doDummyData(tradestrategy.getStrategyData().getCandleDataset().getSeries(0),
                 tradestrategy.getTradingday(), tradestrategy.getChartDays(), tradestrategy.getBarSize(), true, 0);
         backTestbrokerModel.setBrokerDataOnly(true);
-        backTestbrokerModel.onBrokerData(tradestrategy, tradestrategy.getTradingday().getClose());
+        backTestbrokerModel.onBrokerData(tradestrategy, tradestrategy.getTradingday().getOpen(), tradestrategy.getTradingday().getClose());
 
         assertFalse(tradestrategy.getStrategyData().getCandleDataset().getSeries(0).isEmpty());
 

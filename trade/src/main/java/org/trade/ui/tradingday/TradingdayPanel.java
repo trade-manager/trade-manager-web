@@ -412,7 +412,6 @@ public class TradingdayPanel extends BasePanel {
             SwingUtilities.invokeLater(() -> {
 
                 getFrame().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-                boolean dirty = false;
 
                 for (Tradingday tradingday : tradingdays.getTradingdays()) {
 
@@ -426,16 +425,12 @@ public class TradingdayPanel extends BasePanel {
 
                     if (tradingday.isDirty()) {
 
-                        dirty = true;
-                        tradeService.saveTradingday(tradingday);
+                        tradingday = tradeService.saveTradingday(tradingday);
                     }
                 }
 
-                if (dirty) {
-
-                    doRefresh();
-                }
-
+                // Refresh the trading day panel
+                doSearch();
                 clearStatusBarMessage();
                 getFrame().setCursor(Cursor.getDefaultCursor());
             });

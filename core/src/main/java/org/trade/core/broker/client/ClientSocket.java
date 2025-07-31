@@ -40,6 +40,7 @@ import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.Contract;
 import org.trade.core.persistent.dao.Tradestrategy;
 
+import java.time.ZonedDateTime;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ClientSocket {
@@ -59,21 +60,22 @@ public class ClientSocket {
      *
      * @param reqId             int
      * @param tradestrategy     Tradestrategy
-     * @param endDateTime       String
+     * @param startDateTime     ZonedDateTime
+     * @param endDateTime       ZonedDateTime
      * @param chartDays         String
      * @param barSizeSetting    String
      * @param whatToShow        String
      * @param useRTH            int
      * @param formatDateInteger int
      */
-    public void reqHistoricalData(int reqId, Tradestrategy tradestrategy, String endDateTime, String chartDays,
+    public void reqHistoricalData(int reqId, Tradestrategy tradestrategy, ZonedDateTime startDateTime, ZonedDateTime endDateTime, String chartDays,
                                   String barSizeSetting, String whatToShow, int useRTH, int formatDateInteger) throws BrokerModelException {
 
         try {
 
             if (null != endDateTime) {
 
-                PolygonBroker broker = new PolygonBroker(reqId, tradestrategy.getContract(), endDateTime, chartDays,
+                PolygonBroker broker = new PolygonBroker(reqId, tradestrategy.getContract(), startDateTime, endDateTime, chartDays,
                         barSizeSetting, client);
                 backTestBroker.put(reqId, broker);
                 broker.execute();

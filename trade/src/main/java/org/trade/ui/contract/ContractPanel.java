@@ -609,8 +609,8 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
     private ChartPanel createChartPanel(Tradestrategy tradestrategy) throws ServiceException {
 
         ZonedDateTime endDate = tradestrategy.getTradingday().getClose();
-        ZonedDateTime startDate = TradingCalendar.addTradingDays(TradingCalendar.getTradingDayStart(endDate),
-                (-1 * (tradestrategy.getChartDays() - 1)));
+        ZonedDateTime startDate = TradingCalendar.addTradingDays(tradestrategy.getTradingday().getOpen(),
+                (-1 * (tradestrategy.getChartDays())));
 
         StrategyDataUI strategyDataUI = null;
 

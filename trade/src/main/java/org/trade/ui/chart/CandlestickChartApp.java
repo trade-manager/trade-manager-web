@@ -114,7 +114,7 @@ public class CandlestickChartApp extends BasePanel implements IBrokerChangeListe
                 Strategy daoStrategy = (Strategy) DAOStrategy.newInstance().getObject();
                 String name = daoStrategy.getName();
                 Strategy strategy = _tradeService.findStrategyByName(name);
-                Tradestrategy tradestrategy = getTradestrategy(contract, strategy, ChartDays.TWO_DAYS, BarSize.FIVE_MIN, startDate, endDate);
+                Tradestrategy tradestrategy = getTradestrategy(contract, strategy, ChartDays.ONE_DAY, BarSize.FIVE_MIN, startDate, endDate);
                 runStrategy(_tradeService, tradestrategy, true);
 
             } catch (Exception ex) {
@@ -377,7 +377,7 @@ public class CandlestickChartApp extends BasePanel implements IBrokerChangeListe
 
             if (!ChartDays.newInstance(chartDays).isValid()) {
 
-                chartDays = 2;
+                chartDays = 1;
             }
 
             barSize = ConfigProperties.getPropAsInt("trade.backfill.barsize");
@@ -450,12 +450,9 @@ public class CandlestickChartApp extends BasePanel implements IBrokerChangeListe
 
             if (brokerDataOnly && !brokerModel.isConnected()) {
 
-                ZonedDateTime endDate = TradingCalendar.getDateAtTime(
-                        TradingCalendar.getPrevTradingDay(TradingCalendar
-                                .addTradingDays(tradestrategy.getTradingday().getClose(), 0)),
-                        tradestrategy.getTradingday().getClose());
-                ZonedDateTime startDate = endDate.minusDays((tradestrategy.getChartDays() - 1));
-                startDate = TradingCalendar.getPrevTradingDay(startDate);
+                ZonedDateTime endDate = tradestrategy.getTradingday().getClose();
+                ZonedDateTime startDate = TradingCalendar.addTradingDays(tradestrategy.getTradingday().getOpen(),
+                        (-1 * tradestrategy.getChartDays()));
 
                 List<Candle> candles = tradeService.findCandlesByContractDateRangeBarSize(
                         tradestrategy.getContract(), startDate, endDate,

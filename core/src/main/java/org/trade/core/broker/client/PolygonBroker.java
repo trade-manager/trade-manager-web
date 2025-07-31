@@ -68,7 +68,8 @@ public class PolygonBroker extends Broker {
     private final Contract contract;
     private final String chartDays;
     private final String barSize;
-    private final String endDateTime;
+    private final ZonedDateTime endDateTime;
+    private final ZonedDateTime startDateTime;
     private final IClientWrapper brokerModel;
     private final static String url;
     private final static String apiKey;
@@ -85,13 +86,14 @@ public class PolygonBroker extends Broker {
         }
     }
 
-    public PolygonBroker(Integer reqId, Contract contract, String endDateTime, String chartDays, String barSize,
+    public PolygonBroker(Integer reqId, Contract contract, ZonedDateTime startDateTime, ZonedDateTime endDateTime, String chartDays, String barSize,
                          IClientWrapper brokerModel) {
 
         this.reqId = reqId;
         this.contract = contract;
         this.barSize = barSize;
         this.chartDays = chartDays;
+        this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
         this.brokerModel = brokerModel;
     }
@@ -103,24 +105,22 @@ public class PolygonBroker extends Broker {
             if (setContractDetails(contract)) {
 
                 this.brokerModel.contractDetails(contract.getRequestId(), contract);
-                ZonedDateTime endDate = TradingCalendar.getZonedDateTimeFromDateTimeString(this.endDateTime,
-                        "yyyyMMdd HH:mm:ss");
-                endDate = TradingCalendar.getTradingDayEnd(endDate);
+
                 ChartDays chartDays = ChartDays.newInstance();
                 chartDays.setDisplayName(this.chartDays);
-                ZonedDateTime startDate = TradingCalendar.addTradingDays(TradingCalendar.getTradingDayStart(endDate),
-                        (-1 * (Integer.parseInt(chartDays.getCode()) - 1)));
+                ZonedDateTime startDate = TradingCalendar.addTradingDays(this.startDateTime,
+                        (-1 * (Integer.parseInt(chartDays.getCode()))));
 
                 BarSize barSize = BarSize.newInstance();
                 barSize.setDisplayName(this.barSize);
 
                 if (BarSize.DAY == Integer.parseInt(barSize.getValue())) {
 
-                    this.setPriceDataDay(this.reqId, this.contract.getSymbol(), startDate, endDate);
+                    this.setPriceDataDay(this.reqId, this.contract.getSymbol(), startDate, this.endDateTime);
                 } else {
 
                     this.setPriceDataIntraday(this.reqId, this.contract.getSymbol(),
-                            Integer.parseInt(chartDays.getValue()), startDate, endDate);
+                            Integer.parseInt(chartDays.getValue()), startDate, this.endDateTime);
                 }
             }
         } catch (Exception ex) {
