@@ -448,7 +448,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
         }
     }
 
-    public void onBrokerData(Tradestrategy tradestrategy, ZonedDateTime endDate) throws BrokerModelException {
+    public void onBrokerData(Tradestrategy tradestrategy, ZonedDateTime startDate, ZonedDateTime endDate) throws BrokerModelException {
 
         try {
 
@@ -484,6 +484,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
                  * apply this limit to the chartDays.
                  */
                 Integer chartDays = tradestrategy.getChartDays();
+
                 if (TradingCalendar.getDurationInDays(
                         TradingCalendar.addTradingDays(endDate, (-1 * tradestrategy.getChartDays())),
                         TradingCalendar.getDateTimeNowMarketTimeZone()) > 365) {

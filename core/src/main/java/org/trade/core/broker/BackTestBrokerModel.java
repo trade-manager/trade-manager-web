@@ -336,7 +336,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
      * @param tradestrategy Tradestrategy
      * @param endDate       endDate
      */
-    public void onBrokerData(final Tradestrategy tradestrategy, final ZonedDateTime endDate)
+    public void onBrokerData(final Tradestrategy tradestrategy, final ZonedDateTime startDate, final ZonedDateTime endDate)
             throws BrokerModelException {
 
         try {
@@ -348,18 +348,18 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
             }
 
             historyDataRequests.put(tradestrategy.getRequestId(), tradestrategy);
+            ZonedDateTime endDateTime = TradingCalendar
+                    .getDateAtTime(TradingCalendar.addTradingDays(endDate, backfillOffsetDays), endDate);
+            ZonedDateTime startDateTime = TradingCalendar
+                    .getDateAtTime(TradingCalendar.addTradingDays(startDate, backfillOffsetDays), startDate);
 
             if (this.isBrokerDataOnly()) {
-
-                ZonedDateTime endDay = TradingCalendar
-                        .getDateAtTime(TradingCalendar.addTradingDays(endDate, backfillOffsetDays), endDate);
-                String endDateTime = TradingCalendar.getFormattedDate(endDay, "yyyyMMdd HH:mm:ss");
 
                 contractRequests.put(tradestrategy.getContract().getRequestId(), tradestrategy.getContract());
 
                 _log.debug("onBrokerData ReqId: {} Symbol: {} end Time: {} Period length: {} Bar size: {} WhatToShow: {} Regular Trading Hrs: {} Date format: " + backfillDateFormat, tradestrategy.getId(), tradestrategy.getContract().getSymbol(), endDateTime, tradestrategy.getChartDays(), tradestrategy.getBarSize(), backfillWhatToShow, backfillUseRTH);
 
-                client.reqHistoricalData(tradestrategy.getRequestId(), tradestrategy, endDateTime,
+                client.reqHistoricalData(tradestrategy.getRequestId(), tradestrategy, startDateTime, endDateTime,
                         ChartDays.newInstance(tradestrategy.getChartDays()).getDisplayName(),
                         BarSize.newInstance(tradestrategy.getBarSize()).getDisplayName(), backfillWhatToShow,
                         backfillUseRTH, backfillDateFormat);
@@ -367,7 +367,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
 
                 // Running a strategy and getting the historical data. realTimeBarsRequests is used to
                 // Stop the same contract for different days running at the same time.
-                client.reqHistoricalData(tradestrategy.getRequestId(), tradestrategy, null,
+                client.reqHistoricalData(tradestrategy.getRequestId(), tradestrategy, startDateTime, null,
                         ChartDays.newInstance(tradestrategy.getChartDays()).getDisplayName(),
                         BarSize.newInstance(tradestrategy.getBarSize()).getDisplayName(), backfillWhatToShow,
                         backfillUseRTH, backfillDateFormat);
@@ -1210,7 +1210,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
             tradestrategy.setBarSize(60);
             valid = false;
 
-        } else if ((tradestrategy.getChartDays() > 1 && tradestrategy.getChartDays() < 7)
+        } else if ((tradestrategy.getChartDays() > 0 && tradestrategy.getChartDays() < 7)
                 && tradestrategy.getBarSize() < 300) {
 
             tradestrategy.setBarSize(300);

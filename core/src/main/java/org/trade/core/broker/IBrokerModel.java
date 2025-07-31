@@ -167,9 +167,10 @@ public interface IBrokerModel {
      * Method onBrokerData.
      *
      * @param tradestrategy Tradestrategy
+     * @param startDate     ZonedDateTime
      * @param endDate       ZonedDateTime
      */
-    void onBrokerData(Tradestrategy tradestrategy, ZonedDateTime endDate) throws BrokerModelException;
+    void onBrokerData(Tradestrategy tradestrategy, ZonedDateTime startDate, ZonedDateTime endDate) throws BrokerModelException;
 
     /**
      * Method onReqRealTimeBars.

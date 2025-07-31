@@ -175,7 +175,7 @@ public class TradeServiceIT {
         }
 
         Tradestrategy tradestrategy = new Tradestrategy(contract, tradingday, strategy, portfolio,
-                new BigDecimal(100), "BUY", "0", true, ChartDays.TWO_DAYS, BarSize.FIVE_MIN);
+                new BigDecimal(100), "BUY", "0", true, ChartDays.ONE_DAY, BarSize.FIVE_MIN);
 
         if (tradingday.existTradestrategy(tradestrategy)) {
 

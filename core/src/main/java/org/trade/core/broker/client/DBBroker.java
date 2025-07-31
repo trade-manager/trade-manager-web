@@ -125,7 +125,7 @@ public class DBBroker extends Broker {
 
             ZonedDateTime endDate = tradestrategy.getTradingday().getClose();
             ZonedDateTime startDate = TradingCalendar.addTradingDays(tradestrategy.getTradingday().getOpen(),
-                    (-1 * (tradestrategy.getChartDays() - 1)));
+                    (-1 * (tradestrategy.getChartDays())));
 
             List<Candle> candles;
 

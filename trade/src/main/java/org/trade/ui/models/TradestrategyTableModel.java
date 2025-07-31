@@ -116,7 +116,7 @@ public class TradestrategyTableModel extends TableModel {
             null, "Portfolio",
             "<html>Bar size for strategy. Note Chart Days/BarSize combinations for IB:<br/>"
                     + "Note the default is set in the config.properties (<b>trade.backfill.barsize</b>)</html>",
-            "<html>Historical data to pull in i.e 2D is today + yesterday<br>"
+            "<html>Historical data needed to populated indicators<br>i.e. 20MA needs 20 candles pre this trading day.<br>"
                     + "Note the default is set in the config.properties (<b>trade.backfill.duration</b>)</html>",
             "<html>Risk amount for trade used to calculate position size<br>"
                     + "Note the default is set in the config.properties (<b>trade.risk</b>)</html>",
@@ -419,7 +419,7 @@ public class TradestrategyTableModel extends TableModel {
         String strategyName;
         Strategy strategy = (Strategy) DAOStrategy.newInstance().getObject();
         Portfolio portfolio = (Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
-        int chartDays = ChartDays.TWO_DAYS;
+        int chartDays = ChartDays.ONE_DAY;
         Integer barSize = BarSize.FIVE_MIN;
         int riskAmount = 0;
 
@@ -429,7 +429,7 @@ public class TradestrategyTableModel extends TableModel {
 
                 chartDays = ConfigProperties.getPropAsInt("trade.backfill.duration");
                 if (!ChartDays.newInstance(chartDays).isValid())
-                    chartDays = 2;
+                    chartDays = 1;
 
                 barSize = ConfigProperties.getPropAsInt("trade.backfill.barsize");
                 if (!BarSize.newInstance(barSize).isValid())
