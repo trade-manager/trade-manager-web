@@ -93,14 +93,16 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
 
     private static final Integer backfillDateFormat = 2;
     private static final String backfillWhatToShow;
-    private static final Integer backfillOffsetDays = 0;
+    private static final Integer backfillOffsetDays;
     private static final Integer backfillUseRTH;
 
     static {
 
         try {
+
             backfillWhatToShow = ConfigProperties.getPropAsString("trade.backfill.whatToShow");
             backfillUseRTH = ConfigProperties.getPropAsInt("trade.backfill.useRTH");
+            backfillOffsetDays = ConfigProperties.getPropAsInt("trade.backfill.offsetDays");
 
         } catch (Exception ex) {
             throw new IllegalArgumentException("Error initializing IBrokerModel Msg: " + ex.getMessage());
