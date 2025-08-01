@@ -314,46 +314,61 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
         try {
 
             if (null == instance.getTradestrategy().getPortfolio().getIndividualAccount()) {
+
                 AllocationMethodPanel allocationMethodPanel = new AllocationMethodPanel(instance);
                 TextDialog dialog = new TextDialog(this.getFrame(), "FA Account Properties", true,
                         allocationMethodPanel);
                 dialog.setLocationRelativeTo(this);
                 dialog.setVisible(true);
+
                 if (!dialog.getCancel()) {
+
                     if (null != instance.getFAProfile()) {
+
                         instance.setFAGroup(null);
                         instance.setFAMethod(null);
                         instance.setFAPercent(null);
                         instance.setAccountNumber(null);
                     } else {
+
                         if (null != instance.getFAGroup()) {
+
                             instance.setAccountNumber(null);
                         } else {
+
                             instance.setAccountNumber(instance.getTradestrategy().getPortfolio()
                                     .getIndividualAccount().getAccountNumber());
                         }
                     }
                 }
             } else {
+
                 this.setStatusBarMessage("No properties for Individual accounts ...\n", BasePanel.INFORMATION);
             }
         } catch (Exception ex) {
+
             this.setErrorMessage("Error setting FA properties.", ex.getMessage(), ex);
         }
     }
 
     public void doCancel(final Aspects aspects) {
+
         this.setStatusBarMessage("Please select an order to cancel ...\n", BasePanel.INFORMATION);
     }
 
     public void doCloseAll() {
+
         try {
+
             int tabsCount = jTabbedPaneContract.getTabCount();
+
             for (int index = 0; index < tabsCount; index++) {
+
                 doClose(0);
             }
             tree.clearSelection();
         } catch (Exception ex) {
+
             this.setErrorMessage("Error removing all tabs.", ex.getMessage(), ex);
         }
     }
@@ -364,10 +379,14 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
      * @param tradestrategy Tradestrategy
      */
     public void doClose(final Tradestrategy tradestrategy) {
+
         for (int index = 0; index < jTabbedPaneContract.getTabCount(); index++) {
+
             ChartPanel chart = (ChartPanel) jTabbedPaneContract.getComponentAt(index);
+
             if ((null != chart)
                     && chart.getTradestrategy().getId().equals(tradestrategy.getId())) {
+
                 doClose(index);
                 break;
             }
@@ -380,6 +399,7 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
      * @param index Integer
      */
     public void doClose(Integer index) {
+
         ChartPanel chartPanel = (ChartPanel) jTabbedPaneContract.getComponentAt(index);
         TabbedCloseButton tabbedCloseButton = (TabbedCloseButton) jTabbedPaneContract.getTabComponentAt(index);
         tabbedCloseButton.removeMessageListener(this);
@@ -393,6 +413,7 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
     }
 
     public void doExecute() {
+
         this.setStatusBarMessage("Please select an order to execute ...\n", BasePanel.INFORMATION);
     }
 

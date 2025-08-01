@@ -35,6 +35,10 @@
  */
 package org.trade.core.persistent.dao;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -178,6 +182,42 @@ public class CandleIT {
 
             candles = tradeService.findCandlesByContractAndBarSize(tradestrategy.getContract(), BarSize.FIVE_MIN);
             assertFalse(candles.isEmpty());
+        }
+    }
+
+    @Test
+    public void addCandleJSON() throws JsonProcessingException {
+
+        RegularTimePeriod period = new CandlePeriod(
+                TradingCalendar.getTradingDayStart(TradingCalendar.getDateTimeNowMarketTimeZone()), 300);
+
+        for (Tradestrategy tradestrategy : tradeService.findAllTradestrategies()) {
+
+            tradestrategies.add(tradestrategy);
+            Candle candle = new Candle(tradestrategy.getContract(), period, period.getStart());
+            candle.setHigh(new BigDecimal("20.33"));
+            candle.setLow(new BigDecimal("20.11"));
+            candle.setOpen(new BigDecimal("20.23"));
+            candle.setClose(new BigDecimal("20.28"));
+            candle.setVolume(1500L);
+            candle.setVwap(new BigDecimal("20.1"));
+            candle.setTradeCount(10);
+
+            candle = tradeService.saveAspect(candle);
+            assertNotNull(candle.getId());
+            _log.info("addCandle IdCandle: {}", candle.getId());
+
+            ContractDto contractDto = new   ContractDto(candle.getContract().getId(), candle.getContract().getSecType(), candle.getContract().getSymbol(), candle.getContract().getExchange(), candle.getContract().getCurrency(), candle.getContract().getExpiry(),
+                    candle.getContract().getRequestId());
+            CandleDto candleDto = new CandleDto(candle.getId(), contractDto, period, candle.getOpen().doubleValue(), candle.getHigh().doubleValue(), candle.getLow().doubleValue(), candle.getClose().doubleValue(),
+                    candle.getLastUpdateDate());
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.registerModule(new JavaTimeModule());
+            objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            String json = objectMapper.writeValueAsString(candleDto);
+            _log.info("addCandle Candle JSON: {}", json.toString());
+            candleDto = objectMapper.readValue(json, CandleDto.class);
+
         }
     }
 }

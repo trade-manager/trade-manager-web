@@ -102,6 +102,16 @@
             <version>3.0.1</version>
         </dependency>
         <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jdk8</artifactId>
+            <version>2.19.2</version> <!-- Use the latest compatible version -->
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>2.19.2</version> <!-- Use the latest compatible version -->
+        </dependency>
+        <dependency>
             <groupId>org.eclipse</groupId>
             <artifactId>yasson</artifactId>
             <version>3.0.4</version>

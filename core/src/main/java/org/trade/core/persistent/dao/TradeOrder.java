@@ -1292,36 +1292,54 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
     public void validate() throws Exception {
 
         if (null == this.getOrderType()) {
+
             throw new Exception("Order Type cannot be null");
         }
+
         if (null == this.getAction()) {
+
             throw new Exception("Action cannot be null");
         }
+
         if (0 == this.getQuantity()) {
+
             throw new Exception("Quantity cannot be zero");
         }
+
         if (OrderType.LMT.equals(this.getOrderType()) && null == this.getLimitPrice()) {
+
             throw new Exception("Limit price cannot be null");
         }
+
         if (OrderType.STPLMT.equals(this.getOrderType())
                 && (null == this.getLimitPrice() || null == this.getAuxPrice())) {
+
             throw new Exception("Limit/Aux price cannot be null");
         }
+
         if (OrderType.STPLMT.equals(this.getOrderType()) && Action.BUY.equals(this.getAction())
                 && (-1 == CoreUtils.nullSafeComparator(this.getLimitPrice(), this.getAuxPrice()))) {
+
             throw new Exception("Limit Price must be greater than Stop Price for Buy order");
         }
+
         if (OrderType.STPLMT.equals(this.getOrderType()) && Action.SELL.equals(this.getAction())
                 && (-1 == CoreUtils.nullSafeComparator(this.getAuxPrice(), this.getLimitPrice()))) {
+
             throw new Exception("Limit Price must be less than Stop Price for Sell order");
         }
+
         if (((OrderType.TRAIL.equals(this.getOrderType()) || (OrderType.TRAILLIMIT.equals(this.getOrderType())))
                 && null == this.getAuxPrice() && null == this.getTrailingPercent())) {
+
             throw new Exception("Trail orders must have either AuxPrice or Trailing Percent set");
         }
+
         if ((OrderType.TRAILLIMIT.equals(this.getOrderType())) && null == this.getLimitPrice()) {
+
             throw new Exception("Limit Price cannot be null for a TrailLimit order");
         }
+
         if (null == this.getFAProfile()) {
 
             if (null == this.getFAGroup()) {
@@ -1334,6 +1352,7 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
             } else {
 
                 if (null == this.getFAMethod() || null == this.getFAPercent()) {
+
                     throw new Exception("FAGroup is set FAPercent cannot be null.");
                 }
             }

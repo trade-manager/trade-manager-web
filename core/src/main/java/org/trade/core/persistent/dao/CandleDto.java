@@ -37,12 +37,7 @@ package org.trade.core.persistent.dao;
 
 // Generated Feb 21, 2011 12:43:33 PM by Hibernate Tools 3.4.0.CR1
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Transient;
 import org.trade.core.dao.Aspect;
 import org.trade.core.util.time.RegularTimePeriod;
@@ -61,9 +56,7 @@ import java.time.ZonedDateTime;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-@Entity
-@Table(name = "candle")
-public class Candle extends Aspect implements java.io.Serializable {
+public class CandleDto extends Aspect implements java.io.Serializable {
 
     /**
      *
@@ -71,47 +64,21 @@ public class Candle extends Aspect implements java.io.Serializable {
     @Serial
     private static final long serialVersionUID = 7644763985378994305L;
 
-    @Column(name = "start_period")
     private ZonedDateTime startPeriod;
-
-    @Column(name = "end_period")
     private ZonedDateTime endPeriod;
-
-    @Column(name = "open", precision = 10)
     private BigDecimal open;
-
-    @Column(name = "close", precision = 10)
     private BigDecimal close;
-
-    @Column(name = "high", precision = 10)
     private BigDecimal high;
-
-    @Column(name = "low", precision = 10)
     private BigDecimal low;
-
-    @Column(name = "period", length = 45)
     private String period;
-
-    @Column(name = "trade_count")
     private Integer tradeCount;
-
-    @Column(name = "volume")
     private Long volume;
-
-    @Column(name = "vwap", precision = 10)
     private BigDecimal vwap;
-
-    @Column(name = "bar_size")
     private Integer barSize;
-
-    @Column(name = "last_update_date", nullable = false)
     private ZonedDateTime lastUpdateDate;
+    private ContractDto contract;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "contract_id", nullable = false)
-    private Contract contract;
-
-    public Candle() {
+    public CandleDto() {
     }
 
     /**
@@ -120,8 +87,9 @@ public class Candle extends Aspect implements java.io.Serializable {
      * @param contract       Contract
      * @param lastUpdateDate ZonedDateTime
      */
-    public Candle(Contract contract, RegularTimePeriod period, ZonedDateTime lastUpdateDate) {
+    public CandleDto(Long id, ContractDto contract, RegularTimePeriod period, ZonedDateTime lastUpdateDate) {
 
+        this.setId(id);
         this.setContract(contract);
         this.setPeriod(period.toString());
         this.setLastUpdateDate(lastUpdateDate);
@@ -141,10 +109,10 @@ public class Candle extends Aspect implements java.io.Serializable {
      * @param close          double
      * @param lastUpdateDate Date
      */
-    public Candle(Contract contract, RegularTimePeriod period, double open, double high, double low, double close,
-                  ZonedDateTime lastUpdateDate) {
+    public CandleDto(Long id, ContractDto contract, RegularTimePeriod period, double open, double high, double low, double close,
+                     ZonedDateTime lastUpdateDate) {
 
-        this(contract, period, lastUpdateDate);
+        this(id, contract, period, lastUpdateDate);
         this.setStartPeriod(period.getStart());
         this.setEndPeriod(period.getEnd());
         Duration duration = Duration.between(period.getStart(), period.getEnd());
@@ -170,10 +138,10 @@ public class Candle extends Aspect implements java.io.Serializable {
      * @param tradeCount     int
      * @param lastUpdateDate Date
      */
-    public Candle(Contract contract, RegularTimePeriod period, double open, double high,
-                  double low, double close, long volume, double vwap, int tradeCount, ZonedDateTime lastUpdateDate) {
+    public CandleDto(Long id, ContractDto contract, RegularTimePeriod period, double open, double high,
+                     double low, double close, long volume, double vwap, int tradeCount, ZonedDateTime lastUpdateDate) {
 
-        this(contract, period, lastUpdateDate);
+        this(id, contract, period, lastUpdateDate);
         this.setOpen(new BigDecimal(open));
         this.setClose(new BigDecimal(close));
         this.setHigh(new BigDecimal(high));
@@ -184,22 +152,26 @@ public class Candle extends Aspect implements java.io.Serializable {
         this.setLastUpdateDate(lastUpdateDate);
     }
 
+   // @JsonIgnore
+   // public boolean isNew() {
+   //     return null == getId(); // Example implementation
+   // }
 
     /**
      * Method getContract.
      *
-     * @return Contract
+     * @return ContractDto
      */
-    public Contract getContract() {
+    public ContractDto getContract() {
         return this.contract;
     }
 
     /**
      * Method setContract.
      *
-     * @param contract Contract
+     * @param contract ContractDto
      */
-    public void setContract(Contract contract) {
+    public void setContract(ContractDto contract) {
         this.contract = contract;
     }
 
@@ -426,16 +398,6 @@ public class Candle extends Aspect implements java.io.Serializable {
     }
 
     /**
-     * Set the bars side true is green false is red.
-     *
-     * @return boolean The side of the bar true is green false is red.
-     */
-    @Transient
-    public boolean getSide() {
-        return this.getClose().doubleValue() >= this.getOpen().doubleValue();
-    }
-
-    /**
      * Method equals.
      *
      * @param objectToCompare Object
@@ -448,7 +410,7 @@ public class Candle extends Aspect implements java.io.Serializable {
             return true;
         }
 
-        if (objectToCompare instanceof Candle candle) {
+        if (objectToCompare instanceof CandleDto candle) {
 
             if (this.getContract().equals(candle.getContract())) {
 
