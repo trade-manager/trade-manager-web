@@ -44,6 +44,7 @@ public final class Pair {
 
     public double x;
     public double y;
+    public static final Comparator<Pair> X_VALUE_ASC = (o1, o2) -> CoreUtils.nullSafeComparator(o1.x, o2.x);
 
     /**
      * Constructor for Pair.
@@ -52,6 +53,7 @@ public final class Pair {
      * @param y double
      */
     public Pair(double x, double y) {
+
         this.x = x;
         this.y = y;
     }
@@ -62,8 +64,7 @@ public final class Pair {
      * @return String
      */
     public String toString() {
+
         return x + "," + y;
     }
-
-    public static final Comparator<Pair> X_VALUE_ASC = (o1, o2) -> CoreUtils.nullSafeComparator(o1.x, o2.x);
 }

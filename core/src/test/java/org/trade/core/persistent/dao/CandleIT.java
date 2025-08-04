@@ -36,9 +36,7 @@
 package org.trade.core.persistent.dao;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.json.JSONObject;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -56,6 +54,7 @@ import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.series.indicator.StrategyData;
 import org.trade.core.persistent.dao.series.indicator.candle.CandleItem;
 import org.trade.core.persistent.dao.series.indicator.candle.CandlePeriod;
+import org.trade.core.util.JSOMMapper;
 import org.trade.core.util.time.RegularTimePeriod;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.BarSize;
@@ -65,6 +64,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -207,16 +207,24 @@ public class CandleIT {
             assertNotNull(candle.getId());
             _log.info("addCandle IdCandle: {}", candle.getId());
 
-            ContractDto contractDto = new   ContractDto(candle.getContract().getId(), candle.getContract().getSecType(), candle.getContract().getSymbol(), candle.getContract().getExchange(), candle.getContract().getCurrency(), candle.getContract().getExpiry(),
-                    candle.getContract().getRequestId());
-            CandleDto candleDto = new CandleDto(candle.getId(), contractDto, period, candle.getOpen().doubleValue(), candle.getHigh().doubleValue(), candle.getLow().doubleValue(), candle.getClose().doubleValue(),
-                    candle.getLastUpdateDate());
-            ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.registerModule(new JavaTimeModule());
-            objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            String json = objectMapper.writeValueAsString(candleDto);
+            candle.getContract().setTradePositions(new ArrayList<TradePosition>());
+            candle.getContract().setCandles(new ArrayList<Candle>());
+            ContractDto contractDto = JSOMMapper.convertToDto(candle.getContract(), ContractDto.class);
+            CandleDto candleDto = JSOMMapper.convertToDto(candle, CandleDto.class);
+            candleDto.setContract(contractDto);
+
+            String json = JSOMMapper.getJSONString(candleDto);
             _log.info("addCandle Candle JSON: {}", json.toString());
-            candleDto = objectMapper.readValue(json, CandleDto.class);
+            JSONObject dto = new JSONObject(json);
+            assertEquals(candle.getId(), dto.getLong("id"));
+
+            candleDto = JSOMMapper.getDTO(json, CandleDto.class);
+            _log.info("addCandle Candle JSON: {}", candleDto.toString());
+            assertEquals(candle.getId(), candleDto.getId());
+
+            Candle newCandle = JSOMMapper.convertToEntity(candleDto, Candle.class);
+            _log.info("addCandle new Candle: {}", newCandle.toString());
+            assertEquals(candle.getId(), newCandle.getId());
 
         }
     }

@@ -102,6 +102,11 @@
             <version>3.0.1</version>
         </dependency>
         <dependency>
+            <groupId>org.modelmapper</groupId>
+            <artifactId>modelmapper</artifactId>
+            <version>3.2.4</version>
+        </dependency>
+        <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jdk8</artifactId>
             <version>2.19.2</version> <!-- Use the latest compatible version -->
@@ -121,6 +126,11 @@
             <groupId>org.openjdk.nashorn</groupId>
             <artifactId>nashorn-core</artifactId>
             <version>15.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mozilla</groupId>
+            <artifactId>rhino</artifactId>
+            <version>1.8.0</version>
         </dependency>
     </dependencies>
     <build>

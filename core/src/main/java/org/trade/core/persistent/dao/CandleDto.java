@@ -37,11 +37,7 @@ package org.trade.core.persistent.dao;
 
 // Generated Feb 21, 2011 12:43:33 PM by Hibernate Tools 3.4.0.CR1
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.Transient;
 import org.trade.core.dao.Aspect;
-import org.trade.core.util.time.RegularTimePeriod;
-import org.trade.core.util.time.TradingCalendar;
 
 import java.io.Serial;
 import java.math.BigDecimal;
@@ -80,82 +76,6 @@ public class CandleDto extends Aspect implements java.io.Serializable {
 
     public CandleDto() {
     }
-
-    /**
-     * Constructor for Candle.
-     *
-     * @param contract       Contract
-     * @param lastUpdateDate ZonedDateTime
-     */
-    public CandleDto(Long id, ContractDto contract, RegularTimePeriod period, ZonedDateTime lastUpdateDate) {
-
-        this.setId(id);
-        this.setContract(contract);
-        this.setPeriod(period.toString());
-        this.setLastUpdateDate(lastUpdateDate);
-        this.setStartPeriod(period.getStart());
-        this.setEndPeriod(period.getEnd());
-        int barSize = (int) (TradingCalendar.getDurationInSeconds(period.getStart(), period.getEnd()) + 1);
-        this.setBarSize(barSize);
-    }
-
-    /**
-     * Constructor for Candle.
-     *
-     * @param contract       Contract
-     * @param open           double
-     * @param high           double
-     * @param low            double
-     * @param close          double
-     * @param lastUpdateDate Date
-     */
-    public CandleDto(Long id, ContractDto contract, RegularTimePeriod period, double open, double high, double low, double close,
-                     ZonedDateTime lastUpdateDate) {
-
-        this(id, contract, period, lastUpdateDate);
-        this.setStartPeriod(period.getStart());
-        this.setEndPeriod(period.getEnd());
-        Duration duration = Duration.between(period.getStart(), period.getEnd());
-        int barSize = (int) (duration.getSeconds() + 1);
-        this.setBarSize(barSize);
-        this.setOpen(new BigDecimal(open));
-        this.setClose(new BigDecimal(close));
-        this.setHigh(new BigDecimal(high));
-        this.setLow(new BigDecimal(low));
-    }
-
-    /**
-     * Constructor for Candle.
-     *
-     * @param contract       Contract
-     * @param period         RegularTimePeriod
-     * @param open           double
-     * @param high           double
-     * @param low            double
-     * @param close          double
-     * @param volume         long
-     * @param vwap           double
-     * @param tradeCount     int
-     * @param lastUpdateDate Date
-     */
-    public CandleDto(Long id, ContractDto contract, RegularTimePeriod period, double open, double high,
-                     double low, double close, long volume, double vwap, int tradeCount, ZonedDateTime lastUpdateDate) {
-
-        this(id, contract, period, lastUpdateDate);
-        this.setOpen(new BigDecimal(open));
-        this.setClose(new BigDecimal(close));
-        this.setHigh(new BigDecimal(high));
-        this.setLow(new BigDecimal(low));
-        this.setVolume(volume);
-        this.setVwap(new BigDecimal(vwap));
-        this.setTradeCount(tradeCount);
-        this.setLastUpdateDate(lastUpdateDate);
-    }
-
-   // @JsonIgnore
-   // public boolean isNew() {
-   //     return null == getId(); // Example implementation
-   // }
 
     /**
      * Method getContract.

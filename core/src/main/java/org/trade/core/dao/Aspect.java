@@ -89,6 +89,24 @@ public abstract class Aspect extends AbstractPersistable<Long> {
     }
 
     /**
+     * Method getId.
+     *
+     * @return Long
+     */
+    public Long getId() {
+        return super.getId();
+    }
+
+    /**
+     * Method setId.
+     *
+     * @param id Long
+     */
+    public void setId(Long id) {
+        super.setId(id);
+    }
+
+    /**
      * Method getCreateDate.
      *
      * @return ZonedDateTime

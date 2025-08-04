@@ -37,7 +37,6 @@ package org.trade.core.persistent.dao;
 
 // Generated Feb 21, 2011 12:43:33 PM by Hibernate Tools 3.4.0.CR1
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.trade.core.dao.Aspect;
 
 import java.io.Serial;
@@ -69,32 +68,6 @@ public class ContractDto extends Aspect implements Serializable, Cloneable {
 
     public ContractDto() {
     }
-
-    /**
-     * Constructor for Contract.
-     *
-     * @param secType  String
-     * @param symbol   String
-     * @param exchange String
-     * @param currency String
-     * @param expiry   Date
-     */
-    public ContractDto(Long id, String secType, String symbol, String exchange, String currency, ZonedDateTime expiry,
-                       Integer requestId) {
-
-        this.setId(id);
-        this.currency = currency;
-        this.exchange = exchange;
-        this.symbol = symbol;
-        this.secType = secType;
-        this.expiry = expiry;
-        this.requestId = requestId;
-    }
-
-  //  @JsonIgnore
- //   public boolean isNew() {
-  //      return null == getId();
-  //  }
 
     /**
      * Method getRequestId.

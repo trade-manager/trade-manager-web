@@ -48,15 +48,18 @@ import java.lang.reflect.Modifier;
  * @version $Id: Parametric.java,v 1.1 2001/10/18 01:32:15 simon Exp $
  */
 public class Parametric {
+
+    private final Class<?> clazz;
+
     /**
      * Constructor for Parametric.
      *
      * @param aClassToReflect Class<?>
      */
     public Parametric(Class<?> aClassToReflect) {
-        super();
 
-        m_class = aClassToReflect;
+        super();
+        clazz = aClassToReflect;
     }
 
     /**
@@ -65,7 +68,7 @@ public class Parametric {
      * @return Class<?>
      */
     public Class<?> getClassToReflect() {
-        return m_class;
+        return clazz;
     }
 
     /**
@@ -76,35 +79,42 @@ public class Parametric {
      * @return Method
      */
     public Method findMethod(String methodName, Class<?>[] parameters) {
+
         Method theReturn = null;
-        Class<?> currentClass = m_class;
+        Class<?> currentClass = clazz;
 
         while (true) {
+
             try {
+
                 Method[] methods = currentClass.getDeclaredMethods();
 
                 for (Method method : methods) {
+
                     int modifiers = method.getModifiers();
 
                     if (method.getName().equals(methodName) && Modifier.isPublic(modifiers)) {
-                        if (isTargetSignature(method, parameters)) {
-                            theReturn = method;
 
+                        if (isTargetSignature(method, parameters)) {
+
+                            theReturn = method;
                             break;
                         }
                     }
-                } // end for loop
-            } // end try block
-            catch (Throwable t) {
+                }
+            } catch (Throwable t) {
+
                 break;
             }
 
             currentClass = currentClass.getSuperclass();
 
             if (null == currentClass) {
-                break; // we've reached beyond Object
+
+                // we've reached beyond Object
+                break;
             }
-        } // end while loop
+        }
 
         return theReturn;
     }
@@ -116,31 +126,36 @@ public class Parametric {
      * @return Field
      */
     public Field findField(String fieldName) {
+
         Field theReturn = null;
-        Class<?> currentClass = m_class;
+        Class<?> currentClass = clazz;
 
         while (true) {
+
             try {
+
                 Field[] fields = currentClass.getDeclaredFields();
 
                 for (Field field : fields) {
+
                     int modifiers = field.getModifiers();
 
                     if (field.getName().equals(fieldName) && Modifier.isPublic(modifiers)) {
-                        theReturn = field;
 
+                        theReturn = field;
                         break;
                     }
-                } // end for loop
-            } // end try block
-            catch (Throwable t) {
+                }
+            } catch (Throwable t) {
                 break;
             }
 
             currentClass = currentClass.getSuperclass();
 
             if (null == currentClass) {
-                break; // we've reached beyond Object
+
+                // we've reached beyond Object
+                break;
             }
         } // end while loop
 
@@ -161,13 +176,15 @@ public class Parametric {
         // no need to check further if the number of parameters
         // are unequal
         if (thisMethodsParameters.length == parameters.length) {
+
             for (int i = 0; i < parameters.length; i++) {
+
                 Class<?> thisParm = thisMethodsParameters[i];
                 Class<?> target = parameters[i];
-
                 theReturn = thisParm.equals(target) || thisParm.isAssignableFrom(target);
 
                 if (!theReturn) {
+
                     break;
                 }
             }
@@ -175,6 +192,4 @@ public class Parametric {
 
         return theReturn;
     }
-
-    private final Class<?> m_class;
 }
