@@ -51,7 +51,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
-import jakarta.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trade.core.persistent.ServiceException;
@@ -103,22 +102,27 @@ public abstract class IndicatorSeries extends ComparableObjectSeries implements 
     public static final String MACDSeries = MACDSeries.class.getSimpleName();
     public static final String VostroSeries = VostroSeries.class.getSimpleName();
 
-    private Integer id;
-    @NotNull
-    private String name;
-    @NotNull
+    private Long id;
     private String type;
-    private String description;
-    @NotNull
-    private Boolean displaySeries;
-    @NotNull
     private Integer seriesRGBColor;
-    @NotNull
-    private Boolean subChart;
-    private Strategy strategy;
-    protected Integer version;
     private boolean dirty = false;
+    private Strategy strategy;
     private List<CodeValue> codeValues = new ArrayList<>(0);
+
+    @Column(name = "name", length = 45, unique = true, nullable = false)
+    private String name;
+
+    @Column(name = "description", length = 100)
+    private String description;
+
+    @Column(name = "display_series", length = 1, nullable = false)
+    private Boolean displaySeries;
+
+    @Column(name = "sub_chart", length = 1, nullable = false)
+    private Boolean subChart;
+
+    @Column(name = "version", columnDefinition = "integer DEFAULT 0", nullable = false)
+    protected Integer version;
 
     /**
      * Constructor for IndicatorSeries.
@@ -126,6 +130,7 @@ public abstract class IndicatorSeries extends ComparableObjectSeries implements 
      * @param type String
      */
     public IndicatorSeries(String type) {
+
         super(type, true, false);
         this.type = type;
         this.version = 0;
@@ -140,6 +145,7 @@ public abstract class IndicatorSeries extends ComparableObjectSeries implements 
      * @param subChart       Boolean
      */
     public IndicatorSeries(String type, Boolean displaySeries, Integer seriesRGBColor, Boolean subChart) {
+
         super(type, true, false);
         this.type = type;
         this.displaySeries = displaySeries;
@@ -158,6 +164,7 @@ public abstract class IndicatorSeries extends ComparableObjectSeries implements 
      * @param subChart       Boolean
      */
     public IndicatorSeries(String name, String type, Boolean displaySeries, Integer seriesRGBColor, Boolean subChart) {
+
         super(name, true, false);
         this.type = type;
         this.displaySeries = displaySeries;
@@ -179,6 +186,7 @@ public abstract class IndicatorSeries extends ComparableObjectSeries implements 
      */
     public IndicatorSeries(Strategy strategy, String name, String type, String description, Boolean displaySeries,
                            Integer seriesRGBColor, Boolean subChart) {
+
         super(name, true, false);
         this.strategy = strategy;
         this.name = name;
@@ -191,43 +199,24 @@ public abstract class IndicatorSeries extends ComparableObjectSeries implements 
     }
 
     /**
-     * Method getIdIndicatorSeries.
+     * Method getIndicatorSeriesId.
      *
-     * @return Integer
+     * @return Long
      */
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
-    public Integer getIdIndicatorSeries() {
+    public Long getIndicatorSeriesId() {
         return this.id;
     }
 
     /**
-     * Method setIdIndicatorSeries.
+     * Method setIndicatorSeriesId.
      *
-     * @param id Integer
+     * @param id Long
      */
-    public void setIdIndicatorSeries(Integer id) {
+    public void setIndicatorSeriesId(Long id) {
         this.id = id;
-    }
-
-    /**
-     * Method getName.
-     *
-     * @return String
-     */
-    @Column(name = "name", length = 45)
-    public String getName() {
-        return this.name;
-    }
-
-    /**
-     * Method setName.
-     *
-     * @param name String
-     */
-    public void setName(String name) {
-        this.name = name;
     }
 
     /**
@@ -250,42 +239,13 @@ public abstract class IndicatorSeries extends ComparableObjectSeries implements 
     }
 
     /**
-     * Method getDescription.
-     *
-     * @return String
-     */
-    @Column(name = "description", length = 100)
-    public String getDescription() {
-        return this.description;
-    }
-
-    /**
-     * Method setDescription.
-     *
-     * @param description String
-     */
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    /**
      * Method getSeriesRGBColor.
      *
      * @return Integer
      */
-    @Column(name = "series_RGB_color")
+    @Column(name = "series_rgb_color", nullable = false)
     public Integer getSeriesRGBColor() {
         return this.seriesRGBColor;
-    }
-
-    /**
-     * Method getSeriesColor.
-     *
-     * @return Color
-     */
-    @Transient
-    public Color getSeriesColor() {
-        return new Color(this.seriesRGBColor);
     }
 
     /**
@@ -295,87 +255,6 @@ public abstract class IndicatorSeries extends ComparableObjectSeries implements 
      */
     public void setSeriesRGBColor(Integer seriesRGBColor) {
         this.seriesRGBColor = seriesRGBColor;
-    }
-
-    /**
-     * Method getDisplaySeries.
-     *
-     * @return Boolean
-     */
-    @Column(name = "display_series", length = 1)
-    public Boolean getDisplaySeries() {
-        return this.displaySeries;
-    }
-
-    /**
-     * Method setDisplaySeries.
-     *
-     * @param displaySeries Boolean
-     */
-    public void setDisplaySeries(Boolean displaySeries) {
-        this.displaySeries = displaySeries;
-    }
-
-    /**
-     * Method getSubChart.
-     *
-     * @return Boolean
-     */
-    @Column(name = "sub_chart", length = 1)
-    public Boolean getSubChart() {
-        return this.subChart;
-    }
-
-    /**
-     * Method setSubChart.
-     *
-     * @param subChart Boolean
-     */
-    public void setSubChart(Boolean subChart) {
-        this.subChart = subChart;
-    }
-
-    /**
-     * Method getVersion.
-     *
-     * @return Integer
-     */
-    @Column(name = "version")
-    public Integer getVersion() {
-        return this.version;
-    }
-
-    /**
-     * Method setVersion.
-     *
-     * @param version Integer
-     */
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
-
-    /**
-     * Method isDirty.
-     *
-     * @return boolean
-     */
-    @Transient
-    public boolean isDirty() {
-        for (CodeValue item : this.getCodeValues()) {
-            if (item.isDirty())
-                return true;
-        }
-        return this.dirty;
-    }
-
-    /**
-     * Method setDirty.
-     *
-     * @param dirty boolean
-     */
-
-    public void setDirty(boolean dirty) {
-        this.dirty = dirty;
     }
 
     /**
@@ -416,6 +295,133 @@ public abstract class IndicatorSeries extends ComparableObjectSeries implements 
      */
     public void setCodeValues(List<CodeValue> codeValues) {
         this.codeValues = codeValues;
+    }
+
+    /**
+     * Method getName.
+     *
+     * @return String
+     */
+    public String getName() {
+        return this.name;
+    }
+
+    /**
+     * Method setName.
+     *
+     * @param name String
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * Method getDescription.
+     *
+     * @return String
+     */
+    public String getDescription() {
+        return this.description;
+    }
+
+    /**
+     * Method setDescription.
+     *
+     * @param description String
+     */
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    /**
+     * Method getSeriesColor.
+     *
+     * @return Color
+     */
+    @Transient
+    public Color getSeriesColor() {
+        return new Color(this.seriesRGBColor);
+    }
+
+    /**
+     * Method getDisplaySeries.
+     *
+     * @return Boolean
+     */
+    public Boolean getDisplaySeries() {
+        return this.displaySeries;
+    }
+
+    /**
+     * Method setDisplaySeries.
+     *
+     * @param displaySeries Boolean
+     */
+    public void setDisplaySeries(Boolean displaySeries) {
+        this.displaySeries = displaySeries;
+    }
+
+    /**
+     * Method getSubChart.
+     *
+     * @return Boolean
+     */
+    public Boolean getSubChart() {
+        return this.subChart;
+    }
+
+    /**
+     * Method setSubChart.
+     *
+     * @param subChart Boolean
+     */
+    public void setSubChart(Boolean subChart) {
+        this.subChart = subChart;
+    }
+
+    /**
+     * Method getVersion.
+     *
+     * @return Integer
+     */
+    public Integer getVersion() {
+        return this.version;
+    }
+
+    /**
+     * Method setVersion.
+     *
+     * @param version Integer
+     */
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
+
+    /**
+     * Method isDirty.
+     *
+     * @return boolean
+     */
+    @Transient
+    public boolean isDirty() {
+
+        for (CodeValue item : this.getCodeValues()) {
+
+            if (item.isDirty()) {
+                return true;
+            }
+        }
+        return this.dirty;
+    }
+
+    /**
+     * Method setDirty.
+     *
+     * @param dirty boolean
+     */
+
+    public void setDirty(boolean dirty) {
+        this.dirty = dirty;
     }
 
     /**

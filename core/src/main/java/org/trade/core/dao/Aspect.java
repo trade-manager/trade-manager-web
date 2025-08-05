@@ -89,7 +89,8 @@ public abstract class Aspect extends AbstractPersistable<Long> {
     }
 
     /**
-     * Method getId.
+     * Method getId. Used for the ObjectMApper to Dto as the AbstractPersistable
+     * is protected.
      *
      * @return Long
      */
