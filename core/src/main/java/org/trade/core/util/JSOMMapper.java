@@ -28,7 +28,7 @@ public class JSOMMapper {
     static {
 
         objectMapper.registerModule(new JavaTimeModule());
-        // Set max depth to 50
+        // Set max depth
         StreamReadConstraints readConstraints = StreamReadConstraints.builder().maxNestingDepth(200).build();
         StreamWriteConstraints writeConstraints = StreamWriteConstraints.builder().maxNestingDepth(200).build();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);

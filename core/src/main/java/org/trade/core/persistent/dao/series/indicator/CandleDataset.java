@@ -79,14 +79,6 @@ public class CandleDataset extends AbstractXYDataset implements OHLCVwapDataset,
     }
 
     /**
-     *
-     * @return data List<IndicatorSeries>
-     */
-    public List<IndicatorSeries> getData() {
-        return this.data;
-    }
-
-    /**
      * Returns the position within each time period that is used for the X value
      * when the collection is used as an XYDataset.
      *
