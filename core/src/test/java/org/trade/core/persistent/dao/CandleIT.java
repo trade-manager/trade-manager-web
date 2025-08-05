@@ -182,15 +182,15 @@ public class CandleIT {
                     IndicatorSeries indicatorSeries = indicatorDataset.getSeries(i);
                     indicatorSeries.getStrategy().setIndicatorSeries(new ArrayList<>());
 
-                    if(indicatorSeries.getStrategy().hasStrategyManager()){
+                    if (indicatorSeries.getStrategy().hasStrategyManager()) {
 
                         indicatorSeries.getStrategy().getStrategyManager().setIndicatorSeries(new ArrayList<>());
                     }
                 }
             }
 
-      //      String json = JSOMMapper.getJSONString(strategyData);
-      //      _log.info("addCandle Candle JSON: {}", json.toString());
+            //      String json = JSOMMapper.getJSONString(strategyData);
+            //      _log.info("addCandle Candle JSON: {}", json.toString());
 
             assertFalse(tradestrategy.getStrategyData().getBaseCandleSeries().isEmpty());
             tradeService.saveCandleSeries(tradestrategy.getStrategyData().getBaseCandleSeries());
