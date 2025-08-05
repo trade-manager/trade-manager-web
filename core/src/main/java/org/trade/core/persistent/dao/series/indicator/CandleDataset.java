@@ -79,6 +79,14 @@ public class CandleDataset extends AbstractXYDataset implements OHLCVwapDataset,
     }
 
     /**
+     *
+     * @return data List<IndicatorSeries>
+     */
+    public List<IndicatorSeries> getData() {
+        return this.data;
+    }
+
+    /**
      * Returns the position within each time period that is used for the X value
      * when the collection is used as an XYDataset.
      *
@@ -98,7 +106,9 @@ public class CandleDataset extends AbstractXYDataset implements OHLCVwapDataset,
      * @since 1.0.11
      */
     public void setXPosition(TimePeriodAnchor anchor) {
+
         if (anchor == null) {
+
             throw new IllegalArgumentException("Null 'anchor' argument.");
         }
         this.xPosition = anchor;
@@ -113,7 +123,9 @@ public class CandleDataset extends AbstractXYDataset implements OHLCVwapDataset,
      * @see IIndicatorDataset#addSeries(IndicatorSeries)
      */
     public void addSeries(IndicatorSeries series) {
+
         if (series == null) {
+
             throw new IllegalArgumentException("Null series argument.");
         }
         this.data.add(series);
@@ -131,6 +143,7 @@ public class CandleDataset extends AbstractXYDataset implements OHLCVwapDataset,
      * IndicatorSeries)
      */
     public void setSeries(int index, IndicatorSeries series) {
+
         if (series == null) {
             throw new IllegalArgumentException("Null series argument.");
         }
@@ -245,6 +258,7 @@ public class CandleDataset extends AbstractXYDataset implements OHLCVwapDataset,
      * int)
      */
     public double getXValue(int series, int item) {
+
         CandleSeries s = (CandleSeries) this.data.get(series);
         CandleItem di = (CandleItem) s.getDataItem(item);
         RegularTimePeriod period = di.getPeriod();
@@ -284,6 +298,7 @@ public class CandleDataset extends AbstractXYDataset implements OHLCVwapDataset,
      * org.jfree.data.xy.OHLCDataset#getOpenValue(int, int)
      */
     public double getOpenValue(int series, int item) {
+
         CandleSeries s = (CandleSeries) this.data.get(series);
         CandleItem di = (CandleItem) s.getDataItem(item);
         return di.getOpen();

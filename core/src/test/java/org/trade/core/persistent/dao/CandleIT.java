@@ -51,6 +51,8 @@ import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
 import org.trade.core.persistent.TradeService;
+import org.trade.core.persistent.dao.series.indicator.IIndicatorDataset;
+import org.trade.core.persistent.dao.series.indicator.IndicatorSeries;
 import org.trade.core.persistent.dao.series.indicator.StrategyData;
 import org.trade.core.persistent.dao.series.indicator.candle.CandleItem;
 import org.trade.core.persistent.dao.series.indicator.candle.CandlePeriod;
@@ -166,6 +168,29 @@ public class CandleIT {
             StrategyData.doDummyData(tradestrategy.getStrategyData().getBaseCandleSeries(),
                     Tradingday.newInstance(prevTradingday), 2, BarSize.FIVE_MIN, true, 0);
             _log.info("addCandleSeries symbol: {} open: {}. close: {}", tradestrategy.getContract().getSymbol(), tradestrategy.getTradingday().getOpen(), tradestrategy.getTradingday().getClose());
+
+            // tradestrategy.getContract().setTradePositions(new ArrayList<TradePosition>());
+            // tradestrategy.getContract().setCandles(new ArrayList<Candle>());
+            StrategyData strategyData = tradestrategy.getStrategyData();
+            strategyData.getBaseCandleSeries().getContract().setTradePositions(new ArrayList<>());
+            strategyData.getBaseCandleSeries().getContract().setCandles(new ArrayList<>());
+
+            for (IIndicatorDataset indicatorDataset : strategyData.getIndicators()) {
+
+                for (int i = 0; i < indicatorDataset.getSeriesCount(); i++) {
+
+                    IndicatorSeries indicatorSeries = indicatorDataset.getSeries(i);
+                    indicatorSeries.getStrategy().setIndicatorSeries(new ArrayList<>());
+
+                    if(indicatorSeries.getStrategy().hasStrategyManager()){
+
+                        indicatorSeries.getStrategy().getStrategyManager().setIndicatorSeries(new ArrayList<>());
+                    }
+                }
+            }
+
+      //      String json = JSOMMapper.getJSONString(strategyData);
+      //      _log.info("addCandle Candle JSON: {}", json.toString());
 
             assertFalse(tradestrategy.getStrategyData().getBaseCandleSeries().isEmpty());
             tradeService.saveCandleSeries(tradestrategy.getStrategyData().getBaseCandleSeries());

@@ -322,6 +322,7 @@ public abstract class Worker extends ScriptableObject {
     }
 
     public String getClassName() {
-        return this.getClassName();
+
+        return this.getClass().getName();
     }
 }

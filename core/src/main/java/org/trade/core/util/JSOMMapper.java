@@ -1,8 +1,11 @@
 package org.trade.core.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.StreamReadConstraints;
+import com.fasterxml.jackson.core.StreamWriteConstraints;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
@@ -23,11 +26,19 @@ public class JSOMMapper {
     private static final String dateFormat = "yyyy-MM-dd HH:mm:ss -HH:mm";
 
     static {
+
         objectMapper.registerModule(new JavaTimeModule());
+        // Set max depth to 50
+        StreamReadConstraints readConstraints = StreamReadConstraints.builder().maxNestingDepth(200).build();
+        StreamWriteConstraints writeConstraints = StreamWriteConstraints.builder().maxNestingDepth(200).build();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+
         SimpleDateFormat df = new SimpleDateFormat(dateFormat);
         objectMapper.setDateFormat(df);
         objectMapper.setTimeZone(TimeZone.getTimeZone(TradingCalendar.MKT_TIMEZONE));
+        objectMapper.getFactory().setStreamReadConstraints(readConstraints);
+        objectMapper.getFactory().setStreamWriteConstraints(writeConstraints);
 
         modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
@@ -35,11 +46,11 @@ public class JSOMMapper {
     }
 
     /**
-     * @param aspect Aspect
+     * @param aspect Object
      * @return json String
      * @throws JsonProcessingException exception
      */
-    public static String getJSONString(Aspect aspect) throws JsonProcessingException {
+    public static String getJSONString(Object aspect) throws JsonProcessingException {
 
         return objectMapper.writeValueAsString(aspect);
     }

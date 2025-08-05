@@ -105,6 +105,23 @@ public class CandleSeries extends IndicatorSeries {
     private final LinkedList<Integer> tradeCountValues = new LinkedList<>();
     private final LinkedList<Double> vwapVolumeValues = new LinkedList<>();
 
+
+    /**
+     *
+     * @return data List<IndicatorSeries>
+     */
+    public List<IndicatorSeries> getData() {
+        return this.data;
+    }
+
+    /**
+     *
+     * @return data List<IndicatorSeries>
+     */
+    public void setData(List<IndicatorSeries> data) {
+         this.data = data;
+    }
+
     public CandleSeries() {
 
         super(IndicatorSeries.CandleSeries, true, 0, false);
@@ -637,7 +654,13 @@ public class CandleSeries extends IndicatorSeries {
      */
     @Transient
     public RollingCandle getRollingCandle() {
-        return this.rollingCandleValues.getFirst();
+
+        if (!this.rollingCandleValues.isEmpty()) {
+
+            return this.rollingCandleValues.getFirst();
+        }
+
+        return null;
     }
 
     /**
