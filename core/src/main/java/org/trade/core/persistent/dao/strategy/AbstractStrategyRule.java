@@ -1290,7 +1290,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
         javascript.append("     let candleSeries = JSON.parse(candleSeriesJSON);\n");
         javascript.append("     gs.log('Hello Im in a javascript function key: ' + candleSeries.key);\n");
         javascript.append("     // Get the current candle\n");
-        javascript.append("     let currentCandleItem = JSON.parse(gs.getCurrentCandle());\n");
+        javascript.append("     let currentCandleItem = JSON.parse(gs.getCurrentCandleJSON());\n");
         javascript.append("     gs.log('currentCandleItem: ' + currentCandleItem.candle.side);\n");
         javascript.append("     return candleSeries.key\n");
         javascript.append("  } catch (ex) {\n");
