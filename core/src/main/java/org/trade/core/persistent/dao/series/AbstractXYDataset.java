@@ -1,6 +1,7 @@
 package org.trade.core.persistent.dao.series;
 
 public abstract class AbstractXYDataset extends AbstractSeriesDataset implements XYDataset {
+
     public AbstractXYDataset() {
     }
 
@@ -9,9 +10,12 @@ public abstract class AbstractXYDataset extends AbstractSeriesDataset implements
     }
 
     public double getXValue(int series, int item) {
+
         double result = Double.NaN;
         Number x = this.getX(series, item);
+
         if (x != null) {
+
             result = x.doubleValue();
         }
 
@@ -19,9 +23,12 @@ public abstract class AbstractXYDataset extends AbstractSeriesDataset implements
     }
 
     public double getYValue(int series, int item) {
+
         double result = Double.NaN;
         Number y = this.getY(series, item);
+
         if (y != null) {
+
             result = y.doubleValue();
         }
 

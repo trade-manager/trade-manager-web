@@ -52,6 +52,7 @@ import org.trade.core.persistent.dao.CandleRepository;
 import org.trade.core.persistent.dao.CodeType;
 import org.trade.core.persistent.dao.CodeTypeRepository;
 import org.trade.core.persistent.dao.Contract;
+import org.trade.core.persistent.dao.ContractLite;
 import org.trade.core.persistent.dao.ContractRepository;
 import org.trade.core.persistent.dao.Portfolio;
 import org.trade.core.persistent.dao.PortfolioRepository;
@@ -211,6 +212,11 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
     public Contract findContractById(final Long id) {
 
         return contractRepository.findById(id).isPresent() ? contractRepository.findById(id).get() : null;
+    }
+
+    public ContractLite findContractLiteById(final Long id) {
+
+        return contractRepository.findContractLiteById(id);
     }
 
     public TradeOrder findTradeOrderById(final Long id) {

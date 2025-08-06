@@ -89,6 +89,25 @@ public abstract class Aspect extends AbstractPersistable<Long> {
     }
 
     /**
+     * Method getId. Used for the ObjectMApper to Dto as the AbstractPersistable
+     * is protected.
+     *
+     * @return Long
+     */
+    public Long getId() {
+        return super.getId();
+    }
+
+    /**
+     * Method setId.
+     *
+     * @param id Long
+     */
+    public void setId(Long id) {
+        super.setId(id);
+    }
+
+    /**
      * Method getCreateDate.
      *
      * @return ZonedDateTime

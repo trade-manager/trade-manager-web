@@ -35,6 +35,8 @@
  */
 package org.trade.core.persistent.dao;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import org.json.JSONObject;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -52,6 +54,7 @@ import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.series.indicator.StrategyData;
 import org.trade.core.persistent.dao.series.indicator.candle.CandleItem;
 import org.trade.core.persistent.dao.series.indicator.candle.CandlePeriod;
+import org.trade.core.util.JSONMapper;
 import org.trade.core.util.time.RegularTimePeriod;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.BarSize;
@@ -61,6 +64,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -163,6 +167,10 @@ public class CandleIT {
                     Tradingday.newInstance(prevTradingday), 2, BarSize.FIVE_MIN, true, 0);
             _log.info("addCandleSeries symbol: {} open: {}. close: {}", tradestrategy.getContract().getSymbol(), tradestrategy.getTradingday().getOpen(), tradestrategy.getTradingday().getClose());
 
+            StrategyData strategyData = tradestrategy.getStrategyData();
+            String json = JSONMapper.getJSONString(strategyData);
+            _log.info("addCandle Candle JSON: {}", json.toString());
+
             assertFalse(tradestrategy.getStrategyData().getBaseCandleSeries().isEmpty());
             tradeService.saveCandleSeries(tradestrategy.getStrategyData().getBaseCandleSeries());
 
@@ -178,6 +186,50 @@ public class CandleIT {
 
             candles = tradeService.findCandlesByContractAndBarSize(tradestrategy.getContract(), BarSize.FIVE_MIN);
             assertFalse(candles.isEmpty());
+        }
+    }
+
+    @Test
+    public void addCandleJSON() throws JsonProcessingException {
+
+        RegularTimePeriod period = new CandlePeriod(
+                TradingCalendar.getTradingDayStart(TradingCalendar.getDateTimeNowMarketTimeZone()), 300);
+
+        for (Tradestrategy tradestrategy : tradeService.findAllTradestrategies()) {
+
+            tradestrategies.add(tradestrategy);
+            Candle candle = new Candle(tradestrategy.getContract(), period, period.getStart());
+            candle.setHigh(new BigDecimal("20.33"));
+            candle.setLow(new BigDecimal("20.11"));
+            candle.setOpen(new BigDecimal("20.23"));
+            candle.setClose(new BigDecimal("20.28"));
+            candle.setVolume(1500L);
+            candle.setVwap(new BigDecimal("20.1"));
+            candle.setTradeCount(10);
+
+            candle = tradeService.saveAspect(candle);
+            assertNotNull(candle.getId());
+            _log.info("addCandle IdCandle: {}", candle.getId());
+
+            candle.getContract().setTradePositions(new ArrayList<TradePosition>());
+            candle.getContract().setCandles(new ArrayList<Candle>());
+            ContractDto contractDto = JSONMapper.convertToDto(candle.getContract(), ContractDto.class);
+            CandleDto candleDto = JSONMapper.convertToDto(candle, CandleDto.class);
+            candleDto.setContract(contractDto);
+
+            String json = JSONMapper.getJSONString(candleDto);
+            _log.info("addCandle Candle JSON: {}", json.toString());
+            JSONObject dto = new JSONObject(json);
+            assertEquals(candle.getId(), dto.getLong("id"));
+
+            candleDto = JSONMapper.getDTO(json, CandleDto.class);
+            _log.info("addCandle Candle JSON: {}", candleDto.toString());
+            assertEquals(candle.getId(), candleDto.getId());
+
+            Candle newCandle = JSONMapper.convertToEntity(candleDto, Candle.class);
+            _log.info("addCandle new Candle: {}", newCandle.toString());
+            assertEquals(candle.getId(), newCandle.getId());
+
         }
     }
 }

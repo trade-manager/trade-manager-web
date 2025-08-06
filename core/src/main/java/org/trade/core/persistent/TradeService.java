@@ -41,6 +41,7 @@ import org.trade.core.persistent.dao.Account;
 import org.trade.core.persistent.dao.Candle;
 import org.trade.core.persistent.dao.CodeType;
 import org.trade.core.persistent.dao.Contract;
+import org.trade.core.persistent.dao.ContractLite;
 import org.trade.core.persistent.dao.Portfolio;
 import org.trade.core.persistent.dao.Rule;
 import org.trade.core.persistent.dao.Strategy;
@@ -147,6 +148,14 @@ public interface TradeService extends AspectService {
      * @return Contract
      */
     Contract findContractById(Long id);
+
+    /**
+     * Method findContractLiteById.
+     *
+     * @param id Long
+     * @return ContractLite
+     */
+    ContractLite findContractLiteById(final Long id);
 
     /**
      * Method findTradeOrderById.

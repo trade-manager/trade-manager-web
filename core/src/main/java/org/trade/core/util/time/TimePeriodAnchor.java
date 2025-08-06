@@ -134,6 +134,7 @@ public final class TimePeriodAnchor implements Serializable {
      */
     @Serial
     private Object readResolve() throws ObjectStreamException {
+
         if (this.equals(TimePeriodAnchor.START)) {
             return TimePeriodAnchor.START;
         } else if (this.equals(TimePeriodAnchor.MIDDLE)) {

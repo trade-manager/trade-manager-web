@@ -30,6 +30,15 @@ public class ComparableObjectSeries extends Series implements Cloneable, Seriali
         this.allowDuplicateXValues = allowDuplicateXValues;
     }
 
+    /**
+     * Use to get data for objectMapper yo Dto and JSON
+     *
+     * @return data List
+     */
+    public List getData() {
+        return this.data;
+    }
+
     public boolean getAutoSort() {
         return this.autoSort;
     }

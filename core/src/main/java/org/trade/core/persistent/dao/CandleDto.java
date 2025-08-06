@@ -37,16 +37,7 @@ package org.trade.core.persistent.dao;
 
 // Generated Feb 21, 2011 12:43:33 PM by Hibernate Tools 3.4.0.CR1
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 import org.trade.core.dao.Aspect;
-import org.trade.core.util.time.RegularTimePeriod;
-import org.trade.core.util.time.TradingCalendar;
 
 import java.io.Serial;
 import java.math.BigDecimal;
@@ -61,9 +52,7 @@ import java.time.ZonedDateTime;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-@Entity
-@Table(name = "candle")
-public class Candle extends Aspect implements java.io.Serializable {
+public class CandleDto extends Aspect implements java.io.Serializable {
 
     /**
      *
@@ -71,135 +60,38 @@ public class Candle extends Aspect implements java.io.Serializable {
     @Serial
     private static final long serialVersionUID = 7644763985378994305L;
 
-    @Column(name = "start_period")
     private ZonedDateTime startPeriod;
-
-    @Column(name = "end_period")
     private ZonedDateTime endPeriod;
-
-    @Column(name = "open", precision = 10)
     private BigDecimal open;
-
-    @Column(name = "close", precision = 10)
     private BigDecimal close;
-
-    @Column(name = "high", precision = 10)
     private BigDecimal high;
-
-    @Column(name = "low", precision = 10)
     private BigDecimal low;
-
-    @Column(name = "period", length = 45)
     private String period;
-
-    @Column(name = "trade_count")
     private Integer tradeCount;
-
-    @Column(name = "volume")
     private Long volume;
-
-    @Column(name = "vwap", precision = 10)
     private BigDecimal vwap;
-
-    @Column(name = "bar_size")
     private Integer barSize;
-
-    @Column(name = "last_update_date", nullable = false)
     private ZonedDateTime lastUpdateDate;
+    private ContractDto contract;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "contract_id", nullable = false)
-    private Contract contract;
-
-    public Candle() {
+    public CandleDto() {
     }
-
-    /**
-     * Constructor for Candle.
-     *
-     * @param contract       Contract
-     * @param lastUpdateDate ZonedDateTime
-     */
-    public Candle(Contract contract, RegularTimePeriod period, ZonedDateTime lastUpdateDate) {
-
-        this.setContract(contract);
-        this.setPeriod(period.toString());
-        this.setLastUpdateDate(lastUpdateDate);
-        this.setStartPeriod(period.getStart());
-        this.setEndPeriod(period.getEnd());
-        int barSize = (int) (TradingCalendar.getDurationInSeconds(period.getStart(), period.getEnd()) + 1);
-        this.setBarSize(barSize);
-    }
-
-    /**
-     * Constructor for Candle.
-     *
-     * @param contract       Contract
-     * @param open           double
-     * @param high           double
-     * @param low            double
-     * @param close          double
-     * @param lastUpdateDate Date
-     */
-    public Candle(Contract contract, RegularTimePeriod period, double open, double high, double low, double close,
-                  ZonedDateTime lastUpdateDate) {
-
-        this(contract, period, lastUpdateDate);
-        this.setStartPeriod(period.getStart());
-        this.setEndPeriod(period.getEnd());
-        Duration duration = Duration.between(period.getStart(), period.getEnd());
-        int barSize = (int) (duration.getSeconds() + 1);
-        this.setBarSize(barSize);
-        this.setOpen(new BigDecimal(open));
-        this.setClose(new BigDecimal(close));
-        this.setHigh(new BigDecimal(high));
-        this.setLow(new BigDecimal(low));
-    }
-
-    /**
-     * Constructor for Candle.
-     *
-     * @param contract       Contract
-     * @param period         RegularTimePeriod
-     * @param open           double
-     * @param high           double
-     * @param low            double
-     * @param close          double
-     * @param volume         long
-     * @param vwap           double
-     * @param tradeCount     int
-     * @param lastUpdateDate Date
-     */
-    public Candle(Contract contract, RegularTimePeriod period, double open, double high,
-                  double low, double close, long volume, double vwap, int tradeCount, ZonedDateTime lastUpdateDate) {
-
-        this(contract, period, lastUpdateDate);
-        this.setOpen(new BigDecimal(open));
-        this.setClose(new BigDecimal(close));
-        this.setHigh(new BigDecimal(high));
-        this.setLow(new BigDecimal(low));
-        this.setVolume(volume);
-        this.setVwap(new BigDecimal(vwap));
-        this.setTradeCount(tradeCount);
-        this.setLastUpdateDate(lastUpdateDate);
-    }
-
 
     /**
      * Method getContract.
      *
-     * @return Contract
+     * @return ContractDto
      */
-    public Contract getContract() {
+    public ContractDto getContract() {
         return this.contract;
     }
 
     /**
      * Method setContract.
      *
-     * @param contract Contract
+     * @param contract ContractDto
      */
-    public void setContract(Contract contract) {
+    public void setContract(ContractDto contract) {
         this.contract = contract;
     }
 
@@ -426,16 +318,6 @@ public class Candle extends Aspect implements java.io.Serializable {
     }
 
     /**
-     * Set the bars side true is green false is red.
-     *
-     * @return boolean The side of the bar true is green false is red.
-     */
-    @Transient
-    public boolean getSide() {
-        return this.getClose().doubleValue() >= this.getOpen().doubleValue();
-    }
-
-    /**
      * Method equals.
      *
      * @param objectToCompare Object
@@ -448,7 +330,7 @@ public class Candle extends Aspect implements java.io.Serializable {
             return true;
         }
 
-        if (objectToCompare instanceof Candle candle) {
+        if (objectToCompare instanceof CandleDto candle) {
 
             if (this.getContract().equals(candle.getContract())) {
 

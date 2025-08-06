@@ -16,7 +16,9 @@ public abstract class AbstractSeriesDataset extends AbstractDataset implements S
         int seriesCount = this.getSeriesCount();
 
         for (int s = 0; s < seriesCount; ++s) {
+
             if (this.getSeriesKey(s).equals(seriesKey)) {
+
                 return s;
             }
         }

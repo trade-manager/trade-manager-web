@@ -37,6 +37,7 @@ package org.trade.core.persistent.dao;
 
 // Generated Feb 21, 2011 12:43:33 PM by Hibernate Tools 3.4.0.CR1
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -87,9 +88,6 @@ public class Strategy extends Aspect implements Serializable, Cloneable {
     @JoinColumn(name = "strategy_manager_id")
     private Strategy strategy;
 
-    @OneToMany(mappedBy = "strategy", fetch = FetchType.LAZY)
-    private List<Tradestrategy> tradestrategies = new ArrayList<>(0);
-
     @OneToMany(mappedBy = "strategy", fetch = FetchType.LAZY, orphanRemoval = true, cascade = {CascadeType.ALL})
     private List<Rule> rules = new ArrayList<>(0);
 
@@ -125,21 +123,18 @@ public class Strategy extends Aspect implements Serializable, Cloneable {
     /**
      * Constructor for Strategy.
      *
-     * @param name            String
-     * @param description     String
-     * @param marketData      Boolean
-     * @param className       String
-     * @param tradestrategies List<Tradestrategy>
-     * @param rules           List<Rule>
-     * @param strategies      List<Strategy>
+     * @param name        String
+     * @param description String
+     * @param marketData  Boolean
+     * @param className   String
+     * @param rules       List<Rule>
      */
     public Strategy(String name, String description, Boolean marketData, String className,
-                    List<Tradestrategy> tradestrategies, List<Rule> rules, List<Strategy> strategies) {
+                    List<Rule> rules) {
 
         this.name = name;
         this.description = description;
         this.marketData = marketData;
-        this.tradestrategies = tradestrategies;
         this.rules = rules;
         this.className = className;
     }
@@ -217,29 +212,11 @@ public class Strategy extends Aspect implements Serializable, Cloneable {
     }
 
     /**
-     * Method getTradestrategies.
-     *
-     * @return List<Tradestrategy>
-     */
-    public List<Tradestrategy> getTradestrategies() {
-        return this.tradestrategies;
-    }
-
-    /**
-     * Method setTradestrategies.
-     *
-     * @param tradestrategies List<Tradestrategy>
-     */
-    public void setTradestrategies(List<Tradestrategy> tradestrategies) {
-        this.tradestrategies = tradestrategies;
-    }
-
-    /**
      * Method getRules.
      *
      * @return List<Rule>
      */
-
+    @JsonIgnore
     public List<Rule> getRules() {
         return this.rules;
     }
@@ -258,6 +235,7 @@ public class Strategy extends Aspect implements Serializable, Cloneable {
      *
      * @return List<IndicatorSeries>
      */
+    @JsonIgnore
     public List<IndicatorSeries> getIndicatorSeries() {
         return this.indicators;
     }
@@ -323,8 +301,6 @@ public class Strategy extends Aspect implements Serializable, Cloneable {
     public Object clone() throws CloneNotSupportedException {
 
         Strategy strategy = (Strategy) super.clone();
-        List<Tradestrategy> tradestrategies = new ArrayList<>(0);
-        strategy.setTradestrategies(tradestrategies);
         strategy.setIndicatorSeries(this.getIndicatorSeries());
         return strategy;
     }

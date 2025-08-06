@@ -65,13 +65,6 @@ public class CandleDataset extends AbstractXYDataset implements OHLCVwapDataset,
     private static final long serialVersionUID = 3931818830267435673L;
 
     /**
-     * Storage for the data series.
-     */
-    private List<IndicatorSeries> data;
-
-    private TimePeriodAnchor xPosition = TimePeriodAnchor.START;
-
-    /**
      * Creates a new instance of <code>OHLCSeriesCollection</code>.
      */
     public CandleDataset() {
@@ -98,7 +91,9 @@ public class CandleDataset extends AbstractXYDataset implements OHLCVwapDataset,
      * @since 1.0.11
      */
     public void setXPosition(TimePeriodAnchor anchor) {
+
         if (anchor == null) {
+
             throw new IllegalArgumentException("Null 'anchor' argument.");
         }
         this.xPosition = anchor;
@@ -113,7 +108,9 @@ public class CandleDataset extends AbstractXYDataset implements OHLCVwapDataset,
      * @see IIndicatorDataset#addSeries(IndicatorSeries)
      */
     public void addSeries(IndicatorSeries series) {
+
         if (series == null) {
+
             throw new IllegalArgumentException("Null series argument.");
         }
         this.data.add(series);
@@ -131,6 +128,7 @@ public class CandleDataset extends AbstractXYDataset implements OHLCVwapDataset,
      * IndicatorSeries)
      */
     public void setSeries(int index, IndicatorSeries series) {
+
         if (series == null) {
             throw new IllegalArgumentException("Null series argument.");
         }
@@ -245,6 +243,7 @@ public class CandleDataset extends AbstractXYDataset implements OHLCVwapDataset,
      * int)
      */
     public double getXValue(int series, int item) {
+
         CandleSeries s = (CandleSeries) this.data.get(series);
         CandleItem di = (CandleItem) s.getDataItem(item);
         RegularTimePeriod period = di.getPeriod();
@@ -284,6 +283,7 @@ public class CandleDataset extends AbstractXYDataset implements OHLCVwapDataset,
      * org.jfree.data.xy.OHLCDataset#getOpenValue(int, int)
      */
     public double getOpenValue(int series, int item) {
+
         CandleSeries s = (CandleSeries) this.data.get(series);
         CandleItem di = (CandleItem) s.getDataItem(item);
         return di.getOpen();
