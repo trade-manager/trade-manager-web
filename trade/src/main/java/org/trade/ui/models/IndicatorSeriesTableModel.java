@@ -137,7 +137,7 @@ public class IndicatorSeriesTableModel extends TableModel {
         }
         if (Objects.equals(columnNames[column], TYPE)) {
             org.trade.core.persistent.dao.series.indicator.IndicatorSeries element = getData().getIndicatorSeries().get(row);
-            return null == element.getIndicatorSeriesId();
+            return null == element.getId();
         }
         return true;
     }

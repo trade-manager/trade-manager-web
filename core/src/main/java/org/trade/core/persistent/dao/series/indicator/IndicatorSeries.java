@@ -207,7 +207,7 @@ public abstract class IndicatorSeries extends ComparableObjectSeries implements 
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
-    public Long getIndicatorSeriesId() {
+    public Long getId() {
         return this.id;
     }
 
@@ -216,7 +216,7 @@ public abstract class IndicatorSeries extends ComparableObjectSeries implements 
      *
      * @param id Long
      */
-    public void setIndicatorSeriesId(Long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

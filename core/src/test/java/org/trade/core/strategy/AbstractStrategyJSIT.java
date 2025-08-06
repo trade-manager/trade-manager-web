@@ -63,6 +63,8 @@ import org.trade.core.persistent.dao.series.indicator.CandleSeries;
 import org.trade.core.persistent.dao.series.indicator.StrategyData;
 import org.trade.core.persistent.dao.series.indicator.candle.CandleItem;
 import org.trade.core.persistent.dao.strategy.AbstractStrategyRule;
+import org.trade.core.persistent.dao.strategy.StrategyRuleJS;
+import org.trade.core.persistent.dao.strategy.StrategyRuleJSWrapper;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.JSONMapper;
 import org.trade.core.valuetype.BarSize;
@@ -93,7 +95,7 @@ public class AbstractStrategyJSIT {
     private static IBrokerModel brokerModel;
     private static String templateName;
     private static String strategyDir;
-    private static StrategyRuleJSTest strategyProxy;
+    private static StrategyRuleJS strategyProxy;
 
     /**
      * Method setUpBeforeClass.
@@ -122,7 +124,7 @@ public class AbstractStrategyJSIT {
         assertNotNull(tradestrategy);
         StrategyData.doDummyData(tradestrategy.getStrategyData().getBaseCandleSeries(), tradestrategy.getTradingday(), 1, BarSize.FIVE_MIN, Side.BOT.equals(tradestrategy.getSide()), 0);
 
-        strategyProxy = new StrategyRuleJSTest(tradeService, brokerModel, tradestrategy.getStrategyData(),
+        strategyProxy = new StrategyRuleJS(tradeService, brokerModel, tradestrategy.getStrategyData(),
                 tradestrategy.getId());
         assertNotNull(strategyProxy);
         strategyProxy.execute();
@@ -154,142 +156,5 @@ public class AbstractStrategyJSIT {
     @Test
     public void runJavaScript() {
 
-    }
-
-    /**
-     *
-     */
-    public static class StrategyRuleJSWrapper implements Serializable {
-
-        /**
-         *
-         */
-        @Serial
-        private static final long serialVersionUID = -3345516391123859703L;
-
-        private final static Logger _log = LoggerFactory.getLogger(StrategyRuleJSWrapper.class);
-
-        private final StrategyRuleJSTest strategyRuleJSTest;
-        private static final JSONObject result = new JSONObject("{'error': false, 'message': ''}");
-
-        /**
-         * Default Constructor
-         *
-         * @param strategyRuleJSTest StrategyRuleJSTest
-         */
-        public StrategyRuleJSWrapper(StrategyRuleJSTest strategyRuleJSTest) {
-
-            this.strategyRuleJSTest = strategyRuleJSTest;
-        }
-
-        /**
-         * Method log.
-         */
-        public void log(String message) {
-
-            strategyRuleJSTest.log(message);
-        }
-
-        /**
-         * Method log.
-         */
-        @JSGetter
-        public JSONObject getCurrentCandle() {
-
-            try {
-
-                CandleItem candle = strategyRuleJSTest.getCurrentCandle();
-                result.put("candle", new JSONObject(JSONMapper.getJSONString(candle)));
-            } catch (JsonProcessingException ex) {
-
-                result.put("error", true);
-                result.put("message", "Error: StrategyRuleJSWrapper::getCurrentCandle msg: " + ex.getMessage());
-                _log.error(result.getString("message"));
-            }
-
-            return result;
-        }
-    }
-
-    /**
-     *
-     */
-    public static class StrategyRuleJSTest extends AbstractStrategyRule {
-
-        /**
-         *
-         */
-        @Serial
-        private static final long serialVersionUID = -3345516391123859703L;
-
-        /**
-         * Default Constructor
-         *
-         * @param tradeService       TradeService
-         * @param brokerManagerModel IBrokerModel
-         * @param strategyData       StrategyData
-         * @param tradestrategyId    Long
-         */
-        public StrategyRuleJSTest(TradeService tradeService, IBrokerModel brokerManagerModel, StrategyData strategyData, Long tradestrategyId) {
-            super(tradeService, brokerManagerModel, strategyData, tradestrategyId);
-
-
-        }
-
-        /*
-         * Note the current candle is just forming Enter a tier 1-3 gap in first
-         * 5min bar direction, with a 3R target and stop @ 5min high/low
-         *
-         * @param candleSeries the series of candels that has been updated.
-         *
-         * @param newBar has a new bar just started.
-         */
-
-        /**
-         * Method runStrategy.
-         *
-         * @param candleSeries CandleSeries
-         * @param newBar       boolean
-         */
-        public void runStrategy(CandleSeries candleSeries, boolean newBar) {
-
-            try (Context context = Context.enter()) {
-
-                // Set the JavaScript language version (ECMAScript 6)
-                context.setLanguageVersion(Context.VERSION_ES6);
-                String candleSeriesJSON = JSONMapper.getJSONString(candleSeries);
-
-                //Scriptable globalScope = context.initSafeStandardObjects();
-                Scriptable globalScope = context.initStandardObjects();
-                // ScriptableObject.defineClass(scope, StrategyRuleJS.class);
-
-                // Create an instance of a Java class to expose to JavaScript
-                //MyGlideSystem gs = new MyGlideSystem();
-                StrategyRuleJSWrapper gs = new StrategyRuleJSWrapper(this);
-
-                // Wrap the Java object for use in the JavaScript environment
-                Object gsJsObject = Context.javaToJS(gs, globalScope);
-
-                // Make the Java object available in JavaScript as the global variable 'gs'
-                ScriptableObject.putProperty(globalScope, "gs", gsJsObject);
-
-                String strategyName = "";
-                String codeJS = this.getStrategyJS(strategyName);
-                context.evaluateString(globalScope, codeJS, strategyName, 1, null);
-                Object jsFunctionObj = globalScope.get("runStrategy", globalScope);
-
-                if (!(jsFunctionObj instanceof Function)) {
-
-                    _log.error("Error: StrategyRuleJS::runStrategy runStrategy is not a function");
-                }
-                Function jsFunction = (Function) jsFunctionObj;
-                Object[] functionParams = new Object[]{candleSeriesJSON, true};
-                Object jsResult = jsFunction.call(context, globalScope, globalScope, functionParams);
-                _log.info("result: {}", jsResult);
-            } catch (Exception ex) {
-
-                _log.error("Error: StrategyRuleJS::runStrategy msg: {}", ex.getMessage());
-            }
-        }
     }
 }

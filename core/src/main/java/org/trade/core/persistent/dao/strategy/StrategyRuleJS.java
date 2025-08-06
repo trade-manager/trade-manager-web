@@ -101,10 +101,6 @@ public class StrategyRuleJS extends AbstractStrategyRule {
             // Set the JavaScript language version (ECMAScript 6)
             context.setLanguageVersion(Context.VERSION_ES6);
 
-            //StrategyData.doDummyData(tradestrategy.getStrategyData().getBaseCandleSeries(), tradestrategy.getTradingday(), 1, BarSize.FIVE_MIN, Side.BOT.equals(tradestrategy.getSide()), 0);
-            // CandleSeries candleSeries = tradestrategy.getStrategyData().getBaseCandleSeries();
-            String candleSeriesJSON = JSONMapper.getJSONString(candleSeries);
-
             //Scriptable globalScope = context.initSafeStandardObjects();
             Scriptable globalScope = context.initStandardObjects();
 
@@ -126,7 +122,9 @@ public class StrategyRuleJS extends AbstractStrategyRule {
 
                 _log.error("Error: StrategyRuleJS::runStrategy runStrategy is not a function");
             }
+            
             Function jsFunction = (Function) jsFunctionObj;
+            String candleSeriesJSON = JSONMapper.getJSONString(candleSeries);
             Object[] functionParams = new Object[]{candleSeriesJSON, true};
             Object jsResult = jsFunction.call(context, globalScope, globalScope, functionParams);
             _log.info("result: {}", jsResult);
