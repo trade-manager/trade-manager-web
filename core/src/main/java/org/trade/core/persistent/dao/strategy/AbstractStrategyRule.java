@@ -1272,13 +1272,6 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
     }
 
     /**
-     * Method log.
-     */
-    public void log(String message) {
-        _log.info("Info: log message: {}", message);
-    }
-
-    /**
      * @param strategyName
      * @return
      */
@@ -1288,13 +1281,13 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
         javascript.append("function runStrategy(candleSeriesJSON, newBar) {\n");
         javascript.append("  try {\n");
         javascript.append("     let candleSeries = JSON.parse(candleSeriesJSON);\n");
-        javascript.append("     gs.log('Hello Im in a javascript function key: ' + candleSeries.key);\n");
+        javascript.append("     gs.log('Info:  AbstractStrategyRule::runStrategy key: ' + candleSeries.key);\n");
         javascript.append("     // Get the current candle\n");
         javascript.append("     let currentCandleItem = JSON.parse(gs.getCurrentCandleJSON());\n");
-        javascript.append("     gs.log('currentCandleItem: ' + currentCandleItem.candle.side);\n");
+        javascript.append("     //gs.log(1, 100,'currentCandleItem: ' + currentCandleItem.candle.side);\n");
         javascript.append("     return candleSeries.key\n");
         javascript.append("  } catch (ex) {\n");
-        javascript.append("     gs.log('Error: process javascript msg: ' + ex.getMessage());\n");
+        javascript.append("     gs.error(1, 100, 'Error: process javascript msg: ' + ex.getMessage());\n");
         javascript.append("  }\n");
         javascript.append("}");
         return javascript.toString();

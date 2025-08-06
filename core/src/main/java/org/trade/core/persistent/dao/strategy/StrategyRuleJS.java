@@ -136,17 +136,27 @@ public class StrategyRuleJS extends AbstractStrategyRule {
     }
 
     /**
+     * Method error.
+     */
+    public void error(int id, int errorCode, String errorMsg) {
+
+        super.error(id, errorCode, errorMsg);
+    }
+
+    /**
      * Method log.
      */
     public void log(String message) {
 
-        super.log(message);
+        _log.info(message);
     }
 
     /**
      * Method get current candle.
+     *
+     * @return
      */
-    public String getCurrentCandleJSON() {
+    public JSONObject getCurrentCandleJSON() {
 
         try {
 
@@ -159,6 +169,6 @@ public class StrategyRuleJS extends AbstractStrategyRule {
             _log.error(result.getString("message"));
         }
 
-        return result.toString();
+        return result;
     }
 }
