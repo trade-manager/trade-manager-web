@@ -127,285 +127,22 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
     }
 
     /**
-     * Method error. All errors are sent via this method to any class that is
-     * listening to this strategy. Usually this is the main controller.
-     *
-     * @param id        int
-     * @param errorCode int
-     * @param errorMsg  String
-     * @see IStrategyRule#error(int, int, String)
-     */
-    public void error(int id, int errorCode, String errorMsg) {
-
-        if (id > 0) {
-
-            _log.warn("Error symbol: {} Error Id: {} Error Code: {} Error Msg: {}", symbol, id, errorCode, errorMsg);
-        }
-
-        this.fireStrategyError(new StrategyRuleException(id, errorCode, "Symbol: " + symbol + " " + errorMsg));
-
-        /*
-         * For Errors close the strategy down.
-         */
-        if (id == 1) {
-
-            this.cancel();
-        }
-    }
-
-    /**
-     * Registers an object to receive notification of changes to the
-     * strategyRule.
-     *
-     * @param listener the object to register.
-     */
-    public void addMessageListener(IStrategyChangeListener listener) {
-
-        this.listenerList.add(IStrategyChangeListener.class, listener);
-    }
-
-    /**
-     * Deregisters an object so that it no longer receives notification of
-     * changes to the strategyRule.
-     *
-     * @param listener the object to deregister.
-     */
-    public void removeMessageListener(IStrategyChangeListener listener) {
-
-        this.listenerList.remove(IStrategyChangeListener.class, listener);
-    }
-
-    public void removeAllMessageListener() {
-
-        IStrategyChangeListener[] listeners = this.listenerList.getListeners(IStrategyChangeListener.class);
-
-        for (IStrategyChangeListener listener : listeners) {
-
-            removeMessageListener(listener);
-        }
-    }
-
-    /**
-     * Notifies all registered listeners that the strategyRule has an error.
-     *
-     * @param strategyError StrategyRuleException
-     */
-    protected void fireStrategyError(StrategyRuleException strategyError) {
-
-        Object[] listeners = this.listenerList.getListenerList();
-
-        for (int i = listeners.length - 2; i >= 0; i -= 2) {
-
-            if (listeners[i] == IStrategyChangeListener.class) {
-
-                ((IStrategyChangeListener) listeners[i + 1]).strategyError(strategyError);
-            }
-        }
-    }
-
-    /**
-     * Notifies all registered listeners that the strategyRule has completed.
-     *
-     * @param tradestrategy Tradestrategy
-     */
-    protected void fireStrategyComplete(String strategyClassName, final Tradestrategy tradestrategy) {
-
-        Object[] listeners = this.listenerList.getListenerList();
-
-        for (int i = listeners.length - 2; i >= 0; i -= 2) {
-
-            if (listeners[i] == IStrategyChangeListener.class) {
-
-                ((IStrategyChangeListener) listeners[i + 1]).strategyComplete(strategyClassName, tradestrategy);
-            }
-        }
-    }
-
-    /**
-     * Notifies all registered listeners that the strategyRule has started.
-     *
-     * @param tradestrategy Tradestrategy
-     */
-    protected void fireStrategyStarted(String strategyClassName, final Tradestrategy tradestrategy) {
-
-        Object[] listeners = this.listenerList.getListenerList();
-
-        for (int i = listeners.length - 2; i >= 0; i -= 2) {
-
-            if (listeners[i] == IStrategyChangeListener.class) {
-
-                ((IStrategyChangeListener) listeners[i + 1]).strategyStarted(strategyClassName, tradestrategy);
-            }
-        }
-    }
-
-    /**
-     * Notifies all registered listeners that the strategyRule rule has
-     * completed.
-     *
-     * @param tradestrategy Tradestrategy
-     */
-    protected void fireRuleComplete(final Tradestrategy tradestrategy) {
-
-        Object[] listeners = this.listenerList.getListenerList();
-
-        for (int i = listeners.length - 2; i >= 0; i -= 2) {
-
-            if (listeners[i] == IStrategyChangeListener.class) {
-                ((IStrategyChangeListener) listeners[i + 1]).ruleComplete(tradestrategy);
-            }
-        }
-    }
-
-    /**
-     * The main process thread. This will run until it is either canceled or is
-     * done.
+     * Method runStrategy. This method is called every time the candleSeries is
+     * either updated or a candleItem is added.
      * <p>
-     * (non-Javadoc)
+     * <p>
+     * If market data is selected this will fire every time the last price falls
+     * outside the H/L of the current candle. Note also if market data is
+     * selected the current Bid/Ask/Last can be accessed via the
+     * candleSeries.getContract().
+     * <p>
+     * If market data is not selected this method fires every 5sec as real time
+     * bars update the current candle.
+     *
+     * @param candleSeries CandleSeries
+     * @param newBar       boolean when ever a new bar is added to the candleSeries.
      */
-    protected Void doInBackground() {
-
-        /*
-         * We initialize here to keep this instances as part of this worker
-         * thread
-         */
-        try {
-
-            // Get an instances for this thread.
-            this.tradestrategy = tradeService.findTradestrategyById(this.tradestrategyId);
-            this.tradestrategy.setStrategyData(this.strategyData);
-            this.symbol = this.tradestrategy.getContract().getSymbol();
-
-            _log.info("Starting strategyClass: {} engine doInBackground Symbol: {} tradestrategyId: {} Tradingday Date: {}", this.getClass().getName(), this.symbol, this.tradestrategyId, this.tradestrategy.getTradingday().getOpen());
-
-            /*
-             * Process the current candle if there is one on startup.
-             */
-
-            currentCandleCount = this.strategyData.getBaseCandleSeries().getItemCount() - 1;
-            seriesChanged = true;
-            reFreshPositionOrders();
-
-            do {
-
-                /*
-                 * Lock until a candle arrives. First time in we process the
-                 * current candle.
-                 */
-                synchronized (lockStrategyWorker) {
-
-                    while (!seriesChanged) {
-
-                        lockStrategyWorker.wait();
-                    }
-
-                    seriesChanged = false;
-                }
-
-                if (!this.isCancelled()) {
-
-                    /*
-                     * If candle count > than current we have a new candle
-                     *
-                     * If equal then we have an updated candle.
-                     *
-                     * The currentCandleCount is greater than the candle series.
-                     * Then another thread must have cleared the candle series
-                     * so shut down the strategy.
-                     */
-                    CandleSeries candleSeries = this.tradestrategy.getStrategyData().getBaseCandleSeries();
-                    boolean newCandle = false;
-
-                    if ((candleSeries.getItemCount() - 1) > currentCandleCount) {
-
-                        /*
-                         * Add one to the currentCandleCount until we catch up
-                         * to the candleSeries candle count. As it is possible
-                         * the candle count in another thread gets ahead of this
-                         * thread and so this thread is playing catch up.
-                         */
-                        currentCandleCount++;
-                        newCandle = true;
-
-                    } else if (currentCandleCount > (candleSeries.getItemCount() - 1)) {
-
-                        _log.info("Cancelled as candleSeries have been cleared Symbol: {} class: {}", getSymbol(), this.getClass().getName());
-                        this.cancel();
-                        break;
-                    } else if (currentCandleCount == (candleSeries.getItemCount() - 1)) {
-                        /*
-                         * We have an updated candle. If we are listening for
-                         * candles and none are arriving then close the
-                         * strategy.
-                         */
-                        if (currentCandleCount == -1 && listeningCandles) {
-                            this.cancel();
-                            break;
-                        }
-                    }
-
-                    if (currentCandleCount > -1) {
-
-                        /*
-                         * Check the candle is during the trading range and fire
-                         * the rules.
-                         */
-                        if (!getCurrentCandle().getPeriod().getStart()
-                                .isBefore(this.tradestrategy.getTradingday().getOpen())) {
-
-                            /*
-                             * Refresh the orders in the positionOrders as these
-                             * may have been filled via another thread. This
-                             * gets the Orders/OpenPosition and Contract
-                             */
-                            reFreshPositionOrders();
-                            this.tradestrategy.getContract()
-                                    .setLastAskPrice(candleSeries.getContract().getLastAskPrice());
-                            this.tradestrategy.getContract()
-                                    .setLastBidPrice(candleSeries.getContract().getLastBidPrice());
-                            this.tradestrategy.getContract().setLastPrice(candleSeries.getContract().getLastPrice());
-                            runStrategy(candleSeries, newCandle);
-                            strategyLastFired = TradingCalendar.getDateTimeNowMarketTimeZone();
-                        }
-                    }
-
-                    /*
-                     * First time in add a listener for new candle.
-                     */
-                    if (!listeningCandles) {
-
-                        /*
-                         * Start listening for new candles and candle changes.
-                         */
-                        this.strategyData.getBaseCandleSeries().addChangeListener(this);
-
-                        /*
-                         * Tell the worker if listening. Note only for back
-                         * testing that the strategy is running.
-                         */
-                        this.fireStrategyStarted(this.getClass().getSimpleName(), this.tradestrategy);
-                        listeningCandles = true;
-                        _log.info("Started strategyClass: {} engine doInBackground Symbol: {} tradestrategyId: {}", this.getClass().getName(), this.symbol, this.tradestrategyId);
-                    } else {
-
-                        this.fireRuleComplete(this.tradestrategy);
-                    }
-                }
-            } while (!this.isDone() && !this.isCancelled());
-        } catch (InterruptedException interExp) {
-
-            // Do nothing.
-        } catch (Exception ex) {
-
-            _log.error("Error StrategyWorker exception: {} class: {} Msg: {}", getSymbol(), this.getClass().getName(), ex.getMessage(), ex);
-            error(1, 100, "Error StrategyWorker exception: " + ex.getMessage());
-        } finally {
-            /*
-             * Ok we are complete clean up.
-             */
-        }
-        return null;
-    }
+    public abstract void runStrategy(CandleSeries candleSeries, boolean newBar);
 
     /**
      * Method cancel.
@@ -427,32 +164,6 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
             seriesChanged = true;
             lockStrategyWorker.notify();
         }
-    }
-
-    /**
-     * Method runStrategy. This method is called every time the candleSeries is
-     * either updated or a candleItem is added.
-     * <p>
-     * <p>
-     * If market data is selected this will fire every time the last price falls
-     * outside the H/L of the current candle. Note also if market data is
-     * selected the current Bid/Ask/Last can be accessed via the
-     * candleSeries.getContract().
-     * <p>
-     * If market data is not selected this method fires every 5sec as real time
-     * bars update the current candle.
-     *
-     * @param candleSeries CandleSeries
-     * @param newBar       boolean when ever a new bar is added to the candleSeries.
-     */
-    public abstract void runStrategy(CandleSeries candleSeries, boolean newBar);
-
-    protected void done() {
-
-        this.fireStrategyComplete(this.getClass().getSimpleName(), this.tradestrategy);
-        removeAllMessageListener();
-        this.strategyData.getBaseCandleSeries().removeChangeListener(this);
-        _log.info("Rule engine done: {} class: {} tradestrategyId: {} Tradingday Date: {}", getSymbol(), this.getClass().getSimpleName(), this.tradestrategy.getId(), this.tradestrategy.getTradingday().getOpen());
     }
 
     /**
@@ -1247,13 +958,62 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
     }
 
     /**
-     * Method getBrokerManager.
+     * Method error. All errors are sent via this method to any class that is
+     * listening to this strategy. Usually this is the main controller.
      *
-     * @return IBrokerModel
+     * @param id        int
+     * @param errorCode int
+     * @param errorMsg  String
+     * @see IStrategyRule#error(int, int, String)
      */
-    private IBrokerModel getBrokerManager() {
+    public void error(int id, int errorCode, String errorMsg) {
 
-        return this.brokerModel;
+        if (id > 0) {
+
+            _log.warn("Error symbol: {} Error Id: {} Error Code: {} Error Msg: {}", symbol, id, errorCode, errorMsg);
+        }
+
+        this.fireStrategyError(new StrategyRuleException(id, errorCode, "Symbol: " + symbol + " " + errorMsg));
+
+        /*
+         * For Errors close the strategy down.
+         */
+        if (id == 1) {
+
+            this.cancel();
+        }
+    }
+
+    /**
+     * Registers an object to receive notification of changes to the
+     * strategyRule.
+     *
+     * @param listener the object to register.
+     */
+    public void addMessageListener(IStrategyChangeListener listener) {
+
+        this.listenerList.add(IStrategyChangeListener.class, listener);
+    }
+
+    /**
+     * Deregisters an object so that it no longer receives notification of
+     * changes to the strategyRule.
+     *
+     * @param listener the object to deregister.
+     */
+    public void removeMessageListener(IStrategyChangeListener listener) {
+
+        this.listenerList.remove(IStrategyChangeListener.class, listener);
+    }
+
+    public void removeAllMessageListener() {
+
+        IStrategyChangeListener[] listeners = this.listenerList.getListeners(IStrategyChangeListener.class);
+
+        for (IStrategyChangeListener listener : listeners) {
+
+            removeMessageListener(listener);
+        }
     }
 
     /**
@@ -1509,6 +1269,278 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
      */
     public static void logCandle(AbstractStrategyRule context, Candle candle) {
         _log.debug("{} Symbol: {} startPeriod: {} endPeriod: {} Open: {} High: {} Low: {} Close: {} Volume: {} Vwap: {} TradeCount: {} LastUpdate: {}", context.getClass().getSimpleName(), candle.getContract().getSymbol(), candle.getStartPeriod(), candle.getEndPeriod(), new Money(candle.getOpen()), new Money(candle.getHigh()), new Money(candle.getLow()), new Money(candle.getClose()), new Money(candle.getVolume()), new Money(candle.getVwap()), new Money(candle.getTradeCount()), candle.getLastUpdateDate());
+    }
+
+    /**
+     * Method log.
+     */
+    public void log(String message) {
+        _log.info("Info: log message: {}", message);
+    }
+
+    /**
+     * @param strategyName
+     * @return
+     */
+    public String getStrategyJS(String strategyName) {
+
+        StringBuilder javascript = new StringBuilder();
+        javascript.append("function runStrategy(candleSeriesJSON, newBar) {\n");
+        javascript.append("  try {\n");
+        javascript.append("     let candleSeries = JSON.parse(candleSeriesJSON);\n");
+        javascript.append("     gs.log('Hello Im in a javascript function key: ' + candleSeries.key);\n");
+        javascript.append("     // Get the current candle\n");
+        javascript.append("     let currentCandleItem = JSON.parse(gs.getCurrentCandle());\n");
+        javascript.append("     gs.log('currentCandleItem: ' + currentCandleItem.candle.side);\n");
+        javascript.append("     return candleSeries.key\n");
+        javascript.append("  } catch (ex) {\n");
+        javascript.append("     gs.log('Error: process javascript msg: ' + ex.getMessage());\n");
+        javascript.append("  }\n");
+        javascript.append("}");
+        return javascript.toString();
+    }
+
+    /**
+     * The main process thread. This will run until it is either canceled or is
+     * done.
+     * <p>
+     * (non-Javadoc)
+     */
+    protected Void doInBackground() {
+
+        /*
+         * We initialize here to keep this instances as part of this worker
+         * thread
+         */
+        try {
+
+            // Get an instances for this thread.
+            this.tradestrategy = tradeService.findTradestrategyById(this.tradestrategyId);
+            this.tradestrategy.setStrategyData(this.strategyData);
+            this.symbol = this.tradestrategy.getContract().getSymbol();
+
+            _log.info("Starting strategyClass: {} engine doInBackground Symbol: {} tradestrategyId: {} Tradingday Date: {}", this.getClass().getName(), this.symbol, this.tradestrategyId, this.tradestrategy.getTradingday().getOpen());
+
+            /*
+             * Process the current candle if there is one on startup.
+             */
+
+            currentCandleCount = this.strategyData.getBaseCandleSeries().getItemCount() - 1;
+            seriesChanged = true;
+            reFreshPositionOrders();
+
+            do {
+
+                /*
+                 * Lock until a candle arrives. First time in we process the
+                 * current candle.
+                 */
+                synchronized (lockStrategyWorker) {
+
+                    while (!seriesChanged) {
+
+                        lockStrategyWorker.wait();
+                    }
+
+                    seriesChanged = false;
+                }
+
+                if (!this.isCancelled()) {
+
+                    /*
+                     * If candle count > than current we have a new candle
+                     *
+                     * If equal then we have an updated candle.
+                     *
+                     * The currentCandleCount is greater than the candle series.
+                     * Then another thread must have cleared the candle series
+                     * so shut down the strategy.
+                     */
+                    CandleSeries candleSeries = this.tradestrategy.getStrategyData().getBaseCandleSeries();
+                    boolean newCandle = false;
+
+                    if ((candleSeries.getItemCount() - 1) > currentCandleCount) {
+
+                        /*
+                         * Add one to the currentCandleCount until we catch up
+                         * to the candleSeries candle count. As it is possible
+                         * the candle count in another thread gets ahead of this
+                         * thread and so this thread is playing catch up.
+                         */
+                        currentCandleCount++;
+                        newCandle = true;
+
+                    } else if (currentCandleCount > (candleSeries.getItemCount() - 1)) {
+
+                        _log.info("Cancelled as candleSeries have been cleared Symbol: {} class: {}", getSymbol(), this.getClass().getName());
+                        this.cancel();
+                        break;
+                    } else if (currentCandleCount == (candleSeries.getItemCount() - 1)) {
+                        /*
+                         * We have an updated candle. If we are listening for
+                         * candles and none are arriving then close the
+                         * strategy.
+                         */
+                        if (currentCandleCount == -1 && listeningCandles) {
+                            this.cancel();
+                            break;
+                        }
+                    }
+
+                    if (currentCandleCount > -1) {
+
+                        /*
+                         * Check the candle is during the trading range and fire
+                         * the rules.
+                         */
+                        if (!getCurrentCandle().getPeriod().getStart()
+                                .isBefore(this.tradestrategy.getTradingday().getOpen())) {
+
+                            /*
+                             * Refresh the orders in the positionOrders as these
+                             * may have been filled via another thread. This
+                             * gets the Orders/OpenPosition and Contract
+                             */
+                            reFreshPositionOrders();
+                            this.tradestrategy.getContract()
+                                    .setLastAskPrice(candleSeries.getContract().getLastAskPrice());
+                            this.tradestrategy.getContract()
+                                    .setLastBidPrice(candleSeries.getContract().getLastBidPrice());
+                            this.tradestrategy.getContract().setLastPrice(candleSeries.getContract().getLastPrice());
+                            runStrategy(candleSeries, newCandle);
+                            strategyLastFired = TradingCalendar.getDateTimeNowMarketTimeZone();
+                        }
+                    }
+
+                    /*
+                     * First time in add a listener for new candle.
+                     */
+                    if (!listeningCandles) {
+
+                        /*
+                         * Start listening for new candles and candle changes.
+                         */
+                        this.strategyData.getBaseCandleSeries().addChangeListener(this);
+
+                        /*
+                         * Tell the worker if listening. Note only for back
+                         * testing that the strategy is running.
+                         */
+                        this.fireStrategyStarted(this.getClass().getSimpleName(), this.tradestrategy);
+                        listeningCandles = true;
+                        _log.info("Started strategyClass: {} engine doInBackground Symbol: {} tradestrategyId: {}", this.getClass().getName(), this.symbol, this.tradestrategyId);
+                    } else {
+
+                        this.fireRuleComplete(this.tradestrategy);
+                    }
+                }
+            } while (!this.isDone() && !this.isCancelled());
+        } catch (InterruptedException interExp) {
+
+            // Do nothing.
+        } catch (Exception ex) {
+
+            _log.error("Error StrategyWorker exception: {} class: {} Msg: {}", getSymbol(), this.getClass().getName(), ex.getMessage(), ex);
+            error(1, 100, "Error StrategyWorker exception: " + ex.getMessage());
+        } finally {
+            /*
+             * Ok we are complete clean up.
+             */
+        }
+        return null;
+    }
+
+    /**
+     *
+     */
+    protected void done() {
+
+        this.fireStrategyComplete(this.getClass().getSimpleName(), this.tradestrategy);
+        removeAllMessageListener();
+        this.strategyData.getBaseCandleSeries().removeChangeListener(this);
+        _log.info("Rule engine done: {} class: {} tradestrategyId: {} Tradingday Date: {}", getSymbol(), this.getClass().getSimpleName(), this.tradestrategy.getId(), this.tradestrategy.getTradingday().getOpen());
+    }
+
+    /**
+     * Notifies all registered listeners that the strategyRule has an error.
+     *
+     * @param strategyError StrategyRuleException
+     */
+    protected void fireStrategyError(StrategyRuleException strategyError) {
+
+        Object[] listeners = this.listenerList.getListenerList();
+
+        for (int i = listeners.length - 2; i >= 0; i -= 2) {
+
+            if (listeners[i] == IStrategyChangeListener.class) {
+
+                ((IStrategyChangeListener) listeners[i + 1]).strategyError(strategyError);
+            }
+        }
+    }
+
+    /**
+     * Notifies all registered listeners that the strategyRule has completed.
+     *
+     * @param tradestrategy Tradestrategy
+     */
+    protected void fireStrategyComplete(String strategyClassName, final Tradestrategy tradestrategy) {
+
+        Object[] listeners = this.listenerList.getListenerList();
+
+        for (int i = listeners.length - 2; i >= 0; i -= 2) {
+
+            if (listeners[i] == IStrategyChangeListener.class) {
+
+                ((IStrategyChangeListener) listeners[i + 1]).strategyComplete(strategyClassName, tradestrategy);
+            }
+        }
+    }
+
+    /**
+     * Notifies all registered listeners that the strategyRule has started.
+     *
+     * @param tradestrategy Tradestrategy
+     */
+    protected void fireStrategyStarted(String strategyClassName, final Tradestrategy tradestrategy) {
+
+        Object[] listeners = this.listenerList.getListenerList();
+
+        for (int i = listeners.length - 2; i >= 0; i -= 2) {
+
+            if (listeners[i] == IStrategyChangeListener.class) {
+
+                ((IStrategyChangeListener) listeners[i + 1]).strategyStarted(strategyClassName, tradestrategy);
+            }
+        }
+    }
+
+    /**
+     * Notifies all registered listeners that the strategyRule rule has
+     * completed.
+     *
+     * @param tradestrategy Tradestrategy
+     */
+    protected void fireRuleComplete(final Tradestrategy tradestrategy) {
+
+        Object[] listeners = this.listenerList.getListenerList();
+
+        for (int i = listeners.length - 2; i >= 0; i -= 2) {
+
+            if (listeners[i] == IStrategyChangeListener.class) {
+                ((IStrategyChangeListener) listeners[i + 1]).ruleComplete(tradestrategy);
+            }
+        }
+    }
+
+    /**
+     * Method getBrokerManager.
+     *
+     * @return IBrokerModel
+     */
+    private IBrokerModel getBrokerManager() {
+
+        return this.brokerModel;
     }
 
     /**

@@ -19,7 +19,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.TimeZone;
 
-public class JSOMMapper {
+public class JSONMapper {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private static final ModelMapper modelMapper;

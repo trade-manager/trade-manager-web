@@ -51,12 +51,10 @@ import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
 import org.trade.core.persistent.TradeService;
-import org.trade.core.persistent.dao.series.indicator.IIndicatorDataset;
-import org.trade.core.persistent.dao.series.indicator.IndicatorSeries;
 import org.trade.core.persistent.dao.series.indicator.StrategyData;
 import org.trade.core.persistent.dao.series.indicator.candle.CandleItem;
 import org.trade.core.persistent.dao.series.indicator.candle.CandlePeriod;
-import org.trade.core.util.JSOMMapper;
+import org.trade.core.util.JSONMapper;
 import org.trade.core.util.time.RegularTimePeriod;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.BarSize;
@@ -169,28 +167,9 @@ public class CandleIT {
                     Tradingday.newInstance(prevTradingday), 2, BarSize.FIVE_MIN, true, 0);
             _log.info("addCandleSeries symbol: {} open: {}. close: {}", tradestrategy.getContract().getSymbol(), tradestrategy.getTradingday().getOpen(), tradestrategy.getTradingday().getClose());
 
-            // tradestrategy.getContract().setTradePositions(new ArrayList<TradePosition>());
-            // tradestrategy.getContract().setCandles(new ArrayList<Candle>());
             StrategyData strategyData = tradestrategy.getStrategyData();
-            strategyData.getBaseCandleSeries().getContract().setTradePositions(new ArrayList<>());
-            strategyData.getBaseCandleSeries().getContract().setCandles(new ArrayList<>());
-
-            for (IIndicatorDataset indicatorDataset : strategyData.getIndicators()) {
-
-                for (int i = 0; i < indicatorDataset.getSeriesCount(); i++) {
-
-                    IndicatorSeries indicatorSeries = indicatorDataset.getSeries(i);
-                    indicatorSeries.getStrategy().setIndicatorSeries(new ArrayList<>());
-
-                    if (indicatorSeries.getStrategy().hasStrategyManager()) {
-
-                        indicatorSeries.getStrategy().getStrategyManager().setIndicatorSeries(new ArrayList<>());
-                    }
-                }
-            }
-
-            //      String json = JSOMMapper.getJSONString(strategyData);
-            //      _log.info("addCandle Candle JSON: {}", json.toString());
+            String json = JSONMapper.getJSONString(strategyData);
+            _log.info("addCandle Candle JSON: {}", json.toString());
 
             assertFalse(tradestrategy.getStrategyData().getBaseCandleSeries().isEmpty());
             tradeService.saveCandleSeries(tradestrategy.getStrategyData().getBaseCandleSeries());
@@ -234,20 +213,20 @@ public class CandleIT {
 
             candle.getContract().setTradePositions(new ArrayList<TradePosition>());
             candle.getContract().setCandles(new ArrayList<Candle>());
-            ContractDto contractDto = JSOMMapper.convertToDto(candle.getContract(), ContractDto.class);
-            CandleDto candleDto = JSOMMapper.convertToDto(candle, CandleDto.class);
+            ContractDto contractDto = JSONMapper.convertToDto(candle.getContract(), ContractDto.class);
+            CandleDto candleDto = JSONMapper.convertToDto(candle, CandleDto.class);
             candleDto.setContract(contractDto);
 
-            String json = JSOMMapper.getJSONString(candleDto);
+            String json = JSONMapper.getJSONString(candleDto);
             _log.info("addCandle Candle JSON: {}", json.toString());
             JSONObject dto = new JSONObject(json);
             assertEquals(candle.getId(), dto.getLong("id"));
 
-            candleDto = JSOMMapper.getDTO(json, CandleDto.class);
+            candleDto = JSONMapper.getDTO(json, CandleDto.class);
             _log.info("addCandle Candle JSON: {}", candleDto.toString());
             assertEquals(candle.getId(), candleDto.getId());
 
-            Candle newCandle = JSOMMapper.convertToEntity(candleDto, Candle.class);
+            Candle newCandle = JSONMapper.convertToEntity(candleDto, Candle.class);
             _log.info("addCandle new Candle: {}", newCandle.toString());
             assertEquals(candle.getId(), newCandle.getId());
 

@@ -35,8 +35,6 @@
  */
 package org.trade.core.util;
 
-import org.mozilla.javascript.ScriptableObject;
-
 import javax.swing.*;
 
 /**
@@ -66,7 +64,7 @@ import javax.swing.*;
  *
  * @author Simon Allen
  */
-public abstract class Worker extends ScriptableObject {
+public abstract class Worker {
 
     private Object value; // see getValue(), setValue()
     public Thread thread;
@@ -319,10 +317,5 @@ public abstract class Worker extends ScriptableObject {
             isCancelled = false;
             t.start();
         }
-    }
-
-    public String getClassName() {
-
-        return this.getClass().getName();
     }
 }

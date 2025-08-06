@@ -64,13 +64,6 @@ public class CommodityChannelIndexDataset extends AbstractXYDataset
     private static final long serialVersionUID = 3931818830267435673L;
 
     /**
-     * Storage for the data series.
-     */
-    private List<IndicatorSeries> data;
-
-    private TimePeriodAnchor xPosition = TimePeriodAnchor.START;
-
-    /**
      * Creates a new instance of <code>OHLCSeriesCollection</code>.
      */
     public CommodityChannelIndexDataset() {

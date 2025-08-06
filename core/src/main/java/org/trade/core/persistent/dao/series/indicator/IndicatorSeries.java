@@ -35,6 +35,7 @@
  */
 package org.trade.core.persistent.dao.series.indicator;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
@@ -282,6 +283,7 @@ public abstract class IndicatorSeries extends ComparableObjectSeries implements 
      *
      * @return List<CodeValue>
      */
+    @JsonIgnore
     @OneToMany(mappedBy = "indicatorSeries", fetch = FetchType.EAGER, orphanRemoval = true, cascade = {
             CascadeType.ALL})
     public List<CodeValue> getCodeValues() {

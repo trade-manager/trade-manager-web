@@ -37,6 +37,7 @@ package org.trade.core.persistent.dao;
 
 // Generated Feb 21, 2011 12:43:33 PM by Hibernate Tools 3.4.0.CR1
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -944,6 +945,7 @@ public class Contract extends Aspect implements Serializable, Cloneable {
      *
      * @return List<TradePosition>
      */
+    @JsonIgnore
     public List<TradePosition> getTradePositions() {
         return this.tradePositions;
     }
@@ -962,6 +964,7 @@ public class Contract extends Aspect implements Serializable, Cloneable {
      *
      * @return List<Candle>
      */
+    @JsonIgnore
     public List<Candle> getCandles() {
         return this.candles;
     }

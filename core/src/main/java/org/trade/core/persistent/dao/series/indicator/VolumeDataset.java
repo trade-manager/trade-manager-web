@@ -61,13 +61,6 @@ public class VolumeDataset extends AbstractIntervalXYDataset implements IVolumeD
     @Serial
     private static final long serialVersionUID = 3931818830267435673L;
 
-    /**
-     * Storage for the data series.
-     */
-    private List<IndicatorSeries> data;
-
-    private TimePeriodAnchor xPosition = TimePeriodAnchor.START;
-
     public VolumeDataset() {
         this.data = new ArrayList<>();
     }

@@ -123,9 +123,6 @@ public class AbstractStrategyIT {
     @BeforeEach
     public void setUp() throws Exception {
 
-        // m_brokerModel = (IBrokerModel)
-        // ClassFactory.getServiceForInterface(
-        // IBrokerModel._brokerTest, this);
         List<Object> param = new ArrayList<>();
         param.add(tradeService);
         brokerModel = (IBrokerModel) ClassFactory.getServiceForInterface(IBrokerModel._brokerTest, param, this);
@@ -717,7 +714,6 @@ public class AbstractStrategyIT {
          *
          * @param candleSeries CandleSeries
          * @param newBar       boolean
-         *                     boolean)
          */
         public void runStrategy(CandleSeries candleSeries, boolean newBar) {
 
