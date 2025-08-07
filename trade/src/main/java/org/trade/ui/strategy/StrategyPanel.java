@@ -57,7 +57,9 @@ import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.DynamicCode;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.BarSize;
+import org.trade.core.valuetype.ContentType;
 import org.trade.core.valuetype.Currency;
+import org.trade.core.valuetype.Decode;
 import org.trade.core.valuetype.Exchange;
 import org.trade.core.valuetype.SECType;
 import org.trade.core.valuetype.ValueTypeException;
@@ -131,10 +133,18 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
 
                 getMenu().addMessageListener(this);
             }
-            filesMap.put("java", "text/java");
-            filesMap.put("js", "text/javascript");
-            filesMap.put("txt", "text/rtf");
-            String[] files = filesMap.keySet().toArray(new String[0]);
+
+            List<Decode> codes = ContentType.newInstance().getCodesDecodes();
+
+            for (Decode code : codes) {
+
+                String codeVal = code.getCode();
+
+                if (!code.getCode().isEmpty()) {
+
+                    filesMap.put(code.getCode(), code.getValue());
+                }
+            }
 
             this.setLayout(new BorderLayout());
             colorRedAttr = new SimpleAttributeSet();
@@ -161,7 +171,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
             jToolBar.add(jPanel1, BorderLayout.WEST);
 
             // create the message panel first so we can send messages to it...
-            messageText = new StreamEditorPane("text/rtf");
+            messageText = new StreamEditorPane(ContentType.TEXT);
             messageText.setFont(new Font("dialog", Font.PLAIN, 12));
 
             JPanel messagePanel = new JPanel(new BorderLayout());
@@ -173,7 +183,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
             DefaultSyntaxKit.initKit();
             sourceText = new JEditorPane();
             JScrollPane jScrollPane1 = new JScrollPane(sourceText);
-            sourceText.setContentType("text/java");
+            sourceText.setContentType(ContentType.JAVA);
             sourceText.setFont(new Font("monospaced", Font.PLAIN, 12));
             sourceText.setBackground(Color.white);
             sourceText.setForeground(Color.black);
@@ -426,7 +436,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
 
             if (result == JOptionPane.YES_OPTION) {
 
-                Rule latestRule = this.tradeService.findRuleByMaxVersion(this.currentRule.getStrategy());
+                Rule latestRule = this.tradeService.findRuleByMaxVersion(this.currentRule.getStrategy(), filesMap.get(getExtension(fileName)));
                 Integer version = 1;
 
                 if (null != latestRule) {
@@ -512,7 +522,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
                     }
                 }
 
-                Rule latestRule = this.tradeService.findRuleByMaxVersion(this.currentRule.getStrategy());
+                Rule latestRule = this.tradeService.findRuleByMaxVersion(this.currentRule.getStrategy(), this.currentRule.getContentType());
                 Integer version = 1;
 
                 if (null != latestRule) {
@@ -568,78 +578,28 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
 
         for (Strategy strategy : strategies) {
 
-            String fileNameCode = strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/')
-                    + strategy.getClassName() + ".java";
-            String fileNameComments = strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/')
-                    + strategy.getClassName() + ".txt";
-
             try {
 
-                String content = readFile(fileNameCode);
-                String comments = readFile(fileNameComments);
+                // Get the comments as these are common to all files.
+                String fileName = strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/')
+                        + strategy.getClassName() + ".txt";
+                String comments = readFile(fileName);
 
-                if (strategy.getRules().isEmpty()) {
+                for (String fileExtension : filesMap.keySet()) {
 
-                    Rule nextRule = new Rule(strategy, 1, comments,
-                            content.getBytes(), filesMap.get(getExtension(fileNameCode)));
-                    strategy.getRules().add(nextRule);
-                    this.tradeService.saveAspect(nextRule);
-                } else {
+                    if (!"txt".equals(fileExtension)) {
 
-                    Rule latestRule = this.tradeService.findRuleByMaxVersion(strategy);
-                    Integer version = 0;
+                        fileName = strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/')
+                                + strategy.getClassName() + "." + fileExtension;
+                        String content = readFile(fileName);
 
-                    if (null != latestRule) {
+                        if (null != content) {
 
-                        version = latestRule.getRuleVersion();
-                    }
-
-                    for (Rule rule : strategy.getRules()) {
-
-                        if (rule.getRuleVersion().equals(version)) {
-
-                            /*
-                             * Load and save the file in the DB if there is
-                             * no content for this rule. i.e. initial start
-                             * up. Else make sure the rule in the DB is the
-                             * same as the rule in the file system.
-                             */
-                            if (null == rule.getRule() && null != content) {
-
-                                rule.setRule(content.getBytes());
-                                rule = this.tradeService.saveAspect(rule);
-                            } else {
-
-                                String ruleDB = new String(rule.getRule());
-
-                                if (!ruleDB.equals(content)) {
-
-                                    setMessageText(
-                                            "DB strategy not in sync with file system strategy: " + fileNameCode
-                                                    + " file length: " + Objects.requireNonNull(content).length() + " Strategy "
-                                                    + rule.getStrategy().getName() + " length: " + ruleDB.length(),
-                                            true, true, colorRedAttr);
-                                }
-                            }
-                            if (null == rule.getComment() && null != comments) {
-
-                                rule.setComment(comments);
-                                this.tradeService.saveAspect(rule);
-
-                            } else {
-
-                                String commentsDB = rule.getComment();
-                                if (!commentsDB.equals(comments)) {
-
-                                    setMessageText("DB strategy not in sync with file system strategy: "
-                                                    + fileNameComments + " file length: " + Objects.requireNonNull(comments).length() + " Strategy "
-                                                    + rule.getStrategy().getName() + " length: " + commentsDB.length(),
-                                            true, true, colorRedAttr);
-                                }
-                            }
+                            processFile(strategy, content, fileName, comments);
                         }
                     }
                 }
+
             } catch (IOException e) {
                 // Do nothing.
             }
@@ -647,6 +607,72 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
 
         if (!getMessageText().isEmpty()) {
             setMessageText("Re deploy rule to fix this problem.", true, true, colorRedAttr);
+        }
+    }
+
+    private void processFile(Strategy strategy, String content, String fileName, String comments) {
+
+        if (strategy.getRules().isEmpty() || (strategy.getRules().size() == 1 && !strategy.getRules().get(0).getContentType().equals(filesMap.get(getExtension(fileName))))) {
+
+            Rule nextRule = new Rule(strategy, 1, comments,
+                    content.getBytes(), filesMap.get(getExtension(fileName)));
+            strategy.getRules().add(nextRule);
+            this.tradeService.saveAspect(nextRule);
+        } else {
+
+            Rule latestRule = this.tradeService.findRuleByMaxVersion(strategy, filesMap.get(getExtension(fileName)));
+            Integer version = 0;
+
+            if (null != latestRule) {
+
+                version = latestRule.getRuleVersion();
+            }
+
+            for (Rule rule : strategy.getRules()) {
+
+                if (rule.getRuleVersion().equals(version)) {
+
+                    /*
+                     * Load and save the file in the DB if there is
+                     * no content for this rule. i.e. initial start
+                     * up. Else make sure the rule in the DB is the
+                     * same as the rule in the file system.
+                     */
+                    if (null == rule.getRule() && null != content) {
+
+                        rule.setRule(content.getBytes());
+                        rule = this.tradeService.saveAspect(rule);
+                    } else {
+
+                        String ruleDB = new String(rule.getRule());
+
+                        if (!ruleDB.equals(content)) {
+
+                            setMessageText(
+                                    "DB strategy not in sync with file system strategy: " + fileName
+                                            + " file length: " + Objects.requireNonNull(content).length() + " Strategy "
+                                            + rule.getStrategy().getName() + " length: " + ruleDB.length(),
+                                    true, true, colorRedAttr);
+                        }
+                    }
+                    if (null == rule.getComment() && null != comments) {
+
+                        rule.setComment(comments);
+                        this.tradeService.saveAspect(rule);
+
+                    } else {
+
+                        String commentsDB = rule.getComment();
+                        if (!commentsDB.equals(comments)) {
+
+                            setMessageText("DB strategy not in sync with file system strategy: "
+                                            + fileName + " file length: " + Objects.requireNonNull(comments).length() + " Strategy "
+                                            + rule.getStrategy().getName() + " length: " + commentsDB.length(),
+                                    true, true, colorRedAttr);
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -819,9 +845,10 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
 
     private void createRule(final Strategy strategy) throws ServiceException, ValueTypeException {
 
-        Rule latestRule = this.tradeService.findRuleByMaxVersion(strategy);
         Integer version = 1;
-        String contentType = "text/java";
+        String contentType = ContentType.JAVA;
+        Rule latestRule = this.tradeService.findRuleByMaxVersion(strategy, contentType);
+
 
         if (null != latestRule) {
 

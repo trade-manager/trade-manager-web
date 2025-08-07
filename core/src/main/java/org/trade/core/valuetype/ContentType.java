@@ -40,31 +40,28 @@ import java.io.Serial;
 /**
  *
  */
-public class ChartDays extends Decode {
+public class ContentType extends Decode {
 
     @Serial
     private static final long serialVersionUID = -5381026427696898592L;
-    public static final String DECODE = "CHART_DAYS";
-    public static final int ONE_DAY = 1;
-    public static final int TWO_MONTHS = 60;
+    public static final String DECODE = "CONTENT_TYPE";
+    public static final String JAVA = "text/java";
+    public static final String JAVASCRIPT = "text/javascript";
+    public static final String TEXT = "text/rtf";
 
-    public ChartDays() {
+    public ContentType() {
         super(DECODE);
-    }
-
-    public ChartDays(boolean optional) {
-        super(DECODE, optional);
     }
 
     /**
      * Method newInstance.
      *
-     * @param value Integer
-     * @return ChartDays
+     * @param value String
+     * @return ContentType
      */
-    public static ChartDays newInstance(Integer value) {
+    public static ContentType newInstance(String value) {
 
-        final ChartDays returnInstance = new ChartDays();
+        final ContentType returnInstance = new ContentType();
         returnInstance.setValue(value);
         return returnInstance;
     }
@@ -72,12 +69,22 @@ public class ChartDays extends Decode {
     /**
      * Method newInstance.
      *
-     * @return ChartDays
+     * @return ContentType
      */
-    public static ChartDays newInstance() {
+    public static ContentType newInstance() {
 
-        final ChartDays returnInstance = new ChartDays();
+        final ContentType returnInstance = new ContentType();
         returnInstance.setDefaultCode();
         return returnInstance;
     }
+
+    /**
+     * Method convertToUppercase.
+     *
+     * @return boolean
+     */
+    protected boolean convertToUppercase() {
+        return false;
+    }
+
 }

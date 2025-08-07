@@ -514,7 +514,7 @@ updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 strategy_id BIGINT NOT NULL,
 PRIMARY KEY (id),
 INDEX rule_stategy_idx (strategy_id ASC),
-UNIQUE INDEX idstrategy_version_uq (strategy_id ASC, rule_version ASC),
+UNIQUE INDEX idstrategy_version_uq (strategy_id ASC, content_type ASC, rule_version ASC),
 CONSTRAINT rule_stategy_fk
 FOREIGN KEY (strategy_id )
 REFERENCES strategy (id )

@@ -120,7 +120,7 @@ public class AbstractStrategyJSIT {
         } while (!strategyProxy.isWaiting());
         _log.info(" Test Initialized");
 
-         strategyProxy.cancel();
+        strategyProxy.cancel();
     }
 
     /**

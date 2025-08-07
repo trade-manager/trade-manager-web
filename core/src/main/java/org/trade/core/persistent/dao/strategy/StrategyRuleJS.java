@@ -35,7 +35,6 @@
  */
 package org.trade.core.persistent.dao.strategy;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.json.JSONObject;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
@@ -45,10 +44,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trade.core.broker.IBrokerModel;
 import org.trade.core.persistent.TradeService;
+import org.trade.core.persistent.dao.Rule;
 import org.trade.core.persistent.dao.series.indicator.CandleSeries;
 import org.trade.core.persistent.dao.series.indicator.StrategyData;
 import org.trade.core.persistent.dao.series.indicator.candle.CandleItem;
 import org.trade.core.util.JSONMapper;
+import org.trade.core.valuetype.ContentType;
 
 import java.io.Serial;
 
@@ -66,6 +67,7 @@ public class StrategyRuleJS extends AbstractStrategyRule {
     private final static Logger _log = LoggerFactory.getLogger(StrategyRuleJS.class);
 
     private static final JSONObject result = new JSONObject("{'error': false, 'message': ''}");
+
     /**
      * Constructor for AbstractStrategyRule. An abstract class that implements
      * the base functionality for a trading strategies this class monitors the
@@ -116,6 +118,13 @@ public class StrategyRuleJS extends AbstractStrategyRule {
 
             String strategyName = "";
             String codeJS = this.getStrategyJS(strategyName);
+            Rule rule = this.getTradeService().findRuleByMaxVersion(this.getTradestrategy().getStrategy(), ContentType.JAVASCRIPT);
+
+            if (null != rule) {
+
+                codeJS = new String(rule.getRule());
+            }
+
             context.evaluateString(globalScope, codeJS, strategyName, 1, null);
             Object jsFunctionObj = globalScope.get("runStrategy", globalScope);
 
@@ -123,7 +132,7 @@ public class StrategyRuleJS extends AbstractStrategyRule {
 
                 _log.error("Error: StrategyRuleJS::runStrategy runStrategy is not a function");
             }
-            
+
             Function jsFunction = (Function) jsFunctionObj;
             String candleSeriesJSON = JSONMapper.getJSONString(candleSeries);
             Object[] functionParams = new Object[]{candleSeriesJSON, true};

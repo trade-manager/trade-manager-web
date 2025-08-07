@@ -150,14 +150,14 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
 
         fCodeDecodeType = codeDecodeType;
         fCodeDecodeIdentifier = CODE_DECODE_IDENTIFIER;
-
         final LookupQualifier qualifier = new LookupQualifier();
-
         qualifier.setValue(fCodeDecodeIdentifier + _TYPE, fCodeDecodeType);
 
         try {
+
             fLookup = LookupService.getLookup(fCodeDecodeIdentifier, qualifier, optional);
         } catch (final Exception ex) {
+
             fLookup = new PropertiesLookup(null, null);
         }
     }
@@ -173,7 +173,6 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
 
         fCodeDecodeType = codeDecodeType;
         fCodeDecodeIdentifier = identifier;
-
         final LookupQualifier qualifier = new LookupQualifier();
         qualifier.setValue(fCodeDecodeIdentifier + _TYPE, fCodeDecodeType);
 
@@ -199,7 +198,9 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
      * @return true, if this object represents a valid code, false otherwise
      */
     public boolean isValid() {
+
         if (isEmpty()) {
+
             return true;
         }
 
@@ -212,10 +213,14 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
      * @return String
      */
     public String getError() {
+
         if (!(isValid())) {
+
             if (fBadValue != null) {
+
                 return fBadValue + " does not represent a valid " + fCodeDecodeType;
             } else {
+
                 return " does not represent a valid " + fCodeDecodeType;
             }
         }
@@ -227,11 +232,12 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
      * @return The current code for the object, "" if not set.
      */
     public Object getObject() {
+
         Object val = null;
 
         try {
-            val = fLookup.getValueAt(fCodeDecodeIdentifier + _CODE);
 
+            val = fLookup.getValueAt(fCodeDecodeIdentifier + _CODE);
         } catch (final Exception ex) {
             // ignore
         }
@@ -243,12 +249,15 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
      * @return The current code for the object, "" if not set.
      */
     public String getCode() {
+
         String rVal = "";
 
         try {
+
             final Object val = fLookup.getValueAt(fCodeDecodeIdentifier + _CODE);
 
             if (val != null) {
+
                 rVal += val;
             }
         } catch (final Exception ex) {
@@ -262,12 +271,15 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
      * @return
      */
     public String getValue() {
+
         String rVal = "";
 
         try {
+
             final Object val = fLookup.getValueAt(fCodeDecodeIdentifier + _VALUE);
 
             if (val != null) {
+
                 rVal += val;
             }
         } catch (final Exception ex) {
@@ -282,12 +294,15 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
      * @return The current code for the object, "" if not set.
      */
     public String getValue(String key) {
+
         String rVal = "";
 
         try {
+
             final Object val = fLookup.getValueAt(key);
 
             if (val != null) {
+
                 rVal += val;
             }
         } catch (final Exception ex) {
@@ -312,12 +327,15 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
      * @return String
      */
     public String getDisplayName() {
+
         String rVal = "";
 
         try {
+
             final Object val = fLookup.getValueAt(fCodeDecodeIdentifier + _DISPLAY_NAME);
 
             if (val != null) {
+
                 rVal += val;
             }
         } catch (final Exception ex) {
@@ -349,17 +367,24 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
     public boolean equals(Object objectToCompare) {
 
         if (this == objectToCompare) {
+
             return true;
         }
 
         if (objectToCompare == null) {
+
             return false;
         }
         if (objectToCompare instanceof Decode) {
-            if (null == this.getCode())
+
+            if (null == this.getCode()) {
+
                 return false;
+            }
+
             return this.getCode().equals(((Decode) objectToCompare).getCode());
         }
+
         return false;
     }
 
@@ -369,6 +394,7 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
      * @return int
      */
     public int hashCode() {
+
         int hash = 1;
         hash = hash * 31 + fCodeDecodeIdentifier.hashCode();
         hash = hash * 31 + (fCodeDecodeType == null ? 0 : fCodeDecodeType.hashCode());
@@ -396,11 +422,15 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
          */
 
         if (isValid()) {
+
             return (getDisplayName());
         } else {
+
             if ((null != fBadValue) && (null != fBadValue.toString())) {
+
                 return fBadValue.toString();
             } else {
+
                 return "";
             }
         }
@@ -416,16 +446,20 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
         List<Decode> decodes = new ArrayList<>();
 
         try {
+
             final int columns = getLookup().getColumnCount();
             final int rows = getLookup().getRowCount();
             String columnName;
             Decode newDecode;
 
             for (int i = 0; i < columns; i++) {
+
                 columnName = getLookup().getColumnName(i);
 
                 if ((fCodeDecodeIdentifier + _CODE).equals(columnName)) {
+
                     for (int y = 0; y < rows; y++) {
+
                         final Class<?> c = Class.forName(this.getClass().getName());
 
                         // construct a new business object
@@ -437,9 +471,10 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
                     }
                 }
             }
-        } catch (final Exception e) {
+        } catch (final Exception ex) {
+
             throw new ValueTypeException(
-                    "Error getting decodes " + this.getClass().getName() + " error message " + e.getMessage());
+                    "Error getting decodes " + this.getClass().getName() + " error message " + ex.getMessage());
         }
 
         return decodes;
@@ -467,6 +502,7 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
                 setCode((String) JavaTypeTranslator.convert(String.class, value));
 
                 if (null != fBadValue && fLookup.setPos(code, fCodeDecodeIdentifier + _VALUE)) {
+
                     fBadValue = null;
                 }
             } catch (final Exception _) {
@@ -499,15 +535,18 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
             String codeToLookup;
 
             if (convertToUppercase()) {
+
                 codeToLookup = code.toUpperCase();
             } else {
                 codeToLookup = code;
             }
 
             if (!fLookup.setPos(codeToLookup, fCodeDecodeIdentifier + _CODE)) {
+
                 fBadValue = code;
             }
         } catch (Exception ex) {
+
             fBadValue = code;
         }
     }
@@ -518,9 +557,11 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
      * @param code Object
      */
     private void setCode(Object code) {
+
         try {
 
             if (!(fLookup.setPos(code, fCodeDecodeIdentifier + _CODE))) {
+
                 fBadValue = code;
             }
         } catch (final Exception ex) {
@@ -530,12 +571,15 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
     }
 
     public void setDefaultCode() {
+
         try {
 
             if (!fLookup.setDefaultPos(fCodeDecodeIdentifier + _CODE)) {
+
                 fBadValue = null;
             }
         } catch (Exception ex) {
+
             fBadValue = null;
         }
     }
@@ -546,12 +590,16 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
      * @param displayName String
      */
     public void setDisplayName(String displayName) {
+
         try {
+
             String displayNameToLookup;
 
             if (convertToUppercase()) {
+
                 displayNameToLookup = displayName.toUpperCase();
             } else {
+
                 displayNameToLookup = displayName;
             }
 
@@ -563,6 +611,7 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
                 fBadValue = displayName;
             }
         } catch (Exception ex) {
+
             fBadValue = displayName;
         }
     }
@@ -575,6 +624,7 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
      * @return int
      */
     public int compareTo(final Decode other) {
+
         return CoreUtils.nullSafeComparator(this.getDisplayName(), other.getDisplayName());
     }
 
@@ -586,8 +636,11 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
      * @return int
      */
     public int compare(Decode o1, Decode o2) {
+
         int returnVal = CoreUtils.nullSafeComparator(o1.getDisplayName(), o2.getDisplayName());
+
         if (fAscending.equals(Boolean.FALSE)) {
+
             returnVal = returnVal * -1;
         }
         return returnVal;

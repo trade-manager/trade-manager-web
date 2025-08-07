@@ -1027,6 +1027,16 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
     }
 
     /**
+     * Method getTradeService.
+     *
+     * @return TradeService
+     */
+    public TradeService getTradeService() {
+
+        return this.tradeService;
+    }
+
+    /**
      * Method getTradestrategy.
      *
      * @return Tradestrategy

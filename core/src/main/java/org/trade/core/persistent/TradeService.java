@@ -424,10 +424,11 @@ public interface TradeService extends AspectService {
     /**
      * Method findRuleByMaxVersion.
      *
-     * @param strategy Strategy
+     * @param strategy    Strategy
+     * @param contentType String
      * @return Rule
      */
-    Rule findRuleByMaxVersion(Strategy strategy);
+    Rule findRuleByMaxVersion(Strategy strategy, String contentType);
 
     /**
      * Method findStrategyById.

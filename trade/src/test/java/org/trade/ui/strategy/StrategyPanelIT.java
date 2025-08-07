@@ -29,6 +29,7 @@ import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.DynamicCode;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.BarSize;
+import org.trade.core.valuetype.ContentType;
 
 import javax.swing.*;
 import java.awt.*;
@@ -102,7 +103,7 @@ public class StrategyPanelIT {
             if (strategy.getRules().isEmpty()) {
 
                 Rule nextRule = new Rule(strategy, 1, null,
-                        content.getBytes(), "test/java");
+                        content.getBytes(), ContentType.JAVA);
                 strategy.getRules().add(nextRule);
                 strategy = this.tradeService.saveAspect(strategy);
             }
@@ -146,7 +147,7 @@ public class StrategyPanelIT {
         JEditorPane sourceText = new JEditorPane();
         JScrollPane jScrollPane = new JScrollPane(sourceText);
         jScrollPane.setEnabled(true);
-        sourceText.setContentType("text/java");
+        sourceText.setContentType(ContentType.JAVA);
         sourceText.setFont(new Font("monospaced", Font.PLAIN, 12));
         sourceText.setBackground(Color.white);
         sourceText.setForeground(Color.black);
@@ -234,9 +235,9 @@ public class StrategyPanelIT {
 
             fail("Failed to create broker msg: " + ex.getMessage());
         }
-
-        Rule latestRule = this.tradeService.findRuleByMaxVersion(strategy);
+        String contentType = ContentType.JAVA;
         Integer version = 1;
+        Rule latestRule = this.tradeService.findRuleByMaxVersion(strategy, contentType);
 
         if (null != latestRule) {
 
@@ -344,7 +345,7 @@ public class StrategyPanelIT {
             myrule.setStrategy(strategy);
         }
         myrule.setComment("Test Ver: " + myrule.getRuleVersion());
-        StreamEditorPane textArea = new StreamEditorPane("text/rtf");
+        StreamEditorPane textArea = new StreamEditorPane(ContentType.TEXT);
         new JScrollPane(textArea);
         String fileDir = strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/');
         String className = strategy.getClassName() + ".java";
