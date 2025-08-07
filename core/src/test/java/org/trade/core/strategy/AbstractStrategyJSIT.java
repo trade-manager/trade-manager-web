@@ -116,6 +116,7 @@ public class AbstractStrategyJSIT {
         strategyProxy.execute();
 
         do {
+            
             Thread.sleep(1000);
         } while (!strategyProxy.isWaiting());
         _log.info(" Test Initialized");
