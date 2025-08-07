@@ -53,6 +53,7 @@ import org.trade.core.persistent.dao.strategy.IStrategyRule;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.CoreUtils;
 import org.trade.core.util.time.TradingCalendar;
+import org.trade.core.valuetype.ContentType;
 import org.trade.core.valuetype.DAOPortfolio;
 import org.trade.core.valuetype.DAOStrategy;
 import org.trade.core.valuetype.DAOStrategyManager;
@@ -231,7 +232,7 @@ public class TradingdayPanel extends BasePanel {
             JSpinner.DateEditor de1 = new JSpinner.DateEditor(spinnerEnd, DATEFORMAT);
             spinnerEnd.setEditor(de1);
             spinnerEnd.setValue((new Date(tradingday.getOpen())).getDate());
-            portfolioLabel = new JEditorPane("text/rtf", "");
+            portfolioLabel = new JEditorPane(ContentType.TEXT, "");
             portfolioLabel.setAutoscrolls(false);
             portfolioLabel.setEditable(false);
 

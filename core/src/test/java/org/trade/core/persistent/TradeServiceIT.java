@@ -74,6 +74,7 @@ import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.Action;
 import org.trade.core.valuetype.BarSize;
 import org.trade.core.valuetype.ChartDays;
+import org.trade.core.valuetype.ContentType;
 import org.trade.core.valuetype.Currency;
 import org.trade.core.valuetype.DAOPortfolio;
 import org.trade.core.valuetype.DAOStrategy;
@@ -119,6 +120,8 @@ public class TradeServiceIT {
     private static Tradestrategy tradestrategy;
     private static final String symbol = "IBM-" + TradestrategyBase.getRandomNumber(4);
     private static final String comment = "TEST-" + TradestrategyBase.getRandomNumber(8);
+    // Default value is java
+    private static final String contentType = ContentType.JAVA;
     private Integer clientId;
 
     /**
@@ -905,15 +908,16 @@ public class TradeServiceIT {
     @Test
     public void saveRule() {
 
-        String content = "Blah Blah";
+        String contentType = ContentType.JAVASCRIPT;
+        String content = "function (){console.log('Hi');}";
         Strategy strategy = tradestrategy.getStrategy();
         strategy = this.tradeService.findStrategyById(strategy.getId());
-        Rule rule = new Rule(strategy, 0, comment, content.getBytes(), "text/javascript");
+        Rule rule = new Rule(strategy, 0, comment, content.getBytes(), contentType);
         strategy.getRules().add(rule);
         strategy = this.tradeService.saveAspect(strategy);
-        rule = this.tradeService.findRuleByMaxVersion(strategy);
+        rule = this.tradeService.findRuleByMaxVersion(strategy, contentType);
         assertEquals(0, rule.getRuleVersion());
-        assertEquals("text/javascript", rule.getContentType());
+        assertEquals(contentType, rule.getContentType());
     }
 
     @Test
@@ -924,7 +928,7 @@ public class TradeServiceIT {
         Rule rule = new Rule(strategy, 0, comment);
         strategy.getRules().add(rule);
         strategy = this.tradeService.saveAspect(strategy);
-        Rule latestRule = this.tradeService.findRuleByMaxVersion(strategy);
+        Rule latestRule = this.tradeService.findRuleByMaxVersion(strategy, contentType);
         Integer version = 0;
 
         if (null != latestRule) {
@@ -942,7 +946,7 @@ public class TradeServiceIT {
     @Test
     public void findRuleByMaxVersion() {
 
-        Rule latestRule = this.tradeService.findRuleByMaxVersion(tradestrategy.getStrategy());
+        Rule latestRule = this.tradeService.findRuleByMaxVersion(tradestrategy.getStrategy(), contentType);
         assertNull(latestRule);
     }
 
@@ -966,7 +970,7 @@ public class TradeServiceIT {
 
         Strategy strategy = tradestrategy.getStrategy();
         strategy = this.tradeService.findStrategyById(strategy.getId());
-        Rule latestRule = this.tradeService.findRuleByMaxVersion(strategy);
+        Rule latestRule = this.tradeService.findRuleByMaxVersion(strategy, contentType);
         Integer version = 0;
 
         if (null != latestRule) {

@@ -44,8 +44,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Pattern;
 import org.trade.core.dao.Aspect;
 import org.trade.core.util.CoreUtils;
+import org.trade.core.valuetype.ContentType;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -80,7 +82,8 @@ public class Rule extends Aspect implements Serializable {
     protected Integer ruleVersion;
 
     @Column(name = "content_type", length = 20, nullable = false)
-    private String contentType = "text/java";
+    @Pattern(regexp = "^(text/java|text/javascript)$")
+    private String contentType = ContentType.JAVA;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "strategy_id", nullable = false)

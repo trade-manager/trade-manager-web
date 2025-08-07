@@ -6,7 +6,7 @@ function runStrategy(candleSeriesJSON, newBar) {
 
         // Get the current candle
         let currentCandleItem = JSON.parse(gs.getCurrentCandleJSON());
-        gs.log('Info: StrategyRuleJS::runStrategy currentCandleItem: ' + JSON.stringify(currentCandleItem.candle.period.start));
+        gs.log('Info: StrategyRuleJS::runStrategy currentCandleItem: ' + currentCandleItem.candle.side);
         return candleSeries.key
     } catch (ex) {
         gs.error(1, 100, 'Error: StrategyRuleJS::runStrategy process javascript msg: ' + ex.getMessage());

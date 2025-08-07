@@ -27,7 +27,7 @@ public class RuleRepositoryImpl implements RuleRepositoryCustom {
      * @param strategy Strategy
      * @return Integer
      */
-    public Integer findByMaxRuleVersion(Strategy strategy) {
+    public Integer findByMaxRuleVersion(Strategy strategy, String contentType) {
 
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Object> query = builder.createQuery();
@@ -38,6 +38,7 @@ public class RuleRepositoryImpl implements RuleRepositoryCustom {
         CriteriaQuery<Object> select = query.select(minExpression);
 
         List<Predicate> predicates = new ArrayList<>();
+        predicates.add(builder.equal(from.get("contentType"), contentType));
 
         if (null != strategy) {
 

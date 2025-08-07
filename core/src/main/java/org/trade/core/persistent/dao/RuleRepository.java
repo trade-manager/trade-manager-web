@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface RuleRepository extends AspectRepository<Rule, Long>, RuleRepositoryCustom {
 
-    List<Rule> findByStrategyAndVersion(Strategy strategy, Integer version);
+    List<Rule> findByStrategyAndContentTypeAndRuleVersion(Strategy strategy, String contentType, Integer ruleVersion);
 
     List<Rule> findByStrategy(Strategy strategy);
 }

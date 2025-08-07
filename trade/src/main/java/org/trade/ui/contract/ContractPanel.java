@@ -61,6 +61,7 @@ import org.trade.core.util.CoreUtils;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.AllocationMethod;
 import org.trade.core.valuetype.BarSize;
+import org.trade.core.valuetype.ContentType;
 import org.trade.core.valuetype.DAOGroup;
 import org.trade.core.valuetype.DAOProfile;
 import org.trade.core.valuetype.Decode;
@@ -227,10 +228,10 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
             jToolBar.setLayout(new BorderLayout());
             jToolBar.add(jPanel6);
 
-            this.strategyLabel = new JEditorPane("text/rtf", "");
+            this.strategyLabel = new JEditorPane(ContentType.TEXT, "");
             this.strategyLabel.setAutoscrolls(false);
             this.strategyLabel.setEditable(false);
-            this.tradeLabel = new JEditorPane("text/rtf", "");
+            this.tradeLabel = new JEditorPane(ContentType.TEXT, "");
             this.tradeLabel.setAutoscrolls(false);
             this.tradeLabel.setEditable(false);
 

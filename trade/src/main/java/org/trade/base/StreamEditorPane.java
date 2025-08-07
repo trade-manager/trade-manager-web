@@ -37,6 +37,7 @@ package org.trade.base;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.trade.core.valuetype.ContentType;
 
 import javax.swing.*;
 import javax.swing.event.UndoableEditEvent;
@@ -448,7 +449,7 @@ public class StreamEditorPane extends JEditorPane implements MouseListener, Acti
             is.reset();
 
             if ((c1 == '{') && (c2 == '\\') && (c3 == 'r') && (c4 == 't') && (c5 == 'f')) {
-                type = "text/rtf";
+                type = ContentType.TEXT;
             }
             // Add more heuristics here
         }

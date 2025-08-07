@@ -35,18 +35,11 @@
  */
 package org.trade.core.strategy;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import org.json.JSONObject;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.Function;
-import org.mozilla.javascript.Scriptable;
-import org.mozilla.javascript.ScriptableObject;
-import org.mozilla.javascript.annotations.JSGetter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,19 +52,12 @@ import org.trade.core.broker.IBrokerModel;
 import org.trade.core.factory.ClassFactory;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.Tradestrategy;
-import org.trade.core.persistent.dao.series.indicator.CandleSeries;
 import org.trade.core.persistent.dao.series.indicator.StrategyData;
-import org.trade.core.persistent.dao.series.indicator.candle.CandleItem;
-import org.trade.core.persistent.dao.strategy.AbstractStrategyRule;
 import org.trade.core.persistent.dao.strategy.StrategyRuleJS;
-import org.trade.core.persistent.dao.strategy.StrategyRuleJSWrapper;
 import org.trade.core.properties.ConfigProperties;
-import org.trade.core.util.JSONMapper;
 import org.trade.core.valuetype.BarSize;
 import org.trade.core.valuetype.Side;
 
-import java.io.Serial;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -133,6 +119,8 @@ public class AbstractStrategyJSIT {
             Thread.sleep(1000);
         } while (!strategyProxy.isWaiting());
         _log.info(" Test Initialized");
+
+        strategyProxy.cancel();
     }
 
     /**
