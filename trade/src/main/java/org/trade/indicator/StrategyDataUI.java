@@ -190,12 +190,14 @@ public class StrategyDataUI extends Worker {
     }
 
     public void cancel() {
+
         this.setIsCancelled(true);
         /*
          * Unlock the doInBackground that may be waiting for a candle. This will
          * cause a clean finish to the process.
          */
         synchronized (lockStrategyWorker) {
+
             seriesChanged = true;
             lockStrategyWorker.notifyAll();
         }
@@ -283,6 +285,7 @@ public class StrategyDataUI extends Worker {
              * will cause a clean finish to the process.
              */
             synchronized (lockStrategyWorker) {
+
                 this.seriesChanged = true;
                 lockStrategyWorker.notifyAll();
             }

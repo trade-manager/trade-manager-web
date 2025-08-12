@@ -68,6 +68,7 @@ import org.trade.core.util.DynamicCode;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.AccountType;
 import org.trade.core.valuetype.Action;
+import org.trade.core.valuetype.ContentType;
 import org.trade.core.valuetype.Currency;
 import org.trade.core.valuetype.OrderStatus;
 import org.trade.core.valuetype.OrderType;
@@ -135,6 +136,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
 
     private final static Logger _log = LoggerFactory.getLogger(TradeMainControllerPanel.class);
 
+    private static String strategyContentType = null;
     private static Tradingdays tradingdays = null;
     private IBrokerModel brokerModel = null;
     private BrokerDataRequestMonitor brokerDataRequestProgressMonitor = null;
@@ -179,6 +181,8 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
             tradingdays = new Tradingdays();
             tradingdays.add(tradingday);
             String strategyDir = ConfigProperties.getPropAsString("trade.strategy.default.dir");
+            strategyContentType = ConfigProperties.getPropAsString("trade.strategy.content_type");
+
             dynacode = new DynamicCode();
             dynacode.addSourceDir(new File(strategyDir));
 
@@ -651,6 +655,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                  */
 
                 if (tradestrategy.getStrategy().hasStrategyManager()) {
+
                     if (!tradingdayPanel
                             .isStrategyWorkerRunning(tradestrategy.getStrategy().getStrategyManager().getClassName()
                                     + tradestrategy.getId())) {
@@ -658,23 +663,26 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                          * Kill the worker that got us in if still running its
                          * job is done.
                          */
-
                         tradingdayPanel.killStrategyWorker(
                                 tradestrategy.getStrategy().getClassName() + tradestrategy.getId());
                         createStrategy(tradestrategy.getStrategy().getStrategyManager().getClassName(), tradestrategy);
                     }
                 } else {
+
                     String key = tradestrategy.getStrategy().getClassName() + tradestrategy.getId();
+
                     if (tradingdayPanel.isStrategyWorkerRunning(key)) {
+
                         IStrategyRule strategy = tradingdayPanel.getStrategyWorker(key);
                         strategy.tradeOrderFilled(tradeOrder);
                     }
                 }
             }
+
             tradestrategy.setStatus(tradeOrder.getTradestrategyLite().getStatus());
             contractPanel.doRefresh(tradestrategy);
-
         } catch (Exception ex) {
+
             this.setErrorMessage("Error starting PositionManagerRule.", ex.getMessage(), ex);
         }
     }
@@ -896,6 +904,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
      */
 
     public void historicalDataComplete(final Tradestrategy tradestrategy) {
+
         try {
             /*
              * Now we have the history data complete and the request for real
@@ -905,36 +914,43 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
             if (!brokerModel.isBrokerDataOnly()) {
 
                 if (tradestrategy.getTrade()) {
+
                     if (tradestrategy.isThereOpenTradePosition()) {
+
                         int result = JOptionPane.showConfirmDialog(this.getFrame(),
                                 "Position is open for: " + tradestrategy.getContract().getSymbol()
                                         + " do you want to run the Strategy ?",
                                 "Information", JOptionPane.YES_NO_OPTION);
+
                         if (result == JOptionPane.YES_OPTION) {
+
                             if (tradestrategy.getStrategy().hasStrategyManager()) {
+
                                 createStrategy(tradestrategy.getStrategy().getStrategyManager().getClassName(),
                                         tradestrategy);
                             } else {
+
                                 createStrategy(tradestrategy.getStrategy().getClassName(), tradestrategy);
                             }
-
                         } else {
+
                             int result1 = JOptionPane.showConfirmDialog(this.getFrame(),
                                     "Position is open for: " + tradestrategy.getContract().getSymbol()
                                             + " do you want to delete all Orders?",
                                     "Information", JOptionPane.YES_NO_OPTION);
+
                             if (result1 == JOptionPane.YES_OPTION) {
+
                                 tradeService.deleteTradestrategyTradeOrders(tradestrategy);
                             }
                         }
-
                     } else {
                         createStrategy(tradestrategy.getStrategy().getClassName(), tradestrategy);
                     }
                 }
             }
-
         } catch (Exception ex) {
+
             this.setErrorMessage("Could not start strategy: " + tradestrategy.getStrategy().getName() + " for Symbol: "
                     + tradestrategy.getContract().getSymbol(), ex.getMessage(), ex);
         }
@@ -1771,6 +1787,11 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
     private synchronized void createStrategy(String strategyClassName, Tradestrategy tradestrategy) throws Exception {
 
         String key = strategyClassName + tradestrategy.getId();
+
+        if (strategyContentType.equals(ContentType.JAVASCRIPT)) {
+
+            strategyClassName = "org.trade.core.persistent.dao.strategy.StrategyRuleJS;";
+        }
 
         // Only allow one strategy worker per tradestrategy
         if (tradingdayPanel.isStrategyWorkerRunning(key)) {

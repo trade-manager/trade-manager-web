@@ -66,11 +66,14 @@ import javax.swing.*;
  */
 public abstract class Worker {
 
-    private Object value; // see getValue(), setValue()
     public Thread thread;
     protected boolean isDone = false;
     protected boolean isCancelled = false;
     protected static int threadCount = 0;
+
+    // see getValue(), setValue()
+    private Object value;
+    private final ThreadVar threadVar;
 
     /**
      * Class to maintain reference to current worker thread under separate
@@ -80,6 +83,7 @@ public abstract class Worker {
      * @version $Revision: 1.0 $
      */
     private static class ThreadVar {
+
         private Thread thread;
 
         /**
@@ -104,8 +108,6 @@ public abstract class Worker {
             thread = null;
         }
     }
-
-    private final ThreadVar threadVar;
 
     /**
      * Get the value produced by the worker thread, or null if it hasn't been
@@ -172,7 +174,6 @@ public abstract class Worker {
      *
      * @return the boolean running/dead.
      */
-
     public boolean isRunning() {
 
         Thread t = threadVar.get();
@@ -216,9 +217,11 @@ public abstract class Worker {
         Thread t = threadVar.get();
 
         if (t != null) {
+
             return t.getState().compareTo(Thread.State.WAITING) == 0
                     || t.getState().compareTo(Thread.State.TIMED_WAITING) == 0;
         }
+
         return false;
     }
 
@@ -230,9 +233,12 @@ public abstract class Worker {
 
         isCancelled = true;
         Thread t = threadVar.get();
+
         if (t != null) {
+
             t.interrupt();
         }
+
         threadVar.clear();
     }
 
@@ -264,6 +270,7 @@ public abstract class Worker {
     public Object get() {
 
         while (true) {
+
             Thread t = threadVar.get();
 
             if (t == null) {
@@ -289,20 +296,27 @@ public abstract class Worker {
     public Worker() {
 
         final Runnable doFinished = () -> {
+
             isDone = true;
             done();
         };
 
         Runnable doConstruct = new Runnable() {
+
             public void run() {
+
                 try {
+
                     setValue(doInBackground());
                 } finally {
+
                     threadVar.clear();
                 }
+
                 SwingUtilities.invokeLater(doFinished);
             }
         };
+
         Thread t = new Thread(doConstruct, "WorkerThread" + threadCount++);
         threadVar = new ThreadVar(t);
     }
@@ -311,8 +325,11 @@ public abstract class Worker {
      * Start the worker thread.
      */
     public void execute() {
+
         Thread t = threadVar.get();
+
         if (t != null) {
+
             isDone = false;
             isCancelled = false;
             t.start();

@@ -51,11 +51,15 @@ import org.trade.core.TradestrategyBase;
 import org.trade.core.broker.IBrokerModel;
 import org.trade.core.factory.ClassFactory;
 import org.trade.core.persistent.TradeService;
+import org.trade.core.persistent.dao.Rule;
+import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.Tradestrategy;
-import org.trade.core.persistent.dao.series.indicator.StrategyData;
+import org.trade.core.persistent.dao.strategy.IStrategyRule;
 import org.trade.core.persistent.dao.strategy.StrategyRuleJS;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.valuetype.BarSize;
+import org.trade.core.valuetype.ChartDays;
+import org.trade.core.valuetype.ContentType;
 import org.trade.core.valuetype.Side;
 
 import java.util.ArrayList;
@@ -81,7 +85,7 @@ public class AbstractStrategyJSIT {
     private static IBrokerModel brokerModel;
     private static String templateName;
     private static String strategyDir;
-    private static StrategyRuleJS strategyProxy;
+    private static IStrategyRule strategyProxy;
 
     /**
      * Method setUpBeforeClass.
@@ -106,20 +110,33 @@ public class AbstractStrategyJSIT {
         String host = ConfigProperties.getPropAsString("trade.tws.host");
         brokerModel.onConnect(host, port, clientId);
 
-        tradestrategy = TradestrategyBase.createTestTradestrategy(tradeService, symbol);
+        tradestrategy = TradestrategyBase.createTestTradestrategy(tradeService, symbol, Side.BOT, ChartDays.ONE_DAY, BarSize.HOUR_MIN);
         assertNotNull(tradestrategy);
-        StrategyData.doDummyData(tradestrategy.getStrategyData().getBaseCandleSeries(), tradestrategy.getTradingday(), 1, BarSize.FIVE_MIN, Side.BOT.equals(tradestrategy.getSide()), 0);
+        Strategy strategy = tradeService.findStrategyById(tradestrategy.getStrategy().getId());
+        String fileName = strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/') + strategy.getClassName()
+                + ".js";
+        String content = TradestrategyBase.readFile(fileName);
+
+        if (null != content && strategy.getRules().isEmpty()) {
+
+            Rule nextRule = new Rule(strategy, 1, null,
+                    content.getBytes(), ContentType.JAVASCRIPT);
+            strategy.getRules().add(nextRule);
+            strategy = this.tradeService.saveAspect(strategy);
+        }
 
         strategyProxy = new StrategyRuleJS(tradeService, brokerModel, tradestrategy.getStrategyData(),
-                tradestrategy.getId());
+                tradestrategy.getId(), strategy.getRules().getFirst());
         assertNotNull(strategyProxy);
         strategyProxy.execute();
 
-        do {
-            Thread.sleep(1000);
-        } while (!strategyProxy.isWaiting());
-        _log.info(" Test Initialized");
+        while (!strategyProxy.isWaiting()) {
 
+            Thread.sleep(250);
+        }
+
+        _log.info(" Test Initialized");
+        tradestrategy.getStrategyData().populateCandleSeries(tradestrategy.getTradingday(), tradestrategy.getChartDays(), tradestrategy.getBarSize(), Side.BOT.equals(tradestrategy.getSide()), 250);
         strategyProxy.cancel();
     }
 

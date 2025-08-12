@@ -68,6 +68,7 @@ public class CandleDataset extends AbstractXYDataset implements OHLCVwapDataset,
      * Creates a new instance of <code>OHLCSeriesCollection</code>.
      */
     public CandleDataset() {
+
         this.data = new ArrayList<>();
     }
 
@@ -96,6 +97,7 @@ public class CandleDataset extends AbstractXYDataset implements OHLCVwapDataset,
 
             throw new IllegalArgumentException("Null 'anchor' argument.");
         }
+
         this.xPosition = anchor;
         notifyListeners(new DatasetChangeEvent(this, this));
     }
@@ -113,6 +115,7 @@ public class CandleDataset extends AbstractXYDataset implements OHLCVwapDataset,
 
             throw new IllegalArgumentException("Null series argument.");
         }
+
         this.data.add(series);
         series.addChangeListener(this);
         fireDatasetChanged();
@@ -132,6 +135,7 @@ public class CandleDataset extends AbstractXYDataset implements OHLCVwapDataset,
         if (series == null) {
             throw new IllegalArgumentException("Null series argument.");
         }
+
         this.data.get(index).removeChangeListener(this);
         this.data.set(index, series);
         series.addChangeListener(this);
@@ -146,9 +150,11 @@ public class CandleDataset extends AbstractXYDataset implements OHLCVwapDataset,
      * @see IIndicatorDataset#removeSeries(IndicatorSeries)
      */
     public void removeSeries(IndicatorSeries series) {
+
         if (series == null) {
             throw new IllegalArgumentException("Null series argument.");
         }
+
         this.data.remove(series);
         series.removeChangeListener(this);
         fireDatasetChanged();
@@ -182,9 +188,12 @@ public class CandleDataset extends AbstractXYDataset implements OHLCVwapDataset,
      * org.trade.strategy.data.IIndicatorDataset#getSeries(int)
      */
     public CandleSeries getSeries(int series) {
+
         if ((series < 0) || (series >= getSeriesCount())) {
+
             throw new IllegalArgumentException("Series index out of bounds");
         }
+
         return (CandleSeries) this.data.get(series);
     }
 
@@ -198,6 +207,7 @@ public class CandleDataset extends AbstractXYDataset implements OHLCVwapDataset,
      * org.jfree.data.general.SeriesDataset#getSeriesKey(int)
      */
     public Comparable<?> getSeriesKey(int series) {
+
         // defer argument checking
         return getSeries(series).getKey();
     }
@@ -212,6 +222,7 @@ public class CandleDataset extends AbstractXYDataset implements OHLCVwapDataset,
      * org.jfree.data.xy.XYDataset#getItemCount(int)
      */
     public int getItemCount(int series) {
+
         // defer argument checking
         return getSeries(series).getItemCount();
     }
@@ -223,12 +234,17 @@ public class CandleDataset extends AbstractXYDataset implements OHLCVwapDataset,
      * @return The x-value.
      */
     protected synchronized long getX(RegularTimePeriod period) {
+
         long result = 0L;
+
         if (this.xPosition == TimePeriodAnchor.START) {
+
             result = period.getFirstMillisecond();
         } else if (this.xPosition == TimePeriodAnchor.MIDDLE) {
+
             result = period.getMiddleMillisecond();
         } else if (this.xPosition == TimePeriodAnchor.END) {
+
             result = period.getLastMillisecond();
         }
         return result;

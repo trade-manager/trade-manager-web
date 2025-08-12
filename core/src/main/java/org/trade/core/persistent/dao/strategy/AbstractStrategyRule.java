@@ -1282,28 +1282,6 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
     }
 
     /**
-     * @param strategyName
-     * @return
-     */
-    public String getStrategyJS(String strategyName) {
-
-        StringBuilder javascript = new StringBuilder();
-        javascript.append("function runStrategy(candleSeriesJSON, newBar) {\n");
-        javascript.append("  try {\n");
-        javascript.append("     let candleSeries = JSON.parse(candleSeriesJSON);\n");
-        javascript.append("     gs.log('Info:  AbstractStrategyRule::runStrategy key: ' + candleSeries.key);\n");
-        javascript.append("     // Get the current candle\n");
-        javascript.append("     let currentCandleItem = JSON.parse(gs.getCurrentCandleJSON());\n");
-        javascript.append("     //gs.log(1, 100,'currentCandleItem: ' + currentCandleItem.candle.side);\n");
-        javascript.append("     return candleSeries.key\n");
-        javascript.append("  } catch (ex) {\n");
-        javascript.append("     gs.error(1, 100, 'Error: process javascript msg: ' + ex.getMessage());\n");
-        javascript.append("  }\n");
-        javascript.append("}");
-        return javascript.toString();
-    }
-
-    /**
      * The main process thread. This will run until it is either canceled or is
      * done.
      * <p>

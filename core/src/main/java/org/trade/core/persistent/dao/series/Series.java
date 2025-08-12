@@ -14,6 +14,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public abstract class Series implements Cloneable, Serializable {
+
     @Serial
     private static final long serialVersionUID = -6906561437538683581L;
     private Comparable key;
@@ -46,14 +47,17 @@ public abstract class Series implements Cloneable, Serializable {
      */
     @Deprecated
     public void setKey(Comparable key) {
+
         //  Args.nullNotPermitted(key, "key");
         Comparable old = this.key;
 
         try {
+
             this.vetoableChangeSupport.fireVetoableChange("Key", old, key);
             this.key = key;
             this.propertyChangeSupport.firePropertyChange("Key", old, key);
         } catch (PropertyVetoException e) {
+
             throw new IllegalArgumentException(e.getMessage());
         }
     }
@@ -131,17 +135,21 @@ public abstract class Series implements Cloneable, Serializable {
     }
 
     public void fireSeriesChanged() {
+
         if (this.notify) {
+
             this.notifyListeners(new SeriesChangeEvent(this));
         }
-
     }
 
     protected void notifyListeners(SeriesChangeEvent event) {
+
         Object[] listenerList = this.listeners.getListenerList();
 
         for (int i = listenerList.length - 2; i >= 0; i -= 2) {
+
             if (listenerList[i] == SeriesChangeListener.class) {
+
                 ((SeriesChangeListener) listenerList[i + 1]).seriesChanged(event);
             }
         }

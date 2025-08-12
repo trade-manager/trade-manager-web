@@ -38,6 +38,7 @@ package org.trade.core.persistent.dao.series.indicator.candle;
 
 import org.trade.core.util.time.RegularTimePeriod;
 import org.trade.core.util.time.TradingCalendar;
+import org.trade.core.valuetype.BarSize;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -76,12 +77,22 @@ public class CandlePeriod extends RegularTimePeriod implements Serializable {
      * @param secondsLength int
      */
     public CandlePeriod(ZonedDateTime startOfPeriod, int secondsLength) {
+
         if (null == startOfPeriod) {
+
             throw new IllegalArgumentException("Null startOfPeriod argument.");
         }
+
         if (secondsLength == 0) {
+
             throw new IllegalArgumentException("Null 'secondsLength' argument.");
         }
+
+        if (secondsLength == BarSize.HOUR_MIN && 0 != startOfPeriod.getMinute()) {
+
+            startOfPeriod = startOfPeriod.minusMinutes(startOfPeriod.getMinute());
+        }
+
         this.startOfPeriod = startOfPeriod;
         this.secondsLength = secondsLength;
         // this.endOfPeriod = this.startOfPeriod

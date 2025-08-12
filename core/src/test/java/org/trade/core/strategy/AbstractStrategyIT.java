@@ -67,6 +67,7 @@ import org.trade.core.util.DynamicCode;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.Action;
 import org.trade.core.valuetype.BarSize;
+import org.trade.core.valuetype.ChartDays;
 import org.trade.core.valuetype.DAOEntryLimit;
 import org.trade.core.valuetype.Money;
 import org.trade.core.valuetype.OrderStatus;
@@ -133,7 +134,7 @@ public class AbstractStrategyIT {
         String host = ConfigProperties.getPropAsString("trade.tws.host");
         brokerModel.onConnect(host, port, clientId);
 
-        tradestrategy = TradestrategyBase.createTestTradestrategy(tradeService, symbol);
+        tradestrategy = TradestrategyBase.createTestTradestrategy(tradeService, symbol, Side.BOT, ChartDays.ONE_DAY, BarSize.HOUR_MIN);
         assertNotNull(tradestrategy);
 
         strategyProxy = new StrategyRuleTest(tradeService, brokerModel, tradestrategy.getStrategyData(),
@@ -141,9 +142,10 @@ public class AbstractStrategyIT {
         assertNotNull(strategyProxy);
         strategyProxy.execute();
 
-        do {
-            Thread.sleep(1000);
-        } while (!strategyProxy.isWaiting());
+        while (!strategyProxy.isWaiting()) {
+
+            Thread.sleep(250);
+        }
         _log.info(" Test Initialized");
     }
 
@@ -182,14 +184,13 @@ public class AbstractStrategyIT {
                     IStrategyRule.PACKAGE + templateName, param);
             strategyProxy.execute();
 
-            do {
+            while (!strategyProxy.isWaiting()) {
 
-                Thread.sleep(1000);
-            } while (!strategyProxy.isWaiting());
+                Thread.sleep(250);
+            }
 
-            StrategyData.doDummyData(tradestrategy.getStrategyData().getBaseCandleSeries(), tradestrategy.getTradingday(), 1, BarSize.FIVE_MIN, Side.BOT.equals(tradestrategy.getSide()), 0);
+            tradestrategy.getStrategyData().populateCandleSeries(tradestrategy.getTradingday(), tradestrategy.getChartDays(), tradestrategy.getBarSize(), Side.BOT.equals(tradestrategy.getSide()), 250);
             strategyProxy.cancel();
-
         } catch (Exception ex) {
 
             fail("Failed entryRuleNoEntryByRT msg: " + ex.getMessage());
@@ -239,8 +240,9 @@ public class AbstractStrategyIT {
             }
         }
 
-        StrategyData.doDummyData(tradestrategy.getStrategyData().getBaseCandleSeries(),
-                tradestrategy.getTradingday(), 1, BarSize.FIVE_MIN, Side.BOT.equals(tradestrategy.getSide()), 0);
+        //StrategyData.populateBaseCandleSeries(tradestrategy.getStrategyData().getBaseCandleSeries(),
+        //        tradestrategy.getTradingday(), 1, BarSize.FIVE_MIN, Side.BOT.equals(tradestrategy.getSide()), 0);
+        tradestrategy.getStrategyData().populateCandleSeries(tradestrategy.getTradingday(), tradestrategy.getChartDays(), tradestrategy.getBarSize(), Side.BOT.equals(tradestrategy.getSide()), 0);
         strategyProxy.cancel();
     }
 
@@ -545,17 +547,12 @@ public class AbstractStrategyIT {
     @Test
     public void getCurrentCandleCount() throws ServiceException {
 
-        if (Side.BOT.equals(tradestrategy.getSide())) {
-            StrategyData.doDummyData(tradestrategy.getStrategyData().getBaseCandleSeries(),
-                    tradestrategy.getTradingday(), 1, BarSize.HOUR_MIN, true, 250);
 
-        } else {
-            StrategyData.doDummyData(tradestrategy.getStrategyData().getBaseCandleSeries(),
-                    tradestrategy.getTradingday(), 1, BarSize.HOUR_MIN, false, 1);
-
-        }
+        tradestrategy.getStrategyData().populateCandleSeries(tradestrategy.getTradingday(), tradestrategy.getChartDays(), tradestrategy.getBarSize(), Side.BOT.equals(tradestrategy.getSide()), 250);
         int count = strategyProxy.getCurrentCandleCount();
-        assertEquals(-1, count);
+
+        // will close position 1hr and 5min i.e. 13 bars.
+        assertEquals(2, count);
     }
 
     @Test

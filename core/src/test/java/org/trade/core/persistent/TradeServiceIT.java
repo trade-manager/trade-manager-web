@@ -66,9 +66,8 @@ import org.trade.core.persistent.dao.Tradestrategy;
 import org.trade.core.persistent.dao.TradestrategyOrders;
 import org.trade.core.persistent.dao.Tradingday;
 import org.trade.core.persistent.dao.Tradingdays;
-import org.trade.core.persistent.dao.series.indicator.CandleSeries;
 import org.trade.core.persistent.dao.series.indicator.IIndicatorDataset;
-import org.trade.core.persistent.dao.series.indicator.StrategyData;
+import org.trade.core.persistent.dao.series.indicator.candle.CandleItem;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.Action;
@@ -629,15 +628,12 @@ public class TradeServiceIT {
     @Test
     public void saveCandleSeries() throws Exception {
 
-        CandleSeries candleSeries = new CandleSeries(tradestrategy.getStrategyData().getBaseCandleSeries(),
-                BarSize.FIVE_MIN, tradestrategy.getTradingday().getOpen(),
-                tradestrategy.getTradingday().getClose());
-        StrategyData.doDummyData(candleSeries, tradestrategy.getTradingday(), 5, BarSize.FIVE_MIN, true, 0);
+        tradestrategy.getStrategyData().populateCandleSeries(tradestrategy.getTradingday(), 5, tradestrategy.getBarSize(), true, 0);
         long timeStart = System.currentTimeMillis();
-        this.tradeService.saveCandleSeries(candleSeries);
+        this.tradeService.saveCandleSeries(tradestrategy.getStrategyData().getBaseCandleSeries());
         _log.info("Total time: {}", (System.currentTimeMillis() - timeStart) / 1000);
-        assertFalse(candleSeries.isEmpty());
-        assertNotNull(((org.trade.core.persistent.dao.series.indicator.candle.CandleItem) candleSeries.getDataItem(0)).getCandle().getId());
+        assertFalse(tradestrategy.getStrategyData().getCandles().isEmpty());
+        assertNotNull(((CandleItem) tradestrategy.getStrategyData().getBaseCandleSeries().getDataItem(0)).getCandle().getId());
     }
 
     @Test

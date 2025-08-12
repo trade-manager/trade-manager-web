@@ -105,6 +105,7 @@ public class StrategyData extends Worker {
                 IIndicatorDataset indicatorDataset = this.getIndicatorByType(indicator.getType());
 
                 if (null == indicatorDataset) {
+
                     /*
                      * Data-set and Series names should have the same name with
                      * applicable extension of Series/Dataset. this allows
@@ -118,9 +119,10 @@ public class StrategyData extends Worker {
                             .getCreateClass(IIndicatorDataset.PACKAGE + "." + datasetName, params, this);
                     this.indicators.add(indicatorDataset);
                 }
-                indicatorDataset.addSeries(series);
 
+                indicatorDataset.addSeries(series);
             } catch (Exception ex) {
+
                 throw new IllegalArgumentException(
                         "Could not construct StrategyData Object. Either indicator was not found or was not clonable Msg: "
                                 + ex.getMessage());
@@ -136,8 +138,8 @@ public class StrategyData extends Worker {
      *
      * @see org.trade.strategy.impl.Worker#doInBackground()
      */
-
     protected Void doInBackground() {
+
         /*
          * We initialize here to keep this instances as part of this worker
          * thread
@@ -145,6 +147,7 @@ public class StrategyData extends Worker {
         try {
 
             this.seriesChanged = false;
+
             do {
                 /*
                  * Lock until a candle arrives. First time in we process the
@@ -157,8 +160,10 @@ public class StrategyData extends Worker {
 
                     while ((!this.seriesChanged && currentBaseCandleCount == lastBaseCandleProcessed)
                             || this.getBaseCandleSeries().isEmpty()) {
+
                         lockStrategyWorker.wait();
                     }
+
                     this.seriesChanged = false;
                 }
 
@@ -171,11 +176,14 @@ public class StrategyData extends Worker {
                          * the base series in the dataset.
                          */
                         boolean newBar = false;
+
                         if (this.currentBaseCandleCount > this.lastBaseCandleProcessed) {
+
                             this.lastBaseCandleProcessed++;
                             newBar = true;
                         }
                         synchronized (this.getBaseCandleDataset()) {
+
                             this.getCandleDataset().getSeries(0).updateSeries(this.getBaseCandleSeries(),
                                     this.lastBaseCandleProcessed, newBar);
                         }
@@ -183,7 +191,6 @@ public class StrategyData extends Worker {
                 }
 
             } while (!this.isDone() && !this.isCancelled());
-
         } catch (InterruptedException interExp) {
             // Do nothing.
         } catch (Exception ex1) {
@@ -198,7 +205,9 @@ public class StrategyData extends Worker {
     }
 
     public void cancel() {
+
         this.setIsCancelled(true);
+
         /*
          * Unlock the doInBackground that may be waiting for a candle. This will
          * cause a clean finish to the process.
@@ -210,6 +219,7 @@ public class StrategyData extends Worker {
     }
 
     protected void done() {
+
         // Free some memory!!
         // this.clearBaseCandleSeries();
     }
@@ -236,6 +246,7 @@ public class StrategyData extends Worker {
                     this.getCandleDataset().getSeries(0).getBarSize() / getBaseCandleSeries().getBarSize(), null);
             updateIndicators(this.getCandleDataset(), newBar);
         }
+
         this.getCandleDataset().getSeries(0).fireSeriesChanged();
     }
 
@@ -298,6 +309,7 @@ public class StrategyData extends Worker {
                 this.getCandleDataset().updateDataset(this.getBaseCandleDataset(), 0, newBar);
             }
         }
+
         return newBar;
     }
 
@@ -316,6 +328,7 @@ public class StrategyData extends Worker {
              * indicators and are shared across Data-sets.
              */
             if (!IndicatorSeries.CandleSeries.equals(indicator.getType(0))) {
+
                 indicator.updateDataset(source, 0, newBar);
             }
         }
@@ -462,17 +475,17 @@ public class StrategyData extends Worker {
     }
 
     /**
-     * Method doDummyData.
+     * Method populateBaseCandleSeries.
      *
      * @param series             CandleSeries
-     * @param start              Tradingday
+     * @param tradingday         Tradingday
      * @param noDays             int
      * @param barSize            int
      * @param longTrade          boolean
      * @param milliSecondsDeplay int
      */
-    public static void doDummyData(CandleSeries series, Tradingday start, int noDays, int barSize, boolean longTrade,
-                                   int milliSecondsDeplay) throws ServiceException {
+    public static void populateBaseCandleSeries(CandleSeries series, Tradingday tradingday, int noDays, int barSize, boolean longTrade,
+                                                int milliSecondsDeplay) throws ServiceException {
 
         double high = 33.98;
         double low = 33.84;
@@ -496,11 +509,11 @@ public class StrategyData extends Worker {
 
         if (barSize == 1) {
 
-            barSize = (int) TradingCalendar.getDurationInSeconds(start.getOpen(), start.getClose());
+            barSize = (int) TradingCalendar.getDurationInSeconds(tradingday.getOpen(), tradingday.getClose());
         }
 
-        long count = (TradingCalendar.getDurationInSeconds(start.getOpen(), start.getClose()) / barSize) * noDays;
-        RegularTimePeriod period = new CandlePeriod(start.getOpen(), barSize);
+        long count = (TradingCalendar.getDurationInSeconds(tradingday.getOpen(), tradingday.getClose()) / barSize) * noDays;
+        RegularTimePeriod period = new CandlePeriod(tradingday.getOpen(), barSize);
         series.clear();
 
         for (int i = 0; i < count; i++) {
@@ -513,7 +526,7 @@ public class StrategyData extends Worker {
             vwap = vwap + (0.02 * longShort);
             period = period.next();
 
-            if (period.getStart().equals(start.getClose())) {
+            if (period.getStart().equals(tradingday.getClose())) {
 
                 period = new CandlePeriod(
                         TradingCalendar.getTradingDayStart(TradingCalendar.getNextTradingDay(period.getStart())),
@@ -523,10 +536,83 @@ public class StrategyData extends Worker {
             try {
 
                 if (milliSecondsDeplay > 0) {
+
                     Thread.sleep(milliSecondsDeplay);
                 }
-            } catch (InterruptedException e) {
-                _log.error(" Thread interupt: {}", e.getMessage());
+            } catch (InterruptedException ex) {
+
+                _log.error(" Thread interrupt: {}", ex.getMessage());
+            }
+        }
+    }
+
+    /**
+     * Method populateCandleSeries.
+     *
+     * @param tradingday         Tradingday
+     * @param noDays             int
+     * @param barSize            int
+     * @param longTrade          boolean
+     * @param milliSecondsDeplay int
+     */
+    public void populateCandleSeries(Tradingday tradingday, int noDays, int barSize, boolean longTrade,
+                                     int milliSecondsDeplay) throws ServiceException {
+
+        double high = 33.98;
+        double low = 33.84;
+        double open = 33.90;
+        double close = 33.95;
+        double vwap = 34.94;
+        int longShort = 1;
+
+        if (!longTrade) {
+
+            high = 34.15;
+            low = 34.01;
+            open = 34.10;
+            close = 34.03;
+            vwap = 34.02;
+            longShort = -1;
+        }
+
+        long volume = 100000;
+        int tradeCount = 100;
+
+        if (barSize == 1) {
+
+            barSize = (int) TradingCalendar.getDurationInSeconds(tradingday.getOpen(), tradingday.getClose());
+        }
+
+        long count = (TradingCalendar.getDurationInSeconds(tradingday.getOpen(), tradingday.getClose()) / barSize) * noDays;
+        RegularTimePeriod period = new CandlePeriod(tradingday.getOpen(), barSize);
+        this.getBaseCandleSeries().clear();
+
+        for (int i = 0; i < count; i++) {
+
+            this.buildCandle(period.getStart(), open, high, low, close, volume, vwap, tradeCount, 1, null);
+            high = high + (0.02 * longShort);
+            low = low + (0.02 * longShort);
+            open = open + (0.02 * longShort);
+            close = close + (0.02 * longShort);
+            vwap = vwap + (0.02 * longShort);
+            period = period.next();
+
+            if (period.getStart().equals(tradingday.getClose())) {
+
+                period = new CandlePeriod(
+                        TradingCalendar.getTradingDayStart(TradingCalendar.getNextTradingDay(period.getStart())),
+                        barSize);
+            }
+
+            try {
+
+                if (milliSecondsDeplay > 0) {
+
+                    Thread.sleep(milliSecondsDeplay);
+                }
+            } catch (InterruptedException ex) {
+
+                _log.error(" Thread interrupt: {}", ex.getMessage());
             }
         }
     }
