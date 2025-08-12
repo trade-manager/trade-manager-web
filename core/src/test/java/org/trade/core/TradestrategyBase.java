@@ -88,8 +88,9 @@ public class TradestrategyBase {
      */
     public static Tradestrategy createTestTradestrategy(TradeService tradeService, String symbol) throws Exception {
 
-       return createTestTradestrategy(tradeService,  symbol, Side.BOT, ChartDays.ONE_DAY, BarSize.FIVE_MIN);
+        return createTestTradestrategy(tradeService, symbol, Side.BOT, ChartDays.ONE_DAY, BarSize.FIVE_MIN);
     }
+
     /**
      * Method getTestTradestrategy.
      *

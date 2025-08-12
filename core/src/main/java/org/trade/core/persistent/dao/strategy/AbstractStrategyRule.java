@@ -1037,16 +1037,6 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
     }
 
     /**
-     * Method getstrategyData.
-     *
-     * @return StrategyData
-     */
-    public StrategyData getstrategyData() {
-
-        return this.strategyData;
-    }
-
-    /**
      * Method getTradestrategy.
      *
      * @return Tradestrategy
