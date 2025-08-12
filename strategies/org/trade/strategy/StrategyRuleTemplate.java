@@ -111,9 +111,11 @@ public class StrategyRuleTemplate extends AbstractStrategyRule {
     public void runStrategy(CandleSeries candleSeries, boolean newBar) {
 
         try {
+
             // Get the current candle
             CandleItem currentCandleItem = this.getCurrentCandle();
             ZonedDateTime startPeriod = currentCandleItem.getPeriod().getStart();
+            _log.info("Strategy started current candle symbol: {} startPeriod: {}", getSymbol(), startPeriod);
 
             /*
              * Position is open kill this Strategy as its job is done. In this
@@ -122,6 +124,7 @@ public class StrategyRuleTemplate extends AbstractStrategyRule {
              * the position.
              */
             if (this.isThereOpenPosition()) {
+
                 _log.info("Strategy complete open position filled symbol: {} startPeriod: {}", getSymbol(), startPeriod);
                 /*
                  * If the order is partial filled check if the risk goes beyond
@@ -129,12 +132,15 @@ public class StrategyRuleTemplate extends AbstractStrategyRule {
                  * will cause it to be marked as filled.
                  */
                 if (OrderStatus.PARTIALFILLED.equals(this.getOpenPositionOrder().getStatus())) {
+
                     if (isRiskViolated(currentCandleItem.getClose(), this.getTradestrategy().getRiskAmount(),
                             this.getOpenPositionOrder().getQuantity(),
                             this.getOpenPositionOrder().getAverageFilledPrice())) {
+
                         this.cancelOrder(this.getOpenPositionOrder());
                     }
                 }
+
                 this.cancel();
                 return;
             }
@@ -142,7 +148,6 @@ public class StrategyRuleTemplate extends AbstractStrategyRule {
             /*
              * Create code here to create orders based on your conditions/rules.
              */
-
             if (startPeriod.equals(this.getTradestrategy().getTradingday().getOpen()
                     .plusMinutes(this.getTradestrategy().getBarSize() / 60)) && newBar) {
 
@@ -158,8 +163,9 @@ public class StrategyRuleTemplate extends AbstractStrategyRule {
              */
             if (!currentCandleItem.getLastUpdateDate().isBefore(this.getTradestrategy().getTradingday().getClose()
                     .minusMinutes(this.getTradestrategy().getBarSize() / 60))) {
+
                 cancelOrdersClosePosition(true);
-                _log.info("Rule 15:55:00 close all open positions: {} Time: {}", getSymbol(), startPeriod);
+                _log.info("Rule 15:55:00 close all open positions: {} startPeriod: {}", getSymbol(), startPeriod);
                 this.cancel();
             }
         } catch (StrategyRuleException ex) {

@@ -56,12 +56,21 @@ import org.trade.core.valuetype.DAOPortfolio;
 import org.trade.core.valuetype.DAOStrategy;
 import org.trade.core.valuetype.Exchange;
 import org.trade.core.valuetype.SECType;
+import org.trade.core.valuetype.Side;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Random;
+
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  *
@@ -78,6 +87,15 @@ public class TradestrategyBase {
      * @return Tradestrategy
      */
     public static Tradestrategy createTestTradestrategy(TradeService tradeService, String symbol) throws Exception {
+
+       return createTestTradestrategy(tradeService,  symbol, Side.BOT, ChartDays.ONE_DAY, BarSize.FIVE_MIN);
+    }
+    /**
+     * Method getTestTradestrategy.
+     *
+     * @return Tradestrategy
+     */
+    public static Tradestrategy createTestTradestrategy(TradeService tradeService, String symbol, String side, Integer chartDays, Integer barSize) throws Exception {
 
         Tradestrategy tradestrategy;
         Strategy strategy = (Strategy) DAOStrategy.newInstance().getObject();
@@ -157,8 +175,8 @@ public class TradestrategyBase {
             tradingday = instanceTradingDay;
         }
 
-        tradestrategy = new Tradestrategy(contract, tradingday, strategy, portfolio, new BigDecimal(100), "BUY", "0",
-                true, ChartDays.ONE_DAY, BarSize.FIVE_MIN);
+        tradestrategy = new Tradestrategy(contract, tradingday, strategy, portfolio, new BigDecimal(100), side, "0",
+                true, chartDays, barSize);
         tradingday.addTradestrategy(tradestrategy);
         tradingday = tradeService.saveTradingday(tradingday);
         Tradestrategy instance = tradingday.getTradestrategies().getLast();
@@ -226,5 +244,56 @@ public class TradestrategyBase {
         // Generates a number between min (inclusive) and max (inclusive)
         Integer number = random.nextInt((mutiplier - 1) + 1);
         return String.format("%0" + length + "d", number);
+    }
+
+    /**
+     * Method readFile.
+     *
+     * @param fileName String
+     * @return String
+     */
+    public static String readFile(String fileName) {
+
+        File file = new File(fileName);
+
+        if (!file.exists()) {
+
+            return null;
+        }
+
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
+
+            String newLine = "\n";
+            StringBuilder sb = new StringBuilder();
+            String line;
+
+            while ((line = bufferedReader.readLine()) != null) {
+
+                sb.append(line).append(newLine);
+            }
+
+            return sb.toString();
+        } catch (IOException ex) {
+
+            fail("Failed to read file msg: " + ex.getMessage());
+        }
+        return null;
+    }
+
+    /**
+     * Method writeFile.
+     *
+     * @param fileName String
+     * @param content  String
+     */
+    public static void writeFile(String fileName, String content) {
+
+        try (OutputStream out = new FileOutputStream(fileName)) {
+
+            out.write(content.getBytes());
+        } catch (IOException ex) {
+
+            fail("Failed to write OutputStream msg: " + ex.getMessage());
+        }
     }
 }

@@ -60,7 +60,6 @@ import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.BarSize;
 
 import java.math.BigDecimal;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -161,12 +160,9 @@ public class CandleIT {
             tradestrategies.add(tradestrategy);
             tradestrategy = tradeService.findTradestrategyById(tradestrategy.getId());
             tradestrategy.setStrategyData(StrategyData.create(tradestrategy));
-            ZonedDateTime prevTradingday = TradingCalendar.addTradingDays(tradestrategy.getTradingday().getOpen(),
-                    (-1 * (tradestrategy.getChartDays() - 1)));
-            StrategyData.doDummyData(tradestrategy.getStrategyData().getBaseCandleSeries(),
-                    Tradingday.newInstance(prevTradingday), 2, BarSize.FIVE_MIN, true, 0);
-            _log.info("addCandleSeries symbol: {} open: {}. close: {}", tradestrategy.getContract().getSymbol(), tradestrategy.getTradingday().getOpen(), tradestrategy.getTradingday().getClose());
+            tradestrategy.getStrategyData().populateCandleSeries(tradestrategy.getTradingday(), tradestrategy.getChartDays(), tradestrategy.getBarSize(), true, 0);
 
+            _log.info("addCandleSeries symbol: {} open: {}. close: {}", tradestrategy.getContract().getSymbol(), tradestrategy.getTradingday().getOpen(), tradestrategy.getTradingday().getClose());
             StrategyData strategyData = tradestrategy.getStrategyData();
             String json = JSONMapper.getJSONString(strategyData);
             _log.info("addCandle Candle JSON: {}", json.toString());

@@ -44,6 +44,8 @@ import org.trade.core.persistent.dao.series.indicator.CandleSeries;
 public interface IStrategyRule {
 
     String PACKAGE = "org.trade.strategy.";
+    String PACKAGE_JS = "org.trade.core.persistent.dao.strategy.";
+    String PACKAGE_JS_STRATEGY_RULE = "StrategyRuleJS";
 
     /**
      * Method runStrategy.

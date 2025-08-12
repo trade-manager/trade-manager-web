@@ -23,6 +23,7 @@ import org.trade.core.persistent.dao.Rule;
 import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.Tradestrategy;
 import org.trade.core.persistent.dao.strategy.IStrategyRule;
+import org.trade.core.persistent.dao.strategy.StrategyRuleJS;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.DynamicCode;
 import org.trade.core.valuetype.BarSize;
@@ -51,18 +52,19 @@ import static org.junit.jupiter.api.Assertions.fail;
 @SpringBootTest
 @ContextConfiguration(classes = ApplicationRepositoryConfig.class,
         initializers = ApplicationProfileInitializer.class)
-public class StrategyPanelIT {
+public class StrategyPanelJSIT {
 
-    private final static Logger _log = LoggerFactory.getLogger(StrategyPanelIT.class);
+    private final static Logger _log = LoggerFactory.getLogger(StrategyPanelJSIT.class);
 
     @Autowired
     private TradeService tradeService;
 
     private static Tradestrategy tradestrategy;
     private static final String symbol = "IBM-" + TradestrategyBase.getRandomNumber(4);
-    private static String templateName;
+
     private static String strategyDir;
-    private static final String tmpDir = "../temp";
+    private static String templateName;
+    private static final String tmpDir = "temp";
 
     /**
      * Method setUpBeforeClass.
@@ -83,19 +85,17 @@ public class StrategyPanelIT {
         assertNotNull(templateName);
         strategyDir = ConfigProperties.getPropAsString("trade.strategy.default.dir");
         assertNotNull(strategyDir);
-        // tradestrategy = TradestrategyBase.createTestTradestrategy(tradeService, symbol);
         tradestrategy = TradestrategyBase.createTestTradestrategy(tradeService, symbol, Side.BOT, ChartDays.ONE_DAY, BarSize.HOUR_MIN);
-
         assertNotNull(tradestrategy);
         Strategy strategy = tradeService.findStrategyById(tradestrategy.getStrategy().getId());
         String fileName = strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/') + strategy.getClassName()
-                + ".java";
+                + ".js";
         String content = TradestrategyBase.readFile(fileName);
 
         if (null != content && strategy.getRules().isEmpty()) {
 
             Rule nextRule = new Rule(strategy, 1, null,
-                    content.getBytes(), ContentType.JAVA);
+                    content.getBytes(), ContentType.JAVASCRIPT);
             strategy.getRules().add(nextRule);
             strategy = this.tradeService.saveAspect(strategy);
         }
@@ -138,7 +138,7 @@ public class StrategyPanelIT {
         JEditorPane sourceText = new JEditorPane();
         JScrollPane jScrollPane = new JScrollPane(sourceText);
         jScrollPane.setEnabled(true);
-        sourceText.setContentType(ContentType.JAVA);
+        sourceText.setContentType(ContentType.JAVASCRIPT);
         sourceText.setFont(new Font("monospaced", Font.PLAIN, 12));
         sourceText.setBackground(Color.white);
         sourceText.setForeground(Color.black);
@@ -146,12 +146,11 @@ public class StrategyPanelIT {
         sourceText.setSelectionColor(Color.red);
         sourceText.setEditable(true);
 
-        String fileName = strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/') + templateName + ".java";
+        String fileName = strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/') + templateName + ".js";
         String content = TradestrategyBase.readFile(fileName);
         assertNotNull(content);
         sourceText.setText(content);
-        assertEquals(content,
-                sourceText.getText());
+        assertEquals(content, sourceText.getText());
         TradestrategyBase.writeFile(fileName, content);
         String content1 = TradestrategyBase.readFile(fileName);
         sourceText.setText(null);
@@ -179,9 +178,7 @@ public class StrategyPanelIT {
 
         try {
 
-            strategyProxy = (IStrategyRule) dynacode.newProxyInstance(IStrategyRule.class,
-                    IStrategyRule.PACKAGE + templateName, param);
-
+            strategyProxy = new StrategyRuleJS(this.tradeService, brokerManagerModel, tradestrategy.getStrategyData(), tradestrategy.getId());
             _log.info("Created Strategy{}", strategyProxy);
             strategyProxy.execute();
 
@@ -202,7 +199,6 @@ public class StrategyPanelIT {
 
             fail("Failed to create dummy data msg: " + ex.getMessage());
         }
-
         assertFalse(tradestrategy.getStrategyData().getBaseCandleSeries().isEmpty());
         strategyProxy.cancel();
     }
@@ -219,33 +215,16 @@ public class StrategyPanelIT {
 
             brokerManagerModel = (IBrokerModel) ClassFactory
                     .getServiceForInterface(IBrokerModel._brokerTest, param, this);
-            strategy = this.tradeService
-                    .findStrategyById(tradestrategy.getStrategy().getId());
+            strategy = this.tradeService.findStrategyById(tradestrategy.getStrategy().getId());
         } catch (Exception ex) {
 
             fail("Failed to create broker msg: " + ex.getMessage());
         }
-        String contentType = ContentType.JAVA;
-        Integer version = 1;
-        Rule latestRule = this.tradeService.findRuleByMaxVersion(strategy, contentType);
 
-        if (null != latestRule) {
-
-            version = latestRule.getRuleVersion();
-        }
-
-        Rule myRule = null;
-
-        for (Rule rule : strategy.getRules()) {
-
-            if (version.equals(rule.getRuleVersion())) {
-                myRule = rule;
-            }
-        }
-
+        Rule myRule = this.tradeService.findRuleByMaxVersion(strategy, ContentType.JAVASCRIPT);
         assertNotNull(myRule);
         String fileDir = tmpDir + "/" + IStrategyRule.PACKAGE.replace('.', '/');
-        String className = strategy.getClassName() + ".java";
+        String className = strategy.getClassName() + ".js";
 
         File srcDirFile = new File(fileDir);
         assertTrue(srcDirFile.mkdirs());
@@ -272,8 +251,7 @@ public class StrategyPanelIT {
 
         try {
 
-            strategyRule = (IStrategyRule) dynacode.newProxyInstance(IStrategyRule.class,
-                    IStrategyRule.PACKAGE + strategy.getClassName(), param);
+            strategyRule = new StrategyRuleJS(this.tradeService, brokerManagerModel, tradestrategy.getStrategyData(), tradestrategy.getId());
         } catch (Exception ex) {
 
             fail("Failed to create strategyRule msg: " + ex.getMessage());
@@ -285,12 +263,12 @@ public class StrategyPanelIT {
     public void doCompile() {
 
         StrategyPanel strategyPanel = new StrategyPanel(this.tradeService);
-        Rule latestRule = this.tradeService.findRuleByMaxVersion(tradestrategy.getStrategy(), ContentType.JAVA);
+        Rule latestRule = this.tradeService.findRuleByMaxVersion(tradestrategy.getStrategy(), ContentType.JAVASCRIPT);
 
         assertNotNull(latestRule);
-        String fileName = strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/') + tradestrategy.getStrategy().getClassName() + ".java";
+        String fileName = strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/') + tradestrategy.getStrategy().getClassName() + ".js";
         String content = TradestrategyBase.readFile(fileName);
-        strategyPanel.setContent(content, ContentType.JAVA);
+        strategyPanel.setContent(content, ContentType.JAVASCRIPT);
 
         assertNotNull(latestRule);
         boolean result = strategyPanel.doCompile(latestRule);
@@ -326,7 +304,7 @@ public class StrategyPanelIT {
         StreamEditorPane textArea = new StreamEditorPane(ContentType.TEXT);
         new JScrollPane(textArea);
         String fileDir = strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/');
-        String className = strategy.getClassName() + ".java";
+        String className = strategy.getClassName() + ".js";
         String fileName = fileDir + className;
         String content = strategyPanel.readFile(fileName);
         textArea.setText(content);

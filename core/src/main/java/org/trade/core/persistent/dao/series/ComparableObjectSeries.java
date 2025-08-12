@@ -135,7 +135,6 @@ public class ComparableObjectSeries extends Series implements Cloneable, Seriali
         if (notify) {
             this.fireSeriesChanged();
         }
-
     }
 
     public int indexOf(Comparable x) {

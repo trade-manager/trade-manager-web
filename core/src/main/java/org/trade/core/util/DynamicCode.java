@@ -134,9 +134,9 @@ public final class DynamicCode {
 
         LoadedClass loadedClass;
 
-        synchronized (loadedClasses) {
+        synchronized (this.loadedClasses) {
 
-            loadedClass = loadedClasses.get(className);
+            loadedClass = this.loadedClasses.get(className);
         }
 
         // first access of a class

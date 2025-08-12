@@ -65,8 +65,8 @@ public abstract class BasePanel extends JPanel implements IMessageListener {
     private static final int CLEAR = 0;
     private static BasePanelMenu menuBar = null;
     private static Frame frame = null;
-    private static JTextField statusBar = null;
-    private static JProgressBar progressBar = null;
+    private static JTextField statusBar = new JTextField();
+    private static JProgressBar progressBar = new JProgressBar();
     private boolean isSelected = false;
 
     public BasePanel() {
@@ -102,10 +102,7 @@ public abstract class BasePanel extends JPanel implements IMessageListener {
      */
     public void setStatusBar(JTextField statusBar) {
 
-        if (BasePanel.statusBar == null) {
-
-            BasePanel.statusBar = statusBar;
-        }
+        BasePanel.statusBar = statusBar;
     }
 
     /**
@@ -115,10 +112,7 @@ public abstract class BasePanel extends JPanel implements IMessageListener {
      */
     public void setProgressBar(JProgressBar progressBar) {
 
-        if (BasePanel.progressBar == null) {
-
-            BasePanel.progressBar = progressBar;
-        }
+        BasePanel.progressBar = progressBar;
     }
 
     /**

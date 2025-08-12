@@ -295,7 +295,7 @@ public class BrokerModelIT extends TradestrategyBase implements IBrokerChangeLis
     @Test
     public void onBrokerData() throws Exception {
 
-        StrategyData.doDummyData(tradestrategy.getStrategyData().getCandleDataset().getSeries(0),
+        StrategyData.populateBaseCandleSeries(tradestrategy.getStrategyData().getCandleDataset().getSeries(0),
                 tradestrategy.getTradingday(), tradestrategy.getChartDays(), tradestrategy.getBarSize(), true, 0);
         backTestbrokerModel.setBrokerDataOnly(true);
         backTestbrokerModel.onBrokerData(tradestrategy, tradestrategy.getTradingday().getOpen(), tradestrategy.getTradingday().getClose());
@@ -313,6 +313,7 @@ public class BrokerModelIT extends TradestrategyBase implements IBrokerChangeLis
                 .getIndicatorByType(IndicatorSeries.HeikinAshiSeries).getSeries(0);
 
         for (int i = 0; i < candleseries.getItemCount(); i++) {
+
             CandleItem candle = (CandleItem) candleseries.getDataItem(i);
             RegularTimePeriod period = candle.getPeriod();
 
@@ -322,33 +323,52 @@ public class BrokerModelIT extends TradestrategyBase implements IBrokerChangeLis
             MovingAverageItem sma2 = null;
 
             int b = heikinAshiSeries.indexOf(period);
+
             if (b > -1) {
+
                 heikinAshiCandle = (CandleItem) heikinAshiSeries.getDataItem(b);
             }
 
             int c = vwapSeries.indexOf(period.getMiddleMillisecond());
+
             if (c > -1) {
+
                 vwap = (VwapItem) vwapSeries.getDataItem(c);
             }
+
             int d = sma1Series.indexOf(period.getMiddleMillisecond());
+
             if (d > -1) {
+
                 sma1 = (MovingAverageItem) sma1Series.getDataItem(d);
             }
+
             int e = sma2Series.indexOf(period.getMiddleMillisecond());
+
             if (e > -1) {
+
                 sma2 = (MovingAverageItem) sma2Series.getDataItem(e);
             }
+
             _log.info("    Period Start: {} Period End: {} H: {} L: {} O: {} C: {} Vol: {} Vwap: {}", period.getStart(), period.getEnd(), new Money(candle.getHigh()), new Money(candle.getLow()), new Money(candle.getOpen()), new Money(candle.getClose()), new Money(candle.getVolume()), new Money(candle.getVwap()));
+
             if (null != heikinAshiCandle) {
+
                 _log.info("HA  Period Start: {} Period End: {} HA H: {} HA L: {} HA O: {} HA C: {} HA Vol: {} HA Vwap: {}", period.getStart(), period.getEnd(), new Money(heikinAshiCandle.getHigh()), new Money(heikinAshiCandle.getLow()), new Money(heikinAshiCandle.getOpen()), new Money(heikinAshiCandle.getClose()), new Money(heikinAshiCandle.getVolume()), new Money(heikinAshiCandle.getVwap()));
             }
+
             if (null != vwap) {
+
                 _log.info("Vwp Period Start: {} Vwap: {}", period, new Money(vwap.getY()));
             }
+
             if (null != sma1) {
+
                 _log.info("S8  Period Start: {} Sma 8: {}", period, new Money(sma1.getY()));
             }
+
             if (null != sma2) {
+
                 _log.info("S20 Period Start: {} Sma 20: {}", period, new Money(sma2.getY()));
             }
         }

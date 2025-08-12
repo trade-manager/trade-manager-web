@@ -53,11 +53,9 @@ import org.trade.core.persistent.dao.Candle;
 import org.trade.core.persistent.dao.Tradestrategy;
 import org.trade.core.persistent.dao.Tradingday;
 import org.trade.core.persistent.dao.series.indicator.CandleDataset;
-import org.trade.core.persistent.dao.series.indicator.StrategyData;
 import org.trade.core.persistent.dao.series.indicator.candle.CandlePeriod;
 import org.trade.core.util.time.RegularTimePeriod;
 import org.trade.core.util.time.TradingCalendar;
-import org.trade.core.valuetype.BarSize;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -131,8 +129,7 @@ public class CandlePeriodIT extends TradestrategyBase {
 
         if (candles.isEmpty()) {
 
-            StrategyData.doDummyData(tradestrategy.getStrategyData().getBaseCandleSeries(),
-                    Tradingday.newInstance(prevTradingday), 2, BarSize.FIVE_MIN, true, 0);
+            tradestrategy.getStrategyData().populateCandleSeries(Tradingday.newInstance(prevTradingday), 2, tradestrategy.getBarSize(), true, 0);
         } else {
 
             CandleDataset.populateSeries(tradestrategy.getStrategyData(), candles);
@@ -159,10 +156,13 @@ public class CandlePeriodIT extends TradestrategyBase {
         List<Candle> candles = tradeService.findCandlesByContractDateRangeBarSize(
                 tradestrategy.getContract(), prevTradingday,
                 tradestrategy.getTradingday().getOpen(), tradestrategy.getBarSize());
+
         if (candles.isEmpty()) {
-            StrategyData.doDummyData(tradestrategy.getStrategyData().getBaseCandleSeries(),
-                    Tradingday.newInstance(prevTradingday), 2, BarSize.FIVE_MIN, true, 0);
+
+            tradestrategy.getStrategyData().populateCandleSeries(Tradingday.newInstance(prevTradingday), 2, tradestrategy.getBarSize(), true, 0);
+
         } else {
+
             CandleDataset.populateSeries(tradestrategy.getStrategyData(), candles);
         }
         assertFalse(tradestrategy.getStrategyData().getBaseCandleSeries().isEmpty());

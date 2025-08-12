@@ -1037,6 +1037,16 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
     }
 
     /**
+     * Method getstrategyData.
+     *
+     * @return StrategyData
+     */
+    public StrategyData getstrategyData() {
+
+        return this.strategyData;
+    }
+
+    /**
      * Method getTradestrategy.
      *
      * @return Tradestrategy
@@ -1279,28 +1289,6 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
      */
     public static void logCandle(AbstractStrategyRule context, Candle candle) {
         _log.debug("{} Symbol: {} startPeriod: {} endPeriod: {} Open: {} High: {} Low: {} Close: {} Volume: {} Vwap: {} TradeCount: {} LastUpdate: {}", context.getClass().getSimpleName(), candle.getContract().getSymbol(), candle.getStartPeriod(), candle.getEndPeriod(), new Money(candle.getOpen()), new Money(candle.getHigh()), new Money(candle.getLow()), new Money(candle.getClose()), new Money(candle.getVolume()), new Money(candle.getVwap()), new Money(candle.getTradeCount()), candle.getLastUpdateDate());
-    }
-
-    /**
-     * @param strategyName
-     * @return
-     */
-    public String getStrategyJS(String strategyName) {
-
-        StringBuilder javascript = new StringBuilder();
-        javascript.append("function runStrategy(candleSeriesJSON, newBar) {\n");
-        javascript.append("  try {\n");
-        javascript.append("     let candleSeries = JSON.parse(candleSeriesJSON);\n");
-        javascript.append("     gs.log('Info:  AbstractStrategyRule::runStrategy key: ' + candleSeries.key);\n");
-        javascript.append("     // Get the current candle\n");
-        javascript.append("     let currentCandleItem = JSON.parse(gs.getCurrentCandleJSON());\n");
-        javascript.append("     //gs.log(1, 100,'currentCandleItem: ' + currentCandleItem.candle.side);\n");
-        javascript.append("     return candleSeries.key\n");
-        javascript.append("  } catch (ex) {\n");
-        javascript.append("     gs.error(1, 100, 'Error: process javascript msg: ' + ex.getMessage());\n");
-        javascript.append("  }\n");
-        javascript.append("}");
-        return javascript.toString();
     }
 
     /**
