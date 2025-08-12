@@ -40,6 +40,7 @@ import org.slf4j.LoggerFactory;
 import org.trade.core.factory.ClassFactory;
 import org.trade.core.persistent.ServiceException;
 import org.trade.core.persistent.dao.Candle;
+import org.trade.core.persistent.dao.Contract;
 import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.Tradestrategy;
 import org.trade.core.persistent.dao.Tradingday;
@@ -487,51 +488,11 @@ public class StrategyData extends Worker {
     public static void populateBaseCandleSeries(CandleSeries series, Tradingday tradingday, int noDays, int barSize, boolean longTrade,
                                                 int milliSecondsDeplay) throws ServiceException {
 
-        double high = 33.98;
-        double low = 33.84;
-        double open = 33.90;
-        double close = 33.95;
-        double vwap = 34.94;
-        int longShort = 1;
+        LinkedList<Candle> candles = createCandles( tradingday,  noDays,  barSize,  longTrade);
 
-        if (!longTrade) {
+        for (Candle candle : candles) {
 
-            high = 34.15;
-            low = 34.01;
-            open = 34.10;
-            close = 34.03;
-            vwap = 34.02;
-            longShort = -1;
-        }
-
-        long volume = 100000;
-        int tradeCount = 100;
-
-        if (barSize == 1) {
-
-            barSize = (int) TradingCalendar.getDurationInSeconds(tradingday.getOpen(), tradingday.getClose());
-        }
-
-        long count = (TradingCalendar.getDurationInSeconds(tradingday.getOpen(), tradingday.getClose()) / barSize) * noDays;
-        RegularTimePeriod period = new CandlePeriod(tradingday.getOpen(), barSize);
-        series.clear();
-
-        for (int i = 0; i < count; i++) {
-
-            series.buildCandle(period.getStart(), open, high, low, close, volume, vwap, tradeCount, 1, null);
-            high = high + (0.02 * longShort);
-            low = low + (0.02 * longShort);
-            open = open + (0.02 * longShort);
-            close = close + (0.02 * longShort);
-            vwap = vwap + (0.02 * longShort);
-            period = period.next();
-
-            if (period.getStart().equals(tradingday.getClose())) {
-
-                period = new CandlePeriod(
-                        TradingCalendar.getTradingDayStart(TradingCalendar.getNextTradingDay(period.getStart())),
-                        barSize);
-            }
+            series.buildCandle(candle.getStartPeriod(), candle.getOpen().doubleValue(), candle.getHigh().doubleValue(), candle.getLow().doubleValue(), candle.getClose().doubleValue(), candle.getVolume(), candle.getVwap().doubleValue(), candle.getTradeCount(), 1, null);
 
             try {
 
@@ -558,51 +519,11 @@ public class StrategyData extends Worker {
     public void populateCandleSeries(Tradingday tradingday, int noDays, int barSize, boolean longTrade,
                                      int milliSecondsDeplay) throws ServiceException {
 
-        double high = 33.98;
-        double low = 33.84;
-        double open = 33.90;
-        double close = 33.95;
-        double vwap = 34.94;
-        int longShort = 1;
+        LinkedList<Candle> candles = createCandles( tradingday,  noDays,  barSize,  longTrade);
 
-        if (!longTrade) {
+        for (Candle candle : candles) {
 
-            high = 34.15;
-            low = 34.01;
-            open = 34.10;
-            close = 34.03;
-            vwap = 34.02;
-            longShort = -1;
-        }
-
-        long volume = 100000;
-        int tradeCount = 100;
-
-        if (barSize == 1) {
-
-            barSize = (int) TradingCalendar.getDurationInSeconds(tradingday.getOpen(), tradingday.getClose());
-        }
-
-        long count = (TradingCalendar.getDurationInSeconds(tradingday.getOpen(), tradingday.getClose()) / barSize) * noDays;
-        RegularTimePeriod period = new CandlePeriod(tradingday.getOpen(), barSize);
-        this.getBaseCandleSeries().clear();
-
-        for (int i = 0; i < count; i++) {
-
-            this.buildCandle(period.getStart(), open, high, low, close, volume, vwap, tradeCount, 1, null);
-            high = high + (0.02 * longShort);
-            low = low + (0.02 * longShort);
-            open = open + (0.02 * longShort);
-            close = close + (0.02 * longShort);
-            vwap = vwap + (0.02 * longShort);
-            period = period.next();
-
-            if (period.getStart().equals(tradingday.getClose())) {
-
-                period = new CandlePeriod(
-                        TradingCalendar.getTradingDayStart(TradingCalendar.getNextTradingDay(period.getStart())),
-                        barSize);
-            }
+            this.buildCandle(candle.getStartPeriod(), candle.getOpen().doubleValue(), candle.getHigh().doubleValue(), candle.getLow().doubleValue(), candle.getClose().doubleValue(), candle.getVolume(), candle.getVwap().doubleValue(), candle.getTradeCount(), 1, null);
 
             try {
 
@@ -635,5 +556,70 @@ public class StrategyData extends Worker {
                 series.printSeries();
             }
         }
+    }
+
+    /**
+     * create a set of candles createCandles
+     *
+     *
+     * @param tradingday
+     * @param noDays
+     * @param barSize
+     * @param longTrade
+     * @return
+     */
+    private static LinkedList<Candle> createCandles(Tradingday tradingday, int noDays, int barSize, boolean longTrade) {
+
+        LinkedList<Candle> candles = new LinkedList<>();
+        double high = 33.98;
+        double low = 33.84;
+        double open = 33.90;
+        double close = 33.95;
+        double vwap = 34.94;
+        int longShort = 1;
+
+        if (!longTrade) {
+
+            high = 34.15;
+            low = 34.01;
+            open = 34.10;
+            close = 34.03;
+            vwap = 34.02;
+            longShort = -1;
+        }
+
+        long volume = 100000;
+        int tradeCount = 100;
+
+        if (barSize == 1) {
+
+            barSize = (int) TradingCalendar.getDurationInSeconds(tradingday.getOpen(), tradingday.getClose());
+        }
+
+        long count = (TradingCalendar.getDurationInSeconds(tradingday.getOpen(), tradingday.getClose()) / barSize) * noDays;
+        RegularTimePeriod period = new CandlePeriod(tradingday.getOpen(), barSize);
+
+        for (int i = 0; i < count; i++) {
+
+            Candle candle = new Candle(null,  period,  open,  high,
+             low,  close,  volume,  vwap,  tradeCount,  TradingCalendar.getDateTimeNowMarketTimeZone() );
+            candles.add(candle);
+
+            high = high + (0.02 * longShort);
+            low = low + (0.02 * longShort);
+            open = open + (0.02 * longShort);
+            close = close + (0.02 * longShort);
+            vwap = vwap + (0.02 * longShort);
+            period = period.next();
+
+            if (period.getStart().equals(tradingday.getClose())) {
+
+                period = new CandlePeriod(
+                        TradingCalendar.getTradingDayStart(TradingCalendar.getNextTradingDay(period.getStart())),
+                        barSize);
+            }
+        }
+
+        return candles;
     }
 }
