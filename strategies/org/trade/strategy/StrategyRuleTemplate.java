@@ -77,7 +77,15 @@ public class StrategyRuleTemplate extends AbstractStrategyRule {
      */
 
     public StrategyRuleTemplate(TradeService tradeService, IBrokerModel brokerManagerModel, StrategyData strategyData, Long tradestrategyId) {
+
         super(tradeService, brokerManagerModel, strategyData, tradestrategyId);
+    }
+
+    /**
+     * Method call once to initialize the strategy in the worker thread.
+     */
+    public void initStrategy() {
+
     }
 
     /**

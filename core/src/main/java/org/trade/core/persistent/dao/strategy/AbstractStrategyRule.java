@@ -127,6 +127,12 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
     }
 
     /**
+     * Method initStrategy. This method is once in the thread that runs the strategy.
+     * <p>
+     */
+    public abstract void initStrategy();
+
+    /**
      * Method runStrategy. This method is called every time the candleSeries is
      * either updated or a candleItem is added.
      * <p>
@@ -157,7 +163,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
          * Unlock the doInBackground that may be waiting for a candle. This will
          * cause a clean finish to the process.
          */
-        _log.info("Started strategyClass: {} canceled.", this.getClass().getName());
+        _log.info("Cancelled strategyClass: {}.", this.getClass().getName());
 
         synchronized (lockStrategyWorker) {
 
@@ -1282,7 +1288,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
     }
 
     /**
-     * The main process thread. This will run until it is either canceled or is
+     * The main process thread. This will run until it is either cancelled or is
      * done.
      * <p>
      * (non-Javadoc)
@@ -1309,6 +1315,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
             currentCandleCount = this.strategyData.getBaseCandleSeries().getItemCount() - 1;
             seriesChanged = true;
             reFreshPositionOrders();
+            initStrategy();
 
             do {
 

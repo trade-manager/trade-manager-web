@@ -203,8 +203,8 @@ public class StrategyPanelIT {
             fail("Failed to create dummy data msg: " + ex.getMessage());
         }
 
-        assertFalse(tradestrategy.getStrategyData().getBaseCandleSeries().isEmpty());
         strategyProxy.cancel();
+        assertFalse(tradestrategy.getStrategyData().getBaseCandleSeries().isEmpty());
     }
 
     @Test

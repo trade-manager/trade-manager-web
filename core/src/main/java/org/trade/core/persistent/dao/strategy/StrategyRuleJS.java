@@ -68,6 +68,9 @@ public class StrategyRuleJS extends AbstractStrategyRule {
 
     private static final JSONObject result = new JSONObject("{'error': false, 'message': ''}");
     private Rule rule = null;
+    private volatile Context context;
+    private static Scriptable localScope;
+    private static Function jsFunction = null;
 
     /**
      * Constructor for AbstractStrategyRule. An abstract class that implements
@@ -83,7 +86,7 @@ public class StrategyRuleJS extends AbstractStrategyRule {
      */
     public StrategyRuleJS(TradeService tradeService, IBrokerModel brokerModel, StrategyData strategyData, Long tradestrategyId, Rule rule) {
 
-        super(tradeService, brokerModel, strategyData, tradestrategyId);
+        this(tradeService, brokerModel, strategyData, tradestrategyId);
         this.rule = rule;
     }
 
@@ -104,6 +107,58 @@ public class StrategyRuleJS extends AbstractStrategyRule {
     }
 
     /**
+     * Method call once to initialize the strategy in the worker thread.
+     */
+    public void initStrategy() {
+
+        context = Context.enter();
+        // Set the JavaScript language version (ECMAScript 6)
+        context.setLanguageVersion(Context.VERSION_ES6);
+
+        //Scriptable globalScope = context.initSafeStandardObjects();
+        Scriptable globalScope = context.initStandardObjects();
+
+        // Wrap the Java object for use in the JavaScript environment
+        Object gsJsObject = Context.javaToJS(this, globalScope);
+
+        // Make the Java object available in JavaScript as the global variable 'gs'
+        ScriptableObject.putProperty(globalScope, "gs", gsJsObject);
+
+        // Create  a local scope
+        localScope = context.newObject(globalScope);
+        String strategyName = "";
+        String codeJS = null;
+
+        if (null != this.getTradestrategy()) {
+
+            strategyName = this.getTradestrategy().getStrategy().getName();
+            Rule rule = this.getTradeService().findRuleByMaxVersion(this.getTradestrategy().getStrategy(), ContentType.JAVASCRIPT);
+            codeJS = new String(rule.getRule());
+        } else {
+
+            // This is a test
+            if (null != this.rule) {
+
+                codeJS = new String(this.rule.getRule());
+            }
+        }
+
+        if (null != codeJS) {
+
+            context.evaluateString(localScope, codeJS, strategyName, 1, null);
+            Object jsFunctionObj = localScope.get("runStrategy", localScope);
+
+            if (!(jsFunctionObj instanceof Function)) {
+
+                _log.error("Error: StrategyRuleJS::runStrategy runStrategy is not a function");
+            }
+
+            jsFunction = (Function) jsFunctionObj;
+        }
+
+    }
+
+    /**
      * Method runStrategy. This method is called every time the candleSeries is
      * either updated or a candleItem is added.
      * <p>
@@ -121,46 +176,8 @@ public class StrategyRuleJS extends AbstractStrategyRule {
      */
     public void runStrategy(CandleSeries candleSeries, boolean newBar) {
 
-        try (Context context = Context.enter()) {
+        try {
 
-            // Set the JavaScript language version (ECMAScript 6)
-            context.setLanguageVersion(Context.VERSION_ES6);
-
-            //Scriptable globalScope = context.initSafeStandardObjects();
-            Scriptable globalScope = context.initStandardObjects();
-
-            // Wrap the Java object for use in the JavaScript environment
-            Object gsJsObject = Context.javaToJS(this, globalScope);
-
-            // Make the Java object available in JavaScript as the global variable 'gs'
-            ScriptableObject.putProperty(globalScope, "gs", gsJsObject);
-
-            // Create  a local scope
-            Scriptable localScope = context.newObject(globalScope);
-            String strategyName = "";
-            String codeJS = "";
-
-            if (null != this.rule) {
-
-                codeJS = new String(this.rule.getRule());
-            }
-
-            // This is a test
-            if (null != this.getTradestrategy()) {
-
-                Rule rule = this.getTradeService().findRuleByMaxVersion(this.getTradestrategy().getStrategy(), ContentType.JAVASCRIPT);
-                codeJS = new String(rule.getRule());
-            }
-
-            context.evaluateString(localScope, codeJS, strategyName, 1, null);
-            Object jsFunctionObj = localScope.get("runStrategy", localScope);
-
-            if (!(jsFunctionObj instanceof Function)) {
-
-                _log.error("Error: StrategyRuleJS::runStrategy runStrategy is not a function");
-            }
-
-            Function jsFunction = (Function) jsFunctionObj;
             String candleSeriesJSON = JSONMapper.getJSONString(candleSeries);
             Object[] functionParams = new Object[]{candleSeriesJSON, true};
             Object jsResult = jsFunction.call(context, localScope, localScope, functionParams);
@@ -192,18 +209,13 @@ public class StrategyRuleJS extends AbstractStrategyRule {
      */
     public boolean nil(Object value) {
 
-        if (null == value || value.equals("undefined")) {
-
-            return true;
-        }
-        return false;
+        return null == value || value.equals("undefined");
     }
-
 
     /**
      * Method get current candle.
      *
-     * @return
+     * @return JSONObject
      */
     public JSONObject getCurrentCandleJSON() {
 
@@ -223,5 +235,25 @@ public class StrategyRuleJS extends AbstractStrategyRule {
         }
 
         return result;
+    }
+
+    protected void done() {
+
+        try {
+
+            super.done();
+
+            if (null != context) {
+
+                context.exit();
+                _log.info("Info: StrategyRuleJS::done closed context successfully.");
+            }
+        } catch (Exception ex) {
+
+            _log.error("Error: StrategyRuleJS::done msg: {}, context: {}", ex.getMessage(), context);
+        } finally {
+
+            context = null;
+        }
     }
 }

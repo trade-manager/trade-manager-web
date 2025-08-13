@@ -35,7 +35,8 @@
  */
 package org.trade.core.util;
 
-import javax.swing.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The StrategyWorker is an abstract class that you subclass to perform work in
@@ -66,6 +67,7 @@ import javax.swing.*;
  */
 public abstract class Worker {
 
+    private final static Logger _log = LoggerFactory.getLogger(Worker.class);
     public Thread thread;
     protected boolean isDone = false;
     protected boolean isCancelled = false;
@@ -178,11 +180,15 @@ public abstract class Worker {
 
         Thread t = threadVar.get();
 
-        if (t == null)
+        if (t == null) {
             return false;
+        }
 
-        if (t.getState().compareTo(Thread.State.NEW) == 0)
+
+        if (t.getState().compareTo(Thread.State.NEW) == 0) {
             return false;
+        }
+
 
         return t.getState().compareTo(Thread.State.TERMINATED) != 0;
     }
@@ -313,7 +319,9 @@ public abstract class Worker {
                     threadVar.clear();
                 }
 
-                SwingUtilities.invokeLater(doFinished);
+                // Use the same thread.
+                done();
+                //SwingUtilities.invokeLater(doFinished);
             }
         };
 

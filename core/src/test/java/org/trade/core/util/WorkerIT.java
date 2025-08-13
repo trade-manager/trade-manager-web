@@ -33,7 +33,7 @@
  * -------
  *
  */
-package org.trade.core.strategy;
+package org.trade.core.util;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -48,22 +48,14 @@ import org.springframework.test.context.ContextConfiguration;
 import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
-import org.trade.core.broker.IBrokerModel;
-import org.trade.core.factory.ClassFactory;
 import org.trade.core.persistent.TradeService;
-import org.trade.core.persistent.dao.Rule;
-import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.Tradestrategy;
-import org.trade.core.persistent.dao.strategy.IStrategyRule;
-import org.trade.core.persistent.dao.strategy.StrategyRuleJS;
-import org.trade.core.properties.ConfigProperties;
+import org.trade.core.persistent.dao.series.indicator.CandleSeries;
 import org.trade.core.valuetype.BarSize;
 import org.trade.core.valuetype.ChartDays;
-import org.trade.core.valuetype.ContentType;
 import org.trade.core.valuetype.Side;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.Serial;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -73,19 +65,15 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @SpringBootTest
 @ContextConfiguration(classes = ApplicationRepositoryConfig.class,
         initializers = ApplicationProfileInitializer.class)
-public class AbstractStrategyJSIT {
+public class WorkerIT {
 
-    private final static Logger _log = LoggerFactory.getLogger(AbstractStrategyJSIT.class);
+    private final static Logger _log = LoggerFactory.getLogger(WorkerIT.class);
 
     @Autowired
     private TradeService tradeService;
 
     private static final String symbol = "TEST-" + TradestrategyBase.getRandomNumber(4);
     private static Tradestrategy tradestrategy;
-    private static IBrokerModel brokerModel;
-    private static String templateName;
-    private static String strategyDir;
-    private static IStrategyRule strategyProxy;
 
     /**
      * Method setUpBeforeClass.
@@ -100,44 +88,9 @@ public class AbstractStrategyJSIT {
     @BeforeEach
     public void setUp() throws Exception {
 
-        List<Object> param = new ArrayList<>();
-        param.add(tradeService);
-        brokerModel = (IBrokerModel) ClassFactory.getServiceForInterface(IBrokerModel._brokerTest, param, this);
-        templateName = ConfigProperties.getPropAsString("trade.strategy.template");
-        strategyDir = ConfigProperties.getPropAsString("trade.strategy.default.dir");
-        Integer clientId = ConfigProperties.getPropAsInt("trade.tws.clientId");
-        Integer port = Integer.valueOf(ConfigProperties.getPropAsString("trade.tws.port"));
-        String host = ConfigProperties.getPropAsString("trade.tws.host");
-        brokerModel.onConnect(host, port, clientId);
-
         tradestrategy = TradestrategyBase.createTestTradestrategy(tradeService, symbol, Side.BOT, ChartDays.ONE_DAY, BarSize.HOUR_MIN);
         assertNotNull(tradestrategy);
-        Strategy strategy = tradeService.findStrategyById(tradestrategy.getStrategy().getId());
-        String fileName = strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/') + strategy.getClassName()
-                + ".js";
-        String content = TradestrategyBase.readFile(fileName);
-
-        if (null != content && strategy.getRules().isEmpty()) {
-
-            Rule nextRule = new Rule(strategy, 1, null,
-                    content.getBytes(), ContentType.JAVASCRIPT);
-            strategy.getRules().add(nextRule);
-            strategy = this.tradeService.saveAspect(strategy);
-        }
-
-        strategyProxy = new StrategyRuleJS(tradeService, brokerModel, tradestrategy.getStrategyData(),
-                tradestrategy.getId(), strategy.getRules().getFirst());
-        assertNotNull(strategyProxy);
-        strategyProxy.execute();
-
-        while (!strategyProxy.isWaiting()) {
-
-            Thread.sleep(250);
-        }
-
         _log.info(" Test Initialized");
-        tradestrategy.getStrategyData().populateCandleSeries(tradestrategy.getTradingday(), tradestrategy.getChartDays(), tradestrategy.getBarSize(), Side.BOT.equals(tradestrategy.getSide()), 250);
-        strategyProxy.cancel();
     }
 
     /**
@@ -146,7 +99,6 @@ public class AbstractStrategyJSIT {
     @AfterEach
     public void tearDown() throws Exception {
 
-        brokerModel.onDisconnect();
         TradestrategyBase.clearDBData(tradeService, tradestrategy);
     }
 
@@ -158,7 +110,55 @@ public class AbstractStrategyJSIT {
     }
 
     @Test
-    public void runJavaScript() {
+    public void entryRuleNoEntryByRT() {
 
+        WorkerTest strategyProxy = new WorkerIT.WorkerTest();
+        strategyProxy.execute();
+    }
+
+    /**
+     *
+     */
+    public static class WorkerTest extends Worker {
+
+        /**
+         *
+         */
+        @Serial
+        private static final long serialVersionUID = -3345516391123859703L;
+
+        /**
+         * Default Constructor
+         */
+
+        public WorkerTest() {
+
+
+        }
+
+        /**
+         * Method call once to initialize the strategy in the worker thread.
+         */
+        public void initStrategy() {
+            _log.info("Info: WorkerTest::initStrategy");
+        }
+
+        public void runStrategy(CandleSeries candleSeries, boolean newBar) {
+            _log.info("Info: WorkerTest::runStrategy");
+        }
+
+        protected Void doInBackground() {
+            initStrategy();
+            CandleSeries candleSeries = new CandleSeries(tradestrategy.getContract().getSymbol(),
+                    tradestrategy.getContract(), tradestrategy.getBarSize(), tradestrategy.getTradingday().getOpen(),
+                    tradestrategy.getTradingday().getClose());
+            runStrategy(candleSeries, true);
+            _log.info("Info: WorkerTest::doInBackground");
+            return null;
+        }
+
+        protected void done() {
+            _log.info("Info: WorkerTest::done");
+        }
     }
 }

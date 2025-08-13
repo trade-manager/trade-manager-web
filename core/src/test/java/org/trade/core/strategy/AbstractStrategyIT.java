@@ -240,8 +240,6 @@ public class AbstractStrategyIT {
             }
         }
 
-        //StrategyData.populateBaseCandleSeries(tradestrategy.getStrategyData().getBaseCandleSeries(),
-        //        tradestrategy.getTradingday(), 1, BarSize.FIVE_MIN, Side.BOT.equals(tradestrategy.getSide()), 0);
         tradestrategy.getStrategyData().populateCandleSeries(tradestrategy.getTradingday(), tradestrategy.getChartDays(), tradestrategy.getBarSize(), Side.BOT.equals(tradestrategy.getSide()), 0);
         strategyProxy.cancel();
     }
@@ -694,7 +692,15 @@ public class AbstractStrategyIT {
          */
 
         public StrategyRuleTest(TradeService tradeService, IBrokerModel brokerManagerModel, StrategyData strategyData, Long tradestrategyId) {
+
             super(tradeService, brokerManagerModel, strategyData, tradestrategyId);
+        }
+
+        /**
+         * Method call once to initialize the strategy in the worker thread.
+         */
+        public void initStrategy() {
+
         }
 
         /*

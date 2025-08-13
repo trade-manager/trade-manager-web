@@ -40,7 +40,6 @@ import org.slf4j.LoggerFactory;
 import org.trade.core.factory.ClassFactory;
 import org.trade.core.persistent.ServiceException;
 import org.trade.core.persistent.dao.Candle;
-import org.trade.core.persistent.dao.Contract;
 import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.Tradestrategy;
 import org.trade.core.persistent.dao.Tradingday;
@@ -488,7 +487,7 @@ public class StrategyData extends Worker {
     public static void populateBaseCandleSeries(CandleSeries series, Tradingday tradingday, int noDays, int barSize, boolean longTrade,
                                                 int milliSecondsDeplay) throws ServiceException {
 
-        LinkedList<Candle> candles = createCandles( tradingday,  noDays,  barSize,  longTrade);
+        LinkedList<Candle> candles = createCandles(tradingday, noDays, barSize, longTrade);
 
         for (Candle candle : candles) {
 
@@ -519,7 +518,7 @@ public class StrategyData extends Worker {
     public void populateCandleSeries(Tradingday tradingday, int noDays, int barSize, boolean longTrade,
                                      int milliSecondsDeplay) throws ServiceException {
 
-        LinkedList<Candle> candles = createCandles( tradingday,  noDays,  barSize,  longTrade);
+        LinkedList<Candle> candles = createCandles(tradingday, noDays, barSize, longTrade);
 
         for (Candle candle : candles) {
 
@@ -561,7 +560,6 @@ public class StrategyData extends Worker {
     /**
      * create a set of candles createCandles
      *
-     *
      * @param tradingday
      * @param noDays
      * @param barSize
@@ -601,8 +599,8 @@ public class StrategyData extends Worker {
 
         for (int i = 0; i < count; i++) {
 
-            Candle candle = new Candle(null,  period,  open,  high,
-             low,  close,  volume,  vwap,  tradeCount,  TradingCalendar.getDateTimeNowMarketTimeZone() );
+            Candle candle = new Candle(null, period, open, high,
+                    low, close, volume, vwap, tradeCount, TradingCalendar.getDateTimeNowMarketTimeZone());
             candles.add(candle);
 
             high = high + (0.02 * longShort);
