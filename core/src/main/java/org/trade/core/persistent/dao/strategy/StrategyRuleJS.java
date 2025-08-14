@@ -45,6 +45,8 @@ import org.slf4j.LoggerFactory;
 import org.trade.core.broker.IBrokerModel;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.Rule;
+import org.trade.core.persistent.dao.TradeOrder;
+import org.trade.core.persistent.dao.TradeOrderDto;
 import org.trade.core.persistent.dao.series.indicator.CandleSeries;
 import org.trade.core.persistent.dao.series.indicator.StrategyData;
 import org.trade.core.persistent.dao.series.indicator.candle.CandleItem;
@@ -111,51 +113,56 @@ public class StrategyRuleJS extends AbstractStrategyRule {
      */
     public void initStrategy() {
 
-        context = Context.enter();
-        // Set the JavaScript language version (ECMAScript 6)
-        context.setLanguageVersion(Context.VERSION_ES6);
+        try {
+            context = Context.enter();
+            // Set the JavaScript language version (ECMAScript 6)
+            context.setLanguageVersion(Context.VERSION_ES6);
 
-        //Scriptable globalScope = context.initSafeStandardObjects();
-        Scriptable globalScope = context.initStandardObjects();
+            //Scriptable globalScope = context.initSafeStandardObjects();
+            Scriptable globalScope = context.initStandardObjects();
 
-        // Wrap the Java object for use in the JavaScript environment
-        Object gsJsObject = Context.javaToJS(this, globalScope);
+            // Wrap the Java object for use in the JavaScript environment
+            Object gsJsObject = Context.javaToJS(this, globalScope);
 
-        // Make the Java object available in JavaScript as the global variable 'gs'
-        ScriptableObject.putProperty(globalScope, "gs", gsJsObject);
+            // Make the Java object available in JavaScript as the global variable 'gs'
+            ScriptableObject.putProperty(globalScope, "gs", gsJsObject);
 
-        // Create  a local scope
-        localScope = context.newObject(globalScope);
-        String strategyName = "";
-        String codeJS = null;
+            // Create  a local scope
+            localScope = context.newObject(globalScope);
+            String strategyName = "";
+            String codeJS = null;
 
-        if (null != this.getTradestrategy()) {
+            if (null != this.getTradestrategy()) {
 
-            strategyName = this.getTradestrategy().getStrategy().getName();
-            Rule rule = this.getTradeService().findRuleByMaxVersion(this.getTradestrategy().getStrategy(), ContentType.JAVASCRIPT);
-            codeJS = new String(rule.getRule());
-        } else {
+                strategyName = this.getTradestrategy().getStrategy().getName();
+                Rule rule = this.getTradeService().findRuleByMaxVersion(this.getTradestrategy().getStrategy(), ContentType.JAVASCRIPT);
+                codeJS = new String(rule.getRule());
+            } else {
 
-            // This is a test
-            if (null != this.rule) {
+                // This is a test
+                if (null != this.rule) {
 
-                codeJS = new String(this.rule.getRule());
-            }
-        }
-
-        if (null != codeJS) {
-
-            context.evaluateString(localScope, codeJS, strategyName, 1, null);
-            Object jsFunctionObj = localScope.get("runStrategy", localScope);
-
-            if (!(jsFunctionObj instanceof Function)) {
-
-                _log.error("Error: StrategyRuleJS::runStrategy runStrategy is not a function");
+                    codeJS = new String(this.rule.getRule());
+                }
             }
 
-            jsFunction = (Function) jsFunctionObj;
-        }
+            if (null != codeJS) {
 
+                context.evaluateString(localScope, codeJS, strategyName, 1, null);
+                Object jsFunctionObj = localScope.get("runStrategy", localScope);
+
+                if (!(jsFunctionObj instanceof Function)) {
+
+                    _log.error("Error: StrategyRuleJS::runStrategy runStrategy is not a function");
+                }
+
+                jsFunction = (Function) jsFunctionObj;
+            }
+        } catch (Exception ex) {
+
+            _log.error("Error: StrategyRuleJS::initStrategy msg: {}", ex.getMessage());
+            this.cancel();
+        }
     }
 
     /**
@@ -185,6 +192,7 @@ public class StrategyRuleJS extends AbstractStrategyRule {
         } catch (Exception ex) {
 
             _log.error("Error: StrategyRuleJS::runStrategy msg: {}", ex.getMessage());
+            this.cancel();
         }
     }
 
@@ -225,16 +233,59 @@ public class StrategyRuleJS extends AbstractStrategyRule {
 
             if (null != candle) {
 
-                result.put("candle", new JSONObject(JSONMapper.getJSONString(candle)));
+                result.put("data", new JSONObject(JSONMapper.getJSONString(candle)));
             }
         } catch (Exception ex) {
 
             result.put("error", true);
-            result.put("message", "Error: StrategyRuleJSWrapper::getCurrentCandle msg: " + ex.getMessage());
+            result.put("message", "Error: StrategyRuleJS::getCurrentCandleJSON msg: " + ex.getMessage());
             _log.error(result.getString("message"));
         }
 
         return result;
+    }
+
+    public JSONObject getOpenPositionOrderJSON() {
+
+        try {
+
+            TradeOrder tradeOrder = this.getOpenPositionOrder();
+
+            if (null != tradeOrder) {
+
+                result.put("data", new JSONObject(JSONMapper.getJSONString(tradeOrder)));
+            }
+        } catch (Exception ex) {
+
+            result.put("error", true);
+            result.put("message", "Error: StrategyRuleJS::getOpenPositionOrderJSON msg: " + ex.getMessage());
+            _log.error(result.getString("message"));
+        }
+
+        return result;
+    }
+
+    /**
+     * Method cancel a tradeOrder
+     *
+     * @return JSONObject
+     */
+    public void getCancelOrderJSON(String tradeOrderJSON) {
+
+        try {
+            TradeOrderDto tradeOrderDto = JSONMapper.getDTO(tradeOrderJSON, TradeOrderDto.class);
+            TradeOrder tradeOrder = JSONMapper.convertToEntity(tradeOrderDto, TradeOrder.class);
+
+            if (null != tradeOrder) {
+
+                this.cancelOrder(tradeOrder);
+            }
+        } catch (Exception ex) {
+
+            result.put("error", true);
+            result.put("message", "Error: StrategyRuleJS::getCurrentCandleJSON msg: " + ex.getMessage());
+            _log.error(result.getString("message"));
+        }
     }
 
     protected void done() {

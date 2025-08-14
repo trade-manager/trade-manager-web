@@ -37,11 +37,6 @@ package org.trade.core.persistent.dao;
 
 // Generated Feb 21, 2011 2:18:03 PM by Hibernate Tools 3.4.0.CR1
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 import org.trade.core.dao.Aspect;
 import org.trade.core.valuetype.AccountType;
 import org.trade.core.valuetype.Currency;
@@ -59,9 +54,7 @@ import java.util.List;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-@Entity
-@Table(name = "account")
-public class Account extends Aspect implements Serializable, Cloneable {
+public class AccountDto extends Aspect implements Serializable, Cloneable {
 
     /**
      *
@@ -69,43 +62,20 @@ public class Account extends Aspect implements Serializable, Cloneable {
     @Serial
     private static final long serialVersionUID = 5891080561163346464L;
 
-    @Column(name = "name", unique = true, nullable = false, length = 45)
     private String name;
-
-    @Column(name = "account_number", unique = true, nullable = false, length = 20)
     private String accountNumber;
-
-    @Column(name = "currency", nullable = false, length = 3)
     private String currency;
-
-    @Column(name = "alias", unique = true, length = 45)
     private String alias;
-
-    @Column(name = "account_type", length = 20)
     private String accountType;
-
-    @Column(name = "available_funds", precision = 10)
     private BigDecimal availableFunds = new BigDecimal(0);
-
-    @Column(name = "buying_power", precision = 10)
     private BigDecimal buyingPower = new BigDecimal(0);
-
-    @Column(name = "cash_balance", precision = 10)
     private BigDecimal cashBalance = new BigDecimal(0);
-
-    @Column(name = "gross_position_value", precision = 10)
     private BigDecimal grossPositionValue = new BigDecimal(0);
-
-    @Column(name = "realized_pn_l", precision = 10)
     private BigDecimal realizedPnL = new BigDecimal(0);
-
-    @Column(name = "unrealized_pn_l", precision = 10)
     private BigDecimal unrealizedPnL = new BigDecimal(0);
+    private List<PortfolioDto> portfolios = new ArrayList<>(0);
 
-    @ManyToMany(mappedBy = "accounts")
-    private List<Portfolio> portfolios = new ArrayList<>(0);
-
-    public Account() {
+    public AccountDto() {
 
         this.accountType = AccountType.INDIVIDUAL;
         this.currency = Currency.USD;
@@ -119,7 +89,7 @@ public class Account extends Aspect implements Serializable, Cloneable {
      * @param currency      String
      * @param accountType   String
      */
-    public Account(String name, String accountNumber, String currency, String accountType) {
+    public AccountDto(String name, String accountNumber, String currency, String accountType) {
 
         this.accountNumber = accountNumber;
         this.accountType = accountType;
@@ -140,9 +110,9 @@ public class Account extends Aspect implements Serializable, Cloneable {
      * @param realizedPnL        BigDecimal
      * @param unrealizedPnL      BigDecimal
      */
-    public Account(String accountNumber, String name, String accountType, BigDecimal availableFunds,
-                   BigDecimal buyingPower, BigDecimal cashBalance, String currency, BigDecimal grossPositionValue,
-                   BigDecimal realizedPnL, BigDecimal unrealizedPnL) {
+    public AccountDto(String accountNumber, String name, String accountType, BigDecimal availableFunds,
+                      BigDecimal buyingPower, BigDecimal cashBalance, String currency, BigDecimal grossPositionValue,
+                      BigDecimal realizedPnL, BigDecimal unrealizedPnL) {
 
         this.accountNumber = accountNumber;
         this.accountType = accountType;
@@ -359,10 +329,9 @@ public class Account extends Aspect implements Serializable, Cloneable {
      *
      * @return Portfolio
      */
-    @Transient
-    public Portfolio getDefaultPortfolio() {
+    public PortfolioDto getDefaultPortfolio() {
 
-        for (Portfolio item : this.portfolios) {
+        for (PortfolioDto item : this.portfolios) {
 
             if (item.getIsDefault()) {
 
@@ -375,19 +344,35 @@ public class Account extends Aspect implements Serializable, Cloneable {
     /**
      * Method getPortfolios.
      *
-     * @return List<Portfolio>
+     * @return List<PortfolioDto>
      */
-    public List<Portfolio> getPortfolios() {
+    public List<PortfolioDto> getPortfolios() {
         return this.portfolios;
     }
 
     /**
      * Method setPortfolios.
      *
-     * @param portfolios List<Portfolio>
+     * @param portfolios List<PortfolioDto>
      */
-    public void setPortfolios(List<Portfolio> portfolios) {
+    public void setPortfolios(List<PortfolioDto> portfolios) {
         this.portfolios = portfolios;
+    }
+
+    /**
+     * Method isDirty.
+     *
+     * @return boolean
+     */
+    public boolean isDirty() {
+
+        for (PortfolioDto item : this.getPortfolios()) {
+
+            if (item.isDirty()) {
+                return true;
+            }
+        }
+        return super.isDirty();
     }
 
     /**

@@ -199,9 +199,11 @@ public class Contract extends Aspect implements Serializable, Cloneable {
     @Transient
     private List<Tradestrategy> tradestrategies = Collections.synchronizedList(new ArrayList<>(0));
 
+    @JsonIgnore
     @OneToMany(mappedBy = "contractLite", fetch = FetchType.LAZY)
     private List<TradePosition> tradePositions = new ArrayList<>(0);
 
+    @JsonIgnore
     @OneToMany(mappedBy = "contract", fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH, CascadeType.REMOVE})
     private List<Candle> candles = new ArrayList<>(0);
 
@@ -926,7 +928,6 @@ public class Contract extends Aspect implements Serializable, Cloneable {
      *
      * @return List<Tradestrategy>
      */
-    // @OneToMany(mappedBy = "contract", fetch = FetchType.LAZY)
     public List<Tradestrategy> getTradestrategies() {
         return this.tradestrategies;
     }
@@ -945,7 +946,6 @@ public class Contract extends Aspect implements Serializable, Cloneable {
      *
      * @return List<TradePosition>
      */
-    @JsonIgnore
     public List<TradePosition> getTradePositions() {
         return this.tradePositions;
     }
@@ -964,7 +964,6 @@ public class Contract extends Aspect implements Serializable, Cloneable {
      *
      * @return List<Candle>
      */
-    @JsonIgnore
     public List<Candle> getCandles() {
         return this.candles;
     }

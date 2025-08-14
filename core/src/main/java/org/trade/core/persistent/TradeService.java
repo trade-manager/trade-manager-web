@@ -422,6 +422,14 @@ public interface TradeService extends AspectService {
     List<Rule> findRulesAll();
 
     /**
+     * Method findRulesAll.
+     *
+     * @param strategy Strategy
+     * @return List<Rule>
+     */
+    List<Rule> findRulesByStrategy(Strategy strategy);
+
+    /**
      * Method findRuleByMaxVersion.
      *
      * @param strategy    Strategy
