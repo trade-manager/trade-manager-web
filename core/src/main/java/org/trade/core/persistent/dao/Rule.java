@@ -82,7 +82,7 @@ public class Rule extends Aspect implements Serializable {
     protected Integer ruleVersion;
 
     @Column(name = "content_type", length = 20, nullable = false)
-    @Pattern(regexp = "^(text/java|text/javascript)$")
+    @Pattern(regexp = "^(text/java|text/javascript|text/rtf)$")
     private String contentType = ContentType.JAVA;
 
     @ManyToOne(fetch = FetchType.EAGER)
