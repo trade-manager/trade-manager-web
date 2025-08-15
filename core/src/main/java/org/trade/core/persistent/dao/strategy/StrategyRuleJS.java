@@ -56,6 +56,7 @@ import org.trade.core.valuetype.Action;
 import org.trade.core.valuetype.AllocationMethod;
 import org.trade.core.valuetype.BarSize;
 import org.trade.core.valuetype.CalculationType;
+import org.trade.core.valuetype.ChartDays;
 import org.trade.core.valuetype.ContentType;
 import org.trade.core.valuetype.Decode;
 import org.trade.core.valuetype.Exchange;
@@ -404,6 +405,18 @@ public class StrategyRuleJS extends AbstractStrategyRule {
 
             JSONObject constantsJSON = new JSONObject();
 
+            List<Decode> chartDaysCodes = ChartDays.newInstance().getCodesDecodes();
+            JSONObject chartDaysValuesJSON = new JSONObject();
+            for (Decode code : chartDaysCodes) {
+
+                if (!code.getCode().trim().isEmpty()) {
+
+                    chartDaysValuesJSON.put(code.getCode(), Integer.valueOf(code.getValue()));
+                }
+            }
+
+            constantsJSON.put("CHART_DAYS", chartDaysValuesJSON);
+
             List<Decode> timeInForceCodes = TimeInForce.newInstance().getCodesDecodes();
             JSONObject timeInForceValuesJSON = new JSONObject();
             for (Decode code : timeInForceCodes) {
@@ -506,7 +519,7 @@ public class StrategyRuleJS extends AbstractStrategyRule {
 
                 if (!code.getCode().trim().isEmpty()) {
 
-                    barSizeValuesJSON.put(code.getCode(),  Integer.valueOf(code.getValue()));
+                    barSizeValuesJSON.put(code.getCode(), Integer.valueOf(code.getValue()));
                 }
             }
 
@@ -518,7 +531,7 @@ public class StrategyRuleJS extends AbstractStrategyRule {
 
                 if (!code.getCode().trim().isEmpty()) {
 
-                    triggerMethodValuesJSON.put(code.getCode(),code.getValue());
+                    triggerMethodValuesJSON.put(code.getCode(), code.getValue());
                 }
             }
 
