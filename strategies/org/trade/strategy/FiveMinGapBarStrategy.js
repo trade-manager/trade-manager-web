@@ -223,7 +223,7 @@
                     }
                 }
             }
-
+            
             return candleSeries.key
         } catch (ex) {
 

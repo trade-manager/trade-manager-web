@@ -142,7 +142,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
 
             for (Decode code : codes) {
 
-                if (!code.getCode().isEmpty()) {
+                if (!code.getCode().trim().isEmpty()) {
 
                     filesMap.put(code.getCode(), code.getValue());
                 }

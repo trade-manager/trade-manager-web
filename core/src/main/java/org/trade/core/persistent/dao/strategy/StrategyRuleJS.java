@@ -408,7 +408,7 @@ public class StrategyRuleJS extends AbstractStrategyRule {
             JSONObject timeInForceValuesJSON = new JSONObject();
             for (Decode code : timeInForceCodes) {
 
-                if (!code.getCode().isEmpty()) {
+                if (!code.getCode().trim().isEmpty()) {
 
                     timeInForceValuesJSON.put(code.getCode(), code.getValue());
                 }
@@ -420,7 +420,7 @@ public class StrategyRuleJS extends AbstractStrategyRule {
             JSONObject tierValuesJSON = new JSONObject();
             for (Decode code : tierCodes) {
 
-                if (!code.getCode().isEmpty()) {
+                if (!code.getCode().trim().isEmpty()) {
 
                     tierValuesJSON.put(code.getCode(), code.getValue());
                 }
@@ -444,7 +444,7 @@ public class StrategyRuleJS extends AbstractStrategyRule {
             JSONObject marketBiasValuesJSON = new JSONObject();
             for (Decode code : marketBiasCodes) {
 
-                if (!code.getCode().isEmpty()) {
+                if (!code.getCode().trim().isEmpty()) {
 
                     marketBiasValuesJSON.put(code.getCode(), code.getValue());
                 }
@@ -456,7 +456,7 @@ public class StrategyRuleJS extends AbstractStrategyRule {
             JSONObject marketBarValuesJSON = new JSONObject();
             for (Decode code : marketBarCodes) {
 
-                if (!code.getCode().isEmpty()) {
+                if (!code.getCode().trim().isEmpty()) {
 
                     marketBarValuesJSON.put(code.getCode(), code.getValue());
                 }
@@ -468,7 +468,7 @@ public class StrategyRuleJS extends AbstractStrategyRule {
             JSONObject indicatorSeriesValuesJSON = new JSONObject();
             for (Decode code : indicatorSeriesCodes) {
 
-                if (!code.getCode().isEmpty()) {
+                if (!code.getCode().trim().isEmpty()) {
 
                     indicatorSeriesValuesJSON.put(code.getCode(), code.getValue());
                 }
@@ -480,7 +480,7 @@ public class StrategyRuleJS extends AbstractStrategyRule {
             JSONObject allocationMethodValuesJSON = new JSONObject();
             for (Decode code : allocationMethodCodes) {
 
-                if (!code.getCode().isEmpty()) {
+                if (!code.getCode().trim().isEmpty()) {
 
                     allocationMethodValuesJSON.put(code.getCode(), code.getValue());
                 }
@@ -492,7 +492,7 @@ public class StrategyRuleJS extends AbstractStrategyRule {
             JSONObject calculationTypeValuesJSON = new JSONObject();
             for (Decode code : calculationTypeCodes) {
 
-                if (!code.getCode().isEmpty()) {
+                if (!code.getCode().trim().isEmpty()) {
 
                     calculationTypeValuesJSON.put(code.getCode(), code.getValue());
                 }
@@ -504,9 +504,9 @@ public class StrategyRuleJS extends AbstractStrategyRule {
             JSONObject barSizeValuesJSON = new JSONObject();
             for (Decode code : barSizeCodes) {
 
-                if (!code.getCode().isEmpty()) {
+                if (!code.getCode().trim().isEmpty()) {
 
-                    barSizeValuesJSON.put(code.getCode(), code.getValue());
+                    barSizeValuesJSON.put(code.getCode(),  Integer.valueOf(code.getValue()));
                 }
             }
 
@@ -516,9 +516,9 @@ public class StrategyRuleJS extends AbstractStrategyRule {
             JSONObject triggerMethodValuesJSON = new JSONObject();
             for (Decode code : triggerMethodCodes) {
 
-                if (!code.getCode().isEmpty()) {
+                if (!code.getCode().trim().isEmpty()) {
 
-                    triggerMethodValuesJSON.put(code.getCode(), code.getValue());
+                    triggerMethodValuesJSON.put(code.getCode(),code.getValue());
                 }
             }
 
@@ -528,7 +528,7 @@ public class StrategyRuleJS extends AbstractStrategyRule {
             JSONObject orderTypeValuesJSON = new JSONObject();
             for (Decode code : orderTypeCodes) {
 
-                if (!code.getCode().isEmpty()) {
+                if (!code.getCode().trim().isEmpty()) {
 
                     orderTypeValuesJSON.put(code.getCode(), code.getValue());
                 }
@@ -540,7 +540,7 @@ public class StrategyRuleJS extends AbstractStrategyRule {
             JSONObject tradestrategyStatusValuesJSON = new JSONObject();
             for (Decode code : tradestrategyStatusCodes) {
 
-                if (!code.getCode().isEmpty()) {
+                if (!code.getCode().trim().isEmpty()) {
 
                     tradestrategyStatusValuesJSON.put(code.getCode(), code.getValue());
                 }
@@ -552,7 +552,7 @@ public class StrategyRuleJS extends AbstractStrategyRule {
             JSONObject actionValuesJSON = new JSONObject();
             for (Decode code : actionCodes) {
 
-                if (!code.getCode().isEmpty()) {
+                if (!code.getCode().trim().isEmpty()) {
 
                     actionValuesJSON.put(code.getCode(), code.getValue());
                 }
@@ -564,7 +564,7 @@ public class StrategyRuleJS extends AbstractStrategyRule {
             JSONObject orderStatusValuesJSON = new JSONObject();
             for (Decode code : orderStatusCodes) {
 
-                if (!code.getCode().isEmpty()) {
+                if (!code.getCode().trim().isEmpty()) {
 
                     orderStatusValuesJSON.put(code.getCode(), code.getValue());
                 }
@@ -576,7 +576,7 @@ public class StrategyRuleJS extends AbstractStrategyRule {
             JSONObject sideValuesJSON = new JSONObject();
             for (Decode code : sideCodes) {
 
-                if (!code.getCode().isEmpty()) {
+                if (!code.getCode().trim().isEmpty()) {
 
                     sideValuesJSON.put(code.getCode(), code.getValue());
                 }
