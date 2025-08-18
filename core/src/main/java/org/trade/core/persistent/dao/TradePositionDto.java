@@ -373,6 +373,6 @@ public class TradePositionDto extends Aspect implements java.io.Serializable {
                 + " Total Buy qty: " + this.getTotalBuyQuantity() + " Total Buy Value: "
                 + new Money(this.getTotalBuyValue()) + " Total Sell qty: " + this.getTotalSellQuantity()
                 + " Total Sell Value: " + new Money(this.getTotalSellValue()) + " Total Comm: "
-                + new Money(this.getTotalCommission()) + " updateDate: " + this.getUpdateDate();
+                + new Money(this.getTotalCommission()) + " updatedDate: " + this.getUpdatedDate();
     }
 }

@@ -89,7 +89,7 @@ public abstract class Aspect extends AbstractPersistable<Long> {
     }
 
     /**
-     * Method getId. Used for the ObjectMApper to Dto as the AbstractPersistable
+     * Method getId. Used for the ObjectMapper to Dto as the AbstractPersistable
      * is protected.
      *
      * @return Long
@@ -108,39 +108,39 @@ public abstract class Aspect extends AbstractPersistable<Long> {
     }
 
     /**
-     * Method getCreateDate.
+     * Method getCreatedDate.
      *
      * @return ZonedDateTime
      */
-    public ZonedDateTime getCreateDate() {
+    public ZonedDateTime getCreatedDate() {
         return this.createdDate;
     }
 
     /**
-     * Method setCreateDate.
+     * Method setCreatedDate.
      *
      * @param createdDate ZonedDateTime
      */
-    public void setCreateDate(ZonedDateTime createdDate) {
+    public void setCreatedDate(ZonedDateTime createdDate) {
 
         this.createdDate = createdDate;
     }
 
     /**
-     * Method getUpdateDate.
+     * Method getUpdatedDate.
      *
      * @return ZonedDateTime
      */
-    public ZonedDateTime getUpdateDate() {
+    public ZonedDateTime getUpdatedDate() {
         return this.updatedDate;
     }
 
     /**
-     * Method setUpdateDate.
+     * Method setUpdatedDate.
      *
      * @param updatedDate ZonedDateTime
      */
-    public void setUpdateDate(ZonedDateTime updatedDate) {
+    public void setUpdatedDate(ZonedDateTime updatedDate) {
 
         this.updatedDate = updatedDate;
     }

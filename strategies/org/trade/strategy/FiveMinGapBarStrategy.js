@@ -1,12 +1,15 @@
     let CONSTANTS = null;
 
-    function initStrategy() {
+    /**
+     * Method call once to initialize the strategy in the worker thread.
+     */
+    function initialize() {
 
         let result  = JSON.parse(gs.getInitParams());
 
         if(!result.error){
 
-            gs.log('Info: StrategyRuleJS::initStrategy result.data: ' + JSON.stringify(result.data));
+            gs.log('Info: StrategyRuleJS::initialize result.data: ' + JSON.stringify(result.data));
             CONSTANTS = result.data;
         }
     }
@@ -40,44 +43,50 @@
             gs.log('Info: StrategyRuleJS::runStrategy key: ' + candleSeries.key + ' newBar: ' + newBar + ' symbol: ' + gs.getSymbol());
 
             let currentCandleItem = JSON.parse(gs.getCurrentCandleJSON());
+
+            if (currentCandleItem.error) {
+
+                gs.cancel();
+            }
+
             let tradestrategy = JSON.parse(gs.getTradestrategyJSON());
+            tradestrategy = tradestrategy.data;
             gs.log('Info: StrategyRuleJS::runStrategy currentCandleItem: ' + JSON.stringify(currentCandleItem));
             gs.log('Info: StrategyRuleJS::runStrategy tradestrategy: ' + JSON.stringify(tradestrategy));
             gs.log('Info: StrategyRuleJS::runStrategy openPositionOrderKey: ' + openPositionOrderKey);
+            // Get the current candle start date
+            let startPeriod = new Date(currentCandleItem.data.period.start);
+            gs.log('Info: StrategyRuleJS::runStrategy startPeriod: ' + startPeriod);
 
-            if (!currentCandleItem.error) {
+            /*
+             * Trade is open kill this Strategy as its job is done.
+             */
+            if (gs.isThereOpenPosition()) {
 
-                // Get the current candle start date
-                let startPeriod = new Date(currentCandleItem.data.period.start);
-                gs.log('Info: StrategyRuleJS::runStrategy startPeriod: ' + startPeriod);
+                gs.log("Strategy complete open position filled symbol: {} startPeriod: {}", gs.getSymbol(), startPeriod);
 
                 /*
-                 * Trade is open kill this Strategy as its job is done.
+                 * If the order is partial filled chaeck and if the risk goes
+                 * beyond 1 risk unit cancel the openPositionOrder this will
+                 * cause it to be marked as filled.
                  */
-                if (gs.isThereOpenPosition()) {
+                 let tradeOrder = JSON.parse(gs.getOpenPositionOrderJSON());
 
-                    gs.log("Strategy complete open position filled symbol: {} startPeriod: {}", gs.getSymbol(), startPeriod);
+                 gs.log('Info: StrategyRuleJS::runStrategy tradeOrder: ' + JSON.stringify(tradeOrder));
 
-                    /*
-                     * If the order is partial filled chaeck and if the risk goes
-                     * beyond 1 risk unit cancel the openPositionOrder this will
-                     * cause it to be marked as filled.
-                     */
-                     let tradeOrder = JSON.parse(gs.getOpenPositionOrderJSON());
-                     gs.log('Info: StrategyRuleJS::runStrategy tradeOrder: ' + JSON.stringify(tradeOrder));
+                if (!tradeOrder.error) {
 
-                    if (!tradeOrder.error && CONSTANTS.ORDER_STATUS.PARTIALFILLED == tradeOrder.data.status) {
+                    tradeOrder = tradeOrder.data;
 
-                        if (gs.isRiskViolated(currentCandleItem.data.close, tradestrategy.data.risk_amount,
-                                tradeOrder.data.quantity, tradeOrder.data.average_filled_price)) {
+                    if (CONSTANTS.ORDER_STATUS.PARTIALFILLED == tradeOrder.status && gs.isRiskViolated(currentCandleItem.data.close, tradestrategy.risk_amount,
+                            tradeOrder.quantity, tradeOrder.average_filled_price)) {
 
-                            gs.cancelOrder(JSON.stringify(tradeOrder));
-                        }
+                        gs.cancelOrder(JSON.stringify(tradeOrder));
                     }
-
-                    gs.cancel();
-                    return;
                 }
+
+                gs.cancel();
+                return candleSeries.key;
             }
 
             /*
@@ -87,20 +96,30 @@
             let tradeOrder = JSON.parse(gs.getTradeOrderJSON(openPositionOrderKey));
             gs.log('Info: StrategyRuleJS::runStrategy tradeOrder: ' + JSON.stringify(tradeOrder));
 
-            if (!tradeOrder.error && null != openPositionOrderKey && !tradeOrder.data.active) {
+            if (!tradeOrder.error) {
 
-                gs.info("Strategy complete open position cancelled symbol: +  gs.getSymbol() +  startPeriod: " + startPeriod);
-                gs.updateTradestrategyStatus(CONSTANTS.ORDER_STATUS.PARTIALFILLED);
-                gs.cancel();
-                return;
+                tradeOrder = tradeOrder.data;
+
+                if (null != openPositionOrderKey && !tradeOrder.active) {
+
+                    gs.info("Strategy complete open position cancelled symbol: +  gs.getSymbol() +  startPeriod: " + startPeriod);
+                    gs.updateTradestrategyStatus(CONSTANTS.ORDER_STATUS.PARTIALFILLED);
+                    gs.cancel();
+                    return candleSeries.key;
+                }
             }
 
             /*
              * Is it the the 9:35 candle? and we have not created an open
              * position trade.
              */
-            if (startPeriod.equals(this.getTradestrategy().getTradingday().getOpen()
-                    .plusMinutes(this.getTradestrategy().getBarSize() / 60)) && newBar) {
+            let startCandleDate = new Date(tradestrategy.tradingday.open);
+            startCandleDate.setMinutes((new Date(tradestrategy.tradingday.open)).getMinutes() + (tradestrategy.barSize / 60));
+            let timeOutDate = new Date(tradestrategy.tradingday.open);
+            timeOutDate.setMinutes((new Date(tradestrategy.tradingday.open)).getMinutes() + 120);
+            gs.log('Info: StrategyRuleJS::runStrategy startCandleDate: ' + startCandleDate + " timeOutDate: " + timeOutDate);
+
+            if (startPeriod.getTime() === startCandleDate.getTime() && newBar) {
 
                 /*
                  * Add the tails as a % of the body. 10% and vwap must be
@@ -108,126 +127,153 @@
                  */
                 let prevCandleItem = null;
 
-                if (getCurrentCandleCount() > 0) {
+                if (gs.getCurrentCandleCount() > 0) {
 
-                    prevCandleItem = (CandleItem) candleSeries.getDataItem(getCurrentCandleCount() - 1);
-                    // AbstractStrategyRule
-                    // .logCandle(this, prevCandleItem.getCandle());
+
+                    prevCandleItem =  candleSeries.data[(gs.getCurrentCandleCount() - 1)];
+                    gs.log('Info: StrategyRuleJS::runStrategy prevCandleItem: ' + JSON.stringify(prevCandleItem));
                 }
 
-                if (CoreUtils.isBetween(Objects.requireNonNull(prevCandleItem).getOpen(), prevCandleItem.getClose(),
-                        prevCandleItem.getVwap())) {
+                 if (null != prevCandleItem && (gs.between(prevCandleItem.candle.open, prevCandleItem.candle.close, prevCandleItem.candle.vwap))) {
 
-                    let barBodyPercent = (Math.abs(prevCandleItem.getOpen() - prevCandleItem.getClose())
-                            / Math.abs(prevCandleItem.getHigh() - prevCandleItem.getLow())) * 100;
+                    let barBodyPercent = (Math.abs(prevCandleItem.candle.open - prevCandleItem.candle.close)/ Math.abs(prevCandleItem.candle.high - prevCandleItem.candle.low)) * 100;
+                    gs.log('Info: StrategyRuleJS::runStrategy barBodyPercent: ' + barBodyPercent);
 
                     if (barBodyPercent < 10) {
 
-                        gs.info("Bar Body outside % range  Symbol: {} Time: {}", getSymbol(), startPeriod);
-                        updateTradestrategyStatus(CONSTANTS.TRADESTRATEGY_STATUS.NBB);
-                        gs.cancel();
-                        return;
+                        gs.log("Bar Body outside % range  Symbol: " + gs.getSymbol() + " Time: " + startPeriod + " barBodyPercent: " + barBodyPercent);
+                        gs.updateTradestrategyStatus(CONSTANTS.TRADESTRATEGY_STATUS.NBB);
                     }
+                 }
+
+                 let side = CONSTANTS.SIDE.SLD;
+
+                 if (prevCandleItem.candle.side) {
+
+                     side = CONSTANTS.SIDE.BOT;
+                 }
+
+                 let price = prevCandleItem.candle.high;
+                 let priceStop = prevCandleItem.candle.low;
+                 let action = CONSTANTS.ACTION.BUY;
+
+                 if (side === CONSTANTS.SIDE.SLD) {
+
+                     price = prevCandleItem.candle.low;
+                     priceStop = prevCandleItem.candle.high;
+                     action = CONSTANTS.ACTION.SELL;
+                 }
+
+                let priceClose = prevCandleItem.candle.close;
+                let highLowRange = Math.abs(prevCandleItem.candle.high - prevCandleItem.candle.low);
+                priceStop = prevCandleItem.candle.open
+                let entrylimit = gs.getEntryLimit(priceClose);
+
+                if(entrylimit.error){
+
+                    gs.cancel();
                 }
 
-                let side = CONSTANTS.SIDE.SLD;
-
-                if (prevCandleItem.side == CONSTANTS.SIDE.BOT) {
-
-                    side = CONSTANTS.SIDE.BOT;
-                }
-
-                let price = new Money(prevCandleItem.getHigh());
-                let priceStop = new Money(prevCandleItem.getLow());
-                let action = CONSTANTS.ACTION.BUY;
-
-                if (CONSTANTS.SIDE.SLD == side) {
-
-                    price = new Money(prevCandleItem.getLow());
-                    priceStop = new Money(prevCandleItem.getHigh());
-                    action = CONSTANTS.ACTION.SELL;
-                }
-
-                let priceClose = new Money(prevCandleItem.getClose());
-                let entrylimit = getEntryLimit().getValue(priceClose);
-                let highLowRange = Math.abs(prevCandleItem.getHigh() - prevCandleItem.getLow());
-                priceStop = new Money(prevCandleItem.getOpen());
+                entrylimit = JSON.parse(entrylimit);
+                entrylimit = entrylimit.data;
+                gs.log('Info: StrategyRuleJS::runStrategy entrylimit: ' + JSON.stringify(entrylimit));
 
                 // If the candle less than the entry limit %
-                if (((highLowRange) / prevCandleItem.getClose()) < entrylimit.getPercentOfPrice().doubleValue()) {
+                if ((highLowRange / prevCandleItem.candle.close) < entrylimit.percentOfPrice) {
 
                     /*
                      * Check that the entry - stop is greater than 2* the STPLMT
                      * amount.
                      */
-                    // if (Math.abs(price.subtract(priceStop).doubleValue())
-                    // > (entrylimit
-                    // .getLimitAmount().doubleValue() * 2)) {
+                    // if (Math.abs(price.subtract(priceStop).doubleValue()) > (entrylimit.limitAmount * 2)) {
 
                     /*
                      * Create an open position.
                      */
-                    gs.info("We have a trade!!  Symbol: {} Time: {}", getSymbol(), startPeriod);
-                    let tradeOrder = createRiskOpenPosition(action, price, priceStop, true, null, null, null,
-                            null);
-                    openPositionOrderKey = tradeOrder.getOrderKey();
-                    // } else {
-                    // _log.info("Rule 9:35 5min bar less than 2 * stop limits.
-                    // Symbol: "
-                    // + getSymbol() + " Time: " + startPeriod);
-                    // updateTradestrategyStatus(TradestrategyStatus.NBB);
-                    // // Kill this process we are done!
-                    // this.cancel();
-                    // }
+                    gs.log("We have a trade!!  Symbol: " + gs.getSymbol() + " Time: " + startPeriod);
+                    let tradeOrder = gs.createRiskOpenPosition(action, price, priceStop, true, null, null, null, null);
 
+                    if(tradeOrder.error){
+
+                        gs.cancel();
+                    }
+
+                    tradeOrder = JSON.parse(tradeOrder);
+                    tradeOrder = tradeOrder.data;
+                    openPositionOrderKey = tradeOrder.orderKey;
+                    gs.log("We have a trade!!  trade order key: " + openPositionOrderKey);
+
+                    // } else {
+                    // gs.log("Rule 9:35 5min bar less than 2 * stop limits. Symbol: " + gs.getSymbol() + " Time: " + startPeriod);
+                    // gs.updateTradestrategyStatus(CONSTANTS.TRADESTRATEGY_STATUS.NBB);
+                    // // Kill this process we are done!
+                    // gs.cancel();
+                    // }
                 } else {
 
-                    gs.info("Rule 9:35 5min bar outside % limits. Symbol: {} Time: {}", getSymbol(), startPeriod);
-                    updateTradestrategyStatus(CONSTANTS.TRADESTRATEGY_STATUS.PERCENT);
+                    gs.log("Rule 9:35 5min bar outside % limits. Symbol: " + gs.getSymbol() + " Time: " + startPeriod);
+                    gs.updateTradestrategyStatus(CONSTANTS.TRADESTRATEGY_STATUS.PERCENT);
                     // Kill this process we are done!
                     gs.cancel();
                 }
             } else {
 
-                if (startPeriod.isBefore(this.getTradestrategy().getTradingday().getOpen().plusMinutes(120))
-                        && startPeriod.isAfter(this.getTradestrategy().getTradingday().getOpen().plusMinutes(5))) {
-                    CandleItem firstCandle = this.getCandle(TradingCalendar.getDateAtTime(startPeriod,
-                            this.getTradestrategy().getTradingday().getOpen()));
+                if (startPeriod.getTime() < timeOutDate.getTime()
+                        && startPeriod.getTime() > startCandleDate.getTime()) {
+
+                    let firstCandle = gs.getCandle((new Date(tradestrategy.tradingday.open)).toISOString());
                     /*
                      * Check for 5 min H/L being broken in the opposite
                      * direction to the trade before position is opened.
                      */
 
-                    if (firstCandle.getSide()) {
+                    if (firstCandle.candle.side) {
 
-                        if (currentCandleItem.getVwap() < firstCandle.getLow()) {
+                        if (currentCandleItem.candle.vwap < firstCandle.candle.low) {
 
-                            // updateTradestrategyStatus(CONSTANTS.TRADESTRATEGY_STATUS.FIVE_MIN_LOW_BROKEN);
-                            // this.cancelAllOrders();
-                            // // No trade we timed out
-                            // _log.info("Rule 5min low broker Symbol: "
-                            // + getSymbol() + " Time: " + startPeriod);
-                            // this.cancel();
+                            // gs.updateTradestrategyStatus(CONSTANTS.TRADESTRATEGY_STATUS.FIVE_MIN_LOW_BROKEN);
+                            // gs.cancelAllOrders();
+                            // No trade we timed out
+                            // gs.log("Rule 5min low broker Symbol: " + gs.getSymbol() + " Time: " + startPeriod);
+                            // gs.cancel();
                         }
                     } else {
 
-                        if (currentCandleItem.getVwap() > firstCandle.getHigh()) {
+                        if (currentCandleItem.candle.vwap > firstCandle.candle.high) {
 
-                            // updateTradestrategyStatus(CONSTANTS.TRADESTRATEGY_STATUS.FIVE_MIN_HIGH_BROKEN);
-                            // this.cancelAllOrders();
-                            // // No trade we timed out
-                            // _log.info("Rule 5min high broker Symbol: "
-                            // + getSymbol() + " Time: " + startPeriod);
-                            // this.cancel();
+                            // gs.updateTradestrategyStatus(CONSTANTS.TRADESTRATEGY_STATUS.FIVE_MIN_HIGH_BROKEN);
+                            // gs.cancelAllOrders();
+                            // No trade we timed out
+                            // gs.log("Rule 5min high broker Symbol: " + gs.getSymbol() + " Time: " + startPeriod);
+                            // gs.cancel();
                         }
                     }
                 }
             }
 
-            return candleSeries.key
+            if (!startPeriod.getTime() < timeOutDate.getTime()) {
+
+                gs.log("Rule 11:30:00 bar, time out unfilled open position symbol: " +  gs.getSymbol() +  " startPeriod: " + startPeriod+  " timeOutDate: " + timeOutDate);
+
+                if (!gs.isThereOpenPosition()
+                        && !CONSTANTS.TRADESTRATEGY_STATUS.CANCELLED === tradestrategy.status) {
+
+                    gs.updateTradestrategyStatus(CONSTANTS.TRADESTRATEGY_STATUS.TO);
+                    gs.cancelAllOrders();
+                    // No trade we timed out
+                    gs.log("Rule 11:30:00 bar, time out unfilled open position symbol: " +  gs.getSymbol() +  " startPeriod: " + startPeriod+  " timeOutDate: " + timeOutDate);
+                }
+                gs.cancel();
+            }
+
+            return candleSeries.key;
         } catch (ex) {
 
             gs.error(1, 100, 'Error: StrategyRuleJS::runStrategy process javascript msg: ' + ex);
         }
     }
+
+
+
+
 

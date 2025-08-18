@@ -288,12 +288,12 @@ public class AccountTableModel extends TableModel {
             newRow.add(new Money(element.getUnrealizedPnL()));
         }
 
-        if (null == element.getUpdateDate()) {
+        if (null == element.getUpdatedDate()) {
 
             newRow.add(new Date());
         } else {
 
-            newRow.add(new Date(element.getUpdateDate()));
+            newRow.add(new Date(element.getUpdatedDate()));
         }
     }
 }

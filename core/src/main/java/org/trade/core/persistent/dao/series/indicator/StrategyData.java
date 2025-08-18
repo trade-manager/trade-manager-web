@@ -573,7 +573,7 @@ public class StrategyData extends Worker {
         double low = 33.84;
         double open = 33.90;
         double close = 33.95;
-        double vwap = 34.94;
+        double vwap = 33.94;
         int longShort = 1;
 
         if (!longTrade) {
@@ -582,7 +582,7 @@ public class StrategyData extends Worker {
             low = 34.01;
             open = 34.10;
             close = 34.03;
-            vwap = 34.02;
+            vwap = 34.06;
             longShort = -1;
         }
 

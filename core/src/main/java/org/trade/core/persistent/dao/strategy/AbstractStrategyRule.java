@@ -130,7 +130,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
      * Method initStrategy. This method is once in the thread that runs the strategy.
      * <p>
      */
-    public abstract void initStrategy();
+    public abstract void initialize();
 
     /**
      * Method runStrategy. This method is called every time the candleSeries is
@@ -1315,7 +1315,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
             currentCandleCount = this.strategyData.getBaseCandleSeries().getItemCount() - 1;
             seriesChanged = true;
             reFreshPositionOrders();
-            initStrategy();
+            initialize();
 
             do {
 

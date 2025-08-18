@@ -110,7 +110,7 @@ public class PosMgrFHXRBHHeikinStrategy extends AbstractStrategyRule {
     /**
      * Method call once to initialize the strategy in the worker thread.
      */
-    public void initStrategy() {
+    public void initialize() {
 
     }
 

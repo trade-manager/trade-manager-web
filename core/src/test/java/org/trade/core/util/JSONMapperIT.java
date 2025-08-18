@@ -22,7 +22,7 @@ import org.trade.core.persistent.dao.ContractDto;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradeOrderDto;
 import org.trade.core.persistent.dao.Tradestrategy;
-import org.trade.core.persistent.dao.TradestrategyDto;
+import org.trade.core.persistent.dao.TradestrategyLiteDto;
 import org.trade.core.persistent.dao.series.indicator.candle.CandlePeriod;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.time.RegularTimePeriod;
@@ -165,9 +165,9 @@ public class JSONMapperIT {
         _log.info("IdOrder: {}", tradeOrder.getId());
 
 
-        TradestrategyDto tradestrategyDto = JSONMapper.convertToDto(tradestrategy, TradestrategyDto.class);
+        TradestrategyLiteDto tradestrategyLiteDto = JSONMapper.convertToDto(tradestrategy, TradestrategyLiteDto.class);
         TradeOrderDto tradeOrderDto = JSONMapper.convertToDto(tradeOrder, TradeOrderDto.class);
-        tradeOrderDto.setTradestrategy(tradestrategyDto);
+        tradeOrderDto.setTradestrategyLiteDto(tradestrategyLiteDto);
 
         String json = JSONMapper.getJSONString(tradeOrderDto);
         _log.info("mapTradeOrder tradeOrderDto JSON: {}", json.toString());
@@ -181,6 +181,13 @@ public class JSONMapperIT {
         TradeOrder newTradeOrder = JSONMapper.convertToEntity(tradeOrderDto, TradeOrder.class);
         _log.info("mapTradeOrder new newTradeOrder: {}", newTradeOrder.toString());
         assertEquals(tradeOrder.getId(), newTradeOrder.getId());
+
+        tradeOrder = tradeService.findTradeOrderByKey(newTradeOrder.getOrderKey());
+        tradeOrderDto = JSONMapper.convertToDto(tradeOrder, TradeOrderDto.class);
+        json = JSONMapper.getJSONString(tradeOrderDto);
+        _log.info("mapTradeOrder tradeOrderDto JSON: {}", json.toString());
+        dto = new JSONObject(json);
+        assertEquals(tradeOrder.getId(), dto.getLong("id"));
     }
 }
 

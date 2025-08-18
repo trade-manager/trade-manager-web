@@ -51,7 +51,9 @@ import org.trade.core.persistent.dao.TradestrategyDto;
 import org.trade.core.persistent.dao.series.indicator.CandleSeries;
 import org.trade.core.persistent.dao.series.indicator.StrategyData;
 import org.trade.core.persistent.dao.series.indicator.candle.CandleItem;
+import org.trade.core.util.CoreUtils;
 import org.trade.core.util.JSONMapper;
+import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.Action;
 import org.trade.core.valuetype.AllocationMethod;
 import org.trade.core.valuetype.BarSize;
@@ -63,8 +65,10 @@ import org.trade.core.valuetype.Exchange;
 import org.trade.core.valuetype.IndicatorSeries;
 import org.trade.core.valuetype.MarketBar;
 import org.trade.core.valuetype.MarketBias;
+import org.trade.core.valuetype.Money;
 import org.trade.core.valuetype.OrderStatus;
 import org.trade.core.valuetype.OrderType;
+import org.trade.core.valuetype.Percent;
 import org.trade.core.valuetype.Side;
 import org.trade.core.valuetype.Tier;
 import org.trade.core.valuetype.TimeInForce;
@@ -72,6 +76,7 @@ import org.trade.core.valuetype.TradestrategyStatus;
 import org.trade.core.valuetype.TriggerMethod;
 
 import java.io.Serial;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 /**
@@ -129,7 +134,7 @@ public class StrategyRuleJS extends AbstractStrategyRule {
     /**
      * Method call once to initialize the strategy in the worker thread.
      */
-    public void initStrategy() {
+    public void initialize() {
 
         try {
             context = Context.enter();
@@ -168,31 +173,30 @@ public class StrategyRuleJS extends AbstractStrategyRule {
 
                 context.evaluateString(localScope, codeJS, strategyName, 1, null);
 
-                Object initStrategy = localScope.get("initStrategy", localScope);
+                Object initialize = localScope.get("initialize", localScope);
 
-                if (initStrategy instanceof Function) {
+                if (initialize instanceof Function) {
 
-                    Function functionInitStrategy = (Function) initStrategy;
-                    Object[] functionParams = new Object[]{};
+                    Function functionInitStrategy = (Function) initialize;
                     Object jsResult = functionInitStrategy.call(context, localScope, localScope, null);
-                    _log.info("Info: StrategyRuleJS::initStrategy initStrategy result: {}", jsResult);
+                    _log.info("Info: StrategyRuleJS::initialize initialize result: {}", jsResult);
                 } else {
 
-                    _log.error("Error: StrategyRuleJS::initStrategy initStrategy is not a function");
+                    _log.error("Error: StrategyRuleJS::initialize initialize is not a function");
                 }
 
                 Object runStrategy = localScope.get("runStrategy", localScope);
 
                 if (!(runStrategy instanceof Function)) {
 
-                    _log.error("Error: StrategyRuleJS::initStrategy runStrategy is not a function");
+                    _log.error("Error: StrategyRuleJS::initialize runStrategy is not a function");
                 }
 
-                this.functionRunStrategy = (Function) runStrategy;
+                functionRunStrategy = (Function) runStrategy;
             }
         } catch (Exception ex) {
 
-            _log.error("Error: StrategyRuleJS::initStrategy msg: {}", ex.getMessage());
+            _log.error("Error: StrategyRuleJS::initialize msg: {}", ex.getMessage());
             this.cancel();
         }
     }
@@ -219,7 +223,7 @@ public class StrategyRuleJS extends AbstractStrategyRule {
 
             String candleSeriesJSON = JSONMapper.getJSONString(candleSeries);
             Object[] functionParams = new Object[]{candleSeriesJSON, true};
-            Object jsResult = this.functionRunStrategy.call(context, localScope, localScope, functionParams);
+            Object jsResult = functionRunStrategy.call(context, localScope, localScope, functionParams);
             _log.info("Info: StrategyRuleJS::runStrategy runStrategy result: {}", jsResult);
         } catch (Exception ex) {
 
@@ -397,6 +401,113 @@ public class StrategyRuleJS extends AbstractStrategyRule {
         }
     }
 
+    /**
+     * @param high  double
+     * @param low   double
+     * @param value double
+     * @return true/false
+     */
+    public boolean between(double high, double low, double value) {
+
+        return CoreUtils.isBetween(high, low, value);
+    }
+
+    /**
+     * @param dateString String
+     * @return JSONObject
+     */
+    public JSONObject getCandle(String dateString) {
+
+        JSONObject result = getResult();
+
+        try {
+
+            ZonedDateTime date = ZonedDateTime.parse(dateString);
+            date = TradingCalendar.getDateAtTime(date,
+                    this.getTradestrategy().getTradingday().getOpen());
+            CandleItem candle = super.getCandle(date);
+
+            if (null != candle) {
+
+                result.put("data", new JSONObject(JSONMapper.getJSONString(candle)));
+            } else {
+
+                result.put("error", true);
+                result.put("message", "Error: StrategyRuleJS::getCandle candle not found.");
+            }
+        } catch (Exception ex) {
+
+            result.put("error", true);
+            result.put("message", "Error: StrategyRuleJS::getCandle msg: " + ex.getMessage());
+            _log.error(result.getString("message"));
+        }
+
+        return result;
+    }
+
+    /**
+     * @param value double
+     * @return JSONObject
+     */
+    public JSONObject getEntryLimit(double value) {
+
+        JSONObject result = getResult();
+
+        try {
+
+            result.put("data", new JSONObject(JSONMapper.getJSONString(this.getEntryLimit().getValue(new Money(value)))));
+        } catch (Exception ex) {
+
+            result.put("error", true);
+            result.put("message", "Error: StrategyRuleJS::getEntryLimit msg: " + ex.getMessage());
+            _log.error(result.getString("message"));
+        }
+
+        return result;
+    }
+
+    /**
+     * @param action     String
+     * @param entryPrice double
+     * @param stopPrice  double
+     * @param transmit   boolean
+     * @param FAProfile  String
+     * @param FAGroup    String
+     * @param FAMethod   String
+     * @param FAPercent  String
+     * @return TradeOrder
+     */
+    public JSONObject createRiskOpenPosition(String action, double entryPrice, double stopPrice, boolean transmit,
+                                             String FAProfile, String FAGroup, String FAMethod, Percent FAPercent) {
+        JSONObject result = getResult();
+
+        try {
+
+            TradeOrder tradeOrder = this.createRiskOpenPosition(action, new Money(entryPrice), new Money(stopPrice), transmit,
+                    FAProfile, FAGroup, FAMethod, (null == FAPercent ? null : new Percent(FAPercent)));
+
+            if (null != tradeOrder) {
+
+                TradeOrderDto tradeOrderDto = JSONMapper.convertToDto(tradeOrder, TradeOrderDto.class);
+                result.put("data", new JSONObject(JSONMapper.getJSONString(tradeOrderDto)));
+            } else {
+
+                result.put("error", true);
+                result.put("message", "Error: StrategyRuleJS::createRiskOpenPosition tradeOrder not created.");
+            }
+        } catch (Exception ex) {
+
+            result.put("error", true);
+            result.put("message", "Error: StrategyRuleJS::createRiskOpenPosition msg: " + ex.getMessage());
+            _log.error(result.getString("message"));
+        }
+
+        return result;
+    }
+
+    /**
+     * @return JSONObject
+     */
     public JSONObject getInitParams() {
 
         JSONObject result = getResult();

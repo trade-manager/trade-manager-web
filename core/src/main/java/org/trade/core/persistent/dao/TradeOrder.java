@@ -600,7 +600,7 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
     }
 
     /**
-     * Method getCreateDate.
+     * Method getOrderCreateDate.
      *
      * @return ZonedDateTime
      */
@@ -609,7 +609,7 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
     }
 
     /**
-     * Method setCreateDate.
+     * Method setOrderCreateDate.
      *
      * @param orderCreateDate ZonedDateTime
      */

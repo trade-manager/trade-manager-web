@@ -322,6 +322,7 @@ public class StrategyPanelIT {
             myrule = new Rule();
             myrule.setStrategy(strategy);
         }
+
         myrule.setComment("Test Ver: " + myrule.getRuleVersion());
         StreamEditorPane textArea = new StreamEditorPane(ContentType.TEXT);
         new JScrollPane(textArea);

@@ -111,7 +111,7 @@ public class FiveMinGapBarStrategy extends AbstractStrategyRule {
     /**
      * Method call once to initialize the strategy in the worker thread.
      */
-    public void initStrategy() {
+    public void initialize() {
 
     }
 
@@ -183,7 +183,7 @@ public class FiveMinGapBarStrategy extends AbstractStrategyRule {
                  */
                 CandleItem prevCandleItem = null;
 
-                if (getCurrentCandleCount() > 0) {
+                if (this.getCurrentCandleCount() > 0) {
 
                     prevCandleItem = (CandleItem) candleSeries.getDataItem(getCurrentCandleCount() - 1);
                     // AbstractStrategyRule

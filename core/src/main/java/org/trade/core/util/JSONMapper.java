@@ -23,7 +23,6 @@ public class JSONMapper {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private static final ModelMapper modelMapper;
-    private static final String dateFormat = "yyyy-MM-dd HH:mm:ss -HH:mm";
 
     static {
 
@@ -34,7 +33,7 @@ public class JSONMapper {
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 
-        SimpleDateFormat df = new SimpleDateFormat(dateFormat);
+        SimpleDateFormat df = new SimpleDateFormat(TradingCalendar.ISODateFormat);
         objectMapper.setDateFormat(df);
         objectMapper.setTimeZone(TimeZone.getTimeZone(TradingCalendar.MKT_TIMEZONE));
         objectMapper.getFactory().setStreamReadConstraints(readConstraints);
