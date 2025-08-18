@@ -37,23 +37,10 @@ package org.trade.core.persistent.dao;
 
 // Generated Feb 21, 2011 12:43:33 PM by Hibernate Tools 3.4.0.CR1
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 import org.trade.core.dao.Aspect;
-import org.trade.core.persistent.dao.series.indicator.IndicatorSeries;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -62,9 +49,7 @@ import java.util.List;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-@Entity
-@Table(name = "strategy")
-public class Strategy extends Aspect implements Serializable, Cloneable {
+public class StrategyDto extends Aspect implements Serializable, Cloneable {
 
     /**
      *
@@ -72,31 +57,13 @@ public class Strategy extends Aspect implements Serializable, Cloneable {
     @Serial
     private static final long serialVersionUID = -5704206226348654910L;
 
-    @Column(name = "name", unique = true, nullable = false, length = 45)
     private String name;
-
-    @Column(name = "class_name", nullable = false, length = 100)
     private String className;
-
-    @Column(name = "description", length = 240)
     private String description;
-
-    @Column(name = "market_data", length = 1)
     private Boolean marketData = false;
+    private StrategyDto strategy;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "strategy_manager_id")
-    private Strategy strategy;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "strategy", fetch = FetchType.LAZY, orphanRemoval = true, cascade = {CascadeType.ALL})
-    private List<Rule> rules = new ArrayList<>(0);
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "strategy", fetch = FetchType.EAGER, orphanRemoval = true, cascade = {CascadeType.ALL})
-    private List<IndicatorSeries> indicators = new ArrayList<>(0);
-
-    public Strategy() {
+    public StrategyDto() {
     }
 
     /**
@@ -104,7 +71,7 @@ public class Strategy extends Aspect implements Serializable, Cloneable {
      *
      * @param name String
      */
-    public Strategy(String name) {
+    public StrategyDto(String name) {
 
         this.name = name;
         this.className = name;
@@ -116,7 +83,7 @@ public class Strategy extends Aspect implements Serializable, Cloneable {
      * @param name      String
      * @param className String
      */
-    public Strategy(String name, String className) {
+    public StrategyDto(String name, String className) {
 
         this.name = name;
         this.className = className;
@@ -129,15 +96,12 @@ public class Strategy extends Aspect implements Serializable, Cloneable {
      * @param description String
      * @param marketData  Boolean
      * @param className   String
-     * @param rules       List<Rule>
      */
-    public Strategy(String name, String description, Boolean marketData, String className,
-                    List<Rule> rules) {
+    public StrategyDto(String name, String description, Boolean marketData, String className) {
 
         this.name = name;
         this.description = description;
         this.marketData = marketData;
-        this.rules = rules;
         this.className = className;
     }
 
@@ -213,48 +177,13 @@ public class Strategy extends Aspect implements Serializable, Cloneable {
         this.marketData = marketData;
     }
 
-    /**
-     * Method getRules.
-     *
-     * @return List<Rule>
-     */
-    public List<Rule> getRules() {
-        return this.rules;
-    }
-
-    /**
-     * Method setRules.
-     *
-     * @param rules List<Rule>
-     */
-    public void setRules(List<Rule> rules) {
-        this.rules = rules;
-    }
-
-    /**
-     * Method getIndicatorSeries.
-     *
-     * @return List<IndicatorSeries>
-     */
-    public List<IndicatorSeries> getIndicatorSeries() {
-        return this.indicators;
-    }
-
-    /**
-     * Method setIndicatorSeries.
-     *
-     * @param indicators List<IndicatorSeries>
-     */
-    public void setIndicatorSeries(List<IndicatorSeries> indicators) {
-        this.indicators = indicators;
-    }
 
     /**
      * Method getStrategyManager.
      *
      * @return Strategy
      */
-    public Strategy getStrategyManager() {
+    public StrategyDto getStrategyManager() {
         return this.strategy;
     }
 
@@ -263,7 +192,7 @@ public class Strategy extends Aspect implements Serializable, Cloneable {
      *
      * @param strategy Strategy
      */
-    public void setStrategyManager(Strategy strategy) {
+    public void setStrategyManager(StrategyDto strategy) {
         this.strategy = strategy;
     }
 
@@ -276,22 +205,6 @@ public class Strategy extends Aspect implements Serializable, Cloneable {
         return null != getStrategyManager();
     }
 
-    /**
-     * Method isDirty.
-     *
-     * @return boolean
-     */
-    @Transient
-    public boolean isDirty() {
-
-        for (IndicatorSeries item : this.getIndicatorSeries()) {
-
-            if (item.isDirty()) {
-                return true;
-            }
-        }
-        return super.isDirty();
-    }
 
     /**
      * Method clone.
@@ -300,8 +213,7 @@ public class Strategy extends Aspect implements Serializable, Cloneable {
      */
     public Object clone() throws CloneNotSupportedException {
 
-        Strategy strategy = (Strategy) super.clone();
-        strategy.setIndicatorSeries(this.getIndicatorSeries());
+        StrategyDto strategy = (StrategyDto) super.clone();
         return strategy;
     }
 

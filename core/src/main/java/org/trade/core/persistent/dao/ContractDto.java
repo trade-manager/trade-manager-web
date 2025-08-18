@@ -65,6 +65,7 @@ public class ContractDto extends Aspect implements Serializable, Cloneable {
     private ZonedDateTime expiry;
     private String secType;
     private Integer requestId;
+    private TradePositionDto tradePosition;
 
     public ContractDto() {
     }
@@ -176,6 +177,25 @@ public class ContractDto extends Aspect implements Serializable, Cloneable {
      */
     public void setSecType(String secType) {
         this.secType = secType;
+    }
+
+
+    /**
+     * Method getTradePosition.
+     *
+     * @return TradePositionDto
+     */
+    public TradePositionDto getTradePosition() {
+        return this.tradePosition;
+    }
+
+    /**
+     * Method setTradePosition.
+     *
+     * @param tradePosition TradePositionDto
+     */
+    public void setTradePosition(TradePositionDto tradePosition) {
+        this.tradePosition = tradePosition;
     }
 
     /**

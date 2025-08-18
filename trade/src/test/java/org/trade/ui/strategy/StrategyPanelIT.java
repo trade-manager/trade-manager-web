@@ -203,8 +203,8 @@ public class StrategyPanelIT {
             fail("Failed to create dummy data msg: " + ex.getMessage());
         }
 
-        assertFalse(tradestrategy.getStrategyData().getBaseCandleSeries().isEmpty());
         strategyProxy.cancel();
+        assertFalse(tradestrategy.getStrategyData().getBaseCandleSeries().isEmpty());
     }
 
     @Test
@@ -322,6 +322,7 @@ public class StrategyPanelIT {
             myrule = new Rule();
             myrule.setStrategy(strategy);
         }
+
         myrule.setComment("Test Ver: " + myrule.getRuleVersion());
         StreamEditorPane textArea = new StreamEditorPane(ContentType.TEXT);
         new JScrollPane(textArea);

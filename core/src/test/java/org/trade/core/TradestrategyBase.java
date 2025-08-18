@@ -40,6 +40,7 @@ import org.trade.core.persistent.dao.Account;
 import org.trade.core.persistent.dao.Contract;
 import org.trade.core.persistent.dao.ContractLite;
 import org.trade.core.persistent.dao.Portfolio;
+import org.trade.core.persistent.dao.Rule;
 import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradePosition;
@@ -204,7 +205,15 @@ public class TradestrategyBase {
 
                 ContractLite contractLite = tradestrategy0.getContractLite();
                 Portfolio portfolio = tradestrategy0.getPortfolio();
+                Strategy strategy = tradestrategy0.getStrategy();
                 tradeService.deleteAspect(tradingday);
+
+                List<Rule> rules = tradeService.findRulesByStrategy(strategy);
+
+                for (Rule rule : rules) {
+
+                    tradeService.deleteAspect(rule);
+                }
 
                 if (null != contractLite.getTradePosition()) {
 

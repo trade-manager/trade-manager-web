@@ -37,18 +37,8 @@ package org.trade.core.persistent.dao;
 
 // Generated Feb 21, 2011 12:43:33 PM by Hibernate Tools 3.4.0.CR1
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 import org.trade.core.dao.Aspect;
 import org.trade.core.valuetype.Money;
-import org.trade.core.valuetype.Side;
 
 import java.io.Serial;
 import java.math.BigDecimal;
@@ -63,9 +53,7 @@ import java.util.List;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-@Entity
-@Table(name = "tradeposition")
-public class TradePosition extends Aspect implements java.io.Serializable {
+public class TradePositionDto extends Aspect implements java.io.Serializable {
 
     /**
      * There can only ever be one TradePosition open at a time for a Contract. A
@@ -83,57 +71,32 @@ public class TradePosition extends Aspect implements java.io.Serializable {
     @Serial
     private static final long serialVersionUID = 715993951200025530L;
 
-    @Column(name = "open_date", nullable = false)
     private ZonedDateTime openDate;
-
-    @Column(name = "side", nullable = false, length = 3)
     private String side;
-
-    @Column(name = "open_quantity")
     private Integer openQuantity = 0;
-
-    @Column(name = "close_date")
     private ZonedDateTime closeDate;
-
-    @Column(name = "total_commission", precision = 10)
     private BigDecimal totalCommission;
-
-    @Column(name = "total_buy_quantity")
     private Integer totalBuyQuantity;
-
-    @Column(name = "total_buy_value", precision = 10)
     private BigDecimal totalBuyValue;
-
-    @Column(name = "total_sell_quantity")
     private Integer totalSellQuantity;
-
-    @Column(name = "total_sell_value", precision = 10)
     private BigDecimal totalSellValue;
-
-    @Column(name = "total_net_value", precision = 10)
     private BigDecimal totalNetValue;
+    private ContractDto contract;
+    private List<TradeOrderDto> tradeOrders = new ArrayList<>(0);
 
-    @OneToMany(mappedBy = "tradePosition", fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH,
-            CascadeType.REMOVE})
-    private List<TradeOrder> tradeOrders = new ArrayList<>(0);
-
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH})
-    @JoinColumn(name = "contract_id", nullable = false)
-    private ContractLite contractLite;
-
-    public TradePosition() {
+    public TradePositionDto() {
     }
 
     /**
      * Constructor for TradePosition.
      *
-     * @param contract         Contract
+     * @param contract         ContractDto
      * @param positionOpenDate Date
      * @param side             String
      */
-    public TradePosition(ContractLite contract, ZonedDateTime positionOpenDate, String side) {
+    public TradePositionDto(ContractDto contract, ZonedDateTime positionOpenDate, String side) {
 
-        this.contractLite = contract;
+        this.contract = contract;
         this.openDate = positionOpenDate;
         this.side = side;
     }
@@ -141,7 +104,7 @@ public class TradePosition extends Aspect implements java.io.Serializable {
     /**
      * Constructor for TradePosition.
      *
-     * @param contract          ContractLite
+     * @param contract          ContractDto
      * @param positionOpenDate  ZonedDateTime
      * @param positionCloseDate ZonedDateTime
      * @param openQuantity      Integer
@@ -153,12 +116,12 @@ public class TradePosition extends Aspect implements java.io.Serializable {
      * @param totalNetValue     BigDecimal
      * @param tradeOrders       List<TradeOrder>
      */
-    public TradePosition(ContractLite contract, ZonedDateTime positionOpenDate, ZonedDateTime positionCloseDate,
-                         Integer openQuantity, String side, BigDecimal totalCommission, Integer totalBuyQuantity,
-                         BigDecimal totalBuyValue, Integer totalSellQuantity, BigDecimal totalSellValue, BigDecimal totalNetValue,
-                         List<TradeOrder> tradeOrders) {
+    public TradePositionDto(ContractDto contract, ZonedDateTime positionOpenDate, ZonedDateTime positionCloseDate,
+                            Integer openQuantity, String side, BigDecimal totalCommission, Integer totalBuyQuantity,
+                            BigDecimal totalBuyValue, Integer totalSellQuantity, BigDecimal totalSellValue, BigDecimal totalNetValue,
+                            List<TradeOrderDto> tradeOrders) {
 
-        this.contractLite = contract;
+        this.contract = contract;
         this.openDate = positionOpenDate;
         this.closeDate = positionCloseDate;
         this.openQuantity = openQuantity;
@@ -175,19 +138,19 @@ public class TradePosition extends Aspect implements java.io.Serializable {
     /**
      * Method getContract.
      *
-     * @return ContractLite
+     * @return ContractDto
      */
-    public ContractLite getContractLite() {
-        return this.contractLite;
+    public ContractDto getContract() {
+        return this.contract;
     }
 
     /**
      * Method setContract.
      *
-     * @param contractLite ContractLite
+     * @param contract ContractDto
      */
-    public void setContractLite(ContractLite contractLite) {
-        this.contractLite = contractLite;
+    public void setContract(ContractDto contract) {
+        this.contract = contract;
     }
 
     /**
@@ -373,137 +336,28 @@ public class TradePosition extends Aspect implements java.io.Serializable {
     /**
      * Method getTradeOrders.
      *
-     * @return List<TradeOrder>
+     * @return List<TradeOrderDto>
      */
-    public List<TradeOrder> getTradeOrders() {
+    public List<TradeOrderDto> getTradeOrders() {
         return this.tradeOrders;
     }
 
     /**
      * Method setTradeOrders.
      *
-     * @param tradeOrders List<TradeOrder>
+     * @param tradeOrders List<TradeOrderDto>
      */
-    public void setTradeOrders(List<TradeOrder> tradeOrders) {
+    public void setTradeOrders(List<TradeOrderDto> tradeOrders) {
         this.tradeOrders = tradeOrders;
     }
 
     /**
      * Method addTradeOrder.
      *
-     * @param tradeOrders TradeOrder
+     * @param tradeOrders TradeOrderDto
      */
-    public void addTradeOrder(TradeOrder tradeOrders) {
+    public void addTradeOrder(TradeOrderDto tradeOrders) {
         this.tradeOrders.add(tradeOrders);
-    }
-
-    /**
-     * Method isOpen.
-     *
-     * @return boolean
-     */
-    @Transient
-    public boolean isOpen() {
-        return this.equals(this.getContractLite().getTradePosition());
-    }
-
-    /**
-     * Method containsTradeOrder.
-     *
-     * @param tradeOrder TradeOrder
-     * @return boolean
-     */
-    @Transient
-    public boolean containsTradeOrder(TradeOrder tradeOrder) {
-
-        for (TradeOrder item : this.getTradeOrders()) {
-
-            if (item.getOrderKey().equals(tradeOrder.getOrderKey())) {
-
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Method getUnRealizedProfit.
-     *
-     * @param lastPrice BigDecimal
-     * @return BigDecimal
-     */
-    @Transient
-    public BigDecimal getUnRealizedProfit(BigDecimal lastPrice) {
-
-        double unRealizedProfit = 0;
-
-        Long prevIdTradePosition = null;
-
-        for (TradeOrder order : getTradeOrders()) {
-
-            if (order.getIsFilled()) {
-
-                if (null == prevIdTradePosition
-                        || !prevIdTradePosition.equals(order.getTradePosition().getId())) {
-
-                    prevIdTradePosition = order.getTradePosition().getId();
-                    if (order.getTradePosition().equals(order.getTradePosition().getContractLite().getTradePosition())) {
-                        unRealizedProfit = order.getTradePosition().getTotalNetValue().doubleValue()
-                                + (order.getTradePosition().getOpenQuantity() * lastPrice.doubleValue());
-
-                    }
-                }
-            }
-        }
-        return new BigDecimal(unRealizedProfit);
-    }
-
-    /**
-     * Method getRealizedProfit.
-     *
-     * @return BigDecimal
-     */
-    @Transient
-    public BigDecimal getRealizedProfit() {
-
-        double realizedProfit = 0;
-        Long prevIdTradePosition = null;
-
-        for (TradeOrder order : getTradeOrders()) {
-
-            if (order.getIsFilled()) {
-
-                if (null == prevIdTradePosition
-                        || !prevIdTradePosition.equals(order.getTradePosition().getId())) {
-
-                    prevIdTradePosition = order.getTradePosition().getId();
-
-                    if (order.getTradePosition().getTotalSellQuantity().doubleValue() > 0
-                            && order.getTradePosition().getTotalBuyQuantity().doubleValue() > 0) {
-
-                        double qty = (order.getTradePosition().getTotalSellQuantity().doubleValue()
-                                - order.getTradePosition().getTotalBuyQuantity().doubleValue());
-
-                        if (qty == 0) {
-                            realizedProfit = realizedProfit + order.getTradePosition().getTotalNetValue().doubleValue()
-                                    - order.getTradePosition().getTotalCommission().doubleValue();
-                        } else {
-
-                            double avgBuy = (order.getTradePosition().getTotalBuyValue().doubleValue()
-                                    / order.getTradePosition().getTotalBuyQuantity().doubleValue());
-
-                            double avgSell = (order.getTradePosition().getTotalSellValue().doubleValue()
-                                    / order.getTradePosition().getTotalSellQuantity().doubleValue());
-
-                            int sideVal = (Side.BOT.equals(order.getTradePosition().getSide()) ? -1 : 1);
-                            realizedProfit = realizedProfit + (qty * (avgSell - avgBuy) * sideVal)
-                                    - order.getTradePosition().getTotalCommission().doubleValue();
-                        }
-                    }
-                }
-            }
-        }
-        return new BigDecimal(realizedProfit);
     }
 
     /**
@@ -519,6 +373,6 @@ public class TradePosition extends Aspect implements java.io.Serializable {
                 + " Total Buy qty: " + this.getTotalBuyQuantity() + " Total Buy Value: "
                 + new Money(this.getTotalBuyValue()) + " Total Sell qty: " + this.getTotalSellQuantity()
                 + " Total Sell Value: " + new Money(this.getTotalSellValue()) + " Total Comm: "
-                + new Money(this.getTotalCommission()) + " updateDate: " + this.getUpdatedDate();
+                + new Money(this.getTotalCommission()) + " updatedDate: " + this.getUpdatedDate();
     }
 }

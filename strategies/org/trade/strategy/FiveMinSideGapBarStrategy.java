@@ -113,6 +113,13 @@ public class FiveMinSideGapBarStrategy extends AbstractStrategyRule {
     }
 
     /**
+     * Method call once to initialize the strategy in the worker thread.
+     */
+    public void initialize() {
+
+    }
+
+    /**
      * Method runStrategy.
      *
      * @param candleSeries CandleSeries

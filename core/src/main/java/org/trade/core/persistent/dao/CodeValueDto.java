@@ -35,17 +35,10 @@
  */
 package org.trade.core.persistent.dao;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import org.trade.core.dao.Aspect;
 import org.trade.core.factory.ClassFactory;
-import org.trade.core.persistent.dao.series.indicator.IndicatorSeries;
+import org.trade.core.persistent.dao.series.indicator.IndicatorSeriesDto;
 
 import java.io.Serial;
 import java.util.ArrayList;
@@ -55,40 +48,27 @@ import java.util.List;
 /**
  *
  */
-@Entity
-@Table(name = "codevalue")
-public class CodeValue extends Aspect implements java.io.Serializable {
+
+public class CodeValueDto extends Aspect implements java.io.Serializable {
 
     @Serial
     private static final long serialVersionUID = 2273276207080568947L;
 
-    @Column(name = "code_value", nullable = false, length = 45)
     private String codeValue;
+    private CodeAttributeDto codeAttribute;
+    private IndicatorSeriesDto indicatorSeries;
+    private TradestrategyDto tradestrategy;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "code_attribute_id", nullable = false)
-    private CodeAttribute codeAttribute;
-
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "indicator_series_id")
-    private IndicatorSeries indicatorSeries;
-
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "tradestrategy_id")
-    private Tradestrategy tradestrategy;
-
-    public CodeValue() {
+    public CodeValueDto() {
     }
 
     /**
      * Constructor for CodeValue.
      *
-     * @param codeAttribute CodeAttribute
+     * @param codeAttribute CodeAttributeDto
      * @param codeValue     String
      */
-    public CodeValue(CodeAttribute codeAttribute, String codeValue) {
+    public CodeValueDto(CodeAttributeDto codeAttribute, String codeValue) {
 
         this.codeValue = codeValue;
         this.codeAttribute = codeAttribute;
@@ -97,11 +77,11 @@ public class CodeValue extends Aspect implements java.io.Serializable {
     /**
      * Constructor for CodeValue.
      *
-     * @param codeAttribute   CodeAttribute
+     * @param codeAttribute   CodeAttributeDto
      * @param codeValue       String
-     * @param indicatorSeries IndicatorSeries
+     * @param indicatorSeries IndicatorSeriesDto
      */
-    public CodeValue(CodeAttribute codeAttribute, String codeValue, IndicatorSeries indicatorSeries) {
+    public CodeValueDto(CodeAttributeDto codeAttribute, String codeValue, IndicatorSeriesDto indicatorSeries) {
 
         this.codeValue = codeValue;
         this.codeAttribute = codeAttribute;
@@ -111,11 +91,11 @@ public class CodeValue extends Aspect implements java.io.Serializable {
     /**
      * Constructor for CodeValue.
      *
-     * @param codeAttribute CodeAttribute
+     * @param codeAttribute CodeAttributeDto
      * @param codeValue     String
-     * @param tradestrategy Tradestrategy
+     * @param tradestrategy TradestrategyDto
      */
-    public CodeValue(CodeAttribute codeAttribute, String codeValue, Tradestrategy tradestrategy) {
+    public CodeValueDto(CodeAttributeDto codeAttribute, String codeValue, TradestrategyDto tradestrategy) {
 
         this.codeValue = codeValue;
         this.codeAttribute = codeAttribute;
@@ -143,54 +123,54 @@ public class CodeValue extends Aspect implements java.io.Serializable {
     /**
      * Method getCodeAttribute.
      *
-     * @return CodeAttribute
+     * @return CodeAttributeDto
      */
-    public CodeAttribute getCodeAttribute() {
+    public CodeAttributeDto getCodeAttribute() {
         return this.codeAttribute;
     }
 
     /**
      * Method setCodeAttribute.
      *
-     * @param codeAttribute CodeAttribute
+     * @param codeAttribute CodeAttributeDto
      */
-    public void setCodeAttribute(CodeAttribute codeAttribute) {
+    public void setCodeAttribute(CodeAttributeDto codeAttribute) {
         this.codeAttribute = codeAttribute;
     }
 
     /**
      * Method getIndicatorSeries.
      *
-     * @return IndicatorSeries
+     * @return IndicatorSeriesDto
      */
-    public IndicatorSeries getIndicatorSeries() {
+    public IndicatorSeriesDto getIndicatorSeries() {
         return this.indicatorSeries;
     }
 
     /**
      * Method setIndicatorSeries.
      *
-     * @param indicatorSeries IndicatorSeries
+     * @param indicatorSeries IndicatorSeriesDto
      */
-    public void setIndicatorSeries(IndicatorSeries indicatorSeries) {
+    public void setIndicatorSeries(IndicatorSeriesDto indicatorSeries) {
         this.indicatorSeries = indicatorSeries;
     }
 
     /**
      * Method getTradestrategy.
      *
-     * @return Tradestrategy
+     * @return TradestrategyDto
      */
-    public Tradestrategy getTradestrategy() {
+    public TradestrategyDto getTradestrategy() {
         return this.tradestrategy;
     }
 
     /**
      * Method setTradestrategy.
      *
-     * @param tradestrategy Tradestrategy
+     * @param tradestrategy TradestrategyDto
      */
-    public void setTradestrategy(Tradestrategy tradestrategy) {
+    public void setTradestrategy(TradestrategyDto tradestrategy) {
         this.tradestrategy = tradestrategy;
     }
 
@@ -206,9 +186,9 @@ public class CodeValue extends Aspect implements java.io.Serializable {
      * @return The value of the attribute.
      */
     @Transient
-    public static Object getValueCode(final String name, final List<CodeValue> codeValues) throws Exception {
+    public static Object getValueCode(final String name, final List<CodeValueDto> codeValues) throws Exception {
 
-        for (CodeValue value : codeValues) {
+        for (CodeValueDto value : codeValues) {
 
             if (name.equals(value.getCodeAttribute().getName())) {
 
@@ -216,7 +196,7 @@ public class CodeValue extends Aspect implements java.io.Serializable {
                 params.add(value.getCodeValue());
                 // codeValue = ClassFactory.getCreateClass(value.getCodeAttribute().getClassName(), params, CodeAttributePanel.class);
                 return ClassFactory.getCreateClass(value.getCodeAttribute().getClassName(), params,
-                        CodeValue.class);
+                        CodeValueDto.class);
             }
         }
         return null;

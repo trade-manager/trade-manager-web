@@ -37,14 +37,6 @@ package org.trade.core.persistent.dao;
 
 // Generated Feb 21, 2011 12:43:33 PM by Hibernate Tools 3.4.0.CR1
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.Pattern;
 import org.trade.core.dao.Aspect;
 import org.trade.core.util.CoreUtils;
 import org.trade.core.valuetype.ContentType;
@@ -61,9 +53,7 @@ import java.util.Objects;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-@Entity
-@Table(name = "rule")
-public class Rule extends Aspect implements Serializable {
+public class RuleDto extends Aspect implements Serializable {
 
     /**
      *
@@ -71,36 +61,24 @@ public class Rule extends Aspect implements Serializable {
     @Serial
     private static final long serialVersionUID = 2273276207080568947L;
 
-    @Column(name = "comment", nullable = false, length = 200)
     private String comment;
-
-    @Lob
-    @Column(name = "rule")
     private byte[] rule;
-
-    @Column(name = "rule_version", columnDefinition = "integer DEFAULT 0", nullable = false)
     protected Integer ruleVersion;
-
-    @Column(name = "content_type", length = 20, nullable = false)
-    @Pattern(regexp = "^(text/java|text/javascript|text/rtf)$")
     private String contentType = ContentType.JAVA;
+    private StrategyDto strategy;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "strategy_id", nullable = false)
-    private Strategy strategy;
-
-    public Rule() {
+    public RuleDto() {
 
     }
 
     /**
      * Constructor for Rule.
      *
-     * @param strategy    Strategy
+     * @param strategy    StrategyDto
      * @param ruleVersion Integer
      * @param comment     String
      */
-    public Rule(Strategy strategy, Integer ruleVersion, String comment) {
+    public RuleDto(StrategyDto strategy, Integer ruleVersion, String comment) {
 
         this.strategy = strategy;
         this.ruleVersion = ruleVersion;
@@ -110,13 +88,13 @@ public class Rule extends Aspect implements Serializable {
     /**
      * Constructor for Rule.
      *
-     * @param strategy    Strategy
+     * @param strategy    StrategyDto
      * @param ruleVersion Integer
      * @param comment     String
      * @param rule        byte[]
      * @param contentType String
      */
-    public Rule(Strategy strategy, Integer ruleVersion, String comment, byte[] rule, String contentType) {
+    public RuleDto(StrategyDto strategy, Integer ruleVersion, String comment, byte[] rule, String contentType) {
 
         this.strategy = strategy;
         this.ruleVersion = ruleVersion;
@@ -128,18 +106,18 @@ public class Rule extends Aspect implements Serializable {
     /**
      * Method getStrategy.
      *
-     * @return Strategy
+     * @return StrategyDto
      */
-    public Strategy getStrategy() {
+    public StrategyDto getStrategy() {
         return this.strategy;
     }
 
     /**
      * Method setStrategy.
      *
-     * @param strategy Strategy
+     * @param strategy StrategyDto
      */
-    public void setStrategy(Strategy strategy) {
+    public void setStrategy(StrategyDto strategy) {
         this.strategy = strategy;
     }
 
@@ -224,7 +202,7 @@ public class Rule extends Aspect implements Serializable {
         return "Version-" + this.getRuleVersion();
     }
 
-    public static final Comparator<Rule> VERSION_ORDER = (o1, o2) -> CoreUtils.nullSafeComparator(o1.getRuleVersion(), o2.getRuleVersion());
+    public static final Comparator<RuleDto> VERSION_ORDER = (o1, o2) -> CoreUtils.nullSafeComparator(o1.getRuleVersion(), o2.getRuleVersion());
 
     /**
      * Method equals.
@@ -238,15 +216,15 @@ public class Rule extends Aspect implements Serializable {
             return true;
         }
 
-        if (objectToCompare instanceof Rule) {
+        if (objectToCompare instanceof RuleDto) {
 
             if (null == this.getId() || null == this.getRuleVersion()) {
 
                 return false;
             }
 
-            return Objects.equals(this.getStrategy().getId(), ((Rule) objectToCompare).getStrategy().getId())
-                    && this.getRuleVersion().equals(((Rule) objectToCompare).getRuleVersion());
+            return Objects.equals(this.getStrategy().getId(), ((RuleDto) objectToCompare).getStrategy().getId())
+                    && this.getRuleVersion().equals(((RuleDto) objectToCompare).getRuleVersion());
 
         }
         return false;

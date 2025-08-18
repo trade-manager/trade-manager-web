@@ -97,9 +97,16 @@ public class PosMgrHeikinAshiTrailStrategy extends AbstractStrategyRule {
      */
 
     public PosMgrHeikinAshiTrailStrategy(TradeService tradeService, IBrokerModel brokerManagerModel, StrategyData strategyData, Long tradestrategyId) {
+
         super(tradeService, brokerManagerModel, strategyData, tradestrategyId);
     }
 
+    /**
+     * Method call once to initialize the strategy in the worker thread.
+     */
+    public void initialize() {
+
+    }
     /**
      * Method runStrategy.
      *
