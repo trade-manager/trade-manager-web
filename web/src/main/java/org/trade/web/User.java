@@ -25,7 +25,6 @@ public class User extends Aspect implements Serializable, Cloneable {
     @Column(name = "first_name")
     private String firstName;
 
-    @JsonIgnore
     @Column(name = "password")
     private String password;
 

@@ -86,7 +86,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
 
     private final static Logger _log = LoggerFactory.getLogger(AbstractStrategyRule.class);
 
-    private TradeService tradeService;
+    private final TradeService tradeService;
 
     /*
      * Message handler that allows the main controller to listen for errors.
@@ -785,6 +785,10 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
      * Method cancelOrdersClosePosition. This method will close a position by
      * canceling all unfilled orders and creating a market order to close the
      * position.
+     *
+     * @param transmit boolean
+     * @return TradeOrder
+     * @throws StrategyRuleException
      */
     public TradeOrder cancelOrdersClosePosition(boolean transmit) throws StrategyRuleException {
 
@@ -802,6 +806,34 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
 
             throw new StrategyRuleException(1, 380, "Error StrategyWorker exception: " + ex.getMessage());
         }
+        return null;
+    }
+
+    /**
+     * Method getTargetOneOrder.
+     * <p>
+     * This method is used to get target one order.
+     *
+     * @return TradeOrder target one tradeOrder.
+     */
+    public TradeOrder getTargetOneOrder() {
+
+        if (this.isThereOpenPosition()) {
+
+            this.getTradestrategyOrders().getTradeOrders().sort(TradeOrder.ORDER_KEY);
+
+            for (TradeOrder tradeOrder : this.getTradestrategyOrders().getTradeOrders()) {
+
+                if (!tradeOrder.getIsOpenPosition()) {
+
+                    if (OrderType.LMT.equals(tradeOrder.getOrderType()) && null != tradeOrder.getOcaGroupName()) {
+
+                        return tradeOrder;
+                    }
+                }
+            }
+        }
+
         return null;
     }
 

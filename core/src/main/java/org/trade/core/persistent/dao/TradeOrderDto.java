@@ -112,7 +112,7 @@ public class TradeOrderDto extends Aspect implements java.io.Serializable, Clone
 
     private List<TradeOrderfillDto> tradeOrderfills = new ArrayList<>(0);
     private TradePositionDto tradePosition;
-    private TradestrategyLiteDto tradestrategyLiteDto;
+    private TradestrategyLiteDto tradestrategyLite;
 
 
     public TradeOrderDto() {
@@ -121,40 +121,40 @@ public class TradeOrderDto extends Aspect implements java.io.Serializable, Clone
     /**
      * Constructor for TradeOrder.
      *
-     * @param tradestrategyLiteDto TradestrategyLiteDto
-     * @param action               String
-     * @param orderType            String
-     * @param quantity             Integer
-     * @param auxPrice             BigDecimal
-     * @param limitPrice           BigDecimal
-     * @param orderCreateDate      ZonedDateTime
+     * @param tradestrategyLite TradestrategyLiteDto
+     * @param action            String
+     * @param orderType         String
+     * @param quantity          Integer
+     * @param auxPrice          BigDecimal
+     * @param limitPrice        BigDecimal
+     * @param orderCreateDate   ZonedDateTime
      */
-    public TradeOrderDto(TradestrategyLiteDto tradestrategyLiteDto, String action, String orderType, Integer quantity,
+    public TradeOrderDto(TradestrategyLiteDto tradestrategyLite, String action, String orderType, Integer quantity,
                          BigDecimal auxPrice, BigDecimal limitPrice, ZonedDateTime orderCreateDate) {
 
-        this(tradestrategyLiteDto, action, orderCreateDate, orderType, quantity, auxPrice, limitPrice, OverrideConstraints.YES,
+        this(tradestrategyLite, action, orderCreateDate, orderType, quantity, auxPrice, limitPrice, OverrideConstraints.YES,
                 TimeInForce.DAY, TriggerMethod.DEFAULT);
     }
 
     /**
      * Constructor for TradeOrder.
      *
-     * @param tradestrategyLiteDto TradestrategyLiteDto
-     * @param action               String
-     * @param orderCreateDate      ZonedDateTime
-     * @param orderType            String
-     * @param quantity             Integer
-     * @param auxPrice             BigDecimal
-     * @param limitPrice           BigDecimal
-     * @param overrideConstraints  Integer
-     * @param timeInForce          String
-     * @param triggerMethod        Integer
+     * @param tradestrategyLite   TradestrategyLiteDto
+     * @param action              String
+     * @param orderCreateDate     ZonedDateTime
+     * @param orderType           String
+     * @param quantity            Integer
+     * @param auxPrice            BigDecimal
+     * @param limitPrice          BigDecimal
+     * @param overrideConstraints Integer
+     * @param timeInForce         String
+     * @param triggerMethod       Integer
      */
-    public TradeOrderDto(TradestrategyLiteDto tradestrategyLiteDto, String action, ZonedDateTime orderCreateDate, String orderType,
+    public TradeOrderDto(TradestrategyLiteDto tradestrategyLite, String action, ZonedDateTime orderCreateDate, String orderType,
                          Integer quantity, BigDecimal auxPrice, BigDecimal limitPrice, Integer overrideConstraints,
                          String timeInForce, Integer triggerMethod) {
 
-        this.tradestrategyLiteDto = tradestrategyLiteDto;
+        this.tradestrategyLite = tradestrategyLite;
         this.action = action;
         this.auxPrice = auxPrice;
         this.orderCreateDate = orderCreateDate;
@@ -165,39 +165,39 @@ public class TradeOrderDto extends Aspect implements java.io.Serializable, Clone
         this.timeInForce = timeInForce;
         this.triggerMethod = triggerMethod;
         this.orderUpdateDate = orderCreateDate;
-        this.orderReference = Objects.requireNonNull(this.tradestrategyLiteDto.getId()).toString();
+        this.orderReference = Objects.requireNonNull(this.tradestrategyLite.getId()).toString();
     }
 
     /**
      * Constructor for TradeOrder.
      *
-     * @param tradestrategyLiteDto TradestrategyLiteDto
-     * @param action               String
-     * @param orderCreateDate      ZonedDateTime
-     * @param orderType            String
-     * @param limitPrice           Money
-     * @param auxPrice             Money
-     * @param quantity             Integer
-     * @param ocaGroupName         String
-     * @param parentId             Integer
-     * @param triggerMethod        Integer
-     * @param overrideConstraints  Integer
-     * @param timeInForce          String
-     * @param transmit             Boolean
-     * @param trailStopPrice       BigDecimal
-     * @param trailingPercent      BigDecimal
-     * @param FAProfile            String
-     * @param FAGroup              String
-     * @param FAMethod             String
-     * @param FAPercent            BigDecimal
+     * @param tradestrategyLite   TradestrategyLiteDto
+     * @param action              String
+     * @param orderCreateDate     ZonedDateTime
+     * @param orderType           String
+     * @param limitPrice          Money
+     * @param auxPrice            Money
+     * @param quantity            Integer
+     * @param ocaGroupName        String
+     * @param parentId            Integer
+     * @param triggerMethod       Integer
+     * @param overrideConstraints Integer
+     * @param timeInForce         String
+     * @param transmit            Boolean
+     * @param trailStopPrice      BigDecimal
+     * @param trailingPercent     BigDecimal
+     * @param FAProfile           String
+     * @param FAGroup             String
+     * @param FAMethod            String
+     * @param FAPercent           BigDecimal
      */
-    public TradeOrderDto(TradestrategyLiteDto tradestrategyLiteDto, String action, ZonedDateTime orderCreateDate, String orderType,
+    public TradeOrderDto(TradestrategyLiteDto tradestrategyLite, String action, ZonedDateTime orderCreateDate, String orderType,
                          Money limitPrice, Money auxPrice, Integer quantity, String ocaGroupName, Integer parentId,
                          Integer triggerMethod, Integer overrideConstraints, String timeInForce, Boolean transmit,
                          Money trailStopPrice, Percent trailingPercent, String FAProfile, String FAGroup, String FAMethod,
                          BigDecimal FAPercent) {
 
-        this.tradestrategyLiteDto = tradestrategyLiteDto;
+        this.tradestrategyLite = tradestrategyLite;
         this.action = action;
         this.orderCreateDate = orderCreateDate;
         this.auxPrice = (null == auxPrice ? null : auxPrice.getBigDecimalValue());
@@ -341,17 +341,17 @@ public class TradeOrderDto extends Aspect implements java.io.Serializable, Clone
      *
      * @return TradestrategyLiteDto
      */
-    public TradestrategyLiteDto getTradestrategyLiteDto() {
-        return this.tradestrategyLiteDto;
+    public TradestrategyLiteDto getTradestrategyLite() {
+        return this.tradestrategyLite;
     }
 
     /**
      * Method setTradestrategy.
      *
-     * @param tradestrategyLiteDto TradestrategyLiteDto
+     * @param tradestrategyLite TradestrategyLiteDto
      */
-    public void setTradestrategyLiteDto(TradestrategyLiteDto tradestrategyLiteDto) {
-        this.tradestrategyLiteDto = tradestrategyLiteDto;
+    public void setTradestrategyLite(TradestrategyLiteDto tradestrategyLite) {
+        this.tradestrategyLite = tradestrategyLite;
     }
 
     /**

@@ -29,6 +29,7 @@ import org.trade.core.util.DynamicCode;
 import org.trade.core.valuetype.BarSize;
 import org.trade.core.valuetype.ChartDays;
 import org.trade.core.valuetype.ContentType;
+import org.trade.core.valuetype.DAOStrategy;
 import org.trade.core.valuetype.Side;
 
 import javax.swing.*;
@@ -85,9 +86,10 @@ public class StrategyPanelJSIT {
         assertNotNull(templateName);
         strategyDir = ConfigProperties.getPropAsString("trade.strategy.default.dir");
         assertNotNull(strategyDir);
-        tradestrategy = TradestrategyBase.createTestTradestrategy(tradeService, symbol, Side.BOT, ChartDays.ONE_DAY, BarSize.HOUR_MIN);
+        Strategy strategy = (Strategy) DAOStrategy.newInstance().getObject();
+        tradestrategy = TradestrategyBase.createTestTradestrategy(tradeService, strategy, symbol, Side.BOT, ChartDays.ONE_DAY, BarSize.HOUR_MIN);
         assertNotNull(tradestrategy);
-        Strategy strategy = tradeService.findStrategyById(tradestrategy.getStrategy().getId());
+        strategy = tradeService.findStrategyById(tradestrategy.getStrategy().getId());
         String fileName = strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/') + strategy.getClassName()
                 + ".js";
         String content = TradestrategyBase.readFile(fileName);

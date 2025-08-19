@@ -35,6 +35,7 @@
  */
 package org.trade.core.persistent.dao.series.indicator;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Transient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -216,6 +217,7 @@ public abstract class IndicatorSeriesDto extends ComparableObjectSeries implemen
      *
      * @param strategy StrategyDto
      */
+    @JsonIgnore
     public void setStrategy(StrategyDto strategy) {
         this.strategy = strategy;
     }

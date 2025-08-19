@@ -37,6 +37,7 @@ package org.trade.core.persistent.dao;
 
 // Generated Feb 21, 2011 12:43:33 PM by Hibernate Tools 3.4.0.CR1
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.trade.core.dao.Aspect;
 
 import java.io.Serial;
@@ -194,6 +195,7 @@ public class ContractDto extends Aspect implements Serializable, Cloneable {
      *
      * @param tradePosition TradePositionDto
      */
+    @JsonIgnore
     public void setTradePosition(TradePositionDto tradePosition) {
         this.tradePosition = tradePosition;
     }

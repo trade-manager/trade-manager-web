@@ -38,6 +38,7 @@ package org.trade.core.persistent.dao.strategy;
 import org.json.JSONObject;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
+import org.mozilla.javascript.NativeJSON;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 import org.slf4j.Logger;
@@ -47,6 +48,9 @@ import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.Rule;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradeOrderDto;
+import org.trade.core.persistent.dao.TradePosition;
+import org.trade.core.persistent.dao.TradePositionDto;
+import org.trade.core.persistent.dao.Tradestrategy;
 import org.trade.core.persistent.dao.TradestrategyDto;
 import org.trade.core.persistent.dao.series.indicator.CandleSeries;
 import org.trade.core.persistent.dao.series.indicator.StrategyData;
@@ -145,10 +149,10 @@ public class StrategyRuleJS extends AbstractStrategyRule {
             Scriptable globalScope = context.initStandardObjects();
 
             // Wrap the Java object for use in the JavaScript environment
-            Object gsJsObject = Context.javaToJS(this, globalScope);
+            Object gsJSObject = Context.javaToJS(this, globalScope);
 
             // Make the Java object available in JavaScript as the global variable 'gs'
-            ScriptableObject.putProperty(globalScope, "gs", gsJsObject);
+            ScriptableObject.putProperty(globalScope, "gs", gsJSObject);
 
             // Create  a local scope
             localScope = context.newObject(globalScope);
@@ -179,7 +183,7 @@ public class StrategyRuleJS extends AbstractStrategyRule {
 
                     Function functionInitStrategy = (Function) initialize;
                     Object jsResult = functionInitStrategy.call(context, localScope, localScope, null);
-                    _log.info("Info: StrategyRuleJS::initialize initialize result: {}", jsResult);
+                    _log.info("Info: StrategyRuleJS::initialize initialize isCancelled: {}", jsResult);
                 } else {
 
                     _log.error("Error: StrategyRuleJS::initialize initialize is not a function");
@@ -224,7 +228,7 @@ public class StrategyRuleJS extends AbstractStrategyRule {
             String candleSeriesJSON = JSONMapper.getJSONString(candleSeries);
             Object[] functionParams = new Object[]{candleSeriesJSON, true};
             Object jsResult = functionRunStrategy.call(context, localScope, localScope, functionParams);
-            _log.info("Info: StrategyRuleJS::runStrategy runStrategy result: {}", jsResult);
+            _log.info("Info: StrategyRuleJS::runStrategy runStrategy isCancelled: {}", jsResult);
         } catch (Exception ex) {
 
             _log.error("Error: StrategyRuleJS::runStrategy msg: {}", ex.getMessage());
@@ -287,17 +291,70 @@ public class StrategyRuleJS extends AbstractStrategyRule {
         return result;
     }
 
+    /**
+     * @param stopPrice double
+     * @param transmit  Boolean
+     */
+    public void moveStopOCAPrice(double stopPrice, Boolean transmit) {
+
+        JSONObject result = getResult();
+
+        try {
+
+            super.moveStopOCAPrice(new Money(stopPrice), transmit);
+        } catch (Exception ex) {
+
+            result.put("error", true);
+            result.put("message", "Error: StrategyRuleJS::moveStopOCAPrice msg: " + ex.getMessage());
+            _log.error(result.getString("message"));
+        }
+    }
+
+    /**
+     * @return JSONObject
+     */
+    public JSONObject getOpenTradePositionJSON() {
+
+        JSONObject result = getResult();
+
+        try {
+
+            TradePosition tradePosition = this.getOpenTradePosition();
+            TradePositionDto tradePositionDto = JSONMapper.convertToDto(tradePosition, TradePositionDto.class);
+
+            if (null != tradePositionDto) {
+
+                result.put("data", new JSONObject(JSONMapper.getJSONString(tradePositionDto)));
+            } else {
+
+                result.put("error", true);
+                result.put("message", "Error: StrategyRuleJS::getOpenTradePositionJSON tradeOrder not found.");
+            }
+        } catch (Exception ex) {
+
+            result.put("error", true);
+            result.put("message", "Error: StrategyRuleJS::getOpenTradePositionJSON msg: " + ex.getMessage());
+            _log.error(result.getString("message"));
+        }
+
+        return result;
+    }
+
+    /**
+     * @return JSONObject
+     */
     public JSONObject getOpenPositionOrderJSON() {
 
         JSONObject result = getResult();
 
         try {
 
-            TradeOrderDto tradeOrder = JSONMapper.convertToDto(this.getOpenPositionOrder(), TradeOrderDto.class);
+            TradeOrder tradeOrder = this.getOpenPositionOrder();
+            TradeOrderDto tradeOrderDto = JSONMapper.convertToDto(tradeOrder, TradeOrderDto.class);
 
-            if (null != tradeOrder) {
+            if (null != tradeOrderDto) {
 
-                result.put("data", new JSONObject(JSONMapper.getJSONString(tradeOrder)));
+                result.put("data", new JSONObject(JSONMapper.getJSONString(tradeOrderDto)));
             } else {
 
                 result.put("error", true);
@@ -324,7 +381,8 @@ public class StrategyRuleJS extends AbstractStrategyRule {
 
         try {
 
-            TradestrategyDto tradestrategyDto = JSONMapper.convertToDto(this.getTradestrategy(), TradestrategyDto.class);
+            Tradestrategy tradestrategy = this.getTradestrategy();
+            TradestrategyDto tradestrategyDto = JSONMapper.convertToDto(tradestrategy, TradestrategyDto.class);
 
             if (null != tradestrategyDto) {
 
@@ -376,18 +434,96 @@ public class StrategyRuleJS extends AbstractStrategyRule {
         return result;
     }
 
-
     /**
-     * Method cancel a tradeOrder
+     * Method get the trade order.
+     *
+     * @return JSONObject
      */
-    public void cancelOrder(String tradeOrderJSON) {
+    public JSONObject getTargetOneOrderJSON() {
 
         JSONObject result = getResult();
 
         try {
 
-            TradeOrderDto tradeOrderDto = JSONMapper.getDTO(tradeOrderJSON, TradeOrderDto.class);
-            TradeOrder tradeOrder = JSONMapper.convertToEntity(tradeOrderDto, TradeOrder.class);
+            TradeOrder tradeOrder = super.getTargetOneOrder();
+
+            if (null != tradeOrder) {
+
+                TradeOrderDto tradeOrderDto = JSONMapper.convertToDto(tradeOrder, TradeOrderDto.class);
+                result.put("data", new JSONObject(JSONMapper.getJSONString(tradeOrderDto)));
+            } else {
+
+                result.put("error", false);
+                result.put("message", "Error: StrategyRuleJS::getTargetOneOrderJSON tradeOrder not found.");
+                result.put("data", JSONObject.NULL);
+            }
+        } catch (Exception ex) {
+
+            result.put("error", true);
+            result.put("message", "Error: StrategyRuleJS::getTargetOneOrderJSON msg: " + ex.getMessage());
+            _log.error(result.getString("message"));
+        }
+
+        return result;
+    }
+
+    /**
+     * Method getOneMinuteTrailStop.
+     * <p>
+     * This method is used to trail on one minute bars over the first target.
+     *
+     * @param stopPrice Money
+     * @return double new stop or original if not trail.
+     */
+    public double getOneMinuteTrailStop(double stopPrice) {
+
+        if (!(59 == this.getCurrentCandle().getLastUpdateDate().getSecond())) {
+            return stopPrice;
+        }
+
+        CandleSeries candleSeries = this.getTradestrategy().getStrategyData().getBaseCandleSeries();
+
+        if (Side.BOT.equals(this.getOpenTradePosition().getSide())) {
+
+            if ((new Money(stopPrice)).isLessThan(new Money(candleSeries.getPreviousRollingCandle().getVwap()))) {
+
+                return candleSeries.getPreviousRollingCandle().getVwap();
+            }
+
+            if (candleSeries.getPreviousRollingCandle().getVwap() < candleSeries.getRollingCandle().getVwap()) {
+
+                return candleSeries.getPreviousRollingCandle().getVwap();
+            }
+        } else {
+
+            if ((new Money(stopPrice)).isGreaterThan(new Money(candleSeries.getPreviousRollingCandle().getVwap()))) {
+
+                return candleSeries.getPreviousRollingCandle().getVwap();
+            }
+
+            if (candleSeries.getPreviousRollingCandle().getVwap() > candleSeries.getRollingCandle().getVwap()) {
+
+                return candleSeries.getPreviousRollingCandle().getVwap();
+            }
+        }
+
+        return stopPrice;
+    }
+
+    /**
+     * Method cancel a tradeOrder
+     *
+     * @param tradeOrder NativeObject
+     */
+    public void cancelOrder(Object tradeOrder) {
+
+        JSONObject result = getResult();
+
+        try {
+
+            Object tradeOrderJSON = NativeJSON.stringify(context, localScope, tradeOrder, null, null);
+            TradeOrderDto tradeOrderDto = JSONMapper.getDTO(tradeOrderJSON.toString(), TradeOrderDto.class);
+            tradeOrder = JSONMapper.convertToEntity(tradeOrderDto, TradeOrder.class);
 
             if (null != tradeOrder) {
 
@@ -478,13 +614,13 @@ public class StrategyRuleJS extends AbstractStrategyRule {
      * @return TradeOrder
      */
     public JSONObject createRiskOpenPosition(String action, double entryPrice, double stopPrice, boolean transmit,
-                                             String FAProfile, String FAGroup, String FAMethod, Percent FAPercent) {
+                                             String FAProfile, String FAGroup, String FAMethod, double FAPercent) {
         JSONObject result = getResult();
 
         try {
 
             TradeOrder tradeOrder = this.createRiskOpenPosition(action, new Money(entryPrice), new Money(stopPrice), transmit,
-                    FAProfile, FAGroup, FAMethod, (null == FAPercent ? null : new Percent(FAPercent)));
+                    FAProfile, FAGroup, FAMethod, new Percent(FAPercent));
 
             if (null != tradeOrder) {
 
@@ -499,6 +635,50 @@ public class StrategyRuleJS extends AbstractStrategyRule {
 
             result.put("error", true);
             result.put("message", "Error: StrategyRuleJS::createRiskOpenPosition msg: " + ex.getMessage());
+            _log.error(result.getString("message"));
+        }
+
+        return result;
+    }
+
+    /**
+     * @param openPosition    Object
+     * @param stopRiskUnits   Integer
+     * @param stopAddAmount   double
+     * @param targetRiskUnits Integer
+     * @param targetAddAmount double
+     * @param quantity        Integer
+     * @param stopTransmit    Boolean
+     * @return JSONObject
+     */
+    public JSONObject createStopAndTargetOrder(Object openPosition, final Integer stopRiskUnits,
+                                               final double stopAddAmount, final Integer targetRiskUnits, final double targetAddAmount,
+                                               final Integer quantity, final Boolean stopTransmit) {
+
+        JSONObject result = getResult();
+
+        try {
+
+            Object tradeOrderJSON = NativeJSON.stringify(context, localScope, openPosition, null, null);
+            TradeOrderDto tradeOrderDto = JSONMapper.getDTO(tradeOrderJSON.toString(), TradeOrderDto.class);
+            TradeOrder tradeOrder = JSONMapper.convertToEntity(tradeOrderDto, TradeOrder.class);
+            tradeOrder = super.createStopAndTargetOrder(tradeOrder, stopRiskUnits,
+                    new Money(stopAddAmount), targetRiskUnits, new Money(targetAddAmount),
+                    quantity, stopTransmit);
+
+            if (null != tradeOrder) {
+
+                tradeOrderDto = JSONMapper.convertToDto(tradeOrder, TradeOrderDto.class);
+                result.put("data", new JSONObject(JSONMapper.getJSONString(tradeOrderDto)));
+            } else {
+
+                result.put("error", true);
+                result.put("message", "Error: StrategyRuleJS::createStopAndTargetOrder tradeOrder not created.");
+            }
+        } catch (Exception ex) {
+
+            result.put("error", true);
+            result.put("message", "Error: StrategyRuleJS::createStopAndTargetOrder msg: " + ex.getMessage());
             _log.error(result.getString("message"));
         }
 

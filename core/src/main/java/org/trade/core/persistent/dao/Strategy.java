@@ -37,7 +37,6 @@ package org.trade.core.persistent.dao;
 
 // Generated Feb 21, 2011 12:43:33 PM by Hibernate Tools 3.4.0.CR1
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -88,11 +87,9 @@ public class Strategy extends Aspect implements Serializable, Cloneable {
     @JoinColumn(name = "strategy_manager_id")
     private Strategy strategy;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "strategy", fetch = FetchType.LAZY, orphanRemoval = true, cascade = {CascadeType.ALL})
     private List<Rule> rules = new ArrayList<>(0);
 
-    @JsonIgnore
     @OneToMany(mappedBy = "strategy", fetch = FetchType.EAGER, orphanRemoval = true, cascade = {CascadeType.ALL})
     private List<IndicatorSeries> indicators = new ArrayList<>(0);
 

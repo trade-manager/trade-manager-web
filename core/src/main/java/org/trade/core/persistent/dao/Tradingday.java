@@ -37,7 +37,6 @@ package org.trade.core.persistent.dao;
 
 // Generated Feb 21, 2011 2:18:03 PM by Hibernate Tools 3.4.0.CR1
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -96,7 +95,6 @@ public class Tradingday extends Aspect implements Serializable, Cloneable {
     @Column(name = "request_id", unique = true)
     private Integer requestId;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "tradingday", fetch = FetchType.EAGER, orphanRemoval = true, cascade = {CascadeType.ALL})
     @OrderBy("side ASC, id ASC")
     private List<Tradestrategy> tradestrategies = new ArrayList<>(0);

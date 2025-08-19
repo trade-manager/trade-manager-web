@@ -35,7 +35,6 @@
  */
 package org.trade.core.persistent.dao;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -80,11 +79,9 @@ public class Portfolio extends Aspect implements Serializable, Cloneable {
     @Column(name = "is_default", nullable = false)
     private Boolean isDefault = false;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "portfolio", fetch = FetchType.LAZY)
     private List<Tradestrategy> tradestrategies = new ArrayList<>(0);
 
-    @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "portfolioaccount",
             joinColumns = @JoinColumn(name = "portfolio_id"),

@@ -37,6 +37,7 @@ package org.trade.core.persistent.dao;
 
 // Generated Feb 21, 2011 2:18:03 PM by Hibernate Tools 3.4.0.CR1
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.trade.core.dao.Aspect;
 import org.trade.core.valuetype.AccountType;
 import org.trade.core.valuetype.Currency;
@@ -355,6 +356,7 @@ public class AccountDto extends Aspect implements Serializable, Cloneable {
      *
      * @param portfolios List<PortfolioDto>
      */
+    @JsonIgnore
     public void setPortfolios(List<PortfolioDto> portfolios) {
         this.portfolios = portfolios;
     }
