@@ -19,6 +19,7 @@ import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.Candle;
 import org.trade.core.persistent.dao.CandleDto;
 import org.trade.core.persistent.dao.ContractDto;
+import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradeOrderDto;
 import org.trade.core.persistent.dao.Tradestrategy;
@@ -30,6 +31,7 @@ import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.Action;
 import org.trade.core.valuetype.BarSize;
 import org.trade.core.valuetype.ChartDays;
+import org.trade.core.valuetype.DAOStrategy;
 import org.trade.core.valuetype.OrderType;
 import org.trade.core.valuetype.Side;
 
@@ -76,7 +78,8 @@ public class JSONMapperIT {
     public void setUp() throws Exception {
 
         clientId = ConfigProperties.getPropAsInt("trade.tws.clientId");
-        tradestrategy = TradestrategyBase.createTestTradestrategy(tradeService, symbol, Side.BOT, ChartDays.ONE_DAY, BarSize.FIVE_MIN);
+        Strategy strategy = (Strategy) DAOStrategy.newInstance().getObject();
+        tradestrategy = TradestrategyBase.createTestTradestrategy(tradeService, strategy, symbol, Side.BOT, ChartDays.ONE_DAY, BarSize.FIVE_MIN);
         assertNotNull(tradestrategy);
     }
 
@@ -167,7 +170,7 @@ public class JSONMapperIT {
 
         TradestrategyLiteDto tradestrategyLiteDto = JSONMapper.convertToDto(tradestrategy, TradestrategyLiteDto.class);
         TradeOrderDto tradeOrderDto = JSONMapper.convertToDto(tradeOrder, TradeOrderDto.class);
-        tradeOrderDto.setTradestrategyLiteDto(tradestrategyLiteDto);
+        tradeOrderDto.setTradestrategyLite(tradestrategyLiteDto);
 
         String json = JSONMapper.getJSONString(tradeOrderDto);
         _log.info("mapTradeOrder tradeOrderDto JSON: {}", json.toString());

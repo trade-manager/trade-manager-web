@@ -35,6 +35,8 @@
  */
 package org.trade.core;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.Account;
 import org.trade.core.persistent.dao.Contract;
@@ -71,6 +73,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Random;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
 /**
@@ -78,6 +81,7 @@ import static org.junit.jupiter.api.Assertions.fail;
  */
 public class TradestrategyBase {
 
+    private final static Logger _log = LoggerFactory.getLogger(TradestrategyBase.class);
 
     public TradestrategyBase() {
     }
@@ -89,7 +93,7 @@ public class TradestrategyBase {
      */
     public static Tradestrategy createTestTradestrategy(TradeService tradeService, String symbol) throws Exception {
 
-        return createTestTradestrategy(tradeService, symbol, Side.BOT, ChartDays.ONE_DAY, BarSize.FIVE_MIN);
+        return createTestTradestrategy(tradeService, null, symbol, Side.BOT, ChartDays.ONE_DAY, BarSize.FIVE_MIN);
     }
 
     /**
@@ -97,10 +101,14 @@ public class TradestrategyBase {
      *
      * @return Tradestrategy
      */
-    public static Tradestrategy createTestTradestrategy(TradeService tradeService, String symbol, String side, Integer chartDays, Integer barSize) throws Exception {
+    public static Tradestrategy createTestTradestrategy(TradeService tradeService, Strategy strategy, String symbol, String side, Integer chartDays, Integer barSize) throws Exception {
 
         Tradestrategy tradestrategy;
-        Strategy strategy = (Strategy) DAOStrategy.newInstance().getObject();
+
+        if (null == strategy) {
+            strategy = (Strategy) DAOStrategy.newInstance().getObject();
+        }
+
         Portfolio portfolio = (Portfolio) DAOPortfolio.newInstance().getObject();
         portfolio = tradeService.findPortfolioByName(portfolio.getName());
 
@@ -238,6 +246,25 @@ public class TradestrategyBase {
                 }
             }
         }
+    }
+
+    public static Long addTradeOrder(TradeService tradeService, Tradestrategy tradestrategy, String action, String orderType, BigDecimal price, BigDecimal limitPrice, double stop) throws Exception {
+
+        double risk = tradestrategy.getRiskAmount().doubleValue();
+        int quantity = (int) ((int) risk / stop);
+
+        TradeOrder tradeOrder = new TradeOrder(tradestrategy, action, orderType, quantity, price,
+                limitPrice, TradingCalendar.getDateTimeNowMarketTimeZone());
+        tradeOrder.setOrderKey((BigDecimal.valueOf(Math.random() * 1000000)).intValue());
+        tradeOrder.setClientId(0);
+        tradeOrder.setTransmit(true);
+        tradeOrder.setStatus("SUBMITTED");
+        tradeOrder.validate();
+        tradeOrder = tradeService.saveTradeOrder(tradeOrder);
+
+        assertNotNull(tradeOrder);
+        _log.info("IdOrder: {}", tradeOrder.getId());
+        return tradeOrder.getId();
     }
 
     public static String getRandomNumber(int length) {

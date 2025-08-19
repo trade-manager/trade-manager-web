@@ -49,10 +49,12 @@ import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
 import org.trade.core.persistent.TradeService;
+import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.Tradestrategy;
 import org.trade.core.persistent.dao.series.indicator.CandleSeries;
 import org.trade.core.valuetype.BarSize;
 import org.trade.core.valuetype.ChartDays;
+import org.trade.core.valuetype.DAOStrategy;
 import org.trade.core.valuetype.Side;
 
 import java.io.Serial;
@@ -88,7 +90,8 @@ public class WorkerIT {
     @BeforeEach
     public void setUp() throws Exception {
 
-        tradestrategy = TradestrategyBase.createTestTradestrategy(tradeService, symbol, Side.BOT, ChartDays.ONE_DAY, BarSize.HOUR_MIN);
+        Strategy strategy = (Strategy) DAOStrategy.newInstance().getObject();
+        tradestrategy = TradestrategyBase.createTestTradestrategy(tradeService, strategy, symbol, Side.BOT, ChartDays.ONE_DAY, BarSize.HOUR_MIN);
         assertNotNull(tradestrategy);
         _log.info(" Test Initialized");
     }

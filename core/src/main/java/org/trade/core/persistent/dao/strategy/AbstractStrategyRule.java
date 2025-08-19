@@ -806,6 +806,34 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
     }
 
     /**
+     * Method getTargetOneOrder.
+     * <p>
+     * This method is used to get target one order.
+     *
+     * @return TradeOrder target one tradeOrder.
+     */
+    public TradeOrder getTargetOneOrder() {
+
+        if (this.isThereOpenPosition()) {
+
+            this.getTradestrategyOrders().getTradeOrders().sort(TradeOrder.ORDER_KEY);
+
+            for (TradeOrder tradeOrder : this.getTradestrategyOrders().getTradeOrders()) {
+
+                if (!tradeOrder.getIsOpenPosition()) {
+
+                    if (OrderType.LMT.equals(tradeOrder.getOrderType()) && null != tradeOrder.getOcaGroupName()) {
+
+                        return tradeOrder;
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Method moveStopOCAPrice. This method will the stop order for a trade to
      * the new values..
      */

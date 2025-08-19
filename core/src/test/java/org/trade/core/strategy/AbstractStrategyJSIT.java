@@ -39,7 +39,10 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,23 +56,32 @@ import org.trade.core.factory.ClassFactory;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.Rule;
 import org.trade.core.persistent.dao.Strategy;
+import org.trade.core.persistent.dao.TradeOrder;
+import org.trade.core.persistent.dao.TradeOrderfill;
 import org.trade.core.persistent.dao.Tradestrategy;
+import org.trade.core.persistent.dao.series.indicator.StrategyData;
 import org.trade.core.persistent.dao.strategy.IStrategyRule;
 import org.trade.core.persistent.dao.strategy.StrategyRuleJS;
 import org.trade.core.properties.ConfigProperties;
+import org.trade.core.valuetype.Action;
 import org.trade.core.valuetype.BarSize;
 import org.trade.core.valuetype.ChartDays;
 import org.trade.core.valuetype.ContentType;
+import org.trade.core.valuetype.DAOStrategy;
+import org.trade.core.valuetype.Exchange;
+import org.trade.core.valuetype.OrderStatus;
 import org.trade.core.valuetype.Side;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  *
  */
+@TestMethodOrder(OrderAnnotation.class)
 @SpringBootTest
 @ContextConfiguration(classes = ApplicationRepositoryConfig.class,
         initializers = ApplicationProfileInitializer.class)
@@ -86,6 +98,7 @@ public class AbstractStrategyJSIT {
     private static String templateName;
     private static String strategyDir;
     private static IStrategyRule strategyProxy;
+    private static boolean deleteAfter = true;
 
     /**
      * Method setUpBeforeClass.
@@ -109,10 +122,37 @@ public class AbstractStrategyJSIT {
         Integer port = Integer.valueOf(ConfigProperties.getPropAsString("trade.tws.port"));
         String host = ConfigProperties.getPropAsString("trade.tws.host");
         brokerModel.onConnect(host, port, clientId);
+    }
 
-        tradestrategy = TradestrategyBase.createTestTradestrategy(tradeService, symbol, Side.BOT, ChartDays.ONE_DAY, BarSize.FIVE_MIN);
+    /**
+     * Method tearDown.
+     */
+    @AfterEach
+    public void tearDown() throws Exception {
+
+        if (deleteAfter) {
+
+            brokerModel.onDisconnect();
+            TradestrategyBase.clearDBData(tradeService, tradestrategy);
+        }
+    }
+
+    /**
+     * Method tearDownAfterClass.
+     */
+    @AfterAll
+    public static void tearDownAfterClass() throws Exception {
+
+    }
+
+    @Test
+    @Order(1)
+    public void fiveMinGapBarStrategyJS() throws Exception {
+
+        Strategy strategy = (Strategy) DAOStrategy.newInstance().getObject();
+        tradestrategy = TradestrategyBase.createTestTradestrategy(tradeService, strategy, symbol, Side.BOT, ChartDays.ONE_DAY, BarSize.FIVE_MIN);
         assertNotNull(tradestrategy);
-        Strategy strategy = tradeService.findStrategyById(tradestrategy.getStrategy().getId());
+        strategy = tradeService.findStrategyById(tradestrategy.getStrategy().getId());
         String fileName = strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/') + strategy.getClassName()
                 + ".js";
         String content = TradestrategyBase.readFile(fileName);
@@ -138,27 +178,58 @@ public class AbstractStrategyJSIT {
         _log.info(" Test Initialized");
         tradestrategy.getStrategyData().populateCandleSeries(tradestrategy.getTradingday(), tradestrategy.getChartDays(), tradestrategy.getBarSize(), Side.BOT.equals(tradestrategy.getSide()), 250);
         strategyProxy.cancel();
-    }
-
-    /**
-     * Method tearDown.
-     */
-    @AfterEach
-    public void tearDown() throws Exception {
-
-        brokerModel.onDisconnect();
-        TradestrategyBase.clearDBData(tradeService, tradestrategy);
-    }
-
-    /**
-     * Method tearDownAfterClass.
-     */
-    @AfterAll
-    public static void tearDownAfterClass() {
+        deleteAfter = false;
     }
 
     @Test
-    public void runJavaScript() {
+    @Order(2)
+    public void posMgrFHXRBHYRStrategyJS() throws Exception {
 
+        deleteAfter = true;
+        tradestrategy = tradeService.findTradestrategyById(tradestrategy.getId());
+        Strategy strategy = (Strategy) DAOStrategy.newInstance().getObject();
+        assertTrue(strategy.hasStrategyManager());
+        strategy = strategy.getStrategyManager();
+
+        tradestrategy.setStrategy(strategy);
+        tradestrategy = tradeService.saveAspect(tradestrategy);
+
+        assertTrue(tradestrategy.getTradeOrders().size() == 1);
+        TradeOrder tradeOrder = tradestrategy.getTradeOrders().getFirst();
+        tradeOrder.setStatus(OrderStatus.SUBMITTED);
+        tradeOrder = tradeService.saveAspect(tradeOrder);
+        TradeOrderfill tradeOrderfill = new TradeOrderfill(tradeOrder, tradeOrder.getAccountNumber(), tradeOrder.getAuxPrice(),
+                tradeOrder.getQuantity(), Exchange.SMART, String.valueOf(tradeOrder.getOrderKey()), tradeOrder.getAuxPrice(), tradeOrder.getQuantity(), (tradeOrder.getAction().equals(Action.BUY) ? Side.BOT : Side.SLD),
+                tradeOrder.getOrderCreateDate());
+        tradeOrder.addTradeOrderfill(tradeOrderfill);
+        tradeService.saveTradeOrderfill(tradeOrder);
+
+        strategy = tradeService.findStrategyById(tradestrategy.getStrategy().getId());
+        String fileName = strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/') + strategy.getClassName()
+                + ".js";
+        String content = TradestrategyBase.readFile(fileName);
+
+        if (null != content && strategy.getRules().isEmpty()) {
+
+            Rule nextRule = new Rule(strategy, 1, null,
+                    content.getBytes(), ContentType.JAVASCRIPT);
+            strategy.getRules().add(nextRule);
+            strategy = this.tradeService.saveAspect(strategy);
+        }
+
+        tradestrategy.setStrategyData(StrategyData.create(tradestrategy));
+        strategyProxy = new StrategyRuleJS(tradeService, brokerModel, tradestrategy.getStrategyData(),
+                tradestrategy.getId(), strategy.getRules().getFirst());
+        assertNotNull(strategyProxy);
+        strategyProxy.execute();
+
+        while (!strategyProxy.isWaiting()) {
+
+            Thread.sleep(250);
+        }
+
+        _log.info(" Test Initialized");
+        tradestrategy.getStrategyData().populateCandleSeries(tradestrategy.getTradingday(), tradestrategy.getChartDays(), tradestrategy.getBarSize(), Side.BOT.equals(tradestrategy.getSide()), 250);
+        strategyProxy.cancel();
     }
 }

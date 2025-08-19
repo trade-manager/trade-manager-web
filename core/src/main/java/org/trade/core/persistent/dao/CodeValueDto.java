@@ -35,6 +35,7 @@
  */
 package org.trade.core.persistent.dao;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Transient;
 import org.trade.core.dao.Aspect;
 import org.trade.core.factory.ClassFactory;
@@ -170,6 +171,7 @@ public class CodeValueDto extends Aspect implements java.io.Serializable {
      *
      * @param tradestrategy TradestrategyDto
      */
+    @JsonIgnore
     public void setTradestrategy(TradestrategyDto tradestrategy) {
         this.tradestrategy = tradestrategy;
     }

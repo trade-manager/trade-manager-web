@@ -35,7 +35,6 @@
  */
 package org.trade.core.persistent.dao;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -69,12 +68,10 @@ public class CodeValue extends Aspect implements java.io.Serializable {
     @JoinColumn(name = "code_attribute_id", nullable = false)
     private CodeAttribute codeAttribute;
 
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "indicator_series_id")
     private IndicatorSeries indicatorSeries;
 
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "tradestrategy_id")
     private Tradestrategy tradestrategy;

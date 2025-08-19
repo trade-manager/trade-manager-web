@@ -52,13 +52,15 @@
                 return gs.isCancelled();
             }
 
+            currentCandleItem = currentCandleItem.data;
+
             let tradestrategy = JSON.parse(gs.getTradestrategyJSON());
             tradestrategy = tradestrategy.data;
             gs.log('Info: StrategyRuleJS::runStrategy currentCandleItem: ' + JSON.stringify(currentCandleItem));
             gs.log('Info: StrategyRuleJS::runStrategy tradestrategy: ' + JSON.stringify(tradestrategy));
             gs.log('Info: StrategyRuleJS::runStrategy openPositionOrderKey: ' + openPositionOrderKey);
             // Get the current candle start date
-            let startPeriod = new Date(currentCandleItem.data.period.start);
+            let startPeriod = new Date(currentCandleItem.period.start);
             gs.log('Info: StrategyRuleJS::runStrategy startPeriod: ' + startPeriod);
 
             /*
@@ -81,10 +83,10 @@
 
                     tradeOrder = tradeOrder.data;
 
-                    if (CONSTANTS.ORDER_STATUS.PARTIALFILLED == tradeOrder.status && gs.isRiskViolated(currentCandleItem.data.close, tradestrategy.risk_amount,
+                    if (CONSTANTS.ORDER_STATUS.PARTIALFILLED == tradeOrder.status && gs.isRiskViolated(currentCandleItem.close, tradestrategy.risk_amount,
                             tradeOrder.quantity, tradeOrder.average_filled_price)) {
 
-                        gs.cancelOrder(JSON.stringify(tradeOrder));
+                        gs.cancelOrder(tradeOrder);
                     }
                 }
 
@@ -240,9 +242,9 @@
                      * direction to the trade before position is opened.
                      */
 
-                    if (firstCandle.candle.side) {
+                    if (firstCandle.side) {
 
-                        if (currentCandleItem.data.candle.vwap < firstCandle.candle.low) {
+                        if (currentCandleItem.candle.vwap < firstCandle.low) {
 
                             // gs.updateTradestrategyStatus(CONSTANTS.TRADESTRATEGY_STATUS.FIVE_MIN_LOW_BROKEN);
                             // gs.cancelAllOrders();
@@ -253,7 +255,7 @@
                         }
                     } else {
 
-                        if (currentCandleItem.data.candle.vwap > firstCandle.candle.high) {
+                        if (currentCandleItem.candle.vwap > firstCandle.high) {
 
                             // gs.updateTradestrategyStatus(CONSTANTS.TRADESTRATEGY_STATUS.FIVE_MIN_HIGH_BROKEN);
                             // gs.cancelAllOrders();

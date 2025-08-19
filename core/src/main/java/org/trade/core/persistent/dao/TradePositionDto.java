@@ -37,6 +37,7 @@ package org.trade.core.persistent.dao;
 
 // Generated Feb 21, 2011 12:43:33 PM by Hibernate Tools 3.4.0.CR1
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.trade.core.dao.Aspect;
 import org.trade.core.valuetype.Money;
 
@@ -347,6 +348,7 @@ public class TradePositionDto extends Aspect implements java.io.Serializable {
      *
      * @param tradeOrders List<TradeOrderDto>
      */
+    @JsonIgnore
     public void setTradeOrders(List<TradeOrderDto> tradeOrders) {
         this.tradeOrders = tradeOrders;
     }

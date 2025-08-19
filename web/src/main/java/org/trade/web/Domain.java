@@ -21,7 +21,6 @@ public class Domain {
     private Long id;
 
     @Version
-    @JsonIgnore
     @Column(name = "version")
     private Long version;
 
