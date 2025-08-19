@@ -18,11 +18,65 @@
 
         try {
             let candleSeries = JSON.parse(candleSeriesJSON);
-            gs.log('Info: StrategyRuleJS::runStrategy key: ' + candleSeries.key + ' newBar: ' + newBar);
+            gs.log('Info: StrategyRuleJS::runStrategy key: ' + candleSeries.key + ' newBar: ' + newBar + ' symbol: ' + gs.getSymbol());
 
-            // Get the current candle
             let currentCandleItem = JSON.parse(gs.getCurrentCandleJSON());
-            gs.log('Info: StrategyRuleJS::runStrategy currentCandleItem: ' + currentCandleItem.candle.side);
+
+            if (currentCandleItem.error) {
+
+                gs.cancel();
+            }
+
+            let tradestrategy = JSON.parse(gs.getTradestrategyJSON());
+            tradestrategy = tradestrategy.data;
+            gs.log('Info: StrategyRuleJS::runStrategy currentCandleItem: ' + JSON.stringify(currentCandleItem));
+            gs.log('Info: StrategyRuleJS::runStrategy tradestrategy: ' + JSON.stringify(tradestrategy));
+            gs.log('Info: StrategyRuleJS::runStrategy openPositionOrderKey: ' + openPositionOrderKey);
+            // Get the current candle start date
+            let startPeriod = new Date(currentCandleItem.data.period.start);
+            gs.log('Info: StrategyRuleJS::runStrategy startPeriod: ' + startPeriod);
+
+            /*
+             * Get the current open trade. If no trade is open this Strategy
+             * will be closed down.
+             */
+            if (!gs.isThereOpenPosition()) {
+
+                gs.log("No open position so Cancel Strategy Mgr symbol: {} startPeriod: {}", gs.getSymbol(), startPeriod);
+                gs.cancel();
+                return;
+            }
+
+             /*
+              * If all trades are closed shut down the position user
+              *
+              * Note this strategy is run as soon as we enter a position.
+              *
+              * Check to see if the open position is filled and the open quantity
+              * is > 0 also check to see if we already have this position
+              * covered.
+              */
+             if (gs.isThereOpenPosition() && !gs.isPositionCovered()) {
+
+                 /*
+                  * Position has been opened and not covered submit the target
+                  * and stop orders for the open quantity. Two targets at 2R and
+                  * 2R Stop and 2X actual stop this will be managed to 1R below
+                  *
+                  * Make the stop -2R and manage to the Vwap MA of the opening
+                  * bar.
+                  */
+                 let quantity = gs.getOpenPositionOrder().getFilledQuantity();
+                 let tgt1Qty = quantity / 2;
+                 let tgt2Qty = quantity - tgt1Qty;
+
+                 // Integer tgt3Qty = quantity - (tgt1Qty + tgt2Qty);
+                 createStopAndTargetOrder(gs.getOpenPositionOrder(), 2, 0.01, 2, 0.01, tgt1Qty, true);
+                 createStopAndTargetOrder(gs.getOpenPositionOrder(), 2, 0.01, 2, 0.01, tgt2Qty, true);
+                 // createStopAndTargetOrder(getOpenPositionOrder(),
+                 // 2,0.01,4,0.01, tgt3Qty, true);
+                 gs.log("Open position submit Stop/Tgt orders created symbol: {} startPeriod: {}", gs.getSymbol(), startPeriod);
+             }
             return candleSeries.key
         } catch (ex) {
             gs.error(1, 100, 'Error: StrategyRuleJS::runStrategy process javascript msg: ' + ex.getMessage());

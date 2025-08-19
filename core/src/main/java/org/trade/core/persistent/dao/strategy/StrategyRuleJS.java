@@ -478,13 +478,13 @@ public class StrategyRuleJS extends AbstractStrategyRule {
      * @return TradeOrder
      */
     public JSONObject createRiskOpenPosition(String action, double entryPrice, double stopPrice, boolean transmit,
-                                             String FAProfile, String FAGroup, String FAMethod, Percent FAPercent) {
+                                             String FAProfile, String FAGroup, String FAMethod, double FAPercent) {
         JSONObject result = getResult();
 
         try {
 
             TradeOrder tradeOrder = this.createRiskOpenPosition(action, new Money(entryPrice), new Money(stopPrice), transmit,
-                    FAProfile, FAGroup, FAMethod, (null == FAPercent ? null : new Percent(FAPercent)));
+                    FAProfile, FAGroup, FAMethod, new Percent(FAPercent));
 
             if (null != tradeOrder) {
 
