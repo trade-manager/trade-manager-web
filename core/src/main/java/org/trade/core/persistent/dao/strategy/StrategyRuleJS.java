@@ -291,6 +291,10 @@ public class StrategyRuleJS extends AbstractStrategyRule {
         return result;
     }
 
+    /**
+     * @param stopPrice double
+     * @param transmit  Boolean
+     */
     public void moveStopOCAPrice(double stopPrice, Boolean transmit) {
 
         JSONObject result = getResult();
@@ -306,6 +310,9 @@ public class StrategyRuleJS extends AbstractStrategyRule {
         }
     }
 
+    /**
+     * @return JSONObject
+     */
     public JSONObject getOpenTradePositionJSON() {
 
         JSONObject result = getResult();
@@ -333,6 +340,9 @@ public class StrategyRuleJS extends AbstractStrategyRule {
         return result;
     }
 
+    /**
+     * @return JSONObject
+     */
     public JSONObject getOpenPositionOrderJSON() {
 
         JSONObject result = getResult();
@@ -462,9 +472,8 @@ public class StrategyRuleJS extends AbstractStrategyRule {
      * <p>
      * This method is used to trail on one minute bars over the first target.
      *
-     * @param stopPrice     Money
+     * @param stopPrice Money
      * @return double new stop or original if not trail.
-     * @throws StrategyRuleException ex
      */
     public double getOneMinuteTrailStop(double stopPrice) {
 
@@ -632,6 +641,16 @@ public class StrategyRuleJS extends AbstractStrategyRule {
         return result;
     }
 
+    /**
+     * @param openPosition    Object
+     * @param stopRiskUnits   Integer
+     * @param stopAddAmount   double
+     * @param targetRiskUnits Integer
+     * @param targetAddAmount double
+     * @param quantity        Integer
+     * @param stopTransmit    Boolean
+     * @return JSONObject
+     */
     public JSONObject createStopAndTargetOrder(Object openPosition, final Integer stopRiskUnits,
                                                final double stopAddAmount, final Integer targetRiskUnits, final double targetAddAmount,
                                                final Integer quantity, final Boolean stopTransmit) {
