@@ -17,6 +17,7 @@
     function runStrategy(candleSeriesJSON, newBar) {
 
         try {
+
             let candleSeries = JSON.parse(candleSeriesJSON);
             gs.log('Info: StrategyRuleJS::runStrategy key: ' + candleSeries.key + ' newBar: ' + newBar + ' symbol: ' + gs.getSymbol());
 
@@ -25,6 +26,7 @@
             if (currentCandleItem.error) {
 
                 gs.cancel();
+                return gs.isCancelled();
             }
 
             let tradestrategy = JSON.parse(gs.getTradestrategyJSON());
@@ -44,7 +46,7 @@
 
                 gs.log("No open position so Cancel Strategy Mgr symbol: {} startPeriod: {}", gs.getSymbol(), startPeriod);
                 gs.cancel();
-                return;
+                return gs.isCancelled();
             }
 
              /*
@@ -71,13 +73,22 @@
                  let tgt2Qty = quantity - tgt1Qty;
 
                  // Integer tgt3Qty = quantity - (tgt1Qty + tgt2Qty);
-                 createStopAndTargetOrder(gs.getOpenPositionOrder(), 2, 0.01, 2, 0.01, tgt1Qty, true);
-                 createStopAndTargetOrder(gs.getOpenPositionOrder(), 2, 0.01, 2, 0.01, tgt2Qty, true);
+                 let tradeOrder = JSON.parse(gs.getOpenPositionOrderJSON());
+
+                 if(tradeOrder.error){
+
+                     gs.cancel();
+                     return gs.isCancelled();
+                 }
+
+                 tradeOrder = tradeOrder.data;
+                 gs.createStopAndTargetOrder(tradeOrder, 2, 0.01, 2, 0.01, tgt1Qty, true);
+                 gs.createStopAndTargetOrder(tradeOrder, 2, 0.01, 2, 0.01, tgt2Qty, true);
                  // createStopAndTargetOrder(getOpenPositionOrder(),
                  // 2,0.01,4,0.01, tgt3Qty, true);
                  gs.log("Open position submit Stop/Tgt orders created symbol: {} startPeriod: {}", gs.getSymbol(), startPeriod);
              }
-            return candleSeries.key
+            return gs.isCancelled();
         } catch (ex) {
             gs.error(1, 100, 'Error: StrategyRuleJS::runStrategy process javascript msg: ' + ex.getMessage());
         }

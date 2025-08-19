@@ -179,7 +179,7 @@ public class StrategyRuleJS extends AbstractStrategyRule {
 
                     Function functionInitStrategy = (Function) initialize;
                     Object jsResult = functionInitStrategy.call(context, localScope, localScope, null);
-                    _log.info("Info: StrategyRuleJS::initialize initialize result: {}", jsResult);
+                    _log.info("Info: StrategyRuleJS::initialize initialize isCancelled: {}", jsResult);
                 } else {
 
                     _log.error("Error: StrategyRuleJS::initialize initialize is not a function");
@@ -224,7 +224,7 @@ public class StrategyRuleJS extends AbstractStrategyRule {
             String candleSeriesJSON = JSONMapper.getJSONString(candleSeries);
             Object[] functionParams = new Object[]{candleSeriesJSON, true};
             Object jsResult = functionRunStrategy.call(context, localScope, localScope, functionParams);
-            _log.info("Info: StrategyRuleJS::runStrategy runStrategy result: {}", jsResult);
+            _log.info("Info: StrategyRuleJS::runStrategy runStrategy isCancelled: {}", jsResult);
         } catch (Exception ex) {
 
             _log.error("Error: StrategyRuleJS::runStrategy msg: {}", ex.getMessage());

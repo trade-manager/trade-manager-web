@@ -12,6 +12,8 @@
             gs.log('Info: StrategyRuleJS::initialize result.data: ' + JSON.stringify(result.data));
             CONSTANTS = result.data;
         }
+
+        return gs.isCancelled();
     }
 
     /**
@@ -47,6 +49,7 @@
             if (currentCandleItem.error) {
 
                 gs.cancel();
+                return gs.isCancelled();
             }
 
             let tradestrategy = JSON.parse(gs.getTradestrategyJSON());
@@ -86,7 +89,7 @@
                 }
 
                 gs.cancel();
-                return candleSeries.key;
+                return gs.isCancelled();
             }
 
             /*
@@ -105,7 +108,7 @@
                     gs.info("Strategy complete open position cancelled symbol: " +  gs.getSymbol() +  " startPeriod: " + startPeriod);
                     gs.updateTradestrategyStatus(CONSTANTS.ORDER_STATUS.PARTIALFILLED);
                     gs.cancel();
-                    return candleSeries.key;
+                    return gs.isCancelled();
                 }
             }
 
@@ -171,6 +174,7 @@
                 if (entrylimit.error) {
 
                     gs.cancel();
+                    return gs.isCancelled();
                 }
 
                 entrylimit = entrylimit.data;
@@ -191,9 +195,10 @@
                     gs.log("We have a trade!!  Symbol: " + gs.getSymbol() + " Time: " + startPeriod);
                     let tradeOrder = JSON.parse(gs.createRiskOpenPosition(action, price, priceStop, true, null, null, null, 0));
 
-                    if(tradeOrder.error){
+                    if (tradeOrder.error) {
 
                         gs.cancel();
+                        return gs.isCancelled();
                     }
 
                     tradeOrder = tradeOrder.data;
@@ -205,6 +210,7 @@
                     // gs.updateTradestrategyStatus(CONSTANTS.TRADESTRATEGY_STATUS.NBB);
                     // // Kill this process we are done!
                     // gs.cancel();
+                    // return;
                     // }
                 } else {
 
@@ -212,6 +218,7 @@
                     gs.updateTradestrategyStatus(CONSTANTS.TRADESTRATEGY_STATUS.PERCENT);
                     // Kill this process we are done!
                     gs.cancel();
+                    return gs.isCancelled();
                 }
             } else {
 
@@ -224,6 +231,7 @@
                     if (firstCandle.error) {
 
                         gs.cancel();
+                        return gs.isCancelled();
                     }
 
                     firstCandle = firstCandle.data;
@@ -241,6 +249,7 @@
                             // No trade we timed out
                             // gs.log("Rule 5min low broker Symbol: " + gs.getSymbol() + " Time: " + startPeriod);
                             // gs.cancel();
+                            // return gs.isCancelled();
                         }
                     } else {
 
@@ -251,6 +260,7 @@
                             // No trade we timed out
                             // gs.log("Rule 5min high broker Symbol: " + gs.getSymbol() + " Time: " + startPeriod);
                             // gs.cancel();
+                            // return gs.isCancelled();
                         }
                     }
                 }
@@ -266,10 +276,11 @@
                     gs.updateTradestrategyStatus(CONSTANTS.TRADESTRATEGY_STATUS.TO);
                     gs.cancelAllOrders();
                     gs.cancel();
+                    return gs.isCancelled();
                 }
             }
 
-            return candleSeries.key;
+            return gs.isCancelled();
         } catch (ex) {
 
             gs.error(1, 100, 'Error: StrategyRuleJS::runStrategy process javascript msg: ' + ex);
