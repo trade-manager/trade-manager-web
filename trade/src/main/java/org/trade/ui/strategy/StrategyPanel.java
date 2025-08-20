@@ -651,7 +651,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
 
             for (Rule rule : strategy.getRules()) {
 
-                if (rule.getRuleVersion().equals(version)) {
+                if (rule.getRuleVersion().equals(version) && rule.getContentType().equals(filesMap.get(getExtension(fileName)))) {
 
                     /*
                      * Load and save the file in the DB if there is
@@ -676,6 +676,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
                                     true, true, colorRedAttr);
                         }
                     }
+
                     if (null == rule.getComment() && null != comments) {
 
                         rule.setComment(comments);
