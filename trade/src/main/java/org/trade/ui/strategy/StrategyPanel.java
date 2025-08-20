@@ -932,6 +932,9 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
         return null; // Value not found
     }
 
+    /**
+     * Filter for the file selector.
+     */
     public static class JavaFilter extends FileFilter {
 
         // Accept all directories and all csv files.
