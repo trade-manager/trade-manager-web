@@ -46,6 +46,12 @@ public interface IStrategyRule {
     String PACKAGE = "org.trade.strategy.";
 
     /**
+     * Method initialize the strategy.
+     *
+     */
+    void initialize();
+
+    /**
      * Method runStrategy.
      *
      * @param candleSeries CandleSeries

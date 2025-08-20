@@ -44,7 +44,6 @@ import org.trade.base.Tree;
 import org.trade.base.UIPropertyCodes;
 import org.trade.core.broker.IBrokerModel;
 import org.trade.core.factory.ClassFactory;
-import org.trade.core.persistent.ServiceException;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.Contract;
 import org.trade.core.persistent.dao.Rule;
@@ -339,7 +338,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
             candleDataset.addSeries(candleSeries);
             StrategyData strategyData = new StrategyData(rule.getStrategy(), candleDataset);
 
-            fileName = fileName + rule.getStrategy().getClassName() + ".java";
+            fileName = fileName + rule.getStrategy().getClassName() + "." + this.getKeyFromValue(filesMap, rule.getContentType());
             doSaveFile(fileName, this.getContent());
 
             List<Object> param = new ArrayList<>(0);
@@ -347,11 +346,13 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
             IBrokerModel brokerManagerModel = (IBrokerModel) ClassFactory.getServiceForInterface(IBrokerModel._brokerTest,
                     param, this);
 
+            Long tradestrategyId = 0L;
+
             param.clear();
             param.add(this.tradeService);
             param.add(brokerManagerModel);
             param.add(strategyData);
-            param.add(0L);
+            param.add(tradestrategyId);
             DynamicCode dynacode = new DynamicCode();
             dynacode.addSourceDir(new File(TEMP_DIR));
             IStrategyRule strategyProxy = null;
@@ -362,10 +363,12 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
                         param);
             } else {
 
-                strategyProxy = new StrategyRuleJS(this.tradeService, brokerManagerModel, strategyData, 0L, rule);
+                strategyProxy = new StrategyRuleJS(this.tradeService, brokerManagerModel, strategyData, tradestrategyId, rule);
+                strategyProxy.initialize();
                 strategyProxy.runStrategy(candleSeries, true);
             }
 
+            strategyProxy.cancel();
             this.setStatusBarMessage("File compiled.", BasePanel.INFORMATION);
             return true;
         } catch (Exception ex) {
@@ -399,15 +402,16 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
             if (returnVal == JFileChooser.APPROVE_OPTION) {
 
                 String fileName = fileView.getSelectedFile().getPath();
+                String contentType = filesMap.get(getExtension(fileName));
 
                 DefaultMutableTreeNode node = (DefaultMutableTreeNode) Objects.requireNonNull(tree.getSelectionPath())
                         .getLastPathComponent();
-                setContent(readFile(fileName), filesMap.get(getExtension(fileName)));
+                setContent(readFile(fileName), contentType);
                 commentText.setText(null);
 
                 if (node.getUserObject() instanceof Strategy) {
 
-                    createRule((Strategy) node.getUserObject());
+                    createRule((Strategy) node.getUserObject(), contentType);
                 }
             }
         } catch (Exception ex) {
@@ -504,20 +508,38 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
 
         try {
 
-            String templateName = ConfigProperties.getPropAsString("trade.strategy.template");
-            String fileName = strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/') + templateName + ".java";
 
-            if (strategyContentType.equals(ContentType.JAVASCRIPT)) {
+            String[] choices = {"Java", "Javascript"};
+            String contentType = ContentType.JAVA;
+            int result = JOptionPane.showOptionDialog(this.getFrame(), "Do you want to create a Java or Javascript file?",
+                    "Information", JOptionPane.YES_NO_CANCEL_OPTION,     // Option type (can be customized by 'options' array)
+                    JOptionPane.QUESTION_MESSAGE,         // Message type (determines icon)
+                    null,                                 // Custom icon (null uses default based on messageType)
+                    choices,                              // Custom button options
+                    choices[0]);
 
-                fileName = strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/') + templateName + ".js";
+            if (result == JOptionPane.CLOSED_OPTION) {
+
+                return;
+            } else if (result == JOptionPane.YES_OPTION || result == 0) {
+
+                // Check for YES_OPTION or index 0 for custom buttons
+                contentType = ContentType.JAVA;
+            } else if (result == JOptionPane.NO_OPTION || result == 1) {
+
+                // Check for NO_OPTION or index 1 for custom buttons
+                contentType = ContentType.JAVASCRIPT;
             }
-
+            
+            String templateName = ConfigProperties.getPropAsString("trade.strategy.template");
+            String extension = getKeyFromValue(filesMap, contentType);
+            String fileName = strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/') + templateName + "." + extension;
             commentText.setText(null);
-            String contentType = filesMap.get(getExtension(fileName));
             setContent(readFile(fileName), contentType);
             setContent((getContent().replaceAll(templateName, strategy.getClassName())), contentType);
-            createRule(strategy);
+            createRule(strategy, contentType);
         } catch (Exception ex) {
+
             setErrorMessage("Error loading template strategy", ex.getMessage(), ex);
         }
     }
@@ -883,12 +905,10 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
         return dir.delete();
     }
 
-    private void createRule(final Strategy strategy) throws ServiceException, ValueTypeException {
+    private void createRule(final Strategy strategy, String contentType) throws ValueTypeException {
 
         int version = 1;
-        String contentType = ContentType.JAVA;
         Rule latestRule = this.tradeService.findRuleByMaxVersion(strategy, contentType);
-
 
         if (null != latestRule) {
 
