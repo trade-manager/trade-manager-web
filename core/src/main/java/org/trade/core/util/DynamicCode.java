@@ -283,6 +283,7 @@ public final class DynamicCode {
             String subdir = srcDir.getAbsolutePath().replace(':', '_').replace('/', '_').replace('\\', '_');
             this.binDir = new File(System.getProperty("java.io.tmpdir"), "bin/" + subdir);
             this.binDir.mkdirs();
+            this.binDir.deleteOnExit();
 
             // prepare compiler
             this.inlineCompiler = new InlineCompiler(compileClasspath.replace("%20", " "), binDir.getAbsolutePath());
