@@ -319,5 +319,6 @@ public class StrategyPanelJSIT {
         String javaCode = new String(ruleSaved.getRule());
         assertEquals(javaCode, textArea.getText());
         _log.info("Java file to Saved: {}", javaCode);
+        strategyPanel.doWindowClose();
     }
 }

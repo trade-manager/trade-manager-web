@@ -95,6 +95,7 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -427,7 +428,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
 
             if (this.currentRule.getRule().length > 0) {
 
-                if ((new String(this.currentRule.getRule())).equals(getContent())) {
+                if ((new String(this.currentRule.getRule())).equals(this.getContent()) && this.currentRule.getContentType().equals(this.getContentType())) {
 
                     if (null != this.currentRule.getComment() && this.currentRule.getComment().equals(getComments())) {
 
@@ -439,8 +440,9 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
                 }
             }
 
+            String extension = getKeyFromValue(filesMap, this.currentRule.getContentType());
             String fileName = strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/');
-            String fileNameSource = fileName + this.currentRule.getStrategy().getClassName() + ".java";
+            String fileNameSource = fileName + this.currentRule.getStrategy().getClassName() + "." + extension;
             String fileNameComments = fileName + this.currentRule.getStrategy().getClassName() + ".txt";
             int result = JOptionPane.NO_OPTION;
 
@@ -452,15 +454,15 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
 
             if (result == JOptionPane.YES_OPTION) {
 
-                Rule latestRule = this.tradeService.findRuleByMaxVersion(this.currentRule.getStrategy(), filesMap.get(getExtension(fileName)));
+                Rule latestRule = this.tradeService.findRuleByMaxVersion(this.currentRule.getStrategy(), filesMap.get(getExtension(fileNameSource)));
                 Integer version = 1;
 
                 if (null != latestRule) {
 
-                    version = latestRule.getRuleVersion();
+                    version = latestRule.getRuleVersion() + 1;
                 }
 
-                Rule nextRule = new Rule(this.currentRule.getStrategy(), version, commentText.getText(), getContent().getBytes(), filesMap.get(getExtension(fileName)));
+                Rule nextRule = new Rule(this.currentRule.getStrategy(), version, commentText.getText(), getContent().getBytes(), filesMap.get(getExtension(fileNameSource)));
                 this.currentRule.getStrategy().getRules().add(nextRule);
                 this.tradeService.saveAspect(nextRule);
                 doSaveFile(fileNameSource, getContent());
@@ -651,7 +653,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
 
             for (Rule rule : strategy.getRules()) {
 
-                if (rule.getRuleVersion().equals(version)) {
+                if (rule.getRuleVersion().equals(version) && rule.getContentType().equals(filesMap.get(getExtension(fileName)))) {
 
                     /*
                      * Load and save the file in the DB if there is
@@ -676,6 +678,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
                                     true, true, colorRedAttr);
                         }
                     }
+
                     if (null == rule.getComment() && null != comments) {
 
                         rule.setComment(comments);
@@ -838,23 +841,37 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
     }
 
     private String getMessageText() {
+
         return messageText.getText();
     }
 
     private String getContent() {
+
         return sourceText.getText();
     }
+
+    private String getContentType() {
+
+        return sourceText.getContentType();
+    }
+
 
     private String getComments() {
         return commentText.getText();
     }
 
     protected static boolean deleteDir(File dir) {
+
         if (dir.isDirectory()) {
+
             String[] children = dir.list();
+
             for (String child : Objects.requireNonNull(children)) {
+
                 boolean success = deleteDir(new File(dir, child));
+
                 if (!success) {
+
                     return false;
                 }
             }
@@ -890,7 +907,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
         }
     }
 
-    public static String getExtension(String fileName) {
+    private static String getExtension(String fileName) {
 
         int dotIndex = fileName.lastIndexOf('.');
 
@@ -901,6 +918,18 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
 
             return ".txt";
         }
+    }
+
+    private static <K, V> K getKeyFromValue(Map<K, V> map, V value) {
+
+        for (Map.Entry<K, V> entry : map.entrySet()) {
+
+            if (entry.getValue().equals(value)) {
+
+                return entry.getKey();
+            }
+        }
+        return null; // Value not found
     }
 
     public static class JavaFilter extends FileFilter {
@@ -924,7 +953,8 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
         }
 
         public String getDescription() {
-            return "Java Files";
+
+            return "Java/Javascript/Text Files";
         }
     }
 }
