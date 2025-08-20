@@ -849,6 +849,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
 
         return sourceText.getText();
     }
+
     private String getContentType() {
 
         return sourceText.getContentType();
@@ -860,11 +861,17 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
     }
 
     protected static boolean deleteDir(File dir) {
+
         if (dir.isDirectory()) {
+
             String[] children = dir.list();
+
             for (String child : Objects.requireNonNull(children)) {
+
                 boolean success = deleteDir(new File(dir, child));
+
                 if (!success) {
+
                     return false;
                 }
             }
@@ -914,8 +921,11 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
     }
 
     private static <K, V> K getKeyFromValue(Map<K, V> map, V value) {
+
         for (Map.Entry<K, V> entry : map.entrySet()) {
-            if (entry.getValue().equals(value)) { // Use .equals() for object comparison
+
+            if (entry.getValue().equals(value)) {
+
                 return entry.getKey();
             }
         }
@@ -943,7 +953,8 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
         }
 
         public String getDescription() {
-            return "Java Files";
+
+            return "Java/Javascript/Text Files";
         }
     }
 }
