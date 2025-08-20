@@ -530,7 +530,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
                 // Check for NO_OPTION or index 1 for custom buttons
                 contentType = ContentType.JAVASCRIPT;
             }
-            
+
             String templateName = ConfigProperties.getPropAsString("trade.strategy.template");
             String extension = getKeyFromValue(filesMap, contentType);
             String fileName = strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/') + templateName + "." + extension;
