@@ -107,7 +107,7 @@ public class FiveMinWRBGapBarStrategy extends AbstractStrategyRule {
      * @param tradeService       TradeService
      * @param brokerManagerModel BrokerModel
      * @param strategyData       StrategyData
-     * @param strategyClassName    String
+     * @param strategyClassName  String
      */
     public FiveMinWRBGapBarStrategy(TradeService tradeService, IBrokerModel brokerManagerModel, StrategyData strategyData, Long tradestrategyId, String strategyClassName) {
 

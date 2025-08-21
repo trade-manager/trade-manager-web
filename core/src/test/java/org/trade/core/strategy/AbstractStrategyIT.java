@@ -140,7 +140,7 @@ public class AbstractStrategyIT {
         assertNotNull(tradestrategy);
 
         strategyProxy = new StrategyRuleTest(tradeService, brokerModel, tradestrategy.getStrategyData(),
-                tradestrategy.getId(), tradestrategy.getStrategy().getClassName());
+                tradestrategy.getId(), strategy.getClassName());
         assertNotNull(strategyProxy);
         strategyProxy.execute();
 
@@ -692,6 +692,7 @@ public class AbstractStrategyIT {
          * @param brokerManagerModel IBrokerModel
          * @param strategyData       StrategyData
          * @param tradestrategyId    Long
+         * @param strategyClassName  String
          */
 
         public StrategyRuleTest(TradeService tradeService, IBrokerModel brokerManagerModel, StrategyData strategyData, Long tradestrategyId, String strategyClassName) {

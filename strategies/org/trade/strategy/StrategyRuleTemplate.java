@@ -74,7 +74,7 @@ public class StrategyRuleTemplate extends AbstractStrategyRule {
      * @param brokerManagerModel BrokerModel
      * @param strategyData       StrategyData
      * @param tradestrategyId    Long
-     * @param strategyClassName    String
+     * @param strategyClassName  String
      */
     public StrategyRuleTemplate(TradeService tradeService, IBrokerModel brokerManagerModel, StrategyData strategyData, Long tradestrategyId, String strategyClassName) {
 

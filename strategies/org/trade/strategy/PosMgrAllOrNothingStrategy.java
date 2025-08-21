@@ -83,7 +83,7 @@ public class PosMgrAllOrNothingStrategy extends AbstractStrategyRule {
      * @param tradeService       TradeService
      * @param brokerManagerModel BrokerModel
      * @param strategyData       StrategyData
-     * @param strategyClassName    String
+     * @param strategyClassName  String
      */
     public PosMgrAllOrNothingStrategy(TradeService tradeService, IBrokerModel brokerManagerModel, StrategyData strategyData, Long tradestrategyId, String strategyClassName) {
 

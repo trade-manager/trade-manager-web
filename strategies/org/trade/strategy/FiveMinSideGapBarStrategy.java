@@ -104,7 +104,7 @@ public class FiveMinSideGapBarStrategy extends AbstractStrategyRule {
      * @param tradeService       TradeService
      * @param brokerManagerModel BrokerModel
      * @param strategyData       StrategyData
-     * @param strategyClassName    String
+     * @param strategyClassName  String
      */
     public FiveMinSideGapBarStrategy(TradeService tradeService, IBrokerModel brokerManagerModel, StrategyData strategyData, Long tradestrategyId, String strategyClassName) {
 

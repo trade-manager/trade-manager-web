@@ -82,7 +82,8 @@ public class Vwap5MinSideGapBarStrategy extends AbstractStrategyRule {
      * @param tradeService       TradeService
      * @param brokerManagerModel BrokerModel
      * @param strategyData       StrategyData
-     * @param strategyClassName    String
+     * @param tradestrategyId    Long
+     * @param strategyClassName  String
      */
     public Vwap5MinSideGapBarStrategy(TradeService tradeService, IBrokerModel brokerManagerModel, StrategyData strategyData, Long tradestrategyId, String strategyClassName) {
 
