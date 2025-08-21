@@ -9,7 +9,7 @@ function initialize() {
 
     if (CONSTANTS.error) {
 
-        gs.error(1, 100, 'Error: StrategyRuleJS::initialize failed to get constants  msg: ' + JSON.stringify(CONSTANTS.message));
+        gs.error(1, 100, 'Error: PosMgrFHXRBHYRStrategy::initialize failed to get constants  msg: ' + JSON.stringify(CONSTANTS.message));
     }
 
     CONSTANTS = CONSTANTS.data;
@@ -17,11 +17,11 @@ function initialize() {
 
     if (tradestrategy.error) {
 
-        gs.error(1, 100, 'Error: StrategyRuleJS::initialize failed to get tradestrategy  msg: ' + JSON.stringify(tradestrategy.message));
+        gs.error(1, 100, 'Error: PosMgrFHXRBHYRStrategy::initialize failed to get tradestrategy  msg: ' + JSON.stringify(tradestrategy.message));
     }
     tradestrategy = tradestrategy.data;
-    gs.log('Info: StrategyRuleJS::initialize CONSTANTS: ' + JSON.stringify(CONSTANTS));
-    gs.log('Info: StrategyRuleJS::initialize tradestrategy: ' + JSON.stringify(tradestrategy));
+    gs.log('Info: PosMgrFHXRBHYRStrategy::initialize CONSTANTS: ' + JSON.stringify(CONSTANTS));
+    gs.log('Info: PosMgrFHXRBHYRStrategy::initialize tradestrategy: ' + JSON.stringify(tradestrategy));
 
     return gs.isCancelled();
 }
@@ -33,7 +33,7 @@ function runStrategy(candleSeriesJSON, newBar) {
     try {
 
         let candleSeries = JSON.parse(candleSeriesJSON);
-        gs.log('Info: StrategyRuleJS::runStrategy key: ' + candleSeries.key + ' newBar: ' + newBar + ' symbol: ' + gs.getSymbol());
+        gs.log('Info: PosMgrFHXRBHYRStrategy::runStrategy key: ' + candleSeries.key + ' newBar: ' + newBar + ' symbol: ' + gs.getSymbol());
 
         let currentCandleItem = JSON.parse(gs.getCurrentCandleJSON());
 
@@ -45,11 +45,11 @@ function runStrategy(candleSeriesJSON, newBar) {
 
         currentCandleItem = currentCandleItem.data;
 
-        gs.log('Info: StrategyRuleJS::runStrategy currentCandleItem: ' + JSON.stringify(currentCandleItem));
-        gs.log('Info: StrategyRuleJS::runStrategy openPositionOrderKey: ' + openPositionOrderKey);
+        gs.log('Info: PosMgrFHXRBHYRStrategy::runStrategy currentCandleItem: ' + JSON.stringify(currentCandleItem));
+        gs.log('Info: PosMgrFHXRBHYRStrategy::runStrategy openPositionOrderKey: ' + openPositionOrderKey);
         // Get the current candle start date
         let startPeriod = new Date(currentCandleItem.period.start);
-        gs.log('Info: StrategyRuleJS::runStrategy startPeriod: ' + startPeriod);
+        gs.log('Info: PosMgrFHXRBHYRStrategy::runStrategy startPeriod: ' + startPeriod);
 
         /*
          * Get the current open trade. If no trade is open this Strategy
@@ -71,7 +71,7 @@ function runStrategy(candleSeriesJSON, newBar) {
         }
 
         tradePosition = tradePosition.data;
-        gs.log('Info: StrategyRuleJS::runStrategy tradePosition: ' + JSON.stringify(tradePosition));
+        gs.log('Info: PosMgrFHXRBHYRStrategy::runStrategy tradePosition: ' + JSON.stringify(tradePosition));
 
         /*
          * If all trades are closed shut down the position user
@@ -122,7 +122,7 @@ function runStrategy(candleSeriesJSON, newBar) {
         startCandleDate.setMinutes((new Date(tradestrategy.tradingday.open)).getMinutes() + 5);
         let timeOutDate = new Date(tradestrategy.tradingday.close);
         timeOutDate.setMinutes((new Date(tradestrategy.tradingday.close)).getMinutes() - 30);
-        gs.log('Info: StrategyRuleJS::runStrategy startPeriod: ' + startPeriod + " startCandleDate: " + startCandleDate + " timeOutDate: " + timeOutDate);
+        gs.log('Info: PosMgrFHXRBHYRStrategy::runStrategy startPeriod: ' + startPeriod + " startCandleDate: " + startCandleDate + " timeOutDate: " + timeOutDate);
 
         if (startPeriod.getTime() < timeOutDate.getTime() && startPeriod.getTime() > startCandleDate.getTime()) {
 
@@ -146,9 +146,9 @@ function runStrategy(candleSeriesJSON, newBar) {
             }
 
             tradeOrder = tradeOrder.data;
-            gs.log('Info: StrategyRuleJS::runStrategy firstCandle: ' + JSON.stringify(firstCandle));
-            gs.log('Info: StrategyRuleJS::runStrategy tradeOrder: ' + JSON.stringify(tradeOrder));
-            gs.log('Info: StrategyRuleJS::runStrategy current.vwap: ' + currentCandleItem.vwap + "firstCandle vwap: " + firstCandle.vwap);
+            gs.log('Info: PosMgrFHXRBHYRStrategy::runStrategy firstCandle: ' + JSON.stringify(firstCandle));
+            gs.log('Info: PosMgrFHXRBHYRStrategy::runStrategy tradeOrder: ' + JSON.stringify(tradeOrder));
+            gs.log('Info: PosMgrFHXRBHYRStrategy::runStrategy current.vwap: ' + currentCandleItem.vwap + "firstCandle vwap: " + firstCandle.vwap);
 
             if (CONSTANTS.SIDE.BOT === tradePosition.side) {
 
@@ -183,7 +183,7 @@ function runStrategy(candleSeriesJSON, newBar) {
             if (gs.getCurrentCandleCount() > 0) {
 
                 prevCandleItem =  candleSeries.data[(gs.getCurrentCandleCount() - 1)];
-                gs.log('Info: StrategyRuleJS::runStrategy prevCandleItem: ' + JSON.stringify(prevCandleItem));
+                gs.log('Info: PosMgrFHXRBHYRStrategy::runStrategy prevCandleItem: ' + JSON.stringify(prevCandleItem));
             }
 
             if (null != prevCandleItem && avgPrice < prevCandleItem.candle.low) {
@@ -218,7 +218,7 @@ function runStrategy(candleSeriesJSON, newBar) {
         }
 
         targetOneOrder = targetOneOrder.data;
-        gs.log('Info: StrategyRuleJS::runStrategy targetOneOrder: ' + JSON.stringify(targetOneOrder));
+        gs.log('Info: PosMgrFHXRBHYRStrategy::runStrategy targetOneOrder: ' + JSON.stringify(targetOneOrder));
 
         if (null != targetOneOrder) {
 
@@ -276,6 +276,6 @@ function runStrategy(candleSeriesJSON, newBar) {
         return gs.isCancelled();
     } catch (ex) {
 
-        gs.error(1, 100, 'Error: StrategyRuleJS::runStrategy process javascript msg: ' + ex.getMessage());
+        gs.error(1, 100, 'Error: PosMgrFHXRBHYRStrategy::runStrategy process javascript msg: ' + ex.getMessage());
     }
 }

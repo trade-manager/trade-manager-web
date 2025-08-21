@@ -74,11 +74,11 @@ public class StrategyRuleTemplate extends AbstractStrategyRule {
      * @param brokerManagerModel BrokerModel
      * @param strategyData       StrategyData
      * @param tradestrategyId    Long
+     * @param strategyClassName    String
      */
+    public StrategyRuleTemplate(TradeService tradeService, IBrokerModel brokerManagerModel, StrategyData strategyData, Long tradestrategyId, String strategyClassName) {
 
-    public StrategyRuleTemplate(TradeService tradeService, IBrokerModel brokerManagerModel, StrategyData strategyData, Long tradestrategyId) {
-
-        super(tradeService, brokerManagerModel, strategyData, tradestrategyId);
+        super(tradeService, brokerManagerModel, strategyData, tradestrategyId, strategyClassName);
     }
 
     /**

@@ -140,7 +140,7 @@ public class AbstractStrategyIT {
         assertNotNull(tradestrategy);
 
         strategyProxy = new StrategyRuleTest(tradeService, brokerModel, tradestrategy.getStrategyData(),
-                tradestrategy.getId());
+                tradestrategy.getId(),tradestrategy.getStrategy().getClassName());
         assertNotNull(strategyProxy);
         strategyProxy.execute();
 
@@ -180,6 +180,7 @@ public class AbstractStrategyIT {
             param.add(brokerModel);
             param.add(tradestrategy.getStrategyData());
             param.add(tradestrategy.getId());
+            param.add(tradestrategy.getStrategy().getClassName());
             DynamicCode dynacode = new DynamicCode();
             dynacode.addSourceDir(new File(strategyDir));
             IStrategyRule strategyProxy = (IStrategyRule) dynacode.newProxyInstance(IStrategyRule.class,
@@ -693,9 +694,9 @@ public class AbstractStrategyIT {
          * @param tradestrategyId    Long
          */
 
-        public StrategyRuleTest(TradeService tradeService, IBrokerModel brokerManagerModel, StrategyData strategyData, Long tradestrategyId) {
+        public StrategyRuleTest(TradeService tradeService, IBrokerModel brokerManagerModel, StrategyData strategyData, Long tradestrategyId, String strategyClassName) {
 
-            super(tradeService, brokerManagerModel, strategyData, tradestrategyId);
+            super(tradeService, brokerManagerModel, strategyData, tradestrategyId, strategyClassName);
         }
 
         /**

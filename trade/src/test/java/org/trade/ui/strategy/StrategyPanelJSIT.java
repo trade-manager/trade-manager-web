@@ -180,7 +180,7 @@ public class StrategyPanelJSIT {
 
         try {
 
-            strategyProxy = new StrategyRuleJS(this.tradeService, brokerManagerModel, tradestrategy.getStrategyData(), tradestrategy.getId());
+            strategyProxy = new StrategyRuleJS(this.tradeService, brokerManagerModel, tradestrategy.getStrategyData(), tradestrategy.getId(), tradestrategy.getStrategy().getClassName());
             _log.info("Created Strategy{}", strategyProxy);
             strategyProxy.execute();
 
@@ -250,10 +250,11 @@ public class StrategyPanelJSIT {
         param.add(brokerManagerModel);
         param.add(tradestrategy.getStrategyData());
         param.add(tradestrategy.getId());
+        param.add(tradestrategy.getStrategy().getClassName());
 
         try {
 
-            strategyRule = new StrategyRuleJS(this.tradeService, brokerManagerModel, tradestrategy.getStrategyData(), tradestrategy.getId());
+            strategyRule = new StrategyRuleJS(this.tradeService, brokerManagerModel, tradestrategy.getStrategyData(), tradestrategy.getId(), tradestrategy.getStrategy().getClassName());
         } catch (Exception ex) {
 
             fail("Failed to create strategyRule msg: " + ex.getMessage());

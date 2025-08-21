@@ -107,15 +107,16 @@ public class StrategyRuleJS extends AbstractStrategyRule {
      * candle data set for changes. This class runs in its own thread. there
      * will be one Strategy running per tradestrategy.
      *
-     * @param tradeService    TradeService
-     * @param brokerModel     IBrokerModel
-     * @param strategyData    StrategyData
-     * @param tradestrategyId Integer
-     * @param rule            Rule
+     * @param tradeService      TradeService
+     * @param brokerModel       IBrokerModel
+     * @param strategyData      StrategyData
+     * @param tradestrategyId   Integer
+     * @param strategyClassName String
+     * @param rule              Rule
      */
-    public StrategyRuleJS(TradeService tradeService, IBrokerModel brokerModel, StrategyData strategyData, Long tradestrategyId, Rule rule) {
+    public StrategyRuleJS(TradeService tradeService, IBrokerModel brokerModel, StrategyData strategyData, Long tradestrategyId, String strategyClassName, Rule rule) {
 
-        this(tradeService, brokerModel, strategyData, tradestrategyId);
+        this(tradeService, brokerModel, strategyData, tradestrategyId, strategyClassName);
         this.rule = rule;
     }
 
@@ -125,14 +126,15 @@ public class StrategyRuleJS extends AbstractStrategyRule {
      * candle data set for changes. This class runs in its own thread. there
      * will be one Strategy running per tradestrategy.
      *
-     * @param tradeService    TradeService
-     * @param brokerModel     IBrokerModel
-     * @param strategyData    StrategyData
-     * @param tradestrategyId Integer
+     * @param tradeService      TradeService
+     * @param brokerModel       IBrokerModel
+     * @param strategyData      StrategyData
+     * @param tradestrategyId   Integer
+     * @param strategyClassName String
      */
-    public StrategyRuleJS(TradeService tradeService, IBrokerModel brokerModel, StrategyData strategyData, Long tradestrategyId) {
+    public StrategyRuleJS(TradeService tradeService, IBrokerModel brokerModel, StrategyData strategyData, Long tradestrategyId, String strategyClassName) {
 
-        super(tradeService, brokerModel, strategyData, tradestrategyId);
+        super(tradeService, brokerModel, strategyData, tradestrategyId, strategyClassName);
     }
 
     /**
@@ -160,7 +162,7 @@ public class StrategyRuleJS extends AbstractStrategyRule {
             String strategyName = "";
             String codeJS = null;
 
-            if (null != this.getTradestrategy()) {
+            if (null == this.rule) {
 
                 strategyName = this.getTradestrategy().getStrategy().getName();
                 Rule rule = this.getTradeService().findRuleByMaxVersion(this.getTradestrategy().getStrategy(), ContentType.JAVASCRIPT);

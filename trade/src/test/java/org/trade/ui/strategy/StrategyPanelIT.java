@@ -174,6 +174,7 @@ public class StrategyPanelIT {
         param.add(brokerManagerModel);
         param.add(tradestrategy.getStrategyData());
         param.add(tradestrategy.getId());
+        param.add(tradestrategy.getStrategy().getClassName());
         _log.info("Ready to create Strategy");
         DynamicCode dynacode = new DynamicCode();
         dynacode.addSourceDir(new File(strategyDir));
@@ -271,6 +272,7 @@ public class StrategyPanelIT {
         param.add(brokerManagerModel);
         param.add(tradestrategy.getStrategyData());
         param.add(tradestrategy.getId());
+        param.add(strategy.getClassName());
 
         try {
 

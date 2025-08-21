@@ -166,7 +166,7 @@ public class AbstractStrategyJSIT {
         }
 
         strategyProxy = new StrategyRuleJS(tradeService, brokerModel, tradestrategy.getStrategyData(),
-                tradestrategy.getId(), strategy.getRules().getFirst());
+                tradestrategy.getId(), strategy.getClassName(), strategy.getRules().getFirst());
         assertNotNull(strategyProxy);
         strategyProxy.execute();
 
@@ -219,7 +219,7 @@ public class AbstractStrategyJSIT {
 
         tradestrategy.setStrategyData(StrategyData.create(tradestrategy));
         strategyProxy = new StrategyRuleJS(tradeService, brokerModel, tradestrategy.getStrategyData(),
-                tradestrategy.getId(), strategy.getRules().getFirst());
+                tradestrategy.getId(), strategy.getClassName(), strategy.getRules().getFirst());
         assertNotNull(strategyProxy);
         strategyProxy.execute();
 

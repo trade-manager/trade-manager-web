@@ -361,6 +361,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
             param.add(brokerManagerModel);
             param.add(strategyData);
             param.add(tradestrategyId);
+            param.add(rule.getStrategy().getClassName());
             DynamicCode dynacode = new DynamicCode();
             dynacode.addSourceDir(new File(TEMP_DIR));
             IStrategyRule strategyProxy = null;
@@ -371,7 +372,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
                         param);
             } else {
 
-                strategyProxy = new StrategyRuleJS(this.tradeService, brokerManagerModel, strategyData, tradestrategyId, rule);
+                strategyProxy = new StrategyRuleJS(this.tradeService, brokerManagerModel, strategyData, tradestrategyId, rule.getStrategy().getClassName(), rule);
                 strategyProxy.initialize();
                 strategyProxy.runStrategy(candleSeries, true);
             }
