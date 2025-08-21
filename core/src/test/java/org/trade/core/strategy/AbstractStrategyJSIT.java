@@ -159,7 +159,7 @@ public class AbstractStrategyJSIT {
 
         if (null != content && strategy.getRules().isEmpty()) {
 
-            Rule nextRule = new Rule(strategy, 1, null,
+            Rule nextRule = new Rule(strategy, true, 1, null,
                     content.getBytes(), ContentType.JAVASCRIPT);
             strategy.getRules().add(nextRule);
             strategy = this.tradeService.saveAspect(strategy);
@@ -211,7 +211,7 @@ public class AbstractStrategyJSIT {
 
         if (null != content && strategy.getRules().isEmpty()) {
 
-            Rule nextRule = new Rule(strategy, 1, null,
+            Rule nextRule = new Rule(strategy, true, 1, null,
                     content.getBytes(), ContentType.JAVASCRIPT);
             strategy.getRules().add(nextRule);
             strategy = this.tradeService.saveAspect(strategy);

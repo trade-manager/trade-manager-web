@@ -157,7 +157,7 @@ public class PortfolioPanel extends BasePanel implements ChangeListener, ItemLis
 
             JPanel jPanel1 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
             jPanel1.setBorder(new BevelBorder(BevelBorder.RAISED));
-            JLabel jLabelSummary = new JLabel("Ignor in Batting/Sharpe $ under");
+            JLabel jLabelSummary = new JLabel("Ignore in Batting/Sharpe $ under");
             lossGainAmt.setBorder(new BevelBorder(BevelBorder.LOWERED));
             jPanel1.add(jLabelSummary, null);
             jPanel1.add(lossGainAmt, null);

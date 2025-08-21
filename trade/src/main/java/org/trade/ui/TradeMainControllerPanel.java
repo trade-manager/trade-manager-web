@@ -1927,8 +1927,6 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
 
             strategyRule = (IStrategyRule) dynacode.newProxyInstance(IStrategyRule.class,
                     IStrategyRule.PACKAGE + strategyClassName, param);
-
-
         } else {
 
             strategyRule = new StrategyRuleJS(this.tradeService, brokerModel, tradestrategy.getStrategyData(), tradestrategy.getId());

@@ -47,7 +47,6 @@ public interface IStrategyRule {
 
     /**
      * Method initialize the strategy.
-     *
      */
     void initialize();
 

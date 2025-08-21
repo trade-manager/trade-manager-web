@@ -113,6 +113,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
     private StreamEditorPane messageText = null;
     private BaseButton compileButton = null;
     private BaseButton newButton = null;
+    private Checkbox activeCheckBox = null;
     private StrategyTreeModel strategyTreeModel = null;
     private static String strategyDir = null;
     private static String strategyContentType = null;
@@ -164,14 +165,20 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
             compileButton = new BaseButton(this, UIPropertyCodes.newInstance(UIPropertyCodes.COMPILE));
             newButton = new BaseButton(this, BaseUIPropertyCodes.NEW);
             newButton.setToolTipText("Load Template");
-
-            JPanel jPanel1 = new JPanel(new FlowLayout());
-            jPanel1.add(newButton);
-            jPanel1.add(compileButton);
+            activeCheckBox = new Checkbox();
+            activeCheckBox.setLabel("Active");
+            JPanel jPanel1 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
             jPanel1.setBorder(new BevelBorder(BevelBorder.RAISED));
+            jPanel1.add(activeCheckBox, null);
+
+            JPanel jPanel2 = new JPanel(new FlowLayout());
+            jPanel2.add(newButton);
+            jPanel2.add(compileButton);
+            jPanel2.setBorder(new BevelBorder(BevelBorder.RAISED));
             JToolBar jToolBar = new JToolBar();
             jToolBar.setLayout(new BorderLayout());
-            jToolBar.add(jPanel1, BorderLayout.WEST);
+            jToolBar.add(jPanel2, BorderLayout.WEST);
+            jToolBar.add(jPanel1, BorderLayout.EAST);
 
             // create the message panel first so we can send messages to it...
             messageText = new StreamEditorPane(ContentType.TEXT);
@@ -299,6 +306,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
                 commentText.setCaretPosition(0);
                 messageText.setCaretPosition(0);
                 currentRule = rule;
+                activeCheckBox.setState(rule.isActive());
             }
         } catch (Exception ex) {
             setErrorMessage("Error finding Strategy code.", ex.getMessage(), ex);
@@ -434,7 +442,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
 
             if (this.currentRule.getRule().length > 0) {
 
-                if ((new String(this.currentRule.getRule())).equals(this.getContent()) && this.currentRule.getContentType().equals(this.getContentType())) {
+                if ((new String(this.currentRule.getRule())).equals(this.getContent()) && this.currentRule.getContentType().equals(this.getContentType())&& this.currentRule.isActive().equals(activeCheckBox.getState())) {
 
                     if (null != this.currentRule.getComment() && this.currentRule.getComment().equals(getComments())) {
 
@@ -468,7 +476,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
                     version = latestRule.getRuleVersion() + 1;
                 }
 
-                Rule nextRule = new Rule(this.currentRule.getStrategy(), version, commentText.getText(), getContent().getBytes(), filesMap.get(getExtension(fileNameSource)));
+                Rule nextRule = new Rule(this.currentRule.getStrategy(), activeCheckBox.getState(), version, commentText.getText(), getContent().getBytes(), filesMap.get(getExtension(fileNameSource)));
                 this.currentRule.getStrategy().getRules().add(nextRule);
                 this.tradeService.saveAspect(nextRule);
                 doSaveFile(fileNameSource, getContent());
@@ -491,12 +499,14 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
                 }
 
                 this.currentRule.setRule(getContent().getBytes());
+                this.currentRule.setActive(activeCheckBox.getState());
                 this.currentRule = this.tradeService.saveAspect(this.currentRule);
                 doSaveFile(fileNameSource, getContent());
                 doSaveFile(fileNameComments, getComments());
             }
-            refreshTree();
+
             this.currentRule.setDirty(false);
+            doRefresh();
         } catch (Exception ex) {
             setErrorMessage("Error saving strategy", ex.getMessage(), ex);
         } finally {
@@ -643,7 +653,14 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
 
                         if (null != content) {
 
-                            processFile(strategy, content, fileName, comments);
+                            Boolean active = false;
+
+                            if (strategyContentType.equals(filesMap.get(fileExtension))) {
+
+                                active = true;
+                            }
+
+                            processFile(strategy, active, content, fileName, comments);
                         }
                     }
                 }
@@ -657,11 +674,11 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
         }
     }
 
-    private void processFile(Strategy strategy, String content, String fileName, String comments) {
+    private void processFile(Strategy strategy, Boolean active, String content, String fileName, String comments) {
 
         if (strategy.getRules().isEmpty() || (strategy.getRules().size() == 1 && !strategy.getRules().getFirst().getContentType().equals(filesMap.get(getExtension(fileName))))) {
 
-            Rule nextRule = new Rule(strategy, 1, comments,
+            Rule nextRule = new Rule(strategy, active, 1, comments,
                     content.getBytes(), filesMap.get(getExtension(fileName)));
             strategy.getRules().add(nextRule);
             this.tradeService.saveAspect(nextRule);
@@ -916,7 +933,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
             contentType = latestRule.getContentType();
         }
 
-        Rule nextRule = new Rule(strategy, version, commentText.getText(),
+        Rule nextRule = new Rule(strategy, latestRule.isActive(), version, commentText.getText(),
                 getContent().getBytes(), contentType);
         strategy.getRules().add(nextRule);
         refreshTree();
