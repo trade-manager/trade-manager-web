@@ -100,7 +100,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
     private TradestrategyOrders tradestrategyOrders = null;
     private final Long tradestrategyId;
     private String symbol = null;
-    private String strategyClassName = null;
+    private final String strategyClassName;
     private boolean seriesChanged = false;
     private final Object lockStrategyWorker = new Object();
     private boolean listeningCandles = false;
@@ -791,7 +791,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
      *
      * @param transmit boolean
      * @return TradeOrder
-     * @throws StrategyRuleException
+     * @throws StrategyRuleException exception
      */
     public TradeOrder cancelOrdersClosePosition(boolean transmit) throws StrategyRuleException {
 
@@ -1110,7 +1110,6 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
     /**
      * Method reFreshPositionOrders.
      */
-
     public void reFreshPositionOrders() throws StrategyRuleException {
 
         try {
@@ -1474,11 +1473,21 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
     }
 
     /**
+     * Method getStrategyClassName.
+     *
+     * @return strategyClassName
+     */
+    protected String getStrategyClassName() {
+
+        return this.strategyClassName;
+    }
+
+    /**
      *
      */
     protected void done() {
 
-        this.fireStrategyComplete(this.strategyClassName, this.tradestrategy);
+        this.fireStrategyComplete(this.getStrategyClassName(), this.tradestrategy);
         removeAllMessageListener();
         this.strategyData.getBaseCandleSeries().removeChangeListener(this);
         _log.info("Rule engine done: {} class: {} tradestrategyId: {} Tradingday Date: {}", getSymbol(), this.getClass().getSimpleName(), this.tradestrategy.getId(), this.tradestrategy.getTradingday().getOpen());
