@@ -696,7 +696,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                          */
                         tradingdayPanel.killStrategyWorker(
                                 tradestrategy.getStrategy().getClassName() + tradestrategy.getId());
-                        createStrategy(tradestrategy);
+                        createStrategy(tradestrategy, tradestrategy.getStrategy().getStrategyManager().getClassName());
                     }
                 } else {
 
@@ -977,10 +977,10 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
 
                             if (tradestrategy.getStrategy().hasStrategyManager()) {
 
-                                createStrategy(tradestrategy);
+                                createStrategy(tradestrategy, tradestrategy.getStrategy().getClassName());
                             } else {
 
-                                createStrategy(tradestrategy);
+                                createStrategy(tradestrategy, tradestrategy.getStrategy().getClassName());
                             }
                         } else {
 
@@ -996,7 +996,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                         }
                     } else {
 
-                        createStrategy(tradestrategy);
+                        createStrategy(tradestrategy, tradestrategy.getStrategy().getClassName());
                     }
                 }
             }
@@ -1897,17 +1897,18 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
     /**
      * Method createStrategy.
      *
-     * @param tradestrategy Tradestrategy
+     * @param tradestrategy     Tradestrategy
+     * @param strategyClassName String
      */
-    private synchronized void createStrategy(Tradestrategy tradestrategy) throws Exception {
+    private synchronized void createStrategy(Tradestrategy tradestrategy, String strategyClassName) throws Exception {
 
-        String key = tradestrategy.getStrategy().getClassName() + tradestrategy.getId();
+        String key = strategyClassName + tradestrategy.getId();
 
         // Only allow one strategy worker per tradestrategy
         if (tradingdayPanel.isStrategyWorkerRunning(key)) {
 
             throw new StrategyRuleException(1, 100,
-                    "Strategy already running: " + tradestrategy.getStrategy().getClassName() + " Symbol: "
+                    "Strategy already running: " + strategyClassName + " Symbol: "
                             + tradestrategy.getContract().getSymbol() + " Key: " + key + " seriesCount: "
                             + tradestrategy.getStrategyData().getBaseCandleSeries().getItemCount());
         }
@@ -1931,10 +1932,10 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
         if (rules.getFirst().getContentType().equals(ContentType.JAVA)) {
 
             strategyRule = (IStrategyRule) dynacode.newProxyInstance(IStrategyRule.class,
-                    IStrategyRule.PACKAGE + tradestrategy.getStrategy().getClassName(), param);
+                    IStrategyRule.PACKAGE + strategyClassName, param);
         } else {
 
-            strategyRule = new StrategyRuleJS(this.tradeService, brokerModel, tradestrategy.getStrategyData(), tradestrategy.getId());
+            strategyRule = new StrategyRuleJS(this.tradeService, brokerModel, tradestrategy.getStrategyData(), tradestrategy.getId(), rules.getFirst());
         }
 
         strategyRule.addMessageListener(this);

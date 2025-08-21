@@ -141,6 +141,7 @@ public class StrategyRuleJS extends AbstractStrategyRule {
     public void initialize() {
 
         try {
+
             context = Context.enter();
             // Set the JavaScript language version (ECMAScript 6)
             context.setLanguageVersion(Context.VERSION_ES6);
