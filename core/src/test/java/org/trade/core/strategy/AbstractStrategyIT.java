@@ -140,7 +140,7 @@ public class AbstractStrategyIT {
         assertNotNull(tradestrategy);
 
         strategyProxy = new StrategyRuleTest(tradeService, brokerModel, tradestrategy.getStrategyData(),
-                tradestrategy.getId(),tradestrategy.getStrategy().getClassName());
+                tradestrategy.getId(), tradestrategy.getStrategy().getClassName());
         assertNotNull(strategyProxy);
         strategyProxy.execute();
 
