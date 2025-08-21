@@ -1,17 +1,27 @@
 let CONSTANTS = null;
-
+let tradestrategy = null;
 /**
  * Method call once to initialize the strategy in the worker thread.
  */
 function initialize() {
 
-    let result  = JSON.parse(gs.getInitParams());
+    CONSTANTS = JSON.parse(gs.getInitParams());
 
-    if(!result.error){
+    if (CONSTANTS.error) {
 
-        gs.log('Info: StrategyRuleJS::initialize result.data: ' + JSON.stringify(result.data));
-        CONSTANTS = result.data;
+        gs.error(1, 100, 'Error: FiveMinGapBarStrategy::initialize failed to get constants  msg: ' + JSON.stringify(CONSTANTS.message));
     }
+
+    CONSTANTS = CONSTANTS.data;
+    tradestrategy = JSON.parse(gs.getTradestrategyJSON());
+
+    if (tradestrategy.error) {
+
+        gs.error(1, 100, 'Error: FiveMinGapBarStrategy::initialize failed to get tradestrategy  msg: ' + JSON.stringify(tradestrategy.message));
+    }
+    tradestrategy = tradestrategy.data;
+    gs.log('Info: FiveMinGapBarStrategy::initialize CONSTANTS: ' + JSON.stringify(CONSTANTS));
+    gs.log('Info: FiveMinGapBarStrategy::initialize tradestrategy: ' + JSON.stringify(tradestrategy));
 
     return gs.isCancelled();
 }
@@ -42,7 +52,7 @@ function runStrategy(candleSeriesJSON, newBar) {
     try {
 
         let candleSeries = JSON.parse(candleSeriesJSON);
-        gs.log('Info: StrategyRuleJS::runStrategy key: ' + candleSeries.key + ' newBar: ' + newBar + ' symbol: ' + gs.getSymbol());
+        gs.log('Info: FiveMinGapBarStrategy::runStrategy key: ' + candleSeries.key + ' newBar: ' + newBar + ' symbol: ' + gs.getSymbol());
 
         let currentCandleItem = JSON.parse(gs.getCurrentCandleJSON());
 
@@ -53,15 +63,11 @@ function runStrategy(candleSeriesJSON, newBar) {
         }
 
         currentCandleItem = currentCandleItem.data;
-
-        let tradestrategy = JSON.parse(gs.getTradestrategyJSON());
-        tradestrategy = tradestrategy.data;
-        gs.log('Info: StrategyRuleJS::runStrategy currentCandleItem: ' + JSON.stringify(currentCandleItem));
-        gs.log('Info: StrategyRuleJS::runStrategy tradestrategy: ' + JSON.stringify(tradestrategy));
-        gs.log('Info: StrategyRuleJS::runStrategy openPositionOrderKey: ' + openPositionOrderKey);
+        gs.log('Info: FiveMinGapBarStrategy::runStrategy currentCandleItem: ' + JSON.stringify(currentCandleItem));
+        gs.log('Info: FiveMinGapBarStrategy::runStrategy openPositionOrderKey: ' + openPositionOrderKey);
         // Get the current candle start date
         let startPeriod = new Date(currentCandleItem.period.start);
-        gs.log('Info: StrategyRuleJS::runStrategy startPeriod: ' + startPeriod);
+        gs.log('Info: FiveMinGapBarStrategy::runStrategy startPeriod: ' + startPeriod);
 
         /*
          * Trade is open kill this Strategy as its job is done.
@@ -77,7 +83,7 @@ function runStrategy(candleSeriesJSON, newBar) {
              */
              let tradeOrder = JSON.parse(gs.getOpenPositionOrderJSON());
 
-             gs.log('Info: StrategyRuleJS::runStrategy tradeOrder: ' + JSON.stringify(tradeOrder));
+             gs.log('Info: FiveMinGapBarStrategy::runStrategy tradeOrder: ' + JSON.stringify(tradeOrder));
 
             if (!tradeOrder.error) {
 
@@ -99,7 +105,7 @@ function runStrategy(candleSeriesJSON, newBar) {
          * is done.
          */
         let tradeOrder = JSON.parse(gs.getTradeOrderJSON(openPositionOrderKey));
-        gs.log('Info: StrategyRuleJS::runStrategy tradeOrder: ' + JSON.stringify(tradeOrder));
+        gs.log('Info: FiveMinGapBarStrategy::runStrategy tradeOrder: ' + JSON.stringify(tradeOrder));
 
         if (!tradeOrder.error) {
 
@@ -122,7 +128,7 @@ function runStrategy(candleSeriesJSON, newBar) {
         startCandleDate.setMinutes((new Date(tradestrategy.tradingday.open)).getMinutes() + (tradestrategy.barSize / 60));
         let timeOutDate = new Date(tradestrategy.tradingday.open);
         timeOutDate.setMinutes((new Date(tradestrategy.tradingday.open)).getMinutes() + 120);
-        gs.log('Info: StrategyRuleJS::runStrategy startPeriod: ' + startPeriod + " startCandleDate: " + startCandleDate + " timeOutDate: " + timeOutDate);
+        gs.log('Info: FiveMinGapBarStrategy::runStrategy startPeriod: ' + startPeriod + " startCandleDate: " + startCandleDate + " timeOutDate: " + timeOutDate);
 
         if (startPeriod.getTime() === startCandleDate.getTime() && newBar) {
 
@@ -135,13 +141,13 @@ function runStrategy(candleSeriesJSON, newBar) {
             if (gs.getCurrentCandleCount() > 0) {
 
                 prevCandleItem =  candleSeries.data[(gs.getCurrentCandleCount() - 1)];
-                gs.log('Info: StrategyRuleJS::runStrategy prevCandleItem: ' + JSON.stringify(prevCandleItem));
+                gs.log('Info: FiveMinGapBarStrategy::runStrategy prevCandleItem: ' + JSON.stringify(prevCandleItem));
             }
 
             if (null != prevCandleItem && (gs.between(prevCandleItem.candle.open, prevCandleItem.candle.close, prevCandleItem.candle.vwap))) {
 
                let barBodyPercent = (Math.abs(prevCandleItem.candle.open - prevCandleItem.candle.close)/ Math.abs(prevCandleItem.candle.high - prevCandleItem.candle.low)) * 100;
-               gs.log('Info: StrategyRuleJS::runStrategy barBodyPercent: ' + barBodyPercent);
+               gs.log('Info: FiveMinGapBarStrategy::runStrategy barBodyPercent: ' + barBodyPercent);
 
                if (barBodyPercent < 10) {
 
@@ -180,7 +186,7 @@ function runStrategy(candleSeriesJSON, newBar) {
             }
 
             entrylimit = entrylimit.data;
-            gs.log('Info: StrategyRuleJS::runStrategy entrylimit: ' + JSON.stringify(entrylimit));
+            gs.log('Info: FiveMinGapBarStrategy::runStrategy entrylimit: ' + JSON.stringify(entrylimit));
 
             // If the candle less than the entry limit %
             if ((highLowRange / prevCandleItem.candle.close) < entrylimit.percentOfPrice) {
@@ -285,6 +291,6 @@ function runStrategy(candleSeriesJSON, newBar) {
         return gs.isCancelled();
     } catch (ex) {
 
-        gs.error(1, 100, 'Error: StrategyRuleJS::runStrategy process javascript msg: ' + ex);
+        gs.error(1, 100, 'Error: FiveMinGapBarStrategy::runStrategy process javascript msg: ' + ex);
     }
 }

@@ -100,6 +100,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
     private TradestrategyOrders tradestrategyOrders = null;
     private final Long tradestrategyId;
     private String symbol = null;
+    private final String strategyClassName;
     private boolean seriesChanged = false;
     private final Object lockStrategyWorker = new Object();
     private boolean listeningCandles = false;
@@ -112,18 +113,20 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
      * candle data set for changes. This class runs in its own thread. there
      * will be one Strategy running per tradestrategy.
      *
-     * @param tradeService    TradeService
-     * @param brokerModel     IBrokerModel
-     * @param strategyData    StrategyData
-     * @param tradestrategyId Integer
+     * @param tradeService      TradeService
+     * @param brokerModel       IBrokerModel
+     * @param strategyData      StrategyData
+     * @param tradestrategyId   Integer
+     * @param strategyClassName String
      */
-    public AbstractStrategyRule(TradeService tradeService, IBrokerModel brokerModel, StrategyData strategyData, Long tradestrategyId) {
+    public AbstractStrategyRule(TradeService tradeService, IBrokerModel brokerModel, StrategyData strategyData, Long tradestrategyId, String strategyClassName) {
 
         this.listenerList = new EventListenerList();
         this.tradestrategyId = tradestrategyId;
         this.tradeService = tradeService;
         this.brokerModel = brokerModel;
         this.strategyData = strategyData;
+        this.strategyClassName = strategyClassName;
     }
 
     /**
@@ -788,7 +791,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
      *
      * @param transmit boolean
      * @return TradeOrder
-     * @throws StrategyRuleException
+     * @throws StrategyRuleException exception
      */
     public TradeOrder cancelOrdersClosePosition(boolean transmit) throws StrategyRuleException {
 
@@ -1107,7 +1110,6 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
     /**
      * Method reFreshPositionOrders.
      */
-
     public void reFreshPositionOrders() throws StrategyRuleException {
 
         try {
@@ -1471,11 +1473,21 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
     }
 
     /**
+     * Method getStrategyClassName.
+     *
+     * @return strategyClassName
+     */
+    protected String getStrategyClassName() {
+
+        return this.strategyClassName;
+    }
+
+    /**
      *
      */
     protected void done() {
 
-        this.fireStrategyComplete(this.getClass().getSimpleName(), this.tradestrategy);
+        this.fireStrategyComplete(this.getStrategyClassName(), this.tradestrategy);
         removeAllMessageListener();
         this.strategyData.getBaseCandleSeries().removeChangeListener(this);
         _log.info("Rule engine done: {} class: {} tradestrategyId: {} Tradingday Date: {}", getSymbol(), this.getClass().getSimpleName(), this.tradestrategy.getId(), this.tradestrategy.getTradingday().getOpen());

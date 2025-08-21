@@ -44,7 +44,6 @@ import org.trade.base.Tree;
 import org.trade.base.UIPropertyCodes;
 import org.trade.core.broker.IBrokerModel;
 import org.trade.core.factory.ClassFactory;
-import org.trade.core.persistent.ServiceException;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.Contract;
 import org.trade.core.persistent.dao.Rule;
@@ -114,6 +113,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
     private StreamEditorPane messageText = null;
     private BaseButton compileButton = null;
     private BaseButton newButton = null;
+    private Checkbox activeCheckBox = null;
     private StrategyTreeModel strategyTreeModel = null;
     private static String strategyDir = null;
     private static String strategyContentType = null;
@@ -165,14 +165,20 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
             compileButton = new BaseButton(this, UIPropertyCodes.newInstance(UIPropertyCodes.COMPILE));
             newButton = new BaseButton(this, BaseUIPropertyCodes.NEW);
             newButton.setToolTipText("Load Template");
-
-            JPanel jPanel1 = new JPanel(new FlowLayout());
-            jPanel1.add(newButton);
-            jPanel1.add(compileButton);
+            activeCheckBox = new Checkbox();
+            activeCheckBox.setLabel("Active");
+            JPanel jPanel1 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
             jPanel1.setBorder(new BevelBorder(BevelBorder.RAISED));
+            jPanel1.add(activeCheckBox, null);
+
+            JPanel jPanel2 = new JPanel(new FlowLayout());
+            jPanel2.add(newButton);
+            jPanel2.add(compileButton);
+            jPanel2.setBorder(new BevelBorder(BevelBorder.RAISED));
             JToolBar jToolBar = new JToolBar();
             jToolBar.setLayout(new BorderLayout());
-            jToolBar.add(jPanel1, BorderLayout.WEST);
+            jToolBar.add(jPanel2, BorderLayout.WEST);
+            jToolBar.add(jPanel1, BorderLayout.EAST);
 
             // create the message panel first so we can send messages to it...
             messageText = new StreamEditorPane(ContentType.TEXT);
@@ -300,6 +306,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
                 commentText.setCaretPosition(0);
                 messageText.setCaretPosition(0);
                 currentRule = rule;
+                activeCheckBox.setState(rule.isActive());
             }
         } catch (Exception ex) {
             setErrorMessage("Error finding Strategy code.", ex.getMessage(), ex);
@@ -316,10 +323,12 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
     }
 
     public void doWindowActivated() {
+
         doRefresh();
     }
 
     public boolean doWindowDeActivated() {
+
         return true;
     }
 
@@ -337,7 +346,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
             candleDataset.addSeries(candleSeries);
             StrategyData strategyData = new StrategyData(rule.getStrategy(), candleDataset);
 
-            fileName = fileName + rule.getStrategy().getClassName() + ".java";
+            fileName = fileName + rule.getStrategy().getClassName() + "." + this.getKeyFromValue(filesMap, rule.getContentType());
             doSaveFile(fileName, this.getContent());
 
             List<Object> param = new ArrayList<>(0);
@@ -345,11 +354,14 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
             IBrokerModel brokerManagerModel = (IBrokerModel) ClassFactory.getServiceForInterface(IBrokerModel._brokerTest,
                     param, this);
 
+            Long tradestrategyId = 0L;
+
             param.clear();
             param.add(this.tradeService);
             param.add(brokerManagerModel);
             param.add(strategyData);
-            param.add(0L);
+            param.add(tradestrategyId);
+            param.add(rule.getStrategy().getClassName());
             DynamicCode dynacode = new DynamicCode();
             dynacode.addSourceDir(new File(TEMP_DIR));
             IStrategyRule strategyProxy = null;
@@ -360,10 +372,12 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
                         param);
             } else {
 
-                strategyProxy = new StrategyRuleJS(this.tradeService, brokerManagerModel, strategyData, 0L, rule);
+                strategyProxy = new StrategyRuleJS(this.tradeService, brokerManagerModel, strategyData, tradestrategyId, rule.getStrategy().getClassName(), rule);
+                strategyProxy.initialize();
                 strategyProxy.runStrategy(candleSeries, true);
             }
 
+            strategyProxy.cancel();
             this.setStatusBarMessage("File compiled.", BasePanel.INFORMATION);
             return true;
         } catch (Exception ex) {
@@ -397,15 +411,16 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
             if (returnVal == JFileChooser.APPROVE_OPTION) {
 
                 String fileName = fileView.getSelectedFile().getPath();
+                String contentType = filesMap.get(getExtension(fileName));
 
                 DefaultMutableTreeNode node = (DefaultMutableTreeNode) Objects.requireNonNull(tree.getSelectionPath())
                         .getLastPathComponent();
-                setContent(readFile(fileName), filesMap.get(getExtension(fileName)));
+                setContent(readFile(fileName), contentType);
                 commentText.setText(null);
 
                 if (node.getUserObject() instanceof Strategy) {
 
-                    createRule((Strategy) node.getUserObject());
+                    createRule((Strategy) node.getUserObject(), contentType);
                 }
             }
         } catch (Exception ex) {
@@ -428,7 +443,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
 
             if (this.currentRule.getRule().length > 0) {
 
-                if ((new String(this.currentRule.getRule())).equals(this.getContent()) && this.currentRule.getContentType().equals(this.getContentType())) {
+                if ((new String(this.currentRule.getRule())).equals(this.getContent()) && this.currentRule.getContentType().equals(this.getContentType()) && this.currentRule.isActive().equals(activeCheckBox.getState())) {
 
                     if (null != this.currentRule.getComment() && this.currentRule.getComment().equals(getComments())) {
 
@@ -452,6 +467,18 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
                         "Information", JOptionPane.YES_NO_OPTION);
             }
 
+            if (activeCheckBox.getState() && !this.currentRule.isActive().equals(activeCheckBox.getState())) {
+
+                // Turning off other rules for this strategy as only one rule can be active at a time.
+                List<Rule> rules = this.tradeService.findRulesByStrategyAndActive(this.currentRule.getStrategy(), activeCheckBox.getState());
+
+                for (Rule rule : rules) {
+
+                    rule.setActive(!activeCheckBox.getState());
+                    rule = this.tradeService.saveAspect(rule);
+                }
+            }
+
             if (result == JOptionPane.YES_OPTION) {
 
                 Rule latestRule = this.tradeService.findRuleByMaxVersion(this.currentRule.getStrategy(), filesMap.get(getExtension(fileNameSource)));
@@ -462,9 +489,9 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
                     version = latestRule.getRuleVersion() + 1;
                 }
 
-                Rule nextRule = new Rule(this.currentRule.getStrategy(), version, commentText.getText(), getContent().getBytes(), filesMap.get(getExtension(fileNameSource)));
+                Rule nextRule = new Rule(this.currentRule.getStrategy(), activeCheckBox.getState(), version, commentText.getText(), getContent().getBytes(), filesMap.get(getExtension(fileNameSource)));
                 this.currentRule.getStrategy().getRules().add(nextRule);
-                this.tradeService.saveAspect(nextRule);
+                this.currentRule = this.tradeService.saveAspect(nextRule);
                 doSaveFile(fileNameSource, getContent());
                 doSaveFile(fileNameComments, getComments());
 
@@ -485,12 +512,14 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
                 }
 
                 this.currentRule.setRule(getContent().getBytes());
+                this.currentRule.setActive(activeCheckBox.getState());
                 this.currentRule = this.tradeService.saveAspect(this.currentRule);
                 doSaveFile(fileNameSource, getContent());
                 doSaveFile(fileNameComments, getComments());
             }
-            refreshTree();
+
             this.currentRule.setDirty(false);
+            doRefresh();
         } catch (Exception ex) {
             setErrorMessage("Error saving strategy", ex.getMessage(), ex);
         } finally {
@@ -502,20 +531,38 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
 
         try {
 
-            String templateName = ConfigProperties.getPropAsString("trade.strategy.template");
-            String fileName = strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/') + templateName + ".java";
 
-            if (strategyContentType.equals(ContentType.JAVASCRIPT)) {
+            String[] choices = {"Java", "Javascript"};
+            String contentType = ContentType.JAVA;
+            int result = JOptionPane.showOptionDialog(this.getFrame(), "Do you want to create a Java or Javascript file?",
+                    "Information", JOptionPane.YES_NO_CANCEL_OPTION,     // Option type (can be customized by 'options' array)
+                    JOptionPane.QUESTION_MESSAGE,         // Message type (determines icon)
+                    null,                                 // Custom icon (null uses default based on messageType)
+                    choices,                              // Custom button options
+                    choices[0]);
 
-                fileName = strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/') + templateName + ".js";
+            if (result == JOptionPane.CLOSED_OPTION) {
+
+                return;
+            } else if (result == JOptionPane.YES_OPTION || result == 0) {
+
+                // Check for YES_OPTION or index 0 for custom buttons
+                contentType = ContentType.JAVA;
+            } else if (result == JOptionPane.NO_OPTION || result == 1) {
+
+                // Check for NO_OPTION or index 1 for custom buttons
+                contentType = ContentType.JAVASCRIPT;
             }
 
+            String templateName = ConfigProperties.getPropAsString("trade.strategy.template");
+            String extension = getKeyFromValue(filesMap, contentType);
+            String fileName = strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/') + templateName + "." + extension;
             commentText.setText(null);
-            String contentType = filesMap.get(getExtension(fileName));
             setContent(readFile(fileName), contentType);
             setContent((getContent().replaceAll(templateName, strategy.getClassName())), contentType);
-            createRule(strategy);
+            createRule(strategy, contentType);
         } catch (Exception ex) {
+
             setErrorMessage("Error loading template strategy", ex.getMessage(), ex);
         }
     }
@@ -619,7 +666,14 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
 
                         if (null != content) {
 
-                            processFile(strategy, content, fileName, comments);
+                            Boolean active = false;
+
+                            if (strategyContentType.equals(filesMap.get(fileExtension))) {
+
+                                active = true;
+                            }
+
+                            processFile(strategy, active, content, fileName, comments);
                         }
                     }
                 }
@@ -633,11 +687,11 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
         }
     }
 
-    private void processFile(Strategy strategy, String content, String fileName, String comments) {
+    private void processFile(Strategy strategy, Boolean active, String content, String fileName, String comments) {
 
         if (strategy.getRules().isEmpty() || (strategy.getRules().size() == 1 && !strategy.getRules().getFirst().getContentType().equals(filesMap.get(getExtension(fileName))))) {
 
-            Rule nextRule = new Rule(strategy, 1, comments,
+            Rule nextRule = new Rule(strategy, active, 1, comments,
                     content.getBytes(), filesMap.get(getExtension(fileName)));
             strategy.getRules().add(nextRule);
             this.tradeService.saveAspect(nextRule);
@@ -881,12 +935,10 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
         return dir.delete();
     }
 
-    private void createRule(final Strategy strategy) throws ServiceException, ValueTypeException {
+    private void createRule(final Strategy strategy, String contentType) throws ValueTypeException {
 
         int version = 1;
-        String contentType = ContentType.JAVA;
         Rule latestRule = this.tradeService.findRuleByMaxVersion(strategy, contentType);
-
 
         if (null != latestRule) {
 
@@ -894,7 +946,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
             contentType = latestRule.getContentType();
         }
 
-        Rule nextRule = new Rule(strategy, version, commentText.getText(),
+        Rule nextRule = new Rule(strategy, latestRule.isActive(), version, commentText.getText(),
                 getContent().getBytes(), contentType);
         strategy.getRules().add(nextRule);
         refreshTree();
@@ -932,6 +984,9 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
         return null; // Value not found
     }
 
+    /**
+     * Filter for the file selector.
+     */
     public static class JavaFilter extends FileFilter {
 
         // Accept all directories and all csv files.

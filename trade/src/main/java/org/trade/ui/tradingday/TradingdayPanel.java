@@ -894,10 +894,14 @@ public class TradingdayPanel extends BasePanel {
     public boolean isStrategyWorkerRunning(final Tradestrategy tradestrategy) {
 
         String key = tradestrategy.getStrategy().getClassName() + tradestrategy.getId();
+
         if (isStrategyWorkerRunning(key)) {
+
             return true;
         }
+
         if (tradestrategy.getStrategy().hasStrategyManager()) {
+
             key = tradestrategy.getStrategy().getStrategyManager().getClassName() + tradestrategy.getId();
             return isStrategyWorkerRunning(key);
         }
@@ -912,7 +916,9 @@ public class TradingdayPanel extends BasePanel {
      * @return boolean
      */
     public boolean isStrategyWorkerRunning(String key) {
+
         if (strategyWorkers.containsKey(key)) {
+
             IStrategyRule strategy = strategyWorkers.get(key);
             return !strategy.isDone();
         }
@@ -926,6 +932,7 @@ public class TradingdayPanel extends BasePanel {
      * @param strategy IStrategyRule
      */
     public void addStrategyWorker(String key, final IStrategyRule strategy) {
+
         strategyWorkers.put(key, strategy);
     }
 
@@ -944,7 +951,9 @@ public class TradingdayPanel extends BasePanel {
      * @param key String
      */
     public IStrategyRule getStrategyWorker(String key) {
+
         if (strategyWorkers.containsKey(key)) {
+
             return strategyWorkers.get(key);
         }
         return null;
@@ -956,13 +965,20 @@ public class TradingdayPanel extends BasePanel {
      * @param tradestrategy Tradestrategy
      */
     public void killAllStrategyWorkersForTradestrategy(final Tradestrategy tradestrategy) {
+
         String key = tradestrategy.getStrategy().getClassName() + tradestrategy.getId();
+
         if (isStrategyWorkerRunning(key)) {
+
             killStrategyWorker(key);
         }
+
         if (tradestrategy.getStrategy().hasStrategyManager()) {
+
             key = tradestrategy.getStrategy().getStrategyManager().getClassName() + tradestrategy.getId();
+
             if (isStrategyWorkerRunning(key)) {
+
                 killStrategyWorker(key);
             }
         }
@@ -1014,12 +1030,17 @@ public class TradingdayPanel extends BasePanel {
          * If they do kill the strategy worker before deleting trades.
          */
         for (Tradingday tradingday : tradingdays.getTradingdays()) {
+
             if (Tradingdays.hasOpenOrders(tradingday)) {
+
                 int result = JOptionPane.showConfirmDialog(this.getFrame(),
                         "Tradingday: " + tradingday.getOpen() + " has open orders. Do you want to continue", "Warning",
                         JOptionPane.YES_NO_OPTION);
+
                 if (result == JOptionPane.YES_OPTION) {
+
                     for (Tradestrategy tradestrategy : tradingday.getTradestrategies()) {
+
                         killAllStrategyWorkersForTradestrategy(tradestrategy);
                     }
                 } else {
@@ -1033,7 +1054,9 @@ public class TradingdayPanel extends BasePanel {
         this.setStatusBarMessage("Delete in progress ...\n", BasePanel.INFORMATION);
         deleteProgressMonitor = new DeleteProgressMonitor(tradeService, tradingdays);
         deleteProgressMonitor.addPropertyChangeListener(evt -> {
+
             if ("progress".equals(evt.getPropertyName())) {
+
                 int progress = (Integer) evt.getNewValue();
                 setProgressBarProgress(progress, deleteProgressMonitor);
             }
@@ -1285,6 +1308,7 @@ public class TradingdayPanel extends BasePanel {
         public Void doInBackground() {
 
             try {
+
                 grandtotal = tradingdays.getTradingdays().size();
                 this.startTime = System.currentTimeMillis();
                 int totalComplete = 0;
@@ -1293,8 +1317,11 @@ public class TradingdayPanel extends BasePanel {
                 setProgress(0);
                 String message;
                 tradingdays.getTradingdays().sort(Tradingday.DATE_ORDER_ASC);
+
                 for (Tradingday tradingday : tradingdays.getTradingdays()) {
+
                     this.tradeService.deleteTradingdayTradeOrders(tradingday);
+
                     totalComplete++;
                     int percent = (int) (((double) (totalComplete) / grandtotal) * 100d);
                     setProgress(percent);

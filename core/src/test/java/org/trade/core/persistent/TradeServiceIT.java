@@ -908,7 +908,7 @@ public class TradeServiceIT {
         String content = "function (){console.log('Hi');}";
         Strategy strategy = tradestrategy.getStrategy();
         strategy = this.tradeService.findStrategyById(strategy.getId());
-        Rule rule = new Rule(strategy, 0, comment, content.getBytes(), contentType);
+        Rule rule = new Rule(strategy, true, 0, comment, content.getBytes(), contentType);
         strategy.getRules().add(rule);
         strategy = this.tradeService.saveAspect(strategy);
         rule = this.tradeService.findRuleByMaxVersion(strategy, contentType);
@@ -921,7 +921,7 @@ public class TradeServiceIT {
 
         Strategy strategy = tradestrategy.getStrategy();
         strategy = this.tradeService.findStrategyById(strategy.getId());
-        Rule rule = new Rule(strategy, 0, comment);
+        Rule rule = new Rule(strategy, true, 0, comment);
         strategy.getRules().add(rule);
         strategy = this.tradeService.saveAspect(strategy);
         Rule latestRule = this.tradeService.findRuleByMaxVersion(strategy, contentType);
@@ -932,7 +932,7 @@ public class TradeServiceIT {
             version = latestRule.getRuleVersion() + 1;
         }
 
-        rule = new Rule(strategy, version, comment);
+        rule = new Rule(strategy, true, version, comment);
         strategy.getRules().add(rule);
         strategy = this.tradeService.saveAspect(strategy);
         rule = strategy.getRules().getLast();
@@ -974,7 +974,7 @@ public class TradeServiceIT {
             version = latestRule.getRuleVersion() + 1;
         }
 
-        Rule rule = new Rule(strategy, version, comment);
+        Rule rule = new Rule(strategy, true, version, comment);
         strategy.getRules().add(rule);
         strategy = this.tradeService.saveAspect(strategy);
         rule = strategy.getRules().getFirst();

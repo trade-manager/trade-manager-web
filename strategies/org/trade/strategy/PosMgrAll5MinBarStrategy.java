@@ -72,12 +72,11 @@ public class PosMgrAll5MinBarStrategy extends AbstractStrategyRule {
      * @param tradeService       TradeService
      * @param brokerManagerModel BrokerModel
      * @param strategyData       StrategyData
-     * @param tradestrategyId    Long
+     * @param strategyClassName  String
      */
+    public PosMgrAll5MinBarStrategy(TradeService tradeService, IBrokerModel brokerManagerModel, StrategyData strategyData, Long tradestrategyId, String strategyClassName) {
 
-    public PosMgrAll5MinBarStrategy(TradeService tradeService, IBrokerModel brokerManagerModel, StrategyData strategyData, Long tradestrategyId) {
-
-        super(tradeService, brokerManagerModel, strategyData, tradestrategyId);
+        super(tradeService, brokerManagerModel, strategyData, tradestrategyId, strategyClassName);
     }
 
     /**

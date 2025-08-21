@@ -71,6 +71,9 @@ public class Rule extends Aspect implements Serializable {
     @Serial
     private static final long serialVersionUID = 2273276207080568947L;
 
+    @Column(name = "active", length = 1, nullable = false)
+    private Boolean active;
+
     @Column(name = "comment", nullable = false, length = 200)
     private String comment;
 
@@ -97,12 +100,14 @@ public class Rule extends Aspect implements Serializable {
      * Constructor for Rule.
      *
      * @param strategy    Strategy
+     * @param active      Boolean
      * @param ruleVersion Integer
      * @param comment     String
      */
-    public Rule(Strategy strategy, Integer ruleVersion, String comment) {
+    public Rule(Strategy strategy, Boolean active, Integer ruleVersion, String comment) {
 
         this.strategy = strategy;
+        this.active = active;
         this.ruleVersion = ruleVersion;
         this.comment = comment;
     }
@@ -111,14 +116,16 @@ public class Rule extends Aspect implements Serializable {
      * Constructor for Rule.
      *
      * @param strategy    Strategy
+     * @param active      Boolean
      * @param ruleVersion Integer
      * @param comment     String
      * @param rule        byte[]
      * @param contentType String
      */
-    public Rule(Strategy strategy, Integer ruleVersion, String comment, byte[] rule, String contentType) {
+    public Rule(Strategy strategy, Boolean active, Integer ruleVersion, String comment, byte[] rule, String contentType) {
 
         this.strategy = strategy;
+        this.active = active;
         this.ruleVersion = ruleVersion;
         this.comment = comment;
         this.rule = rule;
@@ -141,6 +148,24 @@ public class Rule extends Aspect implements Serializable {
      */
     public void setStrategy(Strategy strategy) {
         this.strategy = strategy;
+    }
+
+    /**
+     * Method getActive.
+     *
+     * @return Boolean
+     */
+    public Boolean isActive() {
+        return this.active;
+    }
+
+    /**
+     * Method setActive.
+     *
+     * @param active Boolean
+     */
+    public void setActive(Boolean active) {
+        this.active = active;
     }
 
     /**

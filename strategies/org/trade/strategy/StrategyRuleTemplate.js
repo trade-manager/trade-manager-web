@@ -1,17 +1,29 @@
 let CONSTANTS = null;
-
+let tradestrategy = null;
 /**
  * Method call once to initialize the strategy in the worker thread.
  */
 function initialize() {
 
-    let result  = JSON.parse(gs.getInitParams());
+    CONSTANTS = JSON.parse(gs.getInitParams());
 
-    if (!result.error) {
+    if (CONSTANTS.error) {
 
-        gs.log('Info: StrategyRuleJS::initialize result.data: ' + JSON.stringify(result.data));
-        CONSTANTS = result.data;
+        gs.error(1, 100, 'Error: StrategyRuleJS::initialize failed to get constants  msg: ' + JSON.stringify(CONSTANTS.message));
     }
+
+    CONSTANTS = CONSTANTS.data;
+    tradestrategy = JSON.parse(gs.getTradestrategyJSON());
+
+    if (tradestrategy.error) {
+
+        gs.error(1, 100, 'Error: StrategyRuleJS::initialize failed to get tradestrategy  msg: ' + JSON.stringify(tradestrategy.message));
+    }
+    tradestrategy = tradestrategy.data;
+    gs.log('Info: StrategyRuleJS::initialize CONSTANTS: ' + JSON.stringify(CONSTANTS));
+    gs.log('Info: StrategyRuleJS::initialize tradestrategy: ' + JSON.stringify(tradestrategy));
+
+    return gs.isCancelled();
 }
 
 function runStrategy(candleSeriesJSON, newBar) {
