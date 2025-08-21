@@ -54,6 +54,7 @@ import org.trade.core.persistent.dao.CodeType;
 import org.trade.core.persistent.dao.CodeValue;
 import org.trade.core.persistent.dao.Contract;
 import org.trade.core.persistent.dao.Portfolio;
+import org.trade.core.persistent.dao.Rule;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradePosition;
 import org.trade.core.persistent.dao.Tradestrategy;
@@ -137,7 +138,6 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
 
     private final static Logger _log = LoggerFactory.getLogger(TradeMainControllerPanel.class);
 
-    private static String strategyContentType = null;
     private static Tradingdays tradingdays = null;
     private IBrokerModel brokerModel = null;
     private BrokerDataRequestMonitor brokerDataRequestProgressMonitor = null;
@@ -182,8 +182,6 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
             tradingdays = new Tradingdays();
             tradingdays.add(tradingday);
             String strategyDir = ConfigProperties.getPropAsString("trade.strategy.default.dir");
-            strategyContentType = ConfigProperties.getPropAsString("trade.strategy.content_type");
-
             dynacode = new DynamicCode();
             dynacode.addSourceDir(new File(strategyDir));
 
@@ -698,7 +696,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                          */
                         tradingdayPanel.killStrategyWorker(
                                 tradestrategy.getStrategy().getClassName() + tradestrategy.getId());
-                        createStrategy(tradestrategy.getStrategy().getStrategyManager().getClassName(), tradestrategy);
+                        createStrategy(tradestrategy);
                     }
                 } else {
 
@@ -979,11 +977,10 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
 
                             if (tradestrategy.getStrategy().hasStrategyManager()) {
 
-                                createStrategy(tradestrategy.getStrategy().getStrategyManager().getClassName(),
-                                        tradestrategy);
+                                createStrategy(tradestrategy);
                             } else {
 
-                                createStrategy(tradestrategy.getStrategy().getClassName(), tradestrategy);
+                                createStrategy(tradestrategy);
                             }
                         } else {
 
@@ -999,7 +996,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                         }
                     } else {
 
-                        createStrategy(tradestrategy.getStrategy().getClassName(), tradestrategy);
+                        createStrategy(tradestrategy);
                     }
                 }
             }
@@ -1900,20 +1897,28 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
     /**
      * Method createStrategy.
      *
-     * @param strategyClassName String
-     * @param tradestrategy     Tradestrategy
+     * @param tradestrategy Tradestrategy
      */
-    private synchronized void createStrategy(String strategyClassName, Tradestrategy tradestrategy) throws Exception {
+    private synchronized void createStrategy(Tradestrategy tradestrategy) throws Exception {
 
-        String key = strategyClassName + tradestrategy.getId();
+        String key = tradestrategy.getStrategy().getClassName() + tradestrategy.getId();
 
         // Only allow one strategy worker per tradestrategy
         if (tradingdayPanel.isStrategyWorkerRunning(key)) {
 
             throw new StrategyRuleException(1, 100,
-                    "Strategy already running: " + strategyClassName + " Symbol: "
+                    "Strategy already running: " + tradestrategy.getStrategy().getClassName() + " Symbol: "
                             + tradestrategy.getContract().getSymbol() + " Key: " + key + " seriesCount: "
                             + tradestrategy.getStrategyData().getBaseCandleSeries().getItemCount());
+        }
+
+        List<Rule> rules = this.tradeService.findRulesByStrategyAndActive(tradestrategy.getStrategy(), true);
+
+        if (rules.isEmpty() || rules.size() > 1) {
+
+            throw new StrategyRuleException(1, 100,
+                    "More than one rules is active for this strategy: " + tradestrategy.getStrategy().getName() + " Symbol: "
+                            + tradestrategy.getContract().getSymbol());
         }
 
         List<Object> param = new ArrayList<>(0);
@@ -1923,10 +1928,10 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
         param.add(tradestrategy.getId());
         IStrategyRule strategyRule = null;
 
-        if (strategyContentType.equals(ContentType.JAVA)) {
+        if (rules.getFirst().getContentType().equals(ContentType.JAVA)) {
 
             strategyRule = (IStrategyRule) dynacode.newProxyInstance(IStrategyRule.class,
-                    IStrategyRule.PACKAGE + strategyClassName, param);
+                    IStrategyRule.PACKAGE + tradestrategy.getStrategy().getClassName(), param);
         } else {
 
             strategyRule = new StrategyRuleJS(this.tradeService, brokerModel, tradestrategy.getStrategyData(), tradestrategy.getId());

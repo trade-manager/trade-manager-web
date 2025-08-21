@@ -442,7 +442,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
 
             if (this.currentRule.getRule().length > 0) {
 
-                if ((new String(this.currentRule.getRule())).equals(this.getContent()) && this.currentRule.getContentType().equals(this.getContentType())&& this.currentRule.isActive().equals(activeCheckBox.getState())) {
+                if ((new String(this.currentRule.getRule())).equals(this.getContent()) && this.currentRule.getContentType().equals(this.getContentType()) && this.currentRule.isActive().equals(activeCheckBox.getState())) {
 
                     if (null != this.currentRule.getComment() && this.currentRule.getComment().equals(getComments())) {
 
@@ -466,6 +466,18 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
                         "Information", JOptionPane.YES_NO_OPTION);
             }
 
+            if (activeCheckBox.getState() && !this.currentRule.isActive().equals(activeCheckBox.getState())) {
+
+                // Turning off other rules for this strategy as only one rule can be active at a time.
+                List<Rule> rules = this.tradeService.findRulesByStrategyAndActive(this.currentRule.getStrategy(), activeCheckBox.getState());
+
+                for (Rule rule : rules) {
+
+                    rule.setActive(!activeCheckBox.getState());
+                    rule = this.tradeService.saveAspect(rule);
+                }
+            }
+
             if (result == JOptionPane.YES_OPTION) {
 
                 Rule latestRule = this.tradeService.findRuleByMaxVersion(this.currentRule.getStrategy(), filesMap.get(getExtension(fileNameSource)));
@@ -478,7 +490,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
 
                 Rule nextRule = new Rule(this.currentRule.getStrategy(), activeCheckBox.getState(), version, commentText.getText(), getContent().getBytes(), filesMap.get(getExtension(fileNameSource)));
                 this.currentRule.getStrategy().getRules().add(nextRule);
-                this.tradeService.saveAspect(nextRule);
+                this.currentRule = this.tradeService.saveAspect(nextRule);
                 doSaveFile(fileNameSource, getContent());
                 doSaveFile(fileNameComments, getComments());
 

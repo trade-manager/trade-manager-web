@@ -10,4 +10,6 @@ public interface RuleRepository extends AspectRepository<Rule, Long>, RuleReposi
     List<Rule> findByStrategyAndContentTypeAndRuleVersion(Strategy strategy, String contentType, Integer ruleVersion);
 
     List<Rule> findByStrategy(Strategy strategy);
+
+    List<Rule> findByStrategyAndActive(Strategy strategy, Boolean active);
 }
