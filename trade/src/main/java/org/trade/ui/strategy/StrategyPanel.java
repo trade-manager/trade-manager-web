@@ -653,6 +653,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
         for (Strategy strategy : strategies) {
 
             try {
+
                 String strategyDir = this.strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/');
                 File strategyDirFile = new File(strategyDir);
 
@@ -695,6 +696,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
 
                         Boolean active = false;
 
+                        // If there is only one or the system default set it to active.
                         if (strategyContentType.equals(filesMap.get(fileExtension)) || strategyFiles.size() == 1) {
 
                             active = true;
