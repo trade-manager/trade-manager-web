@@ -156,7 +156,7 @@ function runStrategy(candleSeriesJSON, newBar) {
 
                     let stopPrice = gs.addPennyAndRoundStop(tradeOrder.averageFilledPrice, tradeOrder.side, CONSTANTS.ACTION.SELL, 0.01);
                     gs.moveStopOCAPrice(stopPrice, true);
-                    gs.log("Move Stop to b.e. Strategy Mgr Symbol: " + gs.getSymbol() + " Time:" + startPeriod + " Price: " + stopPrice + " first bar Vwap: " + firstCandle.getVwap() + " Curr Vwap: " + currentCandleItem.vwap);
+                    gs.log("Move Stop to b.e. Strategy Mgr Symbol: " + gs.getSymbol() + " Time:" + startPeriod + " Price: " + stopPrice + " first bar Vwap: " + firstCandle.vwap + " Curr Vwap: " + currentCandleItem.vwap);
                 }
             } else {
 
@@ -164,7 +164,7 @@ function runStrategy(candleSeriesJSON, newBar) {
 
                     let stopPrice = gs.addPennyAndRoundStop(tradeOrder.averageFilledPrice, tradeOrder.side, CONSTANTS.ACTION.BUY, 0.01);
                     gs.moveStopOCAPrice(stopPrice, true);
-                    gs.log("Move Stop to b.e. Strategy Mgr Symbol: " + gs.getSymbol() + " Time:" + startPeriod + " Price: " + stopPrice + " first bar Vwap: " + firstCandle.getVwap() + " Curr Vwap: " + currentCandleItem.vwap);
+                    gs.log("Move Stop to b.e. Strategy Mgr Symbol: " + gs.getSymbol() + " Time:" + startPeriod + " Price: " + stopPrice + " first bar Vwap: " + firstCandle.vwap + " Curr Vwap: " + currentCandleItem.vwap);
                 }
             }
         }
