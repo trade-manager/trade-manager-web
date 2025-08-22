@@ -189,14 +189,16 @@ public class StrategyRuleJS extends AbstractStrategyRule {
                     _log.info("Info: StrategyRuleJS::initialize initialize isCancelled: {}", jsResult);
                 } else {
 
-                    _log.error("Error: StrategyRuleJS::initialize initialize is not a function");
+                    _log.error("Error: StrategyRuleJS::initialize initialize is not a function, codeJS:\n{}",  codeJS);
+                    this.cancel();
                 }
 
                 Object runStrategy = localScope.get("runStrategy", localScope);
 
                 if (!(runStrategy instanceof Function)) {
 
-                    _log.error("Error: StrategyRuleJS::initialize runStrategy is not a function");
+                    _log.error("Error: StrategyRuleJS::initialize runStrategy is not a function, codeJS:\n{}",  codeJS);
+                    this.cancel();
                 }
 
                 functionRunStrategy = (Function) runStrategy;
