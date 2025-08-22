@@ -72,7 +72,6 @@ import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
-import javax.swing.filechooser.FileFilter;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.SimpleAttributeSet;
@@ -82,6 +81,7 @@ import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
@@ -254,6 +254,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
     public void valueChanged(TreeSelectionEvent e) {
 
         try {
+
             DefaultMutableTreeNode node = (DefaultMutableTreeNode) e.getPath().getLastPathComponent();
 
             if (node.getUserObject() instanceof Strategy) {
@@ -301,6 +302,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
                             + " Please compile and save the strategy.", BasePanel.INFORMATION);
 
                 }
+
                 setContent(new String(rule.getRule()), rule.getContentType());
                 commentText.setText(rule.getComment());
                 commentText.setCaretPosition(0);
@@ -309,6 +311,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
                 activeCheckBox.setState(rule.isActive());
             }
         } catch (Exception ex) {
+
             setErrorMessage("Error finding Strategy code.", ex.getMessage(), ex);
         }
     }
@@ -650,31 +653,54 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
         for (Strategy strategy : strategies) {
 
             try {
+                String strategyDir = this.strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/');
+                File strategyDirFile = new File(strategyDir);
 
-                // Get the comments as these are common to all files.
-                String fileName = strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/')
-                        + strategy.getClassName() + ".txt";
-                String comments = readFile(fileName);
+                FileFilter fileFilter = file -> {
 
-                for (String fileExtension : filesMap.keySet()) {
+                    if (file.isDirectory()) {
 
-                    if (!"txt".equals(fileExtension)) {
+                        return true;
+                    }
 
-                        fileName = strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/')
-                                + strategy.getClassName() + "." + fileExtension;
-                        String content = readFile(fileName);
+                    String extension = getExtension(file.getName());
+                    String fileName = strategy.getClassName() + "." + extension;
+                    return (filesMap.containsKey(extension) && fileName.equals(file.getName()));
+                };
 
-                        if (null != content) {
+                File[] files = strategyDirFile.listFiles(fileFilter);
+                List<File> strategyFiles = new ArrayList<>();
+                String comments = null;
 
-                            Boolean active = false;
+                for (File file : files) {
 
-                            if (strategyContentType.equals(filesMap.get(fileExtension))) {
+                    String fileExtension = getExtension(file.getName());
 
-                                active = true;
-                            }
+                    if ("txt".equals(fileExtension)) {
 
-                            processFile(strategy, active, content, fileName, comments);
+                        comments = readFile(strategyDir + file.getName());
+                    } else {
+
+                        strategyFiles.add(file);
+                    }
+                }
+
+                for (File file : strategyFiles) {
+
+                    String fileExtension = getExtension(file.getName());
+
+                    String content = readFile(strategyDir + file.getName());
+
+                    if (null != content) {
+
+                        Boolean active = false;
+
+                        if (strategyContentType.equals(filesMap.get(fileExtension)) || strategyFiles.size() == 1) {
+
+                            active = true;
                         }
+
+                        processFile(strategy, active, content, file.getName(), comments);
                     }
                 }
             } catch (IOException e) {
@@ -987,7 +1013,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
     /**
      * Filter for the file selector.
      */
-    public static class JavaFilter extends FileFilter {
+    public static class JavaFilter extends javax.swing.filechooser.FileFilter {
 
         // Accept all directories and all csv files.
 
