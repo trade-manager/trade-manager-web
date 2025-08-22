@@ -97,9 +97,9 @@ public class StrategyRuleJS extends AbstractStrategyRule {
     private final static Logger _log = LoggerFactory.getLogger(StrategyRuleJS.class);
 
     private Rule rule = null;
-    private volatile Context context;
-    private static Scriptable localScope;
-    private static Function functionRunStrategy = null;
+    private Context context;
+    private Scriptable localScope;
+    private Function functionRunStrategy = null;
 
     /**
      * Constructor for AbstractStrategyRule. An abstract class that implements
@@ -911,7 +911,7 @@ public class StrategyRuleJS extends AbstractStrategyRule {
 
             if (null != context) {
 
-                context.exit();
+                 context.exit();
                 _log.info("Info: StrategyRuleJS::done closed context successfully.");
             }
         } catch (Exception ex) {
