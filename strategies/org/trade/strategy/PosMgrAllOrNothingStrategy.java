@@ -52,7 +52,8 @@ import java.io.Serial;
 import java.time.ZonedDateTime;
 
 /**
- *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public class PosMgrAllOrNothingStrategy extends AbstractStrategyRule {
 

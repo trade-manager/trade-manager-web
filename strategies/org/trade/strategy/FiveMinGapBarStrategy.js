@@ -1,3 +1,8 @@
+/**
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
+ */
+
 let CONSTANTS = null;
 let tradestrategy = null;
 /**

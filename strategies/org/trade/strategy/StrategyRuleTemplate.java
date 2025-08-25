@@ -18,7 +18,6 @@ import java.time.ZonedDateTime;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-
 public class StrategyRuleTemplate extends AbstractStrategyRule {
 
     /**

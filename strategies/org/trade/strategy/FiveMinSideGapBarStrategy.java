@@ -25,7 +25,6 @@ import java.util.Objects;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-
 public class FiveMinSideGapBarStrategy extends AbstractStrategyRule {
 
     /**
