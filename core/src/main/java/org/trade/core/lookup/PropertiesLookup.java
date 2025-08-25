@@ -1,4 +1,3 @@
-
 package org.trade.core.lookup;
 
 import java.io.Serial;

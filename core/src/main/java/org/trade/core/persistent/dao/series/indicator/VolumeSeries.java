@@ -1,4 +1,3 @@
-
 package org.trade.core.persistent.dao.series.indicator;
 
 import jakarta.persistence.DiscriminatorValue;

@@ -1,4 +1,3 @@
-
 package org.trade.core.persistent.dao.strategy;
 
 import java.io.Serial;

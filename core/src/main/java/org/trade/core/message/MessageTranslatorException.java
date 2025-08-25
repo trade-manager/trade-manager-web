@@ -1,4 +1,3 @@
-
 package org.trade.core.message;
 
 import org.trade.core.exception.NestingException;

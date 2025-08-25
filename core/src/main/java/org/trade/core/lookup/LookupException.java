@@ -1,4 +1,3 @@
-
 package org.trade.core.lookup;
 
 import org.trade.core.exception.NestingException;

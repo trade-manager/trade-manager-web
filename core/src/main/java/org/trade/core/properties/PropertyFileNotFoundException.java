@@ -1,4 +1,3 @@
-
 package org.trade.core.properties;
 
 import java.io.FileNotFoundException;

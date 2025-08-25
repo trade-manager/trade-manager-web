@@ -1,4 +1,3 @@
-
 package org.trade.indicator;
 
 import org.jfree.data.general.SeriesChangeEvent;

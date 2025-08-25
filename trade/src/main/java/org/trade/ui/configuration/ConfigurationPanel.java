@@ -1,4 +1,3 @@
-
 package org.trade.ui.configuration;
 
 import org.slf4j.Logger;

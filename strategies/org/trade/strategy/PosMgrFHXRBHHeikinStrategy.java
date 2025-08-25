@@ -1,4 +1,3 @@
-
 package org.trade.strategy;
 
 import org.slf4j.Logger;

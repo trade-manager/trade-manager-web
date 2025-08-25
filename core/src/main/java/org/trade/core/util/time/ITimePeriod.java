@@ -39,7 +39,6 @@
  * 27-Jan-2005 : Implemented Comparable (DG);
  *
  */
-
 package org.trade.core.util.time;
 
 import java.time.ZonedDateTime;
