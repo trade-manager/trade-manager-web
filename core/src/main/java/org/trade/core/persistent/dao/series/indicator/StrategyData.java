@@ -1,4 +1,3 @@
-
 package org.trade.core.persistent.dao.series.indicator;
 
 import org.slf4j.Logger;

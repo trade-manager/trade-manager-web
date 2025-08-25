@@ -32,8 +32,7 @@
  * Changes
  * -------
  *
- */
-package org.trade.strategy;
+ */package org.trade.strategy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

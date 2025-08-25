@@ -1,4 +1,3 @@
-
 package org.trade.core.persistent.dao.series.indicator.pivot;
 
 import org.slf4j.Logger;

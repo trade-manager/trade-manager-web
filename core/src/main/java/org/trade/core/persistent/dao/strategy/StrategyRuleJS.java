@@ -1,4 +1,3 @@
-
 package org.trade.core.persistent.dao.strategy;
 
 import org.json.JSONObject;
@@ -155,7 +154,7 @@ public class StrategyRuleJS extends AbstractStrategyRule {
                     _log.info("Info: StrategyRuleJS::initialize initialize isCancelled: {}", jsResult);
                 } else {
 
-                    _log.error("Error: StrategyRuleJS::initialize initialize is not a function, codeJS:\n{}",  codeJS);
+                    _log.error("Error: StrategyRuleJS::initialize initialize is not a function, codeJS:\n{}", codeJS);
                     this.cancel();
                 }
 
@@ -163,7 +162,7 @@ public class StrategyRuleJS extends AbstractStrategyRule {
 
                 if (!(runStrategy instanceof Function)) {
 
-                    _log.error("Error: StrategyRuleJS::initialize runStrategy is not a function, codeJS:\n{}",  codeJS);
+                    _log.error("Error: StrategyRuleJS::initialize runStrategy is not a function, codeJS:\n{}", codeJS);
                     this.cancel();
                 }
 
@@ -877,7 +876,7 @@ public class StrategyRuleJS extends AbstractStrategyRule {
 
             if (null != context) {
 
-                 context.exit();
+                context.exit();
                 _log.info("Info: StrategyRuleJS::done closed context successfully.");
             }
         } catch (Exception ex) {

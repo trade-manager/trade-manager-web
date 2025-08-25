@@ -51,7 +51,6 @@
  * 23-Feb-2014 : Added getMillisecond() method (DG);
  *
  */
-
 package org.trade.core.util.time;
 
 import java.time.ZonedDateTime;

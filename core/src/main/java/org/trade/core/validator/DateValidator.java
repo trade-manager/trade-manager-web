@@ -1,4 +1,3 @@
-
 package org.trade.core.validator;
 
 import org.trade.core.exception.ExceptionContext;

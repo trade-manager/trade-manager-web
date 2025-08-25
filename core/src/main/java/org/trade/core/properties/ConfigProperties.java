@@ -1,4 +1,3 @@
-
 package org.trade.core.properties;
 
 import org.slf4j.Logger;

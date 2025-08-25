@@ -1,4 +1,3 @@
-
 package org.trade.ui.widget;
 
 import org.trade.core.valuetype.DAODecode;

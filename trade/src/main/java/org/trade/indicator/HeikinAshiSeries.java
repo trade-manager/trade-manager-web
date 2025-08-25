@@ -1,4 +1,3 @@
-
 package org.trade.indicator;
 
 import org.trade.core.persistent.dao.Contract;

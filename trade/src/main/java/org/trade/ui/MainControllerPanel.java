@@ -1,4 +1,3 @@
-
 package org.trade.ui;
 
 import org.trade.base.BasePanel;

@@ -107,7 +107,6 @@
  * 03-Jul-2013 : Use ParamChecks (DG);
  *
  */
-
 package org.trade.ui.chart.renderer;
 
 import org.jfree.chart.axis.ValueAxis;

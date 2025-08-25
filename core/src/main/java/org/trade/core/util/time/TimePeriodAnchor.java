@@ -38,7 +38,6 @@
  * 01-Mar-2004 : Added readResolve() method (DG);
  *
  */
-
 package org.trade.core.util.time;
 
 import java.io.ObjectStreamException;
