@@ -66,7 +66,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * Some tests for the  DataUtilities class.
+ * Some tests for the  TradeServiceIT class.
  *
  * @author Simon Allen
  * @version $Revision: 1.0 $

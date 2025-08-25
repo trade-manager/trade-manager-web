@@ -3,7 +3,10 @@ package org.trade.web;
 import org.springframework.data.repository.Repository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
-
+/**
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
+ */
 @RepositoryRestResource(exported = false)
 public interface UserRepository extends Repository<User, Long> {
 

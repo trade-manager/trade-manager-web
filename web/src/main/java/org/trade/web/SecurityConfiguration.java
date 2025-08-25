@@ -9,6 +9,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
+/**
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
+ */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {

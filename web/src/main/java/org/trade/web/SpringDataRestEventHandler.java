@@ -7,7 +7,10 @@ import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
-
+/**
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
+ */
 @Component
 @RepositoryEventHandler(Employee.class)
 public class SpringDataRestEventHandler {

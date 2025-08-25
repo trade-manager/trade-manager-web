@@ -43,6 +43,8 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public class TradestrategyBase {
 

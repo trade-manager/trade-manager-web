@@ -19,9 +19,10 @@ import org.trade.core.valuetype.Side;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-
 /**
  *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 @SpringBootTest
 @ContextConfiguration(classes = ApplicationRepositoryConfig.class,

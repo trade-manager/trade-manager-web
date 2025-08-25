@@ -7,6 +7,10 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+/**
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
+ */
 @Component
 public class DatabaseLoader implements CommandLineRunner {
 
