@@ -7,8 +7,8 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.io.Serial;
 import java.util.EventObject;
+
 /**
- *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */

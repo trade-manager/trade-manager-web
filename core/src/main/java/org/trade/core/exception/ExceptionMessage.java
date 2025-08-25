@@ -4,7 +4,6 @@ import java.io.Serial;
 import java.util.StringTokenizer;
 
 /**
- *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */

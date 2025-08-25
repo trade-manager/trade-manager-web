@@ -8,13 +8,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.Domain;
-import org.trade.core.persistent.dao.DomainRepository;
 import org.trade.core.persistent.dao.Employee;
-import org.trade.core.persistent.dao.EmployeeRepository;
 import org.trade.core.persistent.dao.Role;
-import org.trade.core.persistent.dao.RoleRepository;
 import org.trade.core.persistent.dao.User;
-import org.trade.core.persistent.dao.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +18,6 @@ import java.util.List;
 import static org.trade.core.persistent.dao.User.ROLE_MANAGER;
 
 /**
- *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */

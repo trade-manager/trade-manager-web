@@ -50,8 +50,8 @@ import java.io.IOException;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Hashtable;
+
 /**
- *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */

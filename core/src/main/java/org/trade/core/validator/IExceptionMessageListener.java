@@ -4,7 +4,6 @@ import org.trade.core.exception.ExceptionMessage;
 
 
 /**
- *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */

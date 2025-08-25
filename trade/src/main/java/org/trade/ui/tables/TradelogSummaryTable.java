@@ -6,8 +6,8 @@ import org.trade.core.valuetype.ValueTypeException;
 
 import javax.swing.*;
 import java.io.Serial;
+
 /**
- *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */

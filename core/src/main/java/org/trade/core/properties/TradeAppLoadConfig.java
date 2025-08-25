@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.Properties;
 
 /**
- *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */

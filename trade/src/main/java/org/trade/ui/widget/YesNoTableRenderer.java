@@ -9,8 +9,8 @@ import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.io.Serial;
 import java.io.Serializable;
+
 /**
- *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */

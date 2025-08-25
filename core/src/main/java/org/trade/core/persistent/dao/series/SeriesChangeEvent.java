@@ -5,7 +5,6 @@ import java.io.Serializable;
 import java.util.EventObject;
 
 /**
- *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */

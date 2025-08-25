@@ -2,7 +2,6 @@ package org.trade.core.validator;
 
 
 /**
- *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */

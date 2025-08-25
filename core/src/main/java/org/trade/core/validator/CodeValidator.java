@@ -7,7 +7,6 @@ import java.util.Collection;
 
 
 /**
- *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */

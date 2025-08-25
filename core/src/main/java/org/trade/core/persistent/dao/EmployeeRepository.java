@@ -5,7 +5,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.trade.core.dao.AspectRepository;
 
 /**
- *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */

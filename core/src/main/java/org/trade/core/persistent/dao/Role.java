@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
@@ -41,7 +40,6 @@ public class Role extends Aspect implements Serializable, Cloneable {
     }
 
     /**
-     *
      * @return name
      */
     public String getName() {
@@ -50,7 +48,6 @@ public class Role extends Aspect implements Serializable, Cloneable {
     }
 
     /**
-     *
      * @param name String
      */
     public void setName(String name) {
@@ -59,7 +56,6 @@ public class Role extends Aspect implements Serializable, Cloneable {
     }
 
     /**
-     *
      * @return description String
      */
     public String getDescription() {
@@ -68,7 +64,6 @@ public class Role extends Aspect implements Serializable, Cloneable {
     }
 
     /**
-     *
      * @param description String
      */
     public void setDescription(String description) {

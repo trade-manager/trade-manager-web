@@ -7,8 +7,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import java.io.Serial;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
+
 /**
- *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */

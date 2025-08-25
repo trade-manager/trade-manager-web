@@ -8,7 +8,6 @@ import org.trade.core.util.Pair;
 import java.util.List;
 
 /**
- *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */

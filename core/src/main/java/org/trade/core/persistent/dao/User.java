@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
@@ -139,18 +138,18 @@ public class User extends Aspect implements Serializable, Cloneable {
         return roles;
     }
 
-        /**
-         * Method clone.
-         *
-         * @return Object
-         */
-        public Object clone () throws CloneNotSupportedException {
+    /**
+     * Method clone.
+     *
+     * @return Object
+     */
+    public Object clone() throws CloneNotSupportedException {
 
-            User user = (User) super.clone();
-            List<Role> roles = new ArrayList<>(0);
-            user.setRoles(roles);
-            return user;
-        }
+        User user = (User) super.clone();
+        List<Role> roles = new ArrayList<>(0);
+        user.setRoles(roles);
+        return user;
     }
+}
 
 

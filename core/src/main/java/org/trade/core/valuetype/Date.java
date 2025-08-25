@@ -18,7 +18,6 @@ import java.time.ZonedDateTime;
 import java.util.Comparator;
 
 /**
- *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */

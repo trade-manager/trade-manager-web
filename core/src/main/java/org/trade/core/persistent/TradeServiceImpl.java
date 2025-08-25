@@ -75,7 +75,6 @@ import java.util.Optional;
 
 
 /**
- *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
@@ -866,10 +865,12 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
 
         return domainRepository.findByName(name);
     }
+
     public User findUserByName(String name) {
 
         return userRepository.findByName(name);
     }
+
     public Role findRoleByName(String name) {
 
         return roleRepository.findByName(name);

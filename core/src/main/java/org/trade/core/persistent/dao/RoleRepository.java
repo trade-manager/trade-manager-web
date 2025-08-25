@@ -4,7 +4,6 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.trade.core.dao.AspectRepository;
 
 /**
- *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */

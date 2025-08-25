@@ -9,8 +9,8 @@ import org.trade.core.util.CoreUtils;
 import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
+
 /**
- *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */

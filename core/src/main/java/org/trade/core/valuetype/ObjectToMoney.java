@@ -4,7 +4,6 @@ import org.trade.core.conversion.IJavaDynamicTypeConverter;
 import org.trade.core.conversion.JavaTypeTranslatorException;
 
 /**
- *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */

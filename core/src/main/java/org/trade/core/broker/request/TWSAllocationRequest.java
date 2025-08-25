@@ -12,7 +12,6 @@ import java.io.CharArrayWriter;
 import java.util.Stack;
 
 /**
- *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */

@@ -12,8 +12,8 @@ import javax.swing.event.TableModelEvent;
 import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
+
 /**
- *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
