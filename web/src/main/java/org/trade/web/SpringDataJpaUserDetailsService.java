@@ -9,7 +9,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
-
+/**
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
+ */
 @Component
 public class SpringDataJpaUserDetailsService implements UserDetailsService {
 

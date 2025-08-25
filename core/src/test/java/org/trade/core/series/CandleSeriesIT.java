@@ -20,6 +20,11 @@ import org.trade.core.persistent.dao.series.indicator.CandleSeries;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+/**
+ *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
+ */
 @SpringBootTest
 @ContextConfiguration(classes = ApplicationRepositoryConfig.class,
         initializers = ApplicationProfileInitializer.class)

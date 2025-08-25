@@ -14,7 +14,6 @@ import org.trade.core.ApplicationRepositoryConfig;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-
 /**
  * Some tests for the TradingCalendar class.
  *

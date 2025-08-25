@@ -1,6 +1,5 @@
 package org.trade.web;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -13,6 +12,10 @@ import org.trade.core.dao.Aspect;
 
 import java.io.Serializable;
 
+/**
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
+ */
 @Entity
 @Table(name = "user")
 public class User extends Aspect implements Serializable, Cloneable {

@@ -10,6 +10,10 @@ import org.trade.core.dao.Aspect;
 
 import java.io.Serializable;
 
+/**
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
+ */
 @Entity
 @Table(name = "employee")
 public class Employee extends Aspect implements Serializable, Cloneable {

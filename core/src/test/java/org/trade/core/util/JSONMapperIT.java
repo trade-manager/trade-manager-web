@@ -42,9 +42,8 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-
 /**
- * Some tests for the CandleIT class.
+ * Some tests for the JSONMapperIT class.
  *
  * @author Simon Allen
  * @version $Revision: 1.0 $

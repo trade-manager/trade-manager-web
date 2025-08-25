@@ -11,7 +11,10 @@ import org.springframework.stereotype.Component;
 
 import static org.trade.web.WebSocketConfiguration.MESSAGE_PREFIX;
 
-
+/**
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
+ */
 @Component
 @RepositoryEventHandler(Employee.class)
 public class EventHandler {

@@ -1,6 +1,5 @@
 package org.trade.web;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,7 +9,10 @@ import jakarta.persistence.Version;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
-
+/**
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
+ */
 @Entity
 @Table(name = "domain")
 public class Domain {
