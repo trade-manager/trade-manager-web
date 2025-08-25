@@ -8,6 +8,11 @@ import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.Date;
 
+/**
+ *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
+ */
 @Converter(autoApply = true)
 public class ZonedDateTimeConverter implements AttributeConverter<ZonedDateTime, Date> {
 

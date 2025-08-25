@@ -16,9 +16,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public abstract class IndicatorSeriesDto extends ComparableObjectSeries implements Cloneable, Serializable {
 

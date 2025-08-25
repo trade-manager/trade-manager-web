@@ -30,6 +30,8 @@ import java.util.Scanner;
 
 /**
  *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public class Tradingdays extends Aspect implements java.io.Serializable {
 

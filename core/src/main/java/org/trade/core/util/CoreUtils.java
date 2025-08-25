@@ -19,6 +19,8 @@ import java.util.StringTokenizer;
 
 /**
  *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public class CoreUtils {
     /**

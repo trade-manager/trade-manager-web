@@ -8,9 +8,10 @@ import org.trade.base.BaseUIPropertyCodes;
 
 import javax.swing.*;
 import java.io.Serial;
-
 /**
  *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public class TradeMainPanelMenu extends BasePanelMenu {
     /**

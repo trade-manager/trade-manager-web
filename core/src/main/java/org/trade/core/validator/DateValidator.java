@@ -11,13 +11,14 @@ import java.util.GregorianCalendar;
 
 /**
  *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public class DateValidator implements IValidator {
+
     public final static String DATE_TIME_FORMAT = "yyyy-MM-dd'T'HHmmss'Z'";
-
-    private IMessageFactory m_messageFactory;
-
-    private final boolean m_isMandatory;
+    private IMessageFactory messageFactory;
+    private final boolean isMandatory;
 
     /**
      * Constructor for DateValidator.
@@ -26,8 +27,8 @@ public class DateValidator implements IValidator {
      * @param isMandatory    boolean
      */
     public DateValidator(IMessageFactory messageFactory, boolean isMandatory) {
-        m_messageFactory = messageFactory;
-        m_isMandatory = isMandatory;
+        this.messageFactory = messageFactory;
+        this.isMandatory = isMandatory;
     }
 
     /**
@@ -36,11 +37,11 @@ public class DateValidator implements IValidator {
      * @return IMessageFactory
      */
     protected IMessageFactory getMessageFactory() {
-        if (null == m_messageFactory) {
-            m_messageFactory = MessageFactory.SYSTEM_ERROR;
+        if (null == messageFactory) {
+            messageFactory = MessageFactory.SYSTEM_ERROR;
         }
 
-        return m_messageFactory;
+        return messageFactory;
     }
 
     /**
@@ -74,7 +75,7 @@ public class DateValidator implements IValidator {
             receiver.addExceptionMessage(getMessageFactory().create(
                     new ExceptionContext("edit_check", "Value is not in the following format: " + expectedFormat)));
         } else if (null == value) {
-            if (m_isMandatory) {
+            if (isMandatory) {
                 valid = false;
                 receiver.addExceptionMessage(
                         getMessageFactory().create(MessageContextFactory.MANDATORY_VALUE_NOT_PROVIDED.create()));

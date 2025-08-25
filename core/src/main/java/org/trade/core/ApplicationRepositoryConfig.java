@@ -12,6 +12,7 @@ import java.util.Properties;
  * Sample configuration to bootstrap Spring Data JPA through JavaConfig
  *
  * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 @SpringBootApplication(scanBasePackages = {"org.trade.core"})
 public class ApplicationRepositoryConfig {

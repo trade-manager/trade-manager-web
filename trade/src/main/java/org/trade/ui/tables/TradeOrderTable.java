@@ -25,9 +25,10 @@ import javax.swing.text.MaskFormatter;
 import java.io.Serial;
 import java.text.ParseException;
 import java.util.Calendar;
-
 /**
  *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public class TradeOrderTable extends Table {
 

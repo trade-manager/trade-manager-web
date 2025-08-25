@@ -63,8 +63,11 @@ import java.util.StringTokenizer;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
+
 /**
  *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, EReaderSignal {
 

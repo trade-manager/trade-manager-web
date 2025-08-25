@@ -46,9 +46,10 @@ import java.io.Serial;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Objects;
-
 /**
  *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public class PortfolioPanel extends BasePanel implements ChangeListener, ItemListener {
 

@@ -3,6 +3,11 @@ package org.trade.core.persistent.dao.series;
 import java.io.ObjectStreamException;
 import java.io.Serializable;
 
+/**
+ *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
+ */
 public final class DomainOrder implements Serializable {
 
     private static final long serialVersionUID = 4902774943512072627L;

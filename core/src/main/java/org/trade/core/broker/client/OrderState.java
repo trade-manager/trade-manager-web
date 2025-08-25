@@ -3,8 +3,11 @@ package org.trade.core.broker.client;
 import org.trade.core.util.CoreUtils;
 import org.trade.core.valuetype.Money;
 
+
 /**
  *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public class OrderState {
 

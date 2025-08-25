@@ -2,6 +2,11 @@ package org.trade.core.persistent.dao.series;
 
 import java.io.Serializable;
 
+/**
+ *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
+ */
 public abstract class AbstractSeriesDataset extends AbstractDataset implements SeriesDataset, SeriesChangeListener, Serializable {
     private static final long serialVersionUID = -6074996219705033171L;
 

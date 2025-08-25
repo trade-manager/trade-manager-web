@@ -9,6 +9,11 @@ import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.Date;
 
+/**
+ *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
+ */
 @Converter(autoApply = true)
 public class ZonedDateConverter implements AttributeConverter<LocalDate, Date> {
 

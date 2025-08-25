@@ -50,9 +50,10 @@ import java.io.IOException;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Hashtable;
-
 /**
  *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public class DOMTree extends JTree implements DragSourceListener, DragGestureListener, Autoscroll, TreeModelListener,
         TreeSelectionListener, MouseListener {

@@ -3,8 +3,11 @@ package org.trade.core.persistent.dao.strategy;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.series.indicator.CandleSeries;
 
+
 /**
  *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public interface IStrategyRule {
 

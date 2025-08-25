@@ -9,9 +9,10 @@ import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 import java.awt.*;
 import java.io.Serial;
-
 /**
  *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public class Tree extends JTree {
 

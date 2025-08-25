@@ -3,8 +3,11 @@ package org.trade.core.util;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+
 /**
+ *
  * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public class Reflector extends Object {
 

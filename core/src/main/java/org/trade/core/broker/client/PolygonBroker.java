@@ -25,6 +25,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
+ */
 public class PolygonBroker extends Broker {
 
     private final static Logger _log = LoggerFactory.getLogger(PolygonBroker.class);

@@ -13,9 +13,10 @@ import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.Comparator;
 import java.util.Objects;
-
 /**
  *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public class Money extends ValueType implements Comparator<Money>, Comparable<Money> {
     @Serial

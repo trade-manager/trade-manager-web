@@ -7,9 +7,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.io.Serial;
-
 /**
  *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public class TradeAppFrame extends JFrame {
 

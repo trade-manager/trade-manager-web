@@ -43,7 +43,6 @@ import java.util.List;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-
 @Entity
 @DiscriminatorValue("MoneyFlowIndexSeries")
 public class MoneyFlowIndexSeries extends IndicatorSeries {

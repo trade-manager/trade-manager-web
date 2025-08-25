@@ -60,7 +60,6 @@ import java.util.List;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-
 @Entity
 @DiscriminatorValue("HeikinAshiSeries")
 public class HeikinAshiSeries extends IndicatorSeries {

@@ -1,5 +1,10 @@
 package org.trade.core.persistent.dao.series;
 
+/**
+ *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
+ */
 public abstract class AbstractXYDataset extends AbstractSeriesDataset implements XYDataset {
 
     public AbstractXYDataset() {

@@ -4,7 +4,11 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
-
+/**
+ *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
+ */
 public class DatasetGroup implements Cloneable, Serializable {
     @Serial
     private static final long serialVersionUID = -3640642179674185688L;

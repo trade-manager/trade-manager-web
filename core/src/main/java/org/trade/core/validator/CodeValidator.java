@@ -5,15 +5,17 @@ import org.trade.core.message.MessageContextFactory;
 
 import java.util.Collection;
 
+
 /**
  *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public class CodeValidator implements IValidator {
-    private final IMessageFactory m_messageFactory;
 
-    private final Collection<?> m_acceptableValues;
-
-    private final boolean m_isMandatory;
+    private final IMessageFactory messageFactory;
+    private final Collection<?> acceptableValues;
+    private final boolean isMandatory;
 
     /**
      * Constructor for CodeValidator.
@@ -23,9 +25,9 @@ public class CodeValidator implements IValidator {
      * @param isMandatory      boolean
      */
     public CodeValidator(IMessageFactory messageFactory, Collection<?> acceptableValues, boolean isMandatory) {
-        m_messageFactory = messageFactory;
-        m_acceptableValues = acceptableValues;
-        m_isMandatory = isMandatory;
+        this.messageFactory = messageFactory;
+        this.acceptableValues = acceptableValues;
+        this.isMandatory = isMandatory;
     }
 
     /**
@@ -34,7 +36,7 @@ public class CodeValidator implements IValidator {
      * @return IMessageFactory
      */
     protected final IMessageFactory getMessageFactory() {
-        return m_messageFactory;
+        return messageFactory;
     }
 
     /**
@@ -58,7 +60,7 @@ public class CodeValidator implements IValidator {
 
         if (((String) value).isEmpty()) // Optional/mandatory check
         {
-            if (m_isMandatory) {
+            if (isMandatory) {
                 valid = false;
                 receiver.addExceptionMessage(
                         getMessageFactory().create(MessageContextFactory.MANDATORY_VALUE_NOT_PROVIDED.create()));
@@ -66,7 +68,7 @@ public class CodeValidator implements IValidator {
         } else
         // 0 < length so check valid values
         {
-            if (!m_acceptableValues.contains(value)) {
+            if (!acceptableValues.contains(value)) {
                 valid = false;
                 receiver.addExceptionMessage(getMessageFactory().create(
                         MessageContextFactory.CODE_NOT_VALID.create(MessageContextFactory.INVALID_CODE.create(value))));

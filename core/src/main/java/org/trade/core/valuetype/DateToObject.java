@@ -7,9 +7,10 @@ import org.trade.core.conversion.JavaTypeTranslatorException;
 
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
-
 /**
  *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public class DateToObject implements IJavaDynamicTypeConverter {
     public DateToObject() {

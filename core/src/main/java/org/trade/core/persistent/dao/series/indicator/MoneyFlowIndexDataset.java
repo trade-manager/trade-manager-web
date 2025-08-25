@@ -17,6 +17,8 @@ import java.util.List;
 
 /**
  *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public class MoneyFlowIndexDataset extends AbstractXYDataset
         implements IIndicatorDataset, IMoneyFlowIndexDataset, Serializable {

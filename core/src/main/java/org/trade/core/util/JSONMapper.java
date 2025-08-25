@@ -19,6 +19,11 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.TimeZone;
 
+/**
+ *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
+ */
 public class JSONMapper {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();

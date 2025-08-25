@@ -5,9 +5,10 @@ import javax.swing.border.Border;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.io.Serial;
-
 /**
  *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public class ColorRenderer extends JLabel implements TableCellRenderer {
     /**

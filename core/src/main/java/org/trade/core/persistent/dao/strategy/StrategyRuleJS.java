@@ -48,8 +48,11 @@ import java.io.Serial;
 import java.time.ZonedDateTime;
 import java.util.List;
 
+
 /**
  *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public class StrategyRuleJS extends AbstractStrategyRule {
 

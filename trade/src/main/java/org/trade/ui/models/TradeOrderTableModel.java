@@ -23,9 +23,10 @@ import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
 /**
  *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public class TradeOrderTableModel extends TableModel {
 

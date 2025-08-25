@@ -2,6 +2,11 @@ package org.trade.core.persistent.dao.series;
 
 import java.util.EventObject;
 
+/**
+ *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
+ */
 public class DatasetChangeEvent extends EventObject {
     private Dataset dataset;
 

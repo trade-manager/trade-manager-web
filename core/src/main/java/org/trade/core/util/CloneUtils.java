@@ -9,7 +9,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
+ */
 public class CloneUtils {
+
     public CloneUtils() {
     }
 

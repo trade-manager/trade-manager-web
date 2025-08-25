@@ -45,6 +45,9 @@ import java.time.ZonedDateTime;
 
 /**
  * A period of time measured to millisecond precision using two instances of
+ *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public interface ITimePeriod extends Comparable<ITimePeriod> {
 

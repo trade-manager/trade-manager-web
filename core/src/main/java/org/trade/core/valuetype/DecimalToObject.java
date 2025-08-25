@@ -3,9 +3,10 @@ package org.trade.core.valuetype;
 import org.trade.core.conversion.IJavaDynamicTypeConverter;
 import org.trade.core.conversion.JavaTypeTranslator;
 import org.trade.core.conversion.JavaTypeTranslatorException;
-
 /**
  *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public class DecimalToObject implements IJavaDynamicTypeConverter {
 

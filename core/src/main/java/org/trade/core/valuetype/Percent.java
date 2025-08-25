@@ -13,9 +13,10 @@ import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.Comparator;
 import java.util.Objects;
-
 /**
  *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public class Percent extends ValueType implements Comparator<Percent>, Comparable<Percent> {
     /**

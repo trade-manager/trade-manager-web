@@ -21,9 +21,10 @@ import java.awt.geom.Rectangle2D;
 import java.io.Serial;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-
 /**
  *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public class HeikinAshiRenderer extends CandlestickRenderer {
 

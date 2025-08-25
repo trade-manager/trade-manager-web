@@ -16,9 +16,10 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
 /**
  *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public class CommodityChannelIndexDataset extends AbstractXYDataset
         implements IIndicatorDataset, ICommodityChannelIndexDataset, Serializable {

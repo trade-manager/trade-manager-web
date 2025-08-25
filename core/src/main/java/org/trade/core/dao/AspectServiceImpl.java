@@ -10,6 +10,11 @@ import jakarta.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
+ */
 public abstract class AspectServiceImpl<ID extends Aspect> implements AspectService {
 
     @PersistenceContext

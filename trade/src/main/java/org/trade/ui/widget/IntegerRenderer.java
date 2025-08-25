@@ -4,9 +4,10 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.io.Serial;
 import java.text.NumberFormat;
-
 /**
  *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public class IntegerRenderer extends DefaultTableCellRenderer {
     /**

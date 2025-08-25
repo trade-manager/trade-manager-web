@@ -7,36 +7,27 @@ import org.trade.core.message.MessageFactory;
 
 /**
  *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public class StringValidator implements IValidator {
+
     // Use these to indicate sets of valid characters
     public final static int NONE = 0;
-
     public final static int DIGITS = 1;
-
     public final static int SPACES = 2;
-
     public final static int LETTERS = 4;
-
     public final static int PUNCTUATION = 8;
-
     public final static int ANY = 16;
-
     public final static int ALPHANUMERIC = DIGITS + SPACES + LETTERS;
-
     public final static int ALPHA = LETTERS + SPACES;
 
-    private IMessageFactory m_messageFactory;
-
-    private int m_minLength;
-
-    private final int m_maxLength;
-
-    private final int m_permittedCharacterSet;
-
-    private final boolean m_isMandatory;
-
-    private final String m_additionalPermittedCharacters;
+    private IMessageFactory messageFactory;
+    private int minLength;
+    private final int maxLength;
+    private final int permittedCharacterSet;
+    private final boolean isMandatory;
+    private final String additionalPermittedCharacters;
 
     /**
      * Constructor for StringValidator.
@@ -49,11 +40,11 @@ public class StringValidator implements IValidator {
      */
     public StringValidator(IMessageFactory messageFactory, int maxLength, int permittedCharacterSet,
                            String additionalPermittedCharacters, boolean isMandatory) {
-        m_messageFactory = messageFactory;
-        m_maxLength = maxLength;
-        m_permittedCharacterSet = permittedCharacterSet;
-        m_isMandatory = isMandatory;
-        m_additionalPermittedCharacters = additionalPermittedCharacters;
+        this.messageFactory = messageFactory;
+        this.maxLength = maxLength;
+        this.permittedCharacterSet = permittedCharacterSet;
+        this.isMandatory = isMandatory;
+        this.additionalPermittedCharacters = additionalPermittedCharacters;
     }
 
     /**
@@ -69,7 +60,7 @@ public class StringValidator implements IValidator {
     public StringValidator(IMessageFactory messageFactory, int minLength, int maxLength, int permittedCharacterSet,
                            String additionalPermittedCharacters, boolean isMandatory) {
         this(messageFactory, maxLength, permittedCharacterSet, additionalPermittedCharacters, isMandatory);
-        m_minLength = minLength;
+        this.minLength = minLength;
     }
 
     /**
@@ -84,7 +75,7 @@ public class StringValidator implements IValidator {
     public StringValidator(IMessageFactory messageFactory, int minLength, int maxLength, int permittedCharacterSet,
                            boolean isMandatory) {
         this(messageFactory, maxLength, permittedCharacterSet, null, isMandatory);
-        m_minLength = minLength;
+        this.minLength = minLength;
     }
 
     /**
@@ -106,11 +97,11 @@ public class StringValidator implements IValidator {
      * @return IMessageFactory
      */
     protected IMessageFactory getMessageFactory() {
-        if (null == m_messageFactory) {
-            m_messageFactory = MessageFactory.SYSTEM_ERROR;
+        if (null == messageFactory) {
+            messageFactory = MessageFactory.SYSTEM_ERROR;
         }
 
-        return m_messageFactory;
+        return messageFactory;
     }
 
     /**
@@ -119,7 +110,7 @@ public class StringValidator implements IValidator {
      * @return boolean
      */
     public boolean isMandatory() {
-        return (m_isMandatory);
+        return (isMandatory);
     }
 
     /**
@@ -150,26 +141,26 @@ public class StringValidator implements IValidator {
 
         if (((String) value).isEmpty()) // Optional/mandatory check
         {
-            if (m_isMandatory) {
+            if (isMandatory) {
                 valid = false;
                 receiver.addExceptionMessage(
                         getMessageFactory().create(MessageContextFactory.MANDATORY_VALUE_NOT_PROVIDED.create()));
             }
-        } else if (((String) value).length() > m_maxLength) // Max length check
+        } else if (((String) value).length() > maxLength) // Max length check
         {
             valid = false;
             receiver.addExceptionMessage(getMessageFactory().create(MessageContextFactory.MAX_LENGTH_EXCEEDED
-                    .create(MessageContextFactory.MAX_LENGTH.create(m_maxLength))));
-        } else if (((String) value).length() < m_minLength) // Min length check
+                    .create(MessageContextFactory.MAX_LENGTH.create(maxLength))));
+        } else if (((String) value).length() < minLength) // Min length check
         {
             valid = false;
             receiver.addExceptionMessage(getMessageFactory().create(MessageContextFactory.MIN_LENGTH_FAILED
-                    .create(MessageContextFactory.MIN_LENGTH.create(m_minLength))));
+                    .create(MessageContextFactory.MIN_LENGTH.create(minLength))));
         } else
         // 0 < length < max length so check valid characters
         {
-            String invalidCharacters = checkForInvalidCharacters(((String) value), m_permittedCharacterSet,
-                    m_additionalPermittedCharacters);
+            String invalidCharacters = checkForInvalidCharacters(((String) value), permittedCharacterSet,
+                    additionalPermittedCharacters);
 
             if (null != invalidCharacters) {
                 valid = false;

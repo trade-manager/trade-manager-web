@@ -7,6 +7,11 @@ import org.springframework.core.env.ConfigurableEnvironment;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
+ */
 public class ApplicationProfileInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
     @Override

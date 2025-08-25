@@ -6,9 +6,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.Serial;
-
 /**
  *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public class ColorEditor extends AbstractCellEditor implements TableCellEditor, ActionListener {
     /**

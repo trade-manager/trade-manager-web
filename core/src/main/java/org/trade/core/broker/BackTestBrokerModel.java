@@ -28,10 +28,12 @@ import java.time.ZonedDateTime;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
+
 /**
  *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
-
 public class BackTestBrokerModel extends AbstractBrokerModel implements IClientWrapper {
 
     /**

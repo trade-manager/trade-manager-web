@@ -3,6 +3,11 @@ package org.trade.core.exception;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
+ */
 public class ClassName {
 
     private static final Logger _log = LoggerFactory.getLogger(ClassName.class);

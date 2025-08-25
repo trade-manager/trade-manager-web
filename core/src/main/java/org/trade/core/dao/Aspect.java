@@ -13,6 +13,8 @@ import java.time.ZonedDateTime;
 
 /**
  *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 @MappedSuperclass
 public abstract class Aspect extends AbstractPersistable<Long> {

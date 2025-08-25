@@ -4,9 +4,10 @@ import org.trade.base.TableModel;
 import org.trade.core.dao.Aspects;
 
 import java.io.Serial;
-
 /**
  *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public abstract class AspectTableModel extends TableModel {
     /**

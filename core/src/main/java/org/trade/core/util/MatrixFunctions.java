@@ -3,8 +3,11 @@ package org.trade.core.util;
 import java.util.Hashtable;
 import java.util.Iterator;
 
+
 /**
+ *
  * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public final class MatrixFunctions {
 

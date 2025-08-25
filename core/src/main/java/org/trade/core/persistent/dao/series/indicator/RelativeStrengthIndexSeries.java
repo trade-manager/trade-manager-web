@@ -38,7 +38,6 @@ import java.util.List;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-
 @Entity
 @DiscriminatorValue("RelativeStrengthIndexSeries")
 public class RelativeStrengthIndexSeries extends IndicatorSeries {

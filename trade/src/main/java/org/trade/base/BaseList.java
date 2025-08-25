@@ -9,7 +9,6 @@ import java.util.List;
  * @author Simon Allen
  * @version $Id: BaseList.java,v 1.4 2001/11/06 22:37:27 simon Exp $
  */
-
 public class BaseList extends JList<Object> {
     /**
      *

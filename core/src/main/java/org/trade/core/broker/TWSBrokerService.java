@@ -57,7 +57,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
+/**
+ *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
+ */
 public class TWSBrokerService extends AbstractBrokerModel {
 
     private final static org.slf4j.Logger _log = LoggerFactory.getLogger(TWSBrokerService.class);

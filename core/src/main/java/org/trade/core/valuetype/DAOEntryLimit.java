@@ -5,9 +5,10 @@ import org.trade.core.persistent.dao.Entrylimit;
 import java.io.Serial;
 import java.util.List;
 import java.util.ListIterator;
-
 /**
  *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public class DAOEntryLimit extends DAODecode {
 

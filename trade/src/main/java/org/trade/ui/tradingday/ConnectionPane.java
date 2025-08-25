@@ -17,9 +17,10 @@ import java.awt.event.ItemEvent;
 import java.io.Serial;
 import java.text.ParseException;
 import java.util.Objects;
-
 /**
  *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public class ConnectionPane extends JPanel {
 
