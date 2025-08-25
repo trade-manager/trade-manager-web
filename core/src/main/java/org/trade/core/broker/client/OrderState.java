@@ -5,6 +5,7 @@ import org.trade.core.valuetype.Money;
 
 
 /**
+ *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */

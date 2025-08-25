@@ -22,6 +22,7 @@ import java.util.List;
 import static org.trade.core.persistent.dao.User.ROLE_MANAGER;
 
 /**
+ *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */

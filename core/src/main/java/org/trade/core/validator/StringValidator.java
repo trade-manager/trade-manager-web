@@ -6,6 +6,7 @@ import org.trade.core.message.MessageContextFactory;
 import org.trade.core.message.MessageFactory;
 
 /**
+ *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */

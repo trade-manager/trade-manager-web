@@ -3,6 +3,7 @@ package org.trade.core.persistent.dao.series;
 import java.io.Serializable;
 
 /**
+ *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */

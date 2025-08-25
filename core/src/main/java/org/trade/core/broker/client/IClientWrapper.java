@@ -6,6 +6,7 @@ import org.trade.core.persistent.dao.TradeOrderfill;
 import org.trade.core.persistent.dao.Tradestrategy;
 
 /**
+ *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */

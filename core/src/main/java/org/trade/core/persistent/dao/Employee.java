@@ -11,6 +11,7 @@ import org.trade.core.dao.Aspect;
 import java.io.Serializable;
 
 /**
+ *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */

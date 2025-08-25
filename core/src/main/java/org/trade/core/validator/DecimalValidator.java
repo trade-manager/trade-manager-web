@@ -8,6 +8,7 @@ import org.trade.core.message.MessageFactory;
 import java.math.BigDecimal;
 
 /**
+ *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */

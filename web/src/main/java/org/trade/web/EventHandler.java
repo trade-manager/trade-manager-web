@@ -13,6 +13,7 @@ import org.trade.core.persistent.dao.Employee;
 import static org.trade.web.WebSocketConfiguration.MESSAGE_PREFIX;
 
 /**
+ *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */

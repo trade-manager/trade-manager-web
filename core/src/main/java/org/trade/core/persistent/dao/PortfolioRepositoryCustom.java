@@ -3,6 +3,7 @@ package org.trade.core.persistent.dao;
 import java.util.List;
 
 /**
+ *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */

@@ -3,6 +3,7 @@ package org.trade.core.exception;
 import java.io.Serial;
 
 /**
+ *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */

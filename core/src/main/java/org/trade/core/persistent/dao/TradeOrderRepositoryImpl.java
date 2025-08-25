@@ -10,6 +10,7 @@ import jakarta.persistence.criteria.Root;
 import org.springframework.stereotype.Repository;
 
 /**
+ *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */

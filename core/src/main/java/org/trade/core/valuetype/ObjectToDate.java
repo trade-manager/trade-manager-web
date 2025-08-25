@@ -5,6 +5,7 @@ import org.trade.core.conversion.JavaFormatForObject;
 import org.trade.core.conversion.JavaTypeTranslatorException;
 
 /**
+ *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */

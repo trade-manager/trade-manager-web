@@ -8,6 +8,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
 /**
+ *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
