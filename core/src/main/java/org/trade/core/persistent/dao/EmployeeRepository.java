@@ -1,15 +1,14 @@
-package org.trade.web;
+package org.trade.core.persistent.dao;
 
-import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.trade.core.dao.AspectRepository;
 
 /**
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-@PreAuthorize("hasRole('ROLE_MANAGER')")
-public interface EmployeeRepository extends PagingAndSortingRepository<Employee, Long> {
+public interface EmployeeRepository extends AspectRepository<Employee, Long>, EmployeeRepositoryCustom {
 
 
     @PreAuthorize("#employee?.user == null or #employee?.user?.name == authentication?.name")

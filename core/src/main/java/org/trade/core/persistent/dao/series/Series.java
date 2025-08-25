@@ -14,7 +14,6 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
- *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */

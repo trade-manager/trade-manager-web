@@ -1,4 +1,4 @@
-package org.trade.web;
+package org.trade.core.persistent.dao;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -35,6 +35,7 @@ public class Employee extends Aspect implements Serializable, Cloneable {
     }
 
     public Employee(String firstName, String lastName, String description, User user) {
+
         this.firstName = firstName;
         this.lastName = lastName;
         this.description = description;
@@ -71,5 +72,16 @@ public class Employee extends Aspect implements Serializable, Cloneable {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    /**
+     * Method clone.
+     *
+     * @return Object
+     */
+    public Object clone() throws CloneNotSupportedException {
+
+        Employee employee = (Employee) super.clone();
+        return employee;
     }
 }

@@ -4,8 +4,8 @@ import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 
 import java.io.Serial;
+
 /**
- *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */

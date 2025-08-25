@@ -5,7 +5,6 @@ import org.trade.core.persistent.dao.series.indicator.CandleSeries;
 
 
 /**
- *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */

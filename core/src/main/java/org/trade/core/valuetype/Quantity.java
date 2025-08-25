@@ -11,8 +11,8 @@ import java.io.Serial;
 import java.math.BigInteger;
 import java.util.Comparator;
 import java.util.Objects;
+
 /**
- *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */

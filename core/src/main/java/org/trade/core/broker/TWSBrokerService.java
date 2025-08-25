@@ -58,7 +58,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */

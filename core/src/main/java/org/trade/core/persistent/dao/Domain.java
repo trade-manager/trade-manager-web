@@ -1,13 +1,12 @@
-package org.trade.web;
+package org.trade.core.persistent.dao;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.persistence.Version;
+import org.trade.core.dao.Aspect;
 
-import static jakarta.persistence.GenerationType.IDENTITY;
+import java.io.Serial;
+import java.io.Serializable;
 
 /**
  * @author Simon Allen
@@ -15,16 +14,10 @@ import static jakarta.persistence.GenerationType.IDENTITY;
  */
 @Entity
 @Table(name = "domain")
-public class Domain {
+public class Domain extends Aspect implements Serializable, Cloneable {
 
-    @Id
-    @GeneratedValue(strategy = IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
-    private Long id;
-
-    @Version
-    @Column(name = "version")
-    private Long version;
+    @Serial
+    private static final long serialVersionUID = 5691902477608387034L;
 
     @Column(name = "name")
     private String name;
@@ -38,14 +31,6 @@ public class Domain {
     public Domain(String name, String description) {
         this.name = name;
         this.description = description;
-    }
-
-    public Long getId() {
-        return this.id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -64,11 +49,14 @@ public class Domain {
         this.description = description;
     }
 
-    public Long getVersion() {
-        return this.version;
-    }
+    /**
+     * Method clone.
+     *
+     * @return Object
+     */
+    public Object clone() throws CloneNotSupportedException {
 
-    public void setVersion(Long version) {
-        this.version = version;
+        Domain domain = (Domain) super.clone();
+        return domain;
     }
 }

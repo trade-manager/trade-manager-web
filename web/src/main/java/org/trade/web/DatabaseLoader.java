@@ -6,6 +6,20 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.trade.core.persistent.TradeService;
+import org.trade.core.persistent.dao.Domain;
+import org.trade.core.persistent.dao.DomainRepository;
+import org.trade.core.persistent.dao.Employee;
+import org.trade.core.persistent.dao.EmployeeRepository;
+import org.trade.core.persistent.dao.Role;
+import org.trade.core.persistent.dao.RoleRepository;
+import org.trade.core.persistent.dao.User;
+import org.trade.core.persistent.dao.UserRepository;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.trade.core.persistent.dao.User.ROLE_MANAGER;
 
 /**
  * @author Simon Allen
@@ -14,61 +28,44 @@ import org.springframework.stereotype.Component;
 @Component
 public class DatabaseLoader implements CommandLineRunner {
 
-    private final EmployeeRepository employees;
-    private final UserRepository users;
-    private final DomainRepository domains;
-
-    public final static String ROLE_MANAGER = "ROLE_MANAGER";
+    private TradeService tradeService;
 
     @Autowired
-    public DatabaseLoader(EmployeeRepository employeeRepository,
-                          UserRepository userRepository, DomainRepository domainRepository) {
+    public DatabaseLoader(TradeService tradeService) {
 
-        this.domains = domainRepository;
-        this.employees = employeeRepository;
-        this.users = userRepository;
+        this.tradeService = tradeService;
     }
-
 
     public void run(String... strings) {
 
-        Domain global = this.domains.findByName("global");
+        Domain global = this.tradeService.findDomainByName("global");
+        User admin = this.tradeService.findUserByName("admin");
+        User oliver = this.tradeService.findUserByName("oliver");
 
-        if (null == global) {
-
-            global = this.domains.save(new Domain("global", "global"));
-        }
-
-        User admin = this.users.findByName("admin");
-        if (null == admin) {
-
-            admin = this.users.save(new User("admin", "admin",
-                    global, ROLE_MANAGER));
-        }
-        User oliver = this.users.findByName("oliver");
         if (null == oliver) {
 
-            oliver = this.users.save(new User("oliver", "admin",
-                    global, ROLE_MANAGER));
+            List<Role> roles = new ArrayList<>();
+            roles.add(this.tradeService.findRoleByName(ROLE_MANAGER));
+            oliver = this.tradeService.saveUser(new User("oliver", "admin",
+                    global, roles));
         }
 
         SecurityContextHolder.getContext().setAuthentication(
                 new UsernamePasswordAuthenticationToken("admin", "doesn't matter",
                         AuthorityUtils.createAuthorityList(ROLE_MANAGER)));
 
-        this.employees.save(new Employee("Frodo", "Baggins", "ring bearer", admin));
-        this.employees.save(new Employee("Bilbo", "Baggins", "burglar", admin));
-        this.employees.save(new Employee("Gandalf", "the Grey", "wizard", admin));
+        this.tradeService.saveAspect(new Employee("Frodo", "Baggins", "ring bearer", admin));
+        this.tradeService.saveAspect(new Employee("Bilbo", "Baggins", "burglar", admin));
+        this.tradeService.saveAspect(new Employee("Gandalf", "the Grey", "wizard", admin));
 
         SecurityContextHolder.getContext().setAuthentication(
                 new UsernamePasswordAuthenticationToken("oliver", "doesn't matter",
                         AuthorityUtils.createAuthorityList(ROLE_MANAGER)));
 
-        this.employees.save(new Employee("Samwise", "Gamgee", "gardener", oliver));
-        this.employees.save(new Employee("Merry", "Brandybuck", "pony rider", oliver));
-        this.employees.save(new Employee("Peregrin", "Took", "pipe smoker", oliver));
+        this.tradeService.saveAspect(new Employee("Samwise", "Gamgee", "gardener", oliver));
+        this.tradeService.saveAspect(new Employee("Merry", "Brandybuck", "pony rider", oliver));
+        this.tradeService.saveAspect(new Employee("Peregrin", "Took", "pipe smoker", oliver));
 
         SecurityContextHolder.clearContext();
-
     }
 }

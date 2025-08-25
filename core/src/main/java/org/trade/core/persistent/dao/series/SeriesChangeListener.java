@@ -3,7 +3,6 @@ package org.trade.core.persistent.dao.series;
 import java.util.EventListener;
 
 /**
- *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
