@@ -3,6 +3,9 @@ package org.trade.core.persistent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,8 +22,13 @@ import org.trade.core.persistent.dao.CodeTypeRepository;
 import org.trade.core.persistent.dao.Contract;
 import org.trade.core.persistent.dao.ContractLite;
 import org.trade.core.persistent.dao.ContractRepository;
+import org.trade.core.persistent.dao.Domain;
+import org.trade.core.persistent.dao.DomainRepository;
+import org.trade.core.persistent.dao.EmployeeRepository;
 import org.trade.core.persistent.dao.Portfolio;
 import org.trade.core.persistent.dao.PortfolioRepository;
+import org.trade.core.persistent.dao.Role;
+import org.trade.core.persistent.dao.RoleRepository;
 import org.trade.core.persistent.dao.Rule;
 import org.trade.core.persistent.dao.RuleRepository;
 import org.trade.core.persistent.dao.Strategy;
@@ -43,6 +51,8 @@ import org.trade.core.persistent.dao.TradestrategyRepository;
 import org.trade.core.persistent.dao.Tradingday;
 import org.trade.core.persistent.dao.TradingdayRepository;
 import org.trade.core.persistent.dao.Tradingdays;
+import org.trade.core.persistent.dao.User;
+import org.trade.core.persistent.dao.UserRepository;
 import org.trade.core.persistent.dao.series.indicator.CandleSeries;
 import org.trade.core.persistent.dao.series.indicator.candle.CandleItem;
 import org.trade.core.util.CoreUtils;
@@ -65,7 +75,6 @@ import java.util.Optional;
 
 
 /**
- *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
@@ -118,6 +127,18 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
 
     @Autowired
     private TradingdayRepository tradingdayRepository;
+
+    @Autowired
+    private DomainRepository domainRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private EmployeeRepository employeeRepository;
 
     private static final int SCALE_5 = 5;
     private static final int SCALE_2 = 2;
@@ -344,6 +365,24 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
         instance.setAccounts(accounts);
         return portfolioRepository.save(instance);
     }
+
+    @Transactional
+    public User saveUser(User instance) {
+
+        List<Role> roles = new ArrayList<>();
+
+        for (Role role : instance.getRoles()) {
+
+            Role current = this.findRoleByName(role.getName());
+
+            roles.add(Objects.requireNonNullElse(current, role));
+        }
+
+        instance.getRoles().clear();
+        instance.setRoles(roles);
+        return userRepository.save(instance);
+    }
+
 
     public List<Tradestrategy> findAllTradestrategies() {
 
@@ -822,6 +861,21 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
         return saveTradeOrder(tradeOrder);
     }
 
+    public Domain findDomainByName(String name) {
+
+        return domainRepository.findByName(name);
+    }
+
+    public User findUserByName(String name) {
+
+        return userRepository.findByName(name);
+    }
+
+    public Role findRoleByName(String name) {
+
+        return roleRepository.findByName(name);
+    }
+
     public Rule findRuleById(final Long ruleId) {
 
         return ruleRepository.findById(ruleId).isPresent() ? ruleRepository.findById(ruleId).get() : null;
@@ -979,5 +1033,14 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
 
         List<CodeType> codeTypes = codeTypeRepository.findByNameAndType(name, type);
         return codeTypes.isEmpty() ? null : codeTypes.getFirst();
+    }
+
+    public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
+
+        User user = this.userRepository.findByName(name);
+        _log.info("User found: " + user.getName() + " " + user.getPassword() + " " + String.join(",", user.getRoleValues()));
+
+        return new org.springframework.security.core.userdetails.User(user.getName(), user.getPassword(),
+                AuthorityUtils.createAuthorityList(user.getRoleValues()));
     }
 }

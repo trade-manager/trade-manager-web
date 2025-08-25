@@ -15,7 +15,6 @@ import java.text.ParseException;
 import java.util.Stack;
 
 /**
- *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */

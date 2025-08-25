@@ -3,7 +3,6 @@ package org.trade.core.properties;
 import java.io.IOException;
 
 /**
- *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */

@@ -42,6 +42,12 @@ DELETE FROM codeattribute WHERE id >='0'//
 COMMIT//
 DELETE FROM codetype WHERE id >='0'//
 COMMIT//
+DELETE FROM employee WHERE id >='0'//
+COMMIT//
+DELETE FROM user WHERE id >='0'//
+COMMIT//
+DELETE FROM domain WHERE id >='0'//
+COMMIT//
 
 INSERT INTO strategy (id, name, description, market_data, class_name) VALUES (20, 'FHxRBHyR+Heikin', 'Sell front/back half at x/yR or trail BH with Heikin-Ashi bars over xR', 1, 'PosMgrFHXRBHHeikinStrategy')//
 INSERT INTO strategy (id, name, description, class_name) VALUES (21, 'AllOrNothing', 'Close open position at 15:58 with stop 1R', 'PosMgrAllOrNothingStrategy')//
@@ -201,4 +207,25 @@ COMMIT//
 
 
 INSERT INTO portfolio (id, name, alias, description, is_default) VALUES (1, 'Paper', 'Paper Account','Paper trading account', 1)//
+COMMIT//
+
+INSERT INTO domain (id, name, description) VALUES (1, 'global', 'global domain')//
+COMMIT//
+
+INSERT INTO role (id, name, description) VALUES (1, 'ADMINISTRATOR', 'ADMINISTRATOR role')//
+COMMIT//
+
+INSERT INTO role (id, name, description) VALUES (2, 'MANAGER', 'MANAGER role')//
+COMMIT//
+
+INSERT INTO role (id, name, description) VALUES (3, 'USER', 'USER role')//
+COMMIT//
+
+INSERT INTO user (id, name, first_name, last_name, password, domain_id) VALUES (1, 'admin', 'admin', 'admin', 'admin', 1)//
+COMMIT//
+
+INSERT INTO userrole (id, user_id, role_id) VALUES (1, 1, 1)//
+COMMIT//
+
+INSERT INTO employee (id, first_name, last_name, description, user_id) VALUES (1, 'admin', 'admin', 'admin employee', 1)//
 COMMIT//

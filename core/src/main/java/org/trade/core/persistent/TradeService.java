@@ -7,7 +7,9 @@ import org.trade.core.persistent.dao.Candle;
 import org.trade.core.persistent.dao.CodeType;
 import org.trade.core.persistent.dao.Contract;
 import org.trade.core.persistent.dao.ContractLite;
+import org.trade.core.persistent.dao.Domain;
 import org.trade.core.persistent.dao.Portfolio;
+import org.trade.core.persistent.dao.Role;
 import org.trade.core.persistent.dao.Rule;
 import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.TradeOrder;
@@ -19,6 +21,7 @@ import org.trade.core.persistent.dao.TradestrategyLite;
 import org.trade.core.persistent.dao.TradestrategyOrders;
 import org.trade.core.persistent.dao.Tradingday;
 import org.trade.core.persistent.dao.Tradingdays;
+import org.trade.core.persistent.dao.User;
 import org.trade.core.persistent.dao.series.indicator.CandleSeries;
 
 import java.io.IOException;
@@ -29,7 +32,6 @@ import java.util.Optional;
 
 
 /**
- *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
@@ -67,8 +69,15 @@ public interface TradeService extends AspectService {
      * @param instance Portfolio
      * @return Portfolio
      */
-
     Portfolio savePortfolio(Portfolio instance);
+
+    /**
+     * Method saveUser.
+     *
+     * @param instance User
+     * @return User
+     */
+    User saveUser(User instance);
 
     /**
      * Method saveTradeOrder.
@@ -373,6 +382,30 @@ public interface TradeService extends AspectService {
      * @return Long
      */
     Long findCandleCount(final Contract contract);
+
+    /**
+     * Method findDomainByName.
+     *
+     * @param name String
+     * @return Domain
+     */
+    Domain findDomainByName(String name);
+
+    /**
+     * Method findUserByName.
+     *
+     * @param name String
+     * @return User
+     */
+    User findUserByName(String name);
+
+    /**
+     * Method findRoleByName.
+     *
+     * @param name String
+     * @return Role
+     */
+    Role findRoleByName(String name);
 
     /**
      * Method findRuleById.

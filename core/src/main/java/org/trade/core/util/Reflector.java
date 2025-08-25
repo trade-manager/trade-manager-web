@@ -5,7 +5,6 @@ import java.lang.reflect.Method;
 
 
 /**
- *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */

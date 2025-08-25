@@ -25,6 +25,7 @@ class App extends React.Component {
 	}
 
 	loadFromServer(pageSize) {
+
 		follow(client, root, [
 				{rel: 'employees', params: {size: pageSize}}]
 		).then(employeeCollection => {

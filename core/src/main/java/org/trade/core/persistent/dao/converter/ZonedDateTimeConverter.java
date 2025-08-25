@@ -9,7 +9,6 @@ import java.time.ZonedDateTime;
 import java.util.Date;
 
 /**
- *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */

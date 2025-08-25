@@ -9,7 +9,6 @@ import org.trade.core.validator.StringValidator;
 import java.io.Serial;
 
 /**
- *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */

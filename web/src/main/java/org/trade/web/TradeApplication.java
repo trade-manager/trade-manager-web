@@ -13,15 +13,14 @@ import org.trade.core.ApplicationProfileInitializer;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-@SpringBootApplication(scanBasePackages = {"org.trade.core"})
+@SpringBootApplication(scanBasePackages = {"org.trade.core", "org.trade.web"})
 @ConfigurationPropertiesScan("org.trade.core")
-public class ReactAndSpringDataRestApplication {
+public class TradeApplication {
 
     public static void main(String[] args) {
 
-        ConfigurableApplicationContext applicationContext = new SpringApplicationBuilder(ReactAndSpringDataRestApplication.class)
+        ConfigurableApplicationContext applicationContext = new SpringApplicationBuilder(TradeApplication.class)
                 .initializers(new ApplicationProfileInitializer())
                 .run(args);
-
     }
 }

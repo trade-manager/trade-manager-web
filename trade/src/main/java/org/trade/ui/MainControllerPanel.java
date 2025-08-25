@@ -8,8 +8,8 @@ import org.trade.core.properties.ConfigProperties;
 import javax.swing.*;
 import java.awt.*;
 import java.io.Serial;
+
 /**
- *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */

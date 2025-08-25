@@ -28,7 +28,6 @@ import org.slf4j.LoggerFactory;
  * Note that the API changed slightly in the 3rd version: You must now invoke
  * start() on the StrategyWorker after creating it.
  *
- *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */

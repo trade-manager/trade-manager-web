@@ -5,8 +5,8 @@ import org.trade.base.BasePanelMenu;
 
 import javax.swing.*;
 import java.io.Serial;
+
 /**
- *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */

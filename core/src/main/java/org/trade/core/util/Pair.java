@@ -3,7 +3,6 @@ package org.trade.core.util;
 import java.util.Comparator;
 
 /**
- *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
