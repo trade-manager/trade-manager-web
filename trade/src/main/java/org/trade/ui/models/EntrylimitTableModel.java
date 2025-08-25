@@ -11,9 +11,10 @@ import org.trade.core.valuetype.Quantity;
 import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
-
 /**
  *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public class EntrylimitTableModel extends AspectTableModel {
     /**

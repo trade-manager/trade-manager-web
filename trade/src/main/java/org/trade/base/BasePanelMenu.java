@@ -5,9 +5,10 @@ import java.awt.*;
 import java.awt.event.ContainerEvent;
 import java.io.Serial;
 import java.util.ArrayList;
-
 /**
  *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public class BasePanelMenu extends JPanel {
 

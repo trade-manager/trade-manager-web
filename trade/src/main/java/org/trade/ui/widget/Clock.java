@@ -5,9 +5,10 @@ import java.awt.*;
 import java.io.Serial;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-
 /**
  *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public class Clock extends JPanel {
 

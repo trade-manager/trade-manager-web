@@ -19,7 +19,9 @@ import java.util.StringTokenizer;
 import java.util.TimeZone;
 
 /**
+ *
  * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public class TradingCalendar {
 

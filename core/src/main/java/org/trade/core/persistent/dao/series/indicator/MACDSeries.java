@@ -37,7 +37,6 @@ import java.util.List;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-
 @Entity
 @DiscriminatorValue("MACDSeries")
 public class MACDSeries extends IndicatorSeries {

@@ -20,9 +20,10 @@ import org.trade.ui.widget.DecodeTableEditor;
 import javax.swing.*;
 import java.io.Serial;
 import java.util.Calendar;
-
 /**
  *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public class TradelogDetailTable extends Table {
 

@@ -47,6 +47,9 @@ import java.io.Serializable;
 /**
  * Used to indicate one of three positions in a time period: <code>START</code>,
  * <code>MIDDLE</code> and <code>END</code>.
+ *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public final class TimePeriodAnchor implements Serializable {
 

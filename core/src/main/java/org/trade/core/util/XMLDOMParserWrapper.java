@@ -32,7 +32,9 @@ import java.io.UnsupportedEncodingException;
  * The parser is updated to ignore DTDs and external references. It will return
  * the same dom tree regardless of external references and DTDs
  *
+ *
  * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public class XMLDOMParserWrapper {
 

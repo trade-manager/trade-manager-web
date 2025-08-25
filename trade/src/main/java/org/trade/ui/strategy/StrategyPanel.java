@@ -61,9 +61,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-
 /**
  *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public class StrategyPanel extends BasePanel implements TreeSelectionListener {
 

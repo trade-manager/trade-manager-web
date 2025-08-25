@@ -27,8 +27,11 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
+
 /**
  *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public interface TradeService extends AspectService {
 

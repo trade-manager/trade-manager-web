@@ -15,7 +15,11 @@ import java.util.EventListener;
 import java.util.List;
 import java.util.Objects;
 
-
+/**
+ *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
+ */
 public abstract class AbstractDataset implements Dataset, Cloneable, Serializable, ObjectInputValidation {
 
     @Serial

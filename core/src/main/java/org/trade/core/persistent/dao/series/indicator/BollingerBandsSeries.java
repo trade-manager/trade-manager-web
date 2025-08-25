@@ -34,7 +34,6 @@ import java.util.List;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-
 @Entity
 @DiscriminatorValue("BollingerBandsSeries")
 public class BollingerBandsSeries extends IndicatorSeries {

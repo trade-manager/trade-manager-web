@@ -62,6 +62,9 @@ import java.time.ZonedDateTime;
  * period. The results from these methods are timezone dependent.
  * <p>
  * This class is immutable, and all subclasses should be immutable also.
+ *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public abstract class RegularTimePeriod implements ITimePeriod, Comparable<ITimePeriod> {
 

@@ -5,6 +5,11 @@ import org.trade.core.exception.NestingException;
 
 import java.io.Serial;
 
+/**
+ *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
+ */
 public class XMLModelException extends NestingException {
     /**
      *

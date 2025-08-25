@@ -7,9 +7,10 @@ import org.trade.core.validator.IExceptionMessageListener;
 import org.trade.core.validator.IValidator;
 
 import java.io.Serial;
-
 /**
  *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public abstract class StringWrapper extends ValueType {
     /**

@@ -4,6 +4,11 @@ package org.trade.core.persistent.dao;
 import java.time.ZonedDateTime;
 import java.util.List;
 
+/**
+ *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
+ */
 public interface CandleRepositoryCustom {
 
 

@@ -13,7 +13,11 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
+ */
 @Repository
 public class CodeTypeRepositoryImpl implements CodeTypeRepositoryCustom {
 

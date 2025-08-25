@@ -9,7 +9,11 @@ import jakarta.persistence.criteria.Expression;
 import jakarta.persistence.criteria.Root;
 import org.springframework.stereotype.Repository;
 
-
+/**
+ *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
+ */
 @Repository
 public class TradeOrderRepositoryImpl implements TradeOrderRepositoryCustom {
 

@@ -5,9 +5,10 @@ import org.trade.core.dao.Aspect;
 import java.io.Serial;
 import java.io.Serializable;
 
-
 /**
  *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public class PortfolioDto extends Aspect implements Serializable, Cloneable {
 

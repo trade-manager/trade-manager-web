@@ -2,9 +2,10 @@ package org.trade.base;
 
 import javax.swing.*;
 import java.awt.*;
-
 /**
  *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public class WaitCursorEventQueue extends EventQueue {
     /**

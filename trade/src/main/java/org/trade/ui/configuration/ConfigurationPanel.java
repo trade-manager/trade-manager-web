@@ -42,9 +42,10 @@ import java.util.ListIterator;
 import java.util.Objects;
 
 import static org.trade.core.persistent.TradeService.PERSISTENT_PACKAGE;
-
 /**
  *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public class ConfigurationPanel extends BasePanel {
 

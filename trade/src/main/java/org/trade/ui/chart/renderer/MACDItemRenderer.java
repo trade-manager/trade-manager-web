@@ -139,6 +139,9 @@ import static org.jfree.chart.util.ShapeUtils.isPointInRect;
  * <p>
  * This renderer has been retained for historical reasons and, in general, you
  * should use the class instead.
+ *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public class MACDItemRenderer extends StandardXYItemRenderer {
 

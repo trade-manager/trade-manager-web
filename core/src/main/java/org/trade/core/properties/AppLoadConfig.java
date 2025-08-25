@@ -4,6 +4,8 @@ import java.io.IOException;
 
 /**
  *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public class AppLoadConfig {
     private final static String PROPERTIES_PROPERTY_FILE = "core.properties";

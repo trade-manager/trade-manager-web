@@ -11,6 +11,11 @@ import org.xml.sax.Attributes;
 import java.io.CharArrayWriter;
 import java.util.Stack;
 
+/**
+ *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
+ */
 public class TWSAllocationRequest extends SaxMapper {
 
     private Aspects target = null;

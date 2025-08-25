@@ -7,9 +7,10 @@ import org.trade.core.dao.Aspect;
 
 import java.io.Serial;
 import java.math.BigDecimal;
-
 /**
  *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 @Entity
 @Table(name = "entrylimit")

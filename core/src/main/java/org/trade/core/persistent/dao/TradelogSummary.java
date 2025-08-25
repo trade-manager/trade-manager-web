@@ -11,9 +11,10 @@ import org.trade.core.properties.ConfigProperties;
 import java.io.IOException;
 import java.io.Serial;
 import java.math.BigDecimal;
-
 /**
  *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 @Entity
 //@SqlResultSetMappings({

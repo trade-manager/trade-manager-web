@@ -21,9 +21,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.Serial;
 import java.util.Calendar;
-
 /**
  *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public class ConfigurationTable extends Table {
 

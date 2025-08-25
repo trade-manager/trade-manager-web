@@ -2,9 +2,10 @@ package org.trade.core.valuetype;
 
 import java.io.Serial;
 import java.io.Serializable;
-
 /**
  *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public abstract class ValueType implements Cloneable, Serializable {
     /**

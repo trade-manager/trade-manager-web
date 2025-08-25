@@ -16,9 +16,10 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
 /**
  *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public class RelativeStrengthIndexDataset extends AbstractXYDataset
         implements IIndicatorDataset, IRelativeStrengthIndexDataset, Serializable {

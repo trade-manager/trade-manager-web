@@ -5,11 +5,13 @@ import org.trade.core.message.MessageContextFactory;
 
 /**
  *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public class NumericRangeValidator extends StringValidator {
-    private final long m_minValue;
 
-    private final long m_maxValue;
+    private final long minValue;
+    private final long maxValue;
 
     /**
      * Constructor for NumericRangeValidator.
@@ -24,8 +26,8 @@ public class NumericRangeValidator extends StringValidator {
                                  boolean isMandatory) {
         super(messageFactory, maxLength, StringValidator.DIGITS, isMandatory);
 
-        m_minValue = minValue;
-        m_maxValue = maxValue;
+        this.minValue = minValue;
+        this.maxValue = maxValue;
     }
 
     /**
@@ -54,16 +56,16 @@ public class NumericRangeValidator extends StringValidator {
         if (valid && (!((String) value).isEmpty())) {
             try {
                 long i = Long.parseLong(((String) value));
-                if (i < m_minValue) {
+                if (i < minValue) {
                     valid = false;
                     receiver.addExceptionMessage(getMessageFactory().create(MessageContextFactory.BELOW_MIN_VALUE
-                            .create(MessageContextFactory.MIN_VALUE.create(m_minValue))));
+                            .create(MessageContextFactory.MIN_VALUE.create(minValue))));
                 }
 
-                if (i > m_maxValue) {
+                if (i > maxValue) {
                     valid = false;
                     receiver.addExceptionMessage(getMessageFactory().create(MessageContextFactory.EXCEEDS_MAX_VALUE
-                            .create(MessageContextFactory.MAX_VALUE.create(m_maxValue))));
+                            .create(MessageContextFactory.MAX_VALUE.create(maxValue))));
                 }
             } catch (Exception ex) {
                 // Should not happen as I already have checked it for

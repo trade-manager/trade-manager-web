@@ -14,6 +14,11 @@ import java.io.Reader;
 import java.text.ParseException;
 import java.util.Stack;
 
+/**
+ *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
+ */
 public abstract class SaxMapper extends DefaultHandler {
     /*
      * Must be overridden by all subclasses...

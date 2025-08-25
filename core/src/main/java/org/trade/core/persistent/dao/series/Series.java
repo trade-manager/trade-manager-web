@@ -13,6 +13,11 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
+/**
+ *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
+ */
 public abstract class Series implements Cloneable, Serializable {
 
     @Serial

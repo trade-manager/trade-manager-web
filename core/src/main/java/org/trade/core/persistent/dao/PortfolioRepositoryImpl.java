@@ -9,7 +9,11 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-
+/**
+ *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
+ */
 @Repository
 public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
 

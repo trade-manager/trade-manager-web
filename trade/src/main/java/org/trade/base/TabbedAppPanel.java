@@ -11,9 +11,10 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.io.Serial;
 import java.util.List;
-
 /**
  *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public abstract class TabbedAppPanel extends BasePanel implements ChangeListener {
     /**

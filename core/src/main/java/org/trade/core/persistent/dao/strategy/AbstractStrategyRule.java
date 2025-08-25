@@ -38,8 +38,11 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 
+
 /**
  *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public abstract class AbstractStrategyRule extends Worker implements SeriesChangeListener, IStrategyRule, Serializable {
 

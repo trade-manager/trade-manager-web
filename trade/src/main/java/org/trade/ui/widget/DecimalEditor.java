@@ -4,9 +4,10 @@ import org.trade.core.valuetype.Decimal;
 
 import javax.swing.*;
 import java.io.Serial;
-
 /**
  *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public class DecimalEditor extends DefaultCellEditor {
     /**

@@ -11,7 +11,6 @@ import java.math.BigDecimal;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-
 public class AverageTrueRange implements java.io.Serializable {
 
     /**

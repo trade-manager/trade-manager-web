@@ -1,9 +1,10 @@
 package org.trade.core.valuetype;
 
 import java.io.Serial;
-
 /**
  *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public class MarketBar extends Decode {
 

@@ -7,6 +7,11 @@ import org.trade.core.persistent.dao.strategy.StrategyRuleException;
 import javax.swing.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
+ */
 public abstract class Broker extends SwingWorker<Void, Void> implements IStrategyChangeListener {
 
     protected AtomicInteger ruleComplete = new AtomicInteger(0);

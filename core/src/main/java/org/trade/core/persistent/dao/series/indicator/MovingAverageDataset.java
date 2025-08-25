@@ -17,6 +17,8 @@ import java.util.List;
 
 /**
  *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public class MovingAverageDataset extends AbstractXYDataset
         implements IIndicatorDataset, IMovingAverageDataset, Serializable {

@@ -3,7 +3,11 @@ package org.trade.core.persistent.dao.series;
 import java.io.Serializable;
 import java.util.Objects;
 
-
+/**
+ *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
+ */
 public class ComparableObjectItem implements Cloneable, Comparable, Serializable {
     private static final long serialVersionUID = 2751513470325494890L;
     private Comparable x;

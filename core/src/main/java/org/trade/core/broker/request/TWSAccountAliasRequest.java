@@ -12,6 +12,11 @@ import org.xml.sax.Attributes;
 import java.io.CharArrayWriter;
 import java.util.Stack;
 
+/**
+ *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
+ */
 public class TWSAccountAliasRequest extends SaxMapper {
 
     private final static Logger _log = LoggerFactory.getLogger(TWSAccountAliasRequest.class);

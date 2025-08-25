@@ -1,5 +1,10 @@
 package org.trade.core.persistent.dao.series;
 
+/**
+ *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
+ */
 public interface IntervalXYDataset extends XYDataset {
     Number getStartX(int var1, int var2);
 

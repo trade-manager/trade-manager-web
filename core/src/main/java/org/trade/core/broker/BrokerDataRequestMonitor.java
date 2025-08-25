@@ -26,6 +26,11 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
+ */
 public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
 
     private final static Logger _log = LoggerFactory.getLogger(BrokerDataRequestMonitor.class);

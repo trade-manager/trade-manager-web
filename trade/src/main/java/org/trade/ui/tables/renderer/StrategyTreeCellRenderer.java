@@ -8,9 +8,10 @@ import javax.swing.*;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import java.awt.*;
 import java.io.Serial;
-
 /**
  *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public class StrategyTreeCellRenderer extends DefaultTreeCellRenderer {
 

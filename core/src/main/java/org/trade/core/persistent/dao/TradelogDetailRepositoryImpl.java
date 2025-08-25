@@ -11,7 +11,11 @@ import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.List;
 
-
+/**
+ *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
+ */
 @Repository
 public class TradelogDetailRepositoryImpl implements TradelogDetailRepositoryCustom {
 

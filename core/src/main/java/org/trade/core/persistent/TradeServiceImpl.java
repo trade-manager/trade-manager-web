@@ -63,8 +63,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+
 /**
  *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 @Service
 public class TradeServiceImpl extends AspectServiceImpl implements TradeService {

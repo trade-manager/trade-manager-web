@@ -69,9 +69,10 @@ import java.text.NumberFormat;
 import java.time.ZonedDateTime;
 import java.util.Hashtable;
 import java.util.List;
-
 /**
  *
+ * @author Simon Allen
+ * @version $Revision: 1.0 $
  */
 public class ContractPanel extends BasePanel implements TreeSelectionListener, ChangeListener, ItemListener {
     /**
