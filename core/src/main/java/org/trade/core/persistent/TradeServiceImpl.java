@@ -24,6 +24,7 @@ import org.trade.core.persistent.dao.ContractLite;
 import org.trade.core.persistent.dao.ContractRepository;
 import org.trade.core.persistent.dao.Domain;
 import org.trade.core.persistent.dao.DomainRepository;
+import org.trade.core.persistent.dao.Employee;
 import org.trade.core.persistent.dao.EmployeeRepository;
 import org.trade.core.persistent.dao.Portfolio;
 import org.trade.core.persistent.dao.PortfolioRepository;
@@ -165,6 +166,11 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
     public Iterable<Contract> findAllContracts() {
 
         return contractRepository.findAll();
+    }
+
+    public Optional<Employee> findEmployeeByEmail(String email) {
+
+        return employeeRepository.findByEmail(email);
     }
 
     public TradelogReport findTradelogReport(final Portfolio portfolio, ZonedDateTime start, ZonedDateTime end,

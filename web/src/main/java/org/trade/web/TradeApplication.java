@@ -14,7 +14,8 @@ import org.trade.core.ApplicationProfileInitializer;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-@SpringBootApplication(exclude = {SecurityAutoConfiguration.class}, scanBasePackages = {"org.trade.core", "org.trade.web"})
+//@SpringBootApplication(exclude = {SecurityAutoConfiguration.class}, scanBasePackages = {"org.trade.core", "org.trade.web"})
+@SpringBootApplication(scanBasePackages = {"org.trade.core", "org.trade.web"})
 @ConfigurationPropertiesScan("org.trade.core")
 public class TradeApplication {
 

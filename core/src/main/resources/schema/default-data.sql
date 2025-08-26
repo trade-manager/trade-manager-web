@@ -221,7 +221,7 @@ COMMIT//
 INSERT INTO role (id, name, description) VALUES (3, 'USER', 'USER role')//
 COMMIT//
 
-INSERT INTO user (id, name, first_name, last_name, password, domain_id) VALUES (1, 'admin', 'admin', 'admin', 'admin', 1)//
+INSERT INTO user (id, name, first_name, last_name, password, domain_id) VALUES (1, 'admin', 'admin', 'admin', '$2a$10$AIW37PKNXj47i7MXAoccyummq9tDknZ5epNZFh.I4I0JHgVeVwd/.', 1)//
 COMMIT//
 
 INSERT INTO userrole (id, user_id, role_id) VALUES (1, 1, 1)//

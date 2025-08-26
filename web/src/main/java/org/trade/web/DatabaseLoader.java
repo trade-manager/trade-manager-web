@@ -1,5 +1,7 @@
 package org.trade.web;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,6 +16,7 @@ import org.trade.core.persistent.dao.User;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.trade.core.persistent.dao.User.ROLE_MANAGER;
 
@@ -23,6 +26,8 @@ import static org.trade.core.persistent.dao.User.ROLE_MANAGER;
  */
 @Component
 public class DatabaseLoader implements CommandLineRunner {
+
+    private final static Logger _log = LoggerFactory.getLogger(DatabaseLoader.class);
 
     private TradeService tradeService;
 
@@ -36,6 +41,12 @@ public class DatabaseLoader implements CommandLineRunner {
 
         Domain global = this.tradeService.findDomainByName("global");
         User admin = this.tradeService.findUserByName("admin");
+
+        if (admin.validatePassword("admin")) {
+
+            _log.info("Info DatabaseLoader::run {} password is valid.", admin.getName());
+        }
+
         User oliver = this.tradeService.findUserByName("oliver");
 
         if (null == oliver) {
@@ -44,24 +55,41 @@ public class DatabaseLoader implements CommandLineRunner {
             roles.add(this.tradeService.findRoleByName(ROLE_MANAGER));
             oliver = this.tradeService.saveUser(new User("oliver", "admin",
                     global, roles));
+        } else {
+
+            if (oliver.validatePassword("admin")) {
+
+                _log.info("Info DatabaseLoader::run {} password is valid.", oliver.getName());
+            }
         }
 
         SecurityContextHolder.getContext().setAuthentication(
                 new UsernamePasswordAuthenticationToken("admin", "doesn't matter",
                         AuthorityUtils.createAuthorityList(ROLE_MANAGER)));
 
-        this.tradeService.saveAspect(new Employee("Frodo", "Baggins", "ring bearer","Frodo.Baggins@" + global.getName() + ".com",admin));
-        this.tradeService.saveAspect(new Employee("Bilbo", "Baggins", "burglar","Bilbo.Baggins@" + global.getName() + ".com", admin));
-        this.tradeService.saveAspect(new Employee("Gandalf", "Grey", "wizard", "Gandalf.Grey@" + global.getName() + ".com", admin));
+        createEmployee("Frodo", "Baggins", "ring bearer", global.getName(), admin);
+        createEmployee("Bilbo", "Baggins", "burglar", global.getName(), admin);
+        createEmployee("Gandalf", "Grey", "wizard", global.getName(), admin);
 
         SecurityContextHolder.getContext().setAuthentication(
                 new UsernamePasswordAuthenticationToken("oliver", "doesn't matter",
                         AuthorityUtils.createAuthorityList(ROLE_MANAGER)));
 
-        this.tradeService.saveAspect(new Employee("Samwise", "Gamgee", "gardener", "Samwise.Gamgee@" + global.getName() + ".com",oliver));
-        this.tradeService.saveAspect(new Employee("Merry", "Brandybuck", "pony rider", "Merry.Brandybuck@" + global.getName() + ".com",oliver));
-        this.tradeService.saveAspect(new Employee("Peregrin", "Took", "pipe smoker", "Peregrin.Took@" + global.getName() + ".com", oliver));
+        createEmployee("Samwise", "Gamgee", "gardener", global.getName(), oliver);
+        createEmployee("Merry", "Brandybuck", "pony rider", global.getName(), oliver);
+        createEmployee("Peregrin", "Took", "pipe smoker", global.getName(), oliver);
 
         SecurityContextHolder.clearContext();
+    }
+
+    private void createEmployee(String firstName, String lastName, String descrition, String domain, User user){
+
+        String email = firstName + "." + lastName +"@" + domain + ".com";
+        Optional<Employee> employee = this.tradeService.findEmployeeByEmail(email);
+
+        if (!employee.isPresent()) {
+
+            this.tradeService.saveAspect(new Employee(firstName, lastName, descrition, email, user));
+        }
     }
 }
