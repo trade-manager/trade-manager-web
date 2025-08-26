@@ -1,5 +1,6 @@
 *.iml
 .idea
+.run
 .mvn/
 mvnw.cmd
 target
