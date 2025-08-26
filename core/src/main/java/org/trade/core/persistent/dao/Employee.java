@@ -27,6 +27,9 @@ public class Employee extends Aspect implements Serializable, Cloneable {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "email")
+    private String email;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", insertable = true, updatable = true, nullable = false)
     private User user;
@@ -34,11 +37,12 @@ public class Employee extends Aspect implements Serializable, Cloneable {
     private Employee() {
     }
 
-    public Employee(String firstName, String lastName, String description, User user) {
+    public Employee(String firstName, String lastName, String description, String email, User user) {
 
         this.firstName = firstName;
         this.lastName = lastName;
         this.description = description;
+        this.email = email;
         this.user = user;
     }
 
@@ -64,6 +68,14 @@ public class Employee extends Aspect implements Serializable, Cloneable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getEmail() {
+        return this.email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public User getUser() {

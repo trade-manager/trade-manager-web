@@ -8,6 +8,7 @@ import org.trade.core.persistent.dao.CodeType;
 import org.trade.core.persistent.dao.Contract;
 import org.trade.core.persistent.dao.ContractLite;
 import org.trade.core.persistent.dao.Domain;
+import org.trade.core.persistent.dao.Employee;
 import org.trade.core.persistent.dao.Portfolio;
 import org.trade.core.persistent.dao.Role;
 import org.trade.core.persistent.dao.Rule;
@@ -55,6 +56,12 @@ public interface TradeService extends AspectService {
      * @return
      */
     Iterable<Contract> findAllContracts();
+
+    /**
+     * @param email
+     * @return
+     */
+    Optional<Employee> findEmployeeByEmail(String email);
 
     /**
      * Method saveTrading.

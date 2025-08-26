@@ -111,6 +111,12 @@ public class User extends Aspect implements Serializable, Cloneable {
         return this.password;
     }
 
+    @Transient
+    public boolean validatePassword(String password) {
+
+        return PASSWORD_ENCODER.matches(password, this.getPassword());
+    }
+
     public void setPassword(String password) {
 
         this.password = PASSWORD_ENCODER.encode(password);
