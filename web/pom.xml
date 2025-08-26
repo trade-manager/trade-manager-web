@@ -11,6 +11,11 @@
 	<version>1.0.0-SNAPSHOT</version>
 	<name>Trade Manager - Web</name>
 	<description>Trade Manager - Web</description>
+	<properties>
+		<frontend-maven-plugin.version>1.9.1</frontend-maven-plugin.version>
+		<node.version>v23.10.0</node.version>
+		<yarn.version>v1.22.19</yarn.version>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -35,39 +40,76 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>3.1.0</version>
+				<executions>
+					<execution>
+						<id>copy-resources</id>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${basedir}/target/classes/static</outputDirectory>
+							<resources>
+								<resource>
+									<directory>frontend/build</directory>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 			<!-- To build REACT UX npm -->
 			<plugin>
 				<groupId>com.github.eirslett</groupId>
 				<artifactId>frontend-maven-plugin</artifactId>
-				<version>1.9.1</version>
+				<version>${frontend-maven-plugin.version}</version>
 				<configuration>
-					<installDirectory>target</installDirectory>
+					<workingDirectory>frontend</workingDirectory>
 				</configuration>
 				<executions>
 					<execution>
-						<id>install node and npm</id>
+						<id>install node</id>
 						<goals>
-							<goal>install-node-and-npm</goal>
+							<goal>install-node-and-yarn</goal>
 						</goals>
 						<configuration>
-							<nodeVersion>v23.10.0</nodeVersion>
-							<npmVersion>10.9.2</npmVersion>
+							<nodeVersion>${node.version}</nodeVersion>
+							<yarnVersion>${yarn.version}</yarnVersion>
 						</configuration>
 					</execution>
 					<execution>
-						<id>npm install</id>
+						<id>yarn install</id>
 						<goals>
-							<goal>npm</goal>
+							<goal>yarn</goal>
 						</goals>
+						<phase>generate-resources</phase>
+					</execution>
+					<execution>
+						<id>yarn test</id>
+						<goals>
+							<goal>yarn</goal>
+						</goals>
+						<phase>test</phase>
 						<configuration>
-							<arguments>install</arguments>
+							<arguments>test</arguments>
+							<environmentVariables>
+								<CI>true</CI>
+							</environmentVariables>
 						</configuration>
 					</execution>
 					<execution>
-						<id>webpack build</id>
+						<id>yarn build</id>
 						<goals>
-							<goal>webpack</goal>
+							<goal>yarn</goal>
 						</goals>
+						<phase>compile</phase>
+						<configuration>
+							<arguments>build</arguments>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>
@@ -77,7 +119,7 @@
 				<executions>
 					<execution>
 						<configuration>
-							<mainClass>org.trade.ui.TradeApplication</mainClass>
+							<mainClass>org.trade.web.TradeApplication</mainClass>
 						</configuration>
 					</execution>
 				</executions>

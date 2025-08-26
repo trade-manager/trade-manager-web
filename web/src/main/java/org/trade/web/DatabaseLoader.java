@@ -50,17 +50,17 @@ public class DatabaseLoader implements CommandLineRunner {
                 new UsernamePasswordAuthenticationToken("admin", "doesn't matter",
                         AuthorityUtils.createAuthorityList(ROLE_MANAGER)));
 
-        this.tradeService.saveAspect(new Employee("Frodo", "Baggins", "ring bearer", admin));
-        this.tradeService.saveAspect(new Employee("Bilbo", "Baggins", "burglar", admin));
-        this.tradeService.saveAspect(new Employee("Gandalf", "the Grey", "wizard", admin));
+        this.tradeService.saveAspect(new Employee("Frodo", "Baggins", "ring bearer","Frodo.Baggins@" + global.getName() + ".com",admin));
+        this.tradeService.saveAspect(new Employee("Bilbo", "Baggins", "burglar","Bilbo.Baggins@" + global.getName() + ".com", admin));
+        this.tradeService.saveAspect(new Employee("Gandalf", "Grey", "wizard", "Gandalf.Grey@" + global.getName() + ".com", admin));
 
         SecurityContextHolder.getContext().setAuthentication(
                 new UsernamePasswordAuthenticationToken("oliver", "doesn't matter",
                         AuthorityUtils.createAuthorityList(ROLE_MANAGER)));
 
-        this.tradeService.saveAspect(new Employee("Samwise", "Gamgee", "gardener", oliver));
-        this.tradeService.saveAspect(new Employee("Merry", "Brandybuck", "pony rider", oliver));
-        this.tradeService.saveAspect(new Employee("Peregrin", "Took", "pipe smoker", oliver));
+        this.tradeService.saveAspect(new Employee("Samwise", "Gamgee", "gardener", "Samwise.Gamgee@" + global.getName() + ".com",oliver));
+        this.tradeService.saveAspect(new Employee("Merry", "Brandybuck", "pony rider", "Merry.Brandybuck@" + global.getName() + ".com",oliver));
+        this.tradeService.saveAspect(new Employee("Peregrin", "Took", "pipe smoker", "Peregrin.Took@" + global.getName() + ".com", oliver));
 
         SecurityContextHolder.clearContext();
     }

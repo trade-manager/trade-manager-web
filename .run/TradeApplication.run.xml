@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="TradeApplication" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="org.trade.ui.TradeApplication" />
+    <module name="trade-manager-trade" />
+    <option name="VM_PARAMETERS" value="-Duser.timezone=America/New_York  -Dtrade.config=file:../config.properties" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/trade" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

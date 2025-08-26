@@ -227,5 +227,5 @@ COMMIT//
 INSERT INTO userrole (id, user_id, role_id) VALUES (1, 1, 1)//
 COMMIT//
 
-INSERT INTO employee (id, first_name, last_name, description, user_id) VALUES (1, 'admin', 'admin', 'admin employee', 1)//
+INSERT INTO employee (id, first_name, last_name, description, email, user_id) VALUES (1, 'admin', 'admin', 'admin employee', 'admin@global.com', 1)//
 COMMIT//
