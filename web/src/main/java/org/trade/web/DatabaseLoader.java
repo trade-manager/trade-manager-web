@@ -82,9 +82,9 @@ public class DatabaseLoader implements CommandLineRunner {
         SecurityContextHolder.clearContext();
     }
 
-    private void createEmployee(String firstName, String lastName, String descrition, String domain, User user){
+    private void createEmployee(String firstName, String lastName, String descrition, String domain, User user) {
 
-        String email = firstName + "." + lastName +"@" + domain + ".com";
+        String email = firstName + "." + lastName + "@" + domain + ".com";
         Optional<Employee> employee = this.tradeService.findEmployeeByEmail(email);
 
         if (!employee.isPresent()) {
