@@ -55,6 +55,13 @@ public class User extends Aspect implements Serializable, Cloneable {
     )
     private List<Role> roles = new ArrayList<>(0);
 
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(name = "useraccount",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "account_id")
+    )
+    private List<Account> accounts = new ArrayList<>(0);
+
     public User() {
     }
 
@@ -96,16 +103,6 @@ public class User extends Aspect implements Serializable, Cloneable {
         this.lastName = lastName;
     }
 
-    public List<Role> getRoles() {
-
-        return this.roles;
-    }
-
-    public void setRoles(List<Role> roles) {
-
-        this.roles = roles;
-    }
-
     public String getPassword() {
 
         return this.password;
@@ -132,6 +129,16 @@ public class User extends Aspect implements Serializable, Cloneable {
         this.domain = domain;
     }
 
+    public List<Role> getRoles() {
+
+        return this.roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+
+        this.roles = roles;
+    }
+
     @Transient
     public String[] getRoleValues() {
 
@@ -142,6 +149,16 @@ public class User extends Aspect implements Serializable, Cloneable {
             roles[i] = this.getRoles().get(i).getName();
         }
         return roles;
+    }
+
+    public List<Account> getAccounts() {
+
+        return this.accounts;
+    }
+
+    public void setAccounts(List<Account> accounts) {
+
+        this.accounts = accounts;
     }
 
     /**

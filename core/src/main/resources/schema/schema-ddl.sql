@@ -668,11 +668,18 @@ CREATE  TABLE IF NOT EXISTS domain (
 id BIGINT NOT NULL AUTO_INCREMENT ,
 name VARCHAR(255) NOT NULL ,
 description VARCHAR(100) NULL ,
+parent_id BIGINT NULL ,
 version INT NULL DEFAULT 0,
 created_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 PRIMARY KEY (id) ,
-UNIQUE INDEX domain_name_uq (name ASC) )
+UNIQUE INDEX domain_name_uq (name ASC) ,
+INDEX domain_parent_idx (parent_id ASC) ,
+CONSTRAINT domain_domain_fk
+FOREIGN KEY (parent_id )
+REFERENCES domain (id )
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION)
 ENGINE = InnoDB//
 SHOW WARNINGS//
 
@@ -755,6 +762,39 @@ REFERENCES role (id )
   ON UPDATE NO ACTION,
 INDEX userrole_user_idx (user_id ASC) ,
 CONSTRAINT userrole_user_fk
+FOREIGN KEY (user_id )
+REFERENCES user (id )
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION)
+ENGINE = InnoDB//
+SHOW WARNINGS//
+
+-- -----------------------------------------------------
+-- Table UserAccount
+-- -----------------------------------------------------
+DROP SEQUENCE IF EXISTS useraccount_seq //
+CREATE SEQUENCE useraccount_seq start with 1000 minvalue 1000 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
+DO SETVAL(useraccount_seq, 1001, 0) //
+
+DROP TABLE IF EXISTS useraccount //
+SHOW WARNINGS//
+
+CREATE  TABLE IF NOT EXISTS useraccount (
+id BIGINT NOT NULL AUTO_INCREMENT ,
+version INT NULL DEFAULT 0,
+created_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+user_id BIGINT NOT NULL ,
+account_id BIGINT NOT NULL ,
+PRIMARY KEY (id) ,
+INDEX useraccount_account_idx (account_id ASC) ,
+CONSTRAINT useraccount_account_fk
+FOREIGN KEY (account_id )
+REFERENCES account (id )
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION,
+INDEX useraccount_user_idx (user_id ASC) ,
+CONSTRAINT useraccount_user_fk
 FOREIGN KEY (user_id )
 REFERENCES user (id )
   ON DELETE NO ACTION

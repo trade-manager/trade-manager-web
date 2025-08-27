@@ -230,7 +230,7 @@ public class Strategy extends Aspect implements Serializable, Cloneable {
     }
 
     /**
-     * Method getStrategyManager.
+     * Method hasStrategyManager.
      *
      * @return boolean
      */

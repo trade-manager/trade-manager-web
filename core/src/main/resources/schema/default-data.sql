@@ -205,7 +205,6 @@ INSERT INTO entrylimit (id,start_price,end_price,limit_amount, percent_of_price,
 INSERT INTO entrylimit (id,start_price,end_price,limit_amount, percent_of_price, percent_of_margin, share_round, pivot_range, price_round) VALUES (9,'1000.01','3000','0.30','0.02','0','10', '0.5', '0.50')//
 COMMIT//
 
-
 INSERT INTO portfolio (id, name, alias, description, is_default) VALUES (1, 'Paper', 'Paper Account','Paper trading account', 1)//
 COMMIT//
 

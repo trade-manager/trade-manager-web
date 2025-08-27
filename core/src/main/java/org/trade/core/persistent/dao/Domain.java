@@ -2,6 +2,9 @@ package org.trade.core.persistent.dao;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import org.trade.core.dao.Aspect;
 
@@ -24,6 +27,10 @@ public class Domain extends Aspect implements Serializable, Cloneable {
 
     @Column(name = "description")
     private String description;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "parent_id")
+    private Domain domain;
 
     private Domain() {
     }
@@ -50,13 +57,39 @@ public class Domain extends Aspect implements Serializable, Cloneable {
     }
 
     /**
+     * Method getParent.
+     *
+     * @return Domain
+     */
+    public Domain getParent() {
+        return this.domain;
+    }
+
+    /**
+     * Method setParent.
+     *
+     * @param domain Domain
+     */
+    public void setParent(Domain domain) {
+        this.domain = domain;
+    }
+
+    /**
+     * Method hasParent.
+     *
+     * @return boolean
+     */
+    public boolean hasParent() {
+        return null != getParent();
+    }
+
+    /**
      * Method clone.
      *
      * @return Object
      */
     public Object clone() throws CloneNotSupportedException {
 
-        Domain domain = (Domain) super.clone();
-        return domain;
+        return (Domain) super.clone();
     }
 }
