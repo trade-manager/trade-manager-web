@@ -70,6 +70,9 @@ public class Account extends Aspect implements Serializable, Cloneable {
     @ManyToMany(mappedBy = "accounts")
     private List<Portfolio> portfolios = new ArrayList<>(0);
 
+    @ManyToMany(mappedBy = "accounts")
+    private List<User> users = new ArrayList<>(0);
+
     public Account() {
 
         this.accountType = AccountType.INDIVIDUAL;
@@ -353,6 +356,24 @@ public class Account extends Aspect implements Serializable, Cloneable {
      */
     public void setPortfolios(List<Portfolio> portfolios) {
         this.portfolios = portfolios;
+    }
+
+    /**
+     * Method getUsers.
+     *
+     * @return List<User>
+     */
+    public List<User> getUsers() {
+        return this.users;
+    }
+
+    /**
+     * Method setUsers.
+     *
+     * @param users List<User>
+     */
+    public void setUsers(List<User> users) {
+        this.users = users;
     }
 
     /**
