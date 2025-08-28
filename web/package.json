@@ -1,0 +1,33 @@
+{
+  "name": "trade-manager",
+  "version": "0.0.1",
+  "description": "Trade Manager",
+  "author": "Simon Allen",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "react-scripts": "3.4.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "testInteractive": "react-scripts test --env=jsdom",
+    "test": "react-scripts test --env=jsdom --watchAll=false",
+    "eject": "react-scripts eject"
+  },
+  "proxy": "http://localhost:8080",
+  "devDependencies": {},
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
