@@ -1,6 +1,7 @@
 package org.trade.web;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -13,8 +14,8 @@ import org.trade.core.ApplicationProfileInitializer;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-//@SpringBootApplication(exclude = {SecurityAutoConfiguration.class}, scanBasePackages = {"org.trade.core", "org.trade.web"})
-@SpringBootApplication(scanBasePackages = {"org.trade.core", "org.trade.web"})
+@SpringBootApplication(exclude = {SecurityAutoConfiguration.class}, scanBasePackages = {"org.trade.core", "org.trade.web"})
+//@SpringBootApplication(scanBasePackages = {"org.trade.core", "org.trade.web"})
 @ConfigurationPropertiesScan("org.trade.core")
 public class TradeApplication {
 
