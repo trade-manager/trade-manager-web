@@ -46,7 +46,7 @@ public class User extends Aspect implements Serializable, Cloneable {
     private String password;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "domain_id", nullable = false)
+    @JoinColumn(name = "domain", nullable = false)
     private Domain domain;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})

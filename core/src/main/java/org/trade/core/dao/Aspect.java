@@ -28,6 +28,10 @@ public abstract class Aspect extends AbstractPersistable<Long> {
     @Column(name = "updated_date", nullable = false)
     private ZonedDateTime updatedDate;
 
+    // Default is domain global
+    @Column(name = "domain_id", columnDefinition = "BIGINT DEFAULT 1", nullable = false)
+    private Long domainId;
+
     @Transient
     private boolean dirty = false;
 
@@ -47,6 +51,11 @@ public abstract class Aspect extends AbstractPersistable<Long> {
 
         createdDate = TradingCalendar.getDateTimeNowMarketTimeZone();
         updatedDate = TradingCalendar.getDateTimeNowMarketTimeZone();
+
+        if (null == this.domainId) {
+
+            domainId = 1L;
+        }
     }
 
     @PreUpdate
@@ -127,6 +136,27 @@ public abstract class Aspect extends AbstractPersistable<Long> {
      */
     public void setVersion(Integer version) {
         this.version = version;
+    }
+
+    /**
+     * Method getDomainId
+     *
+     * @return Long
+     */
+    public Long getDomainId() {
+
+        return domainId;
+    }
+
+    /**
+     * Method setDomainId.
+     *
+     * @param domainId Long
+     */
+    public void setDomainId(Long domainId) {
+
+        this.domainId = domainId;
+        ;
     }
 
     /**

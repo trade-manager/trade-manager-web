@@ -295,7 +295,9 @@ public class Percent extends ValueType implements Comparator<Percent>, Comparabl
         if (null != value) {
 
             return (value.toString());
-        } else return Objects.requireNonNullElse(invalidValue, "");
+        } else {
+            return Objects.requireNonNullElse(invalidValue, "");
+        }
     }
 
     /**
