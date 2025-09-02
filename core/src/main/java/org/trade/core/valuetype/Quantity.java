@@ -24,16 +24,11 @@ public class Quantity extends ValueType implements Comparator<Quantity>, Compara
     private static final long serialVersionUID = 4937298768811778585L;
 
     public final static String QUANTITY_POSITIVE_7_0 = "#(,)###(,)###";
-
     public final static String QUANTITY_NONNEGATIVE_8_0 = "##(,)###(,)###";
-
     public final static String QUANTITY_POSITIVE_10_0 = "#(,)###(,)###(,)###";
-
     public final static String QUANTITY_NONNEGATIVE_11_0 = "##(,)###(,)###(,)###";
-
     public final static Quantity ZERO = new Quantity(0);
-
-    protected static Boolean m_ascending = true;
+    protected static Boolean ascending = true;
 
     static {
         // Register the appropriate converters
@@ -41,15 +36,9 @@ public class Quantity extends ValueType implements Comparator<Quantity>, Compara
         JavaTypeTranslator.registerDynamicTypeConverter(new MoneyToObject());
     }
 
-    //
-    // Private Attributes
-    //
-
-    private Integer m_value = null;
-
-    private String m_format = QUANTITY_NONNEGATIVE_11_0;
-
-    private String m_invalidValue = null; // This will be null if there were
+    private Integer value = null;
+    private String format = QUANTITY_NONNEGATIVE_11_0;
+    private String invalidValue = null; // This will be null if there were
 
     /**
      * Default Constructor. Create an object and initialize it to empty.
@@ -63,16 +52,21 @@ public class Quantity extends ValueType implements Comparator<Quantity>, Compara
      * @param quantityString String
      */
     public Quantity(String quantityString) {
+
         if ((null != quantityString) && (!quantityString.isEmpty())) {
+
             // This is necessary because Java will parse strings with multiple
             // dashes
             if (quantityString.indexOf("-") != quantityString.lastIndexOf("-")) {
-                m_invalidValue = quantityString;
+
+                invalidValue = quantityString;
             } else {
+
                 try {
+
                     setInteger(Integer.valueOf(quantityString));
                 } catch (NumberFormatException e) {
-                    m_invalidValue = quantityString;
+                    invalidValue = quantityString;
                 }
             }
         }
@@ -84,16 +78,8 @@ public class Quantity extends ValueType implements Comparator<Quantity>, Compara
      * @param d int
      */
     public Quantity(int d) {
-        setInteger(d);
-    }
 
-    /**
-     * Constructor for Quantity.
-     *
-     * @param bd Integer
-     */
-    public Quantity(Integer bd) {
-        setInteger(bd);
+        setInteger(d);
     }
 
     /**
@@ -102,9 +88,10 @@ public class Quantity extends ValueType implements Comparator<Quantity>, Compara
      * @param quantity Quantity
      */
     public Quantity(Quantity quantity) {
-        m_value = quantity.m_value;
-        m_format = quantity.m_format;
-        m_invalidValue = quantity.m_invalidValue;
+
+        value = quantity.value;
+        format = quantity.format;
+        invalidValue = quantity.invalidValue;
     }
 
     /**
@@ -115,7 +102,8 @@ public class Quantity extends ValueType implements Comparator<Quantity>, Compara
      * @param format String
      */
     public void setFormat(String format) {
-        m_format = format;
+
+        this.format = format;
     }
 
     /**
@@ -124,7 +112,8 @@ public class Quantity extends ValueType implements Comparator<Quantity>, Compara
      * @return String
      */
     public String getFormat() {
-        return m_format;
+
+        return format;
     }
 
     /**
@@ -152,8 +141,10 @@ public class Quantity extends ValueType implements Comparator<Quantity>, Compara
         boolean zero = true;
 
         if (getFormat().equals(QUANTITY_POSITIVE_7_0)) {
+
             zero = false;
         } else if (getFormat().equals(QUANTITY_POSITIVE_10_0)) {
+
             zero = false;
         }
 
@@ -169,7 +160,6 @@ public class Quantity extends ValueType implements Comparator<Quantity>, Compara
     public boolean canBeNegative() {
 
         // Currently all formats prohibit negative numbers.
-
         return false;
     }
 
@@ -179,9 +169,9 @@ public class Quantity extends ValueType implements Comparator<Quantity>, Compara
      * @return boolean
      */
     public boolean isNegative() {
-        assertDefined();
 
-        return m_value.compareTo(0) < 0;
+        assertDefined();
+        return value.compareTo(0) < 0;
     }
 
     /**
@@ -191,7 +181,7 @@ public class Quantity extends ValueType implements Comparator<Quantity>, Compara
      */
     public boolean isEmpty() {
 
-        return (null == m_value) || (null != m_invalidValue);
+        return (null == value) || (null != invalidValue);
     }
 
     /**
@@ -201,6 +191,7 @@ public class Quantity extends ValueType implements Comparator<Quantity>, Compara
      * @return Object
      */
     public Object getSQLObject() {
+
         return (getIntegerValue());
     }
 
@@ -211,9 +202,9 @@ public class Quantity extends ValueType implements Comparator<Quantity>, Compara
      * @return A BigDecimal representing the monetary value.
      */
     public Integer getIntegerValue() {
-        assertDefined();
 
-        return m_value;
+        assertDefined();
+        return value;
     }
 
     /**
@@ -225,10 +216,11 @@ public class Quantity extends ValueType implements Comparator<Quantity>, Compara
 
         assertDefined();
 
-        if (null == m_value)
-            return null;
+        if (null == value) {
 
-        return new BigInteger(m_value.toString());
+            return null;
+        }
+        return new BigInteger(value.toString());
     }
 
     /**
@@ -237,9 +229,14 @@ public class Quantity extends ValueType implements Comparator<Quantity>, Compara
      * @return String
      */
     public String toString() {
-        if (null != m_value) {
-            return (m_value.toString());
-        } else return Objects.requireNonNullElse(m_invalidValue, "");
+
+        if (null != value) {
+
+            return (value.toString());
+        } else {
+
+            return Objects.requireNonNullElse(invalidValue, "");
+        }
     }
 
     /**
@@ -248,12 +245,17 @@ public class Quantity extends ValueType implements Comparator<Quantity>, Compara
      * @param value Object
      */
     public void setValue(Object value) throws ValueTypeException {
+
         if (value instanceof Quantity) {
-            setInteger(((Quantity) value).m_value);
+
+            setInteger(((Quantity) value).value);
         } else {
+
             try {
+
                 setInteger(((Quantity) Objects.requireNonNull(JavaTypeTranslator.convert(Quantity.class, value))).getIntegerValue());
             } catch (Exception ex) {
+
                 throw new ValueTypeException(ex);
             }
         }
@@ -266,17 +268,21 @@ public class Quantity extends ValueType implements Comparator<Quantity>, Compara
      * @return Money the result
      */
     public Quantity add(Quantity quantity) {
+
         assertDefined();
 
-        if (null == m_value) {
+        if (null == value) {
+
             if (null == quantity.getIntegerValue()) {
+
                 return new Quantity();
             } else {
+
                 return new Quantity(quantity.getIntegerValue());
             }
         }
 
-        Integer value = m_value + quantity.getIntegerValue();
+        Integer value = this.value + quantity.getIntegerValue();
         return new Quantity(value);
     }
 
@@ -287,13 +293,14 @@ public class Quantity extends ValueType implements Comparator<Quantity>, Compara
      * @return Money the result
      */
     public Quantity subtract(Quantity quantity) {
+
         assertDefined();
 
-        if (null == m_value) {
+        if (null == value) {
+
             return (quantity);
         }
-
-        Integer value = m_value - quantity.getIntegerValue();
+        Integer value = this.value - quantity.getIntegerValue();
         return new Quantity(value);
     }
 
@@ -304,11 +311,10 @@ public class Quantity extends ValueType implements Comparator<Quantity>, Compara
      * @return boolean result.
      */
     public boolean isLessThen(Quantity quantity) {
-        assertDefined();
 
+        assertDefined();
         Integer thisValue = notNull(this);
         Integer parameter = notNull(quantity);
-
         return (thisValue.compareTo(parameter) < 0);
     }
 
@@ -319,11 +325,10 @@ public class Quantity extends ValueType implements Comparator<Quantity>, Compara
      * @return boolean result.
      */
     public boolean isLessThenOrEqualTo(Quantity quantity) {
-        assertDefined();
 
+        assertDefined();
         Integer thisValue = notNull(this);
         Integer parameter = notNull(quantity);
-
         return (thisValue.compareTo(parameter) <= 0);
     }
 
@@ -334,11 +339,10 @@ public class Quantity extends ValueType implements Comparator<Quantity>, Compara
      * @return boolean result.
      */
     public boolean isGreaterThen(Quantity quantity) {
-        assertDefined();
 
+        assertDefined();
         Integer thisValue = notNull(this);
         Integer parameter = notNull(quantity);
-
         return (thisValue.compareTo(parameter) > 0);
     }
 
@@ -349,11 +353,10 @@ public class Quantity extends ValueType implements Comparator<Quantity>, Compara
      * @return boolean result.
      */
     public boolean isGreaterThenOrEqualTo(Quantity quantity) {
-        assertDefined();
 
+        assertDefined();
         Integer thisValue = notNull(this);
         Integer parameter = notNull(quantity);
-
         return (thisValue.compareTo(parameter) >= 0);
     }
 
@@ -365,7 +368,8 @@ public class Quantity extends ValueType implements Comparator<Quantity>, Compara
      * @return boolean
      */
     public boolean isValid(IValidator validator, IExceptionMessageListener receiver) {
-        return validator.isValid(m_value, m_invalidValue, null, receiver);
+
+        return validator.isValid(value, invalidValue, null, receiver);
     }
 
     /**
@@ -376,6 +380,7 @@ public class Quantity extends ValueType implements Comparator<Quantity>, Compara
      * @return IValidator
      */
     public IValidator getDefaultValidator(IMessageFactory messageFactory, boolean isMandatory) {
+
         // This allow non-negative 11.2
         return new DecimalValidator(messageFactory, false, true, 11, 2, isMandatory);
     }
@@ -385,11 +390,13 @@ public class Quantity extends ValueType implements Comparator<Quantity>, Compara
      *
      * @return Object
      */
-
     public Object clone() {
+
         try {
+
             return super.clone();
         } catch (CloneNotSupportedException e) {
+
             // will never happen
             return null;
         }
@@ -402,6 +409,7 @@ public class Quantity extends ValueType implements Comparator<Quantity>, Compara
      * @return int
      */
     public int compareTo(final Quantity other) {
+
         return CoreUtils.nullSafeComparator(this.getBigIntegerValue(), other.getBigIntegerValue());
     }
 
@@ -415,7 +423,9 @@ public class Quantity extends ValueType implements Comparator<Quantity>, Compara
     public int compare(Quantity o1, Quantity o2) {
 
         int returnVal = CoreUtils.nullSafeComparator(o1.getBigIntegerValue(), o2.getBigIntegerValue());
-        if (m_ascending.equals(Boolean.FALSE)) {
+
+        if (ascending.equals(Boolean.FALSE)) {
+
             returnVal = returnVal * -1;
         }
         return returnVal;
@@ -429,19 +439,18 @@ public class Quantity extends ValueType implements Comparator<Quantity>, Compara
      */
     public boolean equals(Object objectToCompare) {
 
-        if (super.equals(objectToCompare))
+        if (super.equals(objectToCompare)) {
+
             return true;
+        }
 
         if (objectToCompare instanceof Quantity) {
+
             return CoreUtils.nullSafeComparator(((Quantity) objectToCompare).getBigIntegerValue(),
                     this.getBigIntegerValue()) == 0;
         }
         return false;
     }
-
-    //
-    // Private Methods
-    //
 
     /**
      * Method setInteger.
@@ -449,9 +458,10 @@ public class Quantity extends ValueType implements Comparator<Quantity>, Compara
      * @param value Integer
      */
     private void setInteger(Integer value) {
-        m_value = value;
+
+        this.value = value;
         // Clear any invalid values
-        m_invalidValue = null;
+        invalidValue = null;
     }
 
     /**
@@ -461,18 +471,23 @@ public class Quantity extends ValueType implements Comparator<Quantity>, Compara
      * @return Integer
      */
     private Integer notNull(Quantity value) {
+
         if (null == value) {
+
             return (0);
         } else {
+
             return (value.getIntegerValue());
         }
     }
 
     private void assertDefined() {
-        if (null != m_invalidValue) {
+
+        if (null != invalidValue) {
+
             throw new NumberFormatException(
                     "Attempting to use a Quantity that was not properly initialized.  Invalid value is: "
-                            + m_invalidValue);
+                            + invalidValue);
         }
     }
 }

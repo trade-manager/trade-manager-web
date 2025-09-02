@@ -21,11 +21,14 @@ public class PercentToObject implements IJavaDynamicTypeConverter {
      * @return Object
      */
     public Object convert(Class<?> targetType, Object valueToConvert) throws JavaTypeTranslatorException {
+
         Object rVal;
 
         if (valueToConvert instanceof Percent) {
+
             rVal = JavaTypeTranslator.convert(targetType, valueToConvert.toString());
         } else {
+
             throw new JavaTypeTranslatorException("Value to convert must be a Percent");
         }
 

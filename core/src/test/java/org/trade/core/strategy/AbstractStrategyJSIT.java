@@ -44,7 +44,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */

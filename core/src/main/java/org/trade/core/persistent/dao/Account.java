@@ -8,6 +8,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import org.trade.core.dao.Aspect;
+import org.trade.core.persistent.user.User;
 import org.trade.core.valuetype.AccountType;
 import org.trade.core.valuetype.Currency;
 

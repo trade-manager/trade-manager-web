@@ -24,7 +24,7 @@ public class Decimal extends ValueType implements Comparator<Decimal>, Comparabl
 
     public final static Decimal ZERO = new Decimal(0L, 0);
 
-    protected static Boolean m_ascending = true;
+    protected static Boolean ascending = true;
 
     static {
         // Register the appropriate converters
@@ -38,9 +38,9 @@ public class Decimal extends ValueType implements Comparator<Decimal>, Comparabl
     public static String DECIMAL_POSITIVE_10_SCALE = "##########";
     public static String DECIMAL_NONNEGATIVE_11_SCALE = "###########";
     private static int SCALE = 0;
-    private String m_format = DECIMAL_NONNEGATIVE_11_SCALE;
-    private BigDecimal m_value = null;
-    private String m_invalidValue = null; // This will be null if there were
+    private String format = DECIMAL_NONNEGATIVE_11_SCALE;
+    private BigDecimal value = null;
+    private String invalidValue = null; // This will be null if there were
 
     /**
      * Default Constructor. Create an object and initialize it to empty.
@@ -54,7 +54,9 @@ public class Decimal extends ValueType implements Comparator<Decimal>, Comparabl
             DECIMAL_NONNEGATIVE_8_SCALE = "########.";
             DECIMAL_POSITIVE_10_SCALE = "##########.";
             DECIMAL_NONNEGATIVE_11_SCALE = "###########.";
+
             for (int i = 0; i < scale; i++) {
+
                 DECIMAL_POSITIVE_7_SCALE = DECIMAL_POSITIVE_7_SCALE + "#";
                 DECIMAL_NONNEGATIVE_8_SCALE = DECIMAL_NONNEGATIVE_8_SCALE + "#";
                 DECIMAL_POSITIVE_10_SCALE = DECIMAL_POSITIVE_10_SCALE + "#";
@@ -69,17 +71,24 @@ public class Decimal extends ValueType implements Comparator<Decimal>, Comparabl
      * @param deciamlString String
      */
     public Decimal(String deciamlString, int scale) {
+
         this(scale);
+
         if ((null != deciamlString) && (!deciamlString.isEmpty())) {
+
             // This is necessary because Java will parse strings with multiple
             // dashes
             if (deciamlString.indexOf("-") != deciamlString.lastIndexOf("-")) {
-                m_invalidValue = deciamlString;
+
+                invalidValue = deciamlString;
             } else {
+
                 try {
+
                     setBigDecimal(new BigDecimal(deciamlString));
                 } catch (NumberFormatException e) {
-                    m_invalidValue = deciamlString;
+
+                    invalidValue = deciamlString;
                 }
             }
         }
@@ -91,6 +100,7 @@ public class Decimal extends ValueType implements Comparator<Decimal>, Comparabl
      * @param d double
      */
     public Decimal(double d, int scale) {
+
         this(scale);
         setBigDecimal(new BigDecimal(d));
     }
@@ -101,6 +111,7 @@ public class Decimal extends ValueType implements Comparator<Decimal>, Comparabl
      * @param d Double
      */
     public Decimal(Double d, int scale) {
+
         this(scale);
         setBigDecimal(BigDecimal.valueOf(d));
     }
@@ -111,6 +122,7 @@ public class Decimal extends ValueType implements Comparator<Decimal>, Comparabl
      * @param bd BigDecimal
      */
     public Decimal(BigDecimal bd, int scale) {
+
         this(scale);
         setBigDecimal(bd);
     }
@@ -121,10 +133,11 @@ public class Decimal extends ValueType implements Comparator<Decimal>, Comparabl
      * @param decimal Decimal
      */
     public Decimal(Decimal decimal, int scale) {
+
         this(scale);
-        m_value = decimal.m_value;
-        m_format = decimal.m_format;
-        m_invalidValue = decimal.m_invalidValue;
+        value = decimal.value;
+        format = decimal.format;
+        invalidValue = decimal.invalidValue;
     }
 
     /**
@@ -134,6 +147,7 @@ public class Decimal extends ValueType implements Comparator<Decimal>, Comparabl
      * @param decimalAmount    int
      */
     public Decimal(long nonDecimalAmount, int decimalAmount, int scale) {
+
         this(scale);
         // Set up the default constraints for IP's basic Money values
         BigDecimal val = new BigDecimal((nonDecimalAmount * 100) + decimalAmount);
@@ -148,7 +162,8 @@ public class Decimal extends ValueType implements Comparator<Decimal>, Comparabl
      * @param format String
      */
     public void setFormat(String format) {
-        m_format = format;
+
+        this.format = format;
     }
 
     /**
@@ -157,7 +172,8 @@ public class Decimal extends ValueType implements Comparator<Decimal>, Comparabl
      * @return String
      */
     public String getFormat() {
-        return m_format;
+
+        return format;
     }
 
     /**
@@ -166,12 +182,17 @@ public class Decimal extends ValueType implements Comparator<Decimal>, Comparabl
      * @return int
      */
     public int getMaxLength() {
+
         int maxLength = 14;
+
         if (getFormat().equals(DECIMAL_NONNEGATIVE_8_SCALE)) {
+
             maxLength = DECIMAL_NONNEGATIVE_8_SCALE.length();
         } else if (getFormat().equals(DECIMAL_POSITIVE_10_SCALE)) {
+
             maxLength = DECIMAL_POSITIVE_10_SCALE.length();
         } else if (getFormat().equals(DECIMAL_POSITIVE_7_SCALE)) {
+
             maxLength = DECIMAL_POSITIVE_7_SCALE.length();
         }
         return maxLength;
@@ -184,10 +205,14 @@ public class Decimal extends ValueType implements Comparator<Decimal>, Comparabl
      * @return boolean
      */
     public boolean canBeZero() {
+
         boolean zero = true;
+
         if (getFormat().equals(DECIMAL_POSITIVE_7_SCALE)) {
+
             zero = false;
         } else if (getFormat().equals(DECIMAL_POSITIVE_10_SCALE)) {
+
             zero = false;
         }
         return zero;
@@ -200,6 +225,7 @@ public class Decimal extends ValueType implements Comparator<Decimal>, Comparabl
      * @return boolean
      */
     public boolean canBeNegative() {
+
         return true;
     }
 
@@ -209,8 +235,9 @@ public class Decimal extends ValueType implements Comparator<Decimal>, Comparabl
      * @return boolean
      */
     public boolean isNegative() {
+
         assertDefined();
-        return m_value.compareTo(new BigDecimal(0)) < 0;
+        return value.compareTo(new BigDecimal(0)) < 0;
     }
 
     /**
@@ -220,19 +247,20 @@ public class Decimal extends ValueType implements Comparator<Decimal>, Comparabl
      */
     public boolean isEmpty() {
 
-        return (null == m_value) || (null != m_invalidValue);
+        return (null == value) || (null != invalidValue);
     }
 
     /**
      * @return The value before the decimal point in the money value.
      */
     public long getNonDecimalAmount() {
-        assertDefined();
 
+        assertDefined();
         long nonDecimalAmount = 0;
 
-        if (null != m_value) {
-            nonDecimalAmount = m_value.longValue();
+        if (null != value) {
+
+            nonDecimalAmount = value.longValue();
         }
 
         return nonDecimalAmount;
@@ -245,6 +273,7 @@ public class Decimal extends ValueType implements Comparator<Decimal>, Comparabl
      * @return Object
      */
     public Object getSQLObject() {
+
         return (getBigDecimalValue());
     }
 
@@ -252,17 +281,16 @@ public class Decimal extends ValueType implements Comparator<Decimal>, Comparabl
      * @return The value after the decimal point in the money value.
      */
     public int getDecimalAmount() {
-        assertDefined();
 
+        assertDefined();
         int decimalAmount = 0;
 
-        if (null != m_value) {
-            BigInteger tot = (m_value.movePointRight(SCALE)).toBigInteger();
-            BigInteger sub = m_value.toBigInteger();
+        if (null != value) {
+
+            BigInteger tot = (value.movePointRight(SCALE)).toBigInteger();
+            BigInteger sub = value.toBigInteger();
             sub = sub.multiply(new BigInteger(MULTIPLIER));
-
             BigInteger res = tot.subtract(sub);
-
             decimalAmount = res.intValue();
         }
 
@@ -276,9 +304,9 @@ public class Decimal extends ValueType implements Comparator<Decimal>, Comparabl
      * @return A BigDecimal representing the monetary value.
      */
     public BigDecimal getBigDecimalValue() {
-        assertDefined();
 
-        return m_value;
+        assertDefined();
+        return value;
     }
 
     /**
@@ -287,9 +315,14 @@ public class Decimal extends ValueType implements Comparator<Decimal>, Comparabl
      * @return String
      */
     public String toString() {
-        if (null != m_value) {
-            return (m_value.toString());
-        } else return Objects.requireNonNullElse(m_invalidValue, "");
+
+        if (null != value) {
+
+            return (value.toString());
+        } else {
+
+            return Objects.requireNonNullElse(invalidValue, "");
+        }
     }
 
     /**
@@ -298,12 +331,17 @@ public class Decimal extends ValueType implements Comparator<Decimal>, Comparabl
      * @param value Object
      */
     public void setValue(Object value) throws ValueTypeException {
+
         if (value instanceof Decimal) {
-            setBigDecimal(((Decimal) value).m_value);
+
+            setBigDecimal(((Decimal) value).value);
         } else {
+
             try {
+
                 setBigDecimal(((Decimal) Objects.requireNonNull(JavaTypeTranslator.convert(Decimal.class, value))).getBigDecimalValue());
             } catch (Exception ex) {
+
                 throw new ValueTypeException(ex);
             }
         }
@@ -316,17 +354,21 @@ public class Decimal extends ValueType implements Comparator<Decimal>, Comparabl
      * @return Money the result
      */
     public Decimal add(Decimal decimal) {
+
         assertDefined();
 
-        if (null == m_value) {
+        if (null == value) {
+
             if (null == decimal.getBigDecimalValue()) {
+
                 return new Decimal(SCALE);
             } else {
+
                 return new Decimal(decimal.getBigDecimalValue(), SCALE);
             }
         }
 
-        BigDecimal value = m_value.add(decimal.getBigDecimalValue());
+        BigDecimal value = this.value.add(decimal.getBigDecimalValue());
         return new Decimal(value, SCALE);
     }
 
@@ -337,13 +379,15 @@ public class Decimal extends ValueType implements Comparator<Decimal>, Comparabl
      * @return Money the result
      */
     public Decimal subtract(Decimal decimal) {
+
         assertDefined();
 
-        if (null == m_value) {
+        if (null == value) {
+
             return (decimal);
         }
 
-        BigDecimal value = m_value.subtract(decimal.getBigDecimalValue());
+        BigDecimal value = this.value.subtract(decimal.getBigDecimalValue());
         return new Decimal(value, SCALE);
     }
 
@@ -354,11 +398,10 @@ public class Decimal extends ValueType implements Comparator<Decimal>, Comparabl
      * @return boolean result.
      */
     public boolean isLessThan(Decimal decimal) {
-        assertDefined();
 
+        assertDefined();
         BigDecimal thisValue = notNull(this);
         BigDecimal parameter = notNull(decimal);
-
         return (thisValue.compareTo(parameter) < 0);
     }
 
@@ -369,11 +412,10 @@ public class Decimal extends ValueType implements Comparator<Decimal>, Comparabl
      * @return boolean result.
      */
     public boolean isLessThanOrEqualTo(Decimal decimal) {
-        assertDefined();
 
+        assertDefined();
         BigDecimal thisValue = notNull(this);
         BigDecimal parameter = notNull(decimal);
-
         return (thisValue.compareTo(parameter) <= 0);
     }
 
@@ -384,11 +426,10 @@ public class Decimal extends ValueType implements Comparator<Decimal>, Comparabl
      * @return boolean result.
      */
     public boolean isGreaterThan(Decimal decimal) {
-        assertDefined();
 
+        assertDefined();
         BigDecimal thisValue = notNull(this);
         BigDecimal parameter = notNull(decimal);
-
         return (thisValue.compareTo(parameter) > 0);
     }
 
@@ -399,11 +440,10 @@ public class Decimal extends ValueType implements Comparator<Decimal>, Comparabl
      * @return boolean result.
      */
     public boolean isGreaterThanOrEqualTo(Decimal decimal) {
-        assertDefined();
 
+        assertDefined();
         BigDecimal thisValue = notNull(this);
         BigDecimal parameter = notNull(decimal);
-
         return (thisValue.compareTo(parameter) >= 0);
     }
 
@@ -415,7 +455,8 @@ public class Decimal extends ValueType implements Comparator<Decimal>, Comparabl
      * @return boolean
      */
     public boolean isValid(IValidator validator, IExceptionMessageListener receiver) {
-        return validator.isValid(m_value, m_invalidValue, null, receiver);
+
+        return validator.isValid(value, invalidValue, null, receiver);
     }
 
     /**
@@ -426,6 +467,7 @@ public class Decimal extends ValueType implements Comparator<Decimal>, Comparabl
      * @return IValidator
      */
     public IValidator getDefaultValidator(IMessageFactory messageFactory, boolean isMandatory) {
+
         // This allow non-negative 11.2
         return new DecimalValidator(messageFactory, false, true, 11, 2, isMandatory);
     }
@@ -438,9 +480,9 @@ public class Decimal extends ValueType implements Comparator<Decimal>, Comparabl
      */
 
     public double doubleValue() {
-        assertDefined();
 
-        return m_value.doubleValue();
+        assertDefined();
+        return value.doubleValue();
     }
 
     /**
@@ -450,9 +492,12 @@ public class Decimal extends ValueType implements Comparator<Decimal>, Comparabl
      */
 
     public Object clone() {
+
         try {
+
             return super.clone();
         } catch (CloneNotSupportedException e) {
+
             // will never happen
             return null;
         }
@@ -465,6 +510,7 @@ public class Decimal extends ValueType implements Comparator<Decimal>, Comparabl
      * @return int
      */
     public int compareTo(final Decimal other) {
+
         return CoreUtils.nullSafeComparator(this.getBigDecimalValue(), other.getBigDecimalValue());
     }
 
@@ -478,7 +524,9 @@ public class Decimal extends ValueType implements Comparator<Decimal>, Comparabl
     public int compare(Decimal o1, Decimal o2) {
 
         int returnVal = CoreUtils.nullSafeComparator(o1.getBigDecimalValue(), o2.getBigDecimalValue());
-        if (m_ascending.equals(Boolean.FALSE)) {
+
+        if (ascending.equals(Boolean.FALSE)) {
+
             returnVal = returnVal * -1;
         }
         return returnVal;
@@ -492,10 +540,13 @@ public class Decimal extends ValueType implements Comparator<Decimal>, Comparabl
      */
     public boolean equals(Object objectToCompare) {
 
-        if (super.equals(objectToCompare))
+        if (super.equals(objectToCompare)) {
+
             return true;
+        }
 
         if (objectToCompare instanceof Decimal) {
+
             return CoreUtils.nullSafeComparator(((Decimal) objectToCompare).getBigDecimalValue(),
                     this.getBigDecimalValue()) == 0;
         }
@@ -512,15 +563,18 @@ public class Decimal extends ValueType implements Comparator<Decimal>, Comparabl
      * @param value BigDecimal
      */
     private void setBigDecimal(BigDecimal value) {
+
         if (value == null) {
-            m_value = new BigDecimal("0.0");
+
+            this.value = new BigDecimal("0.0");
         } else {
-            // m_value = value;
-            m_value = value.setScale(SCALE, RoundingMode.HALF_EVEN);
+
+            // value = value;
+            this.value = value.setScale(SCALE, RoundingMode.HALF_EVEN);
         }
 
         // Clear any invalid values
-        m_invalidValue = null;
+        invalidValue = null;
     }
 
     /**
@@ -530,18 +584,22 @@ public class Decimal extends ValueType implements Comparator<Decimal>, Comparabl
      * @return BigDecimal
      */
     private BigDecimal notNull(Decimal value) {
+
         if (null == value) {
+
             return (new BigDecimal("0.0"));
         } else {
+
             return (value.getBigDecimalValue());
         }
     }
 
     private void assertDefined() {
-        if (null != m_invalidValue) {
+
+        if (null != invalidValue) {
             throw new NumberFormatException(
                     "Attempting to use a Money that was not properly initialized.  Invalid value is: "
-                            + m_invalidValue);
+                            + invalidValue);
         }
     }
 }

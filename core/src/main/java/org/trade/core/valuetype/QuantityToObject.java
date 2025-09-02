@@ -24,8 +24,10 @@ public class QuantityToObject implements IJavaDynamicTypeConverter {
         Object rVal;
 
         if (valueToConvert instanceof Quantity) {
+
             rVal = JavaTypeTranslator.convert(targetType, valueToConvert.toString());
         } else {
+
             throw new JavaTypeTranslatorException("Value to convert must be a Quantity");
         }
 
