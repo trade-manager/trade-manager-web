@@ -3,7 +3,6 @@ package org.trade.core.persistent.dao;
 import org.junit.jupiter.api.Test;
 
 /**
- *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */

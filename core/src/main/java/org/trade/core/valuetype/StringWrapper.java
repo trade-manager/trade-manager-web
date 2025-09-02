@@ -25,7 +25,7 @@ public abstract class StringWrapper extends ValueType {
         JavaTypeTranslator.registerDynamicTypeConverter(new StringWrapperToObject());
     }
 
-    private String m_value = "";
+    private String value = "";
 
     /**
      * Default Constructor
@@ -60,7 +60,7 @@ public abstract class StringWrapper extends ValueType {
      * @return boolean
      */
     public boolean isValid(IValidator validator, IExceptionMessageListener receiver) {
-        return validator.isValid(m_value, null, null, receiver);
+        return validator.isValid(value, null, null, receiver);
     }
 
     /**
@@ -98,7 +98,7 @@ public abstract class StringWrapper extends ValueType {
      * @return boolean
      */
     public boolean isEmpty() {
-        return (m_value.isEmpty());
+        return (value.isEmpty());
     }
 
     /**
@@ -156,7 +156,7 @@ public abstract class StringWrapper extends ValueType {
      */
     public void setValue(StringWrapper value) {
         if (null != value) {
-            setInternalValue(value.m_value);
+            setInternalValue(value.value);
         } else {
             setInternalValue(null);
         }
@@ -172,7 +172,7 @@ public abstract class StringWrapper extends ValueType {
      * @return String
      */
     protected String getInternalValue() {
-        return (m_value);
+        return (value);
     }
 
     /**
@@ -182,9 +182,9 @@ public abstract class StringWrapper extends ValueType {
      */
     protected void setInternalValue(String value) {
         if (null == value) {
-            m_value = "";
+            this.value = "";
         } else {
-            m_value = value.trim();
+            this.value = value.trim();
         }
     }
 }

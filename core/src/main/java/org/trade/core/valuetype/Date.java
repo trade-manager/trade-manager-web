@@ -29,13 +29,9 @@ public class Date extends ValueType implements Comparator<Date>, Comparable<Date
     private static final long serialVersionUID = -5122615819171831028L;
 
     public final static String DATE_TIME_FORMAT = "yyyy-MM-dd'T'HHmmss'Z'";
-
     public final static String DATE_FORMAT = "yyyyMMdd";
-
     public final static int LEN_STRING_IN_DATE_TIME_FORMAT = 18;
-
     public final static int LEN_STRING_IN_DATE_FORMAT = 8;
-
     public static final Date NULLIPDATE = new Date(
             ZonedDateTime.of(LocalDateTime.ofEpochSecond(0, 0, ZoneOffset.UTC), ZoneOffset.UTC.normalized()));
 
@@ -45,19 +41,16 @@ public class Date extends ValueType implements Comparator<Date>, Comparable<Date
         JavaTypeTranslator.registerDynamicTypeConverter(new DateToObject());
     }
 
-    private ZonedDateTime m_date = null;
-
-    private String m_invalidDate = null;
-
-    private String m_format = null;
-
-    protected static Boolean m_ascending = true;
+    private ZonedDateTime date = null;
+    private String invalidDate = null;
+    private String format = null;
+    protected static Boolean ascending = true;
 
     /**
      * Default Constructor
      */
     public Date() {
-        m_date = null;
+        this.date = null;
     }
 
     /**
@@ -66,7 +59,7 @@ public class Date extends ValueType implements Comparator<Date>, Comparable<Date
      * @param date ZonedDateTime
      */
     public Date(ZonedDateTime date) {
-        m_date = date;
+        this.date = date;
     }
 
     /**
@@ -75,7 +68,7 @@ public class Date extends ValueType implements Comparator<Date>, Comparable<Date
      * @param date java.uti.Date
      */
     public Date(java.util.Date date) {
-        m_date = ZonedDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
+        this.date = ZonedDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
     }
 
     /**
@@ -94,26 +87,32 @@ public class Date extends ValueType implements Comparator<Date>, Comparable<Date
      * @param dateFormat String
      */
     public Date(String date, String dateFormat) {
+
         if ((date == null) || (date.isEmpty())) {
+
             return;
         }
 
         if (dateFormat == null) {
-            m_format = DATE_TIME_FORMAT;
+
+            format = DATE_TIME_FORMAT;
 
             if (date.length() == LEN_STRING_IN_DATE_FORMAT) {
-                m_format = DATE_FORMAT;
+
+                format = DATE_FORMAT;
             }
         } else {
-            m_format = dateFormat;
+            format = dateFormat;
         }
 
-        if ((m_format.equals(DATE_TIME_FORMAT) && !rightLengthForDateTime(date))
-                || (m_format.equals(DATE_FORMAT) && (date.length() != LEN_STRING_IN_DATE_FORMAT))) {
-            m_invalidDate = date;
+        if ((format.equals(DATE_TIME_FORMAT) && !rightLengthForDateTime(date))
+                || (format.equals(DATE_FORMAT) && (date.length() != LEN_STRING_IN_DATE_FORMAT))) {
+
+            invalidDate = date;
         } else {
-            m_date = TradingCalendar.getZonedDateTimeFromDateTimeString(date.trim(), m_format);
-            m_invalidDate = null;
+
+            this.date = TradingCalendar.getZonedDateTimeFromDateTimeString(date.trim(), format);
+            invalidDate = null;
         }
     }
 
@@ -121,18 +120,23 @@ public class Date extends ValueType implements Comparator<Date>, Comparable<Date
      * @return The Date this Date is representing
      */
     public ZonedDateTime getZonedDateTime() {
-        return (m_date);
+
+        return this.date;
     }
 
     /**
      * @return The Date this Date is representing
      */
     public java.util.Date getDate() {
+
         Instant instant;
+
         if (null != getZonedDateTime()) {
+
             instant = getZonedDateTime().toInstant();
             return java.util.Date.from(instant);
         }
+
         return null;
     }
 
@@ -146,27 +150,35 @@ public class Date extends ValueType implements Comparator<Date>, Comparable<Date
     public boolean equals(Object objectToCompare) {
 
         if (this == objectToCompare) {
+
             return true;
         }
+
         if (objectToCompare == null) {
+
             return false;
         }
 
         boolean rVal = false;
 
         // Do not compare on nulls
-        if (m_date != null) {
+        if (this.date != null) {
+
             ZonedDateTime cmpTo = null;
 
             if (objectToCompare instanceof Date) {
-                cmpTo = ((Date) objectToCompare).m_date;
+
+                cmpTo = ((Date) objectToCompare).date;
             } else if (objectToCompare instanceof java.util.Date) {
+
                 cmpTo = (ZonedDateTime) objectToCompare;
             }
 
             // Do not compare on nulls
             if (cmpTo != null) {
-                if (m_date.equals(cmpTo)) {
+
+                if (this.date.equals(cmpTo)) {
+
                     rVal = true;
                 }
             }
@@ -182,6 +194,7 @@ public class Date extends ValueType implements Comparator<Date>, Comparable<Date
      * @return int
      */
     public int compareTo(final Date other) {
+
         return CoreUtils.nullSafeComparator(this.getZonedDateTime(), other.getZonedDateTime());
     }
 
@@ -193,6 +206,7 @@ public class Date extends ValueType implements Comparator<Date>, Comparable<Date
      * @return int
      */
     public int compare(Date o1, Date o2) {
+
         return CoreUtils.nullSafeComparator(o1.getZonedDateTime(), o2.getZonedDateTime());
     }
 
@@ -200,8 +214,12 @@ public class Date extends ValueType implements Comparator<Date>, Comparable<Date
      * @return String
      */
     public String toString() {
-        if (null != this.getZonedDateTime())
+
+        if (null != this.getZonedDateTime()) {
+
             return TradingCalendar.getFormattedDate(this.getZonedDateTime(), DATE_TIME_FORMAT);
+        }
+
         return null;
     }
 
@@ -212,12 +230,14 @@ public class Date extends ValueType implements Comparator<Date>, Comparable<Date
      * @return boolean
      */
     public static boolean rightLengthForDateTime(String dateAndTime) {
+
         int length = dateAndTime.length();
+
         // do not count quotes
         int maxLength = DATE_TIME_FORMAT.length() - 4; // "yyyy-MM-dd'T'HHmmss'Z'";
+
         // month and day can be one digit : 2000-1-1T235959Z
         int minLength = maxLength - 2; // "yyyy-M-d'T'HHmmss'Z'";
-
         return (length <= maxLength) && (length >= minLength);
     }
 
@@ -227,7 +247,8 @@ public class Date extends ValueType implements Comparator<Date>, Comparable<Date
      * @return boolean
      */
     public boolean isEmpty() {
-        return null == m_date;
+
+        return null == this.date;
     }
 
     /**
@@ -239,6 +260,7 @@ public class Date extends ValueType implements Comparator<Date>, Comparable<Date
      * value greater than 0 if the argument is a Date before this Date.
      */
     public int compareDates(Date otherDate) {
+
         return compareDates(otherDate.getZonedDateTime());
     }
 
@@ -251,6 +273,7 @@ public class Date extends ValueType implements Comparator<Date>, Comparable<Date
      * value greater than 0 if the argument is a Date before this Date.
      */
     public int compareDates(ZonedDateTime otherDate) {
+
         return this.getZonedDateTime().compareTo(otherDate);
     }
 
@@ -258,12 +281,17 @@ public class Date extends ValueType implements Comparator<Date>, Comparable<Date
      * @param value Object
      */
     public void setValue(Object value) throws ValueTypeException {
+
         if (value instanceof Date) {
-            setDate(((Date) value).m_date);
+
+            setDate(((Date) value).date);
         } else {
+
             try {
+
                 setValue(JavaTypeTranslator.convert(Date.class, value));
             } catch (Exception ex) {
+
                 throw new ValueTypeException(ex);
             }
         }
@@ -275,6 +303,7 @@ public class Date extends ValueType implements Comparator<Date>, Comparable<Date
      * @return boolean
      */
     public boolean isValid() {
+
         return isValid(getDefaultOptionalValidator(MessageFactory.SYSTEM_ERROR), null);
     }
 
@@ -286,7 +315,8 @@ public class Date extends ValueType implements Comparator<Date>, Comparable<Date
      * @return boolean
      */
     public boolean isValid(IValidator validator, IExceptionMessageListener receiver) {
-        return validator.isValid(m_date, m_invalidDate, m_format, receiver);
+
+        return validator.isValid(this.date, invalidDate, format, receiver);
     }
 
     /**
@@ -296,6 +326,7 @@ public class Date extends ValueType implements Comparator<Date>, Comparable<Date
      * @return IValidator
      */
     public IValidator getDefaultOptionalValidator(IMessageFactory messageFactory) {
+
         return getDefaultValidator(messageFactory, true);
     }
 
@@ -306,6 +337,7 @@ public class Date extends ValueType implements Comparator<Date>, Comparable<Date
      * @return IValidator
      */
     public IValidator getDefaultMandatoryValidator(IMessageFactory messageFactory) {
+
         return getDefaultValidator(messageFactory, true);
     }
 
@@ -317,6 +349,7 @@ public class Date extends ValueType implements Comparator<Date>, Comparable<Date
      * @return IValidator
      */
     public IValidator getDefaultValidator(IMessageFactory messageFactory, boolean isMandatory) {
+
         return new DateValidator(messageFactory, isMandatory);
     }
 
@@ -327,7 +360,9 @@ public class Date extends ValueType implements Comparator<Date>, Comparable<Date
      * @return String
      */
     public String getError() {
-        if (m_date == null) {
+
+        if (this.date == null) {
+
             return "Date not set";
         }
         return null;
@@ -339,6 +374,7 @@ public class Date extends ValueType implements Comparator<Date>, Comparable<Date
      * @return Object
      */
     public Object clone() throws CloneNotSupportedException {
+
         return (super.clone());
     }
 
@@ -348,6 +384,7 @@ public class Date extends ValueType implements Comparator<Date>, Comparable<Date
      * @param date java.time.ZonedDateTime
      */
     private void setDate(ZonedDateTime date) {
-        m_date = date;
+
+        this.date = date;
     }
 }

@@ -698,13 +698,16 @@ id BIGINT NOT NULL AUTO_INCREMENT ,
 name VARCHAR(100) NOT NULL ,
 first_name VARCHAR(100)  NULL ,
 last_name VARCHAR(100)  NULL ,
+user_name VARCHAR(100)  NULL ,
+email VARCHAR(100)  NULL ,
 password VARCHAR(255) NOT NULL ,
 version INT NULL DEFAULT 0,
 created_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 domain_id BIGINT NOT NULL ,
 PRIMARY KEY (id) ,
-UNIQUE INDEX user_name_uq (name ASC) ,
+UNIQUE INDEX user_email_uq (email ASC) ,
+UNIQUE INDEX user_user_name_uq (user_name ASC) ,
 INDEX user_domain_idx (domain_id ASC) ,
 CONSTRAINT user_domain_fk
 FOREIGN KEY (domain_id)
@@ -814,6 +817,7 @@ SHOW WARNINGS//
 
 CREATE  TABLE IF NOT EXISTS employee (
 id BIGINT NOT NULL AUTO_INCREMENT ,
+name VARCHAR(100) NOT NULL ,
 first_name VARCHAR(100)  NULL ,
 last_name VARCHAR(100)  NULL ,
 description VARCHAR(100)  NULL ,
@@ -821,9 +825,10 @@ email VARCHAR(100)  NULL ,
 version INT NULL DEFAULT 0,
 created_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
-user_id BIGINT NOT NULL ,
+user_id BIGINT NULL ,
 PRIMARY KEY (id) ,
-INDEX employee_name_uq (first_name ASC, last_name ASC) ,
+INDEX employee_name_uq (name ASC) ,
+INDEX employee_email_uq (email ASC) ,
 INDEX user_idx (user_id ASC) ,
 CONSTRAINT employee_user_fk
 FOREIGN KEY (user_id )

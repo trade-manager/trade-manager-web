@@ -211,7 +211,7 @@ COMMIT//
 INSERT INTO domain (id, name, description) VALUES (1, 'global', 'global domain')//
 COMMIT//
 
-INSERT INTO role (id, name, description) VALUES (1, 'ADMINISTRATOR', 'ADMINISTRATOR role')//
+INSERT INTO role (id, name, description) VALUES (1, 'ADMIN', 'ADMIN role')//
 COMMIT//
 
 INSERT INTO role (id, name, description) VALUES (2, 'MANAGER', 'MANAGER role')//
@@ -220,11 +220,8 @@ COMMIT//
 INSERT INTO role (id, name, description) VALUES (3, 'USER', 'USER role')//
 COMMIT//
 
-INSERT INTO user (id, name, first_name, last_name, password, domain_id) VALUES (1, 'admin', 'admin', 'admin', '$2a$10$AIW37PKNXj47i7MXAoccyummq9tDknZ5epNZFh.I4I0JHgVeVwd/.', 1)//
+INSERT INTO user (id, name, first_name, last_name, user_name, email, password, domain_id) VALUES (1, 'admin', 'admin', 'admin', 'admin','admin@global.com', '$2a$10$AIW37PKNXj47i7MXAoccyummq9tDknZ5epNZFh.I4I0JHgVeVwd/.', 1)//
 COMMIT//
 
 INSERT INTO userrole (id, user_id, role_id) VALUES (1, 1, 1)//
-COMMIT//
-
-INSERT INTO employee (id, first_name, last_name, description, email, user_id) VALUES (1, 'admin', 'admin', 'admin employee', 'admin@global.com', 1)//
 COMMIT//

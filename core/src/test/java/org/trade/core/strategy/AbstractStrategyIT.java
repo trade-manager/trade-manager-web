@@ -59,7 +59,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 /**
- *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
