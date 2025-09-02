@@ -90,7 +90,7 @@ public class UserServiceIT {
         roles.add(role);
         User user = userService.findUserByName(userName);
         assertNull(user);
-        user = new User(userName,  userName,  userName,  userName,  userName + "@" + Domain.GLOBAL + ".com", userName, gobalDomain, roles);
+        user = new User(userName, userName, userName, userName, userName + "@" + Domain.GLOBAL + ".com", userName, gobalDomain, roles);
         user = userService.saveUser(user);
         assertNotNull(user.getId());
     }

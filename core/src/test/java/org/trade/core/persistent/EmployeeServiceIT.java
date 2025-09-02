@@ -17,16 +17,10 @@ import org.trade.core.persistent.domain.Domain;
 import org.trade.core.persistent.domain.DomainService;
 import org.trade.core.persistent.employee.Employee;
 import org.trade.core.persistent.employee.EmployeeService;
-import org.trade.core.persistent.role.Role;
-import org.trade.core.persistent.role.RoleService;
 import org.trade.core.persistent.user.User;
 import org.trade.core.persistent.user.UserService;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * @author Simon Allen
