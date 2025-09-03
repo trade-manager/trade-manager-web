@@ -14,7 +14,7 @@ import java.io.Serializable;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-public class StrategyDto extends Aspect implements Serializable, Cloneable {
+public class StrategyDTO extends Aspect implements Serializable, Cloneable {
 
     /**
      *
@@ -26,9 +26,9 @@ public class StrategyDto extends Aspect implements Serializable, Cloneable {
     private String className;
     private String description;
     private Boolean marketData = false;
-    private StrategyDto strategy;
+    private StrategyDTO strategy;
 
-    public StrategyDto() {
+    public StrategyDTO() {
     }
 
     /**
@@ -36,7 +36,7 @@ public class StrategyDto extends Aspect implements Serializable, Cloneable {
      *
      * @param name String
      */
-    public StrategyDto(String name) {
+    public StrategyDTO(String name) {
 
         this.name = name;
         this.className = name;
@@ -48,7 +48,7 @@ public class StrategyDto extends Aspect implements Serializable, Cloneable {
      * @param name      String
      * @param className String
      */
-    public StrategyDto(String name, String className) {
+    public StrategyDTO(String name, String className) {
 
         this.name = name;
         this.className = className;
@@ -62,7 +62,7 @@ public class StrategyDto extends Aspect implements Serializable, Cloneable {
      * @param marketData  Boolean
      * @param className   String
      */
-    public StrategyDto(String name, String description, Boolean marketData, String className) {
+    public StrategyDTO(String name, String description, Boolean marketData, String className) {
 
         this.name = name;
         this.description = description;
@@ -148,7 +148,7 @@ public class StrategyDto extends Aspect implements Serializable, Cloneable {
      *
      * @return Strategy
      */
-    public StrategyDto getStrategyManager() {
+    public StrategyDTO getStrategyManager() {
         return this.strategy;
     }
 
@@ -157,7 +157,7 @@ public class StrategyDto extends Aspect implements Serializable, Cloneable {
      *
      * @param strategy Strategy
      */
-    public void setStrategyManager(StrategyDto strategy) {
+    public void setStrategyManager(StrategyDTO strategy) {
         this.strategy = strategy;
     }
 
@@ -178,7 +178,7 @@ public class StrategyDto extends Aspect implements Serializable, Cloneable {
      */
     public Object clone() throws CloneNotSupportedException {
 
-        StrategyDto strategy = (StrategyDto) super.clone();
+        StrategyDTO strategy = (StrategyDTO) super.clone();
         return strategy;
     }
 

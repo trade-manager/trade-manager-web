@@ -1,8 +1,13 @@
 package org.trade.core.persistent.role;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import org.trade.core.dao.Aspect;
 import org.trade.core.persistent.user.User;
@@ -32,6 +37,14 @@ public class Role extends Aspect implements Serializable, Cloneable {
 
     @Column(name = "description")
     private String description;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "contained_role_id")
+    private Role containedRole;
+
+    // One-to-many relationship with contains (self-reference)
+    @OneToMany(mappedBy = "containedRole", cascade = CascadeType.ALL)
+    private List<Role> containRoles;
 
     @ManyToMany(mappedBy = "roles")
     private List<User> users = new ArrayList<>(0);
@@ -74,6 +87,40 @@ public class Role extends Aspect implements Serializable, Cloneable {
     public void setDescription(String description) {
 
         this.description = description;
+    }
+
+    /**
+     * @return containedRole Role
+     */
+    public Role getContainedRole() {
+
+        return this.containedRole;
+    }
+
+    /**
+     * @param containedRole Role
+     */
+    public void setContainedRole(Role containedRole) {
+
+        this.containedRole = containedRole;
+    }
+
+    /**
+     * Method getContainRoles.
+     *
+     * @return List<Role>
+     */
+    public List<Role> getContainRoles() {
+        return this.containRoles;
+    }
+
+    /**
+     * Method setContainRoles.
+     *
+     * @param containRoles List<Role>
+     */
+    public void setContainRoles(List<Role> containRoles) {
+        this.containRoles = containRoles;
     }
 
     /**

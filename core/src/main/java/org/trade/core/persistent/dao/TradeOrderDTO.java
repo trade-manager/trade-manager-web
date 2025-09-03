@@ -29,7 +29,7 @@ import java.util.Objects;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-public class TradeOrderDto extends Aspect implements java.io.Serializable, Cloneable {
+public class TradeOrderDTO extends Aspect implements java.io.Serializable, Cloneable {
 
     @Serial
     private static final long serialVersionUID = -832064631322873796L;
@@ -75,12 +75,12 @@ public class TradeOrderDto extends Aspect implements java.io.Serializable, Clone
     private Integer permId;
     private Integer parentId;
 
-    private List<TradeOrderfillDto> tradeOrderfills = new ArrayList<>(0);
-    private TradePositionDto tradePosition;
-    private TradestrategyLiteDto tradestrategyLite;
+    private List<TradeOrderfillDTO> tradeOrderfillDTOs = new ArrayList<>(0);
+    private TradePositionDTO tradePosition;
+    private TradestrategyLiteDTO tradestrategyLite;
 
 
-    public TradeOrderDto() {
+    public TradeOrderDTO() {
     }
 
     /**
@@ -94,7 +94,7 @@ public class TradeOrderDto extends Aspect implements java.io.Serializable, Clone
      * @param limitPrice        BigDecimal
      * @param orderCreateDate   ZonedDateTime
      */
-    public TradeOrderDto(TradestrategyLiteDto tradestrategyLite, String action, String orderType, Integer quantity,
+    public TradeOrderDTO(TradestrategyLiteDTO tradestrategyLite, String action, String orderType, Integer quantity,
                          BigDecimal auxPrice, BigDecimal limitPrice, ZonedDateTime orderCreateDate) {
 
         this(tradestrategyLite, action, orderCreateDate, orderType, quantity, auxPrice, limitPrice, OverrideConstraints.YES,
@@ -115,7 +115,7 @@ public class TradeOrderDto extends Aspect implements java.io.Serializable, Clone
      * @param timeInForce         String
      * @param triggerMethod       Integer
      */
-    public TradeOrderDto(TradestrategyLiteDto tradestrategyLite, String action, ZonedDateTime orderCreateDate, String orderType,
+    public TradeOrderDTO(TradestrategyLiteDTO tradestrategyLite, String action, ZonedDateTime orderCreateDate, String orderType,
                          Integer quantity, BigDecimal auxPrice, BigDecimal limitPrice, Integer overrideConstraints,
                          String timeInForce, Integer triggerMethod) {
 
@@ -156,7 +156,7 @@ public class TradeOrderDto extends Aspect implements java.io.Serializable, Clone
      * @param FAMethod            String
      * @param FAPercent           BigDecimal
      */
-    public TradeOrderDto(TradestrategyLiteDto tradestrategyLite, String action, ZonedDateTime orderCreateDate, String orderType,
+    public TradeOrderDTO(TradestrategyLiteDTO tradestrategyLite, String action, ZonedDateTime orderCreateDate, String orderType,
                          Money limitPrice, Money auxPrice, Integer quantity, String ocaGroupName, Integer parentId,
                          Integer triggerMethod, Integer overrideConstraints, String timeInForce, Boolean transmit,
                          Money trailStopPrice, Percent trailingPercent, String FAProfile, String FAGroup, String FAMethod,
@@ -225,7 +225,7 @@ public class TradeOrderDto extends Aspect implements java.io.Serializable, Clone
      * @param lastUpdateDate      ZonedDateTime
      * @param tradeOrderfills     List<TradeOrderfill>
      */
-    public TradeOrderDto(TradePositionDto tradePosition, String action, BigDecimal averageFilledPrice, Boolean allOrNothing,
+    public TradeOrderDTO(TradePositionDTO tradePosition, String action, BigDecimal averageFilledPrice, Boolean allOrNothing,
                          BigDecimal auxPrice, Integer clientId, BigDecimal commission, ZonedDateTime orderCreateDate,
                          Integer displayQuantity, ZonedDateTime filledDate, Integer filledQuantity, ZonedDateTime goodAfterTime,
                          ZonedDateTime goodTillTime, Boolean hidden, Boolean isOpenPosition, Boolean isFilled, BigDecimal limitPrice,
@@ -233,7 +233,7 @@ public class TradeOrderDto extends Aspect implements java.io.Serializable, Clone
                          Integer overrideConstraints, Integer parentId, Integer permId, Integer quantity, String timeInForce,
                          String status, BigDecimal stopPrice, Boolean transmit, BigDecimal trailStopPrice,
                          BigDecimal trailingPercent, Integer triggerMethod, String warningMessage, String whyHeld,
-                         ZonedDateTime lastUpdateDate, List<TradeOrderfillDto> tradeOrderfills) {
+                         ZonedDateTime lastUpdateDate, List<TradeOrderfillDTO> tradeOrderfills) {
 
         this.tradePosition = tradePosition;
         this.action = action;
@@ -271,7 +271,7 @@ public class TradeOrderDto extends Aspect implements java.io.Serializable, Clone
         this.warningMessage = warningMessage;
         this.whyHeld = whyHeld;
         this.orderUpdateDate = lastUpdateDate;
-        this.tradeOrderfills = tradeOrderfills;
+        this.tradeOrderfillDTOs = tradeOrderfills;
     }
 
     /**
@@ -279,7 +279,7 @@ public class TradeOrderDto extends Aspect implements java.io.Serializable, Clone
      *
      * @return TradePositionDto
      */
-    public TradePositionDto getTradePosition() {
+    public TradePositionDTO getTradePosition() {
         return this.tradePosition;
     }
 
@@ -288,7 +288,7 @@ public class TradeOrderDto extends Aspect implements java.io.Serializable, Clone
      *
      * @param tradePosition TradePosition
      */
-    public void setTradePosition(TradePositionDto tradePosition) {
+    public void setTradePosition(TradePositionDTO tradePosition) {
         this.tradePosition = tradePosition;
     }
 
@@ -306,7 +306,7 @@ public class TradeOrderDto extends Aspect implements java.io.Serializable, Clone
      *
      * @return TradestrategyLiteDto
      */
-    public TradestrategyLiteDto getTradestrategyLite() {
+    public TradestrategyLiteDTO getTradestrategyLite() {
         return this.tradestrategyLite;
     }
 
@@ -315,7 +315,7 @@ public class TradeOrderDto extends Aspect implements java.io.Serializable, Clone
      *
      * @param tradestrategyLite TradestrategyLiteDto
      */
-    public void setTradestrategyLite(TradestrategyLiteDto tradestrategyLite) {
+    public void setTradestrategyLite(TradestrategyLiteDTO tradestrategyLite) {
         this.tradestrategyLite = tradestrategyLite;
     }
 
@@ -1090,17 +1090,17 @@ public class TradeOrderDto extends Aspect implements java.io.Serializable, Clone
      *
      * @return List<TradeOrderfillDto>
      */
-    public List<TradeOrderfillDto> getTradeOrderfills() {
-        return this.tradeOrderfills;
+    public List<TradeOrderfillDTO> getTradeOrderfillDTOs() {
+        return this.tradeOrderfillDTOs;
     }
 
     /**
      * Method setTradeOrderfills.
      *
-     * @param tradeOrderfills List<TradeOrderfillDto>
+     * @param tradeOrderfillDTOs List<TradeOrderfillDto>
      */
-    public void setTradeOrderfills(List<TradeOrderfillDto> tradeOrderfills) {
-        this.tradeOrderfills = tradeOrderfills;
+    public void setTradeOrderfillDTOs(List<TradeOrderfillDTO> tradeOrderfillDTOs) {
+        this.tradeOrderfillDTOs = tradeOrderfillDTOs;
     }
 
     /**
@@ -1108,8 +1108,8 @@ public class TradeOrderDto extends Aspect implements java.io.Serializable, Clone
      *
      * @param tradeOrderfills TradeOrderfill
      */
-    public void addTradeOrderfill(TradeOrderfillDto tradeOrderfills) {
-        this.tradeOrderfills.add(tradeOrderfills);
+    public void addTradeOrderfill(TradeOrderfillDTO tradeOrderfills) {
+        this.tradeOrderfillDTOs.add(tradeOrderfills);
     }
 
     /**
@@ -1121,7 +1121,7 @@ public class TradeOrderDto extends Aspect implements java.io.Serializable, Clone
     @Transient
     public boolean existTradeOrderfill(String execId) {
 
-        for (TradeOrderfillDto tradeOrderfill : this.getTradeOrderfills()) {
+        for (TradeOrderfillDTO tradeOrderfill : this.getTradeOrderfillDTOs()) {
 
             if (tradeOrderfill.getExecId().equals(execId)) {
                 return true;
@@ -1232,13 +1232,13 @@ public class TradeOrderDto extends Aspect implements java.io.Serializable, Clone
      *
      * @return TradeOrder
      */
-    public TradeOrderDto clone() {
+    public TradeOrderDTO clone() {
 
         try {
 
-            TradeOrderDto order = (TradeOrderDto) super.clone();
-            List<TradeOrderfillDto> tradeOrderfills = new ArrayList<>(0);
-            order.setTradeOrderfills(tradeOrderfills);
+            TradeOrderDTO order = (TradeOrderDTO) super.clone();
+            List<TradeOrderfillDTO> tradeOrderfills = new ArrayList<>(0);
+            order.setTradeOrderfillDTOs(tradeOrderfills);
             return order;
         } catch (CloneNotSupportedException ex) {
 
@@ -1258,7 +1258,7 @@ public class TradeOrderDto extends Aspect implements java.io.Serializable, Clone
         if (super.equals(objectToCompare)) {
             return true;
         }
-        if (!(objectToCompare instanceof TradeOrderDto theOtherOrder)) {
+        if (!(objectToCompare instanceof TradeOrderDTO theOtherOrder)) {
             return false;
         }
         if (!theOtherOrder.getAction().equals((this.getAction()))) {
@@ -1357,7 +1357,7 @@ public class TradeOrderDto extends Aspect implements java.io.Serializable, Clone
         return theOtherOrder.getWhyHeld().equals(this.getWhyHeld());
     }
 
-    public static final Comparator<TradeOrderDto> FILLDATE_ORDER = (o1, o2) -> {
+    public static final Comparator<TradeOrderDTO> FILLDATE_ORDER = (o1, o2) -> {
 
         setAscending(true);
         int returnVal;
@@ -1377,7 +1377,7 @@ public class TradeOrderDto extends Aspect implements java.io.Serializable, Clone
         return returnVal;
     };
 
-    public static final Comparator<TradeOrderDto> CREATE_ORDER = (o1, o2) -> {
+    public static final Comparator<TradeOrderDTO> CREATE_ORDER = (o1, o2) -> {
 
         setAscending(true);
         int returnVal;
@@ -1397,7 +1397,7 @@ public class TradeOrderDto extends Aspect implements java.io.Serializable, Clone
         return returnVal;
     };
 
-    public static final Comparator<TradeOrderDto> ORDER_KEY = (o1, o2) -> {
+    public static final Comparator<TradeOrderDTO> ORDER_KEY = (o1, o2) -> {
 
         setAscending(true);
         int returnVal;

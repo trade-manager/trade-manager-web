@@ -214,13 +214,13 @@ COMMIT//
 INSERT INTO role (id, name, description) VALUES (1, 'ADMIN', 'ADMIN role')//
 COMMIT//
 
-INSERT INTO role (id, name, description) VALUES (2, 'MANAGER', 'MANAGER role')//
+INSERT INTO role (id, name, description, contained_role_id) VALUES (2, 'MANAGER', 'MANAGER role', 1)//
 COMMIT//
 
-INSERT INTO role (id, name, description) VALUES (3, 'USER', 'USER role')//
+INSERT INTO role (id, name, description, contained_role_id) VALUES (3, 'USER', 'USER role', 2)//
 COMMIT//
 
-INSERT INTO user (id, name, first_name, last_name, user_name, email, password, domain) VALUES (1, 'admin', 'admin', 'admin', 'admin','admin@global.com', '$2a$10$AIW37PKNXj47i7MXAoccyummq9tDknZ5epNZFh.I4I0JHgVeVwd/.', 1)//
+INSERT INTO user (id, name, first_name, last_name, user_name, email, password, domain) VALUES (1, 'admin', 'admin', 'admin', 'admin','admin@global.com', '{bcrypt}$2a$10$iJGTqOGkIacvFfaTQBfcjuFj3iIH7VlmMWzLk.Ohbon3tf3p8aGB.', 1)//
 COMMIT//
 
 INSERT INTO userrole (id, user_id, role_id) VALUES (1, 1, 1)//

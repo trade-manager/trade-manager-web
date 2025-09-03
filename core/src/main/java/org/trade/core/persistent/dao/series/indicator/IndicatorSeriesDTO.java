@@ -5,8 +5,8 @@ import jakarta.persistence.Transient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trade.core.persistent.ServiceException;
-import org.trade.core.persistent.dao.CodeValueDto;
-import org.trade.core.persistent.dao.StrategyDto;
+import org.trade.core.persistent.dao.CodeValueDTO;
+import org.trade.core.persistent.dao.StrategyDTO;
 import org.trade.core.persistent.dao.series.ComparableObjectItem;
 import org.trade.core.persistent.dao.series.ComparableObjectSeries;
 
@@ -20,19 +20,19 @@ import java.util.List;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-public abstract class IndicatorSeriesDto extends ComparableObjectSeries implements Cloneable, Serializable {
+public abstract class IndicatorSeriesDTO extends ComparableObjectSeries implements Cloneable, Serializable {
 
     @Serial
     private static final long serialVersionUID = -4985280367851073683L;
 
-    protected final static Logger _log = LoggerFactory.getLogger(IndicatorSeriesDto.class);
+    protected final static Logger _log = LoggerFactory.getLogger(IndicatorSeriesDTO.class);
 
     private Long id;
     private String type;
     private Integer seriesRGBColor;
     private boolean dirty = false;
-    private StrategyDto strategy;
-    private List<CodeValueDto> codeValues = new ArrayList<>(0);
+    private StrategyDTO strategy;
+    private List<CodeValueDTO> codeValues = new ArrayList<>(0);
     private String name;
     private String description;
     private Boolean displaySeries;
@@ -44,7 +44,7 @@ public abstract class IndicatorSeriesDto extends ComparableObjectSeries implemen
      *
      * @param type String
      */
-    public IndicatorSeriesDto(String type) {
+    public IndicatorSeriesDTO(String type) {
 
         super(type, true, false);
         this.type = type;
@@ -59,7 +59,7 @@ public abstract class IndicatorSeriesDto extends ComparableObjectSeries implemen
      * @param seriesRGBColor Integer
      * @param subChart       Boolean
      */
-    public IndicatorSeriesDto(String type, Boolean displaySeries, Integer seriesRGBColor, Boolean subChart) {
+    public IndicatorSeriesDTO(String type, Boolean displaySeries, Integer seriesRGBColor, Boolean subChart) {
 
         super(type, true, false);
         this.type = type;
@@ -78,7 +78,7 @@ public abstract class IndicatorSeriesDto extends ComparableObjectSeries implemen
      * @param seriesRGBColor Integer
      * @param subChart       Boolean
      */
-    public IndicatorSeriesDto(String name, String type, Boolean displaySeries, Integer seriesRGBColor, Boolean subChart) {
+    public IndicatorSeriesDTO(String name, String type, Boolean displaySeries, Integer seriesRGBColor, Boolean subChart) {
 
         super(name, true, false);
         this.type = type;
@@ -99,7 +99,7 @@ public abstract class IndicatorSeriesDto extends ComparableObjectSeries implemen
      * @param seriesRGBColor Integer
      * @param subChart       Boolean
      */
-    public IndicatorSeriesDto(StrategyDto strategy, String name, String type, String description, Boolean displaySeries,
+    public IndicatorSeriesDTO(StrategyDTO strategy, String name, String type, String description, Boolean displaySeries,
                               Integer seriesRGBColor, Boolean subChart) {
 
         super(name, true, false);
@@ -173,7 +173,7 @@ public abstract class IndicatorSeriesDto extends ComparableObjectSeries implemen
      * @return StrategyDto
      */
 
-    public StrategyDto getStrategy() {
+    public StrategyDTO getStrategy() {
         return this.strategy;
     }
 
@@ -183,7 +183,7 @@ public abstract class IndicatorSeriesDto extends ComparableObjectSeries implemen
      * @param strategy StrategyDto
      */
     @JsonIgnore
-    public void setStrategy(StrategyDto strategy) {
+    public void setStrategy(StrategyDTO strategy) {
         this.strategy = strategy;
     }
 
@@ -192,7 +192,7 @@ public abstract class IndicatorSeriesDto extends ComparableObjectSeries implemen
      *
      * @return List<CodeValueDto>
      */
-    public List<CodeValueDto> getCodeValues() {
+    public List<CodeValueDTO> getCodeValues() {
         return this.codeValues;
     }
 
@@ -201,7 +201,7 @@ public abstract class IndicatorSeriesDto extends ComparableObjectSeries implemen
      *
      * @param codeValues List<CodeValueDto>
      */
-    public void setCodeValues(List<CodeValueDto> codeValues) {
+    public void setCodeValues(List<CodeValueDTO> codeValues) {
         this.codeValues = codeValues;
     }
 
@@ -313,7 +313,7 @@ public abstract class IndicatorSeriesDto extends ComparableObjectSeries implemen
     @Transient
     public boolean isDirty() {
 
-        for (CodeValueDto item : this.getCodeValues()) {
+        for (CodeValueDTO item : this.getCodeValues()) {
 
             if (item.isDirty()) {
                 return true;
@@ -339,7 +339,7 @@ public abstract class IndicatorSeriesDto extends ComparableObjectSeries implemen
      */
     public Object clone() throws CloneNotSupportedException {
 
-        IndicatorSeriesDto clone = (IndicatorSeriesDto) super.clone();
+        IndicatorSeriesDTO clone = (IndicatorSeriesDTO) super.clone();
         clone.data = new ArrayList<>();
         return clone;
     }

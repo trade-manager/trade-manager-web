@@ -131,20 +131,20 @@ public class CodeType extends Aspect implements java.io.Serializable {
     }
 
     /**
-     * Method getCodeAttribute.
+     * Method getCodeAttributes.
      *
      * @return List<CodeAttribute>
      */
-    public List<CodeAttribute> getCodeAttribute() {
+    public List<CodeAttribute> getCodeAttributes() {
         return this.codeAttributes;
     }
 
     /**
-     * Method setCodeAttribute.
+     * Method setCodeAttributes.
      *
      * @param codeAttributes List<CodeAttribute>
      */
-    public void setCodeAttribute(List<CodeAttribute> codeAttributes) {
+    public void setCodeAttributes(List<CodeAttribute> codeAttributes) {
         this.codeAttributes = codeAttributes;
     }
 
@@ -156,7 +156,7 @@ public class CodeType extends Aspect implements java.io.Serializable {
     @Transient
     public boolean isDirty() {
 
-        for (CodeAttribute item : this.getCodeAttribute()) {
+        for (CodeAttribute item : this.getCodeAttributes()) {
 
             if (item.isDirty()) {
                 return true;

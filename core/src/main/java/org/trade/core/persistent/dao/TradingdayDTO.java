@@ -19,7 +19,7 @@ import java.util.Comparator;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-public class TradingdayDto extends Aspect implements Serializable, Cloneable {
+public class TradingdayDTO extends Aspect implements Serializable, Cloneable {
 
     /**
      *
@@ -34,7 +34,7 @@ public class TradingdayDto extends Aspect implements Serializable, Cloneable {
     private String marketBar;
     private Integer requestId;
 
-    public TradingdayDto() {
+    public TradingdayDTO() {
     }
 
     /**
@@ -43,7 +43,7 @@ public class TradingdayDto extends Aspect implements Serializable, Cloneable {
      * @param open  ZonedDateTime
      * @param close ZonedDateTime
      */
-    public TradingdayDto(ZonedDateTime open, ZonedDateTime close) {
+    public TradingdayDTO(ZonedDateTime open, ZonedDateTime close) {
 
         this.open = open;
         this.close = close;
@@ -52,21 +52,19 @@ public class TradingdayDto extends Aspect implements Serializable, Cloneable {
     /**
      * Constructor for Tradingday.
      *
-     * @param open            ZonedDateTime
-     * @param close           ZonedDateTime
-     * @param marketBias      String
-     * @param marketGap       String
-     * @param marketBar       String
-     * @param tradestrategies List<TradestrategyDto>
+     * @param open       ZonedDateTime
+     * @param close      ZonedDateTime
+     * @param marketBias String
+     * @param marketGap  String
+     * @param marketBar  String
      */
-    public TradingdayDto(ZonedDateTime open, ZonedDateTime close, String marketBias, String marketGap, String marketBar) {
+    public TradingdayDTO(ZonedDateTime open, ZonedDateTime close, String marketBias, String marketGap, String marketBar) {
 
         this.open = open;
         this.close = close;
         this.marketBias = marketBias;
         this.marketGap = marketGap;
         this.marketBar = marketBar;
-
     }
 
     /**
@@ -179,7 +177,7 @@ public class TradingdayDto extends Aspect implements Serializable, Cloneable {
     }
 
 
-    public static final Comparator<TradingdayDto> DATE_ORDER_ASC = (o1, o2) -> {
+    public static final Comparator<TradingdayDTO> DATE_ORDER_ASC = (o1, o2) -> {
 
         int returnVal;
         setAscending(true);
@@ -192,7 +190,7 @@ public class TradingdayDto extends Aspect implements Serializable, Cloneable {
         return returnVal;
     };
 
-    public static final Comparator<TradingdayDto> DATE_ORDER_DESC = (o1, o2) -> {
+    public static final Comparator<TradingdayDTO> DATE_ORDER_DESC = (o1, o2) -> {
 
         int returnVal;
         setAscending(true);
@@ -260,7 +258,7 @@ public class TradingdayDto extends Aspect implements Serializable, Cloneable {
             return true;
         }
 
-        if (objectToCompare instanceof TradingdayDto tradingday) {
+        if (objectToCompare instanceof TradingdayDTO tradingday) {
 
             if (tradingday.getOpen().compareTo(this.getOpen()) == 0) {
 
@@ -276,9 +274,9 @@ public class TradingdayDto extends Aspect implements Serializable, Cloneable {
      * @param date ZonedDateTime
      * @return Tradingday
      */
-    public static TradingdayDto newInstance(ZonedDateTime date) {
+    public static TradingdayDTO newInstance(ZonedDateTime date) {
 
-        return new TradingdayDto(TradingCalendar.getTradingDayStart(date),
+        return new TradingdayDTO(TradingCalendar.getTradingDayStart(date),
                 TradingCalendar.getTradingDayEnd(date));
 
     }
@@ -301,7 +299,7 @@ public class TradingdayDto extends Aspect implements Serializable, Cloneable {
      */
     public Object clone() throws CloneNotSupportedException {
 
-        TradingdayDto tradingday = (TradingdayDto) super.clone();
+        TradingdayDTO tradingday = (TradingdayDTO) super.clone();
         return tradingday;
     }
 }

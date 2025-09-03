@@ -12,14 +12,14 @@ import java.io.Serializable;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-public class TradestrategyLiteDto extends Aspect implements Serializable {
+public class TradestrategyLiteDTO extends Aspect implements Serializable {
 
     @Serial
     private static final long serialVersionUID = -2181676329258092177L;
 
     private String status;
 
-    public TradestrategyLiteDto() {
+    public TradestrategyLiteDTO() {
     }
 
     /**
@@ -29,7 +29,7 @@ public class TradestrategyLiteDto extends Aspect implements Serializable {
      * @param id      Integer
      * @param version Integer
      */
-    public TradestrategyLiteDto(Long id, Integer version) {
+    public TradestrategyLiteDTO(Long id, Integer version) {
 
         setId(id);
         this.version = version;

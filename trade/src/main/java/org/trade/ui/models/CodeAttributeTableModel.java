@@ -57,9 +57,9 @@ public class CodeAttributeTableModel extends TableModel {
         this.data = data;
         this.clearAll();
 
-        if (!getData().getCodeAttribute().isEmpty()) {
+        if (!getData().getCodeAttributes().isEmpty()) {
 
-            for (final CodeAttribute element : getData().getCodeAttribute()) {
+            for (final CodeAttribute element : getData().getCodeAttributes()) {
 
                 final List<Object> newRow = new ArrayList<>();
                 getNewRow(newRow, element);
@@ -78,7 +78,7 @@ public class CodeAttributeTableModel extends TableModel {
      */
     public void populateDAO(Object value, int row, int column) {
 
-        final CodeAttribute element = getData().getCodeAttribute().get(row);
+        final CodeAttribute element = getData().getCodeAttributes().get(row);
 
         switch (column) {
             case 0: {
@@ -116,11 +116,11 @@ public class CodeAttributeTableModel extends TableModel {
 
         String name = (String) this.getValueAt(selectedRow, 0);
 
-        for (final CodeAttribute element : getData().getCodeAttribute()) {
+        for (final CodeAttribute element : getData().getCodeAttributes()) {
 
             if (CoreUtils.nullSafeComparator(element.getName(), name) == 0) {
 
-                getData().getCodeAttribute().remove(element);
+                getData().getCodeAttributes().remove(element);
                 getData().setDirty(true);
                 final List<Object> currRow = rows.get(selectedRow);
                 rows.remove(currRow);
@@ -133,7 +133,7 @@ public class CodeAttributeTableModel extends TableModel {
     public void addRow() {
 
         final CodeAttribute element = new CodeAttribute(this.data, "", "", null, "", null);
-        getData().getCodeAttribute().add(element);
+        getData().getCodeAttributes().add(element);
         getData().setDirty(true);
         final List<Object> newRow = new ArrayList<>();
         getNewRow(newRow, element);

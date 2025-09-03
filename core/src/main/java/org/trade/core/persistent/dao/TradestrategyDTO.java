@@ -18,7 +18,7 @@ import java.util.List;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-public class TradestrategyDto extends Aspect implements Serializable, Cloneable {
+public class TradestrategyDTO extends Aspect implements Serializable, Cloneable {
 
     @Serial
     private static final long serialVersionUID = -2181676329258092177L;
@@ -31,14 +31,14 @@ public class TradestrategyDto extends Aspect implements Serializable, Cloneable 
     private String side;
     private Boolean trade = false;
     private Integer requestId;
-    private StrategyDto strategy;
-    private PortfolioDto portfolio;
-    private ContractDto contract;
-    private TradingdayDto tradingday;
-    private List<TradeOrderDto> tradeOrders = new ArrayList<>(0);
+    private StrategyDTO strategy;
+    private PortfolioDTO portfolio;
+    private ContractDTO contract;
+    private TradingdayDTO tradingday;
+    private List<TradeOrderDTO> tradeOrderDTOs = new ArrayList<>(0);
 
 
-    public TradestrategyDto() {
+    public TradestrategyDTO() {
     }
 
     @PrePersist
@@ -54,7 +54,7 @@ public class TradestrategyDto extends Aspect implements Serializable, Cloneable 
      * @param barSize   Integer
      * @param strategy  StrategyDto
      */
-    public TradestrategyDto(Integer barSize, Integer chartDays, StrategyDto strategy) {
+    public TradestrategyDTO(Integer barSize, Integer chartDays, StrategyDTO strategy) {
 
         this.setBarSize(barSize);
         this.chartDays = chartDays;
@@ -67,7 +67,7 @@ public class TradestrategyDto extends Aspect implements Serializable, Cloneable 
      *
      * @param contract ContractDto
      */
-    public TradestrategyDto(ContractDto contract) {
+    public TradestrategyDTO(ContractDTO contract) {
 
         this.contract = contract;
         super.setDirty(true);
@@ -87,7 +87,7 @@ public class TradestrategyDto extends Aspect implements Serializable, Cloneable 
      * @param chartDays  Integer
      * @param barSize    Integer
      */
-    public TradestrategyDto(ContractDto contract, TradingdayDto tradingday, StrategyDto strategy, PortfolioDto portfolio,
+    public TradestrategyDTO(ContractDTO contract, TradingdayDTO tradingday, StrategyDTO strategy, PortfolioDTO portfolio,
                             BigDecimal riskAmount, String side, String tier, Boolean trade, Integer chartDays, Integer barSize) {
 
         this.setBarSize(barSize);
@@ -244,7 +244,7 @@ public class TradestrategyDto extends Aspect implements Serializable, Cloneable 
      *
      * @return ContractDto
      */
-    public ContractDto getContract() {
+    public ContractDTO getContract() {
         return this.contract;
     }
 
@@ -253,7 +253,7 @@ public class TradestrategyDto extends Aspect implements Serializable, Cloneable 
      *
      * @param contract ContractDto
      */
-    public void setContract(ContractDto contract) {
+    public void setContract(ContractDTO contract) {
         this.contract = contract;
     }
 
@@ -262,7 +262,7 @@ public class TradestrategyDto extends Aspect implements Serializable, Cloneable 
      *
      * @return TradingdayDto
      */
-    public TradingdayDto getTradingday() {
+    public TradingdayDTO getTradingday() {
         return this.tradingday;
     }
 
@@ -271,7 +271,7 @@ public class TradestrategyDto extends Aspect implements Serializable, Cloneable 
      *
      * @param tradingday TradingdayDto
      */
-    public void setTradingday(TradingdayDto tradingday) {
+    public void setTradingday(TradingdayDTO tradingday) {
         this.tradingday = tradingday;
     }
 
@@ -280,7 +280,7 @@ public class TradestrategyDto extends Aspect implements Serializable, Cloneable 
      *
      * @return StrategyDto
      */
-    public StrategyDto getStrategy() {
+    public StrategyDTO getStrategy() {
         return this.strategy;
     }
 
@@ -289,7 +289,7 @@ public class TradestrategyDto extends Aspect implements Serializable, Cloneable 
      *
      * @param strategy StrategyDto
      */
-    public void setStrategy(StrategyDto strategy) {
+    public void setStrategy(StrategyDTO strategy) {
         this.strategy = strategy;
     }
 
@@ -298,7 +298,7 @@ public class TradestrategyDto extends Aspect implements Serializable, Cloneable 
      *
      * @return PortfolioDto
      */
-    public PortfolioDto getPortfolio() {
+    public PortfolioDTO getPortfolio() {
         return this.portfolio;
     }
 
@@ -307,7 +307,7 @@ public class TradestrategyDto extends Aspect implements Serializable, Cloneable 
      *
      * @param portfolio PortfolioDto
      */
-    public void setPortfolio(PortfolioDto portfolio) {
+    public void setPortfolio(PortfolioDTO portfolio) {
         this.portfolio = portfolio;
     }
 
@@ -335,17 +335,17 @@ public class TradestrategyDto extends Aspect implements Serializable, Cloneable 
      *
      * @return List<TradeOrderDto>
      */
-    public List<TradeOrderDto> getTradeOrders() {
-        return this.tradeOrders;
+    public List<TradeOrderDTO> getTradeOrderDTOs() {
+        return this.tradeOrderDTOs;
     }
 
     /**
      * Method setTradeOrders.
      *
-     * @param tradeOrders List<TradeOrderDto>
+     * @param tradeOrderDTOs List<TradeOrderDto>
      */
-    public void setTradeOrders(List<TradeOrderDto> tradeOrders) {
-        this.tradeOrders = tradeOrders;
+    public void setTradeOrderDTOs(List<TradeOrderDTO> tradeOrderDTOs) {
+        this.tradeOrderDTOs = tradeOrderDTOs;
     }
 
     /**
@@ -353,28 +353,28 @@ public class TradestrategyDto extends Aspect implements Serializable, Cloneable 
      *
      * @param tradeOrder TradeOrderDto
      */
-    public void addTradeOrder(TradeOrderDto tradeOrder) {
+    public void addTradeOrder(TradeOrderDTO tradeOrder) {
 
         int index = 0;
 
-        for (TradeOrderDto currTradeOrder : this.tradeOrders) {
+        for (TradeOrderDTO currTradeOrder : this.tradeOrderDTOs) {
 
             if (CoreUtils.nullSafeComparator(currTradeOrder.getId(), tradeOrder.getId()) == 0) {
 
-                index = this.tradeOrders.indexOf(currTradeOrder);
+                index = this.tradeOrderDTOs.indexOf(currTradeOrder);
                 break;
             }
         }
 
         if (index > 0) {
 
-            this.tradeOrders.remove(index);
+            this.tradeOrderDTOs.remove(index);
         }
-        this.tradeOrders.add(tradeOrder);
+        this.tradeOrderDTOs.add(tradeOrder);
     }
 
 
-    public static final Comparator<TradestrategyDto> DATE_ORDER_ASC = (o1, o2) -> {
+    public static final Comparator<TradestrategyDTO> DATE_ORDER_ASC = (o1, o2) -> {
 
         setAscending(true);
         int returnVal;
@@ -401,7 +401,7 @@ public class TradestrategyDto extends Aspect implements Serializable, Cloneable 
         return returnVal;
     };
 
-    public static final Comparator<TradestrategyDto> TRADINGDAY_CONTRACT = (o1, o2) -> {
+    public static final Comparator<TradestrategyDTO> TRADINGDAY_CONTRACT = (o1, o2) -> {
 
         setAscending(true);
         int returnVal;
@@ -493,7 +493,7 @@ public class TradestrategyDto extends Aspect implements Serializable, Cloneable 
             return true;
         }
 
-        if (objectToCompare instanceof TradestrategyDto tradestrategy) {
+        if (objectToCompare instanceof TradestrategyDTO tradestrategy) {
 
             if (this.getContract().equals(tradestrategy.getContract())) {
 
@@ -519,17 +519,17 @@ public class TradestrategyDto extends Aspect implements Serializable, Cloneable 
      */
     public Object clone() throws CloneNotSupportedException {
 
-        TradestrategyDto tradestrategy = (TradestrategyDto) super.clone();
-        ContractDto contract = (ContractDto) this.getContract().clone();
+        TradestrategyDTO tradestrategy = (TradestrategyDTO) super.clone();
+        ContractDTO contract = (ContractDTO) this.getContract().clone();
         tradestrategy.setContract(contract);
-        TradingdayDto tradingday = (TradingdayDto) this.getTradingday().clone();
+        TradingdayDTO tradingday = (TradingdayDTO) this.getTradingday().clone();
         tradestrategy.setTradingday(tradingday);
-        PortfolioDto portfolio = (PortfolioDto) this.getPortfolio().clone();
+        PortfolioDTO portfolio = (PortfolioDTO) this.getPortfolio().clone();
         tradestrategy.setPortfolio(portfolio);
-        StrategyDto strategy = (StrategyDto) this.getStrategy().clone();
+        StrategyDTO strategy = (StrategyDTO) this.getStrategy().clone();
         tradestrategy.setStrategy(strategy);
-        List<TradeOrderDto> tradeOrders = new ArrayList<>(0);
-        tradestrategy.setTradeOrders(tradeOrders);
+        List<TradeOrderDTO> tradeOrders = new ArrayList<>(0);
+        tradestrategy.setTradeOrderDTOs(tradeOrders);
         return tradestrategy;
     }
 }

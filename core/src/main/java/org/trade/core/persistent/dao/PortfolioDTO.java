@@ -9,7 +9,7 @@ import java.io.Serializable;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-public class PortfolioDto extends Aspect implements Serializable, Cloneable {
+public class PortfolioDTO extends Aspect implements Serializable, Cloneable {
 
     @Serial
     private static final long serialVersionUID = 2273276207080568947L;
@@ -20,7 +20,7 @@ public class PortfolioDto extends Aspect implements Serializable, Cloneable {
     private String description;
     private Boolean isDefault = false;
 
-    public PortfolioDto() {
+    public PortfolioDTO() {
 
     }
 
@@ -30,7 +30,7 @@ public class PortfolioDto extends Aspect implements Serializable, Cloneable {
      * @param name        String
      * @param description String
      */
-    public PortfolioDto(String name, String description) {
+    public PortfolioDTO(String name, String description) {
 
         this.name = name;
         this.description = description;
@@ -164,7 +164,7 @@ public class PortfolioDto extends Aspect implements Serializable, Cloneable {
      */
     public Object clone() throws CloneNotSupportedException {
 
-        PortfolioDto portfolio = (PortfolioDto) super.clone();
+        PortfolioDTO portfolio = (PortfolioDTO) super.clone();
         return portfolio;
     }
 }

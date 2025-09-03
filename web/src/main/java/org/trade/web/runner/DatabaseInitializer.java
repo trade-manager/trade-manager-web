@@ -71,9 +71,12 @@ public class DatabaseInitializer implements CommandLineRunner {
 
         if (null != admin) {
 
-            admin.setPassword(this.passwordEncoder.encode("admin"));
-            admin = this.userService.saveUser(admin);
-            _log.info("Info DatabaseLoader::run {} password: {}", admin.getName(), admin.getPassword());
+            if (!this.passwordEncoder.matches("admin", admin.getPassword())) {
+
+                admin.setPassword(this.passwordEncoder.encode("admin"));
+                admin = this.userService.saveUser(admin);
+                _log.info("Info DatabaseLoader::run {} password: {}", admin.getName(), admin.getPassword());
+            }
         }
 
         User oliver = this.userService.findUserByName("oliver");
@@ -87,9 +90,12 @@ public class DatabaseInitializer implements CommandLineRunner {
             oliver = this.userService.saveUser(new User(name, name, name, name, email, passwordEncoder.encode("user"), global, roles));
         } else {
 
-            oliver.setPassword(this.passwordEncoder.encode("user"));
-            oliver = this.userService.saveUser(oliver);
-            _log.info("Info DatabaseLoader::run {} password: {}", oliver.getName(), oliver.getPassword());
+            if (!this.passwordEncoder.matches("user", oliver.getPassword())) {
+
+                oliver.setPassword(this.passwordEncoder.encode("user"));
+                oliver = this.userService.saveUser(oliver);
+                _log.info("Info DatabaseLoader::run {} password: {}", oliver.getName(), oliver.getPassword());
+            }
         }
 
         SecurityContextHolder.getContext().setAuthentication(

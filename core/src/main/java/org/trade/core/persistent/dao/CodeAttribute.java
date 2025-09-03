@@ -180,20 +180,20 @@ public class CodeAttribute extends Aspect implements java.io.Serializable {
     }
 
     /**
-     * Method getCodeValue.
+     * Method getCodeValues.
      *
      * @return List<CodeValue>
      */
-    public List<CodeValue> getCodeValue() {
+    public List<CodeValue> getCodeValues() {
         return this.codeValues;
     }
 
     /**
-     * Method setCodeValue.
+     * Method setCodeValues.
      *
      * @param codeValues List<CodeValue>
      */
-    public void setCodeValue(List<CodeValue> codeValues) {
+    public void setCodeValues(List<CodeValue> codeValues) {
         this.codeValues = codeValues;
     }
 }

@@ -14,10 +14,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.trade.core.persistent.employee.Employee;
-import org.trade.core.persistent.employee.EmployeeDto;
+import org.trade.core.persistent.employee.EmployeeDTO;
 import org.trade.core.persistent.employee.EmployeeService;
+import org.trade.core.persistent.user.UserDTO;
 import org.trade.web.rest.dto.CreateEmployeeRequest;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,28 +42,38 @@ public class EmployeeController {
 
     @Operation(security = {@SecurityRequirement(name = BASIC_AUTH_SECURITY_SCHEME)})
     @GetMapping
-    public List<EmployeeDto> getBooks(@RequestParam(value = "text", required = false) String text) {
+    public List<EmployeeDTO> getEmployees(@RequestParam(value = "text", required = false) String text) {
 
         List<Employee> employees = (text == null) ? employeeService.getEmployees() : employeeService.getEmployeesContainingText(text);
-        return employees.stream().map(EmployeeDto::from).collect(Collectors.toList());
+        List<EmployeeDTO> employeeDTOs = new ArrayList<>();
+
+        for(Employee employee : employees){
+
+            UserDTO user = UserDTO.from(employee.getUser(), employee.getUser().getRoleDTOs());
+            EmployeeDTO employeeDTO = EmployeeDTO.from(employee, user);
+            employeeDTOs.add(employeeDTO);
+        }
+        return employeeDTOs;
+       // return employees.stream().map(EmployeeDTO::from).collect(Collectors.toList());
     }
 
     @Operation(security = {@SecurityRequirement(name = BASIC_AUTH_SECURITY_SCHEME)})
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public EmployeeDto createBook(@Valid @RequestBody CreateEmployeeRequest createEmployeeRequest) {
+    public EmployeeDTO createEmployee(@Valid @RequestBody CreateEmployeeRequest createEmployeeRequest) {
 
         Employee employee = EmployeeController.from(createEmployeeRequest);
-        return EmployeeDto.from(employeeService.saveEmployee(employee));
+        employee = employeeService.saveEmployee(employee);
+        return EmployeeDTO.from(employee, UserDTO.from(employee.getUser(), employee.getUser().getRoleDTOs()));
     }
 
     @Operation(security = {@SecurityRequirement(name = BASIC_AUTH_SECURITY_SCHEME)})
     @DeleteMapping("/{id}")
-    public EmployeeDto deleteBook(@PathVariable Long id) {
+    public EmployeeDTO deleteEmployee(@PathVariable Long id) {
 
         Employee employee = employeeService.validateAndGetEmployee(id);
         employeeService.deleteEmployee(employee);
-        return EmployeeDto.from(employee);
+        return EmployeeDTO.from(employee, UserDTO.from(employee.getUser(), employee.getUser().getRoleDTOs()));
     }
 
     public static Employee from(CreateEmployeeRequest createEmployeeRequest) {
