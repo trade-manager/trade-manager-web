@@ -1,17 +1,6 @@
 package org.trade.core.persistent.role;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
 import org.trade.core.dao.Aspect;
-import org.trade.core.persistent.domain.Domain;
-import org.trade.core.persistent.employee.Employee;
 import org.trade.core.persistent.user.User;
 
 import java.io.Serial;
@@ -23,38 +12,21 @@ import java.util.List;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-@Entity
-@Table(name = "role")
-public class Role extends Aspect implements Serializable, Cloneable {
-
-    public final static String ROLE_ADMIN = "ADMIN";
-    public final static String ROLE_MANAGER = "MANAGER";
-    public final static String ROLE_USER = "USER";
+public class RoleDTO extends Aspect implements Serializable, Cloneable {
 
     @Serial
     private static final long serialVersionUID = 5691902477608387034L;
 
-    @Column(name = "name")
     private String name;
-
-    @Column(name = "description")
     private String description;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "contained_role_id")
-    private Role containedRole;
-
-    // One-to-many relationship with contains (self-reference)
-    @OneToMany(mappedBy = "containedRole", cascade = CascadeType.ALL)
-    private List<Role> containRoles;
-
-    @ManyToMany(mappedBy = "roles")
+    private Long containedRoleId;
+    private List<RoleDTO> containRoles;
     private List<User> users = new ArrayList<>(0);
 
-    public Role() {
+    public RoleDTO() {
     }
 
-    public Role(String name, String description) {
+    public RoleDTO(String name, String description) {
         this.name = name;
         this.description = description;
     }
@@ -92,37 +64,40 @@ public class Role extends Aspect implements Serializable, Cloneable {
     }
 
     /**
-     * @return containedRole Role
+     * Method getContainedRoleId.
+     *
+     * @return containedRoleId Long
      */
-    public Role getContainedRole() {
+    public Long getContainedRoleId() {
 
-        return this.containedRole;
+        return this.containedRoleId;
     }
 
     /**
-     * @param containedRole Role
+     * Method setContainedRoleId.
+     *
+     * @param containedRoleId Long
      */
-    public void setContainedRole(Role containedRole) {
+    public void setContainedRoleId(Long containedRoleId) {
 
-        this.containedRole = containedRole;
+        this.containedRoleId = containedRoleId;
     }
-
 
     /**
      * Method getContainRoles.
      *
-     * @return List<Role>
+     * @return List<RoleDTO>
      */
-    public List<Role> getContainRoles() {
+    public List<RoleDTO> getContainRoles() {
         return this.containRoles;
     }
 
     /**
      * Method setContainRoles.
      *
-     * @param containRoles List<Role>
+     * @param containRoles List<RoleDTO>
      */
-    public void setContainRoles(List<Role> containRoles) {
+    public void setContainRoles(List<RoleDTO> containRoles) {
         this.containRoles = containRoles;
     }
 
@@ -151,7 +126,7 @@ public class Role extends Aspect implements Serializable, Cloneable {
      */
     public Object clone() throws CloneNotSupportedException {
 
-        Role role = (Role) super.clone();
+        RoleDTO role = (RoleDTO) super.clone();
         List<User> users = new ArrayList<>(0);
         role.setUsers(users);
         return role;

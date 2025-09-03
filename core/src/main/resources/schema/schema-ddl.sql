@@ -750,12 +750,19 @@ CREATE  TABLE IF NOT EXISTS role (
 id BIGINT NOT NULL AUTO_INCREMENT ,
 name VARCHAR(100) NOT NULL ,
 description VARCHAR(100) NULL ,
+contained_role_id BIGINT  NULL ,
 version INT NOT NULL DEFAULT 0,
 domain_id BIGINT NOT NULL DEFAULT 1,
 created_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 PRIMARY KEY (id) ,
-UNIQUE INDEX role_name_uq (name ASC) )
+UNIQUE INDEX role_name_uq (name ASC) ,
+INDEX contained_role_idx (contained_role_id ASC) ,
+CONSTRAINT role_contained_role_fk
+FOREIGN KEY (contained_role_id )
+REFERENCES role (id )
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION)
 ENGINE = InnoDB//
 SHOW WARNINGS//
 
