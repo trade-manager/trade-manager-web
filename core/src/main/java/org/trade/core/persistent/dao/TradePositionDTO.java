@@ -19,7 +19,7 @@ import java.util.List;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-public class TradePositionDto extends Aspect implements java.io.Serializable {
+public class TradePositionDTO extends Aspect implements java.io.Serializable {
 
     /**
      * There can only ever be one TradePosition open at a time for a Contract. A
@@ -47,10 +47,10 @@ public class TradePositionDto extends Aspect implements java.io.Serializable {
     private Integer totalSellQuantity;
     private BigDecimal totalSellValue;
     private BigDecimal totalNetValue;
-    private ContractDto contract;
-    private List<TradeOrderDto> tradeOrders = new ArrayList<>(0);
+    private ContractDTO contract;
+    private List<TradeOrderDTO> tradeOrders = new ArrayList<>(0);
 
-    public TradePositionDto() {
+    public TradePositionDTO() {
     }
 
     /**
@@ -60,7 +60,7 @@ public class TradePositionDto extends Aspect implements java.io.Serializable {
      * @param positionOpenDate Date
      * @param side             String
      */
-    public TradePositionDto(ContractDto contract, ZonedDateTime positionOpenDate, String side) {
+    public TradePositionDTO(ContractDTO contract, ZonedDateTime positionOpenDate, String side) {
 
         this.contract = contract;
         this.openDate = positionOpenDate;
@@ -82,10 +82,10 @@ public class TradePositionDto extends Aspect implements java.io.Serializable {
      * @param totalNetValue     BigDecimal
      * @param tradeOrders       List<TradeOrder>
      */
-    public TradePositionDto(ContractDto contract, ZonedDateTime positionOpenDate, ZonedDateTime positionCloseDate,
+    public TradePositionDTO(ContractDTO contract, ZonedDateTime positionOpenDate, ZonedDateTime positionCloseDate,
                             Integer openQuantity, String side, BigDecimal totalCommission, Integer totalBuyQuantity,
                             BigDecimal totalBuyValue, Integer totalSellQuantity, BigDecimal totalSellValue, BigDecimal totalNetValue,
-                            List<TradeOrderDto> tradeOrders) {
+                            List<TradeOrderDTO> tradeOrders) {
 
         this.contract = contract;
         this.openDate = positionOpenDate;
@@ -106,7 +106,7 @@ public class TradePositionDto extends Aspect implements java.io.Serializable {
      *
      * @return ContractDto
      */
-    public ContractDto getContract() {
+    public ContractDTO getContract() {
         return this.contract;
     }
 
@@ -115,7 +115,7 @@ public class TradePositionDto extends Aspect implements java.io.Serializable {
      *
      * @param contract ContractDto
      */
-    public void setContract(ContractDto contract) {
+    public void setContract(ContractDTO contract) {
         this.contract = contract;
     }
 
@@ -304,7 +304,7 @@ public class TradePositionDto extends Aspect implements java.io.Serializable {
      *
      * @return List<TradeOrderDto>
      */
-    public List<TradeOrderDto> getTradeOrders() {
+    public List<TradeOrderDTO> getTradeOrders() {
         return this.tradeOrders;
     }
 
@@ -314,7 +314,7 @@ public class TradePositionDto extends Aspect implements java.io.Serializable {
      * @param tradeOrders List<TradeOrderDto>
      */
     @JsonIgnore
-    public void setTradeOrders(List<TradeOrderDto> tradeOrders) {
+    public void setTradeOrders(List<TradeOrderDTO> tradeOrders) {
         this.tradeOrders = tradeOrders;
     }
 
@@ -323,7 +323,7 @@ public class TradePositionDto extends Aspect implements java.io.Serializable {
      *
      * @param tradeOrders TradeOrderDto
      */
-    public void addTradeOrder(TradeOrderDto tradeOrders) {
+    public void addTradeOrder(TradeOrderDTO tradeOrders) {
         this.tradeOrders.add(tradeOrders);
     }
 

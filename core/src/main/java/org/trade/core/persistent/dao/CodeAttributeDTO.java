@@ -11,7 +11,7 @@ import java.util.List;
  * @version $Revision: 1.0 $
  */
 
-public class CodeAttributeDto extends Aspect implements java.io.Serializable {
+public class CodeAttributeDTO extends Aspect implements java.io.Serializable {
 
     @Serial
     private static final long serialVersionUID = 2273276207080568947L;
@@ -21,10 +21,10 @@ public class CodeAttributeDto extends Aspect implements java.io.Serializable {
     private String defaultValue;
     private String className;
     private String classEditorName;
-    private CodeTypeDto codeType;
-    private List<CodeValueDto> codeValues = new ArrayList<>(0);
+    private CodeTypeDTO codeType;
+    private List<CodeValueDTO> codeValues = new ArrayList<>(0);
 
-    public CodeAttributeDto() {
+    public CodeAttributeDTO() {
     }
 
     /**
@@ -37,7 +37,7 @@ public class CodeAttributeDto extends Aspect implements java.io.Serializable {
      * @param className       String
      * @param classEditorName String
      */
-    public CodeAttributeDto(CodeTypeDto codeType, String name, String description, String defaultValue, String className,
+    public CodeAttributeDTO(CodeTypeDTO codeType, String name, String description, String defaultValue, String className,
                             String classEditorName) {
 
         this.name = name;
@@ -144,7 +144,7 @@ public class CodeAttributeDto extends Aspect implements java.io.Serializable {
      * @return CodeTypeDto
      */
 
-    public CodeTypeDto getCodeType() {
+    public CodeTypeDTO getCodeType() {
         return this.codeType;
     }
 
@@ -153,7 +153,7 @@ public class CodeAttributeDto extends Aspect implements java.io.Serializable {
      *
      * @param codeType CodeTypeDto
      */
-    public void setCodeType(CodeTypeDto codeType) {
+    public void setCodeType(CodeTypeDTO codeType) {
         this.codeType = codeType;
     }
 
@@ -162,7 +162,7 @@ public class CodeAttributeDto extends Aspect implements java.io.Serializable {
      *
      * @return List<CodeValueDto>
      */
-    public List<CodeValueDto> getCodeValue() {
+    public List<CodeValueDTO> getCodeValue() {
         return this.codeValues;
     }
 
@@ -171,7 +171,7 @@ public class CodeAttributeDto extends Aspect implements java.io.Serializable {
      *
      * @param codeValues List<CodeValueDto>
      */
-    public void setCodeValue(List<CodeValueDto> codeValues) {
+    public void setCodeValue(List<CodeValueDTO> codeValues) {
         this.codeValues = codeValues;
     }
 }

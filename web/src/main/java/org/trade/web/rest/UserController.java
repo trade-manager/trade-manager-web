@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.trade.core.persistent.user.User;
-import org.trade.core.persistent.user.UserDto;
+import org.trade.core.persistent.user.UserDTO;
 import org.trade.core.persistent.user.UserService;
 import org.trade.web.security.CustomUserDetails;
 
@@ -35,31 +35,31 @@ public class UserController {
 
     @Operation(security = {@SecurityRequirement(name = BASIC_AUTH_SECURITY_SCHEME)})
     @GetMapping("/me")
-    public UserDto getCurrentUser(@AuthenticationPrincipal CustomUserDetails currentUser) {
+    public UserDTO getCurrentUser(@AuthenticationPrincipal CustomUserDetails currentUser) {
 
-        return UserDto.from(userService.validateAndGetUserByUsername(currentUser.getUsername()));
+        return UserDTO.from(userService.validateAndGetUserByUsername(currentUser.getUsername()));
     }
 
     @Operation(security = {@SecurityRequirement(name = BASIC_AUTH_SECURITY_SCHEME)})
     @GetMapping
-    public List<UserDto> getUsers() {
+    public List<UserDTO> getUsers() {
 
-        return userService.getUsers().stream().map(UserDto::from).collect(Collectors.toList());
+        return userService.getUsers().stream().map(UserDTO::from).collect(Collectors.toList());
     }
 
     @Operation(security = {@SecurityRequirement(name = BASIC_AUTH_SECURITY_SCHEME)})
     @GetMapping("/{username}")
-    public UserDto getUser(@PathVariable String username) {
+    public UserDTO getUser(@PathVariable String username) {
 
-        return UserDto.from(userService.validateAndGetUserByUsername(username));
+        return UserDTO.from(userService.validateAndGetUserByUsername(username));
     }
 
     @Operation(security = {@SecurityRequirement(name = BASIC_AUTH_SECURITY_SCHEME)})
     @DeleteMapping("/{username}")
-    public UserDto deleteUser(@PathVariable String username) {
+    public UserDTO deleteUser(@PathVariable String username) {
 
         User user = userService.validateAndGetUserByUsername(username);
         userService.deleteUser(user);
-        return UserDto.from(user);
+        return UserDTO.from(user);
     }
 }

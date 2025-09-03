@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Transient;
 import org.trade.core.dao.Aspect;
 import org.trade.core.factory.ClassFactory;
-import org.trade.core.persistent.dao.series.indicator.IndicatorSeriesDto;
+import org.trade.core.persistent.dao.series.indicator.IndicatorSeriesDTO;
 
 import java.io.Serial;
 import java.util.ArrayList;
@@ -15,17 +15,17 @@ import java.util.List;
  * @version $Revision: 1.0 $
  */
 
-public class CodeValueDto extends Aspect implements java.io.Serializable {
+public class CodeValueDTO extends Aspect implements java.io.Serializable {
 
     @Serial
     private static final long serialVersionUID = 2273276207080568947L;
 
     private String codeValue;
-    private CodeAttributeDto codeAttribute;
-    private IndicatorSeriesDto indicatorSeries;
-    private TradestrategyDto tradestrategy;
+    private CodeAttributeDTO codeAttribute;
+    private IndicatorSeriesDTO indicatorSeries;
+    private TradestrategyDTO tradestrategy;
 
-    public CodeValueDto() {
+    public CodeValueDTO() {
     }
 
     /**
@@ -34,7 +34,7 @@ public class CodeValueDto extends Aspect implements java.io.Serializable {
      * @param codeAttribute CodeAttributeDto
      * @param codeValue     String
      */
-    public CodeValueDto(CodeAttributeDto codeAttribute, String codeValue) {
+    public CodeValueDTO(CodeAttributeDTO codeAttribute, String codeValue) {
 
         this.codeValue = codeValue;
         this.codeAttribute = codeAttribute;
@@ -47,7 +47,7 @@ public class CodeValueDto extends Aspect implements java.io.Serializable {
      * @param codeValue       String
      * @param indicatorSeries IndicatorSeriesDto
      */
-    public CodeValueDto(CodeAttributeDto codeAttribute, String codeValue, IndicatorSeriesDto indicatorSeries) {
+    public CodeValueDTO(CodeAttributeDTO codeAttribute, String codeValue, IndicatorSeriesDTO indicatorSeries) {
 
         this.codeValue = codeValue;
         this.codeAttribute = codeAttribute;
@@ -61,7 +61,7 @@ public class CodeValueDto extends Aspect implements java.io.Serializable {
      * @param codeValue     String
      * @param tradestrategy TradestrategyDto
      */
-    public CodeValueDto(CodeAttributeDto codeAttribute, String codeValue, TradestrategyDto tradestrategy) {
+    public CodeValueDTO(CodeAttributeDTO codeAttribute, String codeValue, TradestrategyDTO tradestrategy) {
 
         this.codeValue = codeValue;
         this.codeAttribute = codeAttribute;
@@ -91,7 +91,7 @@ public class CodeValueDto extends Aspect implements java.io.Serializable {
      *
      * @return CodeAttributeDto
      */
-    public CodeAttributeDto getCodeAttribute() {
+    public CodeAttributeDTO getCodeAttribute() {
         return this.codeAttribute;
     }
 
@@ -100,7 +100,7 @@ public class CodeValueDto extends Aspect implements java.io.Serializable {
      *
      * @param codeAttribute CodeAttributeDto
      */
-    public void setCodeAttribute(CodeAttributeDto codeAttribute) {
+    public void setCodeAttribute(CodeAttributeDTO codeAttribute) {
         this.codeAttribute = codeAttribute;
     }
 
@@ -109,7 +109,7 @@ public class CodeValueDto extends Aspect implements java.io.Serializable {
      *
      * @return IndicatorSeriesDto
      */
-    public IndicatorSeriesDto getIndicatorSeries() {
+    public IndicatorSeriesDTO getIndicatorSeries() {
         return this.indicatorSeries;
     }
 
@@ -118,7 +118,7 @@ public class CodeValueDto extends Aspect implements java.io.Serializable {
      *
      * @param indicatorSeries IndicatorSeriesDto
      */
-    public void setIndicatorSeries(IndicatorSeriesDto indicatorSeries) {
+    public void setIndicatorSeries(IndicatorSeriesDTO indicatorSeries) {
         this.indicatorSeries = indicatorSeries;
     }
 
@@ -127,7 +127,7 @@ public class CodeValueDto extends Aspect implements java.io.Serializable {
      *
      * @return TradestrategyDto
      */
-    public TradestrategyDto getTradestrategy() {
+    public TradestrategyDTO getTradestrategy() {
         return this.tradestrategy;
     }
 
@@ -137,7 +137,7 @@ public class CodeValueDto extends Aspect implements java.io.Serializable {
      * @param tradestrategy TradestrategyDto
      */
     @JsonIgnore
-    public void setTradestrategy(TradestrategyDto tradestrategy) {
+    public void setTradestrategy(TradestrategyDTO tradestrategy) {
         this.tradestrategy = tradestrategy;
     }
 
@@ -153,9 +153,9 @@ public class CodeValueDto extends Aspect implements java.io.Serializable {
      * @return The value of the attribute.
      */
     @Transient
-    public static Object getValueCode(final String name, final List<CodeValueDto> codeValues) throws Exception {
+    public static Object getValueCode(final String name, final List<CodeValueDTO> codeValues) throws Exception {
 
-        for (CodeValueDto value : codeValues) {
+        for (CodeValueDTO value : codeValues) {
 
             if (name.equals(value.getCodeAttribute().getName())) {
 
@@ -163,7 +163,7 @@ public class CodeValueDto extends Aspect implements java.io.Serializable {
                 params.add(value.getCodeValue());
                 // codeValue = ClassFactory.getCreateClass(value.getCodeAttribute().getClassName(), params, CodeAttributePanel.class);
                 return ClassFactory.getCreateClass(value.getCodeAttribute().getClassName(), params,
-                        CodeValueDto.class);
+                        CodeValueDTO.class);
             }
         }
         return null;

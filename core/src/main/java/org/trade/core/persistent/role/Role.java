@@ -10,8 +10,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import org.trade.core.dao.Aspect;
-import org.trade.core.persistent.domain.Domain;
-import org.trade.core.persistent.employee.Employee;
 import org.trade.core.persistent.user.User;
 
 import java.io.Serial;
@@ -40,7 +38,7 @@ public class Role extends Aspect implements Serializable, Cloneable {
     @Column(name = "description")
     private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "contained_role_id")
     private Role containedRole;
 

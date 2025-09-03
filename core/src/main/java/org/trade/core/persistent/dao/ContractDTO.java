@@ -17,7 +17,7 @@ import java.time.ZonedDateTime;
  * @version $Revision: 1.0 $
  */
 
-public class ContractDto extends Aspect implements Serializable, Cloneable {
+public class ContractDTO extends Aspect implements Serializable, Cloneable {
 
     /**
      *
@@ -31,9 +31,9 @@ public class ContractDto extends Aspect implements Serializable, Cloneable {
     private ZonedDateTime expiry;
     private String secType;
     private Integer requestId;
-    private TradePositionDto tradePosition;
+    private TradePositionDTO tradePosition;
 
-    public ContractDto() {
+    public ContractDTO() {
     }
 
     /**
@@ -151,7 +151,7 @@ public class ContractDto extends Aspect implements Serializable, Cloneable {
      *
      * @return TradePositionDto
      */
-    public TradePositionDto getTradePosition() {
+    public TradePositionDTO getTradePosition() {
         return this.tradePosition;
     }
 
@@ -161,7 +161,7 @@ public class ContractDto extends Aspect implements Serializable, Cloneable {
      * @param tradePosition TradePositionDto
      */
     @JsonIgnore
-    public void setTradePosition(TradePositionDto tradePosition) {
+    public void setTradePosition(TradePositionDTO tradePosition) {
         this.tradePosition = tradePosition;
     }
 
@@ -178,7 +178,7 @@ public class ContractDto extends Aspect implements Serializable, Cloneable {
             return true;
         }
 
-        if (objectToCompare instanceof ContractDto contract) {
+        if (objectToCompare instanceof ContractDTO contract) {
 
             if (this.getSymbol().equals(contract.getSymbol())) {
 
@@ -201,7 +201,7 @@ public class ContractDto extends Aspect implements Serializable, Cloneable {
      */
     public Object clone() throws CloneNotSupportedException {
 
-        ContractDto contract = (ContractDto) super.clone();
+        ContractDTO contract = (ContractDTO) super.clone();
         return contract;
     }
 

@@ -27,6 +27,6 @@ public interface RoleRepository extends AspectRepository<Role, Long> {
      *
      * @return
      */
-    List<Role>  findByContainedRoleIsNull();
+    List<Role> findByContainedRoleIsNull();
 }
 

@@ -12,7 +12,7 @@ import java.util.List;
  * @version $Revision: 1.0 $
  */
 
-public class CodeTypeDto extends Aspect implements java.io.Serializable {
+public class CodeTypeDTO extends Aspect implements java.io.Serializable {
 
     @Serial
     private static final long serialVersionUID = 2273276207080568947L;
@@ -20,14 +20,14 @@ public class CodeTypeDto extends Aspect implements java.io.Serializable {
     private String name;
     private String type;
     private String description;
-    private List<CodeAttributeDto> codeAttributes = new ArrayList<>(0);
+    private List<CodeAttributeDTO> codeAttributes = new ArrayList<>(0);
 
 
     /**
      * Default constructor for CodeType.
      */
 
-    public CodeTypeDto() {
+    public CodeTypeDTO() {
     }
 
     /**
@@ -35,7 +35,7 @@ public class CodeTypeDto extends Aspect implements java.io.Serializable {
      *
      * @param type String
      */
-    public CodeTypeDto(String type) {
+    public CodeTypeDTO(String type) {
         this.type = type;
     }
 
@@ -45,7 +45,7 @@ public class CodeTypeDto extends Aspect implements java.io.Serializable {
      * @param name        String
      * @param description String
      */
-    public CodeTypeDto(String name, String type, String description) {
+    public CodeTypeDTO(String name, String type, String description) {
 
         this.name = name;
         this.type = type;
@@ -111,7 +111,7 @@ public class CodeTypeDto extends Aspect implements java.io.Serializable {
      *
      * @return List<CodeAttributeDto>
      */
-    public List<CodeAttributeDto> getCodeAttribute() {
+    public List<CodeAttributeDTO> getCodeAttribute() {
         return this.codeAttributes;
     }
 
@@ -120,7 +120,7 @@ public class CodeTypeDto extends Aspect implements java.io.Serializable {
      *
      * @param codeAttributes List<CodeAttributeDto>
      */
-    public void setCodeAttribute(List<CodeAttributeDto> codeAttributes) {
+    public void setCodeAttribute(List<CodeAttributeDTO> codeAttributes) {
         this.codeAttributes = codeAttributes;
     }
 
@@ -132,7 +132,7 @@ public class CodeTypeDto extends Aspect implements java.io.Serializable {
     @Transient
     public boolean isDirty() {
 
-        for (CodeAttributeDto item : this.getCodeAttribute()) {
+        for (CodeAttributeDTO item : this.getCodeAttribute()) {
 
             if (item.isDirty()) {
                 return true;

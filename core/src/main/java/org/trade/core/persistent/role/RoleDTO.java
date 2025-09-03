@@ -1,7 +1,7 @@
 package org.trade.core.persistent.role;
 
 import org.trade.core.dao.Aspect;
-import org.trade.core.persistent.user.User;
+import org.trade.core.persistent.user.UserDTO;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -21,7 +21,7 @@ public class RoleDTO extends Aspect implements Serializable, Cloneable {
     private String description;
     private Long containedRoleId;
     private List<RoleDTO> containRoles;
-    private List<User> users = new ArrayList<>(0);
+    private List<UserDTO> users = new ArrayList<>(0);
 
     public RoleDTO() {
     }
@@ -104,18 +104,18 @@ public class RoleDTO extends Aspect implements Serializable, Cloneable {
     /**
      * Method getUsers.
      *
-     * @return List<User>
+     * @return List<UserDTO>
      */
-    public List<User> getUsers() {
+    public List<UserDTO> getUsers() {
         return this.users;
     }
 
     /**
      * Method setUsers.
      *
-     * @param users List<User>
+     * @param users List<UserDTO>
      */
-    public void setUsers(List<User> users) {
+    public void setUsers(List<UserDTO> users) {
         this.users = users;
     }
 
@@ -127,7 +127,7 @@ public class RoleDTO extends Aspect implements Serializable, Cloneable {
     public Object clone() throws CloneNotSupportedException {
 
         RoleDTO role = (RoleDTO) super.clone();
-        List<User> users = new ArrayList<>(0);
+        List<UserDTO> users = new ArrayList<>(0);
         role.setUsers(users);
         return role;
     }

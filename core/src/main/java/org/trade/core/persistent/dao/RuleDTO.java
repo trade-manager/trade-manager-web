@@ -18,7 +18,7 @@ import java.util.Objects;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-public class RuleDto extends Aspect implements Serializable {
+public class RuleDTO extends Aspect implements Serializable {
 
     /**
      *
@@ -30,9 +30,9 @@ public class RuleDto extends Aspect implements Serializable {
     private byte[] rule;
     protected Integer ruleVersion;
     private String contentType = ContentType.JAVA;
-    private StrategyDto strategy;
+    private StrategyDTO strategy;
 
-    public RuleDto() {
+    public RuleDTO() {
 
     }
 
@@ -43,7 +43,7 @@ public class RuleDto extends Aspect implements Serializable {
      * @param ruleVersion Integer
      * @param comment     String
      */
-    public RuleDto(StrategyDto strategy, Integer ruleVersion, String comment) {
+    public RuleDTO(StrategyDTO strategy, Integer ruleVersion, String comment) {
 
         this.strategy = strategy;
         this.ruleVersion = ruleVersion;
@@ -59,7 +59,7 @@ public class RuleDto extends Aspect implements Serializable {
      * @param rule        byte[]
      * @param contentType String
      */
-    public RuleDto(StrategyDto strategy, Integer ruleVersion, String comment, byte[] rule, String contentType) {
+    public RuleDTO(StrategyDTO strategy, Integer ruleVersion, String comment, byte[] rule, String contentType) {
 
         this.strategy = strategy;
         this.ruleVersion = ruleVersion;
@@ -73,7 +73,7 @@ public class RuleDto extends Aspect implements Serializable {
      *
      * @return StrategyDto
      */
-    public StrategyDto getStrategy() {
+    public StrategyDTO getStrategy() {
         return this.strategy;
     }
 
@@ -82,7 +82,7 @@ public class RuleDto extends Aspect implements Serializable {
      *
      * @param strategy StrategyDto
      */
-    public void setStrategy(StrategyDto strategy) {
+    public void setStrategy(StrategyDTO strategy) {
         this.strategy = strategy;
     }
 
@@ -167,7 +167,7 @@ public class RuleDto extends Aspect implements Serializable {
         return "Version-" + this.getRuleVersion();
     }
 
-    public static final Comparator<RuleDto> VERSION_ORDER = (o1, o2) -> CoreUtils.nullSafeComparator(o1.getRuleVersion(), o2.getRuleVersion());
+    public static final Comparator<RuleDTO> VERSION_ORDER = (o1, o2) -> CoreUtils.nullSafeComparator(o1.getRuleVersion(), o2.getRuleVersion());
 
     /**
      * Method equals.
@@ -181,15 +181,15 @@ public class RuleDto extends Aspect implements Serializable {
             return true;
         }
 
-        if (objectToCompare instanceof RuleDto) {
+        if (objectToCompare instanceof RuleDTO) {
 
             if (null == this.getId() || null == this.getRuleVersion()) {
 
                 return false;
             }
 
-            return Objects.equals(this.getStrategy().getId(), ((RuleDto) objectToCompare).getStrategy().getId())
-                    && this.getRuleVersion().equals(((RuleDto) objectToCompare).getRuleVersion());
+            return Objects.equals(this.getStrategy().getId(), ((RuleDTO) objectToCompare).getStrategy().getId())
+                    && this.getRuleVersion().equals(((RuleDTO) objectToCompare).getRuleVersion());
 
         }
         return false;

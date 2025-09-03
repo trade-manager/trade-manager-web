@@ -17,7 +17,7 @@ import java.time.ZonedDateTime;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-public class CandleDto extends Aspect implements java.io.Serializable {
+public class CandleDTO extends Aspect implements java.io.Serializable {
 
     /**
      *
@@ -37,9 +37,9 @@ public class CandleDto extends Aspect implements java.io.Serializable {
     private BigDecimal vwap;
     private Integer barSize;
     private ZonedDateTime lastUpdateDate;
-    private ContractDto contract;
+    private ContractDTO contract;
 
-    public CandleDto() {
+    public CandleDTO() {
     }
 
     /**
@@ -47,7 +47,7 @@ public class CandleDto extends Aspect implements java.io.Serializable {
      *
      * @return ContractDto
      */
-    public ContractDto getContract() {
+    public ContractDTO getContract() {
         return this.contract;
     }
 
@@ -56,7 +56,7 @@ public class CandleDto extends Aspect implements java.io.Serializable {
      *
      * @param contract ContractDto
      */
-    public void setContract(ContractDto contract) {
+    public void setContract(ContractDTO contract) {
         this.contract = contract;
     }
 
@@ -295,7 +295,7 @@ public class CandleDto extends Aspect implements java.io.Serializable {
             return true;
         }
 
-        if (objectToCompare instanceof CandleDto candle) {
+        if (objectToCompare instanceof CandleDTO candle) {
 
             if (this.getContract().equals(candle.getContract())) {
 

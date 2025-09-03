@@ -17,7 +17,7 @@ import java.time.ZonedDateTime;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-public class TradeOrderfillDto extends Aspect implements java.io.Serializable, Cloneable {
+public class TradeOrderfillDTO extends Aspect implements java.io.Serializable, Cloneable {
 
     @Serial
     private static final long serialVersionUID = -4345234694835258864L;
@@ -34,9 +34,9 @@ public class TradeOrderfillDto extends Aspect implements java.io.Serializable, C
     private BigDecimal commission;
     private String orderReference;
     private Integer permId;
-    private TradeOrderDto tradeOrder;
+    private TradeOrderDTO tradeOrder;
 
-    public TradeOrderfillDto() {
+    public TradeOrderfillDTO() {
     }
 
     /**
@@ -53,7 +53,7 @@ public class TradeOrderfillDto extends Aspect implements java.io.Serializable, C
      * @param side               String
      * @param time               Date
      */
-    public TradeOrderfillDto(TradeOrderDto tradeOrder, String accountNumber, BigDecimal averagePrice,
+    public TradeOrderfillDTO(TradeOrderDTO tradeOrder, String accountNumber, BigDecimal averagePrice,
                              Integer cumulativeQuantity, String exchange, String execId, BigDecimal price, Integer quantity, String side,
                              ZonedDateTime time) {
 
@@ -74,7 +74,7 @@ public class TradeOrderfillDto extends Aspect implements java.io.Serializable, C
      *
      * @return TradeOrderDto
      */
-    public TradeOrderDto getTradeOrder() {
+    public TradeOrderDTO getTradeOrder() {
         return this.tradeOrder;
     }
 
@@ -84,7 +84,7 @@ public class TradeOrderfillDto extends Aspect implements java.io.Serializable, C
      * @param tradeOrder TradeOrderDto
      */
     @JsonIgnore
-    public void setTradeOrder(TradeOrderDto tradeOrder) {
+    public void setTradeOrder(TradeOrderDTO tradeOrder) {
         this.tradeOrder = tradeOrder;
     }
 
@@ -309,11 +309,11 @@ public class TradeOrderfillDto extends Aspect implements java.io.Serializable, C
      *
      * @return TradeOrderfill
      */
-    public TradeOrderfillDto clone() {
+    public TradeOrderfillDTO clone() {
 
         try {
 
-            return (TradeOrderfillDto) super.clone();
+            return (TradeOrderfillDTO) super.clone();
         } catch (CloneNotSupportedException e) {
             // will never happen
             return null;
