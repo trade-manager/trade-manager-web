@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.trade.core.persistent.employee.Employee;
 import org.trade.core.persistent.employee.EmployeeDTO;
 import org.trade.core.persistent.employee.EmployeeService;
+import org.trade.core.persistent.user.UserDTO;
 import org.trade.web.rest.dto.CreateEmployeeRequest;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,7 +45,16 @@ public class EmployeeController {
     public List<EmployeeDTO> getEmployees(@RequestParam(value = "text", required = false) String text) {
 
         List<Employee> employees = (text == null) ? employeeService.getEmployees() : employeeService.getEmployeesContainingText(text);
-        return employees.stream().map(EmployeeDTO::from).collect(Collectors.toList());
+        List<EmployeeDTO> employeeDTOs = new ArrayList<>();
+
+        for(Employee employee : employees){
+
+            UserDTO user = UserDTO.from(employee.getUser(), employee.getUser().getRoleDTOs());
+            EmployeeDTO employeeDTO = EmployeeDTO.from(employee, user);
+            employeeDTOs.add(employeeDTO);
+        }
+        return employeeDTOs;
+       // return employees.stream().map(EmployeeDTO::from).collect(Collectors.toList());
     }
 
     @Operation(security = {@SecurityRequirement(name = BASIC_AUTH_SECURITY_SCHEME)})
@@ -52,7 +63,8 @@ public class EmployeeController {
     public EmployeeDTO createEmployee(@Valid @RequestBody CreateEmployeeRequest createEmployeeRequest) {
 
         Employee employee = EmployeeController.from(createEmployeeRequest);
-        return EmployeeDTO.from(employeeService.saveEmployee(employee));
+        employee = employeeService.saveEmployee(employee);
+        return EmployeeDTO.from(employee, UserDTO.from(employee.getUser(), employee.getUser().getRoleDTOs()));
     }
 
     @Operation(security = {@SecurityRequirement(name = BASIC_AUTH_SECURITY_SCHEME)})
@@ -61,7 +73,7 @@ public class EmployeeController {
 
         Employee employee = employeeService.validateAndGetEmployee(id);
         employeeService.deleteEmployee(employee);
-        return EmployeeDTO.from(employee);
+        return EmployeeDTO.from(employee, UserDTO.from(employee.getUser(), employee.getUser().getRoleDTOs()));
     }
 
     public static Employee from(CreateEmployeeRequest createEmployeeRequest) {

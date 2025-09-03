@@ -13,6 +13,7 @@ import org.trade.core.persistent.user.UserDTO;
 import org.trade.core.persistent.user.UserService;
 import org.trade.web.security.CustomUserDetails;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,21 +38,33 @@ public class UserController {
     @GetMapping("/me")
     public UserDTO getCurrentUser(@AuthenticationPrincipal CustomUserDetails currentUser) {
 
-        return UserDTO.from(userService.validateAndGetUserByUsername(currentUser.getUsername()));
+        User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
+        return UserDTO.from(user, user.getRoleDTOs());
     }
 
     @Operation(security = {@SecurityRequirement(name = BASIC_AUTH_SECURITY_SCHEME)})
     @GetMapping
     public List<UserDTO> getUsers() {
 
-        return userService.getUsers().stream().map(UserDTO::from).collect(Collectors.toList());
+        List<User>  users = userService.getUsers();
+        List<UserDTO>  userDTOs = new ArrayList<>();
+
+        for(User user : users){
+
+            UserDTO userDTO =  UserDTO.from(user, user.getRoleDTOs());
+            userDTOs.add(userDTO);
+        }
+
+        return userDTOs;
+        //return userService.getUsers().stream().map(UserDTO::from).collect(Collectors.toList());
     }
 
     @Operation(security = {@SecurityRequirement(name = BASIC_AUTH_SECURITY_SCHEME)})
     @GetMapping("/{username}")
     public UserDTO getUser(@PathVariable String username) {
 
-        return UserDTO.from(userService.validateAndGetUserByUsername(username));
+        User user = userService.validateAndGetUserByUsername(username);
+        return UserDTO.from(user, user.getRoleDTOs());
     }
 
     @Operation(security = {@SecurityRequirement(name = BASIC_AUTH_SECURITY_SCHEME)})
@@ -60,6 +73,6 @@ public class UserController {
 
         User user = userService.validateAndGetUserByUsername(username);
         userService.deleteUser(user);
-        return UserDTO.from(user);
+        return UserDTO.from(user, user.getRoleDTOs());
     }
 }

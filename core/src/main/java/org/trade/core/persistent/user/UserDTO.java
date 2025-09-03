@@ -1,16 +1,18 @@
 package org.trade.core.persistent.user;
 
 import org.trade.core.persistent.domain.Domain;
-import org.trade.core.persistent.role.Role;
+import org.trade.core.persistent.role.RoleDTO;
+
+import java.util.List;
 
 /**
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
 public record UserDTO(Long id, String username, String name, String firstName, String lastName, String email,
-                      Domain domain, Role role) {
+                      List<RoleDTO> role, Domain domain) {
 
-    public static UserDTO from(User user) {
+    public static UserDTO from(User user, List<RoleDTO> roles) {
 
         return new UserDTO(
                 user.getId(),
@@ -19,8 +21,8 @@ public record UserDTO(Long id, String username, String name, String firstName, S
                 user.getFirstName(),
                 user.getLastName(),
                 user.getEmail(),
-                user.getDomain(),
-                user.getRole()
+                roles,
+                user.getDomain()
         );
     }
 }

@@ -120,8 +120,8 @@ public class JSONMapperIT {
 
         candle.getContract().setTradePositions(new ArrayList<>());
         candle.getContract().setCandles(new ArrayList<>());
-        ContractDTO contractDto = JSONMapper.convertToDto(candle.getContract(), ContractDTO.class);
-        CandleDTO candleDto = JSONMapper.convertToDto(candle, CandleDTO.class);
+        ContractDTO contractDto = JSONMapper.convertEntityToDTO(candle.getContract(), ContractDTO.class);
+        CandleDTO candleDto = JSONMapper.convertEntityToDTO(candle, CandleDTO.class);
         candleDto.setContract(contractDto);
 
         String json = JSONMapper.getJSONString(candleDto);
@@ -133,7 +133,7 @@ public class JSONMapperIT {
         _log.info("mapCandleJSON Candle JSON: {}", candleDto.toString());
         assertEquals(candle.getId(), candleDto.getId());
 
-        Candle newCandle = JSONMapper.convertToEntity(candleDto, Candle.class);
+        Candle newCandle = JSONMapper.convertDTOToEntity(candleDto, Candle.class);
         _log.info("mapCandleJSON new Candle: {}", newCandle.toString());
         assertEquals(candle.getId(), newCandle.getId());
     }
@@ -167,8 +167,8 @@ public class JSONMapperIT {
         _log.info("IdOrder: {}", tradeOrder.getId());
 
 
-        TradestrategyLiteDTO tradestrategyLiteDto = JSONMapper.convertToDto(tradestrategy, TradestrategyLiteDTO.class);
-        TradeOrderDTO tradeOrderDto = JSONMapper.convertToDto(tradeOrder, TradeOrderDTO.class);
+        TradestrategyLiteDTO tradestrategyLiteDto = JSONMapper.convertEntityToDTO(tradestrategy, TradestrategyLiteDTO.class);
+        TradeOrderDTO tradeOrderDto = JSONMapper.convertEntityToDTO(tradeOrder, TradeOrderDTO.class);
         tradeOrderDto.setTradestrategyLite(tradestrategyLiteDto);
 
         String json = JSONMapper.getJSONString(tradeOrderDto);
@@ -180,12 +180,12 @@ public class JSONMapperIT {
         _log.info("mapTradeOrder tradeOrderDto JSON: {}", tradeOrderDto.toString());
         assertEquals(tradeOrder.getId(), tradeOrderDto.getId());
 
-        TradeOrder newTradeOrder = JSONMapper.convertToEntity(tradeOrderDto, TradeOrder.class);
+        TradeOrder newTradeOrder = JSONMapper.convertDTOToEntity(tradeOrderDto, TradeOrder.class);
         _log.info("mapTradeOrder new newTradeOrder: {}", newTradeOrder.toString());
         assertEquals(tradeOrder.getId(), newTradeOrder.getId());
 
         tradeOrder = tradeService.findTradeOrderByKey(newTradeOrder.getOrderKey());
-        tradeOrderDto = JSONMapper.convertToDto(tradeOrder, TradeOrderDTO.class);
+        tradeOrderDto = JSONMapper.convertEntityToDTO(tradeOrder, TradeOrderDTO.class);
         json = JSONMapper.getJSONString(tradeOrderDto);
         _log.info("mapTradeOrder tradeOrderDto JSON: {}", json.toString());
         dto = new JSONObject(json);

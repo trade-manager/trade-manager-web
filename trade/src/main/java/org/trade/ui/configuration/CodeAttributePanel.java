@@ -48,7 +48,7 @@ public class CodeAttributePanel extends JPanel {
         this.setLayout(new BorderLayout());
 
         int i = 0;
-        for (CodeAttribute codeAttribute : this.codeType.getCodeAttribute()) {
+        for (CodeAttribute codeAttribute : this.codeType.getCodeAttributes()) {
 
             JLabel jLabel = new JLabel(codeAttribute.getName() + ": ");
             jLabel.setToolTipText(codeAttribute.getDescription());
@@ -121,7 +121,7 @@ public class CodeAttributePanel extends JPanel {
 
     public List<CodeValue> getCodeValues() {
 
-        for (CodeAttribute codeAttribute : this.codeType.getCodeAttribute()) {
+        for (CodeAttribute codeAttribute : this.codeType.getCodeAttributes()) {
             if (((FormattedTextFieldVerifier) this.fields.get(codeAttribute.getName()).getInputVerifier()).isValid()) {
 
                 JComponent field = this.fields.get(codeAttribute.getName());
@@ -136,7 +136,7 @@ public class CodeAttributePanel extends JPanel {
                  * Add code values or updated the current ones. Note there
                  * should always be an equal number for attributes and values.
                  */
-                if (this.currentCodeValues.size() < this.codeType.getCodeAttribute().size()) {
+                if (this.currentCodeValues.size() < this.codeType.getCodeAttributes().size()) {
                     this.currentCodeValues.add(new CodeValue(codeAttribute, newValue));
                 } else {
                     for (CodeValue codeValue : this.currentCodeValues) {

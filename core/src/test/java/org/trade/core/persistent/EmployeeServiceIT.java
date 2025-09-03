@@ -16,10 +16,18 @@ import org.trade.core.TradestrategyBase;
 import org.trade.core.persistent.domain.Domain;
 import org.trade.core.persistent.domain.DomainService;
 import org.trade.core.persistent.employee.Employee;
+import org.trade.core.persistent.employee.EmployeeDTO;
 import org.trade.core.persistent.employee.EmployeeService;
+import org.trade.core.persistent.role.Role;
+import org.trade.core.persistent.role.RoleService;
 import org.trade.core.persistent.user.User;
+import org.trade.core.persistent.user.UserDTO;
 import org.trade.core.persistent.user.UserService;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
@@ -37,11 +45,16 @@ public class EmployeeServiceIT {
     private DomainService domainService;
 
     @Autowired
+    private RoleService roleService;
+
+    @Autowired
     private UserService userService;
 
     @Autowired
     private EmployeeService employeeService;
 
+    private Domain gobalDomain;
+    private User adminUser;
     private static final String userName = "TEST-" + TradestrategyBase.getRandomNumber(4);
 
     /**
@@ -56,6 +69,11 @@ public class EmployeeServiceIT {
      */
     @BeforeEach
     public void setUp() throws Exception {
+
+        gobalDomain = domainService.findDomainByName(Domain.GLOBAL);
+        assertNotNull(gobalDomain.getId());
+        adminUser = userService.findUserByName("admin");
+        assertNotNull(adminUser.getId());
     }
 
     /**
@@ -65,7 +83,18 @@ public class EmployeeServiceIT {
     public void tearDown() throws ClassNotFoundException {
 
         Employee employee = employeeService.findEmployeeByName(userName);
-        employeeService.deleteEmployee(employee);
+
+        if (null != employee) {
+
+            employeeService.deleteEmployee(employee);
+        }
+
+        User user = userService.findUserByName(userName);
+
+        if (null != user) {
+
+            userService.deleteUser(user);
+        }
     }
 
     /**
@@ -78,11 +107,64 @@ public class EmployeeServiceIT {
     @Test
     public void createEmployee() {
 
-        Domain gobalDomain = domainService.findDomainByName(Domain.GLOBAL);
-        assertNotNull(gobalDomain.getId());
-        User adminUser = userService.findUserByName("admin");
         Employee employee = new Employee(userName, userName, userName, userName, userName + "@" + Domain.GLOBAL + ".com", adminUser);
         employeeService.saveEmployee(employee);
         assertNotNull(employee.getId());
+    }
+
+    @Test
+    public void findEmployeeAdminDTO() {
+
+        Employee instance = new Employee(userName, userName, userName, userName, userName + "@" + Domain.GLOBAL + ".com", adminUser);
+        employeeService.saveEmployee(instance);
+        assertNotNull(instance.getId());
+
+        List<Employee> employees = employeeService.getEmployeesContainingText(userName);
+        List<EmployeeDTO> employeeDTOs = new ArrayList<>();
+
+        for (Employee employee : employees) {
+
+            UserDTO user = UserDTO.from(employee.getUser(), employee.getUser().getRoleDTOs());
+            EmployeeDTO employeeDTO = EmployeeDTO.from(employee, user);
+            employeeDTOs.add(employeeDTO);
+        }
+        //List<EmployeeDTO> employeesDTO =  employees.stream().map(EmployeeDTO::from).collect(Collectors.toList());
+        assertFalse(employeeDTOs.isEmpty());
+    }
+
+    @Test
+    public void findEmployeeManagerDTO() {
+
+        Employee instanceAdmin = new Employee(userName, userName, userName, userName, userName + "@" + Domain.GLOBAL + ".com", adminUser);
+        employeeService.saveEmployee(instanceAdmin);
+        assertNotNull(instanceAdmin.getId());
+
+        Role role = roleService.findRoleByName(Role.ROLE_MANAGER);
+        assertNotNull(role.getId());
+        List<Role> roles = new ArrayList<>();
+        roles.add(role);
+
+        String name =  "TEST-" + TradestrategyBase.getRandomNumber(4);
+        User user = new User(name, name, name, name, name + "@" + Domain.GLOBAL + ".com", name, gobalDomain, roles);
+        user = userService.saveUser(user);
+        assertNotNull(user.getId());
+
+        Employee instance = new Employee(name, name, name, name, name + "@" + Domain.GLOBAL + ".com", user);
+        employeeService.saveEmployee(instance);
+        assertNotNull(instance.getId());
+
+        List<Employee> employees = employeeService.getEmployeesContainingText(name);
+        List<EmployeeDTO> employeeDTOs = new ArrayList<>();
+
+        for (Employee employee : employees) {
+
+            UserDTO userDTO = UserDTO.from(employee.getUser(), employee.getUser().getRoleDTOs());
+            EmployeeDTO employeeDTO = EmployeeDTO.from(employee, userDTO);
+            employeeDTOs.add(employeeDTO);
+        }
+
+        employeeService.deleteEmployee(instance);
+        //List<EmployeeDTO> employeesDTO =  employees.stream().map(EmployeeDTO::from).collect(Collectors.toList());
+        assertFalse(employeeDTOs.isEmpty());
     }
 }

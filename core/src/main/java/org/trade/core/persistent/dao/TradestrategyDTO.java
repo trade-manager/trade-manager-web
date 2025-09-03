@@ -35,7 +35,7 @@ public class TradestrategyDTO extends Aspect implements Serializable, Cloneable 
     private PortfolioDTO portfolio;
     private ContractDTO contract;
     private TradingdayDTO tradingday;
-    private List<TradeOrderDTO> tradeOrders = new ArrayList<>(0);
+    private List<TradeOrderDTO> tradeOrderDTOs = new ArrayList<>(0);
 
 
     public TradestrategyDTO() {
@@ -335,17 +335,17 @@ public class TradestrategyDTO extends Aspect implements Serializable, Cloneable 
      *
      * @return List<TradeOrderDto>
      */
-    public List<TradeOrderDTO> getTradeOrders() {
-        return this.tradeOrders;
+    public List<TradeOrderDTO> getTradeOrderDTOs() {
+        return this.tradeOrderDTOs;
     }
 
     /**
      * Method setTradeOrders.
      *
-     * @param tradeOrders List<TradeOrderDto>
+     * @param tradeOrderDTOs List<TradeOrderDto>
      */
-    public void setTradeOrders(List<TradeOrderDTO> tradeOrders) {
-        this.tradeOrders = tradeOrders;
+    public void setTradeOrderDTOs(List<TradeOrderDTO> tradeOrderDTOs) {
+        this.tradeOrderDTOs = tradeOrderDTOs;
     }
 
     /**
@@ -357,20 +357,20 @@ public class TradestrategyDTO extends Aspect implements Serializable, Cloneable 
 
         int index = 0;
 
-        for (TradeOrderDTO currTradeOrder : this.tradeOrders) {
+        for (TradeOrderDTO currTradeOrder : this.tradeOrderDTOs) {
 
             if (CoreUtils.nullSafeComparator(currTradeOrder.getId(), tradeOrder.getId()) == 0) {
 
-                index = this.tradeOrders.indexOf(currTradeOrder);
+                index = this.tradeOrderDTOs.indexOf(currTradeOrder);
                 break;
             }
         }
 
         if (index > 0) {
 
-            this.tradeOrders.remove(index);
+            this.tradeOrderDTOs.remove(index);
         }
-        this.tradeOrders.add(tradeOrder);
+        this.tradeOrderDTOs.add(tradeOrder);
     }
 
 
@@ -529,7 +529,7 @@ public class TradestrategyDTO extends Aspect implements Serializable, Cloneable 
         StrategyDTO strategy = (StrategyDTO) this.getStrategy().clone();
         tradestrategy.setStrategy(strategy);
         List<TradeOrderDTO> tradeOrders = new ArrayList<>(0);
-        tradestrategy.setTradeOrders(tradeOrders);
+        tradestrategy.setTradeOrderDTOs(tradeOrders);
         return tradestrategy;
     }
 }

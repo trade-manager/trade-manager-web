@@ -15,17 +15,9 @@ public interface RoleRepository extends AspectRepository<Role, Long> {
     Role findByName(String name);
 
     /**
-     * Method findRoleByName.
-     *
-     * @param name String
-     * @return Role
-     */
-    Role findRoleByName(String name);
-
-    /**
      * Method findByContainedRoleIsNull.
      *
-     * @return
+     * @return List<Role>
      */
     List<Role> findByContainedRoleIsNull();
 }

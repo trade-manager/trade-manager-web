@@ -1,6 +1,8 @@
 package org.trade.core.persistent.role;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.trade.core.util.JSONMapper;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,7 +36,16 @@ public class RoleServiceImpl implements RoleService {
         roleRepository.delete(role);
     }
 
-    public List<RoleDTO> findAllTopLevelEmployees() {
+    @Transactional
+    public RoleDTO findRoleDTOByName(String name) {
+
+        Role role = roleRepository.findByName(name);
+        return this.convertToDTO(role);
+    }
+
+    @Transactional
+    public List<RoleDTO> findAllTopLevelRoleDTOs() {
+
         // Use a query to get only top-level managers
         List<Role> roles = roleRepository.findByContainedRoleIsNull();
         return roles.stream()
@@ -43,19 +54,21 @@ public class RoleServiceImpl implements RoleService {
     }
 
     private RoleDTO convertToDTO(Role role) {
+
+        role.getContainRoles().size();
         RoleDTO dto = new RoleDTO();
         dto.setId(role.getId());
         dto.setName(role.getName());
         dto.setDescription(role.getDescription());
 
         if (role.getContainedRole() != null) {
-            dto.setContainedRoleId(role.getContainedRole().getId());
+            dto.setContainedRole(JSONMapper.convertEntityToDTO(role.getContainedRole(), RoleDTO.class));
         }
 
         // Recursively convert subordinates, or fetch lazily if needed.
         if (role.getContainRoles() != null && !role.getContainRoles().isEmpty()) {
 
-            dto.setContainRoles(role.getContainRoles().stream()
+            dto.setContainRoleDTOs(role.getContainRoles().stream()
                     .map(this::convertToDTO)
                     .collect(Collectors.toList()));
         }

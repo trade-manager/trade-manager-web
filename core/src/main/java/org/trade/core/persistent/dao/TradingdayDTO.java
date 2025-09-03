@@ -65,7 +65,6 @@ public class TradingdayDTO extends Aspect implements Serializable, Cloneable {
         this.marketBias = marketBias;
         this.marketGap = marketGap;
         this.marketBar = marketBar;
-
     }
 
     /**

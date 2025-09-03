@@ -69,12 +69,12 @@ public class JSONMapper {
         return objectMapper.readValue(json, clazz);
     }
 
-    public static <T> T convertToDto(Aspect aspect, Class<T> clazz) {
+    public static <T> T convertEntityToDTO(Aspect aspect, Class<T> clazz) {
 
         return modelMapper.map(aspect, clazz);
     }
 
-    public static <T> T convertToEntity(Aspect aspect, Class<T> clazz) {
+    public static <T> T convertDTOToEntity(Aspect aspect, Class<T> clazz) {
 
         return modelMapper.map(aspect, clazz);
     }

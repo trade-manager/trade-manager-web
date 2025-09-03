@@ -3,6 +3,7 @@ package org.trade.web;
 import org.json.JSONObject;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -26,6 +27,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -35,9 +37,9 @@ import static org.junit.jupiter.api.Assertions.fail;
 @SpringBootTest
 @ContextConfiguration(classes = ApplicationRepositoryConfig.class,
         initializers = ApplicationProfileInitializer.class)
-class EmployeeApiApplicationIT {
+class EmployeeControllerIT {
 
-    private final static Logger _log = LoggerFactory.getLogger(EmployeeApiApplicationIT.class);
+    private final static Logger _log = LoggerFactory.getLogger(EmployeeControllerIT.class);
 
     @Autowired
     private DomainService domainService;
@@ -53,8 +55,24 @@ class EmployeeApiApplicationIT {
     /**
      * Method setUp.
      */
+    @BeforeAll
+    public static void setUp() {
+
+    }
+
+    /**
+     * Method tearDown.
+     */
+    @AfterAll
+    public static void tearDown() {
+
+    }
+
+    /**
+     * Method setUp.
+     */
     @BeforeEach
-    public void setUp() throws Exception {
+    public void setUpTest() {
 
         Domain gobalDomain = domainService.findDomainByName(Domain.GLOBAL);
         assertNotNull(gobalDomain.getId());
@@ -73,29 +91,24 @@ class EmployeeApiApplicationIT {
      * Method tearDown.
      */
     @AfterEach
-    public void tearDown() throws Exception {
+    public void tearDownTest() {
 
         User user = userService.findUserByName(userName);
         userService.deleteUser(user);
     }
 
-    /**
-     * Method tearDownAfterClass.
-     */
-    @AfterAll
-    public static void tearDownAfterClass() {
-
-    }
 
     @Test
-    public void saveUserREST() throws IOException, InterruptedException {
+    public void getEmployeesREST() throws IOException, InterruptedException {
 
-        String endpoint = "http://localhost:8080/api/users/" + userName;
+        String endpoint = "http://localhost:8080/api/employees";
         HttpClient client = HttpClient.newHttpClient();
 
         HttpRequest request = HttpRequest.newBuilder()
+                .GET()
                 .uri(URI.create(endpoint))
                 .header("Accept", "application/json")
+                .header("Authorization", getBasicAuthenticationHeader("admin", "admin"))
                 .build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
@@ -107,5 +120,11 @@ class EmployeeApiApplicationIT {
         } else {
             fail("Error: " + response.statusCode());
         }
+    }
+
+    private static final String getBasicAuthenticationHeader(String username, String password) {
+
+        String valueToEncode = username + ":" + password;
+        return "Basic " + Base64.getEncoder().encodeToString(valueToEncode.getBytes());
     }
 }

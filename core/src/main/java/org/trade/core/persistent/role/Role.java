@@ -105,7 +105,6 @@ public class Role extends Aspect implements Serializable, Cloneable {
         this.containedRole = containedRole;
     }
 
-
     /**
      * Method getContainRoles.
      *

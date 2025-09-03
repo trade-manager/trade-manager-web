@@ -75,7 +75,7 @@ public class TradeOrderDTO extends Aspect implements java.io.Serializable, Clone
     private Integer permId;
     private Integer parentId;
 
-    private List<TradeOrderfillDTO> tradeOrderfills = new ArrayList<>(0);
+    private List<TradeOrderfillDTO> tradeOrderfillDTOs = new ArrayList<>(0);
     private TradePositionDTO tradePosition;
     private TradestrategyLiteDTO tradestrategyLite;
 
@@ -271,7 +271,7 @@ public class TradeOrderDTO extends Aspect implements java.io.Serializable, Clone
         this.warningMessage = warningMessage;
         this.whyHeld = whyHeld;
         this.orderUpdateDate = lastUpdateDate;
-        this.tradeOrderfills = tradeOrderfills;
+        this.tradeOrderfillDTOs = tradeOrderfills;
     }
 
     /**
@@ -1090,17 +1090,17 @@ public class TradeOrderDTO extends Aspect implements java.io.Serializable, Clone
      *
      * @return List<TradeOrderfillDto>
      */
-    public List<TradeOrderfillDTO> getTradeOrderfills() {
-        return this.tradeOrderfills;
+    public List<TradeOrderfillDTO> getTradeOrderfillDTOs() {
+        return this.tradeOrderfillDTOs;
     }
 
     /**
      * Method setTradeOrderfills.
      *
-     * @param tradeOrderfills List<TradeOrderfillDto>
+     * @param tradeOrderfillDTOs List<TradeOrderfillDto>
      */
-    public void setTradeOrderfills(List<TradeOrderfillDTO> tradeOrderfills) {
-        this.tradeOrderfills = tradeOrderfills;
+    public void setTradeOrderfillDTOs(List<TradeOrderfillDTO> tradeOrderfillDTOs) {
+        this.tradeOrderfillDTOs = tradeOrderfillDTOs;
     }
 
     /**
@@ -1109,7 +1109,7 @@ public class TradeOrderDTO extends Aspect implements java.io.Serializable, Clone
      * @param tradeOrderfills TradeOrderfill
      */
     public void addTradeOrderfill(TradeOrderfillDTO tradeOrderfills) {
-        this.tradeOrderfills.add(tradeOrderfills);
+        this.tradeOrderfillDTOs.add(tradeOrderfills);
     }
 
     /**
@@ -1121,7 +1121,7 @@ public class TradeOrderDTO extends Aspect implements java.io.Serializable, Clone
     @Transient
     public boolean existTradeOrderfill(String execId) {
 
-        for (TradeOrderfillDTO tradeOrderfill : this.getTradeOrderfills()) {
+        for (TradeOrderfillDTO tradeOrderfill : this.getTradeOrderfillDTOs()) {
 
             if (tradeOrderfill.getExecId().equals(execId)) {
                 return true;
@@ -1238,7 +1238,7 @@ public class TradeOrderDTO extends Aspect implements java.io.Serializable, Clone
 
             TradeOrderDTO order = (TradeOrderDTO) super.clone();
             List<TradeOrderfillDTO> tradeOrderfills = new ArrayList<>(0);
-            order.setTradeOrderfills(tradeOrderfills);
+            order.setTradeOrderfillDTOs(tradeOrderfills);
             return order;
         } catch (CloneNotSupportedException ex) {
 

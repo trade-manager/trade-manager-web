@@ -14,6 +14,8 @@ import org.trade.core.dao.Aspect;
 import org.trade.core.persistent.dao.Account;
 import org.trade.core.persistent.domain.Domain;
 import org.trade.core.persistent.role.Role;
+import org.trade.core.persistent.role.RoleDTO;
+import org.trade.core.util.JSONMapper;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -222,6 +224,23 @@ public class User extends Aspect implements Serializable, Cloneable {
         List<Role> roles = new ArrayList<>(0);
         user.setRoles(roles);
         return user;
+    }
+
+    /**
+     * @return
+     */
+    @Transient
+    public List<RoleDTO> getRoleDTOs() {
+
+        List<RoleDTO> roleDTOs = new ArrayList<>();
+
+        for (Role role : this.getRoles()) {
+
+            RoleDTO roleDTO = JSONMapper.convertEntityToDTO(role, RoleDTO.class);
+            roleDTOs.add(roleDTO);
+        }
+
+        return roleDTOs;
     }
 }
 
