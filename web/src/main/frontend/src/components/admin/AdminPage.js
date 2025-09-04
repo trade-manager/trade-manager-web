@@ -18,6 +18,9 @@ function AdminPage() {
   const [employees, setEmployees] = useState([])
   const [employeeId, setEmployeeId] = useState('')
   const [employeeName, setEmployeeName] = useState('')
+  const [employeeFirstName, setEmployeeFirstName] = useState('')
+  const [employeeLastName, setEmployeeLastName] = useState('')
+  const [employeeEmail, setEmployeeEmail] = useState('')
   const [employeeTextSearch, setEmployeeTextSearch] = useState('')
   const [isEmployeesLoading, setIsEmployeesLoading] = useState(false)
 
@@ -33,6 +36,12 @@ function AdminPage() {
       setEmployeeId(value)
     } else if (name === 'employeeName') {
       setEmployeeName(value)
+    } else if (name === 'employeeFirstName') {
+      setEmployeeFirstName(value)
+    } else if (name === 'employeeLastName') {
+      setEmployeeLastName(value)
+    } else if (name === 'employeeEmail') {
+      setEmployeeEmail(value)
     } else if (name === 'employeeTextSearch') {
       setEmployeeTextSearch(value)
     }
@@ -95,14 +104,18 @@ function AdminPage() {
 
   const handleAddEmployee = async () => {
     try {
-      const employee = { id: employeeId.trim(), name: employeeName.trim() }
-      if (!(employee.id && employee.name)) {
+
+      const employee = { name: employeeName.trim(), firstName: employeeFirstName.trim() , lastName: employeeLastName.trim(), email: employeeEmail.trim(), user: user}
+console.log(JSON.stringify(employee));
+      if (!(employee.email && employee.name)) {
+
         return
       }
       await employeeApi.addEmployee(user, employee)
       clearEmployeeForm()
       await handleGetEmployees()
     } catch (error) {
+
       handleLogError(error)
     }
   }
@@ -119,8 +132,10 @@ function AdminPage() {
   }
 
   const clearEmployeeForm = () => {
-    setEmployeeId('')
     setEmployeeName('')
+    setEmployeeFirstName('')
+    setEmployeeLastName('')
+    setEmployeeEmail('')
   }
 
   if (!isAdmin) {
@@ -138,7 +153,7 @@ function AdminPage() {
         isEmployeesLoading={isEmployeesLoading}
         employees={employees}
         employeeId={employeeId}
-        employeeTitle={employeeName}
+        employeeName={employeeName}
         employeeTextSearch={employeeTextSearch}
         handleAddEmployee={handleAddEmployee}
         handleDeleteEmployee={handleDeleteEmployee}

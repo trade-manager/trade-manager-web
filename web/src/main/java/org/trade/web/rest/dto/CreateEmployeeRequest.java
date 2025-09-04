@@ -2,6 +2,7 @@ package org.trade.web.rest.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import org.trade.core.persistent.user.User;
 
 /**
  * @author Simon Allen
@@ -9,10 +10,10 @@ import jakarta.validation.constraints.NotBlank;
  */
 public record CreateEmployeeRequest(
 
-        @Schema(example = "1234567812") @NotBlank Long id,
-        @Schema(example = "James Dean") @NotBlank String name,
-        @Schema(example = "James") @NotBlank String firstName,
-        @Schema(example = "Dean") @NotBlank String lastName,
-        @Schema(example = "James Dean user") @NotBlank String description,
-        @Schema(example = "james.dean@global.com") @NotBlank String email) {
+        @Schema(description = "name") @NotBlank String name,
+        @Schema(description = "firstName") @NotBlank String firstName,
+        @Schema(description = "lastName")@NotBlank String lastName,
+        @Schema(description = "email") @NotBlank String email,
+        @Schema(description = "user") CreateUserRequest user)
+{
 }

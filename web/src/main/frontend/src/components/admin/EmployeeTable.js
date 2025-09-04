@@ -2,7 +2,7 @@ import React from 'react'
 import { Button, Form, Grid, Image, Input, Table } from 'semantic-ui-react'
 import EmployeeForm from './EmployeeForm'
 
-function EmployeeTable({ employees, employeeId, employeeName, employeeTextSearch, handleInputChange, handleAddEmployee, handleDeleteEmployee, handleSearchEmployee }) {
+function EmployeeTable({ employees, employeeName, employeeFirstName, employeeLastName, employeeEmail, employeeTextSearch, handleInputChange, handleAddEmployee, handleDeleteEmployee, handleSearchEmployee }) {
   let employeeList
   if (employees.length === 0) {
     employeeList = (
@@ -37,21 +37,23 @@ function EmployeeTable({ employees, employeeId, employeeName, employeeTextSearch
     <>
       <Grid stackable divided>
         <Grid.Row columns='2'>
-          <Grid.Column width='5'>
+          <Grid.Column width={4}>
             <Form onSubmit={handleSearchEmployee}>
               <Input
                 action={{ icon: 'search' }}
                 name='employeeTextSearch'
-                placeholder='Search by Title'
+                placeholder='Search by Name'
                 value={employeeTextSearch}
                 onChange={handleInputChange}
               />
             </Form>
           </Grid.Column>
-          <Grid.Column>
+          <Grid.Column width={3}>
             <EmployeeForm
-              employeeId={employeeId}
               employeeName={employeeName}
+              employeeFirstName={employeeFirstName}
+              employeeLastName={employeeLastName}
+              employeeEmail={employeeEmail}
               handleInputChange={handleInputChange}
               handleAddEmployee={handleAddEmployee}
             />
@@ -63,10 +65,10 @@ function EmployeeTable({ employees, employeeId, employeeName, employeeTextSearch
           <Table.Row>
             <Table.HeaderCell width={1}/>
             <Table.HeaderCell width={1}>ID</Table.HeaderCell>
-            <Table.HeaderCell width={2}>Name</Table.HeaderCell>
-            <Table.HeaderCell width={3}>First Name</Table.HeaderCell>
-            <Table.HeaderCell width={4}>Last Name</Table.HeaderCell>
-            <Table.HeaderCell width={5}>Email</Table.HeaderCell>
+            <Table.HeaderCell width={4}>Name</Table.HeaderCell>
+            <Table.HeaderCell width={2}>First Name</Table.HeaderCell>
+            <Table.HeaderCell width={2}>Last Name</Table.HeaderCell>
+            <Table.HeaderCell width={4}>Email</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>

@@ -32,7 +32,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     public Employee validateAndGetEmployee(Long id) {
 
         return employeeRepository.findById(id)
-                .orElseThrow(() -> new EmployeeNotFoundException(String.format("Book with id %s not found", id)));
+                .orElseThrow(() -> new EmployeeNotFoundException(String.format("Employee with id %s not found", id)));
     }
 
     public Employee saveEmployee(Employee employee) {
@@ -54,6 +54,4 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         return employeeRepository.findByName(name);
     }
-
-
 }

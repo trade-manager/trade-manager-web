@@ -6,7 +6,7 @@ import org.trade.core.util.JSONMapper;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-public record UserRecord(Long id, String username,  String name,  String email, String role) {
+public record UserRecord(Long id, String username, String name, String email, String role) {
 
     public static UserRecord from(User user) {
 

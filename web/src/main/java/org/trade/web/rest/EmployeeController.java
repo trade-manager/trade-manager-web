@@ -16,9 +16,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.trade.core.persistent.employee.Employee;
 import org.trade.core.persistent.employee.EmployeeRecord;
 import org.trade.core.persistent.employee.EmployeeService;
+import org.trade.core.persistent.user.User;
+import org.trade.core.persistent.user.UserService;
 import org.trade.web.rest.dto.CreateEmployeeRequest;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.trade.web.config.SwaggerConfig.BASIC_AUTH_SECURITY_SCHEME;
@@ -32,10 +35,12 @@ import static org.trade.web.config.SwaggerConfig.BASIC_AUTH_SECURITY_SCHEME;
 public class EmployeeController {
 
     private final EmployeeService employeeService;
+    private final UserService userService;
 
-    public EmployeeController(final EmployeeService employeeService) {
+    public EmployeeController(final EmployeeService employeeService, UserService userService) {
 
         this.employeeService = employeeService;
+        this.userService = userService;
     }
 
     @Operation(security = {@SecurityRequirement(name = BASIC_AUTH_SECURITY_SCHEME)})
@@ -51,7 +56,23 @@ public class EmployeeController {
     @PostMapping
     public EmployeeRecord createEmployee(@Valid @RequestBody CreateEmployeeRequest createEmployeeRequest) {
 
-        Employee employee = EmployeeController.from(createEmployeeRequest);
+        Employee employee = null;
+
+        if (null != createEmployeeRequest.user()) {
+
+            Optional<User> user = userService.getUserByUsername(createEmployeeRequest.user().name());
+
+            if (user.isPresent()) {
+
+                employee = EmployeeController.from(createEmployeeRequest, user.get());
+            }
+        }
+
+        if (null == employee) {
+
+            employee = EmployeeController.from(createEmployeeRequest, null);
+        }
+
         employee = employeeService.saveEmployee(employee);
         return EmployeeRecord.from(employee);
     }
@@ -65,8 +86,8 @@ public class EmployeeController {
         return EmployeeRecord.from(employee);
     }
 
-    public static Employee from(CreateEmployeeRequest createEmployeeRequest) {
+    public static Employee from(CreateEmployeeRequest createEmployeeRequest, User user) {
 
-        return new Employee(createEmployeeRequest.id(), createEmployeeRequest.name(), createEmployeeRequest.firstName(), createEmployeeRequest.lastName(), createEmployeeRequest.description(), createEmployeeRequest.email());
+        return new Employee(createEmployeeRequest.name(), createEmployeeRequest.firstName(), createEmployeeRequest.lastName(), createEmployeeRequest.name(), createEmployeeRequest.email(), user);
     }
 }
