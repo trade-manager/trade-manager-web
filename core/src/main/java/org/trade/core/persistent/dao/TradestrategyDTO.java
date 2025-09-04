@@ -35,7 +35,7 @@ public class TradestrategyDTO extends Aspect implements Serializable, Cloneable 
     private PortfolioDTO portfolio;
     private ContractDTO contract;
     private TradingdayDTO tradingday;
-    private List<TradeOrderDTO> tradeOrderDTOs = new ArrayList<>(0);
+    private List<TradeOrderDTO> tradeOrders = new ArrayList<>(0);
 
 
     public TradestrategyDTO() {
@@ -336,16 +336,16 @@ public class TradestrategyDTO extends Aspect implements Serializable, Cloneable 
      * @return List<TradeOrderDto>
      */
     public List<TradeOrderDTO> getTradeOrderDTOs() {
-        return this.tradeOrderDTOs;
+        return this.tradeOrders;
     }
 
     /**
      * Method setTradeOrders.
      *
-     * @param tradeOrderDTOs List<TradeOrderDto>
+     * @param tradeOrders List<TradeOrderDto>
      */
-    public void setTradeOrderDTOs(List<TradeOrderDTO> tradeOrderDTOs) {
-        this.tradeOrderDTOs = tradeOrderDTOs;
+    public void setTradeOrderDTOs(List<TradeOrderDTO> tradeOrders) {
+        this.tradeOrders = tradeOrders;
     }
 
     /**
@@ -357,20 +357,20 @@ public class TradestrategyDTO extends Aspect implements Serializable, Cloneable 
 
         int index = 0;
 
-        for (TradeOrderDTO currTradeOrder : this.tradeOrderDTOs) {
+        for (TradeOrderDTO currTradeOrder : this.tradeOrders) {
 
             if (CoreUtils.nullSafeComparator(currTradeOrder.getId(), tradeOrder.getId()) == 0) {
 
-                index = this.tradeOrderDTOs.indexOf(currTradeOrder);
+                index = this.tradeOrders.indexOf(currTradeOrder);
                 break;
             }
         }
 
         if (index > 0) {
 
-            this.tradeOrderDTOs.remove(index);
+            this.tradeOrders.remove(index);
         }
-        this.tradeOrderDTOs.add(tradeOrder);
+        this.tradeOrders.add(tradeOrder);
     }
 
 

@@ -75,7 +75,7 @@ public class TradeOrderDTO extends Aspect implements java.io.Serializable, Clone
     private Integer permId;
     private Integer parentId;
 
-    private List<TradeOrderfillDTO> tradeOrderfillDTOs = new ArrayList<>(0);
+    private List<TradeOrderfillDTO> tradeOrderfills = new ArrayList<>(0);
     private TradePositionDTO tradePosition;
     private TradestrategyLiteDTO tradestrategyLite;
 
@@ -271,7 +271,7 @@ public class TradeOrderDTO extends Aspect implements java.io.Serializable, Clone
         this.warningMessage = warningMessage;
         this.whyHeld = whyHeld;
         this.orderUpdateDate = lastUpdateDate;
-        this.tradeOrderfillDTOs = tradeOrderfills;
+        this.tradeOrderfills = tradeOrderfills;
     }
 
     /**
@@ -1091,16 +1091,16 @@ public class TradeOrderDTO extends Aspect implements java.io.Serializable, Clone
      * @return List<TradeOrderfillDto>
      */
     public List<TradeOrderfillDTO> getTradeOrderfillDTOs() {
-        return this.tradeOrderfillDTOs;
+        return this.tradeOrderfills;
     }
 
     /**
      * Method setTradeOrderfills.
      *
-     * @param tradeOrderfillDTOs List<TradeOrderfillDto>
+     * @param tradeOrderfills List<TradeOrderfillDto>
      */
-    public void setTradeOrderfillDTOs(List<TradeOrderfillDTO> tradeOrderfillDTOs) {
-        this.tradeOrderfillDTOs = tradeOrderfillDTOs;
+    public void setTradeOrderfillDTOs(List<TradeOrderfillDTO> tradeOrderfills) {
+        this.tradeOrderfills = tradeOrderfills;
     }
 
     /**
@@ -1109,7 +1109,7 @@ public class TradeOrderDTO extends Aspect implements java.io.Serializable, Clone
      * @param tradeOrderfills TradeOrderfill
      */
     public void addTradeOrderfill(TradeOrderfillDTO tradeOrderfills) {
-        this.tradeOrderfillDTOs.add(tradeOrderfills);
+        this.tradeOrderfills.add(tradeOrderfills);
     }
 
     /**

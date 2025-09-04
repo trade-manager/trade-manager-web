@@ -15,6 +15,7 @@ import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
 import org.trade.core.persistent.role.Role;
 import org.trade.core.persistent.role.RoleDTO;
+import org.trade.core.persistent.role.RoleRecord;
 import org.trade.core.persistent.role.RoleService;
 import org.trade.core.util.JSONMapper;
 
@@ -109,11 +110,11 @@ public class RoleServiceIT {
     }
 
     @Test
-    public void findRoleByNameDTO() {
+    public void findRoleByNameRecord() {
 
         Role role = roleService.findRoleByName(Role.ROLE_MANAGER);
         assertNotNull(role);
-        RoleDTO roleDTO = JSONMapper.convertEntityToDTO(role, RoleDTO.class);
-        assertNotNull(roleDTO);
+        RoleRecord roleRecord = RoleRecord.from(role);
+        assertNotNull(roleRecord);
     }
 }

@@ -17,15 +17,18 @@ import org.trade.core.persistent.domain.Domain;
 import org.trade.core.persistent.domain.DomainService;
 import org.trade.core.persistent.employee.Employee;
 import org.trade.core.persistent.employee.EmployeeDTO;
+import org.trade.core.persistent.employee.EmployeeRecord;
 import org.trade.core.persistent.employee.EmployeeService;
 import org.trade.core.persistent.role.Role;
 import org.trade.core.persistent.role.RoleService;
 import org.trade.core.persistent.user.User;
 import org.trade.core.persistent.user.UserDTO;
+import org.trade.core.persistent.user.UserRecord;
 import org.trade.core.persistent.user.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -113,27 +116,19 @@ public class EmployeeServiceIT {
     }
 
     @Test
-    public void findEmployeeAdminDTO() {
+    public void findEmployeeAdminRecord() {
 
         Employee instance = new Employee(userName, userName, userName, userName, userName + "@" + Domain.GLOBAL + ".com", adminUser);
         employeeService.saveEmployee(instance);
         assertNotNull(instance.getId());
 
         List<Employee> employees = employeeService.getEmployeesContainingText(userName);
-        List<EmployeeDTO> employeeDTOs = new ArrayList<>();
-
-        for (Employee employee : employees) {
-
-            UserDTO user = UserDTO.from(employee.getUser(), employee.getUser().getRoleDTOs());
-            EmployeeDTO employeeDTO = EmployeeDTO.from(employee, user);
-            employeeDTOs.add(employeeDTO);
-        }
-        //List<EmployeeDTO> employeesDTO =  employees.stream().map(EmployeeDTO::from).collect(Collectors.toList());
-        assertFalse(employeeDTOs.isEmpty());
+        List<EmployeeRecord> employeeRecords =  employees.stream().map(EmployeeRecord::from).collect(Collectors.toList());
+        assertFalse(employeeRecords.isEmpty());
     }
 
     @Test
-    public void findEmployeeManagerDTO() {
+    public void findEmployeeManagerRecord() {
 
         Employee instanceAdmin = new Employee(userName, userName, userName, userName, userName + "@" + Domain.GLOBAL + ".com", adminUser);
         employeeService.saveEmployee(instanceAdmin);
@@ -154,17 +149,9 @@ public class EmployeeServiceIT {
         assertNotNull(instance.getId());
 
         List<Employee> employees = employeeService.getEmployeesContainingText(name);
-        List<EmployeeDTO> employeeDTOs = new ArrayList<>();
-
-        for (Employee employee : employees) {
-
-            UserDTO userDTO = UserDTO.from(employee.getUser(), employee.getUser().getRoleDTOs());
-            EmployeeDTO employeeDTO = EmployeeDTO.from(employee, userDTO);
-            employeeDTOs.add(employeeDTO);
-        }
 
         employeeService.deleteEmployee(instance);
-        //List<EmployeeDTO> employeesDTO =  employees.stream().map(EmployeeDTO::from).collect(Collectors.toList());
-        assertFalse(employeeDTOs.isEmpty());
+        List<EmployeeRecord> employeeRecords =  employees.stream().map(EmployeeRecord::from).collect(Collectors.toList());
+        assertFalse(employeeRecords.isEmpty());
     }
 }
