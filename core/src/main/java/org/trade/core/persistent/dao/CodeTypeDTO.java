@@ -20,7 +20,7 @@ public class CodeTypeDTO extends Aspect implements java.io.Serializable {
     private String name;
     private String type;
     private String description;
-    private List<CodeAttributeDTO> codeAttributeDTOs = new ArrayList<>(0);
+    private List<CodeAttributeDTO> codeAttributes = new ArrayList<>(0);
 
 
     /**
@@ -112,7 +112,7 @@ public class CodeTypeDTO extends Aspect implements java.io.Serializable {
      * @return List<CodeAttributeDto>
      */
     public List<CodeAttributeDTO> getCodeAttributeDTOs() {
-        return this.codeAttributeDTOs;
+        return this.codeAttributes;
     }
 
     /**
@@ -121,7 +121,7 @@ public class CodeTypeDTO extends Aspect implements java.io.Serializable {
      * @param codeAttributes List<CodeAttributeDto>
      */
     public void setCodeAttributeDTOs(List<CodeAttributeDTO> codeAttributes) {
-        this.codeAttributeDTOs = codeAttributes;
+        this.codeAttributes = codeAttributes;
     }
 
     /**

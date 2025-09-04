@@ -23,11 +23,11 @@ function EmployeeTable({ employees, employeeId, employeeName, employeeTextSearch
               onClick={() => handleDeleteEmployee(employee.id)}
             />
           </Table.Cell>
-          <Table.Cell>
-            <Image src={`http://covers.openlibrary.org/b/id/${employee.id}-M.jpg`} size='tiny' bordered rounded />
-          </Table.Cell>
           <Table.Cell>{employee.id}</Table.Cell>
           <Table.Cell>{employee.name}</Table.Cell>
+          <Table.Cell>{employee.firstName}</Table.Cell>
+          <Table.Cell>{employee.lastName}</Table.Cell>
+          <Table.Cell>{employee.email}</Table.Cell>
         </Table.Row>
       )
     })
@@ -62,9 +62,11 @@ function EmployeeTable({ employees, employeeId, employeeName, employeeTextSearch
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell width={1}/>
-            <Table.HeaderCell width={3}>Cover</Table.HeaderCell>
-            <Table.HeaderCell width={4}>ID</Table.HeaderCell>
-            <Table.HeaderCell width={8}>Name</Table.HeaderCell>
+            <Table.HeaderCell width={1}>ID</Table.HeaderCell>
+            <Table.HeaderCell width={2}>Name</Table.HeaderCell>
+            <Table.HeaderCell width={3}>First Name</Table.HeaderCell>
+            <Table.HeaderCell width={4}>Last Name</Table.HeaderCell>
+            <Table.HeaderCell width={5}>Email</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>

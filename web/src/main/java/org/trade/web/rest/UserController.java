@@ -9,11 +9,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.trade.core.persistent.user.User;
-import org.trade.core.persistent.user.UserDTO;
+import org.trade.core.persistent.user.UserRecord;
 import org.trade.core.persistent.user.UserService;
 import org.trade.web.security.CustomUserDetails;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,43 +35,34 @@ public class UserController {
 
     @Operation(security = {@SecurityRequirement(name = BASIC_AUTH_SECURITY_SCHEME)})
     @GetMapping("/me")
-    public UserDTO getCurrentUser(@AuthenticationPrincipal CustomUserDetails currentUser) {
+    public UserRecord getCurrentUser(@AuthenticationPrincipal CustomUserDetails currentUser) {
 
         User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
-        return UserDTO.from(user, user.getRoleDTOs());
+        return UserRecord.from(user);
     }
 
     @Operation(security = {@SecurityRequirement(name = BASIC_AUTH_SECURITY_SCHEME)})
     @GetMapping
-    public List<UserDTO> getUsers() {
+    public List<UserRecord> getUsers() {
 
-        List<User>  users = userService.getUsers();
-        List<UserDTO>  userDTOs = new ArrayList<>();
-
-        for(User user : users){
-
-            UserDTO userDTO =  UserDTO.from(user, user.getRoleDTOs());
-            userDTOs.add(userDTO);
-        }
-
-        return userDTOs;
-        //return userService.getUsers().stream().map(UserDTO::from).collect(Collectors.toList());
+        List<User> users = userService.getUsers();
+        return userService.getUsers().stream().map(UserRecord::from).collect(Collectors.toList());
     }
 
     @Operation(security = {@SecurityRequirement(name = BASIC_AUTH_SECURITY_SCHEME)})
     @GetMapping("/{username}")
-    public UserDTO getUser(@PathVariable String username) {
+    public UserRecord getUser(@PathVariable String username) {
 
         User user = userService.validateAndGetUserByUsername(username);
-        return UserDTO.from(user, user.getRoleDTOs());
+        return UserRecord.from(user);
     }
 
     @Operation(security = {@SecurityRequirement(name = BASIC_AUTH_SECURITY_SCHEME)})
     @DeleteMapping("/{username}")
-    public UserDTO deleteUser(@PathVariable String username) {
+    public UserRecord deleteUser(@PathVariable String username) {
 
         User user = userService.validateAndGetUserByUsername(username);
         userService.deleteUser(user);
-        return UserDTO.from(user, user.getRoleDTOs());
+        return UserRecord.from(user);
     }
 }

@@ -84,7 +84,7 @@ public class DatabaseInitializer implements CommandLineRunner {
         if (null == oliver) {
 
             List<Role> roles = new ArrayList<>();
-            roles.add(this.roleService.findRoleByName(ROLE_MANAGER));
+            roles.add(this.roleService.findRoleByName(ROLE_USER));
             String name = "oliver";
             String email = name + "." + name + "@" + global.getName() + ".com";
             oliver = this.userService.saveUser(new User(name, name, name, name, email, passwordEncoder.encode("user"), global, roles));

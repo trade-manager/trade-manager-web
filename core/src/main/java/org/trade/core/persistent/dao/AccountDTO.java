@@ -39,7 +39,7 @@ public class AccountDTO extends Aspect implements Serializable, Cloneable {
     private BigDecimal grossPositionValue = new BigDecimal(0);
     private BigDecimal realizedPnL = new BigDecimal(0);
     private BigDecimal unrealizedPnL = new BigDecimal(0);
-    private List<PortfolioDTO> portfolioDTOs = new ArrayList<>(0);
+    private List<PortfolioDTO> portfolios = new ArrayList<>(0);
 
     public AccountDTO() {
 
@@ -297,7 +297,7 @@ public class AccountDTO extends Aspect implements Serializable, Cloneable {
      */
     public PortfolioDTO getDefaultPortfolio() {
 
-        for (PortfolioDTO item : this.portfolioDTOs) {
+        for (PortfolioDTO item : this.portfolios) {
 
             if (item.getIsDefault()) {
 
@@ -313,17 +313,17 @@ public class AccountDTO extends Aspect implements Serializable, Cloneable {
      * @return List<PortfolioDto>
      */
     public List<PortfolioDTO> getPortfolioDTOs() {
-        return this.portfolioDTOs;
+        return this.portfolios;
     }
 
     /**
      * Method setPortfolios.
      *
-     * @param portfolioDTOs List<PortfolioDto>
+     * @param portfolios List<PortfolioDto>
      */
     @JsonIgnore
-    public void setPortfolioDTOs(List<PortfolioDTO> portfolioDTOs) {
-        this.portfolioDTOs = portfolioDTOs;
+    public void setPortfolioDTOs(List<PortfolioDTO> portfolios) {
+        this.portfolios = portfolios;
     }
 
     /**

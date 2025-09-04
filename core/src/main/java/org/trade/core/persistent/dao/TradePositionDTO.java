@@ -48,7 +48,7 @@ public class TradePositionDTO extends Aspect implements java.io.Serializable {
     private BigDecimal totalSellValue;
     private BigDecimal totalNetValue;
     private ContractDTO contract;
-    private List<TradeOrderDTO> tradeOrderDTOs = new ArrayList<>(0);
+    private List<TradeOrderDTO> tradeOrders = new ArrayList<>(0);
 
     public TradePositionDTO() {
     }
@@ -98,7 +98,7 @@ public class TradePositionDTO extends Aspect implements java.io.Serializable {
         this.totalSellQuantity = totalSellQuantity;
         this.totalSellValue = totalSellValue;
         this.totalNetValue = totalNetValue;
-        this.tradeOrderDTOs = tradeOrders;
+        this.tradeOrders = tradeOrders;
     }
 
     /**
@@ -305,17 +305,17 @@ public class TradePositionDTO extends Aspect implements java.io.Serializable {
      * @return List<TradeOrderDto>
      */
     public List<TradeOrderDTO> getTradeOrderDTOs() {
-        return this.tradeOrderDTOs;
+        return this.tradeOrders;
     }
 
     /**
      * Method setTradeOrders.
      *
-     * @param tradeOrderDTOs List<TradeOrderDto>
+     * @param tradeOrders List<TradeOrderDto>
      */
     @JsonIgnore
-    public void setTradeOrderDTOs(List<TradeOrderDTO> tradeOrderDTOs) {
-        this.tradeOrderDTOs = tradeOrderDTOs;
+    public void setTradeOrderDTOs(List<TradeOrderDTO> tradeOrders) {
+        this.tradeOrders = tradeOrders;
     }
 
     /**
@@ -324,7 +324,7 @@ public class TradePositionDTO extends Aspect implements java.io.Serializable {
      * @param tradeOrders TradeOrderDto
      */
     public void addTradeOrder(TradeOrderDTO tradeOrders) {
-        this.tradeOrderDTOs.add(tradeOrders);
+        this.tradeOrders.add(tradeOrders);
     }
 
     /**

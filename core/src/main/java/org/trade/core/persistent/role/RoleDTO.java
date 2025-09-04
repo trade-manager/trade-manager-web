@@ -21,8 +21,8 @@ public class RoleDTO extends Aspect implements Serializable, Cloneable {
     private String name;
     private String description;
     private RoleDTO containedRole;
-    private List<RoleDTO> containRoleDTOs;
-    private List<UserDTO> userDTOs = new ArrayList<>(0);
+    private List<RoleDTO> containRoles;
+    private List<UserDTO> users = new ArrayList<>(0);
 
     public RoleDTO() {
     }
@@ -91,17 +91,17 @@ public class RoleDTO extends Aspect implements Serializable, Cloneable {
      * @return List<RoleDTO>
      */
     public List<RoleDTO> getContainRoleDTOs() {
-        return this.containRoleDTOs;
+        return this.containRoles;
     }
 
     /**
      * Method setContainRoles.
      *
-     * @param containRoleDTOs List<RoleDTO>
+     * @param containRoles List<RoleDTO>
      */
     @JsonIgnore
-    public void setContainRoleDTOs(List<RoleDTO> containRoleDTOs) {
-        this.containRoleDTOs = containRoleDTOs;
+    public void setContainRoleDTOs(List<RoleDTO> containRoles) {
+        this.containRoles = containRoles;
     }
 
     /**
@@ -110,17 +110,17 @@ public class RoleDTO extends Aspect implements Serializable, Cloneable {
      * @return List<UserDTO>
      */
     public List<UserDTO> getUserDTOs() {
-        return this.userDTOs;
+        return this.users;
     }
 
     /**
      * Method setUsers.
      *
-     * @param userDTOs List<UserDTO>
+     * @param users List<UserDTO>
      */
     @JsonIgnore
-    public void setUserDTOs(List<UserDTO> userDTOs) {
-        this.userDTOs = userDTOs;
+    public void setUserDTOs(List<UserDTO> users) {
+        this.users = users;
     }
 
     /**
