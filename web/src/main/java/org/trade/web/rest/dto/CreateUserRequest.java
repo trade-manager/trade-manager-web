@@ -10,6 +10,5 @@ import jakarta.validation.constraints.NotBlank;
 public record CreateUserRequest(
 
         @Schema(description = "name") @NotBlank String name,
-        @Schema(description = "role") @NotBlank String role)
-{
+        @Schema(description = "role") @NotBlank String role) {
 }

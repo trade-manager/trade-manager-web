@@ -1,6 +1,7 @@
 package org.trade.core.persistent.role;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Simon Allen
@@ -21,9 +22,9 @@ public interface RoleService {
 
     /**
      * @param name String
-     * @return Role
+     * @return Optional<Role>
      */
-    Role findRoleByName(String name);
+    Optional<Role> findRoleByName(String name);
 
     /**
      * @return List<RoleDTO>

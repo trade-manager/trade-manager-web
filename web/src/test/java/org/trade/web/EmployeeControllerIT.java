@@ -29,9 +29,11 @@ import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 @SpringBootTest
@@ -74,15 +76,15 @@ class EmployeeControllerIT {
     @BeforeEach
     public void setUpTest() {
 
-        Domain gobalDomain = domainService.findDomainByName(Domain.GLOBAL);
-        assertNotNull(gobalDomain.getId());
-        Role role = roleService.findRoleByName(Role.ROLE_ADMIN);
-        assertNotNull(role.getId());
+        Optional<Domain> gobalDomain = domainService.findDomainByName(Domain.GLOBAL);
+        assertTrue(gobalDomain.isPresent());
+        Optional<Role> role = roleService.findRoleByName(Role.ROLE_ADMIN);
+        assertTrue(role.isPresent());
         List<Role> roles = new ArrayList<>();
-        roles.add(role);
+        roles.add(role.get());
         User user = userService.findUserByName(userName);
         assertNull(user);
-        user = new User(userName, userName, userName, userName, userName + "@" + Domain.GLOBAL + ".com", userName, gobalDomain, roles);
+        user = new User(userName, userName, userName, userName, userName + "@" + Domain.GLOBAL + ".com", userName, gobalDomain.get(), roles);
         user = userService.saveUser(user);
         assertNotNull(user.getId());
     }

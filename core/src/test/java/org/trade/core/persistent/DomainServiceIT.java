@@ -16,6 +16,8 @@ import org.trade.core.TradestrategyBase;
 import org.trade.core.persistent.domain.Domain;
 import org.trade.core.persistent.domain.DomainService;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -54,10 +56,10 @@ public class DomainServiceIT {
      * Method tearDown.
      */
     @AfterEach
-    public void tearDown() throws ClassNotFoundException {
+    public void tearDown() {
 
-        Domain domain = domainService.findDomainByName(childDomainName);
-        domainService.deleteDomain(domain);
+        Optional<Domain> domain = domainService.findDomainByName(childDomainName);
+        domain.ifPresent(value -> domainService.deleteDomain(value));
     }
 
     /**
@@ -70,11 +72,12 @@ public class DomainServiceIT {
     @Test
     public void createDomain() {
 
-        Domain gobalDomain = domainService.findDomainByName(Domain.GLOBAL);
-        assertNotNull(gobalDomain.getId());
-        assertFalse(gobalDomain.hasParent());
+        Optional<Domain> gobalDomain = domainService.findDomainByName(Domain.GLOBAL);
+        assertTrue(gobalDomain.isPresent());
+        assertNotNull(gobalDomain.get().getId());
+        assertFalse(gobalDomain.get().hasParent());
         Domain childDomain = new Domain(childDomainName, childDomainName);
-        childDomain.setParent(gobalDomain);
+        childDomain.setParent(gobalDomain.get());
         childDomain = domainService.saveDomain(childDomain);
         assertNotNull(childDomain.getId());
         assertTrue(childDomain.hasParent());

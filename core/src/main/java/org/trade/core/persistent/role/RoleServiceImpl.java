@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.trade.core.util.JSONMapper;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -21,7 +22,7 @@ public class RoleServiceImpl implements RoleService {
         this.roleRepository = roleRepository;
     }
 
-    public Role findRoleByName(String name) {
+    public Optional<Role> findRoleByName(String name) {
 
         return roleRepository.findByName(name);
     }
@@ -39,8 +40,9 @@ public class RoleServiceImpl implements RoleService {
     @Transactional
     public RoleDTO findRoleDTOByName(String name) {
 
-        Role role = roleRepository.findByName(name);
-        return this.convertToDTO(role);
+        Optional<Role> role = roleRepository.findByName(name);
+
+        return role.map(this::convertToDTO).orElse(null);
     }
 
     @Transactional

@@ -13,7 +13,6 @@ import org.trade.core.persistent.role.RoleRepository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -63,8 +62,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User validateAndGetUserByUsername(String username) {
 
-        return getUserByUsername(username)
-                .orElseThrow(() -> new UserNotFoundException(String.format("User with username %s not found", username)));
+        return userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException(String.format("User with username %s not found", username)));
     }
 
     @Transactional
@@ -74,9 +72,8 @@ public class UserServiceImpl implements UserService {
 
         for (Role role : instance.getRoles()) {
 
-            Role current = roleRepository.findByName(role.getName());
-
-            roles.add(Objects.requireNonNullElse(current, role));
+            Optional<Role> current = roleRepository.findByName(role.getName());
+            current.ifPresent(roles::add);
         }
 
         instance.getRoles().clear();
@@ -93,19 +90,18 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<User> validUsernameAndPassword(String username, String password) {
 
-        return getUserByUsername(username)
-                .filter(user -> passwordEncoder.matches(password, user.getPassword()));
+        return userRepository.findByUsername(username).filter(user -> passwordEncoder.matches(password, user.getPassword()));
     }
 
     public User findUserByName(String name) {
 
-        return userRepository.findByName(name);
+        return userRepository.findByName(name).orElseThrow(() -> new UserNotFoundException(String.format("User with name %s not found", name)));
     }
 
     public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
 
-        User user = this.userRepository.findByName(name);
-        _log.info("User found: " + user.getName() + " " + user.getPassword() + " " + String.join(",", user.getRoleValues()));
+        User user = this.userRepository.findByName(name).orElseThrow(() -> new UserNotFoundException(String.format("User with name %s not found", name)));
+        _log.info("User found: {}, password: {}, roles: {}", user.getName(), user.getPassword(), String.join(",", user.getRoleValues()));
 
         return new org.springframework.security.core.userdetails.User(user.getName(), user.getPassword(),
                 AuthorityUtils.createAuthorityList(user.getRoleValues()));

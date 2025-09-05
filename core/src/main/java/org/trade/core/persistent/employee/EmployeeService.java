@@ -49,8 +49,8 @@ public interface EmployeeService {
      * Method findEmployeeByName.
      *
      * @param name String
-     * @return Employee
+     * @return Optional<Employee>
      */
-    Employee findEmployeeByName(String name);
+    Optional<Employee> findEmployeeByName(String name);
 
 }

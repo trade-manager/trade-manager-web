@@ -2,6 +2,8 @@ package org.trade.core.persistent.domain;
 
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 /**
  * @author Simon Allen
  * @version $Revision: 1.0 $
@@ -16,7 +18,7 @@ public class DomainServiceImpl implements DomainService {
         this.domainRepository = domainRepository;
     }
 
-    public Domain findDomainByName(String name) {
+    public Optional<Domain> findDomainByName(String name) {
 
         return domainRepository.findByName(name);
     }

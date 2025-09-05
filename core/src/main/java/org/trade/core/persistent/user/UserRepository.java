@@ -16,7 +16,7 @@ public interface UserRepository extends AspectRepository<User, Long> {
      * @param name String
      * @return User
      */
-    User findByName(String name);
+    Optional<User> findByName(String name);
 
     /**
      * @param username String

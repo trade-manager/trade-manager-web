@@ -31,8 +31,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     public Employee validateAndGetEmployee(Long id) {
 
-        return employeeRepository.findById(id)
-                .orElseThrow(() -> new EmployeeNotFoundException(String.format("Employee with id %s not found", id)));
+        return employeeRepository.findById(id).orElseThrow(() -> new EmployeeNotFoundException(String.format("Employee with id %s not found", id)));
     }
 
     public Employee saveEmployee(Employee employee) {
@@ -50,7 +49,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employeeRepository.findByEmail(email);
     }
 
-    public Employee findEmployeeByName(String name) {
+    public Optional<Employee> findEmployeeByName(String name) {
 
         return employeeRepository.findByName(name);
     }

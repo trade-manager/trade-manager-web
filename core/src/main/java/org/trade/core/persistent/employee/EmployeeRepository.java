@@ -14,6 +14,12 @@ import java.util.Optional;
 public interface EmployeeRepository extends AspectRepository<Employee, Long> {
 
     /**
+     * @param id Long
+     * @return Optional<Employee>
+     */
+    Optional<Employee> findById(Long id);
+
+    /**
      * @param email String
      * @return Optional<Employee>
      */
@@ -34,6 +40,6 @@ public interface EmployeeRepository extends AspectRepository<Employee, Long> {
      * @param name String
      * @return Employee
      */
-    Employee findByName(String name);
+    Optional<Employee> findByName(String name);
 }
 

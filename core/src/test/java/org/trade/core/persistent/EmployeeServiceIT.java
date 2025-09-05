@@ -16,22 +16,22 @@ import org.trade.core.TradestrategyBase;
 import org.trade.core.persistent.domain.Domain;
 import org.trade.core.persistent.domain.DomainService;
 import org.trade.core.persistent.employee.Employee;
-import org.trade.core.persistent.employee.EmployeeDTO;
 import org.trade.core.persistent.employee.EmployeeRecord;
 import org.trade.core.persistent.employee.EmployeeService;
 import org.trade.core.persistent.role.Role;
 import org.trade.core.persistent.role.RoleService;
 import org.trade.core.persistent.user.User;
-import org.trade.core.persistent.user.UserDTO;
-import org.trade.core.persistent.user.UserRecord;
 import org.trade.core.persistent.user.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Simon Allen
@@ -73,7 +73,9 @@ public class EmployeeServiceIT {
     @BeforeEach
     public void setUp() throws Exception {
 
-        gobalDomain = domainService.findDomainByName(Domain.GLOBAL);
+        Optional<Domain> domain = domainService.findDomainByName(Domain.GLOBAL);
+        assertTrue(domain.isPresent());
+        gobalDomain = domain.get();
         assertNotNull(gobalDomain.getId());
         adminUser = userService.findUserByName("admin");
         assertNotNull(adminUser.getId());
@@ -85,19 +87,11 @@ public class EmployeeServiceIT {
     @AfterEach
     public void tearDown() throws ClassNotFoundException {
 
-        Employee employee = employeeService.findEmployeeByName(userName);
-
-        if (null != employee) {
-
-            employeeService.deleteEmployee(employee);
-        }
-
+        Optional<Employee> employee = employeeService.findEmployeeByName(userName);
+        employee.ifPresent(value -> employeeService.deleteEmployee(value));
         User user = userService.findUserByName(userName);
+        userService.deleteUser(user);
 
-        if (null != user) {
-
-            userService.deleteUser(user);
-        }
     }
 
     /**
@@ -121,9 +115,10 @@ public class EmployeeServiceIT {
         Employee instance = new Employee(userName, userName, userName, userName, userName + "@" + Domain.GLOBAL + ".com", adminUser);
         employeeService.saveEmployee(instance);
         assertNotNull(instance.getId());
-
+        Employee instanceNew = employeeService.validateAndGetEmployee(instance.getId());
+        assertEquals(instance.getId(), instanceNew.getId());
         List<Employee> employees = employeeService.getEmployeesContainingText(userName);
-        List<EmployeeRecord> employeeRecords =  employees.stream().map(EmployeeRecord::from).collect(Collectors.toList());
+        List<EmployeeRecord> employeeRecords = employees.stream().map(EmployeeRecord::from).collect(Collectors.toList());
         assertFalse(employeeRecords.isEmpty());
     }
 
@@ -134,12 +129,13 @@ public class EmployeeServiceIT {
         employeeService.saveEmployee(instanceAdmin);
         assertNotNull(instanceAdmin.getId());
 
-        Role role = roleService.findRoleByName(Role.ROLE_MANAGER);
-        assertNotNull(role.getId());
+        Optional<Role> role = roleService.findRoleByName(Role.ROLE_MANAGER);
+        assertTrue(role.isPresent());
+        assertNotNull(role.get().getId());
         List<Role> roles = new ArrayList<>();
-        roles.add(role);
+        roles.add(role.get());
 
-        String name =  "TEST-" + TradestrategyBase.getRandomNumber(4);
+        String name = "TEST-" + TradestrategyBase.getRandomNumber(4);
         User user = new User(name, name, name, name, name + "@" + Domain.GLOBAL + ".com", name, gobalDomain, roles);
         user = userService.saveUser(user);
         assertNotNull(user.getId());
@@ -151,7 +147,7 @@ public class EmployeeServiceIT {
         List<Employee> employees = employeeService.getEmployeesContainingText(name);
 
         employeeService.deleteEmployee(instance);
-        List<EmployeeRecord> employeeRecords =  employees.stream().map(EmployeeRecord::from).collect(Collectors.toList());
+        List<EmployeeRecord> employeeRecords = employees.stream().map(EmployeeRecord::from).collect(Collectors.toList());
         assertFalse(employeeRecords.isEmpty());
     }
 }
