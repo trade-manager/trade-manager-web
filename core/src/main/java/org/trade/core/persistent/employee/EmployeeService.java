@@ -9,29 +9,39 @@ import java.util.List;
 public interface EmployeeService {
 
     /**
+     * Method getEmployees.
+     *
      * @return List<Employee>
      */
     List<Employee> getEmployees();
 
     /**
+     * Method getEmployeesContainingText.
+     *
      * @param text String
      * @return List<Employee>
      */
     List<Employee> getEmployeesContainingText(String text);
 
     /**
+     * Method validateAndGetEmployee.
+     *
      * @param id Long
      * @return Employee
      */
     Employee validateAndGetEmployee(Long id);
 
     /**
+     * Method saveEmployee.
+     *
      * @param employee Employee
      * @return Employee
      */
     Employee saveEmployee(Employee employee);
 
     /**
+     * Method deleteEmployee.
+     *
      * @param employee Employee
      */
     void deleteEmployee(Employee employee);
@@ -48,8 +58,7 @@ public interface EmployeeService {
      * Method findEmployeeByName.
      *
      * @param name String
-     * @return Optional<Employee>
+     * @return Employee
      */
     Employee findEmployeeByName(String name);
-
 }
