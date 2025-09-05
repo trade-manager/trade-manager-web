@@ -58,14 +58,14 @@ public class UserServiceIT {
      * Method setUp.
      */
     @BeforeEach
-    public void setUp() throws Exception {
+    public void setUp() {
     }
 
     /**
      * Method tearDown.
      */
     @AfterEach
-    public void tearDown() throws ClassNotFoundException {
+    public void tearDown() {
 
         User user = userService.findUserByName(userName);
         userService.deleteUser(user);

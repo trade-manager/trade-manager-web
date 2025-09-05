@@ -69,7 +69,7 @@ public class EmployeeServiceIT {
      * Method setUp.
      */
     @BeforeEach
-    public void setUp() throws Exception {
+    public void setUp() {
 
         gobalDomain = domainService.findDomainByName(Domain.GLOBAL);
         assertNotNull(gobalDomain.getId());
@@ -81,7 +81,7 @@ public class EmployeeServiceIT {
      * Method tearDown.
      */
     @AfterEach
-    public void tearDown() throws ClassNotFoundException {
+    public void tearDown() {
 
         Employee employee = employeeService.findEmployeeByName(userName);
         employeeService.deleteEmployee(employee);
