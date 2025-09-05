@@ -21,6 +21,11 @@ public class DomainServiceImpl implements DomainService {
         return domainRepository.findByName(name).orElse(null);
     }
 
+    public Domain validateAndGetDomain(String name) {
+
+        return domainRepository.findByName(name).orElseThrow(() -> new DomainNotFoundException(String.format("Domain with name %s not found", name)));
+    }
+
     public Domain saveDomain(Domain domain) {
 
         return domainRepository.save(domain);
