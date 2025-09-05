@@ -1,7 +1,6 @@
 package org.trade.core.persistent.employee;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author Simon Allen
@@ -10,29 +9,39 @@ import java.util.Optional;
 public interface EmployeeService {
 
     /**
+     * Method getEmployees.
+     *
      * @return List<Employee>
      */
     List<Employee> getEmployees();
 
     /**
+     * Method getEmployeesContainingText.
+     *
      * @param text String
      * @return List<Employee>
      */
     List<Employee> getEmployeesContainingText(String text);
 
     /**
+     * Method validateAndGetEmployee.
+     *
      * @param id Long
      * @return Employee
      */
     Employee validateAndGetEmployee(Long id);
 
     /**
+     * Method saveEmployee.
+     *
      * @param employee Employee
      * @return Employee
      */
     Employee saveEmployee(Employee employee);
 
     /**
+     * Method deleteEmployee.
+     *
      * @param employee Employee
      */
     void deleteEmployee(Employee employee);
@@ -41,9 +50,9 @@ public interface EmployeeService {
      * Method findEmployeeByEmail.
      *
      * @param email String
-     * @return Optional<Employee>
+     * @return Employee
      */
-    Optional<Employee> findEmployeeByEmail(String email);
+    Employee findEmployeeByEmail(String email);
 
     /**
      * Method findEmployeeByName.
@@ -52,5 +61,4 @@ public interface EmployeeService {
      * @return Employee
      */
     Employee findEmployeeByName(String name);
-
 }

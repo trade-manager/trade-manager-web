@@ -2,9 +2,11 @@ package org.trade.core.persistent.role;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.trade.core.persistent.domain.DomainNotFoundException;
 import org.trade.core.util.JSONMapper;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -23,7 +25,12 @@ public class RoleServiceImpl implements RoleService {
 
     public Role findRoleByName(String name) {
 
-        return roleRepository.findByName(name);
+        return roleRepository.findByName(name).orElse(null);
+    }
+
+    public Role validateAndGetDomain(String name) {
+
+        return roleRepository.findByName(name).orElseThrow(() -> new DomainNotFoundException(String.format("Role with name %s not found", name)));
     }
 
     public Role saveRole(Role role) {
@@ -33,14 +40,19 @@ public class RoleServiceImpl implements RoleService {
 
     public void deleteRole(Role role) {
 
+        if (null == role) {
+
+            return;
+        }
+
         roleRepository.delete(role);
     }
 
     @Transactional
     public RoleDTO findRoleDTOByName(String name) {
 
-        Role role = roleRepository.findByName(name);
-        return this.convertToDTO(role);
+        Optional<Role> role = roleRepository.findByName(name);
+        return role.map(this::convertToDTO).orElse(null);
     }
 
     @Transactional

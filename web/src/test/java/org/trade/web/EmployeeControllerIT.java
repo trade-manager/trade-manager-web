@@ -29,9 +29,11 @@ import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 @SpringBootTest
@@ -75,9 +77,9 @@ class EmployeeControllerIT {
     public void setUpTest() {
 
         Domain gobalDomain = domainService.findDomainByName(Domain.GLOBAL);
-        assertNotNull(gobalDomain.getId());
+        assertNotNull(gobalDomain);
         Role role = roleService.findRoleByName(Role.ROLE_ADMIN);
-        assertNotNull(role.getId());
+        assertNotNull(role);
         List<Role> roles = new ArrayList<>();
         roles.add(role);
         User user = userService.findUserByName(userName);

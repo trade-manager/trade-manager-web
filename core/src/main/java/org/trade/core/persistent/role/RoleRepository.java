@@ -4,6 +4,7 @@ import org.springframework.stereotype.Repository;
 import org.trade.core.dao.AspectRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Simon Allen
@@ -12,7 +13,7 @@ import java.util.List;
 @Repository
 public interface RoleRepository extends AspectRepository<Role, Long> {
 
-    Role findByName(String name);
+    Optional<Role> findByName(String name);
 
     /**
      * Method findByContainedRoleIsNull.

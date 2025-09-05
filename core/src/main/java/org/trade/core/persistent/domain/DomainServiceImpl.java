@@ -18,7 +18,12 @@ public class DomainServiceImpl implements DomainService {
 
     public Domain findDomainByName(String name) {
 
-        return domainRepository.findByName(name);
+        return domainRepository.findByName(name).orElse(null);
+    }
+
+    public Domain validateAndGetDomain(String name) {
+
+        return domainRepository.findByName(name).orElseThrow(() -> new DomainNotFoundException(String.format("Domain with name %s not found", name)));
     }
 
     public Domain saveDomain(Domain domain) {
@@ -27,6 +32,11 @@ public class DomainServiceImpl implements DomainService {
     }
 
     public void deleteDomain(Domain domain) {
+
+        if (null == domain) {
+
+            return;
+        }
 
         domainRepository.delete(domain);
     }

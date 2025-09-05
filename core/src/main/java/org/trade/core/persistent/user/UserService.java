@@ -16,9 +16,9 @@ public interface UserService {
 
     /**
      * @param username String
-     * @return Optional<User>
+     * @return User
      */
-    Optional<User> getUserByUsername(String username);
+    User getUserByUsername(String username);
 
     /**
      * @param username String

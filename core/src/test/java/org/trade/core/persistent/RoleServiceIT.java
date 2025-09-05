@@ -17,14 +17,12 @@ import org.trade.core.persistent.role.Role;
 import org.trade.core.persistent.role.RoleDTO;
 import org.trade.core.persistent.role.RoleRecord;
 import org.trade.core.persistent.role.RoleService;
-import org.trade.core.util.JSONMapper;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * @author Simon Allen
@@ -53,21 +51,17 @@ public class RoleServiceIT {
      * Method setUp.
      */
     @BeforeEach
-    public void setUp() throws Exception {
+    public void setUp() {
     }
 
     /**
      * Method tearDown.
      */
     @AfterEach
-    public void tearDown() throws ClassNotFoundException {
+    public void tearDown() {
 
         Role role = roleService.findRoleByName(roleName);
-
-        if (null != role) {
-
-            roleService.deleteRole(role);
-        }
+        roleService.deleteRole(role);
     }
 
     /**
@@ -80,10 +74,10 @@ public class RoleServiceIT {
     @Test
     public void createRole() {
 
-        Role role = roleService.findRoleByName(roleName);
-        assertNull(role);
-        role = new Role(roleName, roleName);
+        Role role = new Role(roleName, roleName);
         role = roleService.saveRole(role);
+        assertNotNull(role.getId());
+        role = roleService.findRoleByName(roleName);
         assertNotNull(role.getId());
     }
 

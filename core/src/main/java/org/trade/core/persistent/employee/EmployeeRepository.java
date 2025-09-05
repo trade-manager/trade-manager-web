@@ -14,26 +14,42 @@ import java.util.Optional;
 public interface EmployeeRepository extends AspectRepository<Employee, Long> {
 
     /**
+     * Method findByName.
+     *
+     * @param id Long
+     * @return Optional<Employee>
+     */
+    Optional<Employee> findByEmail(Long id);
+
+    /**
+     * Method findByName.
+     *
      * @param email String
      * @return Optional<Employee>
      */
     Optional<Employee> findByEmail(String email);
 
     /**
+     * Method findAllByOrderByName.
+     *
      * @return List<Employee>
      */
     List<Employee> findAllByOrderByName();
 
     /**
+     * Method findByNameContainingIgnoreCaseOrderByName.
+     *
      * @param name String
      * @return List<Employee>
      */
     List<Employee> findByNameContainingIgnoreCaseOrderByName(String name);
 
     /**
+     * Method findByName.
+     *
      * @param name String
      * @return Employee
      */
-    Employee findByName(String name);
+    Optional<Employee> findByName(String name);
 }
 

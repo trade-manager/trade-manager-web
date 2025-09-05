@@ -16,20 +16,18 @@ import org.trade.core.TradestrategyBase;
 import org.trade.core.persistent.domain.Domain;
 import org.trade.core.persistent.domain.DomainService;
 import org.trade.core.persistent.employee.Employee;
-import org.trade.core.persistent.employee.EmployeeDTO;
 import org.trade.core.persistent.employee.EmployeeRecord;
 import org.trade.core.persistent.employee.EmployeeService;
 import org.trade.core.persistent.role.Role;
 import org.trade.core.persistent.role.RoleService;
 import org.trade.core.persistent.user.User;
-import org.trade.core.persistent.user.UserDTO;
-import org.trade.core.persistent.user.UserRecord;
 import org.trade.core.persistent.user.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -71,7 +69,7 @@ public class EmployeeServiceIT {
      * Method setUp.
      */
     @BeforeEach
-    public void setUp() throws Exception {
+    public void setUp() {
 
         gobalDomain = domainService.findDomainByName(Domain.GLOBAL);
         assertNotNull(gobalDomain.getId());
@@ -83,21 +81,12 @@ public class EmployeeServiceIT {
      * Method tearDown.
      */
     @AfterEach
-    public void tearDown() throws ClassNotFoundException {
+    public void tearDown() {
 
         Employee employee = employeeService.findEmployeeByName(userName);
-
-        if (null != employee) {
-
-            employeeService.deleteEmployee(employee);
-        }
-
+        employeeService.deleteEmployee(employee);
         User user = userService.findUserByName(userName);
-
-        if (null != user) {
-
-            userService.deleteUser(user);
-        }
+        userService.deleteUser(user);
     }
 
     /**
@@ -121,9 +110,10 @@ public class EmployeeServiceIT {
         Employee instance = new Employee(userName, userName, userName, userName, userName + "@" + Domain.GLOBAL + ".com", adminUser);
         employeeService.saveEmployee(instance);
         assertNotNull(instance.getId());
-
+        Employee instanceNew = employeeService.validateAndGetEmployee(instance.getId());
+        assertEquals(instance.getId(), instanceNew.getId());
         List<Employee> employees = employeeService.getEmployeesContainingText(userName);
-        List<EmployeeRecord> employeeRecords =  employees.stream().map(EmployeeRecord::from).collect(Collectors.toList());
+        List<EmployeeRecord> employeeRecords = employees.stream().map(EmployeeRecord::from).collect(Collectors.toList());
         assertFalse(employeeRecords.isEmpty());
     }
 
@@ -135,11 +125,11 @@ public class EmployeeServiceIT {
         assertNotNull(instanceAdmin.getId());
 
         Role role = roleService.findRoleByName(Role.ROLE_MANAGER);
-        assertNotNull(role.getId());
+        assertNotNull(role);
         List<Role> roles = new ArrayList<>();
         roles.add(role);
 
-        String name =  "TEST-" + TradestrategyBase.getRandomNumber(4);
+        String name = "TEST-" + TradestrategyBase.getRandomNumber(4);
         User user = new User(name, name, name, name, name + "@" + Domain.GLOBAL + ".com", name, gobalDomain, roles);
         user = userService.saveUser(user);
         assertNotNull(user.getId());
@@ -151,7 +141,7 @@ public class EmployeeServiceIT {
         List<Employee> employees = employeeService.getEmployeesContainingText(name);
 
         employeeService.deleteEmployee(instance);
-        List<EmployeeRecord> employeeRecords =  employees.stream().map(EmployeeRecord::from).collect(Collectors.toList());
+        List<EmployeeRecord> employeeRecords = employees.stream().map(EmployeeRecord::from).collect(Collectors.toList());
         assertFalse(employeeRecords.isEmpty());
     }
 }

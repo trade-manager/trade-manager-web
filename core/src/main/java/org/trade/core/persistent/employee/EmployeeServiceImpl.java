@@ -3,7 +3,6 @@ package org.trade.core.persistent.employee;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author Simon Allen
@@ -31,8 +30,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     public Employee validateAndGetEmployee(Long id) {
 
-        return employeeRepository.findById(id)
-                .orElseThrow(() -> new EmployeeNotFoundException(String.format("Book with id %s not found", id)));
+        return employeeRepository.findById(id).orElseThrow(() -> new EmployeeNotFoundException(String.format("Employee with id %s not found", id)));
     }
 
     public Employee saveEmployee(Employee employee) {
@@ -42,18 +40,21 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     public void deleteEmployee(Employee employee) {
 
+        if (null == employee) {
+
+            return;
+        }
+
         employeeRepository.delete(employee);
     }
 
-    public Optional<Employee> findEmployeeByEmail(String email) {
+    public Employee findEmployeeByEmail(String email) {
 
-        return employeeRepository.findByEmail(email);
+        return employeeRepository.findByEmail(email).orElse(null);
     }
 
     public Employee findEmployeeByName(String name) {
 
-        return employeeRepository.findByName(name);
+        return employeeRepository.findByName(name).orElse(null);
     }
-
-
 }

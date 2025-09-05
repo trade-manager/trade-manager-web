@@ -20,7 +20,6 @@ import org.trade.core.persistent.user.UserService;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.trade.core.persistent.role.Role.ROLE_ADMIN;
@@ -142,9 +141,9 @@ public class DatabaseInitializer implements CommandLineRunner {
     private void createEmployee(String firstName, String lastName, String description, String domain, User user) {
 
         String email = firstName + "." + lastName + "@" + domain + ".com";
-        Optional<Employee> employee = this.employeeService.findEmployeeByEmail(email);
+        Employee employee = this.employeeService.findEmployeeByEmail(email);
 
-        if (employee.isEmpty()) {
+        if (null == employee) {
 
             this.employeeService.saveEmployee(new Employee(firstName + " " + lastName, firstName, lastName, description, email, user));
         }

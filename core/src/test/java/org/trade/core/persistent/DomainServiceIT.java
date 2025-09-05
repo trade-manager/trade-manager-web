@@ -47,14 +47,14 @@ public class DomainServiceIT {
      * Method setUp.
      */
     @BeforeEach
-    public void setUp() throws Exception {
+    public void setUp() {
     }
 
     /**
      * Method tearDown.
      */
     @AfterEach
-    public void tearDown() throws ClassNotFoundException {
+    public void tearDown() {
 
         Domain domain = domainService.findDomainByName(childDomainName);
         domainService.deleteDomain(domain);
@@ -71,7 +71,7 @@ public class DomainServiceIT {
     public void createDomain() {
 
         Domain gobalDomain = domainService.findDomainByName(Domain.GLOBAL);
-        assertNotNull(gobalDomain.getId());
+        assertNotNull(gobalDomain);
         assertFalse(gobalDomain.hasParent());
         Domain childDomain = new Domain(childDomainName, childDomainName);
         childDomain.setParent(gobalDomain);

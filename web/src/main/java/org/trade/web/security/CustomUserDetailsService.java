@@ -3,7 +3,6 @@ package org.trade.web.security;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.trade.core.persistent.user.User;
 import org.trade.core.persistent.user.UserService;
@@ -27,12 +26,16 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) {
 
-        User user = userService.getUserByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException(String.format("Username %s not found", username)));
-        List<SimpleGrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(user.getRole().getName()));
-        return mapUserToCustomUserDetails(user, authorities);
-    }
+        User user = userService.getUserByUsername(username);
 
+        if (null != user) {
+
+            List<SimpleGrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(user.getRole().getName()));
+            return mapUserToCustomUserDetails(user, authorities);
+        }
+
+        return null;
+    }
 
     private CustomUserDetails mapUserToCustomUserDetails(User user, List<SimpleGrantedAuthority> authorities) {
 

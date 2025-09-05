@@ -17,13 +17,16 @@ import java.util.List;
 public class CorsConfig {
 
     @Bean
-    CorsConfigurationSource corsConfigurationSource(@Value("${app.cors.allowed-origins}") List<String> allowedOrigins) {
+    CorsConfigurationSource corsConfigurationSource(@Value("${app.cors.allowed-origins}") List<String> allowedOrigins,
+                                                    @Value("${app.cors.allowedMethods}") String allowedMethods,
+                                                    @Value("${app.cors.allowedHeaders}") String allowedHeaders,
+                                                    @Value("${app.cors.allowCredentials}") boolean allowCredentials) {
 
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowCredentials(true);
+        configuration.setAllowCredentials(allowCredentials);
         configuration.setAllowedOrigins(allowedOrigins);
-        configuration.addAllowedMethod("*");
-        configuration.addAllowedHeader("*");
+        configuration.addAllowedMethod(allowedMethods);
+        configuration.addAllowedHeader(allowedHeaders);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;

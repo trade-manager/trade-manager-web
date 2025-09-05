@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * @author Simon Allen
@@ -59,14 +58,14 @@ public class UserServiceIT {
      * Method setUp.
      */
     @BeforeEach
-    public void setUp() throws Exception {
+    public void setUp() {
     }
 
     /**
      * Method tearDown.
      */
     @AfterEach
-    public void tearDown() throws ClassNotFoundException {
+    public void tearDown() {
 
         User user = userService.findUserByName(userName);
         userService.deleteUser(user);
@@ -83,14 +82,12 @@ public class UserServiceIT {
     public void createUser() {
 
         Domain gobalDomain = domainService.findDomainByName(Domain.GLOBAL);
-        assertNotNull(gobalDomain.getId());
+        assertNotNull(gobalDomain);
         Role role = roleService.findRoleByName(Role.ROLE_ADMIN);
-        assertNotNull(role.getId());
+        assertNotNull(role);
         List<Role> roles = new ArrayList<>();
         roles.add(role);
-        User user = userService.findUserByName(userName);
-        assertNull(user);
-        user = new User(userName, userName, userName, userName, userName + "@" + Domain.GLOBAL + ".com", userName, gobalDomain, roles);
+        User user = new User(userName, userName, userName, userName, userName + "@" + Domain.GLOBAL + ".com", userName, gobalDomain, roles);
         user = userService.saveUser(user);
         assertNotNull(user.getId());
     }
