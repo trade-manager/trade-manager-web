@@ -1,7 +1,5 @@
 package org.trade.core.persistent.domain;
 
-import java.util.Optional;
-
 /**
  * @author Simon Allen
  * @version $Revision: 1.0 $
@@ -25,5 +23,5 @@ public interface DomainService {
      * @param name String
      * @return Domain
      */
-    Optional<Domain> findDomainByName(String name);
+    Domain findDomainByName(String name);
 }

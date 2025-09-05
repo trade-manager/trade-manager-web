@@ -21,7 +21,6 @@ import org.trade.core.persistent.user.UserService;
 import org.trade.web.rest.dto.CreateEmployeeRequest;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.trade.web.config.SwaggerConfig.BASIC_AUTH_SECURITY_SCHEME;
@@ -60,11 +59,11 @@ public class EmployeeController {
 
         if (null != createEmployeeRequest.user()) {
 
-            Optional<User> user = userService.getUserByUsername(createEmployeeRequest.user().name());
+            User user = userService.getUserByUsername(createEmployeeRequest.user().name());
 
-            if (user.isPresent()) {
+            if (null != user) {
 
-                employee = EmployeeController.from(createEmployeeRequest, user.get());
+                employee = EmployeeController.from(createEmployeeRequest, user);
             }
         }
 

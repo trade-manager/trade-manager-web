@@ -25,13 +25,11 @@ import org.trade.core.persistent.user.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Simon Allen
@@ -73,9 +71,7 @@ public class EmployeeServiceIT {
     @BeforeEach
     public void setUp() throws Exception {
 
-        Optional<Domain> domain = domainService.findDomainByName(Domain.GLOBAL);
-        assertTrue(domain.isPresent());
-        gobalDomain = domain.get();
+        gobalDomain = domainService.findDomainByName(Domain.GLOBAL);
         assertNotNull(gobalDomain.getId());
         adminUser = userService.findUserByName("admin");
         assertNotNull(adminUser.getId());
@@ -87,11 +83,10 @@ public class EmployeeServiceIT {
     @AfterEach
     public void tearDown() throws ClassNotFoundException {
 
-        Optional<Employee> employee = employeeService.findEmployeeByName(userName);
-        employee.ifPresent(value -> employeeService.deleteEmployee(value));
+        Employee employee = employeeService.findEmployeeByName(userName);
+        employeeService.deleteEmployee(employee);
         User user = userService.findUserByName(userName);
         userService.deleteUser(user);
-
     }
 
     /**
@@ -129,11 +124,10 @@ public class EmployeeServiceIT {
         employeeService.saveEmployee(instanceAdmin);
         assertNotNull(instanceAdmin.getId());
 
-        Optional<Role> role = roleService.findRoleByName(Role.ROLE_MANAGER);
-        assertTrue(role.isPresent());
-        assertNotNull(role.get().getId());
+        Role role = roleService.findRoleByName(Role.ROLE_MANAGER);
+        assertNotNull(role);
         List<Role> roles = new ArrayList<>();
-        roles.add(role.get());
+        roles.add(role);
 
         String name = "TEST-" + TradestrategyBase.getRandomNumber(4);
         User user = new User(name, name, name, name, name + "@" + Domain.GLOBAL + ".com", name, gobalDomain, roles);

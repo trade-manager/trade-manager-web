@@ -1,7 +1,6 @@
 package org.trade.core.persistent.employee;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author Simon Allen
@@ -41,9 +40,9 @@ public interface EmployeeService {
      * Method findEmployeeByEmail.
      *
      * @param email String
-     * @return Optional<Employee>
+     * @return Employee
      */
-    Optional<Employee> findEmployeeByEmail(String email);
+    Employee findEmployeeByEmail(String email);
 
     /**
      * Method findEmployeeByName.
@@ -51,6 +50,6 @@ public interface EmployeeService {
      * @param name String
      * @return Optional<Employee>
      */
-    Optional<Employee> findEmployeeByName(String name);
+    Employee findEmployeeByName(String name);
 
 }

@@ -22,10 +22,8 @@ import org.trade.core.persistent.user.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Simon Allen
@@ -69,15 +67,8 @@ public class UserServiceIT {
     @AfterEach
     public void tearDown() throws ClassNotFoundException {
 
-
-        try {
-
-            User user = userService.findUserByName(userName);
-            userService.deleteUser(user);
-        } catch (Exception ex) {
-            // Do nothing
-        }
-
+        User user = userService.findUserByName(userName);
+        userService.deleteUser(user);
     }
 
     /**
@@ -90,14 +81,13 @@ public class UserServiceIT {
     @Test
     public void createUser() {
 
-
-        Optional<Domain> gobalDomain = domainService.findDomainByName(Domain.GLOBAL);
-        assertTrue(gobalDomain.isPresent());
-        Optional<Role> role = roleService.findRoleByName(Role.ROLE_ADMIN);
-        assertTrue(role.isPresent());
+        Domain gobalDomain = domainService.findDomainByName(Domain.GLOBAL);
+        assertNotNull(gobalDomain);
+        Role role = roleService.findRoleByName(Role.ROLE_ADMIN);
+        assertNotNull(role);
         List<Role> roles = new ArrayList<>();
-        roles.add(role.get());
-        User user = new User(userName, userName, userName, userName, userName + "@" + Domain.GLOBAL + ".com", userName, gobalDomain.get(), roles);
+        roles.add(role);
+        User user = new User(userName, userName, userName, userName, userName + "@" + Domain.GLOBAL + ".com", userName, gobalDomain, roles);
         user = userService.saveUser(user);
         assertNotNull(user.getId());
     }

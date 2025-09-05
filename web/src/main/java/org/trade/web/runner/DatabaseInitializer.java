@@ -20,7 +20,6 @@ import org.trade.core.persistent.user.UserService;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.trade.core.persistent.role.Role.ROLE_ADMIN;
@@ -66,7 +65,7 @@ public class DatabaseInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) {
 
-        Optional<Domain> global = this.domainService.findDomainByName("global");
+        Domain global = this.domainService.findDomainByName("global");
         User admin = this.userService.findUserByName("admin");
 
         if (null != admin) {
@@ -84,10 +83,10 @@ public class DatabaseInitializer implements CommandLineRunner {
         if (null == oliver) {
 
             List<Role> roles = new ArrayList<>();
-            roles.add(this.roleService.findRoleByName(ROLE_USER).get());
+            roles.add(this.roleService.findRoleByName(ROLE_USER));
             String name = "oliver";
-            String email = name + "." + name + "@" + global.get().getName() + ".com";
-            oliver = this.userService.saveUser(new User(name, name, name, name, email, passwordEncoder.encode("user"), global.get(), roles));
+            String email = name + "." + name + "@" + global.getName() + ".com";
+            oliver = this.userService.saveUser(new User(name, name, name, name, email, passwordEncoder.encode("user"), global, roles));
         } else {
 
             if (!this.passwordEncoder.matches("user", oliver.getPassword())) {
@@ -102,17 +101,17 @@ public class DatabaseInitializer implements CommandLineRunner {
                 new UsernamePasswordAuthenticationToken("admin", "doesn't matter",
                         AuthorityUtils.createAuthorityList(ROLE_MANAGER)));
 
-        createEmployee("Frodo", "Baggins", "ring bearer", global.get().getName(), admin);
-        createEmployee("Bilbo", "Baggins", "burglar", global.get().getName(), admin);
-        createEmployee("Gandalf", "Grey", "wizard", global.get().getName(), admin);
+        createEmployee("Frodo", "Baggins", "ring bearer", global.getName(), admin);
+        createEmployee("Bilbo", "Baggins", "burglar", global.getName(), admin);
+        createEmployee("Gandalf", "Grey", "wizard", global.getName(), admin);
 
         SecurityContextHolder.getContext().setAuthentication(
                 new UsernamePasswordAuthenticationToken("oliver", "doesn't matter",
                         AuthorityUtils.createAuthorityList(ROLE_MANAGER)));
 
-        createEmployee("Samwise", "Gamgee", "gardener", global.get().getName(), oliver);
-        createEmployee("Merry", "Brandybuck", "pony rider", global.get().getName(), oliver);
-        createEmployee("Peregrin", "Took", "pipe smoker", global.get().getName(), oliver);
+        createEmployee("Samwise", "Gamgee", "gardener", global.getName(), oliver);
+        createEmployee("Merry", "Brandybuck", "pony rider", global.getName(), oliver);
+        createEmployee("Peregrin", "Took", "pipe smoker", global.getName(), oliver);
 
         SecurityContextHolder.clearContext();
 
@@ -142,9 +141,9 @@ public class DatabaseInitializer implements CommandLineRunner {
     private void createEmployee(String firstName, String lastName, String description, String domain, User user) {
 
         String email = firstName + "." + lastName + "@" + domain + ".com";
-        Optional<Employee> employee = this.employeeService.findEmployeeByEmail(email);
+        Employee employee = this.employeeService.findEmployeeByEmail(email);
 
-        if (!employee.isPresent()) {
+        if (null != employee) {
 
             this.employeeService.saveEmployee(new Employee(firstName + " " + lastName, firstName, lastName, description, email, user));
         }

@@ -76,15 +76,15 @@ class EmployeeControllerIT {
     @BeforeEach
     public void setUpTest() {
 
-        Optional<Domain> gobalDomain = domainService.findDomainByName(Domain.GLOBAL);
-        assertTrue(gobalDomain.isPresent());
-        Optional<Role> role = roleService.findRoleByName(Role.ROLE_ADMIN);
-        assertTrue(role.isPresent());
+        Domain gobalDomain = domainService.findDomainByName(Domain.GLOBAL);
+        assertNotNull(gobalDomain);
+        Role role = roleService.findRoleByName(Role.ROLE_ADMIN);
+        assertNotNull(role);
         List<Role> roles = new ArrayList<>();
-        roles.add(role.get());
+        roles.add(role);
         User user = userService.findUserByName(userName);
         assertNull(user);
-        user = new User(userName, userName, userName, userName, userName + "@" + Domain.GLOBAL + ".com", userName, gobalDomain.get(), roles);
+        user = new User(userName, userName, userName, userName, userName + "@" + Domain.GLOBAL + ".com", userName, gobalDomain, roles);
         user = userService.saveUser(user);
         assertNotNull(user.getId());
     }

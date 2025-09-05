@@ -3,7 +3,6 @@ package org.trade.core.persistent.employee;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author Simon Allen
@@ -41,16 +40,21 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     public void deleteEmployee(Employee employee) {
 
+        if (null == employee) {
+
+            return;
+        }
+
         employeeRepository.delete(employee);
     }
 
-    public Optional<Employee> findEmployeeByEmail(String email) {
+    public Employee findEmployeeByEmail(String email) {
 
-        return employeeRepository.findByEmail(email);
+        return employeeRepository.findByEmail(email).orElse(null);
     }
 
-    public Optional<Employee> findEmployeeByName(String name) {
+    public Employee findEmployeeByName(String name) {
 
-        return employeeRepository.findByName(name);
+        return employeeRepository.findByName(name).orElse(null);
     }
 }

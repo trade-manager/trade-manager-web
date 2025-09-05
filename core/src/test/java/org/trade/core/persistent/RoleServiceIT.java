@@ -19,12 +19,10 @@ import org.trade.core.persistent.role.RoleRecord;
 import org.trade.core.persistent.role.RoleService;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Simon Allen
@@ -62,8 +60,8 @@ public class RoleServiceIT {
     @AfterEach
     public void tearDown() {
 
-        Optional<Role> role = roleService.findRoleByName(roleName);
-        role.ifPresent(value -> roleService.deleteRole(value));
+        Role role = roleService.findRoleByName(roleName);
+        roleService.deleteRole(role);
     }
 
     /**
@@ -79,8 +77,8 @@ public class RoleServiceIT {
         Role role = new Role(roleName, roleName);
         role = roleService.saveRole(role);
         assertNotNull(role.getId());
-        Optional<Role> roleNew = roleService.findRoleByName(roleName);
-        assertTrue(roleNew.isPresent());
+        role = roleService.findRoleByName(roleName);
+        assertNotNull(role.getId());
     }
 
     @Test
@@ -108,9 +106,9 @@ public class RoleServiceIT {
     @Test
     public void findRoleByNameRecord() {
 
-        Optional<Role> role = roleService.findRoleByName(roleName);
-        assertTrue(role.isPresent());
-        RoleRecord roleRecord = RoleRecord.from(role.get());
+        Role role = roleService.findRoleByName(roleName);
+        assertNotNull(role);
+        RoleRecord roleRecord = RoleRecord.from(role);
         assertNotNull(roleRecord);
     }
 }

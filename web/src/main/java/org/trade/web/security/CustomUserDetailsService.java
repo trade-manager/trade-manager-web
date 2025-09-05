@@ -9,7 +9,6 @@ import org.trade.core.persistent.user.UserService;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author Simon Allen
@@ -27,12 +26,12 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) {
 
-        Optional<User> user = userService.getUserByUsername(username);
+        User user = userService.getUserByUsername(username);
 
-        if (user.isPresent()) {
+        if (null != user) {
 
-            List<SimpleGrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(user.get().getRole().getName()));
-            return mapUserToCustomUserDetails(user.get(), authorities);
+            List<SimpleGrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(user.getRole().getName()));
+            return mapUserToCustomUserDetails(user, authorities);
         }
 
         return null;

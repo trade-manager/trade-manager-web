@@ -16,8 +16,6 @@ import org.trade.core.TradestrategyBase;
 import org.trade.core.persistent.domain.Domain;
 import org.trade.core.persistent.domain.DomainService;
 
-import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -58,8 +56,8 @@ public class DomainServiceIT {
     @AfterEach
     public void tearDown() {
 
-        Optional<Domain> domain = domainService.findDomainByName(childDomainName);
-        domain.ifPresent(value -> domainService.deleteDomain(value));
+        Domain domain = domainService.findDomainByName(childDomainName);
+        domainService.deleteDomain(domain);
     }
 
     /**
@@ -72,12 +70,11 @@ public class DomainServiceIT {
     @Test
     public void createDomain() {
 
-        Optional<Domain> gobalDomain = domainService.findDomainByName(Domain.GLOBAL);
-        assertTrue(gobalDomain.isPresent());
-        assertNotNull(gobalDomain.get().getId());
-        assertFalse(gobalDomain.get().hasParent());
+        Domain gobalDomain = domainService.findDomainByName(Domain.GLOBAL);
+        assertNotNull(gobalDomain);
+        assertFalse(gobalDomain.hasParent());
         Domain childDomain = new Domain(childDomainName, childDomainName);
-        childDomain.setParent(gobalDomain.get());
+        childDomain.setParent(gobalDomain);
         childDomain = domainService.saveDomain(childDomain);
         assertNotNull(childDomain.getId());
         assertTrue(childDomain.hasParent());

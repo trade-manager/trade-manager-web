@@ -22,9 +22,9 @@ public class RoleServiceImpl implements RoleService {
         this.roleRepository = roleRepository;
     }
 
-    public Optional<Role> findRoleByName(String name) {
+    public Role findRoleByName(String name) {
 
-        return roleRepository.findByName(name);
+        return roleRepository.findByName(name).orElse(null);
     }
 
     public Role saveRole(Role role) {
@@ -34,6 +34,11 @@ public class RoleServiceImpl implements RoleService {
 
     public void deleteRole(Role role) {
 
+        if (null == role) {
+
+            return;
+        }
+
         roleRepository.delete(role);
     }
 
@@ -41,7 +46,6 @@ public class RoleServiceImpl implements RoleService {
     public RoleDTO findRoleDTOByName(String name) {
 
         Optional<Role> role = roleRepository.findByName(name);
-
         return role.map(this::convertToDTO).orElse(null);
     }
 
