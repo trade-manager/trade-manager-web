@@ -19,7 +19,7 @@ public interface EmployeeRepository extends AspectRepository<Employee, Long> {
      * @param id Long
      * @return Optional<Employee>
      */
-    Optional<Employee> findByEmail(Long id);
+    Optional<Employee> findById(Long id);
 
     /**
      * Method findByName.
