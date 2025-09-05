@@ -106,7 +106,7 @@ public class RoleServiceIT {
     @Test
     public void findRoleByNameRecord() {
 
-        Role role = roleService.findRoleByName(roleName);
+        Role role = roleService.findRoleByName(Role.ROLE_MANAGER);
         assertNotNull(role);
         RoleRecord roleRecord = RoleRecord.from(role);
         assertNotNull(roleRecord);

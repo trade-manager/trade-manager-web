@@ -143,7 +143,7 @@ public class DatabaseInitializer implements CommandLineRunner {
         String email = firstName + "." + lastName + "@" + domain + ".com";
         Employee employee = this.employeeService.findEmployeeByEmail(email);
 
-        if (null != employee) {
+        if (null == employee) {
 
             this.employeeService.saveEmployee(new Employee(firstName + " " + lastName, firstName, lastName, description, email, user));
         }
