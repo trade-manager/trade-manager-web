@@ -50,7 +50,7 @@ public class UserController {
     }
 
     @Operation(security = {@SecurityRequirement(name = BASIC_AUTH_SECURITY_SCHEME)})
-    @GetMapping("{username}")
+    @GetMapping("/{username}")
     public UserRecord getUser(@PathVariable String username) {
 
         User user = userService.validateAndGetUserByUsername(username);
