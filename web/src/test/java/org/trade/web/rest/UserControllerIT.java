@@ -1,6 +1,5 @@
-package org.trade.web;
+package org.trade.web.rest;
 
-import org.json.JSONObject;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -9,8 +8,13 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.context.WebApplicationContext;
 import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
@@ -21,27 +25,30 @@ import org.trade.core.persistent.role.RoleService;
 import org.trade.core.persistent.user.User;
 import org.trade.core.persistent.user.UserService;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @ContextConfiguration(classes = ApplicationRepositoryConfig.class,
         initializers = ApplicationProfileInitializer.class)
-class EmployeeControllerIT {
+@AutoConfigureMockMvc
+class UserControllerIT {
 
-    private final static Logger _log = LoggerFactory.getLogger(EmployeeControllerIT.class);
+    private final static Logger _log = LoggerFactory.getLogger(UserControllerIT.class);
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Autowired
+    private WebApplicationContext context;
 
     @Autowired
     private DomainService domainService;
@@ -99,29 +106,26 @@ class EmployeeControllerIT {
         userService.deleteUser(user);
     }
 
-
     @Test
-    public void getEmployeesREST() throws IOException, InterruptedException {
+    @WithMockUser(username = "admin", roles = {Role.ROLE_ADMIN})
+    public void getUserByName() throws Exception {
 
-        String endpoint = "http://localhost:8080/api/employees";
-        HttpClient client = HttpClient.newHttpClient();
+        //  this.mockMvc.perform(get("/api/users")).andDo(print())
+        //          .andExpect(view().name("users"));
 
-        HttpRequest request = HttpRequest.newBuilder()
-                .GET()
-                .uri(URI.create(endpoint))
-                .header("Accept", "application/json")
-                .header("Authorization", getBasicAuthenticationHeader("admin", "admin"))
-                .build();
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-        if (response.statusCode() == 200) {
+        //  this.mockMvc.perform(get("/api/users/{userName}", userName)) // Perform GET request to /greet/{name}
+        //          .andExpect(status().isOk()) // Expect HTTP status 200 OK
+        //          .andExpect(content().contentType(HAL_JSON_VALUE)) // Expect JSON content type
+        //          .andExpect(jsonPath("$.name").value("admin")); // Expect specific JSON content
 
-            _log.info("Info: response body: {}", response.body());
-            JSONObject responseObj = new JSONObject(response.body());
-
-        } else {
-            fail("Error: " + response.statusCode());
-        }
+        String username = "admin";
+        String password = "admin";
+        String auth = username + ":" + password;
+        mockMvc.perform(get("/api/users")
+                        .accept(MediaType.ALL).with(httpBasic(username, password)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("_embedded.users").isArray());
     }
 
     private static final String getBasicAuthenticationHeader(String username, String password) {
