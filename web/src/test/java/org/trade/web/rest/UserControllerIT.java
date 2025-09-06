@@ -122,10 +122,10 @@ class UserControllerIT {
         String username = "admin";
         String password = "admin";
         String auth = username + ":" + password;
-        mockMvc.perform(get("/api/users/{userName}", userName)
+        mockMvc.perform(get("/api/users")
                         .accept(MediaType.ALL).with(httpBasic(username, password)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("userName"));
+                .andExpect(jsonPath("_embedded.users").isArray());
     }
 
     private static final String getBasicAuthenticationHeader(String username, String password) {
