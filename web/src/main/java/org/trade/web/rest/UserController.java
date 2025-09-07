@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.trade.core.persistent.user.User;
 import org.trade.core.persistent.user.UserRecord;
 import org.trade.core.persistent.user.UserService;
-import org.trade.web.security.CustomUserDetails;
+import org.trade.web.service.CustomUserDetails;
 
 import java.util.List;
 import java.util.stream.Collectors;

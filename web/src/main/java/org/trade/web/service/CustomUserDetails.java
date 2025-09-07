@@ -1,4 +1,4 @@
-package org.trade.web.security;
+package org.trade.web.service;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -1,5 +1,6 @@
 package org.trade.core.persistent.role;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -43,9 +44,11 @@ public class Role extends Aspect implements Serializable, Cloneable {
     private Role containedRole;
 
     // One-to-many relationship with contains (self-reference)
+    @JsonIgnore
     @OneToMany(mappedBy = "containedRole", cascade = CascadeType.ALL)
     private List<Role> containRoles;
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "roles")
     private List<User> users = new ArrayList<>(0);
 
