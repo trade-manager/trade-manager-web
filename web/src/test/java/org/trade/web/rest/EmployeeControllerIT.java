@@ -12,7 +12,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
@@ -22,11 +21,13 @@ import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
 import org.trade.core.persistent.domain.Domain;
 import org.trade.core.persistent.domain.DomainService;
+import org.trade.core.persistent.employee.Employee;
+import org.trade.core.persistent.employee.EmployeeService;
 import org.trade.core.persistent.role.Role;
 import org.trade.core.persistent.role.RoleService;
 import org.trade.core.persistent.user.User;
 import org.trade.core.persistent.user.UserService;
-import org.trade.web.service.CustomUserDetailsService;
+import org.trade.core.util.JSONMapper;
 
 import java.util.ArrayList;
 import java.util.Base64;
@@ -36,9 +37,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -47,9 +48,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(classes = {ApplicationRepositoryConfig.class},
         initializers = ApplicationProfileInitializer.class)
 @AutoConfigureMockMvc
-class UserControllerIT {
+class EmployeeControllerIT {
 
-    private final static Logger _log = LoggerFactory.getLogger(UserControllerIT.class);
+    private final static Logger _log = LoggerFactory.getLogger(EmployeeControllerIT.class);
 
     @Autowired
     private MockMvc mockMvc;
@@ -64,10 +65,10 @@ class UserControllerIT {
     private RoleService roleService;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private EmployeeService employeeService;
 
     @Autowired
-    private CustomUserDetailsService customUserDetailsService;
+    private PasswordEncoder passwordEncoder;
 
     private static final String userName = "TEST-" + TradestrategyBase.getRandomNumber(4);
     private static final String adminUserName = "admin";
@@ -106,6 +107,10 @@ class UserControllerIT {
         user = new User(userName, userName, userName, userName, userName + "@" + Domain.GLOBAL + ".com", this.passwordEncoder.encode(password), gobalDomain, roles);
         user = userService.saveUser(user);
         assertNotNull(user.getId());
+
+        Employee employee = new Employee(userName, userName, userName, userName, userName + "@" + Domain.GLOBAL + ".com", user);
+        employeeService.saveEmployee(employee);
+        assertNotNull(employee.getId());
     }
 
     /**
@@ -114,49 +119,60 @@ class UserControllerIT {
     @AfterEach
     public void tearDownTest() {
 
+        Employee employee = employeeService.findEmployeeByName(userName);
+        employeeService.deleteEmployee(employee);
         User user = userService.findUserByName(userName);
         userService.deleteUser(user);
     }
 
     @Test
     @WithMockUser(username = "admin", roles = {Role.ROLE_ADMIN})
-    public void getUserByName() throws Exception {
+    public void getEmployeeByName() throws Exception {
         ;
-        mockMvc.perform(get("/api/users/{username}", userName).with(csrf())
-                        .accept(MediaType.APPLICATION_JSON).with(httpBasic(adminUserName, password)))
+        mockMvc.perform(get("/api/employees").param("text", userName)
+                        .accept(MediaType.APPLICATION_JSON).with(httpBasic(userName, password)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value(userName));
+                .andExpect(jsonPath("$[0].name").value(userName));
     }
 
     @Test
     @WithMockUser(username = "admin", roles = {Role.ROLE_ADMIN})
-    public void getCurrentUser() throws Exception {
+    public void createEmployee() throws Exception {
 
-        UserDetails mockUser = customUserDetailsService.loadUserByUsername(adminUserName);
+        String userNameNew = "TEST-" + TradestrategyBase.getRandomNumber(4);
+        Employee employee = new Employee(userNameNew, userNameNew, userNameNew, userNameNew, userNameNew + "@" + Domain.GLOBAL + ".com");
+        String jsonContent = JSONMapper.getJSONString(employee);
 
-        mockMvc.perform(get("/api/users/me").with(user(mockUser))
-                        .accept(MediaType.APPLICATION_JSON).with(httpBasic(adminUserName, password)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value(adminUserName));
+        mockMvc.perform(post("/api/employees")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(httpBasic(userName, password))
+                        .content(jsonContent))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.name").value(userNameNew));
+
+        employee = employeeService.findEmployeeByName(userNameNew);
+        employeeService.deleteEmployee(employee);
 
     }
 
     @Test
     @WithMockUser(username = "admin", roles = {Role.ROLE_ADMIN})
-    public void getUsers() throws Exception {
+    public void getEmployees() throws Exception {
 
-        mockMvc.perform(get("/api/users")
-                        .accept(MediaType.APPLICATION_JSON).with(httpBasic(adminUserName, password)))
+        mockMvc.perform(get("/api/employees")
+                        .accept(MediaType.APPLICATION_JSON).with(httpBasic(userName, password)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray());
     }
 
     @Test
     @WithMockUser(username = "admin", roles = {Role.ROLE_ADMIN})
-    public void deleteUser() throws Exception {
+    public void deleteEmployee() throws Exception {
 
-        mockMvc.perform(delete("/api/users/{username}", userName).with(csrf())
-                        .accept(MediaType.APPLICATION_JSON).with(httpBasic(adminUserName, password)))
+        Employee employee = employeeService.findEmployeeByName(userName);
+        mockMvc.perform(delete("/api/employees/{id}", employee.getId()).with(csrf())
+                        .accept(MediaType.APPLICATION_JSON).with(httpBasic(userName, password)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value(userName));
     }

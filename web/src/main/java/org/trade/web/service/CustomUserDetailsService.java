@@ -1,4 +1,4 @@
-package org.trade.web.security;
+package org.trade.web.service;
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,7 +23,6 @@ public class CustomUserDetailsService implements UserDetailsService {
         this.userService = userService;
     }
 
-    @Override
     public UserDetails loadUserByUsername(String username) {
 
         User user = userService.getUserByUsername(username);
