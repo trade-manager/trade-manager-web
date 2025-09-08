@@ -8,7 +8,7 @@ import { handleLogError } from '../misc/Helpers'
 function Signup() {
   const Auth = useAuth()
   const isLoggedIn = Auth.userIsAuthenticated()
-console.log(JSON.stringify(isLoggedIn));
+
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [name, setName] = useState('')
@@ -46,7 +46,7 @@ console.log(JSON.stringify(isLoggedIn));
     const user = { username, password, name, email, role, domain}
 
     try {
-      console.log(JSON.stringify(user));
+
       const userPayload = {'username': user.username,'password': user.password, 'name': user.name, 'email': user.email, 'domain': {'name': user.domain}, 'roles': [{'name': user.role}]};
       console.log(JSON.stringify(userPayload));
       const response = await employeeApi.signup(userPayload)
