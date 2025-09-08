@@ -36,6 +36,9 @@ public class RoleServiceIT {
     private final static Logger _log = LoggerFactory.getLogger(RoleServiceIT.class);
 
     @Autowired
+    private TradeService tradeService;
+
+    @Autowired
     private RoleService roleService;
 
     private static final String roleName = "TEST-" + TradestrategyBase.getRandomNumber(4);
@@ -60,8 +63,7 @@ public class RoleServiceIT {
     @AfterEach
     public void tearDown() {
 
-        Role role = roleService.findRoleByName(roleName);
-        roleService.deleteRole(role);
+        TradestrategyBase.deleteRecords(tradeService);
     }
 
     /**
@@ -77,6 +79,7 @@ public class RoleServiceIT {
         Role role = new Role(roleName, roleName);
         role = roleService.saveRole(role);
         assertNotNull(role.getId());
+        TradestrategyBase.addRecord(role);
         role = roleService.findRoleByName(roleName);
         assertNotNull(role.getId());
     }

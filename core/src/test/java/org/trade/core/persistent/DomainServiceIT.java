@@ -32,6 +32,9 @@ public class DomainServiceIT {
     private final static Logger _log = LoggerFactory.getLogger(DomainServiceIT.class);
 
     @Autowired
+    private TradeService tradeService;
+
+    @Autowired
     private DomainService domainService;
 
     private static final String childDomainName = "CHILD-" + TradestrategyBase.getRandomNumber(4);
@@ -56,8 +59,7 @@ public class DomainServiceIT {
     @AfterEach
     public void tearDown() {
 
-        Domain domain = domainService.findDomainByName(childDomainName);
-        domainService.deleteDomain(domain);
+        TradestrategyBase.deleteRecords(tradeService);
     }
 
     /**
@@ -78,5 +80,6 @@ public class DomainServiceIT {
         childDomain = domainService.saveDomain(childDomain);
         assertNotNull(childDomain.getId());
         assertTrue(childDomain.hasParent());
+        TradestrategyBase.addRecord(childDomain);
     }
 }

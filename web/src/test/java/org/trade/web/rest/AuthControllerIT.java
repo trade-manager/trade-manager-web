@@ -12,7 +12,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
@@ -26,7 +25,9 @@ import org.trade.core.persistent.domain.DomainService;
 import org.trade.core.persistent.role.Role;
 import org.trade.core.persistent.role.RoleService;
 import org.trade.core.persistent.user.User;
+import org.trade.core.persistent.user.UserRecord;
 import org.trade.core.persistent.user.UserService;
+import org.trade.core.util.JSONMapper;
 import org.trade.web.service.CustomUserDetailsService;
 
 import java.util.ArrayList;
@@ -36,9 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -47,9 +46,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(classes = {ApplicationRepositoryConfig.class},
         initializers = ApplicationProfileInitializer.class)
 @AutoConfigureMockMvc
-class UserControllerIT {
+class AuthControllerIT {
 
-    private final static Logger _log = LoggerFactory.getLogger(UserControllerIT.class);
+    private final static Logger _log = LoggerFactory.getLogger(AuthControllerIT.class);
 
     @Autowired
     private MockMvc mockMvc;
@@ -123,44 +122,46 @@ class UserControllerIT {
 
     @Test
     @WithMockUser(username = "admin", roles = {Role.ROLE_ADMIN})
-    public void getUserByName() throws Exception {
-        ;
-        mockMvc.perform(get("/api/users/{username}", userName).with(csrf())
-                        .accept(MediaType.APPLICATION_JSON).with(httpBasic(adminUserName, password)))
+    public void authorize() throws Exception {
+
+        User mockUser = userService.getUserByUsername(userName);
+        mockUser.setPassword(password);
+        String jsonContent = JSONMapper.getJSONString(mockUser);
+
+        mockMvc.perform(post("/auth/authenticate")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(httpBasic(userName, password))
+                        .content(jsonContent))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value(userName));
     }
 
     @Test
     @WithMockUser(username = "admin", roles = {Role.ROLE_ADMIN})
-    public void getCurrentUser() throws Exception {
+    public void signup() throws Exception {
 
-        UserDetails mockUser = customUserDetailsService.loadUserByUsername(adminUserName);
+        final String userNameNew = "TEST-" + TradestrategyBase.getRandomNumber(4);
+        Domain gobalDomain = domainService.findDomainByName(Domain.GLOBAL);
+        assertNotNull(gobalDomain);
+        Role role = roleService.findRoleByName(Role.ROLE_ADMIN);
+        assertNotNull(role);
+        List<Role> roles = new ArrayList<>();
+        roles.add(role);
 
-        mockMvc.perform(get("/api/users/me").with(user(mockUser))
-                        .accept(MediaType.APPLICATION_JSON).with(httpBasic(adminUserName, password)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value(adminUserName));
+        User user = new User(userNameNew, userNameNew, userNameNew, userNameNew, userNameNew + "@" + Domain.GLOBAL + ".com", password, gobalDomain, roles);
+        String jsonContent = JSONMapper.getJSONString(UserRecord.from(user));
 
-    }
+        mockMvc.perform(post("/auth/signup")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(httpBasic(adminUserName, password))
+                        .content(jsonContent))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.name").value(userNameNew));
 
-    @Test
-    @WithMockUser(username = "admin", roles = {Role.ROLE_ADMIN})
-    public void getUsers() throws Exception {
-
-        mockMvc.perform(get("/api/users")
-                        .accept(MediaType.APPLICATION_JSON).with(httpBasic(adminUserName, password)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$").isArray());
-    }
-
-    @Test
-    @WithMockUser(username = "admin", roles = {Role.ROLE_ADMIN})
-    public void deleteUser() throws Exception {
-
-        mockMvc.perform(delete("/api/users/{username}", userName).with(csrf())
-                        .accept(MediaType.APPLICATION_JSON).with(httpBasic(adminUserName, password)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value(userName));
+        user = userService.findUserByName(userNameNew);
+        assertNotNull(user.getId());
+        TradestrategyBase.addRecord(user);
     }
 }

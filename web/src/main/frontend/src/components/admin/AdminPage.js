@@ -106,7 +106,8 @@ function AdminPage() {
     try {
 
       const employee = { name: employeeName.trim(), firstName: employeeFirstName.trim() , lastName: employeeLastName.trim(), email: employeeEmail.trim(), user: user}
-console.log(JSON.stringify(employee));
+      console.log(JSON.stringify(employee));
+
       if (!(employee.email && employee.name)) {
 
         return

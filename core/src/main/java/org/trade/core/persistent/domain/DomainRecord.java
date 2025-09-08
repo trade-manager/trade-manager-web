@@ -1,17 +1,16 @@
 package org.trade.core.persistent.domain;
 
-import org.trade.core.util.JSONMapper;
-
 /**
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-public record DomainRecord(DomainDTO domain) {
+public record DomainRecord(Long id, String name) {
 
-    public static DomainRecord from(Domain doamin) {
+    public static DomainRecord from(Domain domain) {
 
         return new DomainRecord(
-                JSONMapper.convertDTOToEntity(doamin, DomainDTO.class)
+                domain.getId(),
+                domain.getName()
         );
     }
 }

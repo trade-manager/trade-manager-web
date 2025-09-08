@@ -19,9 +19,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
+import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.domain.Domain;
 import org.trade.core.persistent.domain.DomainService;
 import org.trade.core.persistent.employee.Employee;
+import org.trade.core.persistent.employee.EmployeeRecord;
 import org.trade.core.persistent.employee.EmployeeService;
 import org.trade.core.persistent.role.Role;
 import org.trade.core.persistent.role.RoleService;
@@ -30,7 +32,6 @@ import org.trade.core.persistent.user.UserService;
 import org.trade.core.util.JSONMapper;
 
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -54,6 +55,9 @@ class EmployeeControllerIT {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private TradeService tradeService;
 
     @Autowired
     private DomainService domainService;
@@ -107,10 +111,12 @@ class EmployeeControllerIT {
         user = new User(userName, userName, userName, userName, userName + "@" + Domain.GLOBAL + ".com", this.passwordEncoder.encode(password), gobalDomain, roles);
         user = userService.saveUser(user);
         assertNotNull(user.getId());
+        TradestrategyBase.addRecord(user);
 
         Employee employee = new Employee(userName, userName, userName, userName, userName + "@" + Domain.GLOBAL + ".com", user);
         employeeService.saveEmployee(employee);
         assertNotNull(employee.getId());
+        TradestrategyBase.addRecord(employee);
     }
 
     /**
@@ -119,16 +125,13 @@ class EmployeeControllerIT {
     @AfterEach
     public void tearDownTest() {
 
-        Employee employee = employeeService.findEmployeeByName(userName);
-        employeeService.deleteEmployee(employee);
-        User user = userService.findUserByName(userName);
-        userService.deleteUser(user);
+        TradestrategyBase.deleteRecords(tradeService);
     }
 
     @Test
     @WithMockUser(username = "admin", roles = {Role.ROLE_ADMIN})
     public void getEmployeeByName() throws Exception {
-        ;
+
         mockMvc.perform(get("/api/employees").param("text", userName)
                         .accept(MediaType.APPLICATION_JSON).with(httpBasic(userName, password)))
                 .andExpect(status().isOk())
@@ -139,9 +142,9 @@ class EmployeeControllerIT {
     @WithMockUser(username = "admin", roles = {Role.ROLE_ADMIN})
     public void createEmployee() throws Exception {
 
-        String userNameNew = "TEST-" + TradestrategyBase.getRandomNumber(4);
-        Employee employee = new Employee(userNameNew, userNameNew, userNameNew, userNameNew, userNameNew + "@" + Domain.GLOBAL + ".com");
-        String jsonContent = JSONMapper.getJSONString(employee);
+        final String userNameNew = "TEST-" + TradestrategyBase.getRandomNumber(4);
+        Employee employee = new Employee(userNameNew, userNameNew, userNameNew, userNameNew, userNameNew + "@" + Domain.GLOBAL + ".com", userService.findUserByName(userName));
+        String jsonContent = JSONMapper.getJSONString(EmployeeRecord.from(employee));
 
         mockMvc.perform(post("/api/employees")
                         .with(csrf())
@@ -152,8 +155,8 @@ class EmployeeControllerIT {
                 .andExpect(jsonPath("$.name").value(userNameNew));
 
         employee = employeeService.findEmployeeByName(userNameNew);
+        assertNotNull(employee);
         employeeService.deleteEmployee(employee);
-
     }
 
     @Test
@@ -175,11 +178,5 @@ class EmployeeControllerIT {
                         .accept(MediaType.APPLICATION_JSON).with(httpBasic(userName, password)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value(userName));
-    }
-
-    private static final String getBasicAuthenticationHeader(String username, String password) {
-
-        String valueToEncode = username + ":" + password;
-        return "Basic " + Base64.getEncoder().encodeToString(valueToEncode.getBytes());
     }
 }

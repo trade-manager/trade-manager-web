@@ -1,23 +1,22 @@
 package org.trade.core.persistent.employee;
 
-import org.trade.core.util.JSONMapper;
+import org.trade.core.persistent.user.UserRecord;
 
 /**
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-public record EmployeeRecord(Long id, String name, String firstName, String lastName, String email) {
+public record EmployeeRecord(Long id, String name, String firstName, String lastName, String email, UserRecord user) {
 
     public static EmployeeRecord from(Employee employee) {
 
-        EmployeeDTO employeeDTO = JSONMapper.convertDTOToEntity(employee, EmployeeDTO.class);
-
         return new EmployeeRecord(
-                employeeDTO.getId(),
-                employeeDTO.getName(),
-                employeeDTO.getFirstName(),
-                employeeDTO.getLastName(),
-                employeeDTO.getEmail()
+                employee.getId(),
+                employee.getName(),
+                employee.getFirstName(),
+                employee.getLastName(),
+                employee.getEmail(),
+                UserRecord.from(employee.getUser())
         );
     }
 }

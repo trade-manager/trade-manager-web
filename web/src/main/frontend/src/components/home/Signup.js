@@ -13,6 +13,8 @@ function Signup() {
   const [password, setPassword] = useState('')
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
+  const [role, setRole] = useState('')
+  const [domain, setDomain] = useState('')
   const [isError, setIsError] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
 
@@ -25,22 +27,29 @@ function Signup() {
       setName(value)
     } else if (name === 'email') {
       setEmail(value)
+    } else if (name === 'role') {
+      setRole(value)
+    } else if (name === 'domain') {
+       setDomain(value)
     }
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    if (!(username && password && name && email)) {
+    if (!(username && password && name && email && role && domain)) {
       setIsError(true)
       setErrorMessage('Please, inform all fields!')
       return
     }
 
-    const user = { username, password, name, email }
+    const user = { username, password, name, email, role, domain}
 
     try {
-      const response = await employeeApi.signup(user)
+
+      const userPayload = {'username': user.username,'password': user.password, 'name': user.name, 'email': user.email, 'domain': {'name': user.domain}, 'roles': [{'name': user.role}]};
+      console.log(JSON.stringify(userPayload));
+      const response = await employeeApi.signup(userPayload)
       const { id, name, role } = response.data
       const authdata = window.btoa(username + ':' + password)
       const authenticatedUser = { id, name, role, authdata }
@@ -51,18 +60,27 @@ function Signup() {
       setPassword('')
       setName('')
       setEmail('')
+      setRole('')
+      setDomain('')
       setIsError(false)
       setErrorMessage('')
     } catch (error) {
+
       handleLogError(error)
+
       if (error.response && error.response.data) {
+
         const errorData = error.response.data
         let errorMessage = 'Invalid fields'
+
         if (errorData.status === 409) {
+
           errorMessage = errorData.message
         } else if (errorData.status === 400) {
+
           errorMessage = errorData.errors[0].defaultMessage
         }
+
         setIsError(true)
         setErrorMessage(errorMessage)
       }
@@ -114,6 +132,24 @@ function Signup() {
               iconPosition='left'
               placeholder='Email'
               value={email}
+              onChange={handleInputChange}
+            />
+            <Form.Input
+              fluid
+              name='role'
+              icon='at'
+              iconPosition='left'
+              placeholder='Role'
+              value={role}
+              onChange={handleInputChange}
+            />
+            <Form.Input
+              fluid
+              name='domain'
+              icon='at'
+              iconPosition='left'
+              placeholder='Domain'
+              value={domain}
               onChange={handleInputChange}
             />
             <Button color='blue' fluid size='large'>Signup</Button>

@@ -1,6 +1,24 @@
 import React from 'react'
 import { Form, Button, Input, Table } from 'semantic-ui-react'
 
+function jsonToCsv(jsonData) {
+  // Extract headers from the first JSON object
+  const headers = ['name'];
+  // Create the header row
+  const csvHeader = headers.join(',');
+
+  // Create data rows
+  const csvRows = jsonData.map(obj => {
+    return headers.map(header => {
+      // Handle cases where a key might be missing in an object
+      return obj[header] !== undefined ? obj[header] : '';
+    }).join(',');
+  });
+
+  // Combine header and data rows
+  return [...csvRows].join(',');
+}
+
 function UserTable({ users, userUsernameSearch, handleInputChange, handleDeleteUser, handleSearchUser }) {
   let userList
   if (users.length === 0) {
@@ -27,7 +45,8 @@ function UserTable({ users, userUsernameSearch, handleInputChange, handleDeleteU
           <Table.Cell>{user.username}</Table.Cell>
           <Table.Cell>{user.name}</Table.Cell>
           <Table.Cell>{user.email}</Table.Cell>
-          <Table.Cell>{user.role}</Table.Cell>
+          <Table.Cell>{jsonToCsv(user.roles)}</Table.Cell>
+          <Table.Cell>{user.domain.name}</Table.Cell>
         </Table.Row>
       )
     })
@@ -53,6 +72,7 @@ function UserTable({ users, userUsernameSearch, handleInputChange, handleDeleteU
             <Table.HeaderCell width={4}>Name</Table.HeaderCell>
             <Table.HeaderCell width={5}>Email</Table.HeaderCell>
             <Table.HeaderCell width={2}>Role</Table.HeaderCell>
+            <Table.HeaderCell width={2}>Domain</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>

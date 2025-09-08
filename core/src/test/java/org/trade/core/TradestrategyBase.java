@@ -2,6 +2,7 @@ package org.trade.core;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.trade.core.dao.Aspect;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.Account;
 import org.trade.core.persistent.dao.Contract;
@@ -35,6 +36,8 @@ import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
@@ -48,6 +51,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 public class TradestrategyBase {
 
     private final static Logger _log = LoggerFactory.getLogger(TradestrategyBase.class);
+    private final static LinkedList<Aspect> aspects = new LinkedList<>();
 
     public TradestrategyBase() {
     }
@@ -297,6 +301,21 @@ public class TradestrategyBase {
         } catch (IOException ex) {
 
             fail("Failed to write OutputStream msg: " + ex.getMessage());
+        }
+    }
+
+    public static void addRecord(Aspect entity) {
+
+        aspects.add(entity);
+    }
+
+    public static void deleteRecords(TradeService tradeService) {
+
+        Iterator<Aspect> descendingIterator = aspects.descendingIterator();
+
+        while (descendingIterator.hasNext()) {
+
+            tradeService.deleteAspect(descendingIterator.next());
         }
     }
 }
