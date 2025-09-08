@@ -18,7 +18,6 @@ import org.trade.core.persistent.employee.EmployeeRecord;
 import org.trade.core.persistent.employee.EmployeeService;
 import org.trade.core.persistent.user.User;
 import org.trade.core.persistent.user.UserService;
-import org.trade.web.rest.dto.CreateEmployeeRequest;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -53,23 +52,23 @@ public class EmployeeController {
     @Operation(security = {@SecurityRequirement(name = BASIC_AUTH_SECURITY_SCHEME)})
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public EmployeeRecord createEmployee(@Valid @RequestBody CreateEmployeeRequest createEmployeeRequest) {
+    public EmployeeRecord createEmployee(@Valid @RequestBody EmployeeRecord employeeRecord) {
 
         Employee employee = null;
 
-        if (null != createEmployeeRequest.user()) {
+        if (null != employeeRecord.user()) {
 
-            User user = userService.getUserByUsername(createEmployeeRequest.user().name());
+            User user = userService.getUserByUsername(employeeRecord.user().username());
 
             if (null != user) {
 
-                employee = EmployeeController.from(createEmployeeRequest, user);
+                employee = EmployeeController.from(employeeRecord, user);
             }
         }
 
         if (null == employee) {
 
-            employee = EmployeeController.from(createEmployeeRequest, null);
+            employee = EmployeeController.from(employeeRecord, null);
         }
 
         employee = employeeService.saveEmployee(employee);
@@ -85,8 +84,8 @@ public class EmployeeController {
         return EmployeeRecord.from(employee);
     }
 
-    public static Employee from(CreateEmployeeRequest createEmployeeRequest, User user) {
+    public static Employee from(EmployeeRecord employeeRecord, User user) {
 
-        return new Employee(createEmployeeRequest.name(), createEmployeeRequest.firstName(), createEmployeeRequest.lastName(), createEmployeeRequest.name(), createEmployeeRequest.email(), user);
+        return new Employee(employeeRecord.name(), employeeRecord.firstName(), employeeRecord.lastName(), employeeRecord.name(), employeeRecord.email(), user);
     }
 }

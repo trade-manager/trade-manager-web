@@ -22,6 +22,8 @@ import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
 import org.trade.core.persistent.domain.Domain;
 import org.trade.core.persistent.domain.DomainService;
+import org.trade.core.persistent.employee.Employee;
+import org.trade.core.persistent.employee.EmployeeService;
 import org.trade.core.persistent.role.Role;
 import org.trade.core.persistent.role.RoleService;
 import org.trade.core.persistent.user.User;
@@ -32,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -47,9 +50,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(classes = {ApplicationRepositoryConfig.class},
         initializers = ApplicationProfileInitializer.class)
 @AutoConfigureMockMvc
-class UserControllerIT {
+class PublicControllerIT {
 
-    private final static Logger _log = LoggerFactory.getLogger(UserControllerIT.class);
+    private final static Logger _log = LoggerFactory.getLogger(PublicControllerIT.class);
 
     @Autowired
     private MockMvc mockMvc;
@@ -62,6 +65,9 @@ class UserControllerIT {
 
     @Autowired
     private RoleService roleService;
+
+    @Autowired
+    private EmployeeService employeeService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -106,6 +112,9 @@ class UserControllerIT {
         user = new User(userName, userName, userName, userName, userName + "@" + Domain.GLOBAL + ".com", this.passwordEncoder.encode(password), gobalDomain, roles);
         user = userService.saveUser(user);
         assertNotNull(user.getId());
+        Employee employee = new Employee(userName, userName, userName, userName, userName + "@" + Domain.GLOBAL + ".com", user);
+        employeeService.saveEmployee(employee);
+        assertNotNull(employee.getId());
     }
 
     /**
@@ -114,50 +123,29 @@ class UserControllerIT {
     @AfterEach
     public void tearDownTest() {
 
+        Employee employee = employeeService.findEmployeeByName(userName);
+        employeeService.deleteEmployee(employee);
         User user = userService.findUserByName(userName);
         userService.deleteUser(user);
     }
 
     @Test
     @WithMockUser(username = "admin", roles = {Role.ROLE_ADMIN})
-    public void getUserByName() throws Exception {
+    public void getNumberOfUsers() throws Exception {
         ;
-        mockMvc.perform(get("/api/users/{username}", userName).with(csrf())
-                        .accept(MediaType.APPLICATION_JSON).with(httpBasic(adminUserName, password)))
+        mockMvc.perform(get("/public/numberOfUsers")
+                        .accept(MediaType.APPLICATION_JSON).with(httpBasic(userName, password)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value(userName));
+                .andExpect(jsonPath("$").value(equalTo(2), Integer.class));
     }
 
     @Test
     @WithMockUser(username = "admin", roles = {Role.ROLE_ADMIN})
-    public void getCurrentUser() throws Exception {
+    public void getNumberOfEmployees() throws Exception {
 
-        UserDetails mockUser = customUserDetailsService.loadUserByUsername(adminUserName);
-
-        mockMvc.perform(get("/api/users/me").with(user(mockUser))
-                        .accept(MediaType.APPLICATION_JSON).with(httpBasic(adminUserName, password)))
+        mockMvc.perform(get("/public/numberOfEmployees")
+                        .accept(MediaType.APPLICATION_JSON).with(httpBasic(userName, password)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value(adminUserName));
-
-    }
-
-    @Test
-    @WithMockUser(username = "admin", roles = {Role.ROLE_ADMIN})
-    public void getUsers() throws Exception {
-
-        mockMvc.perform(get("/api/users")
-                        .accept(MediaType.APPLICATION_JSON).with(httpBasic(adminUserName, password)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$").isArray());
-    }
-
-    @Test
-    @WithMockUser(username = "admin", roles = {Role.ROLE_ADMIN})
-    public void deleteUser() throws Exception {
-
-        mockMvc.perform(delete("/api/users/{username}", userName).with(csrf())
-                        .accept(MediaType.APPLICATION_JSON).with(httpBasic(adminUserName, password)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value(userName));
+                .andExpect(jsonPath("$").value(equalTo(1), Integer.class));
     }
 }

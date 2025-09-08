@@ -22,6 +22,7 @@ import org.trade.core.TradestrategyBase;
 import org.trade.core.persistent.domain.Domain;
 import org.trade.core.persistent.domain.DomainService;
 import org.trade.core.persistent.employee.Employee;
+import org.trade.core.persistent.employee.EmployeeRecord;
 import org.trade.core.persistent.employee.EmployeeService;
 import org.trade.core.persistent.role.Role;
 import org.trade.core.persistent.role.RoleService;
@@ -139,9 +140,9 @@ class EmployeeControllerIT {
     @WithMockUser(username = "admin", roles = {Role.ROLE_ADMIN})
     public void createEmployee() throws Exception {
 
-        String userNameNew = "TEST-" + TradestrategyBase.getRandomNumber(4);
-        Employee employee = new Employee(userNameNew, userNameNew, userNameNew, userNameNew, userNameNew + "@" + Domain.GLOBAL + ".com");
-        String jsonContent = JSONMapper.getJSONString(employee);
+        final String userNameNew = "TEST-" + TradestrategyBase.getRandomNumber(4);
+        Employee employee = new Employee(userNameNew, userNameNew, userNameNew, userNameNew, userNameNew + "@" + Domain.GLOBAL + ".com", userService.findUserByName(userName));
+        String jsonContent = JSONMapper.getJSONString(EmployeeRecord.from(employee));
 
         mockMvc.perform(post("/api/employees")
                         .with(csrf())
@@ -152,8 +153,8 @@ class EmployeeControllerIT {
                 .andExpect(jsonPath("$.name").value(userNameNew));
 
         employee = employeeService.findEmployeeByName(userNameNew);
+        assertNotNull(employee);
         employeeService.deleteEmployee(employee);
-
     }
 
     @Test
@@ -175,11 +176,5 @@ class EmployeeControllerIT {
                         .accept(MediaType.APPLICATION_JSON).with(httpBasic(userName, password)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value(userName));
-    }
-
-    private static final String getBasicAuthenticationHeader(String username, String password) {
-
-        String valueToEncode = username + ":" + password;
-        return "Basic " + Base64.getEncoder().encodeToString(valueToEncode.getBytes());
     }
 }

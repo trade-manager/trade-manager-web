@@ -43,8 +43,8 @@ public class DatabaseInitializer implements CommandLineRunner {
 
     private static final String EMPLOYEES_STR =
             """
-                    9781603090773;Fred Luddy;Fred;Luddy;Fred Luddy user;fred.luddy@global.com
-                    9781603090698;John Doe;John;Doe;John Doe user;john.doe@global.com
+                    9781603090773;Fred Luddy;Fred;Luddy;Fred Luddy user;fred.luddy@global.com, admin
+                    9781603090698;John Doe;John;Doe;John Doe user;john.doe@global.com, admin
                     """;
 
     private static final List<User> USERS = Arrays.asList(
@@ -134,7 +134,7 @@ public class DatabaseInitializer implements CommandLineRunner {
 
         return Arrays.stream(EMPLOYEES_STR.split("\n"))
                 .map(employeeInfoStr -> employeeInfoStr.split(";"))
-                .map(employeeInfoArr -> new Employee(Long.parseLong(employeeInfoArr[0]), employeeInfoArr[1], employeeInfoArr[2], employeeInfoArr[3], employeeInfoArr[4], employeeInfoArr[5]))
+                .map(employeeInfoArr -> new Employee(Long.parseLong(employeeInfoArr[0]), employeeInfoArr[1], employeeInfoArr[2], employeeInfoArr[3], employeeInfoArr[4], employeeInfoArr[5], userService.findUserByName(employeeInfoArr[6])))
                 .collect(Collectors.toList());
     }
 

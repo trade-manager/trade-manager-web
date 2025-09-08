@@ -1,23 +1,38 @@
 package org.trade.core.persistent.user;
 
-import org.trade.core.util.JSONMapper;
+import org.trade.core.persistent.domain.DomainRecord;
+import org.trade.core.persistent.role.Role;
+import org.trade.core.persistent.role.RoleRecord;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-public record UserRecord(Long id, String username, String name, String email, String role) {
+public record UserRecord(Long id, String username, String name, String email, String password, DomainRecord domain,
+                         List<RoleRecord> roles) {
 
     public static UserRecord from(User user) {
 
-        UserDTO userDTO = JSONMapper.convertDTOToEntity(user, UserDTO.class);
+        List<RoleRecord> roles = new ArrayList<>();
+
+        for (Role role : user.getRoles()) {
+
+            roles.add(RoleRecord.from(role));
+        }
 
         return new UserRecord(
-                userDTO.getId(),
-                userDTO.getUsername(),
-                userDTO.getName(),
-                userDTO.getEmail(),
-                userDTO.getRoleDTOs().getFirst().getName()
+
+                user.getId(),
+                user.getUsername(),
+                user.getName(),
+                user.getEmail(),
+                user.getPassword(),
+                DomainRecord.from(user.getDomain()),
+                Collections.unmodifiableList(new ArrayList<>(roles))
         );
     }
 }

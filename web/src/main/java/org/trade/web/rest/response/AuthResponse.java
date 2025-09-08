@@ -1,4 +1,4 @@
-package org.trade.web.rest.dto;
+package org.trade.web.rest.response;
 
 /**
  * @author Simon Allen

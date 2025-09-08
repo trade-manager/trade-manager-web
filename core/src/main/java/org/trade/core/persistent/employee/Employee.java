@@ -41,25 +41,20 @@ public class Employee extends Aspect implements Serializable, Cloneable {
     private Employee() {
     }
 
-    public Employee(String name, String firstName, String lastName, String description, String email, User user) {
+    public Employee(Long id, String name, String firstName, String lastName, String description, String email, User user) {
 
-        this(name, firstName, lastName, description, email);
-        this.user = user;
-    }
-
-    public Employee(Long id, String name, String firstName, String lastName, String description, String email) {
-
-        this(name, firstName, lastName, description, email);
+        this(name, firstName, lastName, description, email, user);
         this.setId(id);
     }
 
-    public Employee(String name, String firstName, String lastName, String description, String email) {
+    public Employee(String name, String firstName, String lastName, String description, String email, User user) {
 
         this.name = name;
         this.firstName = firstName;
         this.lastName = lastName;
         this.description = description;
         this.email = email;
+        this.user = user;
     }
 
 
