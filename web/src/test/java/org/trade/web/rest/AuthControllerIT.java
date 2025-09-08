@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
+import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.domain.Domain;
 import org.trade.core.persistent.domain.DomainService;
 import org.trade.core.persistent.role.Role;
@@ -51,6 +52,9 @@ class AuthControllerIT {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private TradeService tradeService;
 
     @Autowired
     private DomainService domainService;
@@ -104,6 +108,7 @@ class AuthControllerIT {
         user = new User(userName, userName, userName, userName, userName + "@" + Domain.GLOBAL + ".com", this.passwordEncoder.encode(password), gobalDomain, roles);
         user = userService.saveUser(user);
         assertNotNull(user.getId());
+        TradestrategyBase.addRecord(user);
     }
 
     /**
@@ -112,8 +117,7 @@ class AuthControllerIT {
     @AfterEach
     public void tearDownTest() {
 
-        User user = userService.findUserByName(userName);
-        userService.deleteUser(user);
+        TradestrategyBase.deleteRecords(tradeService);
     }
 
     @Test
@@ -131,7 +135,6 @@ class AuthControllerIT {
                         .content(jsonContent))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value(userName));
-
     }
 
     @Test
@@ -158,8 +161,7 @@ class AuthControllerIT {
                 .andExpect(jsonPath("$.name").value(userNameNew));
 
         user = userService.findUserByName(userNameNew);
-        assertNotNull(user);
-        userService.deleteUser(user);
-
+        assertNotNull(user.getId());
+        TradestrategyBase.addRecord(user);
     }
 }

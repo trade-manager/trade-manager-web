@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
+import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.domain.Domain;
 import org.trade.core.persistent.domain.DomainService;
 import org.trade.core.persistent.employee.Employee;
@@ -51,6 +52,9 @@ class PublicControllerIT {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private TradeService tradeService;
 
     @Autowired
     private DomainService domainService;
@@ -107,9 +111,11 @@ class PublicControllerIT {
         user = new User(userName, userName, userName, userName, userName + "@" + Domain.GLOBAL + ".com", this.passwordEncoder.encode(password), gobalDomain, roles);
         user = userService.saveUser(user);
         assertNotNull(user.getId());
+        TradestrategyBase.addRecord(user);
         Employee employee = new Employee(userName, userName, userName, userName, userName + "@" + Domain.GLOBAL + ".com", user);
         employeeService.saveEmployee(employee);
         assertNotNull(employee.getId());
+        TradestrategyBase.addRecord(employee);
     }
 
     /**
@@ -118,10 +124,7 @@ class PublicControllerIT {
     @AfterEach
     public void tearDownTest() {
 
-        Employee employee = employeeService.findEmployeeByName(userName);
-        employeeService.deleteEmployee(employee);
-        User user = userService.findUserByName(userName);
-        userService.deleteUser(user);
+        TradestrategyBase.deleteRecords(tradeService);
     }
 
     @Test
