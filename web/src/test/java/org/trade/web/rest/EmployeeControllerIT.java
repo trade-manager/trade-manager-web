@@ -31,7 +31,6 @@ import org.trade.core.persistent.user.UserService;
 import org.trade.core.util.JSONMapper;
 
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
