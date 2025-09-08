@@ -789,14 +789,14 @@ INDEX userrole_role_idx (role_id ASC) ,
 CONSTRAINT userrole_role_fk
 FOREIGN KEY (role_id )
 REFERENCES role (id )
-  ON DELETE NO ACTION
-  ON UPDATE NO ACTION,
+  ON DELETE CASCADE
+  ON UPDATE CASCADE,
 INDEX userrole_user_idx (user_id ASC) ,
 CONSTRAINT userrole_user_fk
 FOREIGN KEY (user_id )
 REFERENCES user (id )
-  ON DELETE NO ACTION
-  ON UPDATE NO ACTION)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE)
 ENGINE = InnoDB//
 SHOW WARNINGS//
 
@@ -823,14 +823,14 @@ INDEX useraccount_account_idx (account_id ASC) ,
 CONSTRAINT useraccount_account_fk
 FOREIGN KEY (account_id )
 REFERENCES account (id )
-  ON DELETE NO ACTION
-  ON UPDATE NO ACTION,
+  ON DELETE CASCADE
+  ON UPDATE CASCADE,
 INDEX useraccount_user_idx (user_id ASC) ,
 CONSTRAINT useraccount_user_fk
 FOREIGN KEY (user_id )
 REFERENCES user (id )
-  ON DELETE NO ACTION
-  ON UPDATE NO ACTION)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE)
 ENGINE = InnoDB//
 SHOW WARNINGS//
 
