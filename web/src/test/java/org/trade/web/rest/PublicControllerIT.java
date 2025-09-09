@@ -1,5 +1,6 @@
 package org.trade.web.rest;
 
+import org.json.JSONArray;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -16,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
@@ -34,6 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.Matchers.equalTo;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
@@ -146,4 +149,31 @@ class PublicControllerIT {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").value(equalTo(1), Integer.class));
     }
+
+    @Test
+    @WithMockUser(username = "admin", roles = {Role.ROLE_ADMIN})
+    public void getDomains() throws Exception {
+
+        MvcResult mvcResult = mockMvc.perform(get("/public/domains")
+                        .accept(MediaType.APPLICATION_JSON).with(httpBasic(userName, password)))
+                .andExpect(status().isOk()).andReturn();
+        String responseBody = mvcResult.getResponse().getContentAsString();
+        assertNotNull(responseBody);
+        JSONArray result = new JSONArray(responseBody);
+        assertEquals(1, result.length());
+    }
+
+    @Test
+    @WithMockUser(username = "admin", roles = {Role.ROLE_ADMIN})
+    public void getRoles() throws Exception {
+
+        MvcResult mvcResult = mockMvc.perform(get("/public/roles")
+                        .accept(MediaType.APPLICATION_JSON).with(httpBasic(userName, password)))
+                .andExpect(status().isOk()).andReturn();
+        String responseBody = mvcResult.getResponse().getContentAsString();
+        assertNotNull(responseBody);
+        JSONArray result = new JSONArray(responseBody);
+        assertEquals(3, result.length());
+    }
+
 }

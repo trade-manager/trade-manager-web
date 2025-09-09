@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
 
     public List<User> getUsers() {
 
-        return userRepository.findAll();
+        return userRepository.findAllByOrderByName();
     }
 
     public User getUserByUsername(String username) {

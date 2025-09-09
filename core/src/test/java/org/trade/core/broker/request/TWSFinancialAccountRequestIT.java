@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
+import org.trade.core.TradestrategyBase;
 import org.trade.core.dao.Aspect;
 import org.trade.core.dao.Aspects;
 import org.trade.core.persistent.TradeService;
@@ -47,14 +48,14 @@ public class TWSFinancialAccountRequestIT {
      * Method setUpBeforeClass.
      */
     @BeforeAll
-    public static void setUpBeforeClass() throws Exception {
+    public static void setUpBeforeClass() {
     }
 
     /**
      * Method setUp.
      */
     @BeforeEach
-    public void setUp() throws Exception {
+    public void setUp() {
 
     }
 
@@ -62,25 +63,16 @@ public class TWSFinancialAccountRequestIT {
      * Method tearDown.
      */
     @AfterEach
-    public void tearDown() throws Exception {
+    public void tearDown() {
 
-        for (Account account : accounts) {
-
-            account = tradeService.findAccountByAccountNumber(account.getAccountNumber());
-
-            if (null != account) {
-
-                tradeService.deleteAspect(account);
-            }
-        }
-        accounts.clear();
+        TradestrategyBase.deleteRecords(tradeService);
     }
 
     /**
      * Method tearDownAfterClass.
      */
     @AfterAll
-    public static void tearDownAfterClass() throws Exception {
+    public static void tearDownAfterClass() {
     }
 
     @Test
@@ -119,6 +111,7 @@ public class TWSFinancialAccountRequestIT {
                 item.setAccountType(AccountType.INDIVIDUAL);
                 item = tradeService.saveAspect(item);
                 assertNotNull(item.getId());
+                TradestrategyBase.addRecord(item);
                 accounts.add(item);
             }
         }
@@ -143,6 +136,7 @@ public class TWSFinancialAccountRequestIT {
                 item.setAccountType(AccountType.INDIVIDUAL);
                 item = tradeService.saveAspect(item);
                 assertNotNull(item.getId());
+                TradestrategyBase.addRecord(item);
                 accounts.add(item);
             }
         }
@@ -175,6 +169,11 @@ public class TWSFinancialAccountRequestIT {
 
             item = tradeService.savePortfolio(item);
             assertNotNull(item.getId());
+
+            for (Account account : item.getAccounts()) {
+
+                TradestrategyBase.addRecord(account);
+            }
             tradeService.deleteAspect(item);
         }
     }
@@ -196,6 +195,11 @@ public class TWSFinancialAccountRequestIT {
 
             item = tradeService.savePortfolio(item);
             assertNotNull(item.getId());
+
+            for (Account account : item.getAccounts()) {
+
+                TradestrategyBase.addRecord(account);
+            }
             tradeService.deleteAspect(item);
         }
     }
@@ -219,6 +223,12 @@ public class TWSFinancialAccountRequestIT {
 
             item = tradeService.savePortfolio(item);
             assertNotNull(item.getId());
+
+            for (Account account : item.getAccounts()) {
+
+                TradestrategyBase.addRecord(account);
+            }
+
             tradeService.deleteAspect(item);
         }
     }
@@ -256,6 +266,11 @@ public class TWSFinancialAccountRequestIT {
 
             item = tradeService.savePortfolio(item);
             assertNotNull(item.getId());
+
+            for (Account account : item.getAccounts()) {
+
+                TradestrategyBase.addRecord(account);
+            }
             tradeService.deleteAspect(item);
         }
     }
@@ -283,6 +298,12 @@ public class TWSFinancialAccountRequestIT {
 
             item = tradeService.savePortfolio(item);
             assertNotNull(item.getId());
+
+            for (Account account : item.getAccounts()) {
+
+                TradestrategyBase.addRecord(account);
+            }
+
             tradeService.deleteAspect(item);
         }
     }

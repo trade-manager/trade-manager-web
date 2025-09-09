@@ -22,6 +22,7 @@ import org.trade.core.persistent.dao.Entrylimit;
 import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradeOrderfill;
+import org.trade.core.persistent.dao.TradePosition;
 import org.trade.core.persistent.dao.Tradestrategy;
 import org.trade.core.persistent.dao.series.indicator.CandleSeries;
 import org.trade.core.persistent.dao.series.indicator.StrategyData;
@@ -125,7 +126,7 @@ public class AbstractStrategyIT {
 
         brokerModel.onDisconnect();
         strategyProxy.cancel();
-        TradestrategyBase.clearDBData(tradeService, tradestrategy);
+        TradestrategyBase.deleteRecords(tradeService);
     }
 
     /**
@@ -193,6 +194,11 @@ public class AbstractStrategyIT {
          * Position has been open submit the target and stop orders.
          */
         if (strategyProxy.isThereOpenPosition()) {
+
+            TradePosition tradePosition = strategyProxy.getOpenTradePosition();
+            assertNotNull(tradePosition);
+            TradestrategyBase.addRecord(tradePosition);
+
             if (null != strategyProxy.getOpenTradePosition().getOpenQuantity()) {
                 /*
                  * Position has been opened submit the target and stop
@@ -313,6 +319,9 @@ public class AbstractStrategyIT {
         createOpenBuyPosition(new Money(100), Action.BUY, true);
         TradeOrder order = strategyProxy.closePosition(true);
         assertNotNull(order);
+        TradePosition tradePosition = strategyProxy.getOpenTradePosition();
+        assertNotNull(tradePosition);
+        TradestrategyBase.addRecord(tradePosition);
     }
 
     @Test
@@ -376,7 +385,7 @@ public class AbstractStrategyIT {
          * $50,000 with $100 risk. So 2cent stop after round over whole
          * number give 3cent stop. Risk/Stop = 3333 shares * $20 = $66,666
          * which is > than 50% of $100,000 So we should see it adjust to
-         * $50,000/$20.01 = 2498 rounded to nearest 100 i.e Quantity = 2500.
+         * $50,000/$20.01 = 2498 rounded to nearest 100 i.e. Quantity = 2500.
          */
         Money price = new Money(45.75);
         DAOEntryLimit entryLimits = new DAOEntryLimit();
@@ -397,9 +406,7 @@ public class AbstractStrategyIT {
         openOrder.setStatus(OrderStatus.FILLED);
         openOrder = tradeService.saveTradeOrderfill(openOrder);
         assertNotNull(openOrder);
-
         reFreshPositionOrders();
-
         assertNotNull(strategyProxy.getOpenPositionOrder());
 
         /*
@@ -416,9 +423,13 @@ public class AbstractStrategyIT {
         for (TradeOrder order : strategyProxy.getTradestrategy().getTradeOrders()) {
             _log.info("Key: {} Qty: {} Aux Price: {} Lmt Price: {} Stop Price: {}", order.getOrderKey(), order.getQuantity(), order.getAuxPrice(), order.getLimitPrice(), order.getStopPrice());
         }
-        strategyProxy.isPositionCovered();
+        assertTrue(strategyProxy.isPositionCovered());
         entryLimit.setPercentOfMargin(new BigDecimal(0));
         tradeService.saveAspect(entryLimit);
+
+        TradePosition tradePosition = strategyProxy.getOpenTradePosition();
+        assertNotNull(tradePosition);
+        TradestrategyBase.addRecord(tradePosition);
     }
 
     @Test
@@ -448,8 +459,11 @@ public class AbstractStrategyIT {
         TradeOrder targetOne = strategyProxy.createStopAndTargetOrder(new Money(99.0), new Money(103.99), 100,
                 true);
         assertNotNull(targetOne);
-        strategyProxy.isPositionCovered();
+        TradePosition tradePosition = strategyProxy.getOpenTradePosition();
+        TradestrategyBase.addRecord(tradePosition);
+        assertFalse(strategyProxy.isPositionCovered());
     }
+
 
     @Test
     public void createStopAndTargetOrderPercentQty() throws Exception {
@@ -457,7 +471,9 @@ public class AbstractStrategyIT {
         createOpenBuyPosition(new Money(100), Action.BUY, true);
         strategyProxy.createStopAndTargetOrder(strategyProxy.getOpenPositionOrder(), 2, new Money(0.01),
                 4, new Money(0.02), strategyProxy.getOpenPositionOrder().getQuantity() / 2, true);
-        strategyProxy.isPositionCovered();
+        TradePosition tradePosition = strategyProxy.getOpenTradePosition();
+        TradestrategyBase.addRecord(tradePosition);
+        assertTrue(strategyProxy.isPositionCovered());
     }
 
     @Test
@@ -466,6 +482,9 @@ public class AbstractStrategyIT {
         createOpenBuyPosition(new Money(100), Action.BUY, true);
         Money price = strategyProxy.getStopPriceForPositionRisk(strategyProxy.getOpenPositionOrder(), 2);
         assertNotNull(price);
+        TradePosition tradePosition = strategyProxy.getOpenTradePosition();
+        assertNotNull(tradePosition);
+        TradestrategyBase.addRecord(tradePosition);
     }
 
     @Test
@@ -475,6 +494,9 @@ public class AbstractStrategyIT {
         strategyProxy.cancelOrdersClosePosition(true);
         this.reFreshPositionOrders();
         assertTrue(strategyProxy.isPositionCovered());
+        TradePosition tradePosition = strategyProxy.getOpenTradePosition();
+        assertNotNull(tradePosition);
+        TradestrategyBase.addRecord(tradePosition);
     }
 
     @Test
@@ -494,6 +516,9 @@ public class AbstractStrategyIT {
         strategyProxy.moveStopOCAPrice(new Money(avgPrice), true);
         reFreshPositionOrders();
         assertTrue(strategyProxy.isPositionCovered());
+        TradePosition tradePosition = strategyProxy.getOpenTradePosition();
+        assertNotNull(tradePosition);
+        TradestrategyBase.addRecord(tradePosition);
     }
 
     @Test
@@ -509,6 +534,9 @@ public class AbstractStrategyIT {
 
         createOpenBuyPosition(new Money(100), Action.BUY, true);
         assertTrue(strategyProxy.isThereOpenPosition());
+        TradePosition tradePosition = strategyProxy.getOpenTradePosition();
+        assertNotNull(tradePosition);
+        TradestrategyBase.addRecord(tradePosition);
     }
 
     @Test
@@ -563,7 +591,9 @@ public class AbstractStrategyIT {
     public void getTradePosition() throws Exception {
 
         createOpenBuyPosition(new Money(100), Action.BUY, true);
-        assertNotNull(strategyProxy.getOpenTradePosition());
+        TradePosition tradePosition = strategyProxy.getOpenTradePosition();
+        assertNotNull(tradePosition);
+        TradestrategyBase.addRecord(tradePosition);
     }
 
     @Test
@@ -578,6 +608,9 @@ public class AbstractStrategyIT {
 
         createOpenBuyPosition(new Money(100), Action.BUY, true);
         assertNotNull(strategyProxy.getOpenPositionOrder());
+        TradePosition tradePosition = strategyProxy.getOpenTradePosition();
+        assertNotNull(tradePosition);
+        TradestrategyBase.addRecord(tradePosition);
     }
 
     @Test

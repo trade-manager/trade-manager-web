@@ -14,7 +14,6 @@ import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradePosition;
 import org.trade.core.persistent.dao.Tradestrategy;
 import org.trade.core.persistent.dao.Tradingday;
-import org.trade.core.persistent.dao.Tradingdays;
 import org.trade.core.persistent.dao.series.indicator.StrategyData;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.AccountType;
@@ -38,7 +37,6 @@ import java.time.ZonedDateTime;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -90,6 +88,7 @@ public class TradestrategyBase {
             account.setCashBalance(new BigDecimal(25000));
             portfolio.getAccounts().add(account);
             portfolio = tradeService.savePortfolio(portfolio);
+            TradestrategyBase.addRecord(portfolio.getAccounts().getFirst());
         }
 
         ZonedDateTime open = TradingCalendar
@@ -109,6 +108,7 @@ public class TradestrategyBase {
 
                 Tradestrategy instance = tradeService.findTradestrategyById(tradestrategy.getId());
                 instance = tradeService.saveAspect(instance);
+                TradestrategyBase.addRecord(instance);
                 Hashtable<Long, TradePosition> tradePositions = new Hashtable<>();
 
                 for (TradeOrder tradeOrder : instance.getTradeOrders()) {
@@ -136,7 +136,9 @@ public class TradestrategyBase {
                     if (tradePosition.equals(instance.getContractLite().getTradePosition())) {
 
                         instance.getContractLite().setTradePosition(null);
-                        instance.setContractLite(tradeService.saveAspect(instance.getContractLite()));
+                        ContractLite contractLite = tradeService.saveAspect(instance.getContractLite());
+                        instance.setContractLite(contractLite);
+                        TradestrategyBase.addRecord(contractLite);
                     }
                     tradeService.deleteAspect(tradePosition);
                 }
@@ -159,63 +161,12 @@ public class TradestrategyBase {
                 true, chartDays, barSize);
         tradingday.addTradestrategy(tradestrategy);
         tradingday = tradeService.saveTradingday(tradingday);
+        TradestrategyBase.addRecord(tradingday.getTradestrategies().getLast().getContract());
+        TradestrategyBase.addRecord(tradingday);
         Tradestrategy instance = tradingday.getTradestrategies().getLast();
         instance = tradeService.findTradestrategyById(instance);
         instance.setStrategyData(StrategyData.create(instance));
         return instance;
-    }
-
-    /**
-     * Method clearDBData.
-     */
-    public static void clearDBData(TradeService tradeService, Tradestrategy tradestrategy) throws Exception {
-
-        if (null == tradestrategy || null == tradestrategy.getId()) {
-
-            return;
-        }
-
-        Tradingdays tradingdays = tradeService.findTradingdaysByDateRange(tradestrategy.getTradingday().getOpen(), tradestrategy.getTradingday().getClose());
-
-        for (Tradingday tradingday : tradingdays.getTradingdays()) {
-
-            for (Tradestrategy tradestrategy0 : tradingday.getTradestrategies()) {
-
-                ContractLite contractLite = tradestrategy0.getContractLite();
-                Portfolio portfolio = tradestrategy0.getPortfolio();
-                Strategy strategy = tradestrategy0.getStrategy();
-                tradeService.deleteAspect(tradingday);
-
-                List<Rule> rules = tradeService.findRulesByStrategy(strategy);
-
-                for (Rule rule : rules) {
-
-                    tradeService.deleteAspect(rule);
-                }
-
-                if (null != contractLite.getTradePosition()) {
-
-                    contractLite.setTradePosition(null);
-                    contractLite = tradeService.saveAspect(contractLite);
-                }
-
-                tradeService.deleteAspect(contractLite);
-                portfolio = tradeService.findPortfolioById(portfolio.getId());
-
-                List<Account> accounts = portfolio.getAccounts();
-
-                for (Account account : accounts) {
-
-                    tradeService.deleteAspect(account);
-                }
-
-                if (!portfolio.getIsDefault() && portfolio.getTradestrategies().isEmpty()) {
-
-
-                    tradeService.deleteAspect(portfolio);
-                }
-            }
-        }
     }
 
     public static Long addTradeOrder(TradeService tradeService, Tradestrategy tradestrategy, String action, String orderType, BigDecimal price, BigDecimal limitPrice, double stop) throws Exception {
@@ -311,11 +262,21 @@ public class TradestrategyBase {
 
     public static void deleteRecords(TradeService tradeService) {
 
-        Iterator<Aspect> descendingIterator = aspects.descendingIterator();
+        try {
 
-        while (descendingIterator.hasNext()) {
+            Iterator<Aspect> descendingIterator = aspects.descendingIterator();
 
-            tradeService.deleteAspect(descendingIterator.next());
+            while (descendingIterator.hasNext()) {
+
+                Aspect aspect = descendingIterator.next();
+                aspect = tradeService.findAspectById(aspect);
+                tradeService.deleteAspect(aspect);
+            }
+
+            Iterable<Rule> rules = tradeService.findAllRules();
+            rules.forEach(rule -> tradeService.deleteAspect(rule));
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
     }
 }

@@ -124,7 +124,7 @@ public class StrategyPanelJSIT {
             }
         }
 
-        TradestrategyBase.clearDBData(tradeService, tradestrategy);
+        TradestrategyBase.deleteRecords(tradeService);
     }
 
     /**

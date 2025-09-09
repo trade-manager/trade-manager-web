@@ -3,6 +3,7 @@ package org.trade.core.persistent.user;
 import org.springframework.stereotype.Repository;
 import org.trade.core.dao.AspectRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -11,6 +12,14 @@ import java.util.Optional;
  */
 @Repository
 public interface UserRepository extends AspectRepository<User, Long> {
+
+
+    /**
+     * Method findAllByOrderByName.
+     *
+     * @return List<Role>
+     */
+    List<User> findAllByOrderByName();
 
     /**
      * @param name String

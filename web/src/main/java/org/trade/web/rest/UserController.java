@@ -63,7 +63,6 @@ public class UserController {
     @GetMapping
     public List<UserRecord> getUsers() {
 
-        List<User> users = userService.getUsers();
         return userService.getUsers().stream().map(UserRecord::from).collect(Collectors.toList());
     }
 

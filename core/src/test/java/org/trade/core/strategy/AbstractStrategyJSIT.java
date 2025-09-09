@@ -23,6 +23,7 @@ import org.trade.core.persistent.dao.Rule;
 import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradeOrderfill;
+import org.trade.core.persistent.dao.TradePosition;
 import org.trade.core.persistent.dao.Tradestrategy;
 import org.trade.core.persistent.dao.series.indicator.StrategyData;
 import org.trade.core.persistent.dao.strategy.IStrategyRule;
@@ -99,7 +100,7 @@ public class AbstractStrategyJSIT {
         if (deleteAfter) {
 
             brokerModel.onDisconnect();
-            TradestrategyBase.clearDBData(tradeService, tradestrategy);
+            TradestrategyBase.deleteRecords(tradeService);
         }
     }
 
@@ -112,7 +113,7 @@ public class AbstractStrategyJSIT {
     }
 
     @Test
-    @Order(1)
+    @Order(100)
     public void fiveMinGapBarStrategyJS() throws Exception {
 
         Strategy strategy = (Strategy) DAOStrategy.newInstance().getObject();
@@ -148,7 +149,7 @@ public class AbstractStrategyJSIT {
     }
 
     @Test
-    @Order(2)
+    @Order(200)
     public void posMgrFHXRBHYRStrategyJS() throws Exception {
 
         deleteAfter = true;
@@ -197,5 +198,8 @@ public class AbstractStrategyJSIT {
         _log.info(" Test Initialized");
         tradestrategy.getStrategyData().populateCandleSeries(tradestrategy.getTradingday(), tradestrategy.getChartDays(), tradestrategy.getBarSize(), Side.BOT.equals(tradestrategy.getSide()), 250);
         strategyProxy.cancel();
+        TradePosition tradePosition = strategyProxy.getOpenTradePosition();
+        assertNotNull(tradePosition);
+        TradestrategyBase.addRecord(tradePosition);
     }
 }

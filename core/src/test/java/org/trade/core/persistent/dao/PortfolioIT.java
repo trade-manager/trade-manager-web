@@ -63,8 +63,7 @@ public class PortfolioIT {
     @AfterEach
     public void tearDown() throws ClassNotFoundException {
 
-        Account account = tradeService.findAccountByAccountNumber(accountNumber);
-        tradeService.deleteAspect(account);
+        TradestrategyBase.deleteRecords(tradeService);
     }
 
     /**
@@ -85,5 +84,6 @@ public class PortfolioIT {
         portfolio.setAccounts(accounts);
         portfolio = portfolioRepository.save(portfolio);
         assertNotNull(portfolio.getIndividualAccount());
+        TradestrategyBase.addRecord(portfolio.getAccounts().getFirst());
     }
 }

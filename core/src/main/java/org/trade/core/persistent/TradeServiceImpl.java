@@ -128,7 +128,10 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
 
     public void deleteAspect(Aspect instance) {
 
-        this.getAspectRepository().delete(instance);
+        if (null != instance) {
+
+            this.getAspectRepository().delete(instance);
+        }
     }
 
     public void deleteAllAspects(Iterable<? extends Aspect> entities) {
@@ -146,6 +149,15 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
         return contractRepository.findAll();
     }
 
+    public Iterable<Rule> findAllRules() {
+
+        return ruleRepository.findAll();
+    }
+
+    public Iterable<Account> findAllAccounts() {
+
+        return accountRepository.findAll();
+    }
 
     public TradelogReport findTradelogReport(final Portfolio portfolio, ZonedDateTime start, ZonedDateTime end,
                                              boolean filter, String symbol, BigDecimal winLossAmount) throws IOException {

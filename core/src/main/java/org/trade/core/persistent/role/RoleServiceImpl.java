@@ -23,6 +23,11 @@ public class RoleServiceImpl implements RoleService {
         this.roleRepository = roleRepository;
     }
 
+    public List<Role> getRoles() {
+
+        return roleRepository.findAllByOrderByName();
+    }
+
     public Role findRoleByName(String name) {
 
         return roleRepository.findByName(name).orElse(null);

@@ -13,6 +13,19 @@ import java.util.Optional;
 @Repository
 public interface RoleRepository extends AspectRepository<Role, Long> {
 
+    /**
+     * Method findAllByOrderByName.
+     *
+     * @return List<Role>
+     */
+    List<Role> findAllByOrderByName();
+
+    /**
+     * Method findByName.
+     *
+     * @param name String
+     * @return Optional<Role>
+     */
     Optional<Role> findByName(String name);
 
     /**

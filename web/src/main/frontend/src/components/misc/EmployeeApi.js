@@ -6,6 +6,8 @@ export const employeeApi = {
   signup,
   numberOfUsers,
   numberOfEmployees,
+  getDomains,
+  getRoles,
   getUsers,
   deleteUser,
   getEmployees,
@@ -23,6 +25,14 @@ function signup(user) {
   return instance.post('/auth/signup', user, {
     headers: { 'Content-type': 'application/json' }
   })
+}
+
+function getRoles() {
+  return instance.get('/public/roles')
+}
+
+function getDomains() {
+  return instance.get('/public/domains')
 }
 
 function numberOfUsers() {

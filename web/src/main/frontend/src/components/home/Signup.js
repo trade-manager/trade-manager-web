@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { NavLink, Navigate } from 'react-router-dom'
 import { Button, Form, Grid, Segment, Message } from 'semantic-ui-react'
 import { useAuth } from '../context/AuthContext'
 import { employeeApi } from '../misc/EmployeeApi'
 import { handleLogError } from '../misc/Helpers'
+
 
 function Signup() {
   const Auth = useAuth()
@@ -17,6 +18,77 @@ function Signup() {
   const [domain, setDomain] = useState('')
   const [isError, setIsError] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
+
+  const [options, setOptions] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  // Function to fetch data from API
+  const fetchOptions = async (query) => {
+
+    setLoading(true);
+    setIsError(false);
+
+    try {
+
+      const response = await employeeApi.getRoles();
+   console.log("response.data: " + JSON.stringify(response.data));
+      setOptions(response.data); // Assuming API returns data in 'results' array
+    } catch (error) {
+
+      handleLogError(error)
+
+      if (error.response && error.response.data) {
+
+        const errorData = error.response.data
+        let errorMessage = 'Invalid fields'
+
+        if (errorData.status === 409) {
+
+          errorMessage = errorData.message
+        } else if (errorData.status === 400) {
+
+          errorMessage = errorData.errors[0].defaultMessage
+        }
+
+        setIsError(true)
+        setErrorMessage(errorMessage)
+      }
+    } finally {
+
+      setLoading(false);
+    }
+  };
+
+  // Debounce the API call to avoid excessive requests
+  useEffect(() => {
+
+    const handler = setTimeout(() => {
+
+      if (role) {
+
+        fetchOptions(role);
+      } else {
+
+        setOptions([]); // Clear options if input is empty
+      }
+    }, 500); // Adjust debounce time as needed
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [role]);
+
+  const handleRoleInputChange = (event) => {
+    console.log("event.target.value: " + JSON.stringify(event.target.value));
+    setRole(event.target.value);
+  };
+
+  const handleRoleOptionSelect = (option) => {
+  console.log("option: " + JSON.stringify(option));
+    setRole(option.name); // Or whatever property you want to display
+    setOptions([]); // Clear options after selection
+  };
 
   const handleInputChange = (e, { name, value }) => {
     if (name === 'username') {
@@ -43,13 +115,12 @@ function Signup() {
       return
     }
 
-    const user = { username, password, name, email, role, domain}
+    const user = {'username': username,'password': password, 'name': name, 'email': email, 'domain': {'name': domain}, 'roles': [{'name': role}]};
 
     try {
 
-      const userPayload = {'username': user.username,'password': user.password, 'name': user.name, 'email': user.email, 'domain': {'name': user.domain}, 'roles': [{'name': user.role}]};
-      console.log(JSON.stringify(userPayload));
-      const response = await employeeApi.signup(userPayload)
+      console.log(JSON.stringify(user));
+      const response = await employeeApi.signup(user)
       const { id, name, role } = response.data
       const authdata = window.btoa(username + ':' + password)
       const authenticatedUser = { id, name, role, authdata }
@@ -134,15 +205,30 @@ function Signup() {
               value={email}
               onChange={handleInputChange}
             />
-            <Form.Input
-              fluid
-              name='role'
-              icon='at'
-              iconPosition='left'
-              placeholder='Role'
-              value={role}
-              onChange={handleInputChange}
-            />
+            <div>
+                <Form.Input
+                  fluid
+                  type="text"
+                  name='role'
+                  icon='at'
+                  iconPosition='left'
+                  placeholder='Role'
+                  value={role}
+                  onChange={handleRoleInputChange}
+                />
+                  {loading && <p>Loading options...</p>}
+                  {error && <p style={{ color: 'red' }}>{error}</p>}
+
+                  {options.length > 0 && (
+                    <ul style={{ border: '1px solid #ccc', maxHeight: '200px', overflowY: 'auto' }}>
+                      {options.map((option) => (
+                        <li key={option.id} onClick={() => handleRoleOptionSelect(option)} style={{ padding: '8px', cursor: 'pointer' }}>
+                          {option.name} {/* Or the property you want to display */}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+            </div>
             <Form.Input
               fluid
               name='domain'

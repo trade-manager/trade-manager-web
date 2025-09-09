@@ -3,6 +3,7 @@ package org.trade.core.persistent.domain;
 import org.springframework.stereotype.Repository;
 import org.trade.core.dao.AspectRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -11,6 +12,13 @@ import java.util.Optional;
  */
 @Repository
 public interface DomainRepository extends AspectRepository<Domain, Long> {
+
+    /**
+     * Method findAllByOrderByName.
+     *
+     * @return List<Domain>
+     */
+    List<Domain> findAllByOrderByName();
 
     /**
      * Method findByName.

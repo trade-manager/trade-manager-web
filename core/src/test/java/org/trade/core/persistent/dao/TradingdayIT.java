@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
+import org.trade.core.TradestrategyBase;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.MarketBar;
@@ -61,7 +62,7 @@ public class TradingdayIT {
     @AfterEach
     public void tearDown() {
 
-        tradeService.deleteAspect(tradingday);
+        TradestrategyBase.deleteRecords(tradeService);
     }
 
     /**
@@ -88,6 +89,7 @@ public class TradingdayIT {
         tradeService.saveTradingday(tradingday);
         _log.info("Tradingday added Id = {}", tradingday.getId());
         assertNotNull(tradingday.getId());
+        TradestrategyBase.addRecord(tradingday);
     }
 
     @Test
@@ -108,5 +110,6 @@ public class TradingdayIT {
         tradeService.saveTradingday(tradingday);
         _log.info("Tradingday Update Id = {}", tradingday.getId());
         assertNotNull(tradingday.getId());
+        TradestrategyBase.addRecord(tradingday);
     }
 }

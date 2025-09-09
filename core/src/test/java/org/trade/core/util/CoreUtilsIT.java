@@ -83,27 +83,16 @@ public class CoreUtilsIT {
     public void isBetween() {
 
         assertTrue(CoreUtils.isBetween(BigDecimal.valueOf(12.20), BigDecimal.valueOf(12.24), BigDecimal.valueOf(12.23)));
-
         assertTrue(CoreUtils.isBetween(12, 18, 15));
-
         assertFalse(CoreUtils.isBetween(12, 18, 6));
-
         assertTrue(CoreUtils.isBetween(12.20d, 12.24d, 12.23d));
-
         assertTrue(CoreUtils.isBetween(12.20d, 12.26d, 12.26d));
-
         assertTrue(CoreUtils.isBetween(12.20d, 12.26d, 12.20d));
-
         assertTrue(CoreUtils.isBetween(12.24d, 12.20d, 12.23d));
-
         assertTrue(CoreUtils.isBetween(12.26d, 12.20d, 12.26d));
-
         assertTrue(CoreUtils.isBetween(12.26d, 12.20d, 12.20d));
-
         assertTrue(CoreUtils.isBetween(12.20d, 12.20d, 12.20d));
-
         assertFalse(CoreUtils.isBetween(12, 14, 11));
-
         assertFalse(CoreUtils.isBetween(12, 14, 15));
     }
 
