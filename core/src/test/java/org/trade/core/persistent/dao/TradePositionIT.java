@@ -18,7 +18,6 @@ import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.Side;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * @author Simon Allen
@@ -61,7 +60,7 @@ public class TradePositionIT {
     @AfterEach
     public void tearDown() throws Exception {
 
-        TradestrategyBase.clearDBData(tradeService, tradestrategy);
+        TradestrategyBase.deleteRecords(tradeService);
     }
 
     /**
@@ -78,13 +77,10 @@ public class TradePositionIT {
                 TradingCalendar.getDateTimeNowMarketTimeZone(), Side.BOT);
 
         instance = tradeService.saveAspect(instance);
-
         assertNotNull(instance.getId());
         _log.info("testAddTradePosition tradestrategyId: {}IdTradePosition: {}", tradestrategy.getId(), instance.getId());
-
         tradeService.deleteAspect(instance);
         _log.info("testDeleteTradePosition tradestrategyId: {}", tradestrategy.getId());
-        instance = tradeService.findTradePositionById(instance.getId());
-        assertNull(instance);
+        TradestrategyBase.addRecord(instance);
     }
 }

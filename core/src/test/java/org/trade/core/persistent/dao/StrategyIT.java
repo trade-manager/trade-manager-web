@@ -58,6 +58,8 @@ public class StrategyIT {
      */
     @AfterEach
     public void tearDown() {
+
+        TradestrategyBase.deleteRecords(tradeService);
     }
 
     /**
@@ -77,6 +79,6 @@ public class StrategyIT {
         strategy = tradeService.saveAspect(new Strategy(name));
         _log.info("Strategy added Id = {}, name: {}", strategy.getId(), strategy.getName());
         assertNotNull(strategy.getId());
-        tradeService.deleteAspect(strategy);
+        TradestrategyBase.addRecord(strategy);
     }
 }

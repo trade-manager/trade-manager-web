@@ -20,6 +20,7 @@ import org.trade.core.persistent.dao.Account;
 import org.trade.core.persistent.dao.Candle;
 import org.trade.core.persistent.dao.CodeType;
 import org.trade.core.persistent.dao.Contract;
+import org.trade.core.persistent.dao.ContractLite;
 import org.trade.core.persistent.dao.Portfolio;
 import org.trade.core.persistent.dao.Rule;
 import org.trade.core.persistent.dao.Strategy;
@@ -105,14 +106,7 @@ public class TradeServiceIT {
     @AfterEach
     public void tearDown() throws Exception {
 
-        // Delete any rules
-        Strategy strategy = tradestrategy.getStrategy();
-
-        // Lazy initialize the rules.
-        strategy = this.tradeService.findStrategyById(strategy.getId());
-        strategy.getRules().clear();
-        this.tradeService.saveAspect(strategy);
-        TradestrategyBase.clearDBData(tradeService, tradestrategy);
+        TradestrategyBase.deleteRecords(tradeService);
     }
 
     /**
@@ -158,9 +152,10 @@ public class TradeServiceIT {
         tradingday = this.tradeService.saveTradingday(tradingday);
         _log.info("testTradingdaysRemoce tradestrategyId:{}", tradestrategy.getId());
         assertNotNull(tradingday.getId());
+        TradestrategyBase.addRecord(tradingday);
         Optional<Contract> contractOpt = this.tradeService.findContractBySymbol(symbol);
         assertTrue(contractOpt.isPresent());
-        this.tradeService.deleteAspect(contractOpt.get());
+        TradestrategyBase.addRecord(contractOpt.get());
     }
 
     @Test
@@ -175,8 +170,10 @@ public class TradeServiceIT {
                     TradingCalendar.getDateTimeNowMarketTimeZone(), Side.BOT);
 
             tradePosition = this.tradeService.saveAspect(tradePosition);
+            TradestrategyBase.addRecord(tradePosition);
             tradestrategy.getContractLite().setTradePosition(tradePosition);
-            tradestrategy.setContractLite(this.tradeService.saveAspect(tradestrategy.getContractLite()));
+            ContractLite contractLite = this.tradeService.saveAspect(tradestrategy.getContractLite());
+            tradestrategy.setContractLite(contractLite);
             positionOrders = this.tradeService
                     .findPositionOrdersByTradestrategyId(tradestrategy.getId());
 

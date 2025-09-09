@@ -74,11 +74,7 @@ public class CandleIT {
     @AfterEach
     public void tearDown() throws Exception {
 
-        for (Tradestrategy tradestrategy : tradestrategies) {
-
-            TradestrategyBase.clearDBData(tradeService, tradestrategy);
-        }
-        tradestrategies.clear();
+        TradestrategyBase.deleteRecords(tradeService);
     }
 
     /**

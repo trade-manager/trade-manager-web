@@ -68,7 +68,7 @@ public class WorkerIT {
     @AfterEach
     public void tearDown() throws Exception {
 
-        TradestrategyBase.clearDBData(tradeService, tradestrategy);
+        TradestrategyBase.deleteRecords(tradeService);
     }
 
     /**

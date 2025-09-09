@@ -115,7 +115,8 @@ public class TWSBrokerModelIT implements IBrokerChangeListener {
 
             for (Tradestrategy tradestrategy : tradingday.getTradestrategies()) {
 
-                TradestrategyBase.clearDBData(tradeService, tradestrategy);
+                TradestrategyBase.addRecord(tradestrategy.getTradingday());
+                TradestrategyBase.addRecord(tradestrategy.getContract());
             }
         }
 
@@ -147,6 +148,8 @@ public class TWSBrokerModelIT implements IBrokerChangeListener {
             }
             timer.stop();
         }
+
+        TradestrategyBase.deleteRecords(tradeService);
     }
 
     /**

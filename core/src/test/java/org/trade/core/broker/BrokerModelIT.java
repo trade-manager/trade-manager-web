@@ -147,7 +147,7 @@ public class BrokerModelIT extends TradestrategyBase implements IBrokerChangeLis
 
             backTestbrokerModel.onDisconnect();
         }
-        clearDBData(tradeService, tradestrategy);
+        TradestrategyBase.deleteRecords(tradeService);
     }
 
     /**

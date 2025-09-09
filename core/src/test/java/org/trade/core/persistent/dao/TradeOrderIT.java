@@ -75,7 +75,7 @@ public class TradeOrderIT {
     @AfterEach
     public void tearDown() throws Exception {
 
-        TradestrategyBase.clearDBData(tradeService, tradestrategy);
+        TradestrategyBase.deleteRecords(tradeService);
     }
 
     /**

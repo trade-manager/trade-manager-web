@@ -71,7 +71,7 @@ public class CandlePeriodIT extends TradestrategyBase {
     @AfterEach
     public void tearDown() throws Exception {
 
-        clearDBData(tradeService, tradestrategy);
+        TradestrategyBase.deleteRecords(tradeService);
     }
 
     /**

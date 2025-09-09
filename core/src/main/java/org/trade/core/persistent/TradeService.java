@@ -49,10 +49,25 @@ public interface TradeService extends AspectService {
     Optional<Contract> findContractBySymbol(String symbol);
 
     /**
-     * @return
+     * Method findAllContracts.
+     *
+     * @return Iterable<Contract>
      */
     Iterable<Contract> findAllContracts();
 
+    /**
+     * Method findAllRules.
+     *
+     * @return Iterable<Rule>
+     */
+    Iterable<Rule> findAllRules();
+
+    /**
+     * Method findAllAccounts.
+     *
+     * @return Iterable<Account>
+     */
+    Iterable<Account> findAllAccounts();
 
     /**
      * Method saveTrading.

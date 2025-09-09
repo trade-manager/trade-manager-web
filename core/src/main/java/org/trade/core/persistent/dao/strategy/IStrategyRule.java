@@ -1,6 +1,7 @@
 package org.trade.core.persistent.dao.strategy;
 
 import org.trade.core.persistent.dao.TradeOrder;
+import org.trade.core.persistent.dao.TradePosition;
 import org.trade.core.persistent.dao.series.indicator.CandleSeries;
 
 
@@ -86,4 +87,11 @@ public interface IStrategyRule {
      * @param tradeOrder TradeOrder
      */
     void tradeOrderFilled(TradeOrder tradeOrder);
+
+    /**
+     * Method tradeOrderFilled.
+     *
+     * @return TradePosition
+     */
+    TradePosition getOpenTradePosition();
 }

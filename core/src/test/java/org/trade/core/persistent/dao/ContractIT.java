@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
+import org.trade.core.TradestrategyBase;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.Currency;
@@ -70,11 +71,7 @@ public class ContractIT {
     @AfterEach
     public void tearDown() {
 
-        if (null != contract) {
-
-            tradeService.deleteAspect(contract);
-            contract = null;
-        }
+        TradestrategyBase.deleteRecords(tradeService);
     }
 
     /**
@@ -93,7 +90,7 @@ public class ContractIT {
 
         contract = tradeService.saveAspect(contract);
         _log.info("Contract added Id:{}", contract.getId());
-
+        TradestrategyBase.addRecord(contract);
         List<Contract> contracts = contractRepository.findContractByUniqueKey(contract.getSecType(),
                 contract.getSymbol(), contract.getExchange(), contract.getCurrency(),
                 expiry);
@@ -114,6 +111,7 @@ public class ContractIT {
                 new BigDecimal(50));
         contract = tradeService.saveAspect(contract);
         _log.info("Contract added Id:{}", contract.getId());
+        TradestrategyBase.addRecord(contract);
 
         // Expiry is monthly based
         expiry = expiry.plusMonths(2);
