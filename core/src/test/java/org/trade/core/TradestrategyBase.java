@@ -261,6 +261,7 @@ public class TradestrategyBase {
     }
 
     public static void deleteRecords(TradeService tradeService) {
+
         try {
 
             Iterator<Aspect> descendingIterator = aspects.descendingIterator();
@@ -269,13 +270,6 @@ public class TradestrategyBase {
 
                 Aspect aspect = descendingIterator.next();
                 aspect = tradeService.findAspectById(aspect);
-
-                if (aspect instanceof TradePosition) {
-
-                    ContractLite contractLite = ((TradePosition) aspect).getContractLite();
-                    contractLite.setTradePosition(null);
-                    contractLite = tradeService.saveAspect(contractLite);
-                }
                 tradeService.deleteAspect(aspect);
             }
 

@@ -1,6 +1,9 @@
 package org.trade.core.persistent.domain;
 
 import org.springframework.stereotype.Service;
+import org.trade.core.persistent.role.Role;
+
+import java.util.List;
 
 /**
  * @author Simon Allen
@@ -14,6 +17,11 @@ public class DomainServiceImpl implements DomainService {
     public DomainServiceImpl(final DomainRepository domainRepository) {
 
         this.domainRepository = domainRepository;
+    }
+
+    public List<Domain> getDomains() {
+
+        return domainRepository.findAllByOrderByName();
     }
 
     public Domain findDomainByName(String name) {

@@ -95,7 +95,7 @@ UNIQUE INDEX request_id_uq (request_id ASC),
 CONSTRAINT contract_trade_position_fk
 FOREIGN KEY (trade_position_id )
 REFERENCES tradeposition (id )
-  ON DELETE NO ACTION
+  ON DELETE SET NULL
   ON UPDATE NO ACTION)
 ENGINE = InnoDB//
 SHOW WARNINGS//

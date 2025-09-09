@@ -2,6 +2,7 @@ package org.trade.core.persistent.dao;
 
 // Generated Feb 21, 2011 12:43:33 PM by Hibernate Tools 3.4.0.CR1
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -30,7 +31,7 @@ public class ContractLite extends Aspect implements Serializable, Cloneable {
     private static final long serialVersionUID = 5691902477608387034L;
 
     // Holds the current open position. Not there can only be one at a time!
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH, CascadeType.PERSIST})
     @JoinColumn(name = "trade_position_id", insertable = false)
     private TradePosition tradePosition;
 

@@ -9,6 +9,13 @@ import java.util.List;
 public interface RoleService {
 
     /**
+     * Method getRoles.
+     *
+     * @return List<Role>
+     */
+    List<Role> getRoles();
+
+    /**
      * Method saveRole.
      *
      * @param role Role
