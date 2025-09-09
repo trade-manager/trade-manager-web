@@ -132,7 +132,7 @@ console.log("domains: " + JSON.stringify(response.data));
 
   const handleDomainOptionSelect = (option) => {
   console.log("Domain option: " + JSON.stringify(option));
-    setDomain(option.name); // Or whatever property you want to display
+    setDomain(option); // Or whatever property you want to display
     setDomainOptions([]); // Clear options after selection
   };
 
@@ -143,7 +143,7 @@ console.log("domains: " + JSON.stringify(response.data));
 
   const handleRoleOptionSelect = (option) => {
   console.log("Role option: " + JSON.stringify(option));
-    setRole(option.name); // Or whatever property you want to display
+    setRole(option); // Or whatever property you want to display
     setRoleOptions([]); // Clear options after selection
   };
 
@@ -172,7 +172,7 @@ console.log("domains: " + JSON.stringify(response.data));
       return
     }
 
-    const user = {'username': username,'password': password, 'name': name, 'email': email, 'domain': {'name': domain}, 'roles': [{'name': role}]};
+    const user = {'username': username,'password': password, 'name': name, 'email': email, 'domain': domain, 'roles': [role]};
 
     try {
 
@@ -270,7 +270,7 @@ console.log("domains: " + JSON.stringify(response.data));
                   icon='at'
                   iconPosition='left'
                   placeholder='Role'
-                  value={role}
+                  value={role.name}
                   onChange={handleRoleInputChange}
                 />
                   {loading && <p>Loading options...</p>}
@@ -294,7 +294,7 @@ console.log("domains: " + JSON.stringify(response.data));
                   icon='at'
                   iconPosition='left'
                   placeholder='Domain'
-                  value={domain}
+                  value={domain.name}
                   onChange={handleDomainInputChange}
                 />
                   {loading && <p>Loading options...</p>}
