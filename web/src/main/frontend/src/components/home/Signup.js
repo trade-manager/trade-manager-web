@@ -103,7 +103,7 @@ console.log("domains: " + JSON.stringify(response.data));
 
     const handler = setTimeout(() => {
 
-      if (role) {
+      if (domain) {
 
         fetchDomainOptions(role);
       } else {
