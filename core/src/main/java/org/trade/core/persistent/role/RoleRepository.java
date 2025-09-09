@@ -2,7 +2,6 @@ package org.trade.core.persistent.role;
 
 import org.springframework.stereotype.Repository;
 import org.trade.core.dao.AspectRepository;
-import org.trade.core.persistent.domain.Domain;
 
 import java.util.List;
 import java.util.Optional;

@@ -1,7 +1,5 @@
 package org.trade.core.persistent.domain;
 
-import org.trade.core.persistent.role.Role;
-
 import java.util.List;
 
 /**

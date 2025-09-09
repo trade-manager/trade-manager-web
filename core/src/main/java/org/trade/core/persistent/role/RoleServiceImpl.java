@@ -3,7 +3,6 @@ package org.trade.core.persistent.role;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.trade.core.persistent.domain.DomainNotFoundException;
-import org.trade.core.persistent.user.User;
 import org.trade.core.util.JSONMapper;
 
 import java.util.List;

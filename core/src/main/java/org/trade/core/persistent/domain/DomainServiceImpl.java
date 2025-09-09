@@ -1,7 +1,6 @@
 package org.trade.core.persistent.domain;
 
 import org.springframework.stereotype.Service;
-import org.trade.core.persistent.role.Role;
 
 import java.util.List;
 
