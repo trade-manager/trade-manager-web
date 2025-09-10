@@ -1,6 +1,5 @@
 package org.trade.core.persistent;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -18,7 +17,6 @@ import org.trade.core.persistent.role.Role;
 import org.trade.core.persistent.role.RoleDTO;
 import org.trade.core.persistent.role.RoleRecord;
 import org.trade.core.persistent.role.RoleService;
-import org.trade.core.util.JSONMapper;
 
 import java.util.List;
 
@@ -105,6 +103,7 @@ public class RoleServiceIT {
 
         RoleDTO roleDTO = roleService.findRoleDTOByName(Role.ROLE_ADMIN);
         assertNotNull(roleDTO);
+        printRoleRecord(roleDTO);
 
         // Manager role
         assertFalse(roleDTO.getContainRoleDTOs().isEmpty());
@@ -124,11 +123,16 @@ public class RoleServiceIT {
         assertNotNull(roleRecord);
     }
 
-    private void printRoleRecord(RoleDTO role){
+    private void printRoleRecord(RoleDTO role) {
 
         _log.info("Name: {}", role.getName());
-        for (RoleDTO containRole : role.getContainRoleDTOs()) {
-            printRoleRecord(containRole);
+
+        if (role.getContainRoleDTOs() != null && !role.getContainRoleDTOs().isEmpty()) {
+
+            for (RoleDTO containRole : role.getContainRoleDTOs()) {
+
+                printRoleRecord(containRole);
+            }
         }
     }
 }
