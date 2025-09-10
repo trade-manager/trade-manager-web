@@ -115,6 +115,28 @@ public class RoleServiceIT {
     }
 
     @Test
+    public void findRoleRecordByName() {
+
+        Role managerRole = roleService.findRoleByName(Role.ROLE_MANAGER);
+        Role role = new Role(roleName, roleName);
+        role.setContainedRole(managerRole);
+        role = roleService.saveRole(role);
+        assertNotNull(role.getId());
+        TradestrategyBase.addRecord(role);
+
+        RoleRecord roleRecord = roleService.findRoleRecordByName(Role.ROLE_ADMIN);
+        assertNotNull(roleRecord);
+        printRoleRecord(roleRecord);
+
+        // Manager role
+        assertEquals(1, roleRecord.containRoles().size());
+        assertEquals(Role.ROLE_MANAGER, roleRecord.containRoles().getFirst().name());
+
+        // USER and roleName
+        assertEquals(2, roleRecord.containRoles().getFirst().containRoles().size());
+    }
+
+    @Test
     public void findRoleByNameRecord() {
 
         Role role = roleService.findRoleByName(Role.ROLE_MANAGER);
@@ -130,6 +152,19 @@ public class RoleServiceIT {
         if (role.getContainRoleDTOs() != null && !role.getContainRoleDTOs().isEmpty()) {
 
             for (RoleDTO containRole : role.getContainRoleDTOs()) {
+
+                printRoleRecord(containRole);
+            }
+        }
+    }
+
+    private void printRoleRecord(RoleRecord role) {
+
+        _log.info("RoleRecord: {}", role.toString());
+
+        if (role.containRoles() != null && !role.containRoles().isEmpty()) {
+
+            for (RoleRecord containRole : role.containRoles()) {
 
                 printRoleRecord(containRole);
             }
