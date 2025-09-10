@@ -117,7 +117,7 @@ public class RoleServiceIT {
     }
 
     @Test
-    public void findRoleRecordByName() throws JsonProcessingException {
+    public void findRoleRecordByNameAdmin() throws JsonProcessingException {
 
         Role managerRole = roleService.findRoleByName(Role.ROLE_MANAGER);
         Role role = new Role(roleName, roleName);
@@ -130,13 +130,33 @@ public class RoleServiceIT {
         assertNotNull(roleRecord);
         printRoleRecord(roleRecord);
         _log.info("RoleRecord:\n{}" , JSONMapper.getJSONString(roleRecord));
-        
+
         // Manager role
         assertEquals(1, roleRecord.containRoles().size());
         assertEquals(Role.ROLE_MANAGER, roleRecord.containRoles().getFirst().name());
 
         // USER and roleName
         assertEquals(2, roleRecord.containRoles().getFirst().containRoles().size());
+    }
+
+    @Test
+    public void findRoleRecordByNameUser() throws JsonProcessingException {
+
+        Role managerRole = roleService.findRoleByName(Role.ROLE_MANAGER);
+        Role role = new Role(roleName, roleName);
+        role.setContainedRole(managerRole);
+        role = roleService.saveRole(role);
+        assertNotNull(role.getId());
+        TradestrategyBase.addRecord(role);
+
+        RoleRecord roleRecord = roleService.findRoleRecordByName(roleName);
+        assertNotNull(roleRecord);
+        printRoleRecord(roleRecord);
+        _log.info("RoleRecord:\n{}" , JSONMapper.getJSONString(roleRecord));
+
+        // Manager role
+        assertEquals(0, roleRecord.containRoles().size());
+        assertEquals(Role.ROLE_MANAGER, roleRecord.containedRole().name());
     }
 
     @Test
