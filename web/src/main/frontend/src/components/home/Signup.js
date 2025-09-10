@@ -19,12 +19,13 @@ function Signup() {
   const [isError, setIsError] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
 
-  const [options, setOptions] = useState([]);
+  const [roleOptions, setRoleOptions] = useState([]);
+  const [domainOptions, setDomainOptions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   // Function to fetch data from API
-  const fetchOptions = async (query) => {
+  const fetchRoleOptions = async (query) => {
 
     setLoading(true);
     setIsError(false);
@@ -32,8 +33,45 @@ function Signup() {
     try {
 
       const response = await employeeApi.getRoles();
-   console.log("response.data: " + JSON.stringify(response.data));
-      setOptions(response.data); // Assuming API returns data in 'results' array
+console.log("roles: " + JSON.stringify(response.data));
+      setRoleOptions(response.data); // Assuming API returns data in 'results' array
+    } catch (error) {
+
+      handleLogError(error)
+
+      if (error.response && error.response.data) {
+
+        const errorData = error.response.data
+        let errorMessage = 'Invalid fields'
+
+        if (errorData.status === 409) {
+
+          errorMessage = errorData.message
+        } else if (errorData.status === 400) {
+
+          errorMessage = errorData.errors[0].defaultMessage
+        }
+
+        setIsError(true)
+        setErrorMessage(errorMessage)
+      }
+    } finally {
+
+      setLoading(false);
+    }
+  };
+
+  // Function to fetch data from API
+  const fetchDomainOptions = async (query) => {
+
+    setLoading(true);
+    setIsError(false);
+
+    try {
+
+      const response = await employeeApi.getDomains();
+console.log("domains: " + JSON.stringify(response.data));
+      setDomainOptions(response.data); // Assuming API returns data in 'results' array
     } catch (error) {
 
       handleLogError(error)
@@ -65,19 +103,38 @@ function Signup() {
 
     const handler = setTimeout(() => {
 
-      if (role) {
+      if (domain) {
 
-        fetchOptions(role);
+        fetchDomainOptions(role);
       } else {
 
-        setOptions([]); // Clear options if input is empty
+        setDomainOptions([]); // Clear options if input is empty
+      }
+
+      if (role) {
+
+        fetchRoleOptions(role);
+      } else {
+
+        setRoleOptions([]); // Clear options if input is empty
       }
     }, 500); // Adjust debounce time as needed
 
     return () => {
       clearTimeout(handler);
     };
-  }, [role]);
+  }, [role, domain]);
+
+  const handleDomainInputChange = (event) => {
+    console.log("event.target.value: " + JSON.stringify(event.target.value));
+    setDomain(event.target.value);
+  };
+
+  const handleDomainOptionSelect = (option) => {
+  console.log("Domain option: " + JSON.stringify(option));
+    setDomain(option); // Or whatever property you want to display
+    setDomainOptions([]); // Clear options after selection
+  };
 
   const handleRoleInputChange = (event) => {
     console.log("event.target.value: " + JSON.stringify(event.target.value));
@@ -85,9 +142,9 @@ function Signup() {
   };
 
   const handleRoleOptionSelect = (option) => {
-  console.log("option: " + JSON.stringify(option));
-    setRole(option.name); // Or whatever property you want to display
-    setOptions([]); // Clear options after selection
+  console.log("Role option: " + JSON.stringify(option));
+    setRole(option); // Or whatever property you want to display
+    setRoleOptions([]); // Clear options after selection
   };
 
   const handleInputChange = (e, { name, value }) => {
@@ -115,7 +172,7 @@ function Signup() {
       return
     }
 
-    const user = {'username': username,'password': password, 'name': name, 'email': email, 'domain': {'name': domain}, 'roles': [{'name': role}]};
+    const user = {'username': username,'password': password, 'name': name, 'email': email, 'domain': domain, 'roles': [role]};
 
     try {
 
@@ -213,15 +270,15 @@ function Signup() {
                   icon='at'
                   iconPosition='left'
                   placeholder='Role'
-                  value={role}
+                  value={role.name}
                   onChange={handleRoleInputChange}
                 />
                   {loading && <p>Loading options...</p>}
                   {error && <p style={{ color: 'red' }}>{error}</p>}
 
-                  {options.length > 0 && (
+                  {roleOptions.length > 0 && (
                     <ul style={{ border: '1px solid #ccc', maxHeight: '200px', overflowY: 'auto' }}>
-                      {options.map((option) => (
+                      {roleOptions.map((option) => (
                         <li key={option.id} onClick={() => handleRoleOptionSelect(option)} style={{ padding: '8px', cursor: 'pointer' }}>
                           {option.name} {/* Or the property you want to display */}
                         </li>
@@ -229,15 +286,30 @@ function Signup() {
                     </ul>
                   )}
             </div>
-            <Form.Input
-              fluid
-              name='domain'
-              icon='at'
-              iconPosition='left'
-              placeholder='Domain'
-              value={domain}
-              onChange={handleInputChange}
-            />
+            <div>
+                <Form.Input
+                  fluid
+                  type="text"
+                  name='domain'
+                  icon='at'
+                  iconPosition='left'
+                  placeholder='Domain'
+                  value={domain.name}
+                  onChange={handleDomainInputChange}
+                />
+                  {loading && <p>Loading options...</p>}
+                  {error && <p style={{ color: 'red' }}>{error}</p>}
+
+                  {domainOptions.length > 0 && (
+                    <ul style={{ border: '1px solid #ccc', maxHeight: '200px', overflowY: 'auto' }}>
+                      {domainOptions.map((option) => (
+                        <li key={option.id} onClick={() => handleDomainOptionSelect(option)} style={{ padding: '8px', cursor: 'pointer' }}>
+                          {option.name} {/* Or the property you want to display */}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+            </div>
             <Button color='blue' fluid size='large'>Signup</Button>
           </Segment>
         </Form>

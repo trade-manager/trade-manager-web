@@ -1,5 +1,7 @@
 package org.trade.core.persistent.role;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.trade.core.persistent.domain.DomainNotFoundException;
@@ -15,6 +17,8 @@ import java.util.stream.Collectors;
  */
 @Service
 public class RoleServiceImpl implements RoleService {
+
+    private final static Logger _log = LoggerFactory.getLogger(RoleServiceImpl.class);
 
     private final RoleRepository roleRepository;
 

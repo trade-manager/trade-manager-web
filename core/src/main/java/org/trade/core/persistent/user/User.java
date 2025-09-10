@@ -227,7 +227,9 @@ public class User extends Aspect implements Serializable, Cloneable {
     }
 
     /**
-     * @return
+     * Method getRoleDTOs.
+     *
+     * @return List<RoleDTO>
      */
     @Transient
     public List<RoleDTO> getRoleDTOs() {

@@ -92,18 +92,26 @@ public class RoleServiceIT {
     }
 
     @Test
-    public void findRoleByName() {
+    public void findRoleDTOByName() {
 
-        RoleDTO role = roleService.findRoleDTOByName(Role.ROLE_ADMIN);
-        assertNotNull(role);
+        Role managerRole = roleService.findRoleByName(Role.ROLE_MANAGER);
+        Role role = new Role(roleName, roleName);
+        role.setContainedRole(managerRole);
+        role = roleService.saveRole(role);
+        assertNotNull(role.getId());
+        TradestrategyBase.addRecord(role);
+
+        RoleDTO roleDTO = roleService.findRoleDTOByName(Role.ROLE_ADMIN);
+        assertNotNull(roleDTO);
+        printRoleRecord(roleDTO);
 
         // Manager role
-        assertFalse(role.getContainRoleDTOs().isEmpty());
-        assertEquals(Role.ROLE_MANAGER, role.getContainRoleDTOs().getFirst().getName());
+        assertFalse(roleDTO.getContainRoleDTOs().isEmpty());
+        assertEquals(Role.ROLE_MANAGER, roleDTO.getContainRoleDTOs().getFirst().getName());
 
         // User role
-        assertFalse(role.getContainRoleDTOs().getFirst().getContainRoleDTOs().isEmpty());
-        assertEquals(Role.ROLE_USER, role.getContainRoleDTOs().getFirst().getContainRoleDTOs().getFirst().getName());
+        assertFalse(roleDTO.getContainRoleDTOs().getFirst().getContainRoleDTOs().isEmpty());
+        assertEquals(Role.ROLE_USER, roleDTO.getContainRoleDTOs().getFirst().getContainRoleDTOs().getFirst().getName());
     }
 
     @Test
@@ -113,5 +121,18 @@ public class RoleServiceIT {
         assertNotNull(role);
         RoleRecord roleRecord = RoleRecord.from(role);
         assertNotNull(roleRecord);
+    }
+
+    private void printRoleRecord(RoleDTO role) {
+
+        _log.info("Name: {}", role.getName());
+
+        if (role.getContainRoleDTOs() != null && !role.getContainRoleDTOs().isEmpty()) {
+
+            for (RoleDTO containRole : role.getContainRoleDTOs()) {
+
+                printRoleRecord(containRole);
+            }
+        }
     }
 }

@@ -5,7 +5,6 @@ import org.trade.core.persistent.role.Role;
 import org.trade.core.persistent.role.RoleRecord;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -32,7 +31,7 @@ public record UserRecord(Long id, String username, String name, String email, St
                 user.getEmail(),
                 user.getPassword(),
                 DomainRecord.from(user.getDomain()),
-                Collections.unmodifiableList(new ArrayList<>(roles))
+                List.copyOf(roles)
         );
     }
 }

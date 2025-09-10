@@ -113,6 +113,6 @@ public class Employee extends Aspect implements Serializable, Cloneable {
      */
     public Object clone() throws CloneNotSupportedException {
 
-        return (Employee) super.clone();
+        return super.clone();
     }
 }
