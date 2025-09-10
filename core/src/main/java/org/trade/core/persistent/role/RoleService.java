@@ -60,19 +60,4 @@ public interface RoleService {
      * @return RoleDTO
      */
     RoleDTO findRoleDTOByName(String name);
-
-    /**
-     * Method findAllTopLevelRoleRecords.
-     *
-     * @return List<RoleRecord>
-     */
-    List<RoleRecord> findAllTopLevelRoleRecords();
-
-    /**
-     * Method findRoleRecordByName.
-     *
-     * @param name String
-     * @return RoleRecord
-     */
-    RoleRecord findRoleRecordByName(String name);
 }

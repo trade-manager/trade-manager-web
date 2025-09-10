@@ -1,5 +1,7 @@
 package org.trade.core.persistent.role;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.trade.core.persistent.domain.DomainNotFoundException;
@@ -15,6 +17,8 @@ import java.util.stream.Collectors;
  */
 @Service
 public class RoleServiceImpl implements RoleService {
+
+    private final static Logger _log = LoggerFactory.getLogger(RoleServiceImpl.class);
 
     private final RoleRepository roleRepository;
 
@@ -90,37 +94,5 @@ public class RoleServiceImpl implements RoleService {
                     .collect(Collectors.toList()));
         }
         return dto;
-    }
-
-    @Transactional
-    public RoleRecord findRoleRecordByName(String name) {
-
-        Optional<Role> role = roleRepository.findByName(name);
-        return role.map(this::convertToRecord).orElse(null);
-    }
-
-    @Transactional
-    public List<RoleRecord> findAllTopLevelRoleRecords() {
-
-        // Use a query to get only top-level managers
-        List<Role> roles = roleRepository.findByContainedRoleIsNull();
-        return roles.stream()
-                .map(this::convertToRecord)
-                .collect(Collectors.toList());
-    }
-
-    private RoleRecord convertToRecord(Role role) {
-
-        role.getContainRoles().size();
-        RoleRecord roleRecord = RoleRecord.from(role);
-
-        // Recursively convert subordinates, or fetch lazily if needed.
-        if (role.getContainRoles() != null && !role.getContainRoles().isEmpty()) {
-
-            roleRecord.setContainRoleRecords(role.getContainRoles().stream()
-                    .map(this::convertToRecord)
-                    .collect(Collectors.toList()));
-        }
-        return roleRecord;
     }
 }

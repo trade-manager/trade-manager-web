@@ -1,5 +1,6 @@
 package org.trade.core.persistent;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -17,6 +18,7 @@ import org.trade.core.persistent.role.Role;
 import org.trade.core.persistent.role.RoleDTO;
 import org.trade.core.persistent.role.RoleRecord;
 import org.trade.core.persistent.role.RoleService;
+import org.trade.core.util.JSONMapper;
 
 import java.util.List;
 
@@ -114,33 +116,19 @@ public class RoleServiceIT {
     }
 
     @Test
-    public void findRoleRecordByName() {
-
-        Role managerRole = roleService.findRoleByName(Role.ROLE_MANAGER);
-        Role role = new Role(roleName, roleName);
-        role.setContainedRole(managerRole);
-        role = roleService.saveRole(role);
-        assertNotNull(role.getId());
-        TradestrategyBase.addRecord(role);
-
-        RoleRecord roleRecord = roleService.findRoleRecordByName(Role.ROLE_ADMIN);
-        assertNotNull(roleRecord);
-
-        // Manager role
-        assertFalse(roleRecord.getContainRoleRecords().isEmpty());
-        assertEquals(Role.ROLE_MANAGER, roleRecord.getContainRoleRecords().getFirst().name());
-
-        // User role
-        assertFalse(roleRecord.getContainRoleRecords().getFirst().getContainRoleRecords().isEmpty());
-        assertEquals(Role.ROLE_USER, roleRecord.getContainRoleRecords().getFirst().getContainRoleRecords().getFirst().name());
-    }
-
-    @Test
     public void findRoleByNameRecord() {
 
         Role role = roleService.findRoleByName(Role.ROLE_MANAGER);
         assertNotNull(role);
         RoleRecord roleRecord = RoleRecord.from(role);
         assertNotNull(roleRecord);
+    }
+
+    private void printRoleRecord(RoleDTO role){
+
+        _log.info("Name: {}", role.getName());
+        for (RoleDTO containRole : role.getContainRoleDTOs()) {
+            printRoleRecord(containRole);
+        }
     }
 }
