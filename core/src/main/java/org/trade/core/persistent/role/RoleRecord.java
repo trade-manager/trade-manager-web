@@ -9,6 +9,12 @@ import java.util.List;
  */
 public record RoleRecord(Long id, String name, RoleRecord containedRole, List<RoleRecord> containRoles) {
 
+    /**
+     * Method from note roles are LAZY loaded., hence we do not get the children.
+     *
+     * @param role Role
+     * @return RoleRecord
+     */
     public static RoleRecord from(final Role role) {
 
         return new RoleRecord(
@@ -19,6 +25,12 @@ public record RoleRecord(Long id, String name, RoleRecord containedRole, List<Ro
         );
     }
 
+    /**
+     * Method fromWithChild note roles are LAZY loaded.
+     *
+     * @param role Role
+     * @return RoleRecord
+     */
     public static RoleRecord fromWithChild(final Role role) {
 
         List<RoleRecord> containRecordRoles = new ArrayList<>();
