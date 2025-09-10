@@ -46,20 +46,6 @@ public interface RoleService {
      */
     Role validateAndGetDomain(String name);
 
-    /**
-     * Method findAllTopLevelRoleDTOs.
-     *
-     * @return List<RoleDTO>
-     */
-    List<RoleDTO> findAllTopLevelRoleDTOs();
-
-    /**
-     * Method findRoleDTOByName.
-     *
-     * @param name String
-     * @return RoleDTO
-     */
-    RoleDTO findRoleDTOByName(String name);
 
     /**
      * Method findAllTopLevelRoleRecords.

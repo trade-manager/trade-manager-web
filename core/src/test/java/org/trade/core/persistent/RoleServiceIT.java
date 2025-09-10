@@ -15,7 +15,6 @@ import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
 import org.trade.core.persistent.role.Role;
-import org.trade.core.persistent.role.RoleDTO;
 import org.trade.core.persistent.role.RoleRecord;
 import org.trade.core.persistent.role.RoleService;
 import org.trade.core.util.JSONMapper;
@@ -87,34 +86,12 @@ public class RoleServiceIT {
     }
 
     @Test
-    public void findAllTopLevelRoles() {
+    public void findAllTopLevelRoleRecords() {
 
-        List<RoleDTO> roles = roleService.findAllTopLevelRoleDTOs();
+        List<RoleRecord> roles = roleService.findAllTopLevelRoleRecords();
         assertFalse(roles.isEmpty());
     }
 
-    @Test
-    public void findRoleDTOByName() {
-
-        Role managerRole = roleService.findRoleByName(Role.ROLE_MANAGER);
-        Role role = new Role(roleName, roleName);
-        role.setContainedRole(managerRole);
-        role = roleService.saveRole(role);
-        assertNotNull(role.getId());
-        TradestrategyBase.addRecord(role);
-
-        RoleDTO roleDTO = roleService.findRoleDTOByName(Role.ROLE_ADMIN);
-        assertNotNull(roleDTO);
-        printRoleRecord(roleDTO);
-
-        // Manager role
-        assertFalse(roleDTO.getContainRoleDTOs().isEmpty());
-        assertEquals(Role.ROLE_MANAGER, roleDTO.getContainRoleDTOs().getFirst().getName());
-
-        // User role
-        assertFalse(roleDTO.getContainRoleDTOs().getFirst().getContainRoleDTOs().isEmpty());
-        assertEquals(Role.ROLE_USER, roleDTO.getContainRoleDTOs().getFirst().getContainRoleDTOs().getFirst().getName());
-    }
 
     @Test
     public void findRoleRecordByNameAdmin() throws JsonProcessingException {
@@ -129,7 +106,7 @@ public class RoleServiceIT {
         RoleRecord roleRecord = roleService.findRoleRecordByName(Role.ROLE_ADMIN);
         assertNotNull(roleRecord);
         printRoleRecord(roleRecord);
-        _log.info("RoleRecord:\n{}" , JSONMapper.getJSONString(roleRecord));
+        _log.info("RoleRecord:\n{}", JSONMapper.getJSONString(roleRecord));
 
         // Manager role
         assertEquals(1, roleRecord.containRoles().size());
@@ -152,7 +129,7 @@ public class RoleServiceIT {
         RoleRecord roleRecord = roleService.findRoleRecordByName(roleName);
         assertNotNull(roleRecord);
         printRoleRecord(roleRecord);
-        _log.info("RoleRecord:\n{}" , JSONMapper.getJSONString(roleRecord));
+        _log.info("RoleRecord:\n{}", JSONMapper.getJSONString(roleRecord));
 
         // Manager role
         assertEquals(0, roleRecord.containRoles().size());
@@ -166,19 +143,6 @@ public class RoleServiceIT {
         assertNotNull(role);
         RoleRecord roleRecord = RoleRecord.from(role);
         assertNotNull(roleRecord);
-    }
-
-    private void printRoleRecord(RoleDTO role) {
-
-        _log.info("Name: {}", role.getName());
-
-        if (role.getContainRoleDTOs() != null && !role.getContainRoleDTOs().isEmpty()) {
-
-            for (RoleDTO containRole : role.getContainRoleDTOs()) {
-
-                printRoleRecord(containRole);
-            }
-        }
     }
 
     private void printRoleRecord(RoleRecord role) {
