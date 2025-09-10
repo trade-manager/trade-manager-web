@@ -1,5 +1,6 @@
 package org.trade.core.persistent;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -17,6 +18,7 @@ import org.trade.core.persistent.role.Role;
 import org.trade.core.persistent.role.RoleDTO;
 import org.trade.core.persistent.role.RoleRecord;
 import org.trade.core.persistent.role.RoleService;
+import org.trade.core.util.JSONMapper;
 
 import java.util.List;
 
@@ -115,7 +117,7 @@ public class RoleServiceIT {
     }
 
     @Test
-    public void findRoleRecordByName() {
+    public void findRoleRecordByName() throws JsonProcessingException {
 
         Role managerRole = roleService.findRoleByName(Role.ROLE_MANAGER);
         Role role = new Role(roleName, roleName);
@@ -127,7 +129,8 @@ public class RoleServiceIT {
         RoleRecord roleRecord = roleService.findRoleRecordByName(Role.ROLE_ADMIN);
         assertNotNull(roleRecord);
         printRoleRecord(roleRecord);
-
+        _log.info("RoleRecord:\n{}" , JSONMapper.getJSONString(roleRecord));
+        
         // Manager role
         assertEquals(1, roleRecord.containRoles().size());
         assertEquals(Role.ROLE_MANAGER, roleRecord.containRoles().getFirst().name());
