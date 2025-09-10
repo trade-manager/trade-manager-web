@@ -34,7 +34,7 @@ public record RoleRecord(Long id, String name, RoleRecord containedRole, List<Ro
         return new RoleRecord(
                 role.getId(),
                 role.getName(),
-                (null != role.getContainedRole() ? RoleRecord.from(role) : null),
+                (null != role.getContainedRole() ? RoleRecord.from(role.getContainedRole()) : null),
                 List.copyOf(containRecordRoles)
         );
     }
