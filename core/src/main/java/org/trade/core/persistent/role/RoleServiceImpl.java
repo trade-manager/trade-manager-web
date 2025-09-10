@@ -91,4 +91,36 @@ public class RoleServiceImpl implements RoleService {
         }
         return dto;
     }
+
+    @Transactional
+    public RoleRecord findRoleRecordByName(String name) {
+
+        Optional<Role> role = roleRepository.findByName(name);
+        return role.map(this::convertToRecord).orElse(null);
+    }
+
+    @Transactional
+    public List<RoleRecord> findAllTopLevelRoleRecords() {
+
+        // Use a query to get only top-level managers
+        List<Role> roles = roleRepository.findByContainedRoleIsNull();
+        return roles.stream()
+                .map(this::convertToRecord)
+                .collect(Collectors.toList());
+    }
+
+    private RoleRecord convertToRecord(Role role) {
+
+        role.getContainRoles().size();
+        RoleRecord roleRecord = RoleRecord.from(role);
+
+        // Recursively convert subordinates, or fetch lazily if needed.
+        if (role.getContainRoles() != null && !role.getContainRoles().isEmpty()) {
+
+            roleRecord.setContainRoleRecords(role.getContainRoles().stream()
+                    .map(this::convertToRecord)
+                    .collect(Collectors.toList()));
+        }
+        return roleRecord;
+    }
 }
