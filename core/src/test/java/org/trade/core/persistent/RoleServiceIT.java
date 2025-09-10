@@ -129,12 +129,11 @@ public class RoleServiceIT {
         printRoleRecord(roleRecord);
 
         // Manager role
-        assertFalse(roleRecord.containRoles().isEmpty());
+        assertEquals(1, roleRecord.containRoles().size());
         assertEquals(Role.ROLE_MANAGER, roleRecord.containRoles().getFirst().name());
 
-        // User role
-        assertFalse(roleRecord.containRoles().getFirst().containRoles().isEmpty());
-        assertEquals(Role.ROLE_USER, roleRecord.containRoles().getFirst().containRoles().getFirst().name());
+        // USER and roleName
+        assertEquals(2, roleRecord.containRoles().getFirst().containRoles().size());
     }
 
     @Test
