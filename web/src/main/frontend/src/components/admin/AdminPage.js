@@ -138,6 +138,7 @@ function AdminPage() {
     setEmployeeFirstName('');
     setEmployeeLastName('');
     setEmployeeEmail('');
+    console.log("Info: clearEmployeeForm");
   }
 
   if (!isAdmin) {

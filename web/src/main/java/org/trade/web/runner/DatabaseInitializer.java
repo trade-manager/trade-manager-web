@@ -66,7 +66,7 @@ public class DatabaseInitializer implements CommandLineRunner {
     public void run(String... args) {
 
         Domain global = this.domainService.findDomainByName("global");
-        User admin = this.userService.findUserByName("admin");
+        User admin = this.userService.findUserByName("Admin");
 
         if (null != admin) {
 
