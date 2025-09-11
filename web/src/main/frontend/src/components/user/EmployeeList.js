@@ -9,13 +9,11 @@ function EmployeeList({ isEmployeesLoading, employeeTextSearch, employees, handl
     employeeList = employees.map(employee => {
       return (
         <Item key={employee.id}>
-          <Image src={`http://covers.openlibrary.org/b/id/${employee.id}-M.jpg`} size='tiny' bordered rounded />
+
           <Item.Content>
-            <Item.Header>{employee.name}</Item.Header>
+            <Item.Header>ID: {employee.name}</Item.Header>
             <Item.Meta>{employee.id}</Item.Meta>
-            <Item.Description>
-              <Image src='https://react.semantic-ui.com/images/wireframe/short-paragraph.png' />
-            </Item.Description>
+            <Item.Description>First name : {employee.firstName} LAst name: {employee.lastName} Email: {employee.email}</Item.Description>
           </Item.Content>
         </Item>
       )
