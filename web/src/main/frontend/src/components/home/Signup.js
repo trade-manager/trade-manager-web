@@ -126,91 +126,93 @@ console.log("domains: " + JSON.stringify(response.data));
   }, [role, domain]);
 
   const handleDomainInputChange = (event) => {
-    console.log("event.target.value: " + JSON.stringify(event.target.value));
+console.log("event.target.value: " + JSON.stringify(event.target.value));
     setDomain(event.target.value);
   };
 
   const handleDomainOptionSelect = (option) => {
-  console.log("Domain option: " + JSON.stringify(option));
+console.log("Domain option: " + JSON.stringify(option));
     setDomain(option); // Or whatever property you want to display
     setDomainOptions([]); // Clear options after selection
   };
 
   const handleRoleInputChange = (event) => {
-    console.log("event.target.value: " + JSON.stringify(event.target.value));
+console.log("event.target.value: " + JSON.stringify(event.target.value));
     setRole(event.target.value);
   };
 
   const handleRoleOptionSelect = (option) => {
-  console.log("Role option: " + JSON.stringify(option));
+console.log("Role option: " + JSON.stringify(option));
     setRole(option); // Or whatever property you want to display
     setRoleOptions([]); // Clear options after selection
   };
 
   const handleInputChange = (e, { name, value }) => {
     if (name === 'username') {
-      setUsername(value)
+      setUsername(value);
     } else if (name === 'password') {
-      setPassword(value)
+      setPassword(value);
     } else if (name === 'name') {
-      setName(value)
+      setName(value);
     } else if (name === 'email') {
-      setEmail(value)
+      setEmail(value);
     } else if (name === 'role') {
-      setRole(value)
+      setRole(value);
     } else if (name === 'domain') {
-       setDomain(value)
+       setDomain(value);
     }
   }
 
   const handleSubmit = async (e) => {
+
     e.preventDefault()
 
     if (!(username && password && name && email && role && domain)) {
-      setIsError(true)
-      setErrorMessage('Please, inform all fields!')
-      return
+      setIsError(true);
+      setErrorMessage('Please, inform all fields!');
+      return;
     }
 
     const user = {'username': username,'password': password, 'name': name, 'email': email, 'domain': domain, 'roles': [role]};
 
     try {
 
-      console.log(JSON.stringify(user));
-      const response = await employeeApi.signup(user)
-      const { id, name, role } = response.data
-      const authdata = window.btoa(username + ':' + password)
-      const authenticatedUser = { id, name, role, authdata }
+console.log("signup user: " + JSON.stringify(user));
+      const response = await employeeApi.signup(user);
+console.log("signup user response.data: " + JSON.stringify(response.data));
+      const { id, name, role } = response.data;
+      const authdata = window.btoa(username + ':' + password);
+      const authenticatedUser = { id, name, role, authdata };
 
-      Auth.userLogin(authenticatedUser)
+      Auth.userLogin(authenticatedUser);
 
-      setUsername('')
-      setPassword('')
-      setName('')
-      setEmail('')
-      setRole('')
-      setDomain('')
-      setIsError(false)
-      setErrorMessage('')
+      setUsername('');
+      setPassword('');
+      setName('');
+      setEmail('');
+      setRole('');
+      setDomain('');
+      setIsError(false);
+      setErrorMessage('');
     } catch (error) {
 
-      handleLogError(error)
+      handleLogError(error);
 
       if (error.response && error.response.data) {
 
-        const errorData = error.response.data
-        let errorMessage = 'Invalid fields'
+        const errorData = error.response.data;
+        let errorMessage = 'Invalid fields';
 
         if (errorData.status === 409) {
 
-          errorMessage = errorData.message
+          errorMessage = errorData.message;
         } else if (errorData.status === 400) {
 
-          errorMessage = errorData.errors[0].defaultMessage
+          errorMessage = errorData.errors[0].defaultMessage;
         }
 
-        setIsError(true)
-        setErrorMessage(errorMessage)
+        setIsError(true);
+        setErrorMessage(errorMessage);
       }
     }
   }

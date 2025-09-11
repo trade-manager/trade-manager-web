@@ -58,7 +58,7 @@ public class EmployeeController {
 
         if (null != employeeRecord.user()) {
 
-            User user = userService.getUserByUsername(employeeRecord.user().username());
+            User user = userService.validateAndGetUserById(employeeRecord.user().id());
 
             if (null != user) {
 

@@ -31,65 +31,66 @@ function AdminPage() {
 
   const handleInputChange = (e, { name, value }) => {
     if (name === 'userUsernameSearch') {
-      setUserUsernameSearch(value)
+      setUserUsernameSearch(value);
     } else if (name === 'employeeId') {
-      setEmployeeId(value)
+      setEmployeeId(value);
     } else if (name === 'employeeName') {
-      setEmployeeName(value)
+      setEmployeeName(value);
     } else if (name === 'employeeFirstName') {
-      setEmployeeFirstName(value)
+      setEmployeeFirstName(value);
     } else if (name === 'employeeLastName') {
-      setEmployeeLastName(value)
+      setEmployeeLastName(value);
     } else if (name === 'employeeEmail') {
-      setEmployeeEmail(value)
+      setEmployeeEmail(value);
     } else if (name === 'employeeTextSearch') {
-      setEmployeeTextSearch(value)
+      setEmployeeTextSearch(value);
     }
   }
 
   const handleGetUsers = async () => {
     try {
-      setIsUsersLoading(true)
-      const response = await employeeApi.getUsers(user)
-      const users = response.data
-      setUsers(users)
+      setIsUsersLoading(true);
+      const response = await employeeApi.getUsers(user);
+      const users = response.data;
+      console.log("handleGetUsers users: " + JSON.stringify(users));
+      setUsers(users);
     } catch (error) {
-      handleLogError(error)
+      handleLogError(error);
     } finally {
-      setIsUsersLoading(false)
+      setIsUsersLoading(false);
     }
   }
 
   const handleDeleteUser = async (username) => {
     try {
-      await employeeApi.deleteUser(user, username)
-      await handleGetUsers()
+      await employeeApi.deleteUser(user, username);
+      await handleGetUsers();
     } catch (error) {
-      handleLogError(error)
+      handleLogError(error);
     }
   }
 
   const handleSearchUser = async () => {
     try {
-      const response = await employeeApi.getUsers(user, userUsernameSearch)
-      const data = response.data
-      const users = data instanceof Array ? data : [data]
-      setUsers(users)
+      const response = await employeeApi.getUsers(user, userUsernameSearch);
+      const data = response.data;
+      const users = data instanceof Array ? data : [data];
+      setUsers(users);
     } catch (error) {
-      handleLogError(error)
-      setUsers([])
+      handleLogError(error);
+      setUsers([]);
     }
   }
 
   const handleGetEmployees = async () => {
     try {
-      setIsEmployeesLoading(true)
-      const response = await employeeApi.getEmployees(user)
-      setEmployees(response.data)
+      setIsEmployeesLoading(true);
+      const response = await employeeApi.getEmployees(user);
+      setEmployees(response.data);
     } catch (error) {
-      handleLogError(error)
+      handleLogError(error);
     } finally {
-      setIsEmployeesLoading(false)
+      setIsEmployeesLoading(false);
     }
   }
 
@@ -106,15 +107,15 @@ function AdminPage() {
     try {
 
       const employee = { name: employeeName.trim(), firstName: employeeFirstName.trim() , lastName: employeeLastName.trim(), email: employeeEmail.trim(), user: user}
-      console.log(JSON.stringify(employee));
+      console.log("employee: " + JSON.stringify(employee));
 
       if (!(employee.email && employee.name)) {
 
-        return
+        return;
       }
-      await employeeApi.addEmployee(user, employee)
-      clearEmployeeForm()
-      await handleGetEmployees()
+      await employeeApi.addEmployee(user, employee);
+      await handleGetEmployees();
+      clearEmployeeForm();
     } catch (error) {
 
       handleLogError(error)
@@ -133,10 +134,10 @@ function AdminPage() {
   }
 
   const clearEmployeeForm = () => {
-    setEmployeeName('')
-    setEmployeeFirstName('')
-    setEmployeeLastName('')
-    setEmployeeEmail('')
+    setEmployeeName('');
+    setEmployeeFirstName('');
+    setEmployeeLastName('');
+    setEmployeeEmail('');
   }
 
   if (!isAdmin) {
