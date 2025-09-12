@@ -9,11 +9,10 @@ function EmployeeList({ isEmployeesLoading, employeeTextSearch, employees, handl
     employeeList = employees.map(employee => {
       return (
         <Item key={employee.id}>
-
           <Item.Content>
             <Item.Header>ID: {employee.name}</Item.Header>
             <Item.Meta>{employee.id}</Item.Meta>
-            <Item.Description>First name : {employee.firstName} LAst name: {employee.lastName} Email: {employee.email}</Item.Description>
+            <Item.Description>First name : {employee.firstName} Last name: {employee.lastName} Email: {employee.email}</Item.Description>
           </Item.Content>
         </Item>
       )

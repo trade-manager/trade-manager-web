@@ -1,8 +1,8 @@
 import React from 'react'
 import { Button, Form, Icon } from 'semantic-ui-react'
 
-function EmployeeForm({ employeeName, employeeFirstName, employeeLastName, employeeEmail, handleInputChange, handleAddEmployee }) {
-  const createBtnDisabled = false //(employeeEmail == null || employeeEmail.trim() === '' || employeeName == null || employeeName.trim() === '')
+function EmployeeForm({ employeeId, employeeName, employeeFirstName, employeeLastName, employeeEmail, handleInputChange, handleAddEmployee }) {
+  let createBtnDisabled = employeeName.trim() === '' || employeeEmail.trim() === ''
   return (
     <Form onSubmit={handleAddEmployee}>
       <Form.Group>
@@ -30,8 +30,7 @@ function EmployeeForm({ employeeName, employeeFirstName, employeeLastName, emplo
           value={employeeEmail}
           onChange={handleInputChange}
         />
-        <Button icon labelPosition='right' disabled={createBtnDisabled}>Create<Icon name='add' />
-        </Button>
+        <Button icon labelPosition='right' disabled={createBtnDisabled}>Create<Icon name='add' /></Button>
       </Form.Group>
     </Form>
   )

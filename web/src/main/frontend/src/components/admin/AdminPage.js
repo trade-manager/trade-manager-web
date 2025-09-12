@@ -52,7 +52,7 @@ function AdminPage() {
       setIsUsersLoading(true);
       const response = await employeeApi.getUsers(user);
       const users = response.data;
-      console.log("handleGetUsers users: " + JSON.stringify(users));
+      console.log("handleGetUsers users:\n" + JSON.stringify(users));
       setUsers(users);
     } catch (error) {
       handleLogError(error);
@@ -86,7 +86,9 @@ function AdminPage() {
     try {
       setIsEmployeesLoading(true);
       const response = await employeeApi.getEmployees(user);
-      setEmployees(response.data);
+      const employees = response.data;
+      console.log("handleGetEmployees employees:\n" + JSON.stringify(employees));
+      setEmployees(employees);
     } catch (error) {
       handleLogError(error);
     } finally {
@@ -125,7 +127,8 @@ function AdminPage() {
   const handleSearchEmployee = async () => {
     try {
       const response = await employeeApi.getEmployees(user, employeeTextSearch)
-      const employees = response.data
+      const employees = response.data;
+      console.log("handleSearchEmployee employees:\n" + JSON.stringify(employees));
       setEmployees(employees)
     } catch (error) {
       handleLogError(error)
@@ -157,6 +160,9 @@ function AdminPage() {
         employees={employees}
         employeeId={employeeId}
         employeeName={employeeName}
+        employeeFirstName={employeeFirstName}
+        employeeLastName={employeeLastName}
+        employeeEmail={employeeEmail}
         employeeTextSearch={employeeTextSearch}
         handleAddEmployee={handleAddEmployee}
         handleDeleteEmployee={handleDeleteEmployee}
