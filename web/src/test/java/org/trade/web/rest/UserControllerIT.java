@@ -140,7 +140,7 @@ class UserControllerIT {
         mockMvc.perform(get("/api/users/me").with(user(mockUser))
                         .accept(MediaType.APPLICATION_JSON).with(httpBasic(adminUserName, password)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value(adminUserName));
+                .andExpect(jsonPath("$.username").value(adminUserName));
 
     }
 
