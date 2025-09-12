@@ -26,25 +26,35 @@ function UserPage() {
   }
 
   const handleGetEmployees = async () => {
+
     try {
-      setIsEmployeesLoading(true)
-      const response = await employeeApi.getEmployees(user)
-      setEmployees(response.data)
+
+      setIsEmployeesLoading(true);
+      const response = await employeeApi.getEmployees(user);
+      const employees = response.data;
+      console.log("handleGetEmployees employees: " + JSON.stringify(employees));
+      setEmployees(employees);
     } catch (error) {
-      handleLogError(error)
+
+      handleLogError(error);
     } finally {
-      setIsEmployeesLoading(false)
+
+      setIsEmployeesLoading(false);
     }
   }
 
   const handleSearchEmployee = async () => {
+
     try {
-      const response = await employeeApi.getEmployees(user, employeeTextSearch)
-      const employees = response.data
-      setEmployees(employees)
+
+      const response = await employeeApi.getEmployees(user, employeeTextSearch);
+      const employees = response.data;
+console.log("handleSearchEmployee employees:\n" + JSON.stringify(employees));
+      setEmployees(employees);
     } catch (error) {
-      handleLogError(error)
-      setEmployees([])
+
+      handleLogError(error);
+      setEmployees([]);
     }
   }
 

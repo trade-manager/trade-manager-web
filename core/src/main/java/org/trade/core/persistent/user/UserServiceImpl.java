@@ -60,6 +60,11 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException(String.format("User with username %s not found", username)));
     }
 
+    public User validateAndGetUserById(Long id) {
+
+        return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(String.format("User with username %s not found", id)));
+    }
+
     @Transactional
     public User saveUser(User instance) {
 

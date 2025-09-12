@@ -6,7 +6,7 @@ import EmployeeTable from './EmployeeTable'
 function AdminTab(props) {
   const { handleInputChange } = props
   const { isUsersLoading, users, userUsernameSearch, handleDeleteUser, handleSearchUser } = props
-  const { isEmployeesLoading, employees, employeeId, employeeName, employeeTextSearch, handleAddEmployee, handleDeleteEmployee, handleSearchEmployee } = props
+  const { isEmployeesLoading, employees, employeeId, employeeName, employeeFirstName, employeeLastName, employeeEmail, employeeTextSearch, handleAddEmployee, handleDeleteEmployee, handleSearchEmployee } = props
 
   const panes = [
     {
@@ -31,6 +31,9 @@ function AdminTab(props) {
             employees={employees}
             employeeId={employeeId}
             employeeName={employeeName}
+            employeeFirstName={employeeFirstName}
+            employeeLastName={employeeLastName}
+            employeeEmail={employeeEmail}
             employeeTextSearch={employeeTextSearch}
             handleInputChange={handleInputChange}
             handleAddEmployee={handleAddEmployee}

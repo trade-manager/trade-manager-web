@@ -54,7 +54,7 @@ public class AuthController {
         if (userOptional.isPresent()) {
 
             User user = userOptional.get();
-            return ResponseEntity.ok(new AuthResponse(user.getId(), user.getName(), user.getRole().getName()));
+            return ResponseEntity.ok(new AuthResponse(user.getId(), user.getUsername(), user.getRole().getName()));
         }
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -85,6 +85,6 @@ public class AuthController {
 
         User user = UserController.from(userRecord, this.passwordEncoder.encode(userRecord.password()), domain, roles);
         user = userService.saveUser(user);
-        return new AuthResponse(user.getId(), user.getName(), user.getRole().getName());
+        return new AuthResponse(user.getId(), user.getUsername(), user.getRole().getName());
     }
 }

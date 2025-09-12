@@ -2,7 +2,7 @@ import React from 'react'
 import { Button, Form, Grid, Image, Input, Table } from 'semantic-ui-react'
 import EmployeeForm from './EmployeeForm'
 
-function EmployeeTable({ employees, employeeName, employeeFirstName, employeeLastName, employeeEmail, employeeTextSearch, handleInputChange, handleAddEmployee, handleDeleteEmployee, handleSearchEmployee }) {
+function EmployeeTable({ employees, employeeId, employeeName, employeeFirstName, employeeLastName, employeeEmail, employeeTextSearch, handleInputChange, handleAddEmployee, handleDeleteEmployee, handleSearchEmployee }) {
   let employeeList
   if (employees.length === 0) {
     employeeList = (
@@ -50,6 +50,7 @@ function EmployeeTable({ employees, employeeName, employeeFirstName, employeeLas
           </Grid.Column>
           <Grid.Column width={3}>
             <EmployeeForm
+              employeeId={employeeId}
               employeeName={employeeName}
               employeeFirstName={employeeFirstName}
               employeeLastName={employeeLastName}
