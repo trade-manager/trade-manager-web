@@ -113,6 +113,9 @@
                         </goals>
                         <configuration>
                             <arguments>run build</arguments>
+                            <environmentVariables>
+                                <REACT_APP_PROD>development</REACT_APP_PROD>  <!-- production/development -->
+                            </environmentVariables>
                         </configuration>
                     </execution>
                 </executions>
