@@ -134,7 +134,7 @@ class AuthControllerIT {
                         .with(httpBasic(userName, password))
                         .content(jsonContent))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.username").value(userName));
+                .andExpect(jsonPath("$.name").value(userName));
     }
 
     @Test
@@ -158,7 +158,7 @@ class AuthControllerIT {
                         .with(httpBasic(adminUserName, password))
                         .content(jsonContent))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.username").value(userNameNew));
+                .andExpect(jsonPath("$.name").value(userNameNew));
 
         user = userService.findUserByName(userNameNew);
         assertNotNull(user.getId());

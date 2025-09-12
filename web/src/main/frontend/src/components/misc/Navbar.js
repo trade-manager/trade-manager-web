@@ -29,8 +29,9 @@ function Navbar() {
   }
 
   const getUserName = () => {
-    const user = getUser()
-    return user ? user.name : ''
+    const user = getUser();
+    console.log("user: " + JSON.stringify(user))
+    return user ? user.name : '';
   }
 
   return (
