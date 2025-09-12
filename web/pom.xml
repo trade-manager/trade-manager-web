@@ -112,7 +112,8 @@
                             <goal>npm</goal>
                         </goals>
                         <configuration>
-                            <arguments>run build</arguments>
+                            <!--    <arguments>start</arguments>  development-->
+                            <arguments>run build</arguments> <!-- production -->
                         </configuration>
                     </execution>
                 </executions>
