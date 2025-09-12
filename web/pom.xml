@@ -114,7 +114,7 @@
                         <configuration>
                             <arguments>run build</arguments>
                             <environmentVariables>
-                                <REACT_APP_STAGE>development</REACT_APP_STAGE>  <!-- production/development -->
+                                <REACT_APP_PROD>development</REACT_APP_PROD>  <!-- production/development -->
                             </environmentVariables>
                         </configuration>
                     </execution>

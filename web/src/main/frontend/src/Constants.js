@@ -10,4 +10,4 @@ const dev = {
   }
 }
 
-export const config = process.env.REACT_APP_STAGE === 'development' ? dev : prod
+export const config = process.env.REACT_APP_PROD === 'development' ? dev : prod
