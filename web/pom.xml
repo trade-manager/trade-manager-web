@@ -112,8 +112,10 @@
                             <goal>npm</goal>
                         </goals>
                         <configuration>
-                            <!--    <arguments>start</arguments>  development-->
-                            <arguments>run build</arguments> <!-- production -->
+                            <arguments>run build</arguments>
+                            <environmentVariables>
+                                <REACT_APP_STAGE>development</REACT_APP_STAGE>  <!-- production/development -->
+                            </environmentVariables>
                         </configuration>
                     </execution>
                 </executions>
