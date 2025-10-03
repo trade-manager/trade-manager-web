@@ -66,14 +66,11 @@ public class ConfigurationPanel extends BasePanel {
 
     /**
      * Constructor
-     *
-     * @param tradeService TradeService
      */
 
-    public ConfigurationPanel(TradeService tradeService) {
+    public ConfigurationPanel(final TradeService tradeService) {
 
         this.tradeService = tradeService;
-
         try {
 
             if (null != getMenu()) {

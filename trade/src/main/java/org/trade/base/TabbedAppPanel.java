@@ -2,7 +2,9 @@ package org.trade.base;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.trade.core.persistent.TradeService;
+import org.trade.core.persistent.tradingday.TradingdayService;
 import org.trade.ui.widget.Clock;
 
 import javax.swing.*;
@@ -16,6 +18,7 @@ import java.util.List;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
+@org.springframework.stereotype.Component
 public abstract class TabbedAppPanel extends BasePanel implements ChangeListener {
     /**
      *
@@ -23,21 +26,28 @@ public abstract class TabbedAppPanel extends BasePanel implements ChangeListener
     @Serial
     private static final long serialVersionUID = 8405644422808736326L;
 
-    public final TradeService tradeService;
     private final static Logger _log = LoggerFactory.getLogger(TabbedAppPanel.class);
+
+
+    public final TradeService tradeService;
+
+    public  final TradingdayService tradingdayService;
+
     private final JTabbedPane tabbedPane = new JTabbedPane();
     private final JPanel menuPanel = new JPanel();
     private final PrintController printJob = new PrintController();
     private int currentTab = 0;
     private BasePanel currBasePanel = null;
 
+
     /**
      * Constructor for TabbedAppPanel.
      *
-     * @param frame Frame
      */
-    public TabbedAppPanel(Frame frame, TradeService tradeService) {
+    public TabbedAppPanel(Frame frame, final TradeService tradeService, TradingdayService tradingdayService) {
+
         this.tradeService = tradeService;
+        this.tradingdayService = tradingdayService;
 
         try {
 
@@ -121,7 +131,9 @@ public abstract class TabbedAppPanel extends BasePanel implements ChangeListener
     public abstract void tabChanged(BasePanel currBasePanel, BasePanel newBasePanel);
 
     public void doLFMetal() {
+
         try {
+
             UIManager.setLookAndFeel(new javax.swing.plaf.metal.MetalLookAndFeel());
             SwingUtilities.updateComponentTreeUI(getFrame());
         } catch (Exception eMetal) {
@@ -131,6 +143,7 @@ public abstract class TabbedAppPanel extends BasePanel implements ChangeListener
 
     public void doLFWindows() {
         try {
+
             // UIManager
             // .setLookAndFeel(new
             // com.sun.java.swing.plaf.windows.WindowsLookAndFeel());
@@ -141,7 +154,9 @@ public abstract class TabbedAppPanel extends BasePanel implements ChangeListener
     }
 
     public void doLFMotif() {
+
         try {
+
             // UIManager
             // .setLookAndFeel(new
             // com.sun.java.swing.plaf.motif.MotifLookAndFeel());
@@ -153,7 +168,9 @@ public abstract class TabbedAppPanel extends BasePanel implements ChangeListener
     }
 
     public void doExit() {
+
         for (int i = 0; i < tabbedPane.getTabCount(); i++) {
+
             currBasePanel = (BasePanel) tabbedPane.getComponent(i);
             currBasePanel.doWindowClose();
         }

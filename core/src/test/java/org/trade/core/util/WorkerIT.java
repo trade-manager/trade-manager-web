@@ -7,13 +7,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
-import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.Tradestrategy;
 import org.trade.core.persistent.dao.series.indicator.CandleSeries;
@@ -33,12 +31,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @SpringBootTest
 @ContextConfiguration(classes = ApplicationRepositoryConfig.class,
         initializers = ApplicationProfileInitializer.class)
-public class WorkerIT {
+public class WorkerIT extends TradestrategyBase {
 
     private final static Logger _log = LoggerFactory.getLogger(WorkerIT.class);
-
-    @Autowired
-    private TradeService tradeService;
 
     private static final String symbol = "TEST-" + TradestrategyBase.getRandomNumber(4);
     private static Tradestrategy tradestrategy;
@@ -57,7 +52,7 @@ public class WorkerIT {
     public void setUp() throws Exception {
 
         Strategy strategy = (Strategy) DAOStrategy.newInstance().getObject();
-        tradestrategy = TradestrategyBase.createTestTradestrategy(tradeService, strategy, symbol, Side.BOT, ChartDays.ONE_DAY, BarSize.HOUR_MIN);
+        tradestrategy = this.createTestTradestrategy(strategy, symbol, Side.BOT, ChartDays.ONE_DAY, BarSize.HOUR_MIN);
         assertNotNull(tradestrategy);
         _log.info(" Test Initialized");
     }
@@ -68,7 +63,7 @@ public class WorkerIT {
     @AfterEach
     public void tearDown() throws Exception {
 
-        TradestrategyBase.deleteRecords(tradeService);
+        this.deleteRecords();
     }
 
     /**

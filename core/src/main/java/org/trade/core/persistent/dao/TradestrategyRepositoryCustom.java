@@ -1,5 +1,7 @@
 package org.trade.core.persistent.dao;
 
+import org.trade.core.persistent.tradingday.Tradingday;
+
 import java.time.ZonedDateTime;
 import java.util.List;
 
@@ -24,4 +26,12 @@ public interface TradestrategyRepositoryCustom {
 
     List<Tradestrategy> findTradestrategyContractDistinctByDateRange(ZonedDateTime fromOpen,
                                                                      ZonedDateTime toOpen);
+
+    /**
+     * Method findTradestrategyByTradingday.
+     *
+     * @param tradingday Tradingday
+     * @return List<Tradestrategy>
+     */
+    List<Tradestrategy> findTradestrategyByTradingday(Tradingday tradingday);
 }

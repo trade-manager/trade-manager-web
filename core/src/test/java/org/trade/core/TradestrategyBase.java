@@ -2,6 +2,7 @@ package org.trade.core;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.trade.core.dao.Aspect;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.Account;
@@ -13,8 +14,9 @@ import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradePosition;
 import org.trade.core.persistent.dao.Tradestrategy;
-import org.trade.core.persistent.dao.Tradingday;
 import org.trade.core.persistent.dao.series.indicator.StrategyData;
+import org.trade.core.persistent.tradingday.Tradingday;
+import org.trade.core.persistent.tradingday.TradingdayService;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.AccountType;
 import org.trade.core.valuetype.BarSize;
@@ -51,7 +53,14 @@ public class TradestrategyBase {
     private final static Logger _log = LoggerFactory.getLogger(TradestrategyBase.class);
     private final static LinkedList<Aspect> aspects = new LinkedList<>();
 
+    @Autowired
+    public TradingdayService tradingdayService;
+
+    @Autowired
+    public TradeService tradeService;
+
     public TradestrategyBase() {
+
     }
 
     /**
@@ -59,9 +68,9 @@ public class TradestrategyBase {
      *
      * @return Tradestrategy
      */
-    public static Tradestrategy createTestTradestrategy(TradeService tradeService, String symbol) throws Exception {
+    public Tradestrategy createTestTradestrategy(String symbol) throws Exception {
 
-        return createTestTradestrategy(tradeService, null, symbol, Side.BOT, ChartDays.ONE_DAY, BarSize.FIVE_MIN);
+        return createTestTradestrategy(null, symbol, Side.BOT, ChartDays.ONE_DAY, BarSize.FIVE_MIN);
     }
 
     /**
@@ -69,7 +78,7 @@ public class TradestrategyBase {
      *
      * @return Tradestrategy
      */
-    public static Tradestrategy createTestTradestrategy(TradeService tradeService, Strategy strategy, String symbol, String side, Integer chartDays, Integer barSize) throws Exception {
+    public Tradestrategy createTestTradestrategy(Strategy strategy, String symbol, String side, Integer chartDays, Integer barSize) throws Exception {
 
         Tradestrategy tradestrategy;
 
@@ -88,7 +97,7 @@ public class TradestrategyBase {
             account.setCashBalance(new BigDecimal(25000));
             portfolio.getAccounts().add(account);
             portfolio = tradeService.savePortfolio(portfolio);
-            TradestrategyBase.addRecord(portfolio.getAccounts().getFirst());
+            this.addRecord(portfolio.getAccounts().getFirst());
         }
 
         ZonedDateTime open = TradingCalendar
@@ -108,7 +117,7 @@ public class TradestrategyBase {
 
                 Tradestrategy instance = tradeService.findTradestrategyById(tradestrategy.getId());
                 instance = tradeService.saveAspect(instance);
-                TradestrategyBase.addRecord(instance);
+                this.addRecord(instance);
                 Hashtable<Long, TradePosition> tradePositions = new Hashtable<>();
 
                 for (TradeOrder tradeOrder : instance.getTradeOrders()) {
@@ -138,7 +147,7 @@ public class TradestrategyBase {
                         instance.getContractLite().setTradePosition(null);
                         ContractLite contractLite = tradeService.saveAspect(instance.getContractLite());
                         instance.setContractLite(contractLite);
-                        TradestrategyBase.addRecord(contractLite);
+                        this.addRecord(contractLite);
                     }
                     tradeService.deleteAspect(tradePosition);
                 }
@@ -149,7 +158,7 @@ public class TradestrategyBase {
         }
 
         Tradingday tradingday = Tradingday.newInstance(open);
-        Tradingday instanceTradingDay = tradeService.findTradingdayByOpenCloseDate(tradingday.getOpen(), tradingday.getClose());
+        Tradingday instanceTradingDay = tradingdayService.findTradingdayByOpenCloseDate(tradingday.getOpen(), tradingday.getClose());
 
         if (null != instanceTradingDay) {
 
@@ -161,15 +170,15 @@ public class TradestrategyBase {
                 true, chartDays, barSize);
         tradingday.addTradestrategy(tradestrategy);
         tradingday = tradeService.saveTradingday(tradingday);
-        TradestrategyBase.addRecord(tradingday.getTradestrategies().getLast().getContract());
-        TradestrategyBase.addRecord(tradingday);
+        this.addRecord(tradingday.getTradestrategies().getLast().getContract());
+        this.addRecord(tradingday);
         Tradestrategy instance = tradingday.getTradestrategies().getLast();
         instance = tradeService.findTradestrategyById(instance);
         instance.setStrategyData(StrategyData.create(instance));
         return instance;
     }
 
-    public static Long addTradeOrder(TradeService tradeService, Tradestrategy tradestrategy, String action, String orderType, BigDecimal price, BigDecimal limitPrice, double stop) throws Exception {
+    public Long addTradeOrder(Tradestrategy tradestrategy, String action, String orderType, BigDecimal price, BigDecimal limitPrice, double stop) throws Exception {
 
         double risk = tradestrategy.getRiskAmount().doubleValue();
         int quantity = (int) ((int) risk / stop);
@@ -255,12 +264,12 @@ public class TradestrategyBase {
         }
     }
 
-    public static void addRecord(Aspect entity) {
+    public void addRecord(Aspect entity) {
 
         aspects.add(entity);
     }
 
-    public static void deleteRecords(TradeService tradeService) {
+    public void deleteRecords() {
 
         try {
 
@@ -275,8 +284,9 @@ public class TradestrategyBase {
 
             Iterable<Rule> rules = tradeService.findAllRules();
             rules.forEach(rule -> tradeService.deleteAspect(rule));
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
+        } catch (ClassNotFoundException ex) {
+
+            throw new RuntimeException(ex);
         }
     }
 }

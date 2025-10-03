@@ -32,12 +32,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @SpringBootTest
 @ContextConfiguration(classes = ApplicationRepositoryConfig.class,
         initializers = ApplicationProfileInitializer.class)
-public class RoleServiceIT {
+public class RoleServiceIT extends TradestrategyBase {
 
     private final static Logger _log = LoggerFactory.getLogger(RoleServiceIT.class);
-
-    @Autowired
-    private TradeService tradeService;
 
     @Autowired
     private RoleService roleService;
@@ -64,7 +61,7 @@ public class RoleServiceIT {
     @AfterEach
     public void tearDown() {
 
-        TradestrategyBase.deleteRecords(tradeService);
+        this.deleteRecords();
     }
 
     /**
@@ -80,7 +77,7 @@ public class RoleServiceIT {
         Role role = new Role(roleName, roleName);
         role = roleService.saveRole(role);
         assertNotNull(role.getId());
-        TradestrategyBase.addRecord(role);
+        this.addRecord(role);
         role = roleService.findRoleByName(roleName);
         assertNotNull(role.getId());
     }
@@ -101,7 +98,7 @@ public class RoleServiceIT {
         role.setContainedRole(managerRole);
         role = roleService.saveRole(role);
         assertNotNull(role.getId());
-        TradestrategyBase.addRecord(role);
+        this.addRecord(role);
 
         RoleRecord roleRecord = roleService.findRoleRecordByName(Role.ROLE_ADMIN);
         assertNotNull(roleRecord);
@@ -124,7 +121,7 @@ public class RoleServiceIT {
         role.setContainedRole(managerRole);
         role = roleService.saveRole(role);
         assertNotNull(role.getId());
-        TradestrategyBase.addRecord(role);
+        this.addRecord(role);
 
         RoleRecord roleRecord = roleService.findRoleRecordByName(roleName);
         assertNotNull(roleRecord);

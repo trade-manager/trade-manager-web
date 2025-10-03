@@ -17,9 +17,8 @@ import org.trade.core.persistent.dao.TradelogReport;
 import org.trade.core.persistent.dao.Tradestrategy;
 import org.trade.core.persistent.dao.TradestrategyLite;
 import org.trade.core.persistent.dao.TradestrategyOrders;
-import org.trade.core.persistent.dao.Tradingday;
-import org.trade.core.persistent.dao.Tradingdays;
 import org.trade.core.persistent.dao.series.indicator.CandleSeries;
+import org.trade.core.persistent.tradingday.Tradingday;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -324,32 +323,6 @@ public interface TradeService extends AspectService {
      * @return Integer
      */
     Integer findTradeOrderByMaxKey();
-
-    /**
-     * Method findTradingdayById.
-     *
-     * @param tradingdayId Long
-     * @return Tradingday
-     */
-    Tradingday findTradingdayById(Long tradingdayId);
-
-    /**
-     * Method findTradingdayByOpenDate.
-     *
-     * @param openDate  ZonedDateTime
-     * @param closeDate ZonedDateTime
-     * @return Tradingday
-     */
-    Tradingday findTradingdayByOpenCloseDate(ZonedDateTime openDate, ZonedDateTime closeDate);
-
-    /**
-     * Method findTradingdaysByDateRange.
-     *
-     * @param startDate ZonedDateTime
-     * @param endDate   ZonedDateTime
-     * @return Tradingdays
-     */
-    Tradingdays findTradingdaysByDateRange(ZonedDateTime startDate, ZonedDateTime endDate);
 
     /**
      * Method findTradelogReport.

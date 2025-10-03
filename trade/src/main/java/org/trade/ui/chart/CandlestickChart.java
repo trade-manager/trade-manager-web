@@ -29,7 +29,7 @@ import org.jfree.data.Range;
 import org.jfree.data.general.SeriesChangeEvent;
 import org.jfree.data.general.SeriesChangeListener;
 import org.jfree.data.xy.XYDataset;
-import org.trade.core.persistent.dao.Tradingday;
+import org.trade.core.persistent.tradingday.Tradingday;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.Action;
 import org.trade.core.valuetype.Money;

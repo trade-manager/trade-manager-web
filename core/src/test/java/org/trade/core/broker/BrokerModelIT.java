@@ -7,7 +7,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.trade.core.ApplicationProfileInitializer;
@@ -15,7 +14,6 @@ import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
 import org.trade.core.broker.client.Broker;
 import org.trade.core.factory.ClassFactory;
-import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradePosition;
 import org.trade.core.persistent.dao.Tradestrategy;
@@ -55,9 +53,6 @@ public class BrokerModelIT extends TradestrategyBase implements IBrokerChangeLis
 
     private final static Logger _log = LoggerFactory.getLogger(BrokerModelIT.class);
 
-    @Autowired
-    private TradeService tradeService;
-
     private static final String symbol = "NVDA";
     private static Tradestrategy tradestrategy;
     private static IBrokerModel backTestbrokerModel;
@@ -94,7 +89,7 @@ public class BrokerModelIT extends TradestrategyBase implements IBrokerChangeLis
         clientId = ConfigProperties.getPropAsInt("trade.tws.clientId");
         port = Integer.valueOf(ConfigProperties.getPropAsString("trade.tws.port"));
         host = ConfigProperties.getPropAsString("trade.tws.host");
-        tradestrategy = createTestTradestrategy(tradeService, symbol);
+        tradestrategy = createTestTradestrategy(symbol);
         List<Object> params = new ArrayList<>(0);
         params.add(tradeService);
         backTestbrokerModel = (IBrokerModel) ClassFactory.getServiceForInterface(_broker, params, BrokerModelIT.class);
@@ -147,7 +142,7 @@ public class BrokerModelIT extends TradestrategyBase implements IBrokerChangeLis
 
             backTestbrokerModel.onDisconnect();
         }
-        TradestrategyBase.deleteRecords(tradeService);
+        this.deleteRecords();
     }
 
     /**

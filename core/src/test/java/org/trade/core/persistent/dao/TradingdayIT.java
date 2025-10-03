@@ -7,13 +7,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
-import org.trade.core.persistent.TradeService;
+import org.trade.core.persistent.tradingday.Tradingday;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.MarketBar;
 
@@ -30,15 +29,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @SpringBootTest
 @ContextConfiguration(classes = ApplicationRepositoryConfig.class,
         initializers = ApplicationProfileInitializer.class)
-public class TradingdayIT {
+public class TradingdayIT extends TradestrategyBase {
 
     private final static Logger _log = LoggerFactory.getLogger(TradingdayIT.class);
-
-    @Autowired
-    private TradeService tradeService;
-
-    @Autowired
-    private TradingdayRepository tradingdayRepository;
 
     private static Tradingday tradingday;
 
@@ -62,7 +55,7 @@ public class TradingdayIT {
     @AfterEach
     public void tearDown() {
 
-        TradestrategyBase.deleteRecords(tradeService);
+        this.deleteRecords();
     }
 
     /**
@@ -81,7 +74,7 @@ public class TradingdayIT {
 
         ZonedDateTime open = TradingCalendar.getTradingDayStart(
                 TradingCalendar.getPrevTradingDay(TradingCalendar.getDateTimeNowMarketTimeZone()));
-        tradingday = tradingdayRepository.findByOpenCloseDateOrderByOpenAsc(open,
+        tradingday = tradingdayService.findByOpenCloseDateOrderByOpenAsc(open,
                 TradingCalendar.getTradingDayEnd(open));
         if (null == tradingday) {
             tradingday = Tradingday.newInstance(open);
@@ -89,7 +82,7 @@ public class TradingdayIT {
         tradeService.saveTradingday(tradingday);
         _log.info("Tradingday added Id = {}", tradingday.getId());
         assertNotNull(tradingday.getId());
-        TradestrategyBase.addRecord(tradingday);
+        this.addRecord(tradingday);
     }
 
     @Test
@@ -101,7 +94,7 @@ public class TradingdayIT {
 
         ZonedDateTime open = TradingCalendar.getTradingDayStart(
                 TradingCalendar.getPrevTradingDay(TradingCalendar.getDateTimeNowMarketTimeZone()));
-        tradingday = tradingdayRepository.findByOpenCloseDateOrderByOpenAsc(open,
+        tradingday = tradingdayService.findByOpenCloseDateOrderByOpenAsc(open,
                 TradingCalendar.getTradingDayEnd(open));
         if (null == tradingday) {
             tradingday = Tradingday.newInstance(open);
@@ -110,6 +103,6 @@ public class TradingdayIT {
         tradeService.saveTradingday(tradingday);
         _log.info("Tradingday Update Id = {}", tradingday.getId());
         assertNotNull(tradingday.getId());
-        TradestrategyBase.addRecord(tradingday);
+        this.addRecord(tradingday);
     }
 }

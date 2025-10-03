@@ -13,7 +13,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
-import org.trade.core.persistent.TradeService;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -27,12 +26,9 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 @SpringBootTest
 @ContextConfiguration(classes = ApplicationRepositoryConfig.class,
         initializers = ApplicationProfileInitializer.class)
-public class StrategyIT {
+public class StrategyIT extends TradestrategyBase {
 
     private final static Logger _log = LoggerFactory.getLogger(StrategyIT.class);
-
-    @Autowired
-    private TradeService tradeService;
 
     private static final String name = "TEST-" + TradestrategyBase.getRandomNumber(4);
 
@@ -59,7 +55,7 @@ public class StrategyIT {
     @AfterEach
     public void tearDown() {
 
-        TradestrategyBase.deleteRecords(tradeService);
+        this.deleteRecords();
     }
 
     /**
@@ -79,6 +75,6 @@ public class StrategyIT {
         strategy = tradeService.saveAspect(new Strategy(name));
         _log.info("Strategy added Id = {}, name: {}", strategy.getId(), strategy.getName());
         assertNotNull(strategy.getId());
-        TradestrategyBase.addRecord(strategy);
+        this.addRecord(strategy);
     }
 }

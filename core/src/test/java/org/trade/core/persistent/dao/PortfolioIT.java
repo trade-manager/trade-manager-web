@@ -13,7 +13,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
-import org.trade.core.persistent.TradeService;
 import org.trade.core.valuetype.AccountType;
 import org.trade.core.valuetype.Currency;
 import org.trade.core.valuetype.DAOPortfolio;
@@ -31,12 +30,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @SpringBootTest
 @ContextConfiguration(classes = ApplicationRepositoryConfig.class,
         initializers = ApplicationProfileInitializer.class)
-public class PortfolioIT {
+public class PortfolioIT extends TradestrategyBase {
 
     private final static Logger _log = LoggerFactory.getLogger(PortfolioIT.class);
-
-    @Autowired
-    private TradeService tradeService;
 
     @Autowired
     private PortfolioRepository portfolioRepository;
@@ -63,7 +59,7 @@ public class PortfolioIT {
     @AfterEach
     public void tearDown() throws ClassNotFoundException {
 
-        TradestrategyBase.deleteRecords(tradeService);
+        this.deleteRecords();
     }
 
     /**
@@ -84,6 +80,6 @@ public class PortfolioIT {
         portfolio.setAccounts(accounts);
         portfolio = portfolioRepository.save(portfolio);
         assertNotNull(portfolio.getIndividualAccount());
-        TradestrategyBase.addRecord(portfolio.getAccounts().getFirst());
+        this.addRecord(portfolio.getAccounts().getFirst());
     }
 }

@@ -7,7 +7,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.trade.core.ApplicationProfileInitializer;
@@ -15,7 +14,6 @@ import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
 import org.trade.core.dao.Aspect;
 import org.trade.core.dao.Aspects;
-import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.Account;
 import org.trade.core.persistent.dao.Portfolio;
 import org.trade.core.valuetype.AccountType;
@@ -35,12 +33,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest
 @ContextConfiguration(classes = ApplicationRepositoryConfig.class,
         initializers = ApplicationProfileInitializer.class)
-public class TWSFinancialAccountRequestIT {
+public class TWSFinancialAccountRequestIT extends TradestrategyBase {
 
     private final static Logger _log = LoggerFactory.getLogger(TWSFinancialAccountRequestIT.class);
-
-    @Autowired
-    private TradeService tradeService;
 
     private static final List<Account> accounts = new ArrayList<>();
 
@@ -65,7 +60,7 @@ public class TWSFinancialAccountRequestIT {
     @AfterEach
     public void tearDown() {
 
-        TradestrategyBase.deleteRecords(tradeService);
+        this.deleteRecords();
     }
 
     /**
@@ -111,7 +106,7 @@ public class TWSFinancialAccountRequestIT {
                 item.setAccountType(AccountType.INDIVIDUAL);
                 item = tradeService.saveAspect(item);
                 assertNotNull(item.getId());
-                TradestrategyBase.addRecord(item);
+                this.addRecord(item);
                 accounts.add(item);
             }
         }
@@ -136,7 +131,7 @@ public class TWSFinancialAccountRequestIT {
                 item.setAccountType(AccountType.INDIVIDUAL);
                 item = tradeService.saveAspect(item);
                 assertNotNull(item.getId());
-                TradestrategyBase.addRecord(item);
+                this.addRecord(item);
                 accounts.add(item);
             }
         }
@@ -172,7 +167,7 @@ public class TWSFinancialAccountRequestIT {
 
             for (Account account : item.getAccounts()) {
 
-                TradestrategyBase.addRecord(account);
+                this.addRecord(account);
             }
             tradeService.deleteAspect(item);
         }
@@ -198,7 +193,7 @@ public class TWSFinancialAccountRequestIT {
 
             for (Account account : item.getAccounts()) {
 
-                TradestrategyBase.addRecord(account);
+                this.addRecord(account);
             }
             tradeService.deleteAspect(item);
         }
@@ -226,7 +221,7 @@ public class TWSFinancialAccountRequestIT {
 
             for (Account account : item.getAccounts()) {
 
-                TradestrategyBase.addRecord(account);
+                this.addRecord(account);
             }
 
             tradeService.deleteAspect(item);
@@ -269,7 +264,7 @@ public class TWSFinancialAccountRequestIT {
 
             for (Account account : item.getAccounts()) {
 
-                TradestrategyBase.addRecord(account);
+                this.addRecord(account);
             }
             tradeService.deleteAspect(item);
         }
@@ -301,7 +296,7 @@ public class TWSFinancialAccountRequestIT {
 
             for (Account account : item.getAccounts()) {
 
-                TradestrategyBase.addRecord(account);
+                this.addRecord(account);
             }
 
             tradeService.deleteAspect(item);

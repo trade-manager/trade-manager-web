@@ -19,7 +19,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
-import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.domain.Domain;
 import org.trade.core.persistent.domain.DomainService;
 import org.trade.core.persistent.role.Role;
@@ -46,15 +45,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(classes = {ApplicationRepositoryConfig.class},
         initializers = ApplicationProfileInitializer.class)
 @AutoConfigureMockMvc
-class AuthControllerIT {
+class AuthControllerIT extends TradestrategyBase {
 
     private final static Logger _log = LoggerFactory.getLogger(AuthControllerIT.class);
 
     @Autowired
     private MockMvc mockMvc;
-
-    @Autowired
-    private TradeService tradeService;
 
     @Autowired
     private DomainService domainService;
@@ -108,7 +104,7 @@ class AuthControllerIT {
         user = new User(userName, userName, userName, userName, userName + "@" + Domain.GLOBAL + ".com", this.passwordEncoder.encode(password), gobalDomain, roles);
         user = userService.saveUser(user);
         assertNotNull(user.getId());
-        TradestrategyBase.addRecord(user);
+        this.addRecord(user);
     }
 
     /**
@@ -117,7 +113,7 @@ class AuthControllerIT {
     @AfterEach
     public void tearDownTest() {
 
-        TradestrategyBase.deleteRecords(tradeService);
+        this.deleteRecords();
     }
 
     @Test
@@ -162,6 +158,6 @@ class AuthControllerIT {
 
         user = userService.findUserByName(userNameNew);
         assertNotNull(user.getId());
-        TradestrategyBase.addRecord(user);
+        this.addRecord(user);
     }
 }

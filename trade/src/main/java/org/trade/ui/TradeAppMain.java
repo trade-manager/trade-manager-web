@@ -2,7 +2,6 @@ package org.trade.ui;
 
 import org.trade.base.ImageBuilder;
 import org.trade.base.WaitCursorEventQueue;
-import org.trade.core.persistent.TradeService;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,8 +12,6 @@ import java.awt.*;
  */
 public class TradeAppMain {
 
-
-    TradeService tradeService = null;
 
     // Construct the application
     public TradeAppMain() {
@@ -33,7 +30,7 @@ public class TradeAppMain {
             appWidth = 1200;
         }
 
-        TradeAppFrame frame = new TradeAppFrame(tradeService);
+        TradeAppFrame frame = new TradeAppFrame();
         frame.setIconImage(ImageBuilder.getImage("trade.gif"));
         frame.setSize((int) appWidth, (int) appHieght);
         frame.setLocation((int) ((screenSize.getWidth() - frame.getSize().getWidth()) / 2),

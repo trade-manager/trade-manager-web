@@ -32,12 +32,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @SpringBootTest
 @ContextConfiguration(classes = ApplicationRepositoryConfig.class,
         initializers = ApplicationProfileInitializer.class)
-public class UserServiceIT {
+public class UserServiceIT extends TradestrategyBase {
 
     private final static Logger _log = LoggerFactory.getLogger(UserServiceIT.class);
-
-    @Autowired
-    private TradeService tradeService;
 
     @Autowired
     private DomainService domainService;
@@ -70,7 +67,7 @@ public class UserServiceIT {
     @AfterEach
     public void tearDown() {
 
-        TradestrategyBase.deleteRecords(tradeService);
+        this.deleteRecords();
     }
 
     /**
@@ -92,6 +89,6 @@ public class UserServiceIT {
         User user = new User(userName, userName, userName, userName, userName + "@" + Domain.GLOBAL + ".com", userName, gobalDomain, roles);
         user = userService.saveUser(user);
         assertNotNull(user.getId());
-        TradestrategyBase.addRecord(user);
+        this.addRecord(user);
     }
 }

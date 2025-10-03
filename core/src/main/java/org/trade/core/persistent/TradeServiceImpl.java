@@ -40,11 +40,9 @@ import org.trade.core.persistent.dao.Tradestrategy;
 import org.trade.core.persistent.dao.TradestrategyLite;
 import org.trade.core.persistent.dao.TradestrategyOrders;
 import org.trade.core.persistent.dao.TradestrategyRepository;
-import org.trade.core.persistent.dao.Tradingday;
-import org.trade.core.persistent.dao.TradingdayRepository;
-import org.trade.core.persistent.dao.Tradingdays;
 import org.trade.core.persistent.dao.series.indicator.CandleSeries;
 import org.trade.core.persistent.dao.series.indicator.candle.CandleItem;
+import org.trade.core.persistent.tradingday.Tradingday;
 import org.trade.core.util.CoreUtils;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.Action;
@@ -115,10 +113,6 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
     @Autowired
     private TradestrategyRepository tradestrategyRepository;
 
-    @Autowired
-    private TradingdayRepository tradingdayRepository;
-
-
     private static final int SCALE_5 = 5;
     private static final int SCALE_2 = 2;
 
@@ -180,15 +174,6 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
         return accountRepository.findByAccountNumber(accountNumber);
     }
 
-    public Tradingday findTradingdayById(final Long tradingdayId) {
-
-        return tradingdayRepository.findById(tradingdayId).isPresent() ? tradingdayRepository.findById(tradingdayId).get() : null;
-    }
-
-    public Tradingday findTradingdayByOpenCloseDate(final ZonedDateTime openDate, final ZonedDateTime closeDate) {
-
-        return tradingdayRepository.findByOpenCloseDateOrderByOpenAsc(openDate, closeDate);
-    }
 
     public Contract findContractById(final Long id) {
 
@@ -450,10 +435,6 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
         return tradeOrderRepository.findByMaxKey();
     }
 
-    public Tradingdays findTradingdaysByDateRange(final ZonedDateTime startDate, final ZonedDateTime endDate) {
-
-        return tradingdayRepository.findTradingdaysByDateRangeOrderByOpenAsc(startDate, endDate);
-    }
 
     public List<Candle> findCandlesByContractDateRangeBarSize(final Contract contract, final ZonedDateTime startDate,
                                                               final ZonedDateTime endDate, final Integer barSize) {

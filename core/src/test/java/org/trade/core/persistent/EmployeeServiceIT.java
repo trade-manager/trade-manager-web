@@ -38,12 +38,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @SpringBootTest
 @ContextConfiguration(classes = ApplicationRepositoryConfig.class,
         initializers = ApplicationProfileInitializer.class)
-public class EmployeeServiceIT {
+public class EmployeeServiceIT extends TradestrategyBase {
 
     private final static Logger _log = LoggerFactory.getLogger(EmployeeServiceIT.class);
-
-    @Autowired
-    private TradeService tradeService;
 
     @Autowired
     private DomainService domainService;
@@ -86,7 +83,7 @@ public class EmployeeServiceIT {
     @AfterEach
     public void tearDown() {
 
-        TradestrategyBase.deleteRecords(tradeService);
+        this.deleteRecords();
     }
 
     /**
@@ -102,7 +99,7 @@ public class EmployeeServiceIT {
         Employee employee = new Employee(userName, userName, userName, userName, userName + "@" + Domain.GLOBAL + ".com", adminUser);
         employeeService.saveEmployee(employee);
         assertNotNull(employee.getId());
-        TradestrategyBase.addRecord(employee);
+        this.addRecord(employee);
     }
 
     @Test
@@ -111,7 +108,7 @@ public class EmployeeServiceIT {
         Employee instance = new Employee(userName, userName, userName, userName, userName + "@" + Domain.GLOBAL + ".com", adminUser);
         employeeService.saveEmployee(instance);
         assertNotNull(instance.getId());
-        TradestrategyBase.addRecord(instance);
+        this.addRecord(instance);
         Employee instanceNew = employeeService.validateAndGetEmployee(instance.getId());
         assertEquals(instance.getId(), instanceNew.getId());
         List<Employee> employees = employeeService.getEmployeesContainingText(userName);
@@ -125,7 +122,7 @@ public class EmployeeServiceIT {
         Employee instanceAdmin = new Employee(userName, userName, userName, userName, userName + "@" + Domain.GLOBAL + ".com", adminUser);
         employeeService.saveEmployee(instanceAdmin);
         assertNotNull(instanceAdmin.getId());
-        TradestrategyBase.addRecord(instanceAdmin);
+        this.addRecord(instanceAdmin);
 
         Role role = roleService.findRoleByName(Role.ROLE_MANAGER);
         assertNotNull(role);
@@ -136,7 +133,7 @@ public class EmployeeServiceIT {
         User user = new User(name, name, name, name, name + "@" + Domain.GLOBAL + ".com", name, gobalDomain, roles);
         user = userService.saveUser(user);
         assertNotNull(user.getId());
-        TradestrategyBase.addRecord(user);
+        this.addRecord(user);
 
         Employee instance = new Employee(name, name, name, name, name + "@" + Domain.GLOBAL + ".com", user);
         employeeService.saveEmployee(instance);
@@ -144,7 +141,7 @@ public class EmployeeServiceIT {
 
         List<Employee> employees = employeeService.getEmployeesContainingText(name);
 
-        TradestrategyBase.addRecord(instance);
+        this.addRecord(instance);
         List<EmployeeRecord> employeeRecords = employees.stream().map(EmployeeRecord::from).collect(Collectors.toList());
         assertFalse(employeeRecords.isEmpty());
     }

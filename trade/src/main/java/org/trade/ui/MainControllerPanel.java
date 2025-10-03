@@ -2,7 +2,6 @@ package org.trade.ui;
 
 import org.trade.base.BasePanel;
 import org.trade.base.TabbedAppPanel;
-import org.trade.core.persistent.TradeService;
 import org.trade.core.properties.ConfigProperties;
 
 import javax.swing.*;
@@ -30,9 +29,9 @@ public class MainControllerPanel extends TabbedAppPanel {
      *
      * @param frame the main application Frame.
      */
-    public MainControllerPanel(Frame frame, TradeService tradeService) {
+    public MainControllerPanel(Frame frame) {
 
-        super(frame, tradeService);
+        super(frame, null, null);
 
         try {
 

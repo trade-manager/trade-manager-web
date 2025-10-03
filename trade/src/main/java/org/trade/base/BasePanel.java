@@ -2,6 +2,9 @@ package org.trade.base;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.trade.core.persistent.TradeService;
+import org.trade.core.persistent.tradingday.TradingdayService;
 import org.trade.core.util.Reflector;
 
 import javax.swing.*;

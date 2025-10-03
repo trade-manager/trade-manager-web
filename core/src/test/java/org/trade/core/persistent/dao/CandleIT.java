@@ -7,13 +7,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
-import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.series.indicator.StrategyData;
 import org.trade.core.persistent.dao.series.indicator.candle.CandleItem;
 import org.trade.core.persistent.dao.series.indicator.candle.CandlePeriod;
@@ -37,12 +35,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @SpringBootTest
 @ContextConfiguration(classes = ApplicationRepositoryConfig.class,
         initializers = ApplicationProfileInitializer.class)
-public class CandleIT {
+public class CandleIT extends TradestrategyBase {
 
     private final static Logger _log = LoggerFactory.getLogger(CandleIT.class);
-
-    @Autowired
-    private TradeService tradeService;
 
     private static List<Tradestrategy> tradestrategies = new ArrayList<>();
     private static final String[] symbols = {"TEST-" + TradestrategyBase.getRandomNumber(4), "TEST-" + TradestrategyBase.getRandomNumber(4)};
@@ -63,7 +58,7 @@ public class CandleIT {
 
         for (String symbol : symbols) {
 
-            Tradestrategy tradestrategy = TradestrategyBase.createTestTradestrategy(tradeService, symbol);
+            Tradestrategy tradestrategy = this.createTestTradestrategy(symbol);
             assertNotNull(tradestrategy);
         }
     }
@@ -74,7 +69,7 @@ public class CandleIT {
     @AfterEach
     public void tearDown() throws Exception {
 
-        TradestrategyBase.deleteRecords(tradeService);
+        this.deleteRecords();
     }
 
     /**

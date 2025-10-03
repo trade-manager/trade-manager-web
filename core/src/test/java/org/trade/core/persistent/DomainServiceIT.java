@@ -27,12 +27,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest
 @ContextConfiguration(classes = ApplicationRepositoryConfig.class,
         initializers = ApplicationProfileInitializer.class)
-public class DomainServiceIT {
+public class DomainServiceIT extends TradestrategyBase {
 
     private final static Logger _log = LoggerFactory.getLogger(DomainServiceIT.class);
-
-    @Autowired
-    private TradeService tradeService;
 
     @Autowired
     private DomainService domainService;
@@ -59,7 +56,7 @@ public class DomainServiceIT {
     @AfterEach
     public void tearDown() {
 
-        TradestrategyBase.deleteRecords(tradeService);
+        this.deleteRecords();
     }
 
     /**
@@ -80,6 +77,6 @@ public class DomainServiceIT {
         childDomain = domainService.saveDomain(childDomain);
         assertNotNull(childDomain.getId());
         assertTrue(childDomain.hasParent());
-        TradestrategyBase.addRecord(childDomain);
+        this.addRecord(childDomain);
     }
 }

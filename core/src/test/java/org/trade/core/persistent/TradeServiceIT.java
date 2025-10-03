@@ -7,7 +7,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.trade.core.ApplicationProfileInitializer;
@@ -30,10 +29,10 @@ import org.trade.core.persistent.dao.TradePosition;
 import org.trade.core.persistent.dao.TradelogReport;
 import org.trade.core.persistent.dao.Tradestrategy;
 import org.trade.core.persistent.dao.TradestrategyOrders;
-import org.trade.core.persistent.dao.Tradingday;
-import org.trade.core.persistent.dao.Tradingdays;
 import org.trade.core.persistent.dao.series.indicator.IIndicatorDataset;
 import org.trade.core.persistent.dao.series.indicator.candle.CandleItem;
+import org.trade.core.persistent.tradingday.Tradingday;
+import org.trade.core.persistent.tradingday.Tradingdays;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.Action;
@@ -75,12 +74,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest
 @ContextConfiguration(classes = ApplicationRepositoryConfig.class,
         initializers = ApplicationProfileInitializer.class)
-public class TradeServiceIT {
+public class TradeServiceIT extends TradestrategyBase {
 
     private final static Logger _log = LoggerFactory.getLogger(TradeServiceIT.class);
-
-    @Autowired
-    private TradeService tradeService;
 
     private static Tradestrategy tradestrategy;
     private static final String symbol = "IBM-" + TradestrategyBase.getRandomNumber(4);
@@ -96,7 +92,7 @@ public class TradeServiceIT {
     public void setUp() throws Exception {
 
         clientId = ConfigProperties.getPropAsInt("trade.tws.clientId");
-        tradestrategy = TradestrategyBase.createTestTradestrategy(tradeService, symbol);
+        tradestrategy = this.createTestTradestrategy(symbol);
         assertNotNull(tradestrategy);
     }
 
@@ -106,7 +102,7 @@ public class TradeServiceIT {
     @AfterEach
     public void tearDown() throws Exception {
 
-        TradestrategyBase.deleteRecords(tradeService);
+        this.deleteRecords();
     }
 
     /**
@@ -126,7 +122,7 @@ public class TradeServiceIT {
         ZonedDateTime open = TradingCalendar.getTradingDayStart(
                 TradingCalendar.getPrevTradingDay(TradingCalendar.getDateTimeNowMarketTimeZone()));
         ZonedDateTime close = TradingCalendar.getTradingDayEnd(open);
-        Tradingdays tradingdays = this.tradeService.findTradingdaysByDateRange(open, open);
+        Tradingdays tradingdays = this.tradingdayService.findTradingdaysByDateRangeOrderByOpenAsc(open, open);
         Tradingday tradingday = tradingdays.getTradingday(open, close);
 
         if (null == tradingday) {
@@ -152,10 +148,10 @@ public class TradeServiceIT {
         tradingday = this.tradeService.saveTradingday(tradingday);
         _log.info("testTradingdaysRemoce tradestrategyId:{}", tradestrategy.getId());
         assertNotNull(tradingday.getId());
-        TradestrategyBase.addRecord(tradingday);
+        this.addRecord(tradingday);
         Optional<Contract> contractOpt = this.tradeService.findContractBySymbol(symbol);
         assertTrue(contractOpt.isPresent());
-        TradestrategyBase.addRecord(contractOpt.get());
+        this.addRecord(contractOpt.get());
     }
 
     @Test
@@ -170,7 +166,7 @@ public class TradeServiceIT {
                     TradingCalendar.getDateTimeNowMarketTimeZone(), Side.BOT);
 
             tradePosition = this.tradeService.saveAspect(tradePosition);
-            TradestrategyBase.addRecord(tradePosition);
+            this.addRecord(tradePosition);
             tradestrategy.getContractLite().setTradePosition(tradePosition);
             ContractLite contractLite = this.tradeService.saveAspect(tradestrategy.getContractLite());
             tradestrategy.setContractLite(contractLite);
@@ -717,7 +713,7 @@ public class TradeServiceIT {
         TradePosition tradePosition = new TradePosition(tradestrategy.getContractLite(),
                 TradingCalendar.getDateTimeNowMarketTimeZone(), Side.BOT);
         this.tradeService.saveAspect(tradePosition);
-        Tradingday result = this.tradeService
+        Tradingday result = this.tradingdayService
                 .findTradingdayById(tradestrategy.getTradingday().getId());
         assertNotNull(result);
         this.tradeService.deleteTradingdayTradeOrders(result);
@@ -809,7 +805,7 @@ public class TradeServiceIT {
     @Test
     public void findTradingdayById() {
 
-        Tradingday result = this.tradeService
+        Tradingday result = this.tradingdayService
                 .findTradingdayById(tradestrategy.getTradingday().getId());
         assertNotNull(result);
     }
@@ -817,7 +813,7 @@ public class TradeServiceIT {
     @Test
     public void findTradingdayByOpenDate() {
 
-        Tradingday result = this.tradeService.findTradingdayByOpenCloseDate(
+        Tradingday result = this.tradingdayService.findTradingdayByOpenCloseDate(
                 tradestrategy.getTradingday().getOpen(), tradestrategy.getTradingday().getClose());
         assertNotNull(result);
     }
@@ -825,7 +821,7 @@ public class TradeServiceIT {
     @Test
     public void findTradingdaysByDateRange() {
 
-        Tradingdays result = this.tradeService.findTradingdaysByDateRange(
+        Tradingdays result = this.tradingdayService.findTradingdaysByDateRangeOrderByOpenAsc(
                 tradestrategy.getTradingday().getOpen(), tradestrategy.getTradingday().getOpen());
         assertNotNull(result);
     }
@@ -1002,7 +998,7 @@ public class TradeServiceIT {
     @Test
     public void reassignStrategy() {
 
-        Tradingday tradingday = this.tradeService
+        Tradingday tradingday = this.tradingdayService
                 .findTradingdayById(tradestrategy.getTradingday().getId());
         assertFalse(tradingday.getTradestrategies().isEmpty());
         Strategy toStrategy = (Strategy) DAOStrategy.newInstance().getObject();

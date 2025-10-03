@@ -84,7 +84,7 @@ public class PortfolioPanel extends BasePanel implements ChangeListener, ItemLis
      * @param controller   BasePanel
      * @param tradeService TradeService
      */
-    public PortfolioPanel(BasePanel controller, TradeService tradeService) {
+    public PortfolioPanel(BasePanel controller) {
         try {
 
             if (null != getMenu()) {

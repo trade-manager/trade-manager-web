@@ -9,6 +9,7 @@ import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import org.springframework.stereotype.Repository;
+import org.trade.core.persistent.tradingday.Tradingday;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -229,5 +230,31 @@ public class TradestrategyRepositoryImpl implements TradestrategyRepositoryCusto
         TypedQuery<Tradestrategy> typedQuery = entityManager.createQuery(query);
         List<Tradestrategy> items = typedQuery.getResultList();
         return items;
+    }
+
+    /**
+     * Method findTradestrategyByDate.
+     *
+     * @param tradingday Tradingday
+     * @return List<Tradestrategy>
+     */
+    public List<Tradestrategy> findTradestrategyByTradingday(Tradingday tradingday) {
+
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Tradestrategy> query = builder.createQuery(Tradestrategy.class);
+        Root<Tradestrategy> from = query.from(Tradestrategy.class);
+        query.select(from);
+        List<Predicate> predicates = new ArrayList<>();
+
+        if (null != tradingday) {
+
+            Join<Tradestrategy, Tradingday> tradingdayJoin = from.join("tradingday");
+            Predicate predicate = builder.equal(tradingdayJoin.get("id"), tradingday.getId());
+            predicates.add(predicate);
+        }
+
+        query.where(predicates.toArray(new Predicate[]{}));
+        TypedQuery<Tradestrategy> typedQuery = entityManager.createQuery(query);
+        return typedQuery.getResultList();
     }
 }

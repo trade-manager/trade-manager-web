@@ -6,13 +6,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
-import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.Candle;
 import org.trade.core.persistent.dao.CodeType;
 import org.trade.core.persistent.dao.Tradestrategy;
@@ -33,12 +31,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @SpringBootTest
 @ContextConfiguration(classes = ApplicationRepositoryConfig.class,
         initializers = ApplicationProfileInitializer.class)
-public class IndicatorSeriesIT {
+public class IndicatorSeriesIT extends TradestrategyBase {
 
     private final static Logger _log = LoggerFactory.getLogger(IndicatorSeriesIT.class);
-
-    @Autowired
-    private TradeService tradeService;
 
     private static Tradestrategy tradestrategy;
     private static TradestrategyBase TradestrategyBase;
@@ -50,7 +45,7 @@ public class IndicatorSeriesIT {
     @BeforeEach
     public void setUp() throws Exception {
 
-        tradestrategy = TradestrategyBase.createTestTradestrategy(tradeService, symbol);
+        tradestrategy = this.createTestTradestrategy(symbol);
         assertNotNull(tradestrategy);
     }
 
@@ -60,7 +55,7 @@ public class IndicatorSeriesIT {
     @AfterEach
     public void tearDown() throws Exception {
 
-        TradestrategyBase.deleteRecords(tradeService);
+        this.deleteRecords();
     }
 
     /**

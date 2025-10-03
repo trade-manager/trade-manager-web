@@ -7,7 +7,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.trade.core.ApplicationProfileInitializer;
@@ -66,12 +65,9 @@ import static org.junit.jupiter.api.Assertions.fail;
 @SpringBootTest
 @ContextConfiguration(classes = ApplicationRepositoryConfig.class,
         initializers = ApplicationProfileInitializer.class)
-public class AbstractStrategyIT {
+public class AbstractStrategyIT extends TradestrategyBase {
 
     private final static Logger _log = LoggerFactory.getLogger(AbstractStrategyIT.class);
-
-    @Autowired
-    private TradeService tradeService;
 
     private static final String symbol = "TEST-" + TradestrategyBase.getRandomNumber(4);
     private static Tradestrategy tradestrategy;
@@ -103,7 +99,7 @@ public class AbstractStrategyIT {
         String host = ConfigProperties.getPropAsString("trade.tws.host");
         brokerModel.onConnect(host, port, clientId);
         Strategy strategy = (Strategy) DAOStrategy.newInstance().getObject();
-        tradestrategy = TradestrategyBase.createTestTradestrategy(tradeService, strategy, symbol, Side.BOT, ChartDays.ONE_DAY, BarSize.HOUR_MIN);
+        tradestrategy = this.createTestTradestrategy(strategy, symbol, Side.BOT, ChartDays.ONE_DAY, BarSize.HOUR_MIN);
         assertNotNull(tradestrategy);
 
         strategyProxy = new StrategyRuleTest(tradeService, brokerModel, tradestrategy.getStrategyData(),
@@ -126,7 +122,7 @@ public class AbstractStrategyIT {
 
         brokerModel.onDisconnect();
         strategyProxy.cancel();
-        TradestrategyBase.deleteRecords(tradeService);
+        this.deleteRecords();
     }
 
     /**
@@ -197,7 +193,7 @@ public class AbstractStrategyIT {
 
             TradePosition tradePosition = strategyProxy.getOpenTradePosition();
             assertNotNull(tradePosition);
-            TradestrategyBase.addRecord(tradePosition);
+            this.addRecord(tradePosition);
 
             if (null != strategyProxy.getOpenTradePosition().getOpenQuantity()) {
                 /*
@@ -321,7 +317,7 @@ public class AbstractStrategyIT {
         assertNotNull(order);
         TradePosition tradePosition = strategyProxy.getOpenTradePosition();
         assertNotNull(tradePosition);
-        TradestrategyBase.addRecord(tradePosition);
+        this.addRecord(tradePosition);
     }
 
     @Test
@@ -429,7 +425,7 @@ public class AbstractStrategyIT {
 
         TradePosition tradePosition = strategyProxy.getOpenTradePosition();
         assertNotNull(tradePosition);
-        TradestrategyBase.addRecord(tradePosition);
+        this.addRecord(tradePosition);
     }
 
     @Test
@@ -460,7 +456,7 @@ public class AbstractStrategyIT {
                 true);
         assertNotNull(targetOne);
         TradePosition tradePosition = strategyProxy.getOpenTradePosition();
-        TradestrategyBase.addRecord(tradePosition);
+        this.addRecord(tradePosition);
         assertFalse(strategyProxy.isPositionCovered());
     }
 
@@ -472,7 +468,7 @@ public class AbstractStrategyIT {
         strategyProxy.createStopAndTargetOrder(strategyProxy.getOpenPositionOrder(), 2, new Money(0.01),
                 4, new Money(0.02), strategyProxy.getOpenPositionOrder().getQuantity() / 2, true);
         TradePosition tradePosition = strategyProxy.getOpenTradePosition();
-        TradestrategyBase.addRecord(tradePosition);
+        this.addRecord(tradePosition);
         assertTrue(strategyProxy.isPositionCovered());
     }
 
@@ -484,7 +480,7 @@ public class AbstractStrategyIT {
         assertNotNull(price);
         TradePosition tradePosition = strategyProxy.getOpenTradePosition();
         assertNotNull(tradePosition);
-        TradestrategyBase.addRecord(tradePosition);
+        this.addRecord(tradePosition);
     }
 
     @Test
@@ -496,7 +492,7 @@ public class AbstractStrategyIT {
         assertTrue(strategyProxy.isPositionCovered());
         TradePosition tradePosition = strategyProxy.getOpenTradePosition();
         assertNotNull(tradePosition);
-        TradestrategyBase.addRecord(tradePosition);
+        this.addRecord(tradePosition);
     }
 
     @Test
@@ -518,7 +514,7 @@ public class AbstractStrategyIT {
         assertTrue(strategyProxy.isPositionCovered());
         TradePosition tradePosition = strategyProxy.getOpenTradePosition();
         assertNotNull(tradePosition);
-        TradestrategyBase.addRecord(tradePosition);
+        this.addRecord(tradePosition);
     }
 
     @Test
@@ -536,7 +532,7 @@ public class AbstractStrategyIT {
         assertTrue(strategyProxy.isThereOpenPosition());
         TradePosition tradePosition = strategyProxy.getOpenTradePosition();
         assertNotNull(tradePosition);
-        TradestrategyBase.addRecord(tradePosition);
+        this.addRecord(tradePosition);
     }
 
     @Test
@@ -593,7 +589,7 @@ public class AbstractStrategyIT {
         createOpenBuyPosition(new Money(100), Action.BUY, true);
         TradePosition tradePosition = strategyProxy.getOpenTradePosition();
         assertNotNull(tradePosition);
-        TradestrategyBase.addRecord(tradePosition);
+        this.addRecord(tradePosition);
     }
 
     @Test
@@ -610,7 +606,7 @@ public class AbstractStrategyIT {
         assertNotNull(strategyProxy.getOpenPositionOrder());
         TradePosition tradePosition = strategyProxy.getOpenTradePosition();
         assertNotNull(tradePosition);
-        TradestrategyBase.addRecord(tradePosition);
+        this.addRecord(tradePosition);
     }
 
     @Test

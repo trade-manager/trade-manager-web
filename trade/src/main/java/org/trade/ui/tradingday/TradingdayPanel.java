@@ -12,9 +12,10 @@ import org.trade.core.persistent.dao.CodeType;
 import org.trade.core.persistent.dao.Portfolio;
 import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.Tradestrategy;
-import org.trade.core.persistent.dao.Tradingday;
-import org.trade.core.persistent.dao.Tradingdays;
 import org.trade.core.persistent.dao.strategy.IStrategyRule;
+import org.trade.core.persistent.tradingday.Tradingday;
+import org.trade.core.persistent.tradingday.TradingdayService;
+import org.trade.core.persistent.tradingday.Tradingdays;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.CoreUtils;
 import org.trade.core.util.time.TradingCalendar;
@@ -63,6 +64,7 @@ public class TradingdayPanel extends BasePanel {
     private static final long serialVersionUID = 8543984162821384818L;
 
     private final TradeService tradeService;
+    private final TradingdayService tradingdayService;
     private TradingdayTableModel tradingdayModel = null;
     private Table tradestrategyTable = null;
     private TradestrategyTableModel tradestrategyModel = null;
@@ -104,13 +106,14 @@ public class TradingdayPanel extends BasePanel {
     /**
      * Constructor
      *
-     * @param tradingdays  Tradingdays
-     * @param controller   BasePanel
-     * @param tradeService TradeService
+     * @param tradingdays Tradingdays
+     * @param controller  BasePanel
      */
-    public TradingdayPanel(Tradingdays tradingdays, BasePanel controller, TradeService tradeService) {
+    public TradingdayPanel(Tradingdays tradingdays, BasePanel controller, final TradeService tradeService, final TradingdayService tradingdayService) {
 
         this.tradeService = tradeService;
+        this.tradingdayService = tradingdayService;
+
         try {
 
             if (null != getMenu()) {
@@ -438,7 +441,7 @@ public class TradingdayPanel extends BasePanel {
              * search hand over the DatasetContainers. We do this as these
              * Datasets may have live data running into them.
              */
-            Tradingdays tradingdays = tradeService.findTradingdaysByDateRange(startDate, endDate);
+            Tradingdays tradingdays = tradingdayService.findTradingdaysByDateRangeOrderByOpenAsc(startDate, endDate);
             Tradingday todayTradingday = tradingdays.getTradingday(
                     TradingCalendar.getTradingDayStart(TradingCalendar.getDateTimeNowMarketTimeZone()),
                     TradingCalendar.getTradingDayEnd(TradingCalendar.getDateTimeNowMarketTimeZone()));
@@ -573,7 +576,7 @@ public class TradingdayPanel extends BasePanel {
 
             if (null != currentTradingday && null != currentTradingday.getId()) {
 
-                Tradingday instance = tradeService.findTradingdayById(currentTradingday.getId());
+                Tradingday instance = tradingdayService.findTradingdayById(currentTradingday.getId());
                 instance.populateStrategyData(currentTradingday);
                 tradingdays.replaceTradingday(instance);
             }

@@ -15,7 +15,6 @@ import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
 import org.trade.core.broker.TWSBrokerModel;
-import org.trade.core.persistent.TradeService;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.Action;
@@ -37,12 +36,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @SpringBootTest
 @ContextConfiguration(classes = ApplicationRepositoryConfig.class,
         initializers = ApplicationProfileInitializer.class)
-public class TradeOrderIT {
+public class TradeOrderIT extends TradestrategyBase {
 
     private final static Logger _log = LoggerFactory.getLogger(TradeOrderIT.class);
-
-    @Autowired
-    private TradeService tradeService;
 
     @Autowired
     private TradeOrderRepository tradeOrderRepository;
@@ -65,7 +61,7 @@ public class TradeOrderIT {
     public void setUp() throws Exception {
 
         clientId = ConfigProperties.getPropAsInt("trade.tws.clientId");
-        tradestrategy = TradestrategyBase.createTestTradestrategy(tradeService, symbol);
+        tradestrategy = this.createTestTradestrategy(symbol);
         assertNotNull(tradestrategy);
     }
 
@@ -75,7 +71,7 @@ public class TradeOrderIT {
     @AfterEach
     public void tearDown() throws Exception {
 
-        TradestrategyBase.deleteRecords(tradeService);
+        this.deleteRecords();
     }
 
     /**

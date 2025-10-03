@@ -85,4 +85,73 @@ public class ContractRepositoryImpl implements ContractRepositoryCustom {
         return entityManager.find(ContractLite.class, id);
     }
 
+
+    /**
+     * Method findContractByUniqueKey.
+     *
+     * @param SECType    String
+     * @param symbol     String
+     * @param exchange   String
+     * @param currency   String
+     * @param expiryDate Date
+     * @return Contract
+
+    private Contract findContractByUniqueKey(String SECType, String symbol, String exchange, String currency,
+    ZonedDateTime expiryDate) {
+
+    CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+    CriteriaQuery<Contract> query = builder.createQuery(Contract.class);
+    Root<Contract> from = query.from(Contract.class);
+    query.select(from);
+    List<Predicate> predicates = new ArrayList<>();
+
+    if (null != SECType) {
+
+    Predicate predicate = builder.equal(from.get("secType"), SECType);
+    predicates.add(predicate);
+    }
+
+    if (null != symbol) {
+
+    Predicate predicate = builder.equal(from.get("symbol"), symbol);
+    predicates.add(predicate);
+    }
+
+    if (null != exchange) {
+
+    Predicate predicate = builder.equal(from.get("exchange"), exchange);
+    predicates.add(predicate);
+    }
+
+    if (null != currency) {
+
+    Predicate predicate = builder.equal(from.get("currency"), currency);
+    predicates.add(predicate);
+    }
+
+    if (null != expiryDate) {
+
+    Integer yearExpiry = expiryDate.getYear();
+    Expression<Integer> year = builder.function("year", Integer.class, from.get("expiry"));
+    Predicate predicateYear = builder.equal(year, yearExpiry);
+    predicates.add(predicateYear);
+
+    int monthExpiry = expiryDate.getMonthValue();
+    Expression<Integer> month = builder.function("month", Integer.class, from.get("expiry"));
+    Predicate predicateMonth = builder.equal(month, 1 + monthExpiry);
+    predicates.add(predicateMonth);
+    }
+
+    query.where(predicates.toArray(new Predicate[]{}));
+    TypedQuery<Contract> typedQuery = entityManager.createQuery(query);
+    List<Contract> items = typedQuery.getResultList();
+
+    if (!items.isEmpty()) {
+
+    return items.getFirst();
+    }
+
+    return null;
+    }
+     */
 }

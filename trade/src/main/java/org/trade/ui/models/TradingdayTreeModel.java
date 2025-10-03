@@ -1,8 +1,8 @@
 package org.trade.ui.models;
 
 import org.trade.core.persistent.dao.Tradestrategy;
-import org.trade.core.persistent.dao.Tradingday;
-import org.trade.core.persistent.dao.Tradingdays;
+import org.trade.core.persistent.tradingday.Tradingday;
+import org.trade.core.persistent.tradingday.Tradingdays;
 import org.trade.core.valuetype.Side;
 import org.trade.core.valuetype.ValueTypeException;
 

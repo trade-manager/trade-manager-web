@@ -8,7 +8,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.trade.base.StreamEditorPane;
@@ -18,7 +17,6 @@ import org.trade.core.TradestrategyBase;
 import org.trade.core.broker.IBrokerModel;
 import org.trade.core.factory.ClassFactory;
 import org.trade.core.persistent.ServiceException;
-import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.Rule;
 import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.Tradestrategy;
@@ -53,12 +51,9 @@ import static org.junit.jupiter.api.Assertions.fail;
 @SpringBootTest
 @ContextConfiguration(classes = ApplicationRepositoryConfig.class,
         initializers = ApplicationProfileInitializer.class)
-public class StrategyPanelIT {
+public class StrategyPanelIT extends TradestrategyBase {
 
     private final static Logger _log = LoggerFactory.getLogger(StrategyPanelIT.class);
-
-    @Autowired
-    private TradeService tradeService;
 
     private static Tradestrategy tradestrategy;
     private static final String symbol = "IBM-" + TradestrategyBase.getRandomNumber(4);
@@ -87,7 +82,7 @@ public class StrategyPanelIT {
         assertNotNull(strategyDir);
         // tradestrategy = TradestrategyBase.createTestTradestrategy(tradeService, symbol);
         Strategy strategy = (Strategy) DAOStrategy.newInstance().getObject();
-        tradestrategy = TradestrategyBase.createTestTradestrategy(tradeService, strategy, symbol, Side.BOT, ChartDays.ONE_DAY, BarSize.HOUR_MIN);
+        tradestrategy = this.createTestTradestrategy(strategy, symbol, Side.BOT, ChartDays.ONE_DAY, BarSize.HOUR_MIN);
 
         assertNotNull(tradestrategy);
         strategy = tradeService.findStrategyById(tradestrategy.getStrategy().getId());
@@ -124,7 +119,7 @@ public class StrategyPanelIT {
             }
         }
 
-        TradestrategyBase.deleteRecords(tradeService);
+        this.deleteRecords();
     }
 
     /**
