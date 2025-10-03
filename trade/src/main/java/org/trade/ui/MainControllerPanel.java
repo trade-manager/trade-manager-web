@@ -2,6 +2,8 @@ package org.trade.ui;
 
 import org.trade.base.BasePanel;
 import org.trade.base.TabbedAppPanel;
+import org.trade.core.persistent.TradeService;
+import org.trade.core.persistent.tradingday.TradingdayService;
 import org.trade.core.properties.ConfigProperties;
 
 import javax.swing.*;
@@ -29,9 +31,9 @@ public class MainControllerPanel extends TabbedAppPanel {
      *
      * @param frame the main application Frame.
      */
-    public MainControllerPanel(Frame frame) {
+    public MainControllerPanel(Frame frame, TradeService tradeService, TradingdayService tradingdayService) {
 
-        super(frame, null, null);
+        super(frame, tradeService, tradingdayService);
 
         try {
 

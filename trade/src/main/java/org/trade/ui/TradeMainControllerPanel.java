@@ -12,6 +12,7 @@ import org.trade.core.broker.IBrokerChangeListener;
 import org.trade.core.broker.IBrokerModel;
 import org.trade.core.factory.ClassFactory;
 import org.trade.core.lookup.DBTableLookupServiceProvider;
+import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.Account;
 import org.trade.core.persistent.dao.Candle;
 import org.trade.core.persistent.dao.CodeType;
@@ -121,9 +122,9 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
      *
      * @param frame the main application Frame.
      */
-    public TradeMainControllerPanel(Frame frame) {
+    public TradeMainControllerPanel(Frame frame, TradeService tradeService, TradingdayService tradingdayService) {
 
-        super(frame, null, null);
+        super(frame, tradeService, tradingdayService);
 
         try {
 

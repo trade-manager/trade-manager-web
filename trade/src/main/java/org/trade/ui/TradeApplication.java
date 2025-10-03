@@ -1,6 +1,5 @@
 package org.trade.ui;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
@@ -10,6 +9,7 @@ import org.trade.base.ImageBuilder;
 import org.trade.base.WaitCursorEventQueue;
 import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.persistent.TradeService;
+import org.trade.core.persistent.tradingday.TradingdayService;
 
 import java.awt.*;
 
@@ -26,11 +26,14 @@ public class TradeApplication {
     @Component
     class SwingApp {
 
-        @Autowired
-        TradeService tradeService;
 
-        public SwingApp(TradeService tradeService) {
+        public final TradeService tradeService;
+        public final TradingdayService tradingdayService;
 
+        public SwingApp(TradeService tradeService, TradingdayService tradingdayService) {
+
+            this.tradeService = tradeService;
+            this.tradingdayService = tradingdayService;
             Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
             double appWidth = screenSize.getWidth() * 0.9;
             double appHieght = screenSize.getHeight() * 0.9;
@@ -45,7 +48,7 @@ public class TradeApplication {
                 appWidth = 1200;
             }
 
-            TradeAppFrame frame = new TradeAppFrame();
+            TradeAppFrame frame = new TradeAppFrame(tradeService, tradingdayService);
             frame.setIconImage(ImageBuilder.getImage("trade.gif"));
             frame.setSize((int) appWidth, (int) appHieght);
             frame.setLocation((int) ((screenSize.getWidth() - frame.getSize().getWidth()) / 2),

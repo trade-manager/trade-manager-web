@@ -1,5 +1,8 @@
 package org.trade.ui;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.trade.core.persistent.TradeService;
+import org.trade.core.persistent.tradingday.TradingdayService;
 import org.trade.core.properties.AppLoadConfig;
 
 import javax.swing.*;
@@ -34,11 +37,12 @@ public class AppFrame extends JFrame {
         }
     }
 
-    public AppFrame() {
+    @Autowired
+    public AppFrame(TradeService tradeService, TradingdayService tradingdayService) {
 
         super();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        mainPanel = new MainControllerPanel(this);
+        mainPanel = new MainControllerPanel(this, tradeService, tradingdayService);
         this.setTitle("Application");
         enableEvents(AWTEvent.WINDOW_EVENT_MASK);
         this.setLocationRelativeTo(null);

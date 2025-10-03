@@ -2,7 +2,6 @@ package org.trade.base;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.tradingday.TradingdayService;
 import org.trade.ui.widget.Clock;
@@ -18,7 +17,6 @@ import java.util.List;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-@org.springframework.stereotype.Component
 public abstract class TabbedAppPanel extends BasePanel implements ChangeListener {
     /**
      *
@@ -30,8 +28,7 @@ public abstract class TabbedAppPanel extends BasePanel implements ChangeListener
 
 
     public final TradeService tradeService;
-
-    public  final TradingdayService tradingdayService;
+    public final TradingdayService tradingdayService;
 
     private final JTabbedPane tabbedPane = new JTabbedPane();
     private final JPanel menuPanel = new JPanel();
@@ -42,9 +39,8 @@ public abstract class TabbedAppPanel extends BasePanel implements ChangeListener
 
     /**
      * Constructor for TabbedAppPanel.
-     *
      */
-    public TabbedAppPanel(Frame frame, final TradeService tradeService, TradingdayService tradingdayService) {
+    public TabbedAppPanel(Frame frame, final TradeService tradeService, final TradingdayService tradingdayService) {
 
         this.tradeService = tradeService;
         this.tradingdayService = tradingdayService;

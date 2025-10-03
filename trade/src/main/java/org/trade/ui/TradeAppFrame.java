@@ -1,5 +1,7 @@
 package org.trade.ui;
 
+import org.trade.core.persistent.TradeService;
+import org.trade.core.persistent.tradingday.TradingdayService;
 import org.trade.core.properties.TradeAppLoadConfig;
 
 import javax.swing.*;
@@ -18,11 +20,11 @@ public class TradeAppFrame extends JFrame {
 
     private final TradeMainControllerPanel mainPanel;
 
-    public TradeAppFrame() {
+    public TradeAppFrame(TradeService tradeService, TradingdayService tradingdayService) {
 
         super();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        mainPanel = new TradeMainControllerPanel(this);
+        mainPanel = new TradeMainControllerPanel(this, tradeService, tradingdayService);
         this.setTitle("Trade Manager");
         enableEvents(AWTEvent.WINDOW_EVENT_MASK);
         this.setLocationRelativeTo(null);
