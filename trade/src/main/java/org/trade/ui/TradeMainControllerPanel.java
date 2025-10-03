@@ -175,7 +175,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
              * month i.e. Batting avg, Simple Sharpe ratio and P/L information.
              *
              */
-            PortfolioPanel portfolioPanel = new PortfolioPanel(this);
+            PortfolioPanel portfolioPanel = new PortfolioPanel(this, this.tradeService);
 
             /*
              * Constructs a new Configuration tab that contains all information
