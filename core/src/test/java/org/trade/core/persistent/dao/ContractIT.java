@@ -13,7 +13,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
-import org.trade.core.persistent.TradeService;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.Currency;
 import org.trade.core.valuetype.Exchange;
@@ -35,12 +34,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest
 @ContextConfiguration(classes = ApplicationRepositoryConfig.class,
         initializers = ApplicationProfileInitializer.class)
-public class ContractIT {
+public class ContractIT extends TradestrategyBase {
 
     private final static Logger _log = LoggerFactory.getLogger(TradingdayIT.class);
-
-    @Autowired
-    private TradeService tradeService;
 
     @Autowired
     private ContractRepository contractRepository;
@@ -71,7 +67,7 @@ public class ContractIT {
     @AfterEach
     public void tearDown() {
 
-        TradestrategyBase.deleteRecords(tradeService);
+        this.deleteRecords();
     }
 
     /**
@@ -90,7 +86,7 @@ public class ContractIT {
 
         contract = tradeService.saveAspect(contract);
         _log.info("Contract added Id:{}", contract.getId());
-        TradestrategyBase.addRecord(contract);
+        this.addRecord(contract);
         List<Contract> contracts = contractRepository.findContractByUniqueKey(contract.getSecType(),
                 contract.getSymbol(), contract.getExchange(), contract.getCurrency(),
                 expiry);
@@ -111,7 +107,7 @@ public class ContractIT {
                 new BigDecimal(50));
         contract = tradeService.saveAspect(contract);
         _log.info("Contract added Id:{}", contract.getId());
-        TradestrategyBase.addRecord(contract);
+        this.addRecord(contract);
 
         // Expiry is monthly based
         expiry = expiry.plusMonths(2);

@@ -7,12 +7,12 @@ import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.Contract;
 import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.Tradestrategy;
-import org.trade.core.persistent.dao.Tradingday;
-import org.trade.core.persistent.dao.Tradingdays;
 import org.trade.core.persistent.dao.series.indicator.CandleDataset;
 import org.trade.core.persistent.dao.series.indicator.CandleSeries;
 import org.trade.core.persistent.dao.series.indicator.IndicatorSeries;
 import org.trade.core.persistent.dao.series.indicator.StrategyData;
+import org.trade.core.persistent.tradingday.Tradingday;
+import org.trade.core.persistent.tradingday.Tradingdays;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.time.TradingCalendar;
 

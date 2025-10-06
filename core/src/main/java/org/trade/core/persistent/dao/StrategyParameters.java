@@ -2,6 +2,7 @@ package org.trade.core.persistent.dao;
 
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
+import org.trade.core.persistent.codetype.CodeType;
 
 import java.io.Serial;
 

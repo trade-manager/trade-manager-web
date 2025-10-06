@@ -1,4 +1,4 @@
-package org.trade.core.persistent.dao;
+package org.trade.core.persistent.codetype;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -8,7 +8,7 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,42 +17,34 @@ import java.util.List;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-@Repository
-public class CodeTypeRepositoryImpl implements CodeTypeRepositoryCustom {
+@Service
+public class CodeTypeServiceImpl implements CodeTypeService {
 
     @PersistenceContext
     private EntityManager entityManager;
 
-    /**
-     * Method findByNameAndType.
-     *
-     * @param codeName String
-     * @param codeType String
-     * @return List<CodeType>
-     */
-    public List<CodeType> findByNameAndType(String codeName, String codeType) {
+    private final CodeTypeRepository codeTypeRepository;
 
-        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<CodeType> query = builder.createQuery(CodeType.class);
-        Root<CodeType> from = query.from(CodeType.class);
-        query.select(from);
-        List<Predicate> predicates = new ArrayList<>();
+    public CodeTypeServiceImpl(final CodeTypeRepository codeTypeRepository) {
 
-        if (null != codeName) {
+        this.codeTypeRepository = codeTypeRepository;
+    }
 
-            Predicate predicate = builder.equal(from.get("name"), codeName);
-            predicates.add(predicate);
-        }
+    public CodeType findCodeTypeByName(String name) {
 
-        if (null != codeType) {
+        return codeTypeRepository.findByName(name).orElse(null);
+    }
 
-            Predicate predicate = builder.equal(from.get("type"), codeType);
-            predicates.add(predicate);
-        }
+    public CodeType validateAndGetCodeType(String name) {
 
-        query.where(predicates.toArray(new Predicate[]{}));
-        TypedQuery<CodeType> typedQuery = entityManager.createQuery(query);
-        return typedQuery.getResultList();
+        return codeTypeRepository.findByName(name).orElseThrow(() -> new CodeTypeNotFoundException(String.format("CodeType with name %s not found", name)));
+    }
+
+    public CodeType findCodeTypeByNameAndType(String name, String type) {
+
+        List<CodeType> codeTypes = codeTypeRepository.findByNameAndType(name, type);
+        return codeTypes.isEmpty() ? null : codeTypes.getFirst();
+
     }
 
     /**
@@ -83,5 +75,20 @@ public class CodeTypeRepositoryImpl implements CodeTypeRepositoryCustom {
         query.where(predicates.toArray(new Predicate[]{}));
         TypedQuery<CodeValue> typedQuery = entityManager.createQuery(query);
         return typedQuery.getResultList();
+    }
+
+    public CodeType saveCodeType(CodeType codeType) {
+
+        return codeTypeRepository.save(codeType);
+    }
+
+    public void deleteCodeType(CodeType codeType) {
+
+        if (null == codeType) {
+
+            return;
+        }
+
+        codeTypeRepository.delete(codeType);
     }
 }

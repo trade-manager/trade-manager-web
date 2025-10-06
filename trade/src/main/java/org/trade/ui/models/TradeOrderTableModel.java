@@ -456,7 +456,14 @@ public class TradeOrderTableModel extends TableModel {
             newRow.add(new Date(element.getFilledDate()));
         }
 
-        newRow.add(new Quantity(element.getFilledQuantity()));
+        if (null == element.getFilledQuantity()) {
+
+            newRow.add(new Quantity(0));
+        } else {
+
+            newRow.add(new Quantity(element.getFilledQuantity()));
+        }
+
         newRow.add(new Money(element.getStopPrice()));
         TradeOrder tradeOrder = new TradeOrder();
 

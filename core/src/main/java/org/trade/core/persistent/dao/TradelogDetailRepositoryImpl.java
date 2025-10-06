@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import org.springframework.stereotype.Repository;
+import org.trade.core.persistent.portfolio.Portfolio;
 import org.trade.core.util.time.TradingCalendar;
 
 import java.io.IOException;

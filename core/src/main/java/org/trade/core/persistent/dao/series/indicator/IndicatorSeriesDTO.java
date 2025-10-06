@@ -5,7 +5,7 @@ import jakarta.persistence.Transient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trade.core.persistent.ServiceException;
-import org.trade.core.persistent.dao.CodeValueDTO;
+import org.trade.core.persistent.codetype.CodeValueRecord;
 import org.trade.core.persistent.dao.StrategyDTO;
 import org.trade.core.persistent.dao.series.ComparableObjectItem;
 import org.trade.core.persistent.dao.series.ComparableObjectSeries;
@@ -32,7 +32,7 @@ public abstract class IndicatorSeriesDTO extends ComparableObjectSeries implemen
     private Integer seriesRGBColor;
     private boolean dirty = false;
     private StrategyDTO strategy;
-    private List<CodeValueDTO> codeValues = new ArrayList<>(0);
+    private List<CodeValueRecord> codeValues = new ArrayList<>(0);
     private String name;
     private String description;
     private Boolean displaySeries;
@@ -192,7 +192,7 @@ public abstract class IndicatorSeriesDTO extends ComparableObjectSeries implemen
      *
      * @return List<CodeValueDto>
      */
-    public List<CodeValueDTO> getCodeValues() {
+    public List<CodeValueRecord> getCodeValues() {
         return this.codeValues;
     }
 
@@ -201,7 +201,7 @@ public abstract class IndicatorSeriesDTO extends ComparableObjectSeries implemen
      *
      * @param codeValues List<CodeValueDto>
      */
-    public void setCodeValues(List<CodeValueDTO> codeValues) {
+    public void setCodeValues(List<CodeValueRecord> codeValues) {
         this.codeValues = codeValues;
     }
 
@@ -303,23 +303,6 @@ public abstract class IndicatorSeriesDTO extends ComparableObjectSeries implemen
      */
     public void setVersion(Integer version) {
         this.version = version;
-    }
-
-    /**
-     * Method isDirty.
-     *
-     * @return boolean
-     */
-    @Transient
-    public boolean isDirty() {
-
-        for (CodeValueDTO item : this.getCodeValues()) {
-
-            if (item.isDirty()) {
-                return true;
-            }
-        }
-        return this.dirty;
     }
 
     /**

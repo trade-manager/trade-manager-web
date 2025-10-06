@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.trade.core.broker.BrokerModelException;
 import org.trade.core.broker.IBrokerModel;
 import org.trade.core.persistent.TradeService;
-import org.trade.core.persistent.dao.Account;
+import org.trade.core.persistent.account.Account;
 import org.trade.core.persistent.dao.Candle;
 import org.trade.core.persistent.dao.Contract;
 import org.trade.core.persistent.dao.Entrylimit;

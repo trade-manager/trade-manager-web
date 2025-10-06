@@ -2,6 +2,8 @@ package org.trade.core.persistent.dao;
 
 import jakarta.persistence.PrePersist;
 import org.trade.core.dao.Aspect;
+import org.trade.core.persistent.portfolio.PortfolioRecord;
+import org.trade.core.persistent.tradingday.TradingdayRecord;
 import org.trade.core.util.CoreUtils;
 
 import java.io.Serial;
@@ -32,9 +34,9 @@ public class TradestrategyDTO extends Aspect implements Serializable, Cloneable 
     private Boolean trade = false;
     private Integer requestId;
     private StrategyDTO strategy;
-    private PortfolioDTO portfolio;
+    private PortfolioRecord portfolio;
     private ContractDTO contract;
-    private TradingdayDTO tradingday;
+    private TradingdayRecord tradingday;
     private List<TradeOrderDTO> tradeOrders = new ArrayList<>(0);
 
 
@@ -87,7 +89,7 @@ public class TradestrategyDTO extends Aspect implements Serializable, Cloneable 
      * @param chartDays  Integer
      * @param barSize    Integer
      */
-    public TradestrategyDTO(ContractDTO contract, TradingdayDTO tradingday, StrategyDTO strategy, PortfolioDTO portfolio,
+    public TradestrategyDTO(ContractDTO contract, TradingdayRecord tradingday, StrategyDTO strategy, PortfolioRecord portfolio,
                             BigDecimal riskAmount, String side, String tier, Boolean trade, Integer chartDays, Integer barSize) {
 
         this.setBarSize(barSize);
@@ -142,7 +144,7 @@ public class TradestrategyDTO extends Aspect implements Serializable, Cloneable 
 
         if (barSize == 1) {
 
-            Duration duration = Duration.between(this.getTradingday().getOpen(), this.getTradingday().getClose());
+            Duration duration = Duration.between(this.getTradingday().open(), this.getTradingday().close());
             long daySeconds = duration.getSeconds();
             this.barSize = ((int) daySeconds) * barSize;
         }
@@ -262,7 +264,7 @@ public class TradestrategyDTO extends Aspect implements Serializable, Cloneable 
      *
      * @return TradingdayDto
      */
-    public TradingdayDTO getTradingday() {
+    public TradingdayRecord getTradingday() {
         return this.tradingday;
     }
 
@@ -271,7 +273,7 @@ public class TradestrategyDTO extends Aspect implements Serializable, Cloneable 
      *
      * @param tradingday TradingdayDto
      */
-    public void setTradingday(TradingdayDTO tradingday) {
+    public void setTradingday(TradingdayRecord tradingday) {
         this.tradingday = tradingday;
     }
 
@@ -298,7 +300,7 @@ public class TradestrategyDTO extends Aspect implements Serializable, Cloneable 
      *
      * @return PortfolioDto
      */
-    public PortfolioDTO getPortfolio() {
+    public PortfolioRecord getPortfolio() {
         return this.portfolio;
     }
 
@@ -307,7 +309,7 @@ public class TradestrategyDTO extends Aspect implements Serializable, Cloneable 
      *
      * @param portfolio PortfolioDto
      */
-    public void setPortfolio(PortfolioDTO portfolio) {
+    public void setPortfolio(PortfolioRecord portfolio) {
         this.portfolio = portfolio;
     }
 
@@ -379,7 +381,7 @@ public class TradestrategyDTO extends Aspect implements Serializable, Cloneable 
         setAscending(true);
         int returnVal;
 
-        if (CoreUtils.nullSafeComparator(o1.getTradingday().getOpen(), o2.getTradingday().getOpen()) == 0) {
+        if (CoreUtils.nullSafeComparator(o1.getTradingday().open(), o2.getTradingday().open()) == 0) {
 
             if (CoreUtils.nullSafeComparator(o1.getSide(), o2.getSide()) == 0) {
 
@@ -391,7 +393,7 @@ public class TradestrategyDTO extends Aspect implements Serializable, Cloneable 
 
         } else {
 
-            returnVal = CoreUtils.nullSafeComparator(o1.getTradingday().getOpen(), o2.getTradingday().getOpen());
+            returnVal = CoreUtils.nullSafeComparator(o1.getTradingday().open(), o2.getTradingday().open());
         }
 
         if (getAscending().equals(Boolean.FALSE)) {
@@ -406,7 +408,7 @@ public class TradestrategyDTO extends Aspect implements Serializable, Cloneable 
         setAscending(true);
         int returnVal;
 
-        if (CoreUtils.nullSafeComparator(o1.getTradingday().getOpen(), o2.getTradingday().getOpen()) == 0) {
+        if (CoreUtils.nullSafeComparator(o1.getTradingday().open(), o2.getTradingday().open()) == 0) {
 
             if (o1.getContract().equals(o2.getContract())) {
 
@@ -424,7 +426,7 @@ public class TradestrategyDTO extends Aspect implements Serializable, Cloneable 
 
         } else {
 
-            returnVal = CoreUtils.nullSafeComparator(o1.getTradingday().getOpen(), o2.getTradingday().getOpen());
+            returnVal = CoreUtils.nullSafeComparator(o1.getTradingday().open(), o2.getTradingday().open());
         }
 
         if (getAscending().equals(Boolean.FALSE)) {
@@ -497,11 +499,11 @@ public class TradestrategyDTO extends Aspect implements Serializable, Cloneable 
 
             if (this.getContract().equals(tradestrategy.getContract())) {
 
-                if (this.getTradingday().getOpen().compareTo(tradestrategy.getTradingday().getOpen()) == 0) {
+                if (this.getTradingday().open().compareTo(tradestrategy.getTradingday().open()) == 0) {
 
                     if (this.getStrategy().getName().equals(tradestrategy.getStrategy().getName())) {
 
-                        if (this.getPortfolio().getName().equals(tradestrategy.getPortfolio().getName())) {
+                        if (this.getPortfolio().name().equals(tradestrategy.getPortfolio().name())) {
 
                             return this.getBarSize().equals(tradestrategy.getBarSize());
                         }
@@ -522,10 +524,10 @@ public class TradestrategyDTO extends Aspect implements Serializable, Cloneable 
         TradestrategyDTO tradestrategy = (TradestrategyDTO) super.clone();
         ContractDTO contract = (ContractDTO) this.getContract().clone();
         tradestrategy.setContract(contract);
-        TradingdayDTO tradingday = (TradingdayDTO) this.getTradingday().clone();
-        tradestrategy.setTradingday(tradingday);
-        PortfolioDTO portfolio = (PortfolioDTO) this.getPortfolio().clone();
-        tradestrategy.setPortfolio(portfolio);
+        // TradingdayRecord tradingday = (TradingdayRecord) this.getTradingday().clone();
+        // tradestrategy.setTradingday(tradingday);
+        //PortfolioRecord portfolio = (PortfolioRecord) this.getPortfolio().clone();
+        //tradestrategy.setPortfolio(portfolio);
         StrategyDTO strategy = (StrategyDTO) this.getStrategy().clone();
         tradestrategy.setStrategy(strategy);
         List<TradeOrderDTO> tradeOrders = new ArrayList<>(0);

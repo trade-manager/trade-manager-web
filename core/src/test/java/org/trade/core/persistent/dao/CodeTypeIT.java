@@ -12,6 +12,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
+import org.trade.core.persistent.codetype.CodeType;
+import org.trade.core.persistent.codetype.CodeTypeService;
+import org.trade.core.persistent.codetype.CodeValue;
 
 import java.util.List;
 
@@ -30,7 +33,7 @@ public class CodeTypeIT {
     private final static Logger _log = LoggerFactory.getLogger(CodeTypeIT.class);
 
     @Autowired
-    CodeTypeRepository codeTypeRepository;
+    CodeTypeService codeTypeService;
 
     /**
      * Method setUpBeforeClass.
@@ -63,10 +66,10 @@ public class CodeTypeIT {
     @Test
     public void findCodeValueByName() {
 
-        CodeType codeType = codeTypeRepository.findByName("MovingAverage");
+        CodeType codeType = codeTypeService.findCodeTypeByName("MovingAverage");
         assertNotNull(codeType);
         _log.info("CodeType id: {}", codeType.getId());
-        List<CodeValue> codeValues = codeTypeRepository.findByAttributeName(codeType.getName(), "Length");
+        List<CodeValue> codeValues = codeTypeService.findByAttributeName(codeType.getName(), "Length");
         assertFalse(codeValues.isEmpty());
         _log.info("CodeValue id: {}", codeValues.getFirst().getId());
     }

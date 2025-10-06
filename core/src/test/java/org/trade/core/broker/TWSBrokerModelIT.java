@@ -7,19 +7,17 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
 import org.trade.core.factory.ClassFactory;
-import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradePosition;
 import org.trade.core.persistent.dao.Tradestrategy;
-import org.trade.core.persistent.dao.Tradingday;
-import org.trade.core.persistent.dao.Tradingdays;
+import org.trade.core.persistent.tradingday.Tradingday;
+import org.trade.core.persistent.tradingday.Tradingdays;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.time.TradingCalendar;
 
@@ -39,12 +37,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 @SpringBootTest
 @ContextConfiguration(classes = ApplicationRepositoryConfig.class,
         initializers = ApplicationProfileInitializer.class)
-public class TWSBrokerModelIT implements IBrokerChangeListener {
+public class TWSBrokerModelIT extends TradestrategyBase implements IBrokerChangeListener {
 
     private final static Logger _log = LoggerFactory.getLogger(TWSBrokerModelIT.class);
-
-    @Autowired
-    private TradeService tradeService;
 
     private Tradingdays tradingdays = null;
     private IBrokerModel tWSBrokerModel;
@@ -115,8 +110,8 @@ public class TWSBrokerModelIT implements IBrokerChangeListener {
 
             for (Tradestrategy tradestrategy : tradingday.getTradestrategies()) {
 
-                TradestrategyBase.addRecord(tradestrategy.getTradingday());
-                TradestrategyBase.addRecord(tradestrategy.getContract());
+                this.addRecord(tradestrategy.getTradingday());
+                this.addRecord(tradestrategy.getContract());
             }
         }
 
@@ -149,7 +144,7 @@ public class TWSBrokerModelIT implements IBrokerChangeListener {
             timer.stop();
         }
 
-        TradestrategyBase.deleteRecords(tradeService);
+        this.deleteRecords();
     }
 
     /**

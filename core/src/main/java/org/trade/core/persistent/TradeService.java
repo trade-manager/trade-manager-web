@@ -2,12 +2,12 @@ package org.trade.core.persistent;
 
 import org.trade.core.dao.Aspect;
 import org.trade.core.dao.AspectService;
-import org.trade.core.persistent.dao.Account;
+import org.trade.core.persistent.account.Account;
+import org.trade.core.persistent.account.AccountService;
+import org.trade.core.persistent.codetype.CodeTypeService;
 import org.trade.core.persistent.dao.Candle;
-import org.trade.core.persistent.dao.CodeType;
 import org.trade.core.persistent.dao.Contract;
 import org.trade.core.persistent.dao.ContractLite;
-import org.trade.core.persistent.dao.Portfolio;
 import org.trade.core.persistent.dao.Rule;
 import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.TradeOrder;
@@ -17,9 +17,11 @@ import org.trade.core.persistent.dao.TradelogReport;
 import org.trade.core.persistent.dao.Tradestrategy;
 import org.trade.core.persistent.dao.TradestrategyLite;
 import org.trade.core.persistent.dao.TradestrategyOrders;
-import org.trade.core.persistent.dao.Tradingday;
-import org.trade.core.persistent.dao.Tradingdays;
 import org.trade.core.persistent.dao.series.indicator.CandleSeries;
+import org.trade.core.persistent.portfolio.Portfolio;
+import org.trade.core.persistent.portfolio.PortfolioService;
+import org.trade.core.persistent.tradingday.Tradingday;
+import org.trade.core.persistent.tradingday.TradingdayService;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -34,17 +36,51 @@ import java.util.Optional;
  */
 public interface TradeService extends AspectService {
 
+    String PERSISTENT_PACKAGE = "org.trade.core.persistent.dao.";
 
-    public static final String PERSISTENT_PACKAGE = "org.trade.core.persistent.dao.";
+    int SCALE_5 = 5;
+    int SCALE_2 = 2;
 
     /**
-     * @param entities
+     * Method getTradingdayService.
+     *
+     * @return TradingdayService
+     */
+    TradingdayService getTradingdayService();
+
+    /**
+     * Method getCodeTypeService.
+     *
+     * @return TradingdayService
+     */
+    CodeTypeService getCodeTypeService();
+
+    /**
+     * Method getAccountService.
+     *
+     * @return AccountService
+     */
+    AccountService getAccountService();
+
+    /**
+     * Method getPortfolioService.
+     *
+     * @return PortfolioService
+     */
+    PortfolioService getPortfolioService();
+
+    /**
+     * Method deleteAllAspects.
+     *
+     * @param entities Iterable<? extends Aspect>
      */
     void deleteAllAspects(Iterable<? extends Aspect> entities);
 
     /**
-     * @param symbol
-     * @return
+     * Method findContractBySymbol.
+     *
+     * @param symbol String
+     * @return Optional<Contract>
      */
     Optional<Contract> findContractBySymbol(String symbol);
 
@@ -177,8 +213,8 @@ public interface TradeService extends AspectService {
     Tradestrategy findTradestrategyById(Long id);
 
     /**
-     * @param tradestrategy
-     * @return
+     * @param tradestrategy Tradestrategy
+     * @return TradestrategyLite
      */
     TradestrategyLite findTradestrategyLiteByTradestrategy(final Tradestrategy tradestrategy);
 
@@ -220,7 +256,7 @@ public interface TradeService extends AspectService {
 
     /**
      * @param requestId Integer
-     * @return
+     * @return Tradestrategy
      */
     Tradestrategy findTradestrategyByRequestId(Integer requestId);
 
@@ -326,32 +362,6 @@ public interface TradeService extends AspectService {
     Integer findTradeOrderByMaxKey();
 
     /**
-     * Method findTradingdayById.
-     *
-     * @param tradingdayId Long
-     * @return Tradingday
-     */
-    Tradingday findTradingdayById(Long tradingdayId);
-
-    /**
-     * Method findTradingdayByOpenDate.
-     *
-     * @param openDate  ZonedDateTime
-     * @param closeDate ZonedDateTime
-     * @return Tradingday
-     */
-    Tradingday findTradingdayByOpenCloseDate(ZonedDateTime openDate, ZonedDateTime closeDate);
-
-    /**
-     * Method findTradingdaysByDateRange.
-     *
-     * @param startDate ZonedDateTime
-     * @param endDate   ZonedDateTime
-     * @return Tradingdays
-     */
-    Tradingdays findTradingdaysByDateRange(ZonedDateTime startDate, ZonedDateTime endDate);
-
-    /**
      * Method findTradelogReport.
      *
      * @param portfolio     Portfolio
@@ -366,18 +376,18 @@ public interface TradeService extends AspectService {
                                       String symbol, BigDecimal winLossAmount) throws IOException;
 
     /**
-     * @param contract
-     * @param startDate
-     * @param endDate
-     * @return
+     * @param contract  Contract
+     * @param startDate ZonedDateTime
+     * @param endDate   ZonedDateTime
+     * @return List<Candle>
      */
     List<Candle> findCandlesByContractDateRangeBarSize(final Contract contract, final ZonedDateTime startDate,
                                                        final ZonedDateTime endDate, final Integer barSize);
 
     /**
-     * @param contract
-     * @param barSize
-     * @return
+     * @param contract Contract
+     * @param barSize  Integer
+     * @return List<Candle>
      */
     List<Candle> findCandlesByContractAndBarSize(Contract contract, Integer barSize);
 
@@ -416,9 +426,9 @@ public interface TradeService extends AspectService {
     /**
      * Method findRulesByStrategyAndActive.
      *
-     * @param strategy
-     * @param active
-     * @return
+     * @param strategy Strategy
+     * @param active   Boolean
+     * @return List<Rule>
      */
     List<Rule> findRulesByStrategyAndActive(Strategy strategy, Boolean active);
 
@@ -473,9 +483,8 @@ public interface TradeService extends AspectService {
     /**
      * Delete all aspects.
      *
-     * @param entities
-     * @param <S>
-     * @return
+     * @param entities Iterable<S>
+     * @return <S extends Aspect> List<S>
      */
     <S extends Aspect> List<S> saveAllAspects(final Iterable<S> entities);
 
@@ -503,13 +512,4 @@ public interface TradeService extends AspectService {
      * @param tradingday   Tradingday
      */
     void reassignStrategy(Strategy fromStrategy, Strategy toStrategy, Tradingday tradingday);
-
-    /**
-     * Method findCodeTypeByNameType.
-     *
-     * @param name String
-     * @param type String
-     * @return CodeType
-     */
-    CodeType findCodeTypeByNameType(String name, String type);
 }

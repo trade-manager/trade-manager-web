@@ -71,8 +71,8 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
     @Serial
     private static final long serialVersionUID = 4053737356695023777L;
 
-    private static final String TEMP_DIR = "temp";
     private final TradeService tradeService;
+    private static final String TEMP_DIR = "temp";
     private Tree tree = null;
     private JEditorPane sourceText = null;
     private JTextArea commentText = null;
@@ -91,10 +91,8 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
 
     /**
      * Constructor for StrategyPanel.
-     *
-     * @param tradeService TradeService
      */
-    public StrategyPanel(TradeService tradeService) {
+    public StrategyPanel(final TradeService tradeService) {
 
         this.tradeService = tradeService;
 

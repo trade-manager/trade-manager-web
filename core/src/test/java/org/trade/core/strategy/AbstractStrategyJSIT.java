@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.trade.core.ApplicationProfileInitializer;
@@ -18,7 +17,6 @@ import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
 import org.trade.core.broker.IBrokerModel;
 import org.trade.core.factory.ClassFactory;
-import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.Rule;
 import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.TradeOrder;
@@ -41,6 +39,7 @@ import org.trade.core.valuetype.Side;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -52,12 +51,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest
 @ContextConfiguration(classes = ApplicationRepositoryConfig.class,
         initializers = ApplicationProfileInitializer.class)
-public class AbstractStrategyJSIT {
+public class AbstractStrategyJSIT extends TradestrategyBase {
 
     private final static Logger _log = LoggerFactory.getLogger(AbstractStrategyJSIT.class);
-
-    @Autowired
-    private TradeService tradeService;
 
     private static final String symbol = "TEST-" + TradestrategyBase.getRandomNumber(4);
     private static Tradestrategy tradestrategy;
@@ -100,7 +96,7 @@ public class AbstractStrategyJSIT {
         if (deleteAfter) {
 
             brokerModel.onDisconnect();
-            TradestrategyBase.deleteRecords(tradeService);
+            this.deleteRecords();
         }
     }
 
@@ -117,7 +113,7 @@ public class AbstractStrategyJSIT {
     public void fiveMinGapBarStrategyJS() throws Exception {
 
         Strategy strategy = (Strategy) DAOStrategy.newInstance().getObject();
-        tradestrategy = TradestrategyBase.createTestTradestrategy(tradeService, strategy, symbol, Side.BOT, ChartDays.ONE_DAY, BarSize.FIVE_MIN);
+        tradestrategy = this.createTestTradestrategy(strategy, symbol, Side.BOT, ChartDays.ONE_DAY, BarSize.FIVE_MIN);
         assertNotNull(tradestrategy);
         strategy = tradeService.findStrategyById(tradestrategy.getStrategy().getId());
         String fileName = strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/') + strategy.getClassName()
@@ -161,7 +157,7 @@ public class AbstractStrategyJSIT {
         tradestrategy.setStrategy(strategy);
         tradestrategy = tradeService.saveAspect(tradestrategy);
 
-        assertTrue(tradestrategy.getTradeOrders().size() == 1);
+        assertEquals(1, tradestrategy.getTradeOrders().size());
         TradeOrder tradeOrder = tradestrategy.getTradeOrders().getFirst();
         tradeOrder.setStatus(OrderStatus.SUBMITTED);
         tradeOrder = tradeService.saveAspect(tradeOrder);
@@ -200,6 +196,6 @@ public class AbstractStrategyJSIT {
         strategyProxy.cancel();
         TradePosition tradePosition = strategyProxy.getOpenTradePosition();
         assertNotNull(tradePosition);
-        TradestrategyBase.addRecord(tradePosition);
+        this.addRecord(tradePosition);
     }
 }

@@ -19,7 +19,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
-import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.domain.Domain;
 import org.trade.core.persistent.domain.DomainService;
 import org.trade.core.persistent.employee.Employee;
@@ -49,15 +48,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(classes = {ApplicationRepositoryConfig.class},
         initializers = ApplicationProfileInitializer.class)
 @AutoConfigureMockMvc
-class EmployeeControllerIT {
+class EmployeeControllerIT extends TradestrategyBase {
 
     private final static Logger _log = LoggerFactory.getLogger(EmployeeControllerIT.class);
 
     @Autowired
     private MockMvc mockMvc;
-
-    @Autowired
-    private TradeService tradeService;
 
     @Autowired
     private DomainService domainService;
@@ -111,12 +107,12 @@ class EmployeeControllerIT {
         user = new User(userName, userName, userName, userName, userName + "@" + Domain.GLOBAL + ".com", this.passwordEncoder.encode(password), gobalDomain, roles);
         user = userService.saveUser(user);
         assertNotNull(user.getId());
-        TradestrategyBase.addRecord(user);
+        this.addRecord(user);
 
         Employee employee = new Employee(userName, userName, userName, userName, userName + "@" + Domain.GLOBAL + ".com", user);
         employeeService.saveEmployee(employee);
         assertNotNull(employee.getId());
-        TradestrategyBase.addRecord(employee);
+        this.addRecord(employee);
     }
 
     /**
@@ -125,7 +121,7 @@ class EmployeeControllerIT {
     @AfterEach
     public void tearDownTest() {
 
-        TradestrategyBase.deleteRecords(tradeService);
+        this.deleteRecords();
     }
 
     @Test

@@ -1,5 +1,7 @@
 package org.trade.core.persistent.dao;
 
+import org.trade.core.persistent.portfolio.Portfolio;
+
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;

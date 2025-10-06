@@ -12,7 +12,6 @@ import java.awt.*;
  */
 public class AppMain {
 
-
     // Construct the application
     public AppMain() {
 

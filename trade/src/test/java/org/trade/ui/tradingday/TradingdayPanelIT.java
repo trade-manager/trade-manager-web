@@ -7,17 +7,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
-import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.Contract;
 import org.trade.core.persistent.dao.Tradestrategy;
-import org.trade.core.persistent.dao.Tradingday;
-import org.trade.core.persistent.dao.Tradingdays;
+import org.trade.core.persistent.tradingday.Tradingday;
+import org.trade.core.persistent.tradingday.Tradingdays;
 import org.trade.core.valuetype.ValueTypeException;
 import org.trade.ui.models.TradingdayTableModel;
 import org.trade.ui.tables.TradingdayTable;
@@ -34,12 +32,9 @@ import static org.junit.jupiter.api.Assertions.fail;
 @SpringBootTest
 @ContextConfiguration(classes = ApplicationRepositoryConfig.class,
         initializers = ApplicationProfileInitializer.class)
-public class TradingdayPanelIT {
+public class TradingdayPanelIT extends TradestrategyBase {
 
     private final static Logger _log = LoggerFactory.getLogger(TradingdayPanelIT.class);
-
-    @Autowired
-    private TradeService tradeService;
 
     private static Tradestrategy tradestrategy;
     private static final String symbol = "IBM-" + TradestrategyBase.getRandomNumber(4);
@@ -58,7 +53,7 @@ public class TradingdayPanelIT {
     @BeforeEach
     public void setUp() throws Exception {
 
-        tradestrategy = TradestrategyBase.createTestTradestrategy(tradeService, symbol);
+        tradestrategy = this.createTestTradestrategy(symbol);
         assertNotNull(tradestrategy);
     }
 
@@ -68,7 +63,7 @@ public class TradingdayPanelIT {
     @AfterEach
     public void tearDown() throws Exception {
 
-        TradestrategyBase.deleteRecords(tradeService);
+        this.deleteRecords();
     }
 
     /**
@@ -83,7 +78,7 @@ public class TradingdayPanelIT {
 
         Tradingdays tradingdays = new Tradingdays();
 
-        Tradingday instance1 = tradeService
+        Tradingday instance1 = this.tradeService.getTradingdayService()
                 .findTradingdayById(tradestrategy.getTradingday().getId());
         tradingdays.add(instance1);
 
@@ -102,7 +97,7 @@ public class TradingdayPanelIT {
         tradestrategy.getContract().setIndustry("Computer");
         Contract result = this.tradeService.saveAspect(tradestrategy.getContract());
         assertNotNull(result);
-        Tradingday instance2 = tradeService
+        Tradingday instance2 = this.tradeService.getTradingdayService()
                 .findTradingdayById(tradestrategy.getTradingday().getId());
         tradingdays.replaceTradingday(instance2);
         int selectedRow = tradingdayTable.getSelectedRow();

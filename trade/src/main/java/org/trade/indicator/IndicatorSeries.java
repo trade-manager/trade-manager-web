@@ -4,7 +4,7 @@ import org.jfree.data.ComparableObjectItem;
 import org.jfree.data.ComparableObjectSeries;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.trade.core.persistent.dao.CodeValue;
+import org.trade.core.persistent.codetype.CodeValue;
 import org.trade.core.persistent.dao.Strategy;
 
 import java.awt.*;

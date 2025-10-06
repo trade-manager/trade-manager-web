@@ -1,6 +1,5 @@
 package org.trade.ui;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
@@ -26,11 +25,12 @@ public class TradeApplication {
     @Component
     class SwingApp {
 
-        @Autowired
-        TradeService tradeService;
+
+        public final TradeService tradeService;
 
         public SwingApp(TradeService tradeService) {
 
+            this.tradeService = tradeService;
             Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
             double appWidth = screenSize.getWidth() * 0.9;
             double appHieght = screenSize.getHeight() * 0.9;

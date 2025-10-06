@@ -6,4 +6,11 @@ package org.trade.core.persistent.dao;
  */
 public interface StrategyRepositoryCustom {
 
+    /**
+     * Method findStrategyByName.
+     *
+     * @param name String
+     * @return Strategy
+     */
+    Strategy findStrategyByName(String name);
 }

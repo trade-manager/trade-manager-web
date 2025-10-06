@@ -1,4 +1,4 @@
-package org.trade.core.persistent.dao;
+package org.trade.core.persistent.portfolio;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -11,6 +11,8 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import org.trade.core.dao.Aspect;
+import org.trade.core.persistent.account.Account;
+import org.trade.core.persistent.dao.Tradestrategy;
 
 import java.io.Serial;
 import java.io.Serializable;

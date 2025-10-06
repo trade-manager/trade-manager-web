@@ -23,20 +23,22 @@ public abstract class TabbedAppPanel extends BasePanel implements ChangeListener
     @Serial
     private static final long serialVersionUID = 8405644422808736326L;
 
-    public final TradeService tradeService;
     private final static Logger _log = LoggerFactory.getLogger(TabbedAppPanel.class);
+
+    public final TradeService tradeService;
+
     private final JTabbedPane tabbedPane = new JTabbedPane();
     private final JPanel menuPanel = new JPanel();
     private final PrintController printJob = new PrintController();
     private int currentTab = 0;
     private BasePanel currBasePanel = null;
 
+
     /**
      * Constructor for TabbedAppPanel.
-     *
-     * @param frame Frame
      */
-    public TabbedAppPanel(Frame frame, TradeService tradeService) {
+    public TabbedAppPanel(Frame frame, final TradeService tradeService) {
+
         this.tradeService = tradeService;
 
         try {
@@ -121,7 +123,9 @@ public abstract class TabbedAppPanel extends BasePanel implements ChangeListener
     public abstract void tabChanged(BasePanel currBasePanel, BasePanel newBasePanel);
 
     public void doLFMetal() {
+
         try {
+
             UIManager.setLookAndFeel(new javax.swing.plaf.metal.MetalLookAndFeel());
             SwingUtilities.updateComponentTreeUI(getFrame());
         } catch (Exception eMetal) {
@@ -131,6 +135,7 @@ public abstract class TabbedAppPanel extends BasePanel implements ChangeListener
 
     public void doLFWindows() {
         try {
+
             // UIManager
             // .setLookAndFeel(new
             // com.sun.java.swing.plaf.windows.WindowsLookAndFeel());
@@ -141,7 +146,9 @@ public abstract class TabbedAppPanel extends BasePanel implements ChangeListener
     }
 
     public void doLFMotif() {
+
         try {
+
             // UIManager
             // .setLookAndFeel(new
             // com.sun.java.swing.plaf.motif.MotifLookAndFeel());
@@ -153,7 +160,9 @@ public abstract class TabbedAppPanel extends BasePanel implements ChangeListener
     }
 
     public void doExit() {
+
         for (int i = 0; i < tabbedPane.getTabCount(); i++) {
+
             currBasePanel = (BasePanel) tabbedPane.getComponent(i);
             currBasePanel.doWindowClose();
         }

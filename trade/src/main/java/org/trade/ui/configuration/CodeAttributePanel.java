@@ -1,9 +1,9 @@
 package org.trade.ui.configuration;
 
 import org.trade.core.factory.ClassFactory;
-import org.trade.core.persistent.dao.CodeAttribute;
-import org.trade.core.persistent.dao.CodeType;
-import org.trade.core.persistent.dao.CodeValue;
+import org.trade.core.persistent.codetype.CodeAttribute;
+import org.trade.core.persistent.codetype.CodeType;
+import org.trade.core.persistent.codetype.CodeValue;
 import org.trade.core.valuetype.Decode;
 import org.trade.ui.widget.DecodeComboBoxEditor;
 import org.trade.ui.widget.DecodeComboBoxRenderer;

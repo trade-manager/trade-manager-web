@@ -13,7 +13,6 @@ import java.awt.*;
  */
 public class TradeAppMain {
 
-
     TradeService tradeService = null;
 
     // Construct the application

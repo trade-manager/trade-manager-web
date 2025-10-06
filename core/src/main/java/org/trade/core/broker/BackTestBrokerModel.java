@@ -75,7 +75,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
         }
     }
 
-    public BackTestBrokerModel(TradeService tradeService) {
+    public BackTestBrokerModel(final TradeService tradeService) {
 
         try {
 

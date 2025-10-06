@@ -1,16 +1,29 @@
-package org.trade.core.persistent.dao;
+package org.trade.core.persistent.tradingday;
 
 // Generated Feb 21, 2011 2:18:03 PM by Hibernate Tools 3.4.0.CR1
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import org.trade.core.dao.Aspect;
+import org.trade.core.persistent.dao.Tradestrategy;
 import org.trade.core.util.CoreUtils;
 import org.trade.core.util.time.TradingCalendar;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Random;
 
 
 /**
@@ -19,7 +32,9 @@ import java.util.Comparator;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-public class TradingdayDTO extends Aspect implements Serializable, Cloneable {
+@Entity
+@Table(name = "tradingday")
+public class Tradingday extends Aspect implements Serializable, Cloneable {
 
     /**
      *
@@ -27,14 +42,36 @@ public class TradingdayDTO extends Aspect implements Serializable, Cloneable {
     @Serial
     private static final long serialVersionUID = 3388042483785305102L;
 
+    @Column(name = "open", unique = true, nullable = false)
     private ZonedDateTime open;
+
+    @Column(name = "close", unique = true, nullable = false)
     private ZonedDateTime close;
+
+    @Column(name = "market_bias", length = 10)
     private String marketBias;
+
+    @Column(name = "market_gap", length = 10)
     private String marketGap;
+
+    @Column(name = "market_bar", length = 10)
     private String marketBar;
+
+    // Use for Interactive broker data requests API are int reqId
+    @Column(name = "request_id", unique = true)
     private Integer requestId;
 
-    public TradingdayDTO() {
+    @OneToMany(mappedBy = "tradingday", fetch = FetchType.EAGER, orphanRemoval = true, cascade = {CascadeType.ALL})
+    @OrderBy("side ASC, id ASC")
+    private List<Tradestrategy> tradestrategies = new ArrayList<>(0);
+
+    @PrePersist
+    public void initializeRequestId() {
+
+        getRequestId();
+    }
+
+    public Tradingday() {
     }
 
     /**
@@ -43,7 +80,7 @@ public class TradingdayDTO extends Aspect implements Serializable, Cloneable {
      * @param open  ZonedDateTime
      * @param close ZonedDateTime
      */
-    public TradingdayDTO(ZonedDateTime open, ZonedDateTime close) {
+    public Tradingday(ZonedDateTime open, ZonedDateTime close) {
 
         this.open = open;
         this.close = close;
@@ -52,19 +89,22 @@ public class TradingdayDTO extends Aspect implements Serializable, Cloneable {
     /**
      * Constructor for Tradingday.
      *
-     * @param open       ZonedDateTime
-     * @param close      ZonedDateTime
-     * @param marketBias String
-     * @param marketGap  String
-     * @param marketBar  String
+     * @param open            ZonedDateTime
+     * @param close           ZonedDateTime
+     * @param marketBias      String
+     * @param marketGap       String
+     * @param marketBar       String
+     * @param tradestrategies List<Tradestrategy>
      */
-    public TradingdayDTO(ZonedDateTime open, ZonedDateTime close, String marketBias, String marketGap, String marketBar) {
+    public Tradingday(ZonedDateTime open, ZonedDateTime close, String marketBias, String marketGap, String marketBar,
+                      List<Tradestrategy> tradestrategies) {
 
         this.open = open;
         this.close = close;
         this.marketBias = marketBias;
         this.marketGap = marketGap;
         this.marketBar = marketBar;
+        this.tradestrategies = tradestrategies;
     }
 
     /**
@@ -73,6 +113,15 @@ public class TradingdayDTO extends Aspect implements Serializable, Cloneable {
      * @return Integer
      */
     public Integer getRequestId() {
+
+        if (this.requestId == null) {
+
+            Random random = new Random();
+            int min = 1;
+            int max = 1000000000;
+            // Formula: random.nextInt(max - min + 1) + min
+            this.requestId = random.nextInt(max - min + 1) + min;
+        }
 
         return this.requestId;
     }
@@ -176,8 +225,54 @@ public class TradingdayDTO extends Aspect implements Serializable, Cloneable {
         this.marketBar = marketBar;
     }
 
+    /**
+     * Method getTradestrategies.
+     *
+     * @return List<Tradestrategy>
+     */
+    public List<Tradestrategy> getTradestrategies() {
+        return this.tradestrategies;
+    }
 
-    public static final Comparator<TradingdayDTO> DATE_ORDER_ASC = (o1, o2) -> {
+    /**
+     * Method setTradestrategies.
+     *
+     * @param tradestrategies List<Tradestrategy>
+     */
+    public void setTradestrategies(List<Tradestrategy> tradestrategies) {
+        this.tradestrategies = tradestrategies;
+    }
+
+    /**
+     * Method addTradestrategy.
+     *
+     * @param tradestrategy Tradestrategy
+     */
+    public void addTradestrategy(Tradestrategy tradestrategy) {
+        this.tradestrategies.add(tradestrategy);
+    }
+
+    /**
+     * Method removeTradestrategy.
+     *
+     * @param tradestrategy Tradestrategy
+     */
+    public boolean removeTradestrategy(Tradestrategy tradestrategy) {
+
+        for (ListIterator<Tradestrategy> itemIter = this.tradestrategies.listIterator(); itemIter.hasNext(); ) {
+
+            Tradestrategy item = itemIter.next();
+
+            if (item.equals(tradestrategy)) {
+
+                itemIter.remove();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static final Comparator<Tradingday> DATE_ORDER_ASC = (o1, o2) -> {
 
         int returnVal;
         setAscending(true);
@@ -190,7 +285,7 @@ public class TradingdayDTO extends Aspect implements Serializable, Cloneable {
         return returnVal;
     };
 
-    public static final Comparator<TradingdayDTO> DATE_ORDER_DESC = (o1, o2) -> {
+    public static final Comparator<Tradingday> DATE_ORDER_DESC = (o1, o2) -> {
 
         int returnVal;
         setAscending(true);
@@ -258,7 +353,7 @@ public class TradingdayDTO extends Aspect implements Serializable, Cloneable {
             return true;
         }
 
-        if (objectToCompare instanceof TradingdayDTO tradingday) {
+        if (objectToCompare instanceof Tradingday tradingday) {
 
             if (tradingday.getOpen().compareTo(this.getOpen()) == 0) {
 
@@ -274,11 +369,54 @@ public class TradingdayDTO extends Aspect implements Serializable, Cloneable {
      * @param date ZonedDateTime
      * @return Tradingday
      */
-    public static TradingdayDTO newInstance(ZonedDateTime date) {
+    public static Tradingday newInstance(ZonedDateTime date) {
 
-        return new TradingdayDTO(TradingCalendar.getTradingDayStart(date),
+        return new Tradingday(TradingCalendar.getTradingDayStart(date),
                 TradingCalendar.getTradingDayEnd(date));
 
+    }
+
+    /**
+     * Method existTradestrategy.
+     *
+     * @param tradestrategy Tradestrategy
+     * @return boolean
+     */
+    public boolean existTradestrategy(Tradestrategy tradestrategy) {
+
+        if (null != this.getTradestrategies()) {
+
+            for (Tradestrategy currTradestrategy : this.getTradestrategies()) {
+
+                if (currTradestrategy.equals(tradestrategy)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Method populateStrategyData.
+     *
+     * @param tradingday Tradingday
+     */
+    public void populateStrategyData(Tradingday tradingday) {
+
+        if (null != tradingday.getTradestrategies()) {
+
+            for (Tradestrategy currTradestrategy : tradingday.getTradestrategies()) {
+
+                for (Tradestrategy tradestrategy : this.getTradestrategies()) {
+
+                    if (currTradestrategy.equals(tradestrategy)) {
+
+                        tradestrategy.setStrategyData(currTradestrategy.getStrategyData());
+                        break;
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -289,6 +427,12 @@ public class TradingdayDTO extends Aspect implements Serializable, Cloneable {
     @Transient
     public boolean isDirty() {
 
+        for (Tradestrategy item : this.getTradestrategies()) {
+
+            if (item.isDirty()) {
+                return true;
+            }
+        }
         return super.isDirty();
     }
 
@@ -299,7 +443,13 @@ public class TradingdayDTO extends Aspect implements Serializable, Cloneable {
      */
     public Object clone() throws CloneNotSupportedException {
 
-        TradingdayDTO tradingday = (TradingdayDTO) super.clone();
+        Tradingday tradingday = (Tradingday) super.clone();
+        List<Tradestrategy> tradestrategies = new ArrayList<>(0);
+        tradingday.setTradestrategies(tradestrategies);
         return tradingday;
+    }
+
+    public void clear() {
+        getTradestrategies().clear();
     }
 }

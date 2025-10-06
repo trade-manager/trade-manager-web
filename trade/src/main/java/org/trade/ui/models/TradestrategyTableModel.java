@@ -2,11 +2,11 @@ package org.trade.ui.models;
 
 import org.trade.base.TableModel;
 import org.trade.core.persistent.dao.Contract;
-import org.trade.core.persistent.dao.Portfolio;
+import org.trade.core.persistent.portfolio.Portfolio;
 import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.Tradestrategy;
-import org.trade.core.persistent.dao.Tradingday;
-import org.trade.core.persistent.dao.Tradingdays;
+import org.trade.core.persistent.tradingday.Tradingday;
+import org.trade.core.persistent.tradingday.Tradingdays;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.CoreUtils;
 import org.trade.core.util.time.TradingCalendar;
