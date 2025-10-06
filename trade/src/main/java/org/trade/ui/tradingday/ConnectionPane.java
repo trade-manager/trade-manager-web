@@ -2,7 +2,7 @@ package org.trade.ui.tradingday;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.trade.core.persistent.dao.Portfolio;
+import org.trade.core.persistent.portfolio.Portfolio;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.valuetype.DAOPortfolio;
 import org.trade.core.valuetype.Decode;

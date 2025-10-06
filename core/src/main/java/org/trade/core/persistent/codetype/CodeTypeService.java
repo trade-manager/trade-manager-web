@@ -17,6 +17,14 @@ public interface CodeTypeService {
     CodeType findCodeTypeByName(String name);
 
     /**
+     * Method validateAndGetCodeType.
+     *
+     * @param name String
+     * @return CodeType
+     */
+    CodeType validateAndGetCodeType(String name);
+
+    /**
      * Method findCodeTypeByNameAndType.
      *
      * @param name String

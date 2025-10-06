@@ -8,7 +8,7 @@ import org.trade.base.ExampleFileFilter;
 import org.trade.base.FilePreviewer;
 import org.trade.base.Table;
 import org.trade.core.persistent.TradeService;
-import org.trade.core.persistent.dao.Portfolio;
+import org.trade.core.persistent.portfolio.Portfolio;
 import org.trade.core.persistent.dao.TradelogDetail;
 import org.trade.core.persistent.dao.TradelogReport;
 import org.trade.core.persistent.dao.TradelogSummary;

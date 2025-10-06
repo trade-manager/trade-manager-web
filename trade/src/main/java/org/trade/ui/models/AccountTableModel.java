@@ -1,8 +1,8 @@
 package org.trade.ui.models;
 
 import org.trade.base.TableModel;
-import org.trade.core.persistent.dao.Account;
-import org.trade.core.persistent.dao.Portfolio;
+import org.trade.core.persistent.account.Account;
+import org.trade.core.persistent.portfolio.Portfolio;
 import org.trade.core.util.CoreUtils;
 import org.trade.core.valuetype.AccountType;
 import org.trade.core.valuetype.Currency;

@@ -3,7 +3,7 @@ package org.trade.core.broker.request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trade.core.dao.Aspects;
-import org.trade.core.persistent.dao.Account;
+import org.trade.core.persistent.account.Account;
 import org.trade.core.xml.SaxMapper;
 import org.trade.core.xml.TagTracker;
 import org.trade.core.xml.XMLModelException;

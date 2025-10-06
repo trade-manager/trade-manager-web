@@ -1,6 +1,6 @@
 package org.trade.core.valuetype;
 
-import org.trade.core.persistent.dao.Portfolio;
+import org.trade.core.persistent.portfolio.Portfolio;
 
 import java.io.Serial;
 import java.util.ArrayList;
