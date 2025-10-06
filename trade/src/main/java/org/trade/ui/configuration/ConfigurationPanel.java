@@ -12,8 +12,8 @@ import org.trade.core.dao.Aspects;
 import org.trade.core.factory.ClassFactory;
 import org.trade.core.lookup.DBTableLookupServiceProvider;
 import org.trade.core.persistent.TradeService;
-import org.trade.core.persistent.dao.CodeType;
-import org.trade.core.persistent.dao.CodeValue;
+import org.trade.core.persistent.codetype.CodeType;
+import org.trade.core.persistent.codetype.CodeValue;
 import org.trade.core.persistent.dao.Portfolio;
 import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.series.indicator.IndicatorSeries;
@@ -282,7 +282,7 @@ public class ConfigurationPanel extends BasePanel {
 
             this.clearStatusBarMessage();
             String indicatorName = series.getType().substring(0, series.getType().indexOf("Series"));
-            CodeType codeType = tradeService.findCodeTypeByNameType(indicatorName,
+            CodeType codeType = tradeService.getCodeTypeService().findCodeTypeByNameAndType(indicatorName,
                     CodeType.IndicatorParameters);
 
             if (null == codeType) {

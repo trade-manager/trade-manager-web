@@ -74,7 +74,7 @@ public class TradingdayIT extends TradestrategyBase {
 
         ZonedDateTime open = TradingCalendar.getTradingDayStart(
                 TradingCalendar.getPrevTradingDay(TradingCalendar.getDateTimeNowMarketTimeZone()));
-        tradingday = tradingdayService.findByOpenCloseDateOrderByOpenAsc(open,
+        tradingday = tradeService.getTradingdayService().findByOpenCloseDateOrderByOpenAsc(open,
                 TradingCalendar.getTradingDayEnd(open));
         if (null == tradingday) {
             tradingday = Tradingday.newInstance(open);
@@ -94,7 +94,7 @@ public class TradingdayIT extends TradestrategyBase {
 
         ZonedDateTime open = TradingCalendar.getTradingDayStart(
                 TradingCalendar.getPrevTradingDay(TradingCalendar.getDateTimeNowMarketTimeZone()));
-        tradingday = tradingdayService.findByOpenCloseDateOrderByOpenAsc(open,
+        tradingday = tradeService.getTradingdayService().findByOpenCloseDateOrderByOpenAsc(open,
                 TradingCalendar.getTradingDayEnd(open));
         if (null == tradingday) {
             tradingday = Tradingday.newInstance(open);

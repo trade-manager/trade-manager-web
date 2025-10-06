@@ -28,7 +28,7 @@ public class AppMain {
 
             appWidth = 1200;
         }
-        AppFrame frame = new AppFrame(null, null);
+        AppFrame frame = new AppFrame(null);
         frame.setIconImage(ImageBuilder.getImage("trade.gif"));
         frame.setSize((int) appWidth, (int) appHieght);
         frame.setLocation((int) ((screenSize.getWidth() - frame.getSize().getWidth()) / 2),

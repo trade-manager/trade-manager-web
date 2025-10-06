@@ -15,8 +15,8 @@ import org.trade.core.lookup.DBTableLookupServiceProvider;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.Account;
 import org.trade.core.persistent.dao.Candle;
-import org.trade.core.persistent.dao.CodeType;
-import org.trade.core.persistent.dao.CodeValue;
+import org.trade.core.persistent.codetype.CodeType;
+import org.trade.core.persistent.codetype.CodeValue;
 import org.trade.core.persistent.dao.Contract;
 import org.trade.core.persistent.dao.Portfolio;
 import org.trade.core.persistent.dao.Rule;
@@ -30,7 +30,6 @@ import org.trade.core.persistent.dao.strategy.IStrategyRule;
 import org.trade.core.persistent.dao.strategy.StrategyRuleException;
 import org.trade.core.persistent.dao.strategy.StrategyRuleJS;
 import org.trade.core.persistent.tradingday.Tradingday;
-import org.trade.core.persistent.tradingday.TradingdayService;
 import org.trade.core.persistent.tradingday.Tradingdays;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.DynamicCode;
@@ -122,9 +121,9 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
      *
      * @param frame the main application Frame.
      */
-    public TradeMainControllerPanel(Frame frame, TradeService tradeService, TradingdayService tradingdayService) {
+    public TradeMainControllerPanel(Frame frame, TradeService tradeService) {
 
-        super(frame, tradeService, tradingdayService);
+        super(frame, tradeService);
 
         try {
 
@@ -138,7 +137,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
              */
             setSelected(true);
             Tradingday tradingday = Tradingday.newInstance(TradingCalendar.getCurrentTradingDay());
-            Tradingday todayTradingday = tradingdayService.findTradingdayByOpenCloseDate(tradingday.getOpen(),
+            Tradingday todayTradingday = tradeService.getTradingdayService().findTradingdayByOpenCloseDate(tradingday.getOpen(),
                     tradingday.getClose());
 
             if (null != todayTradingday) {
@@ -159,7 +158,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
              * contracts and decide how to trade them.
              *
              */
-            tradingdayPanel = new TradingdayPanel(tradingdays, this, this.tradeService, this.tradingdayService);
+            tradingdayPanel = new TradingdayPanel(tradingdays, this, this.tradeService);
             /*
              * Constructs a new Contract tab that contains all information
              * related to the Tradestrategy i.e. charts, Orders for a particular
@@ -1350,8 +1349,9 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
         try {
 
             this.clearStatusBarMessage();
-            CodeType codeType = tradeService.findCodeTypeByNameType(tradestrategy.getStrategy().getName(),
+            CodeType codeType = tradeService.getCodeTypeService().findCodeTypeByNameAndType(tradestrategy.getStrategy().getName(),
                     CodeType.StrategyParameters);
+
 
             if (null != codeType) {
 
@@ -1637,7 +1637,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
         if (null == tradingdays.getTradingday(tradestrategy.getTradingday().getOpen(),
                 tradestrategy.getTradingday().getClose())) {
 
-            Tradingday tradingday = tradingdayService
+            Tradingday tradingday = tradeService.getTradingdayService()
                     .findTradingdayById(tradestrategy.getTradingday().getId());
             tradingdays.add(tradingday);
         }

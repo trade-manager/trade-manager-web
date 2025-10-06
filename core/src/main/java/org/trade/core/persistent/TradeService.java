@@ -2,9 +2,9 @@ package org.trade.core.persistent;
 
 import org.trade.core.dao.Aspect;
 import org.trade.core.dao.AspectService;
+import org.trade.core.persistent.codetype.CodeTypeService;
 import org.trade.core.persistent.dao.Account;
 import org.trade.core.persistent.dao.Candle;
-import org.trade.core.persistent.dao.CodeType;
 import org.trade.core.persistent.dao.Contract;
 import org.trade.core.persistent.dao.ContractLite;
 import org.trade.core.persistent.dao.Portfolio;
@@ -19,6 +19,7 @@ import org.trade.core.persistent.dao.TradestrategyLite;
 import org.trade.core.persistent.dao.TradestrategyOrders;
 import org.trade.core.persistent.dao.series.indicator.CandleSeries;
 import org.trade.core.persistent.tradingday.Tradingday;
+import org.trade.core.persistent.tradingday.TradingdayService;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -34,14 +35,32 @@ import java.util.Optional;
 public interface TradeService extends AspectService {
 
 
-    public static final String PERSISTENT_PACKAGE = "org.trade.core.persistent.dao.";
+    String PERSISTENT_PACKAGE = "org.trade.core.persistent.dao.";
 
     /**
+     * Method getTradingdayService.
+     *
+     * @return TradingdayService
+     */
+    TradingdayService getTradingdayService();
+
+    /**
+     * Method getCodeTypeService.
+     *
+     * @return TradingdayService
+     */
+    CodeTypeService getCodeTypeService();
+
+    /**
+     * Method deleteAllAspects.
+     *
      * @param entities
      */
     void deleteAllAspects(Iterable<? extends Aspect> entities);
 
     /**
+     * Method findContractBySymbol.
+     *
      * @param symbol
      * @return
      */
@@ -476,13 +495,4 @@ public interface TradeService extends AspectService {
      * @param tradingday   Tradingday
      */
     void reassignStrategy(Strategy fromStrategy, Strategy toStrategy, Tradingday tradingday);
-
-    /**
-     * Method findCodeTypeByNameType.
-     *
-     * @param name String
-     * @param type String
-     * @return CodeType
-     */
-    CodeType findCodeTypeByNameType(String name, String type);
 }

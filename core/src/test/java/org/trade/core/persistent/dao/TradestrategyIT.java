@@ -124,7 +124,7 @@ public class TradestrategyIT extends TradestrategyBase {
         assertNotNull(tradestrategy);
         ZonedDateTime open = TradingCalendar.getTradingDayStart(
                 TradingCalendar.getPrevTradingDay(TradingCalendar.getDateTimeNowMarketTimeZone()));
-        Tradingdays tradingdays = tradingdayService.findTradingdaysByDateRangeOrderByOpenAsc(open, open);
+        Tradingdays tradingdays = tradeService.getTradingdayService().findTradingdaysByDateRangeOrderByOpenAsc(open, open);
 
         for (Tradingday tradingday : tradingdays.getTradingdays()) {
 

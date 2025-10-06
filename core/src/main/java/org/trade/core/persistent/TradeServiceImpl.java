@@ -10,12 +10,11 @@ import org.trade.core.dao.Aspect;
 import org.trade.core.dao.AspectRepository;
 import org.trade.core.dao.AspectServiceImpl;
 import org.trade.core.dao.Aspects;
+import org.trade.core.persistent.codetype.CodeTypeService;
 import org.trade.core.persistent.dao.Account;
 import org.trade.core.persistent.dao.AccountRepository;
 import org.trade.core.persistent.dao.Candle;
 import org.trade.core.persistent.dao.CandleRepository;
-import org.trade.core.persistent.dao.CodeType;
-import org.trade.core.persistent.dao.CodeTypeRepository;
 import org.trade.core.persistent.dao.Contract;
 import org.trade.core.persistent.dao.ContractLite;
 import org.trade.core.persistent.dao.ContractRepository;
@@ -43,6 +42,7 @@ import org.trade.core.persistent.dao.TradestrategyRepository;
 import org.trade.core.persistent.dao.series.indicator.CandleSeries;
 import org.trade.core.persistent.dao.series.indicator.candle.CandleItem;
 import org.trade.core.persistent.tradingday.Tradingday;
+import org.trade.core.persistent.tradingday.TradingdayService;
 import org.trade.core.util.CoreUtils;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.Action;
@@ -71,6 +71,9 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
 
     private final static Logger _log = LoggerFactory.getLogger(TradeServiceImpl.class);
 
+    private static final int SCALE_5 = 5;
+    private static final int SCALE_2 = 2;
+
     @Autowired
     private AspectRepository aspectRepository;
 
@@ -82,9 +85,6 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
 
     @Autowired
     private CandleRepository candleRepository;
-
-    @Autowired
-    private CodeTypeRepository codeTypeRepository;
 
     @Autowired
     private PortfolioRepository portfolioRepository;
@@ -113,8 +113,26 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
     @Autowired
     private TradestrategyRepository tradestrategyRepository;
 
-    private static final int SCALE_5 = 5;
-    private static final int SCALE_2 = 2;
+    public final TradingdayService tradingdayService;
+
+    public final CodeTypeService codeTypeService;
+
+    public TradeServiceImpl(final TradingdayService tradingdayService, final CodeTypeService codeTypeService) {
+
+        this.tradingdayService = tradingdayService;
+        this.codeTypeService = codeTypeService;
+
+    }
+
+    public TradingdayService getTradingdayService() {
+
+        return this.tradingdayService;
+    }
+
+    public CodeTypeService getCodeTypeService() {
+
+        return this.codeTypeService;
+    }
 
     public AspectRepository<Aspect, Long> getAspectRepository() {
         return this.aspectRepository;
@@ -969,12 +987,4 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
             }
         }
     }
-
-    public CodeType findCodeTypeByNameType(String name, String type) {
-
-        List<CodeType> codeTypes = codeTypeRepository.findByNameAndType(name, type);
-        return codeTypes.isEmpty() ? null : codeTypes.getFirst();
-    }
-
-
 }

@@ -1,5 +1,16 @@
-package org.trade.core.persistent.dao;
+package org.trade.core.persistent.codetype;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorColumn;
+import jakarta.persistence.DiscriminatorType;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import org.trade.core.dao.Aspect;
 
@@ -11,23 +22,36 @@ import java.util.List;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-
-public class CodeTypeDTO extends Aspect implements java.io.Serializable {
+@Entity
+@Table(name = "codetype")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "type", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorValue("CodeType")
+public class CodeType extends Aspect implements java.io.Serializable {
 
     @Serial
     private static final long serialVersionUID = 2273276207080568947L;
 
+    @Column(name = "name", nullable = false, length = 45)
     private String name;
-    private String type;
-    private String description;
-    private List<CodeAttributeDTO> codeAttributes = new ArrayList<>(0);
 
+    @Column(name = "type", length = 45, insertable = false, updatable = false, unique = true, nullable = false)
+    private String type;
+
+    @Column(name = "description", nullable = false, length = 100)
+    private String description;
+
+    @OneToMany(mappedBy = "codeType", fetch = FetchType.EAGER, orphanRemoval = true, cascade = {CascadeType.ALL})
+    private List<CodeAttribute> codeAttributes = new ArrayList<>(0);
+
+    public static final String IndicatorParameters = "IndicatorParameters";
+    public static final String StrategyParameters = "StrategyParameters";
 
     /**
      * Default constructor for CodeType.
      */
 
-    public CodeTypeDTO() {
+    public CodeType() {
     }
 
     /**
@@ -35,7 +59,7 @@ public class CodeTypeDTO extends Aspect implements java.io.Serializable {
      *
      * @param type String
      */
-    public CodeTypeDTO(String type) {
+    public CodeType(String type) {
         this.type = type;
     }
 
@@ -45,7 +69,7 @@ public class CodeTypeDTO extends Aspect implements java.io.Serializable {
      * @param name        String
      * @param description String
      */
-    public CodeTypeDTO(String name, String type, String description) {
+    public CodeType(String name, String type, String description) {
 
         this.name = name;
         this.type = type;
@@ -107,20 +131,20 @@ public class CodeTypeDTO extends Aspect implements java.io.Serializable {
     }
 
     /**
-     * Method getCodeAttributeDTOs.
+     * Method getCodeAttributes.
      *
-     * @return List<CodeAttributeDto>
+     * @return List<CodeAttribute>
      */
-    public List<CodeAttributeDTO> getCodeAttributeDTOs() {
+    public List<CodeAttribute> getCodeAttributes() {
         return this.codeAttributes;
     }
 
     /**
-     * Method setCodeAttributeDTOs.
+     * Method setCodeAttributes.
      *
-     * @param codeAttributes List<CodeAttributeDto>
+     * @param codeAttributes List<CodeAttribute>
      */
-    public void setCodeAttributeDTOs(List<CodeAttributeDTO> codeAttributes) {
+    public void setCodeAttributes(List<CodeAttribute> codeAttributes) {
         this.codeAttributes = codeAttributes;
     }
 
@@ -132,7 +156,7 @@ public class CodeTypeDTO extends Aspect implements java.io.Serializable {
     @Transient
     public boolean isDirty() {
 
-        for (CodeAttributeDTO item : this.getCodeAttributeDTOs()) {
+        for (CodeAttribute item : this.getCodeAttributes()) {
 
             if (item.isDirty()) {
                 return true;

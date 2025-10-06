@@ -4,7 +4,7 @@ import org.trade.base.TableModel;
 import org.trade.core.dao.Aspect;
 import org.trade.core.dao.Aspects;
 import org.trade.core.factory.ClassFactory;
-import org.trade.core.persistent.dao.CodeValue;
+import org.trade.core.persistent.codetype.CodeValue;
 import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.util.CoreUtils;
 import org.trade.core.valuetype.DAOStrategy;

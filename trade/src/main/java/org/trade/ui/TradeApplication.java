@@ -9,7 +9,6 @@ import org.trade.base.ImageBuilder;
 import org.trade.base.WaitCursorEventQueue;
 import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.persistent.TradeService;
-import org.trade.core.persistent.tradingday.TradingdayService;
 
 import java.awt.*;
 
@@ -28,12 +27,10 @@ public class TradeApplication {
 
 
         public final TradeService tradeService;
-        public final TradingdayService tradingdayService;
 
-        public SwingApp(TradeService tradeService, TradingdayService tradingdayService) {
+        public SwingApp(TradeService tradeService) {
 
             this.tradeService = tradeService;
-            this.tradingdayService = tradingdayService;
             Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
             double appWidth = screenSize.getWidth() * 0.9;
             double appHieght = screenSize.getHeight() * 0.9;
@@ -48,7 +45,7 @@ public class TradeApplication {
                 appWidth = 1200;
             }
 
-            TradeAppFrame frame = new TradeAppFrame(tradeService, tradingdayService);
+            TradeAppFrame frame = new TradeAppFrame(tradeService);
             frame.setIconImage(ImageBuilder.getImage("trade.gif"));
             frame.setSize((int) appWidth, (int) appHieght);
             frame.setLocation((int) ((screenSize.getWidth() - frame.getSize().getWidth()) / 2),

@@ -12,7 +12,7 @@ import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
 import org.trade.core.persistent.dao.Candle;
-import org.trade.core.persistent.dao.CodeType;
+import org.trade.core.persistent.codetype.CodeType;
 import org.trade.core.persistent.dao.Tradestrategy;
 import org.trade.core.persistent.dao.series.indicator.candle.CandlePeriod;
 import org.trade.core.util.time.TradingCalendar;
@@ -80,7 +80,7 @@ public class IndicatorSeriesIT extends TradestrategyBase {
 
         String indicatorName = IndicatorSeries.MovingAverageSeries.substring(0,
                 IndicatorSeries.MovingAverageSeries.indexOf("Series"));
-        CodeType result = this.tradeService.findCodeTypeByNameType(indicatorName,
+        CodeType result = this.tradeService.getCodeTypeService().findCodeTypeByNameAndType(indicatorName,
                 CodeType.IndicatorParameters);
         assertNotNull(result);
     }

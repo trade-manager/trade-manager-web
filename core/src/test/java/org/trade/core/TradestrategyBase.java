@@ -16,7 +16,6 @@ import org.trade.core.persistent.dao.TradePosition;
 import org.trade.core.persistent.dao.Tradestrategy;
 import org.trade.core.persistent.dao.series.indicator.StrategyData;
 import org.trade.core.persistent.tradingday.Tradingday;
-import org.trade.core.persistent.tradingday.TradingdayService;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.AccountType;
 import org.trade.core.valuetype.BarSize;
@@ -52,9 +51,6 @@ public class TradestrategyBase {
 
     private final static Logger _log = LoggerFactory.getLogger(TradestrategyBase.class);
     private final static LinkedList<Aspect> aspects = new LinkedList<>();
-
-    @Autowired
-    public TradingdayService tradingdayService;
 
     @Autowired
     public TradeService tradeService;
@@ -158,7 +154,7 @@ public class TradestrategyBase {
         }
 
         Tradingday tradingday = Tradingday.newInstance(open);
-        Tradingday instanceTradingDay = tradingdayService.findTradingdayByOpenCloseDate(tradingday.getOpen(), tradingday.getClose());
+        Tradingday instanceTradingDay = tradeService.getTradingdayService().findTradingdayByOpenCloseDate(tradingday.getOpen(), tradingday.getClose());
 
         if (null != instanceTradingDay) {
 

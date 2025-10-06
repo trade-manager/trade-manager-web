@@ -459,7 +459,7 @@ public class TradeOrderTableModel extends TableModel {
         if (null == element.getFilledQuantity()) {
 
             newRow.add(new Quantity(0));
-        } else{
+        } else {
 
             newRow.add(new Quantity(element.getFilledQuantity()));
         }

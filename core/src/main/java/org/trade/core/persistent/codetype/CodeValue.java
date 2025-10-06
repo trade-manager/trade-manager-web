@@ -1,4 +1,4 @@
-package org.trade.core.persistent.dao;
+package org.trade.core.persistent.codetype;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,6 +9,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import org.trade.core.dao.Aspect;
 import org.trade.core.factory.ClassFactory;
+import org.trade.core.persistent.dao.Tradestrategy;
 import org.trade.core.persistent.dao.series.indicator.IndicatorSeries;
 
 import java.io.Serial;

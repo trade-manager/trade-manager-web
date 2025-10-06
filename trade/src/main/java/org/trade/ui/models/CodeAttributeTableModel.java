@@ -1,8 +1,8 @@
 package org.trade.ui.models;
 
 import org.trade.base.TableModel;
-import org.trade.core.persistent.dao.CodeAttribute;
-import org.trade.core.persistent.dao.CodeType;
+import org.trade.core.persistent.codetype.CodeAttribute;
+import org.trade.core.persistent.codetype.CodeType;
 import org.trade.core.util.CoreUtils;
 import org.trade.core.valuetype.DataType;
 

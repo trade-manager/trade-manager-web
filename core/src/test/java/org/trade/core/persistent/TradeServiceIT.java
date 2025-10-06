@@ -15,9 +15,9 @@ import org.trade.core.TradestrategyBase;
 import org.trade.core.broker.TWSBrokerModel;
 import org.trade.core.dao.Aspect;
 import org.trade.core.dao.Aspects;
+import org.trade.core.persistent.codetype.CodeType;
 import org.trade.core.persistent.dao.Account;
 import org.trade.core.persistent.dao.Candle;
-import org.trade.core.persistent.dao.CodeType;
 import org.trade.core.persistent.dao.Contract;
 import org.trade.core.persistent.dao.ContractLite;
 import org.trade.core.persistent.dao.Portfolio;
@@ -122,7 +122,7 @@ public class TradeServiceIT extends TradestrategyBase {
         ZonedDateTime open = TradingCalendar.getTradingDayStart(
                 TradingCalendar.getPrevTradingDay(TradingCalendar.getDateTimeNowMarketTimeZone()));
         ZonedDateTime close = TradingCalendar.getTradingDayEnd(open);
-        Tradingdays tradingdays = this.tradingdayService.findTradingdaysByDateRangeOrderByOpenAsc(open, open);
+        Tradingdays tradingdays = this.tradeService.getTradingdayService().findTradingdaysByDateRangeOrderByOpenAsc(open, open);
         Tradingday tradingday = tradingdays.getTradingday(open, close);
 
         if (null == tradingday) {
@@ -713,7 +713,7 @@ public class TradeServiceIT extends TradestrategyBase {
         TradePosition tradePosition = new TradePosition(tradestrategy.getContractLite(),
                 TradingCalendar.getDateTimeNowMarketTimeZone(), Side.BOT);
         this.tradeService.saveAspect(tradePosition);
-        Tradingday result = this.tradingdayService
+        Tradingday result = this.tradeService.getTradingdayService()
                 .findTradingdayById(tradestrategy.getTradingday().getId());
         assertNotNull(result);
         this.tradeService.deleteTradingdayTradeOrders(result);
@@ -805,7 +805,7 @@ public class TradeServiceIT extends TradestrategyBase {
     @Test
     public void findTradingdayById() {
 
-        Tradingday result = this.tradingdayService
+        Tradingday result = this.tradeService.getTradingdayService()
                 .findTradingdayById(tradestrategy.getTradingday().getId());
         assertNotNull(result);
     }
@@ -813,7 +813,7 @@ public class TradeServiceIT extends TradestrategyBase {
     @Test
     public void findTradingdayByOpenDate() {
 
-        Tradingday result = this.tradingdayService.findTradingdayByOpenCloseDate(
+        Tradingday result = this.tradeService.getTradingdayService().findTradingdayByOpenCloseDate(
                 tradestrategy.getTradingday().getOpen(), tradestrategy.getTradingday().getClose());
         assertNotNull(result);
     }
@@ -821,7 +821,7 @@ public class TradeServiceIT extends TradestrategyBase {
     @Test
     public void findTradingdaysByDateRange() {
 
-        Tradingdays result = this.tradingdayService.findTradingdaysByDateRangeOrderByOpenAsc(
+        Tradingdays result = this.tradeService.getTradingdayService().findTradingdaysByDateRangeOrderByOpenAsc(
                 tradestrategy.getTradingday().getOpen(), tradestrategy.getTradingday().getOpen());
         assertNotNull(result);
     }
@@ -998,7 +998,7 @@ public class TradeServiceIT extends TradestrategyBase {
     @Test
     public void reassignStrategy() {
 
-        Tradingday tradingday = this.tradingdayService
+        Tradingday tradingday = this.tradeService.getTradingdayService()
                 .findTradingdayById(tradestrategy.getTradingday().getId());
         assertFalse(tradingday.getTradestrategies().isEmpty());
         Strategy toStrategy = (Strategy) DAOStrategy.newInstance().getObject();
