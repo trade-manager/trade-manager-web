@@ -27,7 +27,7 @@ public interface RuleService {
     /**
      * Method findByMaxRuleVersion.
      *
-     * @param strategy Strategy
+     * @param strategy    Strategy
      * @param contentType String
      * @return Integer
      */
@@ -36,7 +36,7 @@ public interface RuleService {
     /**
      * Method findByStrategyAndContentTypeAndRuleVersion.
      *
-     * @param strategy Strategy
+     * @param strategy    Strategy
      * @param contentType String
      * @param ruleVersion Integer
      * @return List<Rule>
@@ -55,7 +55,7 @@ public interface RuleService {
      * Method findByStrategyAndActive.
      *
      * @param strategy Strategy
-     * @param active Boolean
+     * @param active   Boolean
      * @return List<Rule>
      */
     List<Rule> findByStrategyAndActive(Strategy strategy, Boolean active);
@@ -63,7 +63,7 @@ public interface RuleService {
     /**
      * Method findByMaxVersion.
      *
-     * @param strategy Strategy
+     * @param strategy    Strategy
      * @param contentType String
      * @return Rule
      */

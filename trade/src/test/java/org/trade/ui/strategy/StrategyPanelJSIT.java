@@ -17,11 +17,11 @@ import org.trade.core.TradestrategyBase;
 import org.trade.core.broker.IBrokerModel;
 import org.trade.core.factory.ClassFactory;
 import org.trade.core.persistent.ServiceException;
-import org.trade.core.persistent.rule.Rule;
 import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.Tradestrategy;
 import org.trade.core.persistent.dao.strategy.IStrategyRule;
 import org.trade.core.persistent.dao.strategy.StrategyRuleJS;
+import org.trade.core.persistent.rule.Rule;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.DynamicCode;
 import org.trade.core.valuetype.BarSize;
@@ -95,7 +95,7 @@ public class StrategyPanelJSIT extends TradestrategyBase {
             Rule nextRule = new Rule(strategy, true, 1, null,
                     content.getBytes(), ContentType.JAVASCRIPT);
             strategy.getRules().add(nextRule);
-            strategy = this.tradeService.saveAspect(strategy);
+            strategy = this.tradeService.getAspectService().save(strategy);
         }
     }
 
@@ -115,7 +115,7 @@ public class StrategyPanelJSIT extends TradestrategyBase {
             if (!strategy.getRules().isEmpty()) {
 
                 strategy.getRules().clear();
-                strategy = this.tradeService.saveAspect(strategy);
+                strategy = this.tradeService.getAspectService().save(strategy);
             }
         }
 
@@ -308,7 +308,7 @@ public class StrategyPanelJSIT extends TradestrategyBase {
         String content = strategyPanel.readFile(fileName);
         textArea.setText(content);
         myrule.setRule(textArea.getText().getBytes());
-        myrule = this.tradeService.saveAspect(myrule);
+        myrule = this.tradeService.getAspectService().save(myrule);
         assertNotNull(myrule.getId());
         Rule ruleSaved = this.tradeService.getRuleService().findById(myrule.getId());
         assertNotNull(ruleSaved.getId());

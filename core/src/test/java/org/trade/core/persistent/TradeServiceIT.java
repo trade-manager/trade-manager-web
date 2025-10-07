@@ -15,13 +15,11 @@ import org.trade.core.TradestrategyBase;
 import org.trade.core.broker.TWSBrokerModel;
 import org.trade.core.dao.Aspect;
 import org.trade.core.dao.Aspects;
-import org.trade.core.persistent.codetype.CodeType;
 import org.trade.core.persistent.account.Account;
+import org.trade.core.persistent.codetype.CodeType;
 import org.trade.core.persistent.dao.Candle;
 import org.trade.core.persistent.dao.Contract;
 import org.trade.core.persistent.dao.ContractLite;
-import org.trade.core.persistent.portfolio.Portfolio;
-import org.trade.core.persistent.rule.Rule;
 import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradeOrderfill;
@@ -31,6 +29,8 @@ import org.trade.core.persistent.dao.Tradestrategy;
 import org.trade.core.persistent.dao.TradestrategyOrders;
 import org.trade.core.persistent.dao.series.indicator.IIndicatorDataset;
 import org.trade.core.persistent.dao.series.indicator.candle.CandleItem;
+import org.trade.core.persistent.portfolio.Portfolio;
+import org.trade.core.persistent.rule.Rule;
 import org.trade.core.persistent.tradingday.Tradingday;
 import org.trade.core.persistent.tradingday.Tradingdays;
 import org.trade.core.properties.ConfigProperties;
@@ -165,10 +165,10 @@ public class TradeServiceIT extends TradestrategyBase {
             TradePosition tradePosition = new TradePosition(tradestrategy.getContractLite(),
                     TradingCalendar.getDateTimeNowMarketTimeZone(), Side.BOT);
 
-            tradePosition = this.tradeService.saveAspect(tradePosition);
+            tradePosition = this.tradeService.getAspectService().save(tradePosition);
             this.addRecord(tradePosition);
             tradestrategy.getContractLite().setTradePosition(tradePosition);
-            ContractLite contractLite = this.tradeService.saveAspect(tradestrategy.getContractLite());
+            ContractLite contractLite = this.tradeService.getAspectService().save(tradestrategy.getContractLite());
             tradestrategy.setContractLite(contractLite);
             positionOrders = this.tradeService
                     .findPositionOrdersByTradestrategyId(tradestrategy.getId());
@@ -428,14 +428,14 @@ public class TradeServiceIT extends TradestrategyBase {
     @Test
     public void saveTradestrategy() {
 
-        Tradestrategy result = this.tradeService.saveAspect(tradestrategy);
+        Tradestrategy result = this.tradeService.getAspectService().save(tradestrategy);
         assertNotNull(result.getId());
     }
 
     @Test
     public void saveContract() {
 
-        Contract result = this.tradeService.saveAspect(tradestrategy.getContract());
+        Contract result = this.tradeService.getAspectService().save(tradestrategy.getContract());
         assertNotNull(result.getId());
     }
 
@@ -443,7 +443,7 @@ public class TradeServiceIT extends TradestrategyBase {
     public void setDefaultPortfolio() {
 
         tradestrategy.getPortfolio().setIsDefault(false);
-        this.tradeService.saveAspect(tradestrategy.getPortfolio());
+        this.tradeService.getAspectService().save(tradestrategy.getPortfolio());
         this.tradeService.getPortfolioService().resetDefault(tradestrategy.getPortfolio());
         assertTrue(tradestrategy.getPortfolio().getIsDefault());
     }
@@ -663,7 +663,7 @@ public class TradeServiceIT extends TradestrategyBase {
 
         TradePosition tradePosition = new TradePosition(tradestrategy.getContractLite(),
                 TradingCalendar.getDateTimeNowMarketTimeZone(), Side.BOT);
-        TradePosition resultTrade = this.tradeService.saveAspect(tradePosition);
+        TradePosition resultTrade = this.tradeService.getAspectService().save(tradePosition);
         TradePosition result = this.tradeService.findTradePositionById(resultTrade.getId());
         assertNotNull(result);
     }
@@ -674,16 +674,16 @@ public class TradeServiceIT extends TradestrategyBase {
         TradePosition tradePosition = new TradePosition(tradestrategy.getContractLite(),
                 TradingCalendar.getDateTimeNowMarketTimeZone(), Side.BOT);
 
-        TradePosition resultTrade = this.tradeService.saveAspect(tradePosition);
+        TradePosition resultTrade = this.tradeService.getAspectService().save(tradePosition);
         resultTrade.getContractLite().setTradePosition(resultTrade);
-        resultTrade.setContractLite(this.tradeService.saveAspect(resultTrade.getContractLite()));
+        resultTrade.setContractLite(this.tradeService.getAspectService().save(resultTrade.getContractLite()));
         assertNotNull(resultTrade);
 
         TradestrategyOrders result = this.tradeService
                 .findPositionOrdersByTradestrategyId(tradestrategy.getId());
         assertNotNull(result);
         resultTrade.getContractLite().setTradePosition(null);
-        resultTrade.setContractLite(this.tradeService.saveAspect(resultTrade.getContractLite()));
+        resultTrade.setContractLite(this.tradeService.getAspectService().save(resultTrade.getContractLite()));
     }
 
     @Test
@@ -692,14 +692,14 @@ public class TradeServiceIT extends TradestrategyBase {
         TradePosition tradePosition = new TradePosition(tradestrategy.getContractLite(),
                 TradingCalendar.getDateTimeNowMarketTimeZone(), Side.BOT);
         tradestrategy.getContractLite().setTradePosition(tradePosition);
-        TradePosition resultTrade = this.tradeService.saveAspect(tradePosition);
+        TradePosition resultTrade = this.tradeService.getAspectService().save(tradePosition);
         assertNotNull(resultTrade);
 
         TradestrategyOrders positionOrders = this.tradeService
                 .findPositionOrdersByTradestrategyId(tradestrategy.getId());
         _log.info("testFindVersionById tradestrategyId:{} version: {}", positionOrders.getId(), positionOrders.getVersion());
 
-        TradestrategyOrders result = this.tradeService.saveAspect(positionOrders);
+        TradestrategyOrders result = this.tradeService.getAspectService().save(positionOrders);
 
         _log.info("testFindVersionById tradestrategyId:{} version: {}", result.getId(), result.getVersion());
         result = this.tradeService.refreshPositionOrdersByTradestrategyId(positionOrders);
@@ -712,7 +712,7 @@ public class TradeServiceIT extends TradestrategyBase {
 
         TradePosition tradePosition = new TradePosition(tradestrategy.getContractLite(),
                 TradingCalendar.getDateTimeNowMarketTimeZone(), Side.BOT);
-        this.tradeService.saveAspect(tradePosition);
+        this.tradeService.getAspectService().save(tradePosition);
         Tradingday result = this.tradeService.getTradingdayService()
                 .findById(tradestrategy.getTradingday().getId());
         assertNotNull(result);
@@ -724,7 +724,7 @@ public class TradeServiceIT extends TradestrategyBase {
 
         TradePosition tradePosition = new TradePosition(tradestrategy.getContractLite(),
                 TradingCalendar.getDateTimeNowMarketTimeZone(), Side.BOT);
-        TradePosition result = this.tradeService.saveAspect(tradePosition);
+        TradePosition result = this.tradeService.getAspectService().save(tradePosition);
         assertNotNull(result.getId());
     }
 
@@ -868,7 +868,7 @@ public class TradeServiceIT extends TradestrategyBase {
         strategy = this.tradeService.findStrategyById(strategy.getId());
         Rule rule = new Rule(strategy, true, 0, comment, content.getBytes(), contentType);
         strategy.getRules().add(rule);
-        strategy = this.tradeService.saveAspect(strategy);
+        strategy = this.tradeService.getAspectService().save(strategy);
         rule = this.tradeService.getRuleService().findByMaxVersion(strategy, contentType);
         assertEquals(0, rule.getRuleVersion());
         assertEquals(contentType, rule.getContentType());
@@ -881,7 +881,7 @@ public class TradeServiceIT extends TradestrategyBase {
         strategy = this.tradeService.findStrategyById(strategy.getId());
         Rule rule = new Rule(strategy, true, 0, comment);
         strategy.getRules().add(rule);
-        strategy = this.tradeService.saveAspect(strategy);
+        strategy = this.tradeService.getAspectService().save(strategy);
         Rule latestRule = this.tradeService.getRuleService().findByMaxVersion(strategy, contentType);
         Integer version = 0;
 
@@ -892,7 +892,7 @@ public class TradeServiceIT extends TradestrategyBase {
 
         rule = new Rule(strategy, true, version, comment);
         strategy.getRules().add(rule);
-        strategy = this.tradeService.saveAspect(strategy);
+        strategy = this.tradeService.getAspectService().save(strategy);
         rule = strategy.getRules().getLast();
         assertEquals(1, rule.getRuleVersion());
     }
@@ -934,11 +934,11 @@ public class TradeServiceIT extends TradestrategyBase {
 
         Rule rule = new Rule(strategy, true, version, comment);
         strategy.getRules().add(rule);
-        strategy = this.tradeService.saveAspect(strategy);
+        strategy = this.tradeService.getAspectService().save(strategy);
         rule = strategy.getRules().getFirst();
         assertEquals(0, rule.getRuleVersion());
         strategy.getRules().clear();
-        this.tradeService.saveAspect(strategy);
+        this.tradeService.getAspectService().save(strategy);
     }
 
     @Test
@@ -951,7 +951,7 @@ public class TradeServiceIT extends TradestrategyBase {
     @Test
     public void findAspectsByClassName() throws Exception {
 
-        Aspects result = this.tradeService.findByClassName(tradestrategy.getClass().getName());
+        Aspects result = this.tradeService.getAspectService().findByClassName(tradestrategy.getClass().getName());
         assertNotNull(result);
     }
 
@@ -962,7 +962,7 @@ public class TradeServiceIT extends TradestrategyBase {
 
             org.trade.core.persistent.dao.series.indicator.IndicatorSeries series = indicator.getSeries(0);
             String indicatorName = series.getType().substring(0, series.getType().indexOf("Series"));
-            Aspects result = this.tradeService.findByClassNameAndFieldName(CodeType.class.getName(),
+            Aspects result = this.tradeService.getAspectService().findByClassNameAndFieldName(CodeType.class.getName(),
                     "name", indicatorName);
             assertNotNull(result);
         }
@@ -971,14 +971,14 @@ public class TradeServiceIT extends TradestrategyBase {
     @Test
     public void findAspectById() throws ClassNotFoundException {
 
-        Aspect result = this.tradeService.findAspectById(tradestrategy);
+        Aspect result = this.tradeService.getAspectService().findById(tradestrategy);
         assertNotNull(result);
     }
 
     @Test
     public void saveAspect() {
 
-        Aspect result = this.tradeService.saveAspect(tradestrategy);
+        Aspect result = this.tradeService.getAspectService().save(tradestrategy);
         assertNotNull(result);
     }
 
@@ -987,12 +987,12 @@ public class TradeServiceIT extends TradestrategyBase {
 
         final String symbol = "SAA-" + TradestrategyBase.getRandomNumber(4);
         Contract contract = new Contract(SECType.STOCK, symbol, Exchange.SMART, Currency.USD, null, null);
-        contract = tradeService.saveAspect(contract);
-        this.tradeService.deleteAspect(contract);
+        contract = tradeService.getAspectService().save(contract);
+        this.tradeService.getAspectService().delete(contract);
 
         Contract finalContract = contract;
         assertDoesNotThrow(
-                () -> assertNull(this.tradeService.findAspectById(finalContract)));
+                () -> assertNull(this.tradeService.getAspectService().findById(finalContract)));
     }
 
     @Test
@@ -1023,11 +1023,11 @@ public class TradeServiceIT extends TradestrategyBase {
         LocalDateTime now = LocalDateTime.now();
         ZonedDateTime expiry = now.atZone(ZoneId.systemDefault());
         Contract contract = new Contract("STK", "Test3", "SMART", "USD", expiry, new BigDecimal(1));
-        contract = tradeService.saveAspect(contract);
+        contract = tradeService.getAspectService().save(contract);
 
         Optional<Contract> contract1 = tradeService.findContractBySymbol(contract.getSymbol());
         assertThat(contract1.get()).extracting(Contract::getSymbol).isEqualTo(contract.getSymbol());
-        tradeService.deleteAspect(contract);
+        tradeService.getAspectService().delete(contract);
     }
 
 }

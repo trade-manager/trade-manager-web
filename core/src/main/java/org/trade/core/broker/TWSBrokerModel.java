@@ -1626,7 +1626,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
                      */
                     if (account.isDirty()) {
 
-                        account = tradeService.saveAspect(account, true);
+                        account = this.tradeService.getAspectService().save(account);
                         accountRequests.replace(accountNumber, account);
                         this.fireUpdateAccountTime(accountNumber);
                     }
@@ -1690,7 +1690,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
 
                 if (TWSBrokerModel.populateContract(contract, contractDetails)) {
 
-                    contract = tradeService.saveAspect(contract);
+                    contract = this.tradeService.getAspectService().save(contract);
                 }
             } else {
 
@@ -1774,7 +1774,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
                                     AccountType.INDIVIDUAL);
                         }
                         account.setAlias(item.getAlias());
-                        account = tradeService.saveAspect(account);
+                        account = this.tradeService.getAspectService().save(account);
                     }
                     client.requestFA(EClientSocket.GROUPS);
                     break;
@@ -1982,7 +1982,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
 
                                 if (updateCandleDB) {
 
-                                    tradeService.saveAspect(candleItem.getCandle());
+                                    this.tradeService.getAspectService().save(candleItem.getCandle());
                                     updateCandleDB = false;
                                 }
                             }

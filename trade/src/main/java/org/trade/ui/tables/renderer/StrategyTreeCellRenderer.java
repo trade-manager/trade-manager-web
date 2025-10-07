@@ -1,7 +1,7 @@
 package org.trade.ui.tables.renderer;
 
-import org.trade.core.persistent.rule.Rule;
 import org.trade.core.persistent.dao.Strategy;
+import org.trade.core.persistent.rule.Rule;
 import org.trade.ui.models.StrategyTreeModel;
 
 import javax.swing.*;

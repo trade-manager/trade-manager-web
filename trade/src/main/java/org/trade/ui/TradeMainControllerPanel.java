@@ -14,12 +14,10 @@ import org.trade.core.factory.ClassFactory;
 import org.trade.core.lookup.DBTableLookupServiceProvider;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.account.Account;
-import org.trade.core.persistent.dao.Candle;
 import org.trade.core.persistent.codetype.CodeType;
 import org.trade.core.persistent.codetype.CodeValue;
+import org.trade.core.persistent.dao.Candle;
 import org.trade.core.persistent.dao.Contract;
-import org.trade.core.persistent.portfolio.Portfolio;
-import org.trade.core.persistent.rule.Rule;
 import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradePosition;
@@ -29,6 +27,8 @@ import org.trade.core.persistent.dao.strategy.IStrategyChangeListener;
 import org.trade.core.persistent.dao.strategy.IStrategyRule;
 import org.trade.core.persistent.dao.strategy.StrategyRuleException;
 import org.trade.core.persistent.dao.strategy.StrategyRuleJS;
+import org.trade.core.persistent.portfolio.Portfolio;
+import org.trade.core.persistent.rule.Rule;
 import org.trade.core.persistent.tradingday.Tradingday;
 import org.trade.core.persistent.tradingday.Tradingdays;
 import org.trade.core.properties.ConfigProperties;
@@ -1244,7 +1244,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                          * when the default Portfolio has no accounts.
                          */
                         defaultPortfolio.setName(account.getAccountNumber());
-                        defaultPortfolio = tradeService.saveAspect(defaultPortfolio);
+                        defaultPortfolio = tradeService.getAspectService().save(defaultPortfolio);
 
                     } else {
 
@@ -1375,7 +1375,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
 
                                 value.setTradestrategy(instance);
                             }
-                            tradeService.saveAspect(value);
+                            tradeService.getAspectService().save(value);
                         }
                     }
                 }
@@ -1789,7 +1789,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
 
                                 if (result == JOptionPane.YES_OPTION) {
 
-                                    tradeService.deleteAllAspects(candles);
+                                    tradeService.getAspectService().deleteAll(candles);
                                 } else {
                                     return;
                                 }

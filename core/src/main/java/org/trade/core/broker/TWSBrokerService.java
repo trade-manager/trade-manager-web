@@ -1009,7 +1009,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
                             AccountType.INDIVIDUAL);
                 }
                 account.setAlias(alias.alias());
-                account = getPersistentModel().saveAspect(account);
+                account = getPersistentModel().getAspectService().save(account);
             }
         }
     }
@@ -1364,7 +1364,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
 
                                     if (updateCandleDB) {
 
-                                        getPersistentModel().saveAspect(candleItem.getCandle());
+                                        getPersistentModel().getAspectService().save(candleItem.getCandle());
                                         updateCandleDB = false;
                                     }
                                 }

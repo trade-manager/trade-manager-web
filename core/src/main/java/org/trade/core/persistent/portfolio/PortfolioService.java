@@ -50,6 +50,7 @@ public interface PortfolioService {
      * @param instance
      */
     void resetDefault(final Portfolio instance);
+
     /**
      * Method save.
      *

@@ -958,7 +958,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
         try {
 
             this.getTradestrategyOrders().setStatus(status);
-            this.tradestrategyOrders = tradeService.saveAspect(this.getTradestrategyOrders());
+            this.tradestrategyOrders = this.tradeService.getAspectService().save(this.getTradestrategyOrders());
         } catch (Exception ex) {
 
             throw new StrategyRuleException(1, 400, "Error updating tradestrategy status: " + ex.getMessage());

@@ -104,7 +104,7 @@ public class TWSFinancialAccountRequestIT extends TradestrategyBase {
 
                 item.setCurrency(Currency.USD);
                 item.setAccountType(AccountType.INDIVIDUAL);
-                item = tradeService.saveAspect(item);
+                item = tradeService.getAspectService().save(item);
                 assertNotNull(item.getId());
                 this.addRecord(item);
                 accounts.add(item);
@@ -129,7 +129,7 @@ public class TWSFinancialAccountRequestIT extends TradestrategyBase {
 
                 item.setCurrency(Currency.USD);
                 item.setAccountType(AccountType.INDIVIDUAL);
-                item = tradeService.saveAspect(item);
+                item = tradeService.getAspectService().save(item);
                 assertNotNull(item.getId());
                 this.addRecord(item);
                 accounts.add(item);
@@ -169,7 +169,7 @@ public class TWSFinancialAccountRequestIT extends TradestrategyBase {
 
                 this.addRecord(account);
             }
-            tradeService.deleteAspect(item);
+            tradeService.getAspectService().delete(item);
         }
     }
 
@@ -195,7 +195,7 @@ public class TWSFinancialAccountRequestIT extends TradestrategyBase {
 
                 this.addRecord(account);
             }
-            tradeService.deleteAspect(item);
+            tradeService.getAspectService().delete(item);
         }
     }
 
@@ -224,7 +224,7 @@ public class TWSFinancialAccountRequestIT extends TradestrategyBase {
                 this.addRecord(account);
             }
 
-            tradeService.deleteAspect(item);
+            tradeService.getAspectService().delete(item);
         }
     }
 
@@ -266,7 +266,7 @@ public class TWSFinancialAccountRequestIT extends TradestrategyBase {
 
                 this.addRecord(account);
             }
-            tradeService.deleteAspect(item);
+            tradeService.getAspectService().delete(item);
         }
     }
 
@@ -299,7 +299,7 @@ public class TWSFinancialAccountRequestIT extends TradestrategyBase {
                 this.addRecord(account);
             }
 
-            tradeService.deleteAspect(item);
+            tradeService.getAspectService().delete(item);
         }
     }
 }

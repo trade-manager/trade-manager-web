@@ -9,11 +9,8 @@ import jakarta.persistence.criteria.Expression;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.trade.core.persistent.dao.Strategy;
-import org.trade.core.persistent.domain.DomainRepository;
-import org.trade.core.persistent.portfolio.Portfolio;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,18 +42,18 @@ public class RuleServiceImpl implements RuleService {
         return this.ruleRepository.findAll();
     }
 
-    public  List<Rule> findByStrategyAndContentTypeAndRuleVersion(Strategy strategy, String contentType, Integer ruleVersion){
+    public List<Rule> findByStrategyAndContentTypeAndRuleVersion(Strategy strategy, String contentType, Integer ruleVersion) {
 
-        return this.ruleRepository.findByStrategyAndContentTypeAndRuleVersion(strategy,  contentType,  ruleVersion);
+        return this.ruleRepository.findByStrategyAndContentTypeAndRuleVersion(strategy, contentType, ruleVersion);
     }
 
-    public  List<Rule> findByStrategy(Strategy strategy){
+    public List<Rule> findByStrategy(Strategy strategy) {
         return this.ruleRepository.findByStrategy(strategy);
     }
 
-    public  List<Rule> findByStrategyAndActive(Strategy strategy, Boolean active){
+    public List<Rule> findByStrategyAndActive(Strategy strategy, Boolean active) {
 
-        return this.ruleRepository.findByStrategyAndActive(strategy,  active);
+        return this.ruleRepository.findByStrategyAndActive(strategy, active);
     }
 
     /**

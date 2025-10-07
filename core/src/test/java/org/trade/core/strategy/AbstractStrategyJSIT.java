@@ -17,7 +17,6 @@ import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
 import org.trade.core.broker.IBrokerModel;
 import org.trade.core.factory.ClassFactory;
-import org.trade.core.persistent.rule.Rule;
 import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradeOrderfill;
@@ -26,6 +25,7 @@ import org.trade.core.persistent.dao.Tradestrategy;
 import org.trade.core.persistent.dao.series.indicator.StrategyData;
 import org.trade.core.persistent.dao.strategy.IStrategyRule;
 import org.trade.core.persistent.dao.strategy.StrategyRuleJS;
+import org.trade.core.persistent.rule.Rule;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.valuetype.Action;
 import org.trade.core.valuetype.BarSize;
@@ -125,7 +125,7 @@ public class AbstractStrategyJSIT extends TradestrategyBase {
             Rule nextRule = new Rule(strategy, true, 1, null,
                     content.getBytes(), ContentType.JAVASCRIPT);
             strategy.getRules().add(nextRule);
-            strategy = this.tradeService.saveAspect(strategy);
+            strategy = this.tradeService.getAspectService().save(strategy);
         }
 
         strategyProxy = new StrategyRuleJS(tradeService, brokerModel, tradestrategy.getStrategyData(),
@@ -155,12 +155,12 @@ public class AbstractStrategyJSIT extends TradestrategyBase {
         strategy = strategy.getStrategyManager();
 
         tradestrategy.setStrategy(strategy);
-        tradestrategy = tradeService.saveAspect(tradestrategy);
+        tradestrategy = tradeService.getAspectService().save(tradestrategy);
 
         assertEquals(1, tradestrategy.getTradeOrders().size());
         TradeOrder tradeOrder = tradestrategy.getTradeOrders().getFirst();
         tradeOrder.setStatus(OrderStatus.SUBMITTED);
-        tradeOrder = tradeService.saveAspect(tradeOrder);
+        tradeOrder = tradeService.getAspectService().save(tradeOrder);
         TradeOrderfill tradeOrderfill = new TradeOrderfill(tradeOrder, tradeOrder.getAccountNumber(), tradeOrder.getAuxPrice(),
                 tradeOrder.getQuantity(), Exchange.SMART, String.valueOf(tradeOrder.getOrderKey()), tradeOrder.getAuxPrice(), tradeOrder.getQuantity(), (tradeOrder.getAction().equals(Action.BUY) ? Side.BOT : Side.SLD),
                 tradeOrder.getOrderCreateDate());
@@ -177,7 +177,7 @@ public class AbstractStrategyJSIT extends TradestrategyBase {
             Rule nextRule = new Rule(strategy, true, 1, null,
                     content.getBytes(), ContentType.JAVASCRIPT);
             strategy.getRules().add(nextRule);
-            strategy = this.tradeService.saveAspect(strategy);
+            strategy = this.tradeService.getAspectService().save(strategy);
         }
 
         tradestrategy.setStrategyData(StrategyData.create(tradestrategy));

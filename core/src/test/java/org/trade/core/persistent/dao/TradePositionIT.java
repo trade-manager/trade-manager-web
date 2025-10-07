@@ -71,10 +71,10 @@ public class TradePositionIT extends TradestrategyBase {
         TradePosition instance = new TradePosition(tradestrategy.getContractLite(),
                 TradingCalendar.getDateTimeNowMarketTimeZone(), Side.BOT);
 
-        instance = tradeService.saveAspect(instance);
+        instance = tradeService.getAspectService().save(instance);
         assertNotNull(instance.getId());
         _log.info("testAddTradePosition tradestrategyId: {}IdTradePosition: {}", tradestrategy.getId(), instance.getId());
-        tradeService.deleteAspect(instance);
+        tradeService.getAspectService().delete(instance);
         _log.info("testDeleteTradePosition tradestrategyId: {}", tradestrategy.getId());
         this.addRecord(instance);
     }

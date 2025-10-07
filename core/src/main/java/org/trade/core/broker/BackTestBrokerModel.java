@@ -989,7 +989,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
 
                 if (BackTestBrokerModel.populateContract(contract, contractDetails)) {
 
-                    contract = tradeService.saveAspect(contract);
+                    contract = tradeService.getAspectService().save(contract);
                     contractRequests.remove(reqId);
                 }
             }

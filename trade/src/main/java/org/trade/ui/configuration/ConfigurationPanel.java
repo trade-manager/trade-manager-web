@@ -14,9 +14,9 @@ import org.trade.core.lookup.DBTableLookupServiceProvider;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.codetype.CodeType;
 import org.trade.core.persistent.codetype.CodeValue;
-import org.trade.core.persistent.portfolio.Portfolio;
 import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.series.indicator.IndicatorSeries;
+import org.trade.core.persistent.portfolio.Portfolio;
 import org.trade.core.valuetype.DAOEntryLimit;
 import org.trade.core.valuetype.ReferenceTable;
 import org.trade.ui.models.AccountTableModel;
@@ -190,7 +190,7 @@ public class ConfigurationPanel extends BasePanel {
 
                 if (item.isDirty()) {
 
-                    item = tradeService.saveAspect(item);
+                    item = tradeService.getAspectService().save(item);
 
                     /*
                      * Replace the aspect with the mergedAspect then update the
@@ -201,7 +201,7 @@ public class ConfigurationPanel extends BasePanel {
             }
 
             aspects.setDirty(false);
-            Aspects aspects = tradeService.findByClassName(className);
+            Aspects aspects = tradeService.getAspectService().findByClassName(className);
 
             for (Aspect currAspect : aspects.getAspects()) {
 
@@ -218,7 +218,7 @@ public class ConfigurationPanel extends BasePanel {
 
                 if (!exists) {
 
-                    tradeService.deleteAspect(currAspect);
+                    tradeService.getAspectService().delete(currAspect);
                 }
             }
 
@@ -359,7 +359,7 @@ public class ConfigurationPanel extends BasePanel {
 
         try {
 
-            aspects = tradeService.findByClassName(PERSISTENT_PACKAGE + refTableClass);
+            aspects = tradeService.getAspectService().findByClassName(PERSISTENT_PACKAGE + refTableClass);
             List<Object> params = new ArrayList<>();
             tableModel = (AspectTableModel) ClassFactory
                     .getCreateClass("org.trade.ui.models." + refTableClass + "TableModel", params, this);

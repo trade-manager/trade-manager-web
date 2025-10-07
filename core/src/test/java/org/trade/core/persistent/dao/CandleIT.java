@@ -98,7 +98,7 @@ public class CandleIT extends TradestrategyBase {
             candle.setVwap(new BigDecimal("20.1"));
             candle.setTradeCount(10);
 
-            candle = tradeService.saveAspect(candle);
+            candle = tradeService.getAspectService().save(candle);
             assertNotNull(candle.getId());
             _log.info("addCandle IdCandle: {}", candle.getId());
         }

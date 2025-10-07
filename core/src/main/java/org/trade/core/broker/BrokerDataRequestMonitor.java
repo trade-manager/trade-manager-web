@@ -538,7 +538,7 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
 
                 if (null == contract) {
 
-                    contract = this.tradeService.saveAspect(series.getContract());
+                    contract = this.tradeService.getAspectService().save(series.getContract());
                 }
             }
 

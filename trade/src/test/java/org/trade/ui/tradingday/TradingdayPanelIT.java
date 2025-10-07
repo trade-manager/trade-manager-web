@@ -95,7 +95,7 @@ public class TradingdayPanelIT extends TradestrategyBase {
         tradingdayTable.setRowSelectionInterval(0, 0);
 
         tradestrategy.getContract().setIndustry("Computer");
-        Contract result = this.tradeService.saveAspect(tradestrategy.getContract());
+        Contract result = this.tradeService.getAspectService().save(tradestrategy.getContract());
         assertNotNull(result);
         Tradingday instance2 = this.tradeService.getTradingdayService()
                 .findById(tradestrategy.getTradingday().getId());

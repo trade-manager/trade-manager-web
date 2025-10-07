@@ -1,14 +1,11 @@
 package org.trade.core.persistent;
 
-import org.trade.core.dao.Aspect;
-import org.trade.core.dao.AspectRepository;
 import org.trade.core.dao.AspectService;
 import org.trade.core.persistent.account.AccountService;
 import org.trade.core.persistent.codetype.CodeTypeService;
 import org.trade.core.persistent.dao.Candle;
 import org.trade.core.persistent.dao.Contract;
 import org.trade.core.persistent.dao.ContractLite;
-import org.trade.core.persistent.rule.Rule;
 import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradeOrderfill;
@@ -35,7 +32,7 @@ import java.util.Optional;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-public interface TradeService extends AspectService {
+public interface TradeService {
 
     String PERSISTENT_PACKAGE = "org.trade.core.persistent.dao.";
 
@@ -43,11 +40,11 @@ public interface TradeService extends AspectService {
     int SCALE_2 = 2;
 
     /**
-     * Method getAspectRepository.
+     * Method getAspectService.
      *
-     * @return AspectRepository<Aspect, Long>
+     * @return AspectService
      */
-    AspectRepository<Aspect, Long> getAspectRepository();
+    AspectService getAspectService();
 
     /**
      * Method getTradingdayService.
@@ -83,13 +80,6 @@ public interface TradeService extends AspectService {
      * @return RuleService
      */
     RuleService getRuleService();
-
-    /**
-     * Method deleteAllAspects.
-     *
-     * @param entities Iterable<? extends Aspect>
-     */
-    void deleteAllAspects(Iterable<? extends Aspect> entities);
 
     /**
      * Method findContractBySymbol.
@@ -376,46 +366,6 @@ public interface TradeService extends AspectService {
      * @return List<Strategy>
      */
     List<Strategy> findStrategies();
-
-    /**
-     * Method findAspectById.
-     *
-     * @param instance Aspect
-     * @return Aspect
-     */
-    Aspect findAspectById(final Aspect instance) throws ClassNotFoundException;
-
-    /**
-     * Method saveAspect.
-     *
-     * @param instance Aspect
-     * @return Aspect
-     */
-    <T extends Aspect> T saveAspect(T instance);
-
-    /**
-     * Delete all aspects.
-     *
-     * @param entities Iterable<S>
-     * @return <S extends Aspect> List<S>
-     */
-    <S extends Aspect> List<S> saveAllAspects(final Iterable<S> entities);
-
-    /**
-     * Method saveAspect.
-     *
-     * @param instance        Aspect
-     * @param overrideVersion boolean
-     * @return Aspect
-     */
-    <T extends Aspect> T saveAspect(T instance, boolean overrideVersion);
-
-    /**
-     * Method removeAspect.
-     *
-     * @param instance Aspect
-     */
-    void deleteAspect(Aspect instance);
 
     /**
      * Method reassignStrategy.

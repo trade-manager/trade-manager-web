@@ -11,7 +11,6 @@ import org.trade.core.broker.IBrokerModel;
 import org.trade.core.factory.ClassFactory;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.dao.Contract;
-import org.trade.core.persistent.rule.Rule;
 import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.series.indicator.CandleDataset;
 import org.trade.core.persistent.dao.series.indicator.CandleSeries;
@@ -19,6 +18,7 @@ import org.trade.core.persistent.dao.series.indicator.StrategyData;
 import org.trade.core.persistent.dao.series.indicator.candle.CandlePeriod;
 import org.trade.core.persistent.dao.strategy.IStrategyRule;
 import org.trade.core.persistent.dao.strategy.StrategyRuleJS;
+import org.trade.core.persistent.rule.Rule;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.DynamicCode;
 import org.trade.core.util.time.RegularTimePeriod;
@@ -442,7 +442,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
                 for (Rule rule : rules) {
 
                     rule.setActive(!activeCheckBox.getState());
-                    rule = this.tradeService.saveAspect(rule);
+                    rule = this.tradeService.getAspectService().save(rule);
                 }
             }
 
@@ -458,7 +458,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
 
                 Rule nextRule = new Rule(this.currentRule.getStrategy(), activeCheckBox.getState(), version, commentText.getText(), getContent().getBytes(), filesMap.get(getExtension(fileNameSource)));
                 this.currentRule.getStrategy().getRules().add(nextRule);
-                this.currentRule = this.tradeService.saveAspect(nextRule);
+                this.currentRule = this.tradeService.getAspectService().save(nextRule);
                 doSaveFile(fileNameSource, getContent());
                 doSaveFile(fileNameComments, getComments());
 
@@ -480,7 +480,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
 
                 this.currentRule.setRule(getContent().getBytes());
                 this.currentRule.setActive(activeCheckBox.getState());
-                this.currentRule = this.tradeService.saveAspect(this.currentRule);
+                this.currentRule = this.tradeService.getAspectService().save(this.currentRule);
                 doSaveFile(fileNameSource, getContent());
                 doSaveFile(fileNameComments, getComments());
             }
@@ -554,7 +554,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
                     if (strategy.getId().equals(this.currentRule.getStrategy().getId())) {
 
                         strategy.getRules().remove(this.currentRule);
-                        strategy = this.tradeService.saveAspect(strategy);
+                        strategy = this.tradeService.getAspectService().save(strategy);
                     }
                 }
 
@@ -686,7 +686,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
             Rule nextRule = new Rule(strategy, active, 1, comments,
                     content.getBytes(), filesMap.get(getExtension(fileName)));
             strategy.getRules().add(nextRule);
-            this.tradeService.saveAspect(nextRule);
+            this.tradeService.getAspectService().save(nextRule);
         } else {
 
             Rule latestRule = this.tradeService.getRuleService().findByMaxVersion(strategy, filesMap.get(getExtension(fileName)));
@@ -710,7 +710,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
                     if (null == rule.getRule() && null != content) {
 
                         rule.setRule(content.getBytes());
-                        rule = this.tradeService.saveAspect(rule);
+                        rule = this.tradeService.getAspectService().save(rule);
                     } else {
 
                         String ruleDB = new String(rule.getRule());
@@ -728,7 +728,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
                     if (null == rule.getComment() && null != comments) {
 
                         rule.setComment(comments);
-                        this.tradeService.saveAspect(rule);
+                        this.tradeService.getAspectService().save(rule);
                     } else {
 
                         String commentsDB = rule.getComment();

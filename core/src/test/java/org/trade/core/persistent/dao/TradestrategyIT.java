@@ -99,7 +99,7 @@ public class TradestrategyIT extends TradestrategyBase {
         _log.info("findPositionOrdersById PositionOrders id: {}", positionOrders.getId());
         positionOrders.setStatus(TradestrategyStatus.CANCELLED);
 
-        positionOrders = tradeService.saveAspect(positionOrders);
+        positionOrders = tradeService.getAspectService().save(positionOrders);
         assertNotNull(positionOrders);
         positionOrders = tradestrategyRepository.findPositionOrdersByTradestrategyId(tradestrategy.getId());
         _log.info("findPositionOrdersById PositionOrders id: {} Status: {}", positionOrders.getId(), positionOrders.getStatus());
@@ -169,13 +169,13 @@ public class TradestrategyIT extends TradestrategyBase {
                 contracts.add(tradestrategy.getContract().getSymbol());
             }
 
-            tradeService.deleteAspect(tradingday);
+            tradeService.getAspectService().delete(tradingday);
 
             for (String symbol : contracts) {
 
                 Optional<Contract> contract = tradeService.findContractBySymbol(symbol);
                 assertTrue(contract.isPresent());
-                tradeService.deleteAspect(contract.get());
+                tradeService.getAspectService().delete(contract.get());
             }
         }
     }
@@ -201,13 +201,13 @@ public class TradestrategyIT extends TradestrategyBase {
                 contracts.add(tradestrategy.getContract().getSymbol());
             }
 
-            tradeService.deleteAspect(tradingday);
+            tradeService.getAspectService().delete(tradingday);
 
             for (String symbol : contracts) {
 
                 Optional<Contract> contract = tradeService.findContractBySymbol(symbol);
                 assertTrue(contract.isPresent());
-                tradeService.deleteAspect(contract.get());
+                tradeService.getAspectService().delete(contract.get());
             }
         }
     }
