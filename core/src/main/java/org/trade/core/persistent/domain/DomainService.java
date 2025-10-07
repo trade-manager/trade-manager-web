@@ -9,40 +9,40 @@ import java.util.List;
 public interface DomainService {
 
     /**
-     * Method getDomains.
+     * Method finaAll.
      *
      * @return List<Domain>
      */
-    List<Domain> getDomains();
+    List<Domain> finaAll();
 
     /**
-     * Method saveDomain.
+     * Method save.
      *
      * @param domain Domain
      * @return Domain
      */
-    Domain saveDomain(Domain domain);
+    Domain save(Domain domain);
 
     /**
-     * Method deleteDomain.
+     * Method delete.
      *
      * @param domain Domain
      */
-    void deleteDomain(Domain domain);
+    void delete(Domain domain);
 
     /**
-     * Method findDomainByName.
+     * Method findByName.
      *
      * @param name String
      * @return Domain
      */
-    Domain findDomainByName(String name);
+    Domain findByName(String name);
 
     /**
-     * Method validateAndGetDomain.
+     * Method validateAndGet.
      *
      * @param name String
      * @return Domain
      */
-    Domain validateAndGetDomain(String name);
+    Domain validateAndGet(String name);
 }

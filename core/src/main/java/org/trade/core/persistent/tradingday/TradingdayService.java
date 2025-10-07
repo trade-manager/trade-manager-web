@@ -18,21 +18,21 @@ public interface TradingdayService {
     Tradingdays findTradingdaysByDateRangeOrderByOpenAsc(ZonedDateTime startDate, ZonedDateTime endDate);
 
     /**
-     * Method findTradingdayById.
+     * Method findById.
      *
      * @param tradingdayId Long
      * @return Tradingday
      */
-    Tradingday findTradingdayById(Long tradingdayId);
+    Tradingday findById(Long tradingdayId);
 
     /**
-     * Method findTradingdayByOpenDate.
+     * Method findByOpenCloseDate.
      *
      * @param openDate  ZonedDateTime
      * @param closeDate ZonedDateTime
      * @return Tradingday
      */
-    Tradingday findTradingdayByOpenCloseDate(ZonedDateTime openDate, ZonedDateTime closeDate);
+    Tradingday findByOpenCloseDate(ZonedDateTime openDate, ZonedDateTime closeDate);
 
     /**
      * Method findByOpenCloseDateOrderByOpenAsc.

@@ -9,42 +9,42 @@ import java.util.List;
 public interface RoleService {
 
     /**
-     * Method getRoles.
+     * Method findAll.
      *
      * @return List<Role>
      */
-    List<Role> getRoles();
+    List<Role> findAll();
 
     /**
-     * Method saveRole.
+     * Method save.
      *
      * @param role Role
      * @return Role
      */
-    Role saveRole(Role role);
+    Role save(Role role);
 
     /**
-     * Method deleteRole.
+     * Method delete.
      *
      * @param role Role
      */
-    void deleteRole(Role role);
+    void delete(Role role);
 
     /**
-     * Method findRoleByName.
+     * Method findByName.
      *
      * @param name String
      * @return Role
      */
-    Role findRoleByName(String name);
+    Role findByName(String name);
 
     /**
-     * Method validateAndGetDomain.
+     * Method validateAndGet.
      *
      * @param name String
      * @return Role
      */
-    Role validateAndGetDomain(String name);
+    Role validateAndGet(String name);
 
 
     /**

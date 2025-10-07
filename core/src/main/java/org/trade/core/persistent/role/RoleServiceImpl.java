@@ -26,27 +26,27 @@ public class RoleServiceImpl implements RoleService {
         this.roleRepository = roleRepository;
     }
 
-    public List<Role> getRoles() {
+    public List<Role> findAll() {
 
         return roleRepository.findAllByOrderByName();
     }
 
-    public Role findRoleByName(String name) {
+    public Role findByName(String name) {
 
         return roleRepository.findByName(name).orElse(null);
     }
 
-    public Role validateAndGetDomain(String name) {
+    public Role validateAndGet(String name) {
 
         return roleRepository.findByName(name).orElseThrow(() -> new DomainNotFoundException(String.format("Role with name %s not found", name)));
     }
 
-    public Role saveRole(Role role) {
+    public Role save(Role role) {
 
         return roleRepository.save(role);
     }
 
-    public void deleteRole(Role role) {
+    public void delete(Role role) {
 
         if (null == role) {
 

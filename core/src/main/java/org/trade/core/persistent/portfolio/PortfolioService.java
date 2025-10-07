@@ -16,46 +16,53 @@ public interface PortfolioService {
     Portfolio findDefault();
 
     /**
-     * Method findPortfolioById.
+     * Method findById.
      *
      * @return Portfolio
      */
-    Portfolio findPortfolioById(Long id);
+    Portfolio findById(Long id);
 
     /**
-     * Method findPortfolioByName.
+     * Method findByName.
      *
      * @return Portfolio
      */
-    Portfolio findPortfolioByName(String name);
+    Portfolio findByName(String name);
 
     /**
-     * Method validateAndGetPortfolio.
+     * Method validateAndGet.
      *
      * @param name String
      * @return Portfolio
      */
-    Portfolio validateAndGetPortfolio(String name);
+    Portfolio validateAndGet(String name);
 
     /**
-     * Method findAllPortfolios.
+     * Method findAll.
      *
      * @return List<Portfolio>
      */
-    List<Portfolio> findAllPortfolios();
+    List<Portfolio> findAll();
 
     /**
-     * Method savePortfolio.
+     * Method resetDefault.
+     *
+     * @param instance
+     */
+    void resetDefault(final Portfolio instance);
+
+    /**
+     * Method save.
      *
      * @param portfolio Portfolio
      * @return Portfolio
      */
-    Portfolio savePortfolio(Portfolio portfolio);
+    Portfolio save(Portfolio portfolio);
 
     /**
-     * Method deletePortfolio.
+     * Method delete.
      *
      * @param portfolio Portfolio
      */
-    void deletePortfolio(Portfolio portfolio);
+    void delete(Portfolio portfolio);
 }

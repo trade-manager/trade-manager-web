@@ -65,7 +65,7 @@ public class DatabaseInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) {
 
-        Domain global = this.domainService.findDomainByName("global");
+        Domain global = this.domainService.findByName("global");
         User admin = this.userService.findUserByName("Admin");
 
         if (null != admin) {
@@ -73,7 +73,7 @@ public class DatabaseInitializer implements CommandLineRunner {
             if (!this.passwordEncoder.matches("admin", admin.getPassword())) {
 
                 admin.setPassword(this.passwordEncoder.encode("admin"));
-                admin = this.userService.saveUser(admin);
+                admin = this.userService.save(admin);
                 _log.info("Info DatabaseLoader::run {} password: {}", admin.getName(), admin.getPassword());
             }
         }
@@ -83,16 +83,16 @@ public class DatabaseInitializer implements CommandLineRunner {
         if (null == oliver) {
 
             List<Role> roles = new ArrayList<>();
-            roles.add(this.roleService.findRoleByName(ROLE_USER));
+            roles.add(this.roleService.findByName(ROLE_USER));
             String name = "oliver";
             String email = name + "." + name + "@" + global.getName() + ".com";
-            oliver = this.userService.saveUser(new User(name, name, name, name, email, passwordEncoder.encode("user"), global, roles));
+            oliver = this.userService.save(new User(name, name, name, name, email, passwordEncoder.encode("user"), global, roles));
         } else {
 
             if (!this.passwordEncoder.matches("user", oliver.getPassword())) {
 
                 oliver.setPassword(this.passwordEncoder.encode("user"));
-                oliver = this.userService.saveUser(oliver);
+                oliver = this.userService.save(oliver);
                 _log.info("Info DatabaseLoader::run {} password: {}", oliver.getName(), oliver.getPassword());
             }
         }
@@ -115,7 +115,7 @@ public class DatabaseInitializer implements CommandLineRunner {
 
         SecurityContextHolder.clearContext();
 
-        if (!userService.getUsers().isEmpty()) {
+        if (!userService.findAll().isEmpty()) {
 
             return;
         }
@@ -123,10 +123,10 @@ public class DatabaseInitializer implements CommandLineRunner {
         USERS.forEach(user -> {
 
             user.setPassword(this.passwordEncoder.encode(user.getPassword()));
-            this.userService.saveUser(user);
+            this.userService.save(user);
         });
 
-        getEmployees().forEach(employeeService::saveEmployee);
+        getEmployees().forEach(employeeService::save);
         _log.info("Database initialized");
     }
 
@@ -141,11 +141,11 @@ public class DatabaseInitializer implements CommandLineRunner {
     private void createEmployee(String firstName, String lastName, String description, String domain, User user) {
 
         String email = firstName + "." + lastName + "@" + domain + ".com";
-        Employee employee = this.employeeService.findEmployeeByEmail(email);
+        Employee employee = this.employeeService.findByEmail(email);
 
         if (null == employee) {
 
-            this.employeeService.saveEmployee(new Employee(firstName + " " + lastName, firstName, lastName, description, email, user));
+            this.employeeService.save(new Employee(firstName + " " + lastName, firstName, lastName, description, email, user));
         }
     }
 }

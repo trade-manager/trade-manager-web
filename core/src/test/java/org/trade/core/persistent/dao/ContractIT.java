@@ -84,7 +84,7 @@ public class ContractIT extends TradestrategyBase {
         // values in it by reading them from form object
         contract = new Contract(SECType.STOCK, "QQQ", Exchange.SMART, Currency.USD, expiry, new BigDecimal(1));
 
-        contract = tradeService.saveAspect(contract);
+        contract = tradeService.getAspectService().save(contract);
         _log.info("Contract added Id:{}", contract.getId());
         this.addRecord(contract);
         List<Contract> contracts = contractRepository.findContractByUniqueKey(contract.getSecType(),
@@ -105,7 +105,7 @@ public class ContractIT extends TradestrategyBase {
         _log.info("Expiry Date: {}", expiry);
         contract = new Contract(SECType.FUTURE, "ES", Exchange.SMART, Currency.USD, expiry,
                 new BigDecimal(50));
-        contract = tradeService.saveAspect(contract);
+        contract = tradeService.getAspectService().save(contract);
         _log.info("Contract added Id:{}", contract.getId());
         this.addRecord(contract);
 

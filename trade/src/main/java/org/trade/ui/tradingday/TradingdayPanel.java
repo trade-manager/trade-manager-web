@@ -9,10 +9,10 @@ import org.trade.core.persistent.ServiceException;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.account.Account;
 import org.trade.core.persistent.codetype.CodeType;
-import org.trade.core.persistent.portfolio.Portfolio;
 import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.Tradestrategy;
 import org.trade.core.persistent.dao.strategy.IStrategyRule;
+import org.trade.core.persistent.portfolio.Portfolio;
 import org.trade.core.persistent.tradingday.Tradingday;
 import org.trade.core.persistent.tradingday.Tradingdays;
 import org.trade.core.properties.ConfigProperties;
@@ -257,7 +257,7 @@ public class TradingdayPanel extends BasePanel {
             jSplitPane1.setOneTouchExpandable(true);
             this.add(jSplitPane1);
             DAOPortfolio code = DAOPortfolio.newInstance();
-            Portfolio portfolio = tradeService.findPortfolioByName(((Portfolio) Objects.requireNonNull(code).getObject()).getName());
+            Portfolio portfolio = tradeService.getPortfolioService().findByName(((Portfolio) Objects.requireNonNull(code).getObject()).getName());
             this.setPortfolioLabel(portfolio);
             enableTradestrategyButtons(null);
         } catch (Exception ex) {
@@ -573,7 +573,7 @@ public class TradingdayPanel extends BasePanel {
 
             if (null != currentTradingday && null != currentTradingday.getId()) {
 
-                Tradingday instance = tradeService.getTradingdayService().findTradingdayById(currentTradingday.getId());
+                Tradingday instance = tradeService.getTradingdayService().findById(currentTradingday.getId());
                 instance.populateStrategyData(currentTradingday);
                 tradingdays.replaceTradingday(instance);
             }
@@ -1067,7 +1067,7 @@ public class TradingdayPanel extends BasePanel {
             enable = true;
             transferButton.setTransferObject(tradestrategy.getId());
             try {
-                CodeType codeType = tradeService.getCodeTypeService().findCodeTypeByNameAndType(tradestrategy.getStrategy().getName(),
+                CodeType codeType = tradeService.getCodeTypeService().findByNameAndType(tradestrategy.getStrategy().getName(),
                         CodeType.StrategyParameters);
                 if (null != codeType) {
                     strategyParmButton.setEnabled(true);

@@ -17,10 +17,10 @@ import org.trade.core.TradestrategyBase;
 import org.trade.core.broker.IBrokerModel;
 import org.trade.core.factory.ClassFactory;
 import org.trade.core.persistent.ServiceException;
-import org.trade.core.persistent.dao.Rule;
 import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.Tradestrategy;
 import org.trade.core.persistent.dao.strategy.IStrategyRule;
+import org.trade.core.persistent.rule.Rule;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.DynamicCode;
 import org.trade.core.valuetype.BarSize;
@@ -95,7 +95,7 @@ public class StrategyPanelIT extends TradestrategyBase {
             Rule nextRule = new Rule(strategy, true, 1, null,
                     content.getBytes(), ContentType.JAVA);
             strategy.getRules().add(nextRule);
-            strategy = this.tradeService.saveAspect(strategy);
+            strategy = this.tradeService.getAspectService().save(strategy);
         }
     }
 
@@ -115,7 +115,7 @@ public class StrategyPanelIT extends TradestrategyBase {
             if (!strategy.getRules().isEmpty()) {
 
                 strategy.getRules().clear();
-                strategy = this.tradeService.saveAspect(strategy);
+                strategy = this.tradeService.getAspectService().save(strategy);
             }
         }
 
@@ -226,7 +226,7 @@ public class StrategyPanelIT extends TradestrategyBase {
         }
         String contentType = ContentType.JAVA;
         Integer version = 1;
-        Rule latestRule = this.tradeService.findRuleByMaxVersion(strategy, contentType);
+        Rule latestRule = this.tradeService.getRuleService().findByMaxVersion(strategy, contentType);
 
         if (null != latestRule) {
 
@@ -285,7 +285,7 @@ public class StrategyPanelIT extends TradestrategyBase {
     public void doCompile() {
 
         StrategyPanel strategyPanel = new StrategyPanel(this.tradeService);
-        Rule latestRule = this.tradeService.findRuleByMaxVersion(tradestrategy.getStrategy(), ContentType.JAVA);
+        Rule latestRule = this.tradeService.getRuleService().findByMaxVersion(tradestrategy.getStrategy(), ContentType.JAVA);
 
         assertNotNull(latestRule);
         String fileName = strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/') + tradestrategy.getStrategy().getClassName() + ".java";
@@ -332,9 +332,9 @@ public class StrategyPanelIT extends TradestrategyBase {
         String content = strategyPanel.readFile(fileName);
         textArea.setText(content);
         myrule.setRule(textArea.getText().getBytes());
-        myrule = this.tradeService.saveAspect(myrule);
+        myrule = this.tradeService.getAspectService().save(myrule);
         assertNotNull(myrule.getId());
-        Rule ruleSaved = this.tradeService.findRuleById(myrule.getId());
+        Rule ruleSaved = this.tradeService.getRuleService().findById(myrule.getId());
         assertNotNull(ruleSaved.getId());
 
         String javaCode = new String(ruleSaved.getRule());

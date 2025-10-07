@@ -25,7 +25,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     public UserDetails loadUserByUsername(String username) {
 
-        User user = userService.getUserByUsername(username);
+        User user = userService.findByUsername(username);
 
         if (null != user) {
 

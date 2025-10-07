@@ -6,20 +6,63 @@ import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-public abstract class AspectServiceImpl<ID extends Aspect> implements AspectService {
+@Service
+public class AspectServiceImpl implements AspectService {
 
     @PersistenceContext
     private EntityManager entityManager;
 
-    public abstract AspectRepository<ID, Integer> getAspectRepository();
+    private final AspectRepository aspectRepository;
+
+    public AspectServiceImpl(final AspectRepository aspectRepository) {
+
+        this.aspectRepository = aspectRepository;
+    }
+
+    public Aspect findById(final Aspect aspect) throws ClassNotFoundException {
+
+        Aspects aspects = this.findByClassNameAndFieldName(aspect.getClass().getName(), "Id", Objects.requireNonNull(aspect.getId()).toString());
+
+        if (!aspects.getAspects().isEmpty()) {
+
+            return aspects.getAspects().getFirst();
+        }
+
+        return null;
+    }
+
+    public void delete(Aspect instance) {
+
+        if (null != instance) {
+
+            this.aspectRepository.delete(instance);
+        }
+    }
+
+    public void deleteAll(Iterable<? extends Aspect> entities) {
+
+        this.aspectRepository.deleteAll(entities);
+    }
+
+    public <T extends Aspect> T save(Aspect instance) {
+
+        return (T) this.aspectRepository.save(instance);
+    }
+
+    public <S extends Aspect> List<S> saveAll(final Iterable<S> entities) {
+
+        return this.aspectRepository.saveAll(entities);
+    }
 
     /**
      * @param className String
@@ -70,6 +113,7 @@ public abstract class AspectServiceImpl<ID extends Aspect> implements AspectServ
         List<Object> items = typedQuery.getResultList();
 
         for (Object item : items) {
+
             aspects.add((Aspect) item);
         }
 
@@ -90,6 +134,7 @@ public abstract class AspectServiceImpl<ID extends Aspect> implements AspectServ
         List<Object> items = typedQuery.getResultList();
 
         if (!items.isEmpty()) {
+
             return items;
         }
 

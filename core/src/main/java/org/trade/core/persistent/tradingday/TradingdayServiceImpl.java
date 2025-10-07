@@ -114,7 +114,7 @@ public class TradingdayServiceImpl implements TradingdayService {
      * @param closeDate ZonedDateTime
      * @return Tradingday
      */
-    public Tradingday findTradingdayByOpenCloseDate(ZonedDateTime openDate, ZonedDateTime closeDate) {
+    public Tradingday findByOpenCloseDate(ZonedDateTime openDate, ZonedDateTime closeDate) {
 
         List<Tradingday> items = tradingdayRepository.findByOpenAndCloseOrderByOpenAsc(openDate, closeDate);
 
@@ -126,7 +126,7 @@ public class TradingdayServiceImpl implements TradingdayService {
         return null;
     }
 
-    public Tradingday findTradingdayById(final Long tradingdayId) {
+    public Tradingday findById(final Long tradingdayId) {
 
         return tradingdayRepository.findById(tradingdayId).isPresent() ? tradingdayRepository.findById(tradingdayId).get() : null;
     }

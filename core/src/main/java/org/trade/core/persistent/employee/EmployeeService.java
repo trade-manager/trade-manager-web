@@ -9,56 +9,56 @@ import java.util.List;
 public interface EmployeeService {
 
     /**
-     * Method getEmployees.
+     * Method findAll.
      *
      * @return List<Employee>
      */
-    List<Employee> getEmployees();
+    List<Employee> findAll();
 
     /**
-     * Method getEmployeesContainingText.
+     * Method findContainingText.
      *
      * @param text String
      * @return List<Employee>
      */
-    List<Employee> getEmployeesContainingText(String text);
+    List<Employee> findContainingText(String text);
 
     /**
-     * Method validateAndGetEmployee.
+     * Method validateAndGet.
      *
      * @param id Long
      * @return Employee
      */
-    Employee validateAndGetEmployee(Long id);
+    Employee validateAndGet(Long id);
 
     /**
-     * Method saveEmployee.
+     * Method save.
      *
      * @param employee Employee
      * @return Employee
      */
-    Employee saveEmployee(Employee employee);
+    Employee save(Employee employee);
 
     /**
-     * Method deleteEmployee.
+     * Method delete.
      *
      * @param employee Employee
      */
-    void deleteEmployee(Employee employee);
+    void delete(Employee employee);
 
     /**
-     * Method findEmployeeByEmail.
+     * Method findByEmail.
      *
      * @param email String
      * @return Employee
      */
-    Employee findEmployeeByEmail(String email);
+    Employee findByEmail(String email);
 
     /**
-     * Method findEmployeeByName.
+     * Method findByName.
      *
      * @param name String
      * @return Employee
      */
-    Employee findEmployeeByName(String name);
+    Employee findByName(String name);
 }

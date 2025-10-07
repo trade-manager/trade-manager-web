@@ -79,7 +79,7 @@ public class TradingdayPanelIT extends TradestrategyBase {
         Tradingdays tradingdays = new Tradingdays();
 
         Tradingday instance1 = this.tradeService.getTradingdayService()
-                .findTradingdayById(tradestrategy.getTradingday().getId());
+                .findById(tradestrategy.getTradingday().getId());
         tradingdays.add(instance1);
 
         TradingdayTableModel tradingdayModel = new TradingdayTableModel();
@@ -95,10 +95,10 @@ public class TradingdayPanelIT extends TradestrategyBase {
         tradingdayTable.setRowSelectionInterval(0, 0);
 
         tradestrategy.getContract().setIndustry("Computer");
-        Contract result = this.tradeService.saveAspect(tradestrategy.getContract());
+        Contract result = this.tradeService.getAspectService().save(tradestrategy.getContract());
         assertNotNull(result);
         Tradingday instance2 = this.tradeService.getTradingdayService()
-                .findTradingdayById(tradestrategy.getTradingday().getId());
+                .findById(tradestrategy.getTradingday().getId());
         tradingdays.replaceTradingday(instance2);
         int selectedRow = tradingdayTable.getSelectedRow();
         tradingdayModel.setData(tradingdays);

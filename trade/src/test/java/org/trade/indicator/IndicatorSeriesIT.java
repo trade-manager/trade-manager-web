@@ -11,8 +11,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
-import org.trade.core.persistent.dao.Candle;
 import org.trade.core.persistent.codetype.CodeType;
+import org.trade.core.persistent.dao.Candle;
 import org.trade.core.persistent.dao.Tradestrategy;
 import org.trade.core.persistent.dao.series.indicator.candle.CandlePeriod;
 import org.trade.core.util.time.TradingCalendar;
@@ -71,7 +71,7 @@ public class IndicatorSeriesIT extends TradestrategyBase {
         ZonedDateTime date = TradingCalendar.getTradingDayStart(TradingCalendar.getDateTimeNowMarketTimeZone());
         CandleItem candleItem = new CandleItem(tradestrategy.getContract(),
                 new CandlePeriod(date, 300), 100.23, 100.23, 100.23, 100.23, 10000000L, 100.23, 100, date);
-        Candle candle = this.tradeService.saveAspect(candleItem.getCandle());
+        Candle candle = this.tradeService.getAspectService().save(candleItem.getCandle());
         assertNotNull(candle.getId());
     }
 
@@ -80,7 +80,7 @@ public class IndicatorSeriesIT extends TradestrategyBase {
 
         String indicatorName = IndicatorSeries.MovingAverageSeries.substring(0,
                 IndicatorSeries.MovingAverageSeries.indexOf("Series"));
-        CodeType result = this.tradeService.getCodeTypeService().findCodeTypeByNameAndType(indicatorName,
+        CodeType result = this.tradeService.getCodeTypeService().findByNameAndType(indicatorName,
                 CodeType.IndicatorParameters);
         assertNotNull(result);
     }

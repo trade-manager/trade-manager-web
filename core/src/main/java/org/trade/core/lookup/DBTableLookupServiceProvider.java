@@ -180,7 +180,7 @@ public class DBTableLookupServiceProvider implements ILookupServiceProvider {
                         rows.add(newRowNone);
                     }
 
-                    List<?> codes = _tradeService.findCodesByClassName(dao);
+                    List<?> codes = _tradeService.getAspectService().findCodesByClassName(dao);
 
                     for (Object daoObject : codes) {
 

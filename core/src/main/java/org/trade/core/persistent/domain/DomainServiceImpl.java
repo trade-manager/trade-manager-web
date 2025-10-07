@@ -18,27 +18,27 @@ public class DomainServiceImpl implements DomainService {
         this.domainRepository = domainRepository;
     }
 
-    public List<Domain> getDomains() {
+    public List<Domain> finaAll() {
 
         return domainRepository.findAllByOrderByName();
     }
 
-    public Domain findDomainByName(String name) {
+    public Domain findByName(String name) {
 
         return domainRepository.findByName(name).orElse(null);
     }
 
-    public Domain validateAndGetDomain(String name) {
+    public Domain validateAndGet(String name) {
 
         return domainRepository.findByName(name).orElseThrow(() -> new DomainNotFoundException(String.format("Domain with name %s not found", name)));
     }
 
-    public Domain saveDomain(Domain domain) {
+    public Domain save(Domain domain) {
 
         return domainRepository.save(domain);
     }
 
-    public void deleteDomain(Domain domain) {
+    public void delete(Domain domain) {
 
         if (null == domain) {
 

@@ -362,14 +362,14 @@ public class AbstractStrategyIT extends TradestrategyBase {
         DAOEntryLimit entryLimits = new DAOEntryLimit();
         Entrylimit entryLimit = entryLimits.getValue(price);
         entryLimit.setPercentOfMargin(new BigDecimal("0.5"));
-        entryLimit = tradeService.saveAspect(entryLimit);
+        entryLimit = tradeService.getAspectService().save(entryLimit);
 
         TradeOrder result = strategyProxy.createRiskOpenPosition(Action.BUY, new Money(20.00),
                 new Money(19.98), true, null, null, null, null);
 
         assertEquals(2500, result.getQuantity(), 0);
         entryLimit.setPercentOfMargin(new BigDecimal(0));
-        entryLimit = tradeService.saveAspect(entryLimit);
+        entryLimit = tradeService.getAspectService().save(entryLimit);
         assertEquals(new BigDecimal(0), entryLimit.getPercentOfMargin());
     }
 
@@ -387,7 +387,7 @@ public class AbstractStrategyIT extends TradestrategyBase {
         DAOEntryLimit entryLimits = new DAOEntryLimit();
         Entrylimit entryLimit = entryLimits.getValue(price);
         entryLimit.setPercentOfMargin(new BigDecimal("0.5"));
-        entryLimit = tradeService.saveAspect(entryLimit);
+        entryLimit = tradeService.getAspectService().save(entryLimit);
 
         TradeOrder openOrder = strategyProxy.createRiskOpenPosition(Action.SELL, new Money(45.75),
                 new Money(46.00), true, null, null, null, null);
@@ -421,7 +421,7 @@ public class AbstractStrategyIT extends TradestrategyBase {
         }
         assertTrue(strategyProxy.isPositionCovered());
         entryLimit.setPercentOfMargin(new BigDecimal(0));
-        tradeService.saveAspect(entryLimit);
+        tradeService.getAspectService().save(entryLimit);
 
         TradePosition tradePosition = strategyProxy.getOpenTradePosition();
         assertNotNull(tradePosition);

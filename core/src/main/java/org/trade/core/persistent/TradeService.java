@@ -1,14 +1,11 @@
 package org.trade.core.persistent;
 
-import org.trade.core.dao.Aspect;
 import org.trade.core.dao.AspectService;
-import org.trade.core.persistent.account.Account;
 import org.trade.core.persistent.account.AccountService;
 import org.trade.core.persistent.codetype.CodeTypeService;
 import org.trade.core.persistent.dao.Candle;
 import org.trade.core.persistent.dao.Contract;
 import org.trade.core.persistent.dao.ContractLite;
-import org.trade.core.persistent.dao.Rule;
 import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradeOrderfill;
@@ -20,6 +17,7 @@ import org.trade.core.persistent.dao.TradestrategyOrders;
 import org.trade.core.persistent.dao.series.indicator.CandleSeries;
 import org.trade.core.persistent.portfolio.Portfolio;
 import org.trade.core.persistent.portfolio.PortfolioService;
+import org.trade.core.persistent.rule.RuleService;
 import org.trade.core.persistent.tradingday.Tradingday;
 import org.trade.core.persistent.tradingday.TradingdayService;
 
@@ -34,12 +32,19 @@ import java.util.Optional;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-public interface TradeService extends AspectService {
+public interface TradeService {
 
     String PERSISTENT_PACKAGE = "org.trade.core.persistent.dao.";
 
     int SCALE_5 = 5;
     int SCALE_2 = 2;
+
+    /**
+     * Method getAspectService.
+     *
+     * @return AspectService
+     */
+    AspectService getAspectService();
 
     /**
      * Method getTradingdayService.
@@ -70,11 +75,11 @@ public interface TradeService extends AspectService {
     PortfolioService getPortfolioService();
 
     /**
-     * Method deleteAllAspects.
+     * Method getRuleService.
      *
-     * @param entities Iterable<? extends Aspect>
+     * @return RuleService
      */
-    void deleteAllAspects(Iterable<? extends Aspect> entities);
+    RuleService getRuleService();
 
     /**
      * Method findContractBySymbol.
@@ -90,20 +95,6 @@ public interface TradeService extends AspectService {
      * @return Iterable<Contract>
      */
     Iterable<Contract> findAllContracts();
-
-    /**
-     * Method findAllRules.
-     *
-     * @return Iterable<Rule>
-     */
-    Iterable<Rule> findAllRules();
-
-    /**
-     * Method findAllAccounts.
-     *
-     * @return Iterable<Account>
-     */
-    Iterable<Account> findAllAccounts();
 
     /**
      * Method saveTrading.
@@ -144,21 +135,6 @@ public interface TradeService extends AspectService {
      */
     void saveCandleSeries(CandleSeries candleSeries);
 
-    /**
-     * Method findAccountById.
-     *
-     * @param id Long
-     * @return Account
-     */
-    Account findAccountById(Long id);
-
-    /**
-     * Method findAccountByNumber.
-     *
-     * @param accountNumber String
-     * @return Account
-     */
-    Account findAccountByAccountNumber(String accountNumber);
 
     /**
      * Method findContractById.
@@ -294,37 +270,6 @@ public interface TradeService extends AspectService {
     TradePosition findTradePositionById(Long tradePositionId);
 
     /**
-     * Method findPortfolioById.
-     *
-     * @param id Long
-     * @return Portfolio
-     */
-    Portfolio findPortfolioById(Long id);
-
-    /**
-     * Method findPortfolioByName.
-     *
-     * @param name String
-     * @return Portfolio
-     */
-
-    Portfolio findPortfolioByName(String name);
-
-    /**
-     * Method findPortfolioDefault.
-     *
-     * @return Portfolio
-     */
-    Portfolio findPortfolioDefault();
-
-    /**
-     * Method resetDefaultPortfolio.
-     *
-     * @param instance Portfolio
-     */
-    void resetDefaultPortfolio(Portfolio instance);
-
-    /**
      * Method removeTradingdayTradeOrders.
      *
      * @param instance Tradingday
@@ -399,48 +344,6 @@ public interface TradeService extends AspectService {
      */
     Long findCandleCount(final Contract contract);
 
-
-    /**
-     * Method findRuleById.
-     *
-     * @param ruleId Long
-     * @return Rule
-     */
-    Rule findRuleById(Long ruleId);
-
-    /**
-     * Method findRulesAll.
-     *
-     * @return List<Rule>
-     */
-    List<Rule> findRulesAll();
-
-    /**
-     * Method findRulesByStrategy.
-     *
-     * @param strategy Strategy
-     * @return List<Rule>
-     */
-    List<Rule> findRulesByStrategy(Strategy strategy);
-
-    /**
-     * Method findRulesByStrategyAndActive.
-     *
-     * @param strategy Strategy
-     * @param active   Boolean
-     * @return List<Rule>
-     */
-    List<Rule> findRulesByStrategyAndActive(Strategy strategy, Boolean active);
-
-    /**
-     * Method findRuleByMaxVersion.
-     *
-     * @param strategy    Strategy
-     * @param contentType String
-     * @return Rule
-     */
-    Rule findRuleByMaxVersion(Strategy strategy, String contentType);
-
     /**
      * Method findStrategyById.
      *
@@ -463,46 +366,6 @@ public interface TradeService extends AspectService {
      * @return List<Strategy>
      */
     List<Strategy> findStrategies();
-
-    /**
-     * Method findAspectById.
-     *
-     * @param instance Aspect
-     * @return Aspect
-     */
-    Aspect findAspectById(final Aspect instance) throws ClassNotFoundException;
-
-    /**
-     * Method saveAspect.
-     *
-     * @param instance Aspect
-     * @return Aspect
-     */
-    <T extends Aspect> T saveAspect(T instance);
-
-    /**
-     * Delete all aspects.
-     *
-     * @param entities Iterable<S>
-     * @return <S extends Aspect> List<S>
-     */
-    <S extends Aspect> List<S> saveAllAspects(final Iterable<S> entities);
-
-    /**
-     * Method saveAspect.
-     *
-     * @param instance        Aspect
-     * @param overrideVersion boolean
-     * @return Aspect
-     */
-    <T extends Aspect> T saveAspect(T instance, boolean overrideVersion);
-
-    /**
-     * Method removeAspect.
-     *
-     * @param instance Aspect
-     */
-    void deleteAspect(Aspect instance);
 
     /**
      * Method reassignStrategy.

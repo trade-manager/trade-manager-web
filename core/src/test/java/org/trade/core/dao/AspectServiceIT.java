@@ -80,7 +80,7 @@ public class AspectServiceIT extends TradestrategyBase {
         String className = "org.trade.core.persistent.dao.Strategy";
         _log.info("Find Aspects by className: {}", className);
 
-        Aspect aspect = tradeService.findAspectById(tradestrategy);
+        Aspect aspect = tradeService.getAspectService().findById(tradestrategy);
         assertNotNull(aspect);
     }
 
@@ -92,7 +92,7 @@ public class AspectServiceIT extends TradestrategyBase {
         String className = "org.trade.core.persistent.dao.Strategy";
         _log.info("Find Aspects by className: {}", className);
 
-        Aspects aspects = tradeService.findByClassName(className);
+        Aspects aspects = tradeService.getAspectService().findByClassName(className);
         assertNotNull(aspects);
         assertFalse(aspects.getAspects().isEmpty());
 
@@ -110,7 +110,7 @@ public class AspectServiceIT extends TradestrategyBase {
         String className = "org.trade.core.persistent.dao.Strategy";
         _log.info("Find Aspects by className: {}", className);
 
-        List<?> codes = tradeService.findCodesByClassName(className);
+        List<?> codes = tradeService.getAspectService().findCodesByClassName(className);
         assertNotNull(codes);
         assertFalse(codes.isEmpty());
         for (Object daoObject : codes) {
@@ -124,10 +124,10 @@ public class AspectServiceIT extends TradestrategyBase {
 
         // Create new instance of Strategy and set
         // values in it by reading them from form object
-        String className = "org.trade.core.persistent.dao.Rule";
+        String className = "org.trade.core.persistent.rule.Rule";
         _log.info("Find Aspects by className: {}", className);
 
-        List<?> codes = tradeService.findCodesByClassName(className);
+        List<?> codes = tradeService.getAspectService().findCodesByClassName(className);
         assertNotNull(codes);
         assertTrue(codes.isEmpty());
     }
@@ -142,7 +142,7 @@ public class AspectServiceIT extends TradestrategyBase {
         String indicatorName = "5MinGapBar";
         _log.info("Find Aspects by className: {}, fieldName: {}, value: {}", className, fieldName, indicatorName);
 
-        Aspects instance = tradeService.findByClassNameAndFieldName(className, fieldName, indicatorName);
+        Aspects instance = tradeService.getAspectService().findByClassNameAndFieldName(className, fieldName, indicatorName);
         assertNotNull(instance);
 
         for (Aspect aspect : instance.getAspects()) {

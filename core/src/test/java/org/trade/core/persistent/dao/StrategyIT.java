@@ -72,7 +72,7 @@ public class StrategyIT extends TradestrategyBase {
         // values in it by reading them from form object
         Strategy strategy = strategyRepository.findByName(name);
         assertNull(strategy);
-        strategy = tradeService.saveAspect(new Strategy(name));
+        strategy = tradeService.getAspectService().save(new Strategy(name));
         _log.info("Strategy added Id = {}, name: {}", strategy.getId(), strategy.getName());
         assertNotNull(strategy.getId());
         this.addRecord(strategy);

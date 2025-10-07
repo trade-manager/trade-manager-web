@@ -66,7 +66,7 @@ public class CodeTypeIT {
     @Test
     public void findCodeValueByName() {
 
-        CodeType codeType = codeTypeService.findCodeTypeByName("MovingAverage");
+        CodeType codeType = codeTypeService.findByName("MovingAverage");
         assertNotNull(codeType);
         _log.info("CodeType id: {}", codeType.getId());
         List<CodeValue> codeValues = codeTypeService.findByAttributeName(codeType.getName(), "Length");

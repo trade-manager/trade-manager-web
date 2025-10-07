@@ -9,46 +9,46 @@ import java.util.List;
 public interface AccountService {
 
     /**
-     * Method findAccountById.
+     * Method findById.
      *
      * @return Account
      */
-    Account findAccountById(Long id);
+    Account findById(Long id);
 
     /**
-     * Method findAccountByAccountNumber.
+     * Method findByAccountNumber.
      *
      * @return Account
      */
-    Account findAccountByAccountNumber(String accountNumber);
+    Account findByAccountNumber(String accountNumber);
 
     /**
-     * Method findAllAccountsOrderByAccountNumber.
+     * Method findAllOrderByAccountNumber.
      *
      * @return List<Account>
      */
-    List<Account> findAllAccountsOrderByAccountNumber();
+    List<Account> findAllOrderByAccountNumber();
 
     /**
-     * Method validateAndGetAccount.
+     * Method validateAndGet.
      *
      * @param accountNumber String
      * @return Account
      */
-    Account validateAndGetAccount(String accountNumber);
+    Account validateAndGet(String accountNumber);
 
     /**
-     * Method saveAccount.
+     * Method save.
      *
      * @param account Account
      * @return account
      */
-    Account saveAccount(Account account);
+    Account save(Account account);
 
     /**
-     * Method deleteAccount.
+     * Method delete.
      *
      * @param account Account
      */
-    void deleteAccount(Account account);
+    void delete(Account account);
 }

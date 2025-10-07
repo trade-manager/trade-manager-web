@@ -8,13 +8,13 @@ import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.account.Account;
 import org.trade.core.persistent.dao.Contract;
 import org.trade.core.persistent.dao.ContractLite;
-import org.trade.core.persistent.portfolio.Portfolio;
-import org.trade.core.persistent.dao.Rule;
 import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradePosition;
 import org.trade.core.persistent.dao.Tradestrategy;
 import org.trade.core.persistent.dao.series.indicator.StrategyData;
+import org.trade.core.persistent.portfolio.Portfolio;
+import org.trade.core.persistent.rule.Rule;
 import org.trade.core.persistent.tradingday.Tradingday;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.AccountType;
@@ -83,7 +83,7 @@ public class TradestrategyBase {
         }
 
         Portfolio portfolio = (Portfolio) DAOPortfolio.newInstance().getObject();
-        portfolio = tradeService.findPortfolioByName(portfolio.getName());
+        portfolio = tradeService.getPortfolioService().findByName(portfolio.getName());
 
         if (portfolio.getAccounts().isEmpty()) {
 
@@ -112,7 +112,7 @@ public class TradestrategyBase {
             if (null != tradestrategy) {
 
                 Tradestrategy instance = tradeService.findTradestrategyById(tradestrategy.getId());
-                instance = tradeService.saveAspect(instance);
+                instance = this.tradeService.getAspectService().save(instance);
                 this.addRecord(instance);
                 Hashtable<Long, TradePosition> tradePositions = new Hashtable<>();
 
@@ -126,7 +126,7 @@ public class TradestrategyBase {
 
                     if (null != tradeOrder.getId()) {
 
-                        tradeService.deleteAspect(tradeOrder);
+                        this.tradeService.getAspectService().delete(tradeOrder);
                     }
                 }
 
@@ -141,11 +141,11 @@ public class TradestrategyBase {
                     if (tradePosition.equals(instance.getContractLite().getTradePosition())) {
 
                         instance.getContractLite().setTradePosition(null);
-                        ContractLite contractLite = tradeService.saveAspect(instance.getContractLite());
+                        ContractLite contractLite = this.tradeService.getAspectService().save(instance.getContractLite());
                         instance.setContractLite(contractLite);
                         this.addRecord(contractLite);
                     }
-                    tradeService.deleteAspect(tradePosition);
+                    this.tradeService.getAspectService().delete(tradePosition);
                 }
 
                 instance.getTradeOrders().clear();
@@ -154,7 +154,7 @@ public class TradestrategyBase {
         }
 
         Tradingday tradingday = Tradingday.newInstance(open);
-        Tradingday instanceTradingDay = tradeService.getTradingdayService().findTradingdayByOpenCloseDate(tradingday.getOpen(), tradingday.getClose());
+        Tradingday instanceTradingDay = tradeService.getTradingdayService().findByOpenCloseDate(tradingday.getOpen(), tradingday.getClose());
 
         if (null != instanceTradingDay) {
 
@@ -274,12 +274,12 @@ public class TradestrategyBase {
             while (descendingIterator.hasNext()) {
 
                 Aspect aspect = descendingIterator.next();
-                aspect = tradeService.findAspectById(aspect);
-                tradeService.deleteAspect(aspect);
+                aspect = tradeService.getAspectService().findById(aspect);
+                tradeService.getAspectService().delete(aspect);
             }
 
-            Iterable<Rule> rules = tradeService.findAllRules();
-            rules.forEach(rule -> tradeService.deleteAspect(rule));
+            Iterable<Rule> rules = tradeService.getRuleService().findAll();
+            rules.forEach(rule -> tradeService.getAspectService().delete(rule));
         } catch (ClassNotFoundException ex) {
 
             throw new RuntimeException(ex);

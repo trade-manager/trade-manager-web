@@ -1,4 +1,4 @@
-package org.trade.core.persistent.dao;
+package org.trade.core.persistent.rule;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -9,7 +9,8 @@ import jakarta.persistence.criteria.Expression;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
+import org.trade.core.persistent.dao.Strategy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,11 +19,42 @@ import java.util.List;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-@Repository
-public class RuleRepositoryImpl implements RuleRepositoryCustom {
+@Service
+public class RuleServiceImpl implements RuleService {
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    private final RuleRepository ruleRepository;
+
+    public RuleServiceImpl(final RuleRepository ruleRepository) {
+
+        this.ruleRepository = ruleRepository;
+    }
+
+    public Rule findById(Long id) {
+
+        return this.ruleRepository.findById(id).orElse(null);
+    }
+
+    public List<Rule> findAll() {
+
+        return this.ruleRepository.findAll();
+    }
+
+    public List<Rule> findByStrategyAndContentTypeAndRuleVersion(Strategy strategy, String contentType, Integer ruleVersion) {
+
+        return this.ruleRepository.findByStrategyAndContentTypeAndRuleVersion(strategy, contentType, ruleVersion);
+    }
+
+    public List<Rule> findByStrategy(Strategy strategy) {
+        return this.ruleRepository.findByStrategy(strategy);
+    }
+
+    public List<Rule> findByStrategyAndActive(Strategy strategy, Boolean active) {
+
+        return this.ruleRepository.findByStrategyAndActive(strategy, active);
+    }
 
     /**
      * Method findByMaxVersion.
@@ -55,8 +87,23 @@ public class RuleRepositoryImpl implements RuleRepositoryCustom {
         Object item = typedQuery.getSingleResult();
 
         if (null == item) {
+
             return 0;
         }
+
         return (Integer) item;
+    }
+
+    public Rule findByMaxVersion(final Strategy strategy, String contentType) {
+
+        Integer version = this.findByMaxRuleVersion(strategy, contentType);
+        List<Rule> rules = this.findByStrategyAndContentTypeAndRuleVersion(strategy, contentType, version);
+
+        if (!rules.isEmpty()) {
+
+            return rules.getFirst();
+        }
+
+        return null;
     }
 }

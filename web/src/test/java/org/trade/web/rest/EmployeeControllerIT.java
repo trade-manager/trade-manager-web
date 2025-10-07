@@ -96,21 +96,21 @@ class EmployeeControllerIT extends TradestrategyBase {
     @BeforeEach
     public void setUpTest() {
 
-        Domain gobalDomain = domainService.findDomainByName(Domain.GLOBAL);
+        Domain gobalDomain = domainService.findByName(Domain.GLOBAL);
         assertNotNull(gobalDomain);
-        Role role = roleService.findRoleByName(Role.ROLE_ADMIN);
+        Role role = roleService.findByName(Role.ROLE_ADMIN);
         assertNotNull(role);
         List<Role> roles = new ArrayList<>();
         roles.add(role);
         User user = userService.findUserByName(userName);
         assertNull(user);
         user = new User(userName, userName, userName, userName, userName + "@" + Domain.GLOBAL + ".com", this.passwordEncoder.encode(password), gobalDomain, roles);
-        user = userService.saveUser(user);
+        user = userService.save(user);
         assertNotNull(user.getId());
         this.addRecord(user);
 
         Employee employee = new Employee(userName, userName, userName, userName, userName + "@" + Domain.GLOBAL + ".com", user);
-        employeeService.saveEmployee(employee);
+        employeeService.save(employee);
         assertNotNull(employee.getId());
         this.addRecord(employee);
     }
@@ -150,9 +150,9 @@ class EmployeeControllerIT extends TradestrategyBase {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name").value(userNameNew));
 
-        employee = employeeService.findEmployeeByName(userNameNew);
+        employee = employeeService.findByName(userNameNew);
         assertNotNull(employee);
-        employeeService.deleteEmployee(employee);
+        employeeService.delete(employee);
     }
 
     @Test
@@ -169,7 +169,7 @@ class EmployeeControllerIT extends TradestrategyBase {
     @WithMockUser(username = "admin", roles = {Role.ROLE_ADMIN})
     public void deleteEmployee() throws Exception {
 
-        Employee employee = employeeService.findEmployeeByName(userName);
+        Employee employee = employeeService.findByName(userName);
         mockMvc.perform(delete("/api/employees/{id}", employee.getId()).with(csrf())
                         .accept(MediaType.APPLICATION_JSON).with(httpBasic(userName, password)))
                 .andExpect(status().isOk())

@@ -64,27 +64,27 @@ public class AuthController {
     @PostMapping("/signup")
     public AuthResponse signUp(@Valid @RequestBody UserRecord userRecord) {
 
-        if (userService.hasUserWithUsername(userRecord.username())) {
+        if (userService.hasWithUsername(userRecord.username())) {
 
             throw new DuplicatedUserInfoException(String.format("Username %s is already been used", userRecord.username()));
         }
 
-        if (userService.hasUserWithEmail(userRecord.email())) {
+        if (userService.hasWithEmail(userRecord.email())) {
 
             throw new DuplicatedUserInfoException(String.format("Email %s is already been used", userRecord.email()));
         }
 
-        Domain domain = domainService.findDomainByName(userRecord.domain().name());
+        Domain domain = domainService.findByName(userRecord.domain().name());
         List<Role> roles = new ArrayList<>();
 
         for (RoleRecord roleRecord : userRecord.roles()) {
 
-            Role role = roleService.findRoleByName(roleRecord.name());
+            Role role = roleService.findByName(roleRecord.name());
             roles.add(role);
         }
 
         User user = UserController.from(userRecord, this.passwordEncoder.encode(userRecord.password()), domain, roles);
-        user = userService.saveUser(user);
+        user = userService.save(user);
         return new AuthResponse(user.getId(), user.getUsername(), user.getRole().getName());
     }
 }

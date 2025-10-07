@@ -37,24 +37,24 @@ public class PublicController {
     @GetMapping("/numberOfUsers")
     public Integer getNumberOfUsers() {
 
-        return userService.getUsers().size();
+        return userService.findAll().size();
     }
 
     @GetMapping("/numberOfEmployees")
     public Integer getNumberOfEmployees() {
 
-        return employeeService.getEmployees().size();
+        return employeeService.findAll().size();
     }
 
     @GetMapping("/domains")
     public List<DomainRecord> getDomains() {
 
-        return domainService.getDomains().stream().map(DomainRecord::from).collect(Collectors.toList());
+        return domainService.finaAll().stream().map(DomainRecord::from).collect(Collectors.toList());
     }
 
     @GetMapping("/roles")
     public List<RoleRecord> getRoles() {
 
-        return roleService.getRoles().stream().map(RoleRecord::from).collect(Collectors.toList());
+        return roleService.findAll().stream().map(RoleRecord::from).collect(Collectors.toList());
     }
 }
