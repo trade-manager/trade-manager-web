@@ -3,7 +3,7 @@ package org.trade.indicator;
 
 import org.jfree.data.general.SeriesChangeEvent;
 import org.trade.core.persistent.codetype.CodeValue;
-import org.trade.core.persistent.dao.Strategy;
+import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.util.time.RegularTimePeriod;
 import org.trade.core.valuetype.CalculationType;
 import org.trade.indicator.candle.CandleItem;

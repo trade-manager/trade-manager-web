@@ -13,9 +13,13 @@ import org.springframework.test.context.ContextConfiguration;
 import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
+import org.trade.core.persistent.strategy.Strategy;
+import org.trade.core.persistent.strategy.StrategyRepository;
 
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * Some tests for the DataUtilities class.
@@ -70,11 +74,11 @@ public class StrategyIT extends TradestrategyBase {
 
         // Create new instance of Strategy and set
         // values in it by reading them from form object
-        Strategy strategy = strategyRepository.findByName(name);
-        assertNull(strategy);
-        strategy = tradeService.getAspectService().save(new Strategy(name));
-        _log.info("Strategy added Id = {}, name: {}", strategy.getId(), strategy.getName());
-        assertNotNull(strategy.getId());
+        Optional<Strategy> strategyOpt = strategyRepository.findByName(name);
+        assertFalse(strategyOpt.isPresent());
+        Strategy strategy = tradeService.getAspectService().save(new Strategy(name));
+        _log.info("Strategy added Id = {}, name: {}", strategy, strategy.getName());
+        assertNotNull(strategy);
         this.addRecord(strategy);
     }
 }

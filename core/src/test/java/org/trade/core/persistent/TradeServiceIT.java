@@ -20,7 +20,6 @@ import org.trade.core.persistent.codetype.CodeType;
 import org.trade.core.persistent.dao.Candle;
 import org.trade.core.persistent.dao.Contract;
 import org.trade.core.persistent.dao.ContractLite;
-import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradeOrderfill;
 import org.trade.core.persistent.dao.TradePosition;
@@ -31,6 +30,7 @@ import org.trade.core.persistent.dao.series.indicator.IIndicatorDataset;
 import org.trade.core.persistent.dao.series.indicator.candle.CandleItem;
 import org.trade.core.persistent.portfolio.Portfolio;
 import org.trade.core.persistent.rule.Rule;
+import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.persistent.tradingday.Tradingday;
 import org.trade.core.persistent.tradingday.Tradingdays;
 import org.trade.core.properties.ConfigProperties;
@@ -865,7 +865,7 @@ public class TradeServiceIT extends TradestrategyBase {
         String contentType = ContentType.JAVASCRIPT;
         String content = "function (){console.log('Hi');}";
         Strategy strategy = tradestrategy.getStrategy();
-        strategy = this.tradeService.findStrategyById(strategy.getId());
+        strategy = this.tradeService.getStrategyService().findById(strategy.getId());
         Rule rule = new Rule(strategy, true, 0, comment, content.getBytes(), contentType);
         strategy.getRules().add(rule);
         strategy = this.tradeService.getAspectService().save(strategy);
@@ -878,7 +878,7 @@ public class TradeServiceIT extends TradestrategyBase {
     public void findRuleById() {
 
         Strategy strategy = tradestrategy.getStrategy();
-        strategy = this.tradeService.findStrategyById(strategy.getId());
+        strategy = this.tradeService.getStrategyService().findById(strategy.getId());
         Rule rule = new Rule(strategy, true, 0, comment);
         strategy.getRules().add(rule);
         strategy = this.tradeService.getAspectService().save(strategy);
@@ -907,15 +907,14 @@ public class TradeServiceIT extends TradestrategyBase {
     @Test
     public void findStrategyById() {
 
-        Strategy result = this.tradeService
-                .findStrategyById(tradestrategy.getStrategy().getId());
+        Strategy result = this.tradeService.getStrategyService().findById(tradestrategy.getStrategy().getId());
         assertNotNull(result);
     }
 
     @Test
     public void findStrategyByName() {
 
-        Strategy result = this.tradeService.findStrategyByName(tradestrategy.getStrategy().getName());
+        Strategy result = this.tradeService.getStrategyService().findByName(tradestrategy.getStrategy().getName());
         assertNotNull(result);
     }
 
@@ -923,7 +922,7 @@ public class TradeServiceIT extends TradestrategyBase {
     public void removeRule() {
 
         Strategy strategy = tradestrategy.getStrategy();
-        strategy = this.tradeService.findStrategyById(strategy.getId());
+        strategy = this.tradeService.getStrategyService().findById(strategy.getId());
         Rule latestRule = this.tradeService.getRuleService().findByMaxVersion(strategy, contentType);
         Integer version = 0;
 
@@ -944,7 +943,7 @@ public class TradeServiceIT extends TradestrategyBase {
     @Test
     public void findStrategies() {
 
-        List<Strategy> result = this.tradeService.findStrategies();
+        List<Strategy> result = this.tradeService.getStrategyService().findAll();
         assertNotNull(result);
     }
 
@@ -1002,7 +1001,7 @@ public class TradeServiceIT extends TradestrategyBase {
                 .findById(tradestrategy.getTradingday().getId());
         assertFalse(tradingday.getTradestrategies().isEmpty());
         Strategy toStrategy = (Strategy) DAOStrategy.newInstance().getObject();
-        toStrategy = this.tradeService.findStrategyById(toStrategy.getId());
+        toStrategy = this.tradeService.getStrategyService().findById(toStrategy.getId());
         this.tradeService.reassignStrategy(tradestrategy.getStrategy(), toStrategy, tradingday);
         assertEquals(toStrategy, tradingday.getTradestrategies().getFirst().getStrategy());
     }

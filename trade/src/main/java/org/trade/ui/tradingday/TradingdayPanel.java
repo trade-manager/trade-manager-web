@@ -9,7 +9,7 @@ import org.trade.core.persistent.ServiceException;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.account.Account;
 import org.trade.core.persistent.codetype.CodeType;
-import org.trade.core.persistent.dao.Strategy;
+import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.persistent.dao.Tradestrategy;
 import org.trade.core.persistent.dao.strategy.IStrategyRule;
 import org.trade.core.persistent.portfolio.Portfolio;
@@ -1369,7 +1369,7 @@ public class TradingdayPanel extends BasePanel {
                 getProgressBar().setMaximum(100);
                 setProgress(0);
                 String message;
-                this.toStrategy = this.tradeService.findStrategyById(this.toStrategy.getId());
+                this.toStrategy = this.tradeService.getStrategyService().findById(this.toStrategy.getId());
                 tradingdays.getTradingdays().sort(Tradingday.DATE_ORDER_ASC);
                 for (Tradingday tradingday : tradingdays.getTradingdays()) {
                     this.tradeService.reassignStrategy(this.fromStrategy, this.toStrategy, tradingday);

@@ -6,7 +6,6 @@ import org.trade.core.persistent.codetype.CodeTypeService;
 import org.trade.core.persistent.dao.Candle;
 import org.trade.core.persistent.dao.Contract;
 import org.trade.core.persistent.dao.ContractLite;
-import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradeOrderfill;
 import org.trade.core.persistent.dao.TradePosition;
@@ -18,6 +17,8 @@ import org.trade.core.persistent.dao.series.indicator.CandleSeries;
 import org.trade.core.persistent.portfolio.Portfolio;
 import org.trade.core.persistent.portfolio.PortfolioService;
 import org.trade.core.persistent.rule.RuleService;
+import org.trade.core.persistent.strategy.Strategy;
+import org.trade.core.persistent.strategy.StrategyService;
 import org.trade.core.persistent.tradingday.Tradingday;
 import org.trade.core.persistent.tradingday.TradingdayService;
 
@@ -80,6 +81,13 @@ public interface TradeService {
      * @return RuleService
      */
     RuleService getRuleService();
+
+    /**
+     * Method getStrategyService.
+     *
+     * @return StrategyService
+     */
+    StrategyService getStrategyService();
 
     /**
      * Method findContractBySymbol.
@@ -343,29 +351,6 @@ public interface TradeService {
      * @return Long
      */
     Long findCandleCount(final Contract contract);
-
-    /**
-     * Method findStrategyById.
-     *
-     * @param id Long
-     * @return Strategy
-     */
-    Strategy findStrategyById(Long id);
-
-    /**
-     * Method findStrategyByName.
-     *
-     * @param name String
-     * @return Strategy
-     */
-    Strategy findStrategyByName(String name);
-
-    /**
-     * Method findStrategies.
-     *
-     * @return List<Strategy>
-     */
-    List<Strategy> findStrategies();
 
     /**
      * Method reassignStrategy.

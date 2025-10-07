@@ -3,7 +3,7 @@ package org.trade.indicator;
 
 import org.trade.core.persistent.codetype.CodeValue;
 import org.trade.core.persistent.dao.Entrylimit;
-import org.trade.core.persistent.dao.Strategy;
+import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.persistent.dao.series.indicator.candle.CandlePeriod;
 import org.trade.core.persistent.dao.series.indicator.pivot.PivotCalculator;
 import org.trade.core.util.Pair;

@@ -12,8 +12,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
-import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.Tradestrategy;
+import org.trade.core.persistent.strategy.Strategy;
 
 import java.util.List;
 
@@ -77,7 +77,7 @@ public class AspectServiceIT extends TradestrategyBase {
 
         // Create new instance of Strategy and set
         // values in it by reading them from form object
-        String className = "org.trade.core.persistent.dao.Strategy";
+        String className = "org.trade.core.persistent.strategy.Strategy";
         _log.info("Find Aspects by className: {}", className);
 
         Aspect aspect = tradeService.getAspectService().findById(tradestrategy);
@@ -89,7 +89,7 @@ public class AspectServiceIT extends TradestrategyBase {
 
         // Create new instance of Strategy and set
         // values in it by reading them from form object
-        String className = "org.trade.core.persistent.dao.Strategy";
+        String className = "org.trade.core.persistent.strategy.Strategy";
         _log.info("Find Aspects by className: {}", className);
 
         Aspects aspects = tradeService.getAspectService().findByClassName(className);
@@ -107,7 +107,7 @@ public class AspectServiceIT extends TradestrategyBase {
 
         // Create new instance of Strategy and set
         // values in it by reading them from form object
-        String className = "org.trade.core.persistent.dao.Strategy";
+        String className = "org.trade.core.persistent.strategy.Strategy";
         _log.info("Find Aspects by className: {}", className);
 
         List<?> codes = tradeService.getAspectService().findCodesByClassName(className);
@@ -137,7 +137,7 @@ public class AspectServiceIT extends TradestrategyBase {
 
         // Create new instance of Strategy and set
         // values in it by reading them from form object
-        String className = "org.trade.core.persistent.dao.Strategy";
+        String className = "org.trade.core.persistent.strategy.Strategy";
         String fieldName = "name";
         String indicatorName = "5MinGapBar";
         _log.info("Find Aspects by className: {}, fieldName: {}, value: {}", className, fieldName, indicatorName);

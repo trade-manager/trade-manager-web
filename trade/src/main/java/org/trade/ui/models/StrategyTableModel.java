@@ -2,7 +2,7 @@ package org.trade.ui.models;
 
 import org.trade.core.dao.Aspect;
 import org.trade.core.dao.Aspects;
-import org.trade.core.persistent.dao.Strategy;
+import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.util.CoreUtils;
 import org.trade.core.valuetype.DAOStrategyManager;
 import org.trade.core.valuetype.Decode;

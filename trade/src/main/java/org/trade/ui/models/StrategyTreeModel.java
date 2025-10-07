@@ -1,6 +1,6 @@
 package org.trade.ui.models;
 
-import org.trade.core.persistent.dao.Strategy;
+import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.persistent.rule.Rule;
 import org.trade.core.valuetype.ValueTypeException;
 

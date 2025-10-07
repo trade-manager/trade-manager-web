@@ -1,6 +1,6 @@
 package org.trade.ui.tables.renderer;
 
-import org.trade.core.persistent.dao.Strategy;
+import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.persistent.dao.Tradestrategy;
 import org.trade.core.persistent.dao.strategy.IStrategyRule;
 import org.trade.core.valuetype.DAOStrategy;

@@ -1,6 +1,6 @@
 package org.trade.indicator;
 
-import org.trade.core.persistent.dao.Strategy;
+import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.util.time.RegularTimePeriod;
 import org.trade.indicator.vwap.VwapItem;
 

@@ -14,7 +14,7 @@ import org.trade.core.lookup.DBTableLookupServiceProvider;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.codetype.CodeType;
 import org.trade.core.persistent.codetype.CodeValue;
-import org.trade.core.persistent.dao.Strategy;
+import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.persistent.dao.series.indicator.IndicatorSeries;
 import org.trade.core.persistent.portfolio.Portfolio;
 import org.trade.core.valuetype.DAOEntryLimit;

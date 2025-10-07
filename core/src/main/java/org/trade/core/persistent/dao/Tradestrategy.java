@@ -15,6 +15,7 @@ import org.trade.core.factory.ClassFactory;
 import org.trade.core.persistent.codetype.CodeValue;
 import org.trade.core.persistent.dao.series.indicator.StrategyData;
 import org.trade.core.persistent.portfolio.Portfolio;
+import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.persistent.tradingday.Tradingday;
 import org.trade.core.util.CoreUtils;
 

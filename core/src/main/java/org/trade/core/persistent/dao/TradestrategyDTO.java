@@ -3,6 +3,7 @@ package org.trade.core.persistent.dao;
 import jakarta.persistence.PrePersist;
 import org.trade.core.dao.Aspect;
 import org.trade.core.persistent.portfolio.PortfolioRecord;
+import org.trade.core.persistent.strategy.StrategyRecord;
 import org.trade.core.persistent.tradingday.TradingdayRecord;
 import org.trade.core.util.CoreUtils;
 
@@ -33,7 +34,7 @@ public class TradestrategyDTO extends Aspect implements Serializable, Cloneable 
     private String side;
     private Boolean trade = false;
     private Integer requestId;
-    private StrategyDTO strategy;
+    private StrategyRecord strategy;
     private PortfolioRecord portfolio;
     private ContractDTO contract;
     private TradingdayRecord tradingday;
@@ -56,7 +57,7 @@ public class TradestrategyDTO extends Aspect implements Serializable, Cloneable 
      * @param barSize   Integer
      * @param strategy  StrategyDto
      */
-    public TradestrategyDTO(Integer barSize, Integer chartDays, StrategyDTO strategy) {
+    public TradestrategyDTO(Integer barSize, Integer chartDays, StrategyRecord strategy) {
 
         this.setBarSize(barSize);
         this.chartDays = chartDays;
@@ -89,7 +90,7 @@ public class TradestrategyDTO extends Aspect implements Serializable, Cloneable 
      * @param chartDays  Integer
      * @param barSize    Integer
      */
-    public TradestrategyDTO(ContractDTO contract, TradingdayRecord tradingday, StrategyDTO strategy, PortfolioRecord portfolio,
+    public TradestrategyDTO(ContractDTO contract, TradingdayRecord tradingday, StrategyRecord strategy, PortfolioRecord portfolio,
                             BigDecimal riskAmount, String side, String tier, Boolean trade, Integer chartDays, Integer barSize) {
 
         this.setBarSize(barSize);
@@ -282,7 +283,7 @@ public class TradestrategyDTO extends Aspect implements Serializable, Cloneable 
      *
      * @return StrategyDto
      */
-    public StrategyDTO getStrategy() {
+    public StrategyRecord getStrategy() {
         return this.strategy;
     }
 
@@ -291,7 +292,7 @@ public class TradestrategyDTO extends Aspect implements Serializable, Cloneable 
      *
      * @param strategy StrategyDto
      */
-    public void setStrategy(StrategyDTO strategy) {
+    public void setStrategy(StrategyRecord strategy) {
         this.strategy = strategy;
     }
 
@@ -501,7 +502,7 @@ public class TradestrategyDTO extends Aspect implements Serializable, Cloneable 
 
                 if (this.getTradingday().open().compareTo(tradestrategy.getTradingday().open()) == 0) {
 
-                    if (this.getStrategy().getName().equals(tradestrategy.getStrategy().getName())) {
+                    if (this.getStrategy().name().equals(tradestrategy.getStrategy().name())) {
 
                         if (this.getPortfolio().name().equals(tradestrategy.getPortfolio().name())) {
 
@@ -528,8 +529,8 @@ public class TradestrategyDTO extends Aspect implements Serializable, Cloneable 
         // tradestrategy.setTradingday(tradingday);
         //PortfolioRecord portfolio = (PortfolioRecord) this.getPortfolio().clone();
         //tradestrategy.setPortfolio(portfolio);
-        StrategyDTO strategy = (StrategyDTO) this.getStrategy().clone();
-        tradestrategy.setStrategy(strategy);
+        //StrategyRecord strategy = (StrategyRecord) this.getStrategy().clone();
+        // tradestrategy.setStrategy(strategy);
         List<TradeOrderDTO> tradeOrders = new ArrayList<>(0);
         tradestrategy.setTradeOrderDTOs(tradeOrders);
         return tradestrategy;

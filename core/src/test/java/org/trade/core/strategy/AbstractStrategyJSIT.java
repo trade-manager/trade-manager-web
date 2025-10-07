@@ -17,7 +17,6 @@ import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
 import org.trade.core.broker.IBrokerModel;
 import org.trade.core.factory.ClassFactory;
-import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradeOrderfill;
 import org.trade.core.persistent.dao.TradePosition;
@@ -26,6 +25,7 @@ import org.trade.core.persistent.dao.series.indicator.StrategyData;
 import org.trade.core.persistent.dao.strategy.IStrategyRule;
 import org.trade.core.persistent.dao.strategy.StrategyRuleJS;
 import org.trade.core.persistent.rule.Rule;
+import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.valuetype.Action;
 import org.trade.core.valuetype.BarSize;
@@ -115,7 +115,7 @@ public class AbstractStrategyJSIT extends TradestrategyBase {
         Strategy strategy = (Strategy) DAOStrategy.newInstance().getObject();
         tradestrategy = this.createTestTradestrategy(strategy, symbol, Side.BOT, ChartDays.ONE_DAY, BarSize.FIVE_MIN);
         assertNotNull(tradestrategy);
-        strategy = tradeService.findStrategyById(tradestrategy.getStrategy().getId());
+        strategy = tradeService.getStrategyService().findById(tradestrategy.getStrategy().getId());
         String fileName = strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/') + strategy.getClassName()
                 + ".js";
         String content = TradestrategyBase.readFile(fileName);
@@ -167,7 +167,7 @@ public class AbstractStrategyJSIT extends TradestrategyBase {
         tradeOrder.addTradeOrderfill(tradeOrderfill);
         tradeService.saveTradeOrderfill(tradeOrder);
 
-        strategy = tradeService.findStrategyById(tradestrategy.getStrategy().getId());
+        strategy = tradeService.getStrategyService().findById(tradestrategy.getStrategy().getId());
         String fileName = strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/') + strategy.getClassName()
                 + ".js";
         String content = TradestrategyBase.readFile(fileName);

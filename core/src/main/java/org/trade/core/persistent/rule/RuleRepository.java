@@ -2,7 +2,7 @@ package org.trade.core.persistent.rule;
 
 import org.springframework.stereotype.Repository;
 import org.trade.core.dao.AspectRepository;
-import org.trade.core.persistent.dao.Strategy;
+import org.trade.core.persistent.strategy.Strategy;
 
 import java.util.List;
 

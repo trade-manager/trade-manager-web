@@ -17,7 +17,7 @@ import org.trade.core.TradestrategyBase;
 import org.trade.core.broker.IBrokerModel;
 import org.trade.core.factory.ClassFactory;
 import org.trade.core.persistent.ServiceException;
-import org.trade.core.persistent.dao.Strategy;
+import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.persistent.dao.Tradestrategy;
 import org.trade.core.persistent.dao.strategy.IStrategyRule;
 import org.trade.core.persistent.dao.strategy.StrategyRuleJS;
@@ -85,7 +85,7 @@ public class StrategyPanelJSIT extends TradestrategyBase {
         Strategy strategy = (Strategy) DAOStrategy.newInstance().getObject();
         tradestrategy = this.createTestTradestrategy(strategy, symbol, Side.BOT, ChartDays.ONE_DAY, BarSize.HOUR_MIN);
         assertNotNull(tradestrategy);
-        strategy = tradeService.findStrategyById(tradestrategy.getStrategy().getId());
+        strategy = tradeService.getStrategyService().findById(tradestrategy.getStrategy().getId());
         String fileName = strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/') + strategy.getClassName()
                 + ".js";
         String content = TradestrategyBase.readFile(fileName);
@@ -107,7 +107,7 @@ public class StrategyPanelJSIT extends TradestrategyBase {
 
         File dir = new File(tmpDir);
         StrategyPanel.deleteDir(dir);
-        List<Strategy> strategies = this.tradeService.findStrategies();
+        List<Strategy> strategies = this.tradeService.getStrategyService().findAll();
         assertNotNull(strategies);
 
         for (Strategy strategy : strategies) {
@@ -213,7 +213,7 @@ public class StrategyPanelJSIT extends TradestrategyBase {
 
             brokerManagerModel = (IBrokerModel) ClassFactory
                     .getServiceForInterface(IBrokerModel._brokerTest, param, this);
-            strategy = this.tradeService.findStrategyById(tradestrategy.getStrategy().getId());
+            strategy = this.tradeService.getStrategyService().findById(tradestrategy.getStrategy().getId());
         } catch (Exception ex) {
 
             fail("Failed to create broker msg: " + ex.getMessage());
@@ -279,7 +279,7 @@ public class StrategyPanelJSIT extends TradestrategyBase {
     public void doSave() throws Exception {
 
         StrategyPanel strategyPanel = new StrategyPanel(this.tradeService);
-        List<Strategy> strategies = this.tradeService.findStrategies();
+        List<Strategy> strategies = this.tradeService.getStrategyService().findAll();
         assertNotNull(strategies);
         assertFalse(strategies.isEmpty());
 
