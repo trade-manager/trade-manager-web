@@ -17,7 +17,7 @@ import org.trade.core.TradestrategyBase;
 import org.trade.core.broker.IBrokerModel;
 import org.trade.core.factory.ClassFactory;
 import org.trade.core.persistent.ServiceException;
-import org.trade.core.persistent.dao.Rule;
+import org.trade.core.persistent.rule.Rule;
 import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.Tradestrategy;
 import org.trade.core.persistent.dao.strategy.IStrategyRule;
@@ -219,7 +219,7 @@ public class StrategyPanelJSIT extends TradestrategyBase {
             fail("Failed to create broker msg: " + ex.getMessage());
         }
 
-        Rule myRule = this.tradeService.findRuleByMaxVersion(strategy, ContentType.JAVASCRIPT);
+        Rule myRule = this.tradeService.getRuleService().findByMaxVersion(strategy, ContentType.JAVASCRIPT);
         assertNotNull(myRule);
         String fileDir = tmpDir + "/" + IStrategyRule.PACKAGE.replace('.', '/');
         String className = strategy.getClassName() + ".js";
@@ -262,7 +262,7 @@ public class StrategyPanelJSIT extends TradestrategyBase {
     public void doCompile() {
 
         StrategyPanel strategyPanel = new StrategyPanel(this.tradeService);
-        Rule latestRule = this.tradeService.findRuleByMaxVersion(tradestrategy.getStrategy(), ContentType.JAVASCRIPT);
+        Rule latestRule = this.tradeService.getRuleService().findByMaxVersion(tradestrategy.getStrategy(), ContentType.JAVASCRIPT);
 
         assertNotNull(latestRule);
         String fileName = strategyDir + "/" + IStrategyRule.PACKAGE.replace('.', '/') + tradestrategy.getStrategy().getClassName() + ".js";
@@ -310,7 +310,7 @@ public class StrategyPanelJSIT extends TradestrategyBase {
         myrule.setRule(textArea.getText().getBytes());
         myrule = this.tradeService.saveAspect(myrule);
         assertNotNull(myrule.getId());
-        Rule ruleSaved = this.tradeService.findRuleById(myrule.getId());
+        Rule ruleSaved = this.tradeService.getRuleService().findById(myrule.getId());
         assertNotNull(ruleSaved.getId());
 
         String javaCode = new String(ruleSaved.getRule());

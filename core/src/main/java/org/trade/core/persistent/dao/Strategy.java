@@ -13,6 +13,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import org.trade.core.dao.Aspect;
 import org.trade.core.persistent.dao.series.indicator.IndicatorSeries;
+import org.trade.core.persistent.rule.Rule;
 
 import java.io.Serial;
 import java.io.Serializable;

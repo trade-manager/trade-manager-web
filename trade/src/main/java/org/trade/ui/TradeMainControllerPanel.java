@@ -19,7 +19,7 @@ import org.trade.core.persistent.codetype.CodeType;
 import org.trade.core.persistent.codetype.CodeValue;
 import org.trade.core.persistent.dao.Contract;
 import org.trade.core.persistent.portfolio.Portfolio;
-import org.trade.core.persistent.dao.Rule;
+import org.trade.core.persistent.rule.Rule;
 import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradePosition;
@@ -137,7 +137,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
              */
             setSelected(true);
             Tradingday tradingday = Tradingday.newInstance(TradingCalendar.getCurrentTradingDay());
-            Tradingday todayTradingday = tradeService.getTradingdayService().findTradingdayByOpenCloseDate(tradingday.getOpen(),
+            Tradingday todayTradingday = tradeService.getTradingdayService().findByOpenCloseDate(tradingday.getOpen(),
                     tradingday.getClose());
 
             if (null != todayTradingday) {
@@ -1008,7 +1008,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
             /*
              * Update the default portfolio.
              */
-            tradeService.resetDefaultPortfolio(connectionPane.getPortfolio());
+            tradeService.getPortfolioService().resetDefault(connectionPane.getPortfolio());
             DBTableLookupServiceProvider.clearLookup();
 
             if (!dialog.getCancel()) {
@@ -1214,7 +1214,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
 
             scanLine.useDelimiter("\\,");
             int tokens = accountNumbers.replaceAll("[^,]", "").length();
-            Portfolio defaultPortfolio = tradeService.findPortfolioDefault();
+            Portfolio defaultPortfolio = tradeService.getPortfolioService().findDefault();
 
             while (scanLine.hasNext()) {
 
@@ -1222,7 +1222,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
 
                 if (!accountNumber.isEmpty()) {
 
-                    Account account = tradeService.findAccountByAccountNumber(accountNumber);
+                    Account account = tradeService.getAccountService().findByAccountNumber(accountNumber);
 
                     if (null == account) {
 
@@ -1257,7 +1257,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                             /*
                              * Update the default portfolio.
                              */
-                            tradeService.resetDefaultPortfolio(portfolio);
+                            tradeService.getPortfolioService().resetDefault(portfolio);
                         }
                     }
                 }
@@ -1265,7 +1265,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
 
             DBTableLookupServiceProvider.clearLookup();
             tradingdayPanel.doWindowActivated();
-            defaultPortfolio = tradeService.findPortfolioByName(defaultPortfolio.getName());
+            defaultPortfolio = tradeService.getPortfolioService().findByName(defaultPortfolio.getName());
 
             for (Account item : defaultPortfolio.getAccounts()) {
 
@@ -1293,12 +1293,12 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
 
             try {
 
-                Account account = tradeService.findAccountByAccountNumber(accountNumber);
+                Account account = tradeService.getAccountService().findByAccountNumber(accountNumber);
                 Portfolio portfolio = account.getDefaultPortfolio();
 
                 if (null != portfolio) {
 
-                    portfolio = tradeService.findPortfolioById(portfolio.getId());
+                    portfolio = tradeService.getPortfolioService().findById(portfolio.getId());
                     tradingdayPanel.setPortfolioLabel(portfolio);
                     setStatusBarMessage("Account: " + accountNumber + " information updated.",
                             BasePanel.INFORMATION);
@@ -1349,7 +1349,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
         try {
 
             this.clearStatusBarMessage();
-            CodeType codeType = tradeService.getCodeTypeService().findCodeTypeByNameAndType(tradestrategy.getStrategy().getName(),
+            CodeType codeType = tradeService.getCodeTypeService().findByNameAndType(tradestrategy.getStrategy().getName(),
                     CodeType.StrategyParameters);
 
 
@@ -1638,7 +1638,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                 tradestrategy.getTradingday().getClose())) {
 
             Tradingday tradingday = tradeService.getTradingdayService()
-                    .findTradingdayById(tradestrategy.getTradingday().getId());
+                    .findById(tradestrategy.getTradingday().getId());
             tradingdays.add(tradingday);
         }
 
@@ -1880,7 +1880,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                             + tradestrategy.getStrategyData().getBaseCandleSeries().getItemCount());
         }
 
-        List<Rule> rules = this.tradeService.findRulesByStrategyAndActive(strategy, true);
+        List<Rule> rules = this.tradeService.getRuleService().findByStrategyAndActive(strategy, true);
 
         if (rules.isEmpty() || rules.size() > 1) {
 

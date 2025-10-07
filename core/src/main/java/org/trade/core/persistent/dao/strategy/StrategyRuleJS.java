@@ -10,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trade.core.broker.IBrokerModel;
 import org.trade.core.persistent.TradeService;
-import org.trade.core.persistent.dao.Rule;
+import org.trade.core.persistent.rule.Rule;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradeOrderDTO;
 import org.trade.core.persistent.dao.TradePosition;
@@ -133,7 +133,7 @@ public class StrategyRuleJS extends AbstractStrategyRule {
             if (null == this.rule) {
 
                 strategyName = this.getTradestrategy().getStrategy().getName();
-                Rule rule = this.getTradeService().findRuleByMaxVersion(this.getTradestrategy().getStrategy(), ContentType.JAVASCRIPT);
+                Rule rule = this.getTradeService().getRuleService().findByMaxVersion(this.getTradestrategy().getStrategy(), ContentType.JAVASCRIPT);
                 codeJS = new String(rule.getRule());
             } else {
 

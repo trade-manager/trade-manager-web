@@ -100,7 +100,7 @@ public class TWSFinancialAccountRequestIT extends TradestrategyBase {
 
             Account item = (Account) aspect;
 
-            if (null == tradeService.findAccountByAccountNumber(item.getAccountNumber())) {
+            if (null == tradeService.getAccountService().findByAccountNumber(item.getAccountNumber())) {
 
                 item.setCurrency(Currency.USD);
                 item.setAccountType(AccountType.INDIVIDUAL);
@@ -125,7 +125,7 @@ public class TWSFinancialAccountRequestIT extends TradestrategyBase {
 
             Account item = (Account) aspect;
 
-            if (null == tradeService.findAccountByAccountNumber(item.getAccountNumber())) {
+            if (null == tradeService.getAccountService().findByAccountNumber(item.getAccountNumber())) {
 
                 item.setCurrency(Currency.USD);
                 item.setAccountType(AccountType.INDIVIDUAL);

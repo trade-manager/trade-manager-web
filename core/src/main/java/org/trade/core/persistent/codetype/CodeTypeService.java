@@ -9,31 +9,33 @@ import java.util.List;
 public interface CodeTypeService {
 
     /**
-     * Method findCodeTypeByName.
+     * Method findByName.
      *
      * @param name String
      * @return CodeType
      */
-    CodeType findCodeTypeByName(String name);
+    CodeType findByName(String name);
 
     /**
-     * Method validateAndGetCodeType.
+     * Method validateAndGet.
      *
      * @param name String
      * @return CodeType
      */
-    CodeType validateAndGetCodeType(String name);
+    CodeType validateAndGet(String name);
 
     /**
-     * Method findCodeTypeByNameAndType.
+     * Method findByNameAndType.
      *
      * @param name String
      * @param type String
      * @return CodeType
      */
-    CodeType findCodeTypeByNameAndType(String name, String type);
+    CodeType findByNameAndType(String name, String type);
 
     /**
+     * Method findByAttributeName.
+     *
      * @param codeTypeName      String
      * @param codeAttributeName String
      * @return List<CodeValue>
@@ -41,18 +43,18 @@ public interface CodeTypeService {
     List<CodeValue> findByAttributeName(String codeTypeName, String codeAttributeName);
 
     /**
-     * Method saveCodeType.
+     * Method save.
      *
      * @param codeType CodeType
      * @return CodeType
      */
-    CodeType saveCodeType(CodeType codeType);
+    CodeType save(CodeType codeType);
 
     /**
-     * Method deleteCodeType.
+     * Method delete.
      *
      * @param codeType CodeType
      */
-    void deleteCodeType(CodeType codeType);
+    void delete(CodeType codeType);
 
 }

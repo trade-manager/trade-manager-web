@@ -35,38 +35,38 @@ public class UserServiceImpl implements UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public List<User> getUsers() {
+    public List<User> findAll() {
 
         return userRepository.findAllByOrderByName();
     }
 
-    public User getUserByUsername(String username) {
+    public User findByUsername(String username) {
 
         return userRepository.findByUsername(username).orElse(null);
     }
 
-    public boolean hasUserWithUsername(String username) {
+    public boolean hasWithUsername(String username) {
 
         return userRepository.existsByUsername(username);
     }
 
-    public boolean hasUserWithEmail(String email) {
+    public boolean hasWithEmail(String email) {
 
         return userRepository.existsByEmail(email);
     }
 
-    public User validateAndGetUserByUsername(String username) {
+    public User validateAndFindByUsername(String username) {
 
         return userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException(String.format("User with username %s not found", username)));
     }
 
-    public User validateAndGetUserById(Long id) {
+    public User validateAndFindUserById(Long id) {
 
         return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(String.format("User with username %s not found", id)));
     }
 
     @Transactional
-    public User saveUser(User instance) {
+    public User save(User instance) {
 
         List<Role> roles = new ArrayList<>();
 
@@ -82,7 +82,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUser(User user) {
+    public void delete(User user) {
 
         if (null == user) {
 

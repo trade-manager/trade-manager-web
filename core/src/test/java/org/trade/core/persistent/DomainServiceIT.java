@@ -69,12 +69,12 @@ public class DomainServiceIT extends TradestrategyBase {
     @Test
     public void createDomain() {
 
-        Domain gobalDomain = domainService.findDomainByName(Domain.GLOBAL);
+        Domain gobalDomain = domainService.findByName(Domain.GLOBAL);
         assertNotNull(gobalDomain);
         assertFalse(gobalDomain.hasParent());
         Domain childDomain = new Domain(childDomainName, childDomainName);
         childDomain.setParent(gobalDomain);
-        childDomain = domainService.saveDomain(childDomain);
+        childDomain = domainService.save(childDomain);
         assertNotNull(childDomain.getId());
         assertTrue(childDomain.hasParent());
         this.addRecord(childDomain);

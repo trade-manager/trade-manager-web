@@ -71,7 +71,7 @@ public class EmployeeServiceIT extends TradestrategyBase {
     @BeforeEach
     public void setUp() {
 
-        gobalDomain = domainService.findDomainByName(Domain.GLOBAL);
+        gobalDomain = domainService.findByName(Domain.GLOBAL);
         assertNotNull(gobalDomain.getId());
         adminUser = userService.findUserByName("admin");
         assertNotNull(adminUser.getId());
@@ -97,7 +97,7 @@ public class EmployeeServiceIT extends TradestrategyBase {
     public void createEmployee() {
 
         Employee employee = new Employee(userName, userName, userName, userName, userName + "@" + Domain.GLOBAL + ".com", adminUser);
-        employeeService.saveEmployee(employee);
+        employeeService.save(employee);
         assertNotNull(employee.getId());
         this.addRecord(employee);
     }
@@ -106,12 +106,12 @@ public class EmployeeServiceIT extends TradestrategyBase {
     public void findEmployeeAdminRecord() {
 
         Employee instance = new Employee(userName, userName, userName, userName, userName + "@" + Domain.GLOBAL + ".com", adminUser);
-        employeeService.saveEmployee(instance);
+        employeeService.save(instance);
         assertNotNull(instance.getId());
         this.addRecord(instance);
-        Employee instanceNew = employeeService.validateAndGetEmployee(instance.getId());
+        Employee instanceNew = employeeService.validateAndGet(instance.getId());
         assertEquals(instance.getId(), instanceNew.getId());
-        List<Employee> employees = employeeService.getEmployeesContainingText(userName);
+        List<Employee> employees = employeeService.findContainingText(userName);
         List<EmployeeRecord> employeeRecords = employees.stream().map(EmployeeRecord::from).collect(Collectors.toList());
         assertFalse(employeeRecords.isEmpty());
     }
@@ -120,26 +120,26 @@ public class EmployeeServiceIT extends TradestrategyBase {
     public void findEmployeeManagerRecord() {
 
         Employee instanceAdmin = new Employee(userName, userName, userName, userName, userName + "@" + Domain.GLOBAL + ".com", adminUser);
-        employeeService.saveEmployee(instanceAdmin);
+        employeeService.save(instanceAdmin);
         assertNotNull(instanceAdmin.getId());
         this.addRecord(instanceAdmin);
 
-        Role role = roleService.findRoleByName(Role.ROLE_MANAGER);
+        Role role = roleService.findByName(Role.ROLE_MANAGER);
         assertNotNull(role);
         List<Role> roles = new ArrayList<>();
         roles.add(role);
 
         String name = "TEST-" + TradestrategyBase.getRandomNumber(4);
         User user = new User(name, name, name, name, name + "@" + Domain.GLOBAL + ".com", name, gobalDomain, roles);
-        user = userService.saveUser(user);
+        user = userService.save(user);
         assertNotNull(user.getId());
         this.addRecord(user);
 
         Employee instance = new Employee(name, name, name, name, name + "@" + Domain.GLOBAL + ".com", user);
-        employeeService.saveEmployee(instance);
+        employeeService.save(instance);
         assertNotNull(instance.getId());
 
-        List<Employee> employees = employeeService.getEmployeesContainingText(name);
+        List<Employee> employees = employeeService.findContainingText(name);
 
         this.addRecord(instance);
         List<EmployeeRecord> employeeRecords = employees.stream().map(EmployeeRecord::from).collect(Collectors.toList());

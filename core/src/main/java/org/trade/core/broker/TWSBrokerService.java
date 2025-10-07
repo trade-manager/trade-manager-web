@@ -296,7 +296,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
     @Override
     public void onSubscribeAccountUpdates(boolean subscribe, String accountNumber) {
         try {
-            Account account = tradeService.findAccountByAccountNumber(accountNumber);
+            Account account = tradeService.getAccountService().findByAccountNumber(accountNumber);
             accountRequests.put(accountNumber, account);
             if (controller().client().isConnected()) {
                 controller().reqAccountUpdates(subscribe, accountNumber, new AccountHandler(this, accountNumber));
@@ -1003,7 +1003,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
             for (Alias alias : aliases) {
                 _log.debug("Aliases: {}/n", alias.alias());
 
-                Account account = getPersistentModel().findAccountByAccountNumber(alias.account());
+                Account account = getPersistentModel().getAccountService().findByAccountNumber(alias.account());
                 if (null == account) {
                     account = new Account(alias.account(), alias.account(), Currency.USD,
                             AccountType.INDIVIDUAL);

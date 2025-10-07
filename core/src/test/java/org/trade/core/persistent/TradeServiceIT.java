@@ -21,7 +21,7 @@ import org.trade.core.persistent.dao.Candle;
 import org.trade.core.persistent.dao.Contract;
 import org.trade.core.persistent.dao.ContractLite;
 import org.trade.core.persistent.portfolio.Portfolio;
-import org.trade.core.persistent.dao.Rule;
+import org.trade.core.persistent.rule.Rule;
 import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradeOrderfill;
@@ -444,7 +444,7 @@ public class TradeServiceIT extends TradestrategyBase {
 
         tradestrategy.getPortfolio().setIsDefault(false);
         this.tradeService.saveAspect(tradestrategy.getPortfolio());
-        this.tradeService.resetDefaultPortfolio(tradestrategy.getPortfolio());
+        this.tradeService.getPortfolioService().resetDefault(tradestrategy.getPortfolio());
         assertTrue(tradestrategy.getPortfolio().getIsDefault());
     }
 
@@ -598,14 +598,14 @@ public class TradeServiceIT extends TradestrategyBase {
     public void findAccountById() {
 
         Portfolio result = this.tradeService
-                .findPortfolioById(tradestrategy.getPortfolio().getId());
+                .getPortfolioService().findById(tradestrategy.getPortfolio().getId());
         assertNotNull(result);
     }
 
     @Test
     public void findAccountByNumber() {
 
-        Account result = this.tradeService.findAccountByAccountNumber(tradestrategy.getPortfolio().getIndividualAccount().getAccountNumber());
+        Account result = this.tradeService.getAccountService().findByAccountNumber(tradestrategy.getPortfolio().getIndividualAccount().getAccountNumber());
         assertNotNull(result);
     }
 
@@ -714,7 +714,7 @@ public class TradeServiceIT extends TradestrategyBase {
                 TradingCalendar.getDateTimeNowMarketTimeZone(), Side.BOT);
         this.tradeService.saveAspect(tradePosition);
         Tradingday result = this.tradeService.getTradingdayService()
-                .findTradingdayById(tradestrategy.getTradingday().getId());
+                .findById(tradestrategy.getTradingday().getId());
         assertNotNull(result);
         this.tradeService.deleteTradingdayTradeOrders(result);
     }
@@ -806,14 +806,14 @@ public class TradeServiceIT extends TradestrategyBase {
     public void findTradingdayById() {
 
         Tradingday result = this.tradeService.getTradingdayService()
-                .findTradingdayById(tradestrategy.getTradingday().getId());
+                .findById(tradestrategy.getTradingday().getId());
         assertNotNull(result);
     }
 
     @Test
     public void findTradingdayByOpenDate() {
 
-        Tradingday result = this.tradeService.getTradingdayService().findTradingdayByOpenCloseDate(
+        Tradingday result = this.tradeService.getTradingdayService().findByOpenCloseDate(
                 tradestrategy.getTradingday().getOpen(), tradestrategy.getTradingday().getClose());
         assertNotNull(result);
     }
@@ -869,7 +869,7 @@ public class TradeServiceIT extends TradestrategyBase {
         Rule rule = new Rule(strategy, true, 0, comment, content.getBytes(), contentType);
         strategy.getRules().add(rule);
         strategy = this.tradeService.saveAspect(strategy);
-        rule = this.tradeService.findRuleByMaxVersion(strategy, contentType);
+        rule = this.tradeService.getRuleService().findByMaxVersion(strategy, contentType);
         assertEquals(0, rule.getRuleVersion());
         assertEquals(contentType, rule.getContentType());
     }
@@ -882,7 +882,7 @@ public class TradeServiceIT extends TradestrategyBase {
         Rule rule = new Rule(strategy, true, 0, comment);
         strategy.getRules().add(rule);
         strategy = this.tradeService.saveAspect(strategy);
-        Rule latestRule = this.tradeService.findRuleByMaxVersion(strategy, contentType);
+        Rule latestRule = this.tradeService.getRuleService().findByMaxVersion(strategy, contentType);
         Integer version = 0;
 
         if (null != latestRule) {
@@ -900,7 +900,7 @@ public class TradeServiceIT extends TradestrategyBase {
     @Test
     public void findRuleByMaxVersion() {
 
-        Rule latestRule = this.tradeService.findRuleByMaxVersion(tradestrategy.getStrategy(), contentType);
+        Rule latestRule = this.tradeService.getRuleService().findByMaxVersion(tradestrategy.getStrategy(), contentType);
         assertNull(latestRule);
     }
 
@@ -924,7 +924,7 @@ public class TradeServiceIT extends TradestrategyBase {
 
         Strategy strategy = tradestrategy.getStrategy();
         strategy = this.tradeService.findStrategyById(strategy.getId());
-        Rule latestRule = this.tradeService.findRuleByMaxVersion(strategy, contentType);
+        Rule latestRule = this.tradeService.getRuleService().findByMaxVersion(strategy, contentType);
         Integer version = 0;
 
         if (null != latestRule) {
@@ -999,7 +999,7 @@ public class TradeServiceIT extends TradestrategyBase {
     public void reassignStrategy() {
 
         Tradingday tradingday = this.tradeService.getTradingdayService()
-                .findTradingdayById(tradestrategy.getTradingday().getId());
+                .findById(tradestrategy.getTradingday().getId());
         assertFalse(tradingday.getTradestrategies().isEmpty());
         Strategy toStrategy = (Strategy) DAOStrategy.newInstance().getObject();
         toStrategy = this.tradeService.findStrategyById(toStrategy.getId());

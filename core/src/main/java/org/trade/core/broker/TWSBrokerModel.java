@@ -248,7 +248,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
 
         try {
 
-            Account account = tradeService.findAccountByAccountNumber(accountNumber);
+            Account account = tradeService.getAccountService().findByAccountNumber(accountNumber);
             accountRequests.put(accountNumber, account);
 
             if (client.isConnected()) {
@@ -1768,7 +1768,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
                     for (Aspect aspect : aspects.getAspects()) {
 
                         Account item = (Account) aspect;
-                        Account account = tradeService.findAccountByAccountNumber(item.getAccountNumber());
+                        Account account = tradeService.getAccountService().findByAccountNumber(item.getAccountNumber());
                         if (null == account) {
                             account = new Account(item.getAccountNumber(), item.getAccountNumber(), Currency.USD,
                                     AccountType.INDIVIDUAL);

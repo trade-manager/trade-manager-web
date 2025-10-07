@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.trade.core.dao.Aspect;
 import org.trade.core.dao.AspectRepository;
+import org.trade.core.dao.AspectService;
 import org.trade.core.dao.AspectServiceImpl;
 import org.trade.core.dao.Aspects;
 import org.trade.core.persistent.account.Account;
@@ -18,8 +19,8 @@ import org.trade.core.persistent.dao.CandleRepository;
 import org.trade.core.persistent.dao.Contract;
 import org.trade.core.persistent.dao.ContractLite;
 import org.trade.core.persistent.dao.ContractRepository;
-import org.trade.core.persistent.dao.Rule;
-import org.trade.core.persistent.dao.RuleRepository;
+import org.trade.core.persistent.rule.Rule;
+import org.trade.core.persistent.rule.RuleRepository;
 import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.StrategyRepository;
 import org.trade.core.persistent.dao.TradeOrder;
@@ -41,6 +42,7 @@ import org.trade.core.persistent.dao.series.indicator.CandleSeries;
 import org.trade.core.persistent.dao.series.indicator.candle.CandleItem;
 import org.trade.core.persistent.portfolio.Portfolio;
 import org.trade.core.persistent.portfolio.PortfolioService;
+import org.trade.core.persistent.rule.RuleService;
 import org.trade.core.persistent.tradingday.Tradingday;
 import org.trade.core.persistent.tradingday.TradingdayService;
 import org.trade.core.util.CoreUtils;
@@ -81,9 +83,6 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
     private CandleRepository candleRepository;
 
     @Autowired
-    private RuleRepository ruleRepository;
-
-    @Autowired
     private StrategyRepository strategyRepository;
 
     @Autowired
@@ -104,18 +103,24 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
     @Autowired
     private TradestrategyRepository tradestrategyRepository;
 
-    public final TradingdayService tradingdayService;
-    public final CodeTypeService codeTypeService;
-    public final AccountService accountService;
-    public final PortfolioService portfolioService;
+    private final TradingdayService tradingdayService;
+    private final CodeTypeService codeTypeService;
+    private final AccountService accountService;
+    private final PortfolioService portfolioService;
+    private final RuleService ruleService;
 
-    public TradeServiceImpl(final TradingdayService tradingdayService, final CodeTypeService codeTypeService, final AccountService accountService, final PortfolioService portfolioService) {
+    public TradeServiceImpl(final TradingdayService tradingdayService, final CodeTypeService codeTypeService, final AccountService accountService, final PortfolioService portfolioService, final RuleService ruleService) {
 
         this.tradingdayService = tradingdayService;
         this.codeTypeService = codeTypeService;
         this.accountService = accountService;
         this.portfolioService = portfolioService;
+        this.ruleService = ruleService;
+    }
 
+
+    public AspectRepository<Aspect, Long> getAspectRepository(){
+        return  aspectRepository;
     }
 
     public TradingdayService getTradingdayService() {
@@ -138,8 +143,9 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
         return this.portfolioService;
     }
 
-    public AspectRepository<Aspect, Long> getAspectRepository() {
-        return this.aspectRepository;
+    public RuleService getRuleService() {
+
+        return this. ruleService;
     }
 
     public void deleteAspect(Aspect instance) {
@@ -165,16 +171,6 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
         return contractRepository.findAll();
     }
 
-    public Iterable<Rule> findAllRules() {
-
-        return ruleRepository.findAll();
-    }
-
-    public Iterable<Account> findAllAccounts() {
-
-        return accountService.findAllAccountsOrderByAccountNumber();
-    }
-
     public TradelogReport findTradelogReport(final Portfolio portfolio, ZonedDateTime start, ZonedDateTime end,
                                              boolean filter, String symbol, BigDecimal winLossAmount) throws IOException {
 
@@ -185,17 +181,6 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
         tradelogReport.setTradelogSummary(reportSummary);
         return tradelogReport;
     }
-
-    public Account findAccountById(final Long id) {
-
-        return accountService.findAccountById(id);
-    }
-
-    public Account findAccountByAccountNumber(String accountNumber) {
-
-        return accountService.findAccountByAccountNumber(accountNumber);
-    }
-
 
     public Contract findContractById(final Long id) {
 
@@ -303,66 +288,20 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
     }
 
     @Transactional
-    public Portfolio findPortfolioById(final Long id) {
-
-        Portfolio portfolio = portfolioService.findPortfolioById(id);
-
-        if (null != portfolio) {
-
-            portfolio.getTradestrategies().size();
-            return portfolio;
-        }
-
-        return null;
-    }
-
-    @Transactional
-    public Portfolio findPortfolioByName(String name) {
-
-        Portfolio portfolio = portfolioService.findPortfolioByName(name);
-
-        if (null != portfolio) {
-
-            portfolio.getAccounts().size();
-            return portfolio;
-        }
-
-        return null;
-    }
-
-    public Portfolio findPortfolioDefault() {
-
-        return portfolioService.findDefault();
-    }
-
-    @Transactional
-    public void resetDefaultPortfolio(final Portfolio instance) {
-
-        List<Portfolio> items = portfolioService.findAllPortfolios();
-
-        for (Portfolio item : items) {
-
-            item.setIsDefault(Objects.equals(item.getId(), instance.getId()));
-            item = this.saveAspect(item);
-            instance.setIsDefault(item.getIsDefault());
-        }
-    }
-
-    @Transactional
     public Portfolio savePortfolio(Portfolio instance) {
 
         List<Account> accounts = new ArrayList<>();
 
         for (Account account : instance.getAccounts()) {
 
-            Account current = this.findAccountByAccountNumber(account.getAccountNumber());
+            Account current = this.getAccountService().findByAccountNumber(account.getAccountNumber());
 
             accounts.add(Objects.requireNonNullElse(current, account));
         }
 
         instance.getAccounts().clear();
         instance.setAccounts(accounts);
-        return portfolioService.savePortfolio(instance);
+        return portfolioService.save(instance);
     }
 
     public List<Tradestrategy> findAllTradestrategies() {
@@ -838,40 +777,6 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
         return saveTradeOrder(tradeOrder);
     }
 
-
-    public Rule findRuleById(final Long ruleId) {
-
-        return ruleRepository.findById(ruleId).isPresent() ? ruleRepository.findById(ruleId).get() : null;
-    }
-
-    public List<Rule> findRulesAll() {
-
-        return ruleRepository.findAll();
-    }
-
-    public List<Rule> findRulesByStrategy(Strategy strategy) {
-
-        return ruleRepository.findByStrategy(strategy);
-    }
-
-    public List<Rule> findRulesByStrategyAndActive(Strategy strategy, Boolean active) {
-
-        return ruleRepository.findByStrategyAndActive(strategy, active);
-    }
-
-    public Rule findRuleByMaxVersion(final Strategy strategy, String contentType) {
-
-        Integer version = ruleRepository.findByMaxRuleVersion(strategy, contentType);
-        List<Rule> rules = ruleRepository.findByStrategyAndContentTypeAndRuleVersion(strategy, contentType, version);
-
-        if (!rules.isEmpty()) {
-
-            return rules.getFirst();
-        }
-
-        return null;
-    }
-
     @Transactional
     public Strategy findStrategyById(final Long id) {
 
@@ -936,7 +841,7 @@ public class TradeServiceImpl extends AspectServiceImpl implements TradeService 
              * Relationship Portfolio -> PortfolioAccount is LAZY so we
              * need to call size() on PortfolioAccount.
              */
-            List<Portfolio> items = portfolioService.findAllPortfolios();
+            List<Portfolio> items = portfolioService.findAll();
             Aspects aspects = new Aspects();
 
             for (Aspect item : items) {

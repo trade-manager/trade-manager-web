@@ -1101,7 +1101,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
 
             if (null != getTradestrategy().getPortfolio().getIndividualAccount()) {
 
-                return tradeService.findAccountByAccountNumber(
+                return tradeService.getAccountService().findByAccountNumber(
                         getTradestrategy().getPortfolio().getIndividualAccount().getAccountNumber());
             }
             return null;

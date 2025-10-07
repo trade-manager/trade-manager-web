@@ -124,7 +124,7 @@ public class AspectServiceIT extends TradestrategyBase {
 
         // Create new instance of Strategy and set
         // values in it by reading them from form object
-        String className = "org.trade.core.persistent.dao.Rule";
+        String className = "org.trade.core.persistent.rule.Rule";
         _log.info("Find Aspects by className: {}", className);
 
         List<?> codes = tradeService.findCodesByClassName(className);

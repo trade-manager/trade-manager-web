@@ -6,8 +6,10 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Simon Allen
@@ -26,19 +28,51 @@ public class PortfolioServiceImpl implements PortfolioService {
         this.portfolioRepository = portfolioRepository;
     }
 
-    public Portfolio findPortfolioById(Long id) {
+    @Transactional
+    public Portfolio findById(Long id) {
 
-        return this.portfolioRepository.findById(id).orElse(null);
+        Portfolio portfolio = this.portfolioRepository.findById(id).orElse(null);
+
+        if (null != portfolio) {
+
+            portfolio.getTradestrategies().size();
+            return portfolio;
+        }
+
+        return null;
     }
 
-    public Portfolio findPortfolioByName(String name) {
+    @Transactional
+    public Portfolio findByName(String name) {
 
-        return this.portfolioRepository.findByName(name).orElse(null);
+        Portfolio portfolio = this.portfolioRepository.findByName(name).orElse(null);
+
+        if (null != portfolio) {
+
+            portfolio.getAccounts().size();
+            return portfolio;
+        }
+
+        return null;
     }
 
-    public Portfolio validateAndGetPortfolio(String name) {
+    public Portfolio validateAndGet(String name) {
 
         return portfolioRepository.findByName(name).orElseThrow(() -> new PortfolioNotFoundException(String.format("Portfolio with name %s not found", name)));
+    }
+
+
+    @Transactional
+    public void resetDefault(final Portfolio instance) {
+
+        List<Portfolio> items = this.findAll();
+
+        for (Portfolio item : items) {
+
+            item.setIsDefault(Objects.equals(item.getId(), instance.getId()));
+            item = this.save(item);
+            instance.setIsDefault(item.getIsDefault());
+        }
     }
 
     /**
@@ -73,21 +107,17 @@ public class PortfolioServiceImpl implements PortfolioService {
      *
      * @return Portfolio
      */
-    public List<Portfolio> findAllPortfolios() {
+    public List<Portfolio> findAll() {
 
-        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Portfolio> query = builder.createQuery(Portfolio.class);
-        Root<Portfolio> from = query.from(Portfolio.class);
-        query.select(from);
-        return entityManager.createQuery(query).getResultList();
+        return portfolioRepository.findAll();
     }
 
-    public Portfolio savePortfolio(Portfolio portfolio) {
+    public Portfolio save(Portfolio portfolio) {
 
         return portfolioRepository.save(portfolio);
     }
 
-    public void deletePortfolio(Portfolio portfolio) {
+    public void delete(Portfolio portfolio) {
 
         if (null == portfolio) {
 
@@ -96,5 +126,4 @@ public class PortfolioServiceImpl implements PortfolioService {
 
         portfolioRepository.delete(portfolio);
     }
-
 }

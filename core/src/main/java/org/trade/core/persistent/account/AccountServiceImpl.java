@@ -18,32 +18,32 @@ public class AccountServiceImpl implements AccountService {
         this.accountRepository = accountRepository;
     }
 
-    public Account findAccountById(Long id) {
+    public Account findById(Long id) {
 
         return this.accountRepository.findById(id).orElse(null);
     }
 
-    public List<Account> findAllAccountsOrderByAccountNumber() {
+    public List<Account> findAllOrderByAccountNumber() {
 
         return this.accountRepository.findAll();
     }
 
-    public Account validateAndGetAccount(String accountNumber) {
+    public Account validateAndGet(String accountNumber) {
 
         return accountRepository.findByAccountNumber(accountNumber).orElseThrow(() -> new AccountNotFoundException(String.format("Account with accountNumber %s not found", accountNumber)));
     }
 
-    public Account findAccountByAccountNumber(String accountNumber) {
+    public Account findByAccountNumber(String accountNumber) {
 
         return this.accountRepository.findByAccountNumber(accountNumber).orElse(null);
     }
 
-    public Account saveAccount(Account account) {
+    public Account save(Account account) {
 
         return accountRepository.save(account);
     }
 
-    public void deleteAccount(Account account) {
+    public void delete(Account account) {
 
         if (null == account) {
 

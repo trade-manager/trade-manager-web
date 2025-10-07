@@ -18,27 +18,27 @@ public class EmployeeServiceImpl implements EmployeeService {
         this.employeeRepository = employeeRepository;
     }
 
-    public List<Employee> getEmployees() {
+    public List<Employee> findAll() {
 
         return employeeRepository.findAllByOrderByName();
     }
 
-    public List<Employee> getEmployeesContainingText(String text) {
+    public List<Employee> findContainingText(String text) {
 
         return employeeRepository.findByNameContainingIgnoreCaseOrderByName(text);
     }
 
-    public Employee validateAndGetEmployee(Long id) {
+    public Employee validateAndGet(Long id) {
 
         return employeeRepository.findById(id).orElseThrow(() -> new EmployeeNotFoundException(String.format("Employee with id %s not found", id)));
     }
 
-    public Employee saveEmployee(Employee employee) {
+    public Employee save(Employee employee) {
 
         return employeeRepository.save(employee);
     }
 
-    public void deleteEmployee(Employee employee) {
+    public void delete(Employee employee) {
 
         if (null == employee) {
 
@@ -48,12 +48,12 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeRepository.delete(employee);
     }
 
-    public Employee findEmployeeByEmail(String email) {
+    public Employee findByEmail(String email) {
 
         return employeeRepository.findByEmail(email).orElse(null);
     }
 
-    public Employee findEmployeeByName(String name) {
+    public Employee findByName(String name) {
 
         return employeeRepository.findByName(name).orElse(null);
     }

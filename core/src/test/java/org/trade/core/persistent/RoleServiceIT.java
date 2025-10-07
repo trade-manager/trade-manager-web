@@ -75,10 +75,10 @@ public class RoleServiceIT extends TradestrategyBase {
     public void createRole() {
 
         Role role = new Role(roleName, roleName);
-        role = roleService.saveRole(role);
+        role = roleService.save(role);
         assertNotNull(role.getId());
         this.addRecord(role);
-        role = roleService.findRoleByName(roleName);
+        role = roleService.findByName(roleName);
         assertNotNull(role.getId());
     }
 
@@ -93,10 +93,10 @@ public class RoleServiceIT extends TradestrategyBase {
     @Test
     public void findRoleRecordByNameAdmin() throws JsonProcessingException {
 
-        Role managerRole = roleService.findRoleByName(Role.ROLE_MANAGER);
+        Role managerRole = roleService.findByName(Role.ROLE_MANAGER);
         Role role = new Role(roleName, roleName);
         role.setContainedRole(managerRole);
-        role = roleService.saveRole(role);
+        role = roleService.save(role);
         assertNotNull(role.getId());
         this.addRecord(role);
 
@@ -116,10 +116,10 @@ public class RoleServiceIT extends TradestrategyBase {
     @Test
     public void findRoleRecordByNameUser() throws JsonProcessingException {
 
-        Role managerRole = roleService.findRoleByName(Role.ROLE_MANAGER);
+        Role managerRole = roleService.findByName(Role.ROLE_MANAGER);
         Role role = new Role(roleName, roleName);
         role.setContainedRole(managerRole);
-        role = roleService.saveRole(role);
+        role = roleService.save(role);
         assertNotNull(role.getId());
         this.addRecord(role);
 
@@ -136,7 +136,7 @@ public class RoleServiceIT extends TradestrategyBase {
     @Test
     public void findRoleByNameRecord() {
 
-        Role role = roleService.findRoleByName(Role.ROLE_MANAGER);
+        Role role = roleService.findByName(Role.ROLE_MANAGER);
         assertNotNull(role);
         RoleRecord roleRecord = RoleRecord.from(role);
         assertNotNull(roleRecord);

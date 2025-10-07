@@ -45,7 +45,7 @@ public class EmployeeController {
     @GetMapping
     public List<EmployeeRecord> getEmployees(@RequestParam(value = "text", required = false) String text) {
 
-        List<Employee> employees = (text == null) ? employeeService.getEmployees() : employeeService.getEmployeesContainingText(text);
+        List<Employee> employees = (text == null) ? employeeService.findAll() : employeeService.findContainingText(text);
         return employees.stream().map(EmployeeRecord::from).collect(Collectors.toList());
     }
 
@@ -58,7 +58,7 @@ public class EmployeeController {
 
         if (null != employeeRecord.user()) {
 
-            User user = userService.validateAndGetUserById(employeeRecord.user().id());
+            User user = userService.validateAndFindUserById(employeeRecord.user().id());
 
             if (null != user) {
 
@@ -71,7 +71,7 @@ public class EmployeeController {
             employee = EmployeeController.from(employeeRecord, null);
         }
 
-        employee = employeeService.saveEmployee(employee);
+        employee = employeeService.save(employee);
         return EmployeeRecord.from(employee);
     }
 
@@ -79,8 +79,8 @@ public class EmployeeController {
     @DeleteMapping("/{id}")
     public EmployeeRecord deleteEmployee(@PathVariable Long id) {
 
-        Employee employee = employeeService.validateAndGetEmployee(id);
-        employeeService.deleteEmployee(employee);
+        Employee employee = employeeService.validateAndGet(id);
+        employeeService.delete(employee);
         return EmployeeRecord.from(employee);
     }
 

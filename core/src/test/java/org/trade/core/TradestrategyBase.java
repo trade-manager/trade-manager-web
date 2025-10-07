@@ -9,7 +9,7 @@ import org.trade.core.persistent.account.Account;
 import org.trade.core.persistent.dao.Contract;
 import org.trade.core.persistent.dao.ContractLite;
 import org.trade.core.persistent.portfolio.Portfolio;
-import org.trade.core.persistent.dao.Rule;
+import org.trade.core.persistent.rule.Rule;
 import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradePosition;
@@ -83,7 +83,7 @@ public class TradestrategyBase {
         }
 
         Portfolio portfolio = (Portfolio) DAOPortfolio.newInstance().getObject();
-        portfolio = tradeService.findPortfolioByName(portfolio.getName());
+        portfolio = tradeService.getPortfolioService().findByName(portfolio.getName());
 
         if (portfolio.getAccounts().isEmpty()) {
 
@@ -154,7 +154,7 @@ public class TradestrategyBase {
         }
 
         Tradingday tradingday = Tradingday.newInstance(open);
-        Tradingday instanceTradingDay = tradeService.getTradingdayService().findTradingdayByOpenCloseDate(tradingday.getOpen(), tradingday.getClose());
+        Tradingday instanceTradingDay = tradeService.getTradingdayService().findByOpenCloseDate(tradingday.getOpen(), tradingday.getClose());
 
         if (null != instanceTradingDay) {
 
@@ -278,7 +278,7 @@ public class TradestrategyBase {
                 tradeService.deleteAspect(aspect);
             }
 
-            Iterable<Rule> rules = tradeService.findAllRules();
+            Iterable<Rule> rules = tradeService.getRuleService().findAll();
             rules.forEach(rule -> tradeService.deleteAspect(rule));
         } catch (ClassNotFoundException ex) {
 

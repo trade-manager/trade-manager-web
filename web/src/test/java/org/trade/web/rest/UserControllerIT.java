@@ -94,16 +94,16 @@ class UserControllerIT extends TradestrategyBase {
     @BeforeEach
     public void setUpTest() {
 
-        Domain gobalDomain = domainService.findDomainByName(Domain.GLOBAL);
+        Domain gobalDomain = domainService.findByName(Domain.GLOBAL);
         assertNotNull(gobalDomain);
-        Role role = roleService.findRoleByName(Role.ROLE_ADMIN);
+        Role role = roleService.findByName(Role.ROLE_ADMIN);
         assertNotNull(role);
         List<Role> roles = new ArrayList<>();
         roles.add(role);
         User user = userService.findUserByName(userName);
         assertNull(user);
         user = new User(userName, userName, userName, userName, userName + "@" + Domain.GLOBAL + ".com", this.passwordEncoder.encode(password), gobalDomain, roles);
-        user = userService.saveUser(user);
+        user = userService.save(user);
         assertNotNull(user.getId());
         this.addRecord(user);
     }

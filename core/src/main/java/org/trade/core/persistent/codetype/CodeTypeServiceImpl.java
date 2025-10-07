@@ -30,17 +30,17 @@ public class CodeTypeServiceImpl implements CodeTypeService {
         this.codeTypeRepository = codeTypeRepository;
     }
 
-    public CodeType findCodeTypeByName(String name) {
+    public CodeType findByName(String name) {
 
         return codeTypeRepository.findByName(name).orElse(null);
     }
 
-    public CodeType validateAndGetCodeType(String name) {
+    public CodeType validateAndGet(String name) {
 
         return codeTypeRepository.findByName(name).orElseThrow(() -> new CodeTypeNotFoundException(String.format("CodeType with name %s not found", name)));
     }
 
-    public CodeType findCodeTypeByNameAndType(String name, String type) {
+    public CodeType findByNameAndType(String name, String type) {
 
         List<CodeType> codeTypes = codeTypeRepository.findByNameAndType(name, type);
         return codeTypes.isEmpty() ? null : codeTypes.getFirst();
@@ -77,12 +77,12 @@ public class CodeTypeServiceImpl implements CodeTypeService {
         return typedQuery.getResultList();
     }
 
-    public CodeType saveCodeType(CodeType codeType) {
+    public CodeType save(CodeType codeType) {
 
         return codeTypeRepository.save(codeType);
     }
 
-    public void deleteCodeType(CodeType codeType) {
+    public void delete(CodeType codeType) {
 
         if (null == codeType) {
 

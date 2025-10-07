@@ -10,66 +10,74 @@ import java.util.Optional;
 public interface UserService {
 
     /**
-     * Method getUsers.
+     * Method findAll.
      *
      * @return List<User>
      */
-    List<User> getUsers();
+    List<User> findAll();
 
     /**
-     * Method getUserByUsername.
+     * Method findUserByName.
+     *
+     * @param name String
+     * @return User
+     */
+    User findUserByName(String name);
+
+    /**
+     * Method findByUsername.
      *
      * @param username String
      * @return User
      */
-    User getUserByUsername(String username);
+    User findByUsername(String username);
 
     /**
-     * Method hasUserWithUsername.
+     * Method hasWithUsername.
      *
      * @param username String
      * @return boolean
      */
-    boolean hasUserWithUsername(String username);
+    boolean hasWithUsername(String username);
 
     /**
-     * Method hasUserWithEmail.
+     * Method hasWithEmail.
      *
      * @param email String
      * @return boolean
      */
-    boolean hasUserWithEmail(String email);
+    boolean hasWithEmail(String email);
 
     /**
-     * Method validateAndGetUserByUsername.
+     * Method validateAndFindByUsername.
      *
      * @param username String
      * @return User
      */
-    User validateAndGetUserByUsername(String username);
+    User validateAndFindByUsername(String username);
 
     /**
-     * Method validateAndGetUserById.
+     * Method validateAndFindUserById.
      *
      * @param id Long
      * @return User
      */
-    User validateAndGetUserById(Long id);
+    User validateAndFindUserById(Long id);
 
     /**
-     * Method saveUser.
+     * Method save.
      *
      * @param user User
      * @return User
      */
-    User saveUser(User user);
+    User save(User user);
 
     /**
-     * Method deleteUser.
+     * Method delete.
      *
      * @param user User
      */
-    void deleteUser(User user);
+    void delete(User user);
 
     /**
      * Method validUsernameAndPassword.
@@ -79,12 +87,4 @@ public interface UserService {
      * @return Optional<User>
      */
     Optional<User> validUsernameAndPassword(String username, String password);
-
-    /**
-     * Method findUserByName.
-     *
-     * @param name String
-     * @return User
-     */
-    User findUserByName(String name);
 }

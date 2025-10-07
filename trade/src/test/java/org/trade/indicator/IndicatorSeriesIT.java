@@ -80,7 +80,7 @@ public class IndicatorSeriesIT extends TradestrategyBase {
 
         String indicatorName = IndicatorSeries.MovingAverageSeries.substring(0,
                 IndicatorSeries.MovingAverageSeries.indexOf("Series"));
-        CodeType result = this.tradeService.getCodeTypeService().findCodeTypeByNameAndType(indicatorName,
+        CodeType result = this.tradeService.getCodeTypeService().findByNameAndType(indicatorName,
                 CodeType.IndicatorParameters);
         assertNotNull(result);
     }

@@ -55,7 +55,7 @@ public class UserController {
     @GetMapping("/me")
     public UserRecord getCurrentUser(@AuthenticationPrincipal CustomUserDetails currentUser) {
 
-        User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
+        User user = userService.validateAndFindByUsername(currentUser.getUsername());
         return UserRecord.from(user);
     }
 
@@ -63,14 +63,14 @@ public class UserController {
     @GetMapping
     public List<UserRecord> getUsers() {
 
-        return userService.getUsers().stream().map(UserRecord::from).collect(Collectors.toList());
+        return userService.findAll().stream().map(UserRecord::from).collect(Collectors.toList());
     }
 
     @Operation(security = {@SecurityRequirement(name = BASIC_AUTH_SECURITY_SCHEME)})
     @GetMapping("/{username}")
     public UserRecord getUser(@PathVariable String username) {
 
-        User user = userService.validateAndGetUserByUsername(username);
+        User user = userService.validateAndFindByUsername(username);
         return UserRecord.from(user);
     }
 
@@ -79,17 +79,17 @@ public class UserController {
     @PostMapping
     public UserRecord createUser(@Valid @RequestBody UserRecord userRecord) {
 
-        Domain domain = domainService.findDomainByName(userRecord.domain().name());
+        Domain domain = domainService.findByName(userRecord.domain().name());
         List<Role> roles = new ArrayList<>();
 
         for (RoleRecord roleRecord : userRecord.roles()) {
 
-            Role role = roleService.findRoleByName(roleRecord.name());
+            Role role = roleService.findByName(roleRecord.name());
             roles.add(role);
         }
 
         User user = UserController.from(userRecord, this.passwordEncoder.encode(userRecord.password()), domain, roles);
-        user = userService.saveUser(user);
+        user = userService.save(user);
         return UserRecord.from(user);
     }
 
@@ -97,8 +97,8 @@ public class UserController {
     @DeleteMapping("/{username}")
     public UserRecord deleteUser(@PathVariable String username) {
 
-        User user = userService.validateAndGetUserByUsername(username);
-        userService.deleteUser(user);
+        User user = userService.validateAndFindByUsername(username);
+        userService.delete(user);
         return UserRecord.from(user);
     }
 

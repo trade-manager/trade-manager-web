@@ -282,7 +282,7 @@ public class ConfigurationPanel extends BasePanel {
 
             this.clearStatusBarMessage();
             String indicatorName = series.getType().substring(0, series.getType().indexOf("Series"));
-            CodeType codeType = tradeService.getCodeTypeService().findCodeTypeByNameAndType(indicatorName,
+            CodeType codeType = tradeService.getCodeTypeService().findByNameAndType(indicatorName,
                     CodeType.IndicatorParameters);
 
             if (null == codeType) {
