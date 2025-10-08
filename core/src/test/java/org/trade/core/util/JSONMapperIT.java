@@ -14,9 +14,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
-import org.trade.core.persistent.contract.ContractRecord;
-import org.trade.core.persistent.dao.Candle;
-import org.trade.core.persistent.dao.CandleDTO;
+import org.trade.core.persistent.candle.Candle;
+import org.trade.core.persistent.candle.CandleRecord;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradeOrderDTO;
 import org.trade.core.persistent.dao.Tradestrategy;
@@ -115,22 +114,21 @@ public class JSONMapperIT extends TradestrategyBase {
 
         candle.getContract().setTradePositions(new ArrayList<>());
         candle.getContract().setCandles(new ArrayList<>());
-        ContractRecord contractDto = JSONMapper.convertEntityToDTO(candle.getContract(), ContractRecord.class);
-        CandleDTO candleDto = JSONMapper.convertEntityToDTO(candle, CandleDTO.class);
-        candleDto.setContract(contractDto);
+        String json = JSONMapper.getJSONString(CandleRecord.from(candle));
+        _log.info("mapCandleJSON Candle JSON: {}", json);
+        JSONObject candleJSON = new JSONObject(json);
+        assertEquals(candle.getId(), candleJSON.getLong("id"));
+        assertEquals(candle.getContract().getId(), candleJSON.getJSONObject("contract").getLong("id"));
 
-        String json = JSONMapper.getJSONString(candleDto);
-        _log.info("mapCandleJSON Candle JSON: {}", json.toString());
-        JSONObject dto = new JSONObject(json);
-        assertEquals(candle.getId(), dto.getLong("id"));
+        CandleRecord candleRecord = JSONMapper.getDTO(candleJSON.toString(), CandleRecord.class);
+        _log.info("mapCandleJSON Candle JSON: {}", candleRecord.toString());
+        assertEquals(candle.getId(), candleRecord.id());
+        assertEquals(candle.getContract().getId(), candleRecord.contract().id());
 
-        candleDto = JSONMapper.getDTO(json, CandleDTO.class);
-        _log.info("mapCandleJSON Candle JSON: {}", candleDto.toString());
-        assertEquals(candle.getId(), candleDto.getId());
-
-        Candle newCandle = JSONMapper.convertDTOToEntity(candleDto, Candle.class);
-        _log.info("mapCandleJSON new Candle: {}", newCandle.toString());
-        assertEquals(candle.getId(), newCandle.getId());
+        Candle currCandle = tradeService.getCandleService().findById(candleRecord.id());
+        _log.info("mapCandleJSON new Candle: {}", candle.toString());
+        assertEquals(candle.getId(), currCandle.getId());
+        assertEquals(candle.getContract().getId(), currCandle.getContract().getId());
     }
 
     @Test

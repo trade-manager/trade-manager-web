@@ -2,10 +2,10 @@ package org.trade.core.persistent;
 
 import org.trade.core.dao.AspectService;
 import org.trade.core.persistent.account.AccountService;
+import org.trade.core.persistent.candle.CandleService;
 import org.trade.core.persistent.codetype.CodeTypeService;
 import org.trade.core.persistent.contract.Contract;
 import org.trade.core.persistent.contract.ContractService;
-import org.trade.core.persistent.dao.Candle;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradeOrderfill;
 import org.trade.core.persistent.dao.TradePosition;
@@ -94,6 +94,14 @@ public interface TradeService {
      * @return ContractService
      */
     ContractService getContractService();
+
+    /**
+     * Method getCandleService.
+     *
+     * @return CandleService
+     */
+    CandleService getCandleService();
+
 
     /**
      * Method saveTrading.
@@ -291,29 +299,6 @@ public interface TradeService {
     TradelogReport findTradelogReport(Portfolio portfolio, ZonedDateTime start, ZonedDateTime end, boolean filter,
                                       String symbol, BigDecimal winLossAmount) throws IOException;
 
-    /**
-     * @param contract  Contract
-     * @param startDate ZonedDateTime
-     * @param endDate   ZonedDateTime
-     * @return List<Candle>
-     */
-    List<Candle> findCandlesByContractDateRangeBarSize(final Contract contract, final ZonedDateTime startDate,
-                                                       final ZonedDateTime endDate, final Integer barSize);
-
-    /**
-     * @param contract Contract
-     * @param barSize  Integer
-     * @return List<Candle>
-     */
-    List<Candle> findCandlesByContractAndBarSize(Contract contract, Integer barSize);
-
-    /**
-     * Method findCandleCount.
-     *
-     * @param contract Contract
-     * @return Long
-     */
-    Long findCandleCount(final Contract contract);
 
     /**
      * Method reassignStrategy.

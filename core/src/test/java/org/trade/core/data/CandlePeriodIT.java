@@ -12,7 +12,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
-import org.trade.core.persistent.dao.Candle;
+import org.trade.core.persistent.candle.Candle;
 import org.trade.core.persistent.dao.Tradestrategy;
 import org.trade.core.persistent.dao.series.indicator.CandleDataset;
 import org.trade.core.persistent.dao.series.indicator.candle.CandlePeriod;
@@ -84,7 +84,7 @@ public class CandlePeriodIT extends TradestrategyBase {
         ZonedDateTime prevTradingday = tradestrategy.getTradingday().getOpen()
                 .minusDays((tradestrategy.getChartDays() - 1));
         prevTradingday = TradingCalendar.getPrevTradingDay(prevTradingday);
-        List<Candle> candles = tradeService.findCandlesByContractDateRangeBarSize(
+        List<Candle> candles = tradeService.getCandleService().findByContractDateRangeBarSize(
                 tradestrategy.getContract(), prevTradingday,
                 tradestrategy.getTradingday().getOpen(), tradestrategy.getBarSize());
 
@@ -114,7 +114,7 @@ public class CandlePeriodIT extends TradestrategyBase {
         ZonedDateTime prevTradingday = tradestrategy.getTradingday().getOpen()
                 .minusDays((tradestrategy.getChartDays() - 1));
         prevTradingday = TradingCalendar.getPrevTradingDay(prevTradingday);
-        List<Candle> candles = tradeService.findCandlesByContractDateRangeBarSize(
+        List<Candle> candles = tradeService.getCandleService().findByContractDateRangeBarSize(
                 tradestrategy.getContract(), prevTradingday,
                 tradestrategy.getTradingday().getOpen(), tradestrategy.getBarSize());
 

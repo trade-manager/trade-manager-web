@@ -17,7 +17,7 @@ import org.trade.core.persistent.account.Account;
 import org.trade.core.persistent.codetype.CodeType;
 import org.trade.core.persistent.codetype.CodeValue;
 import org.trade.core.persistent.contract.Contract;
-import org.trade.core.persistent.dao.Candle;
+import org.trade.core.persistent.candle.Candle;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradePosition;
 import org.trade.core.persistent.dao.Tradestrategy;
@@ -1776,7 +1776,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                             ZonedDateTime startDate = TradingCalendar.addTradingDays(tradestrategy.getTradingday().getOpen(),
                                     (-1 * (tradestrategy.getChartDays())));
 
-                            List<Candle> candles = tradeService.findCandlesByContractDateRangeBarSize(
+                            List<Candle> candles = tradeService.getCandleService().findByContractDateRangeBarSize(
                                     tradestrategy.getContract(), startDate, endDate,
                                     tradestrategy.getBarSize());
 

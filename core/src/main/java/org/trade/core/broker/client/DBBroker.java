@@ -4,8 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trade.core.persistent.ServiceException;
 import org.trade.core.persistent.TradeService;
+import org.trade.core.persistent.candle.Candle;
 import org.trade.core.persistent.contract.Contract;
-import org.trade.core.persistent.dao.Candle;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradeOrderfill;
 import org.trade.core.persistent.dao.Tradestrategy;
@@ -712,7 +712,7 @@ public class DBBroker extends Broker {
                         new Strategy(), tradestrategy.getPortfolio(), new BigDecimal(0), null, null, false,
                         tradestrategy.getChartDays(), tradestrategy.getBarSize());
                 childTradestrategy.setDirty(false);
-                List<Candle> indicatorCandles = tradeService.findCandlesByContractDateRangeBarSize(
+                List<Candle> indicatorCandles = tradeService.getCandleService().findByContractDateRangeBarSize(
                         childTradestrategy.getContract(), startDate, endDate,
                         childTradestrategy.getBarSize());
 
@@ -763,7 +763,7 @@ public class DBBroker extends Broker {
                  */
                 if ((Math.floor(tradestrategy.getBarSize() / (double) size) == (tradestrategy.getBarSize() / (double) size))) {
 
-                    candles = tradeService.findCandlesByContractDateRangeBarSize(tradestrategy.getContract(), startDate, endDate, size);
+                    candles = tradeService.getCandleService().findByContractDateRangeBarSize(tradestrategy.getContract(), startDate, endDate, size);
 
                     if (!candles.isEmpty()) {
 

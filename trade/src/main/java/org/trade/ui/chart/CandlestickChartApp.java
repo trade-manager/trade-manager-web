@@ -15,7 +15,7 @@ import org.trade.core.broker.IBrokerModel;
 import org.trade.core.factory.ClassFactory;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.contract.Contract;
-import org.trade.core.persistent.dao.Candle;
+import org.trade.core.persistent.candle.Candle;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradePosition;
 import org.trade.core.persistent.dao.Tradestrategy;
@@ -455,7 +455,7 @@ public class CandlestickChartApp extends BasePanel implements IBrokerChangeListe
                 ZonedDateTime startDate = TradingCalendar.addTradingDays(tradestrategy.getTradingday().getOpen(),
                         (-1 * tradestrategy.getChartDays()));
 
-                List<Candle> candles = tradeService.findCandlesByContractDateRangeBarSize(
+                List<Candle> candles = tradeService.getCandleService().findByContractDateRangeBarSize(
                         tradestrategy.getContract(), startDate, endDate,
                         tradestrategy.getBarSize());
 

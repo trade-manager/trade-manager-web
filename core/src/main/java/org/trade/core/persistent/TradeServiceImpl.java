@@ -11,11 +11,11 @@ import org.trade.core.dao.AspectService;
 import org.trade.core.dao.Aspects;
 import org.trade.core.persistent.account.Account;
 import org.trade.core.persistent.account.AccountService;
+import org.trade.core.persistent.candle.Candle;
+import org.trade.core.persistent.candle.CandleService;
 import org.trade.core.persistent.codetype.CodeTypeService;
 import org.trade.core.persistent.contract.Contract;
 import org.trade.core.persistent.contract.ContractService;
-import org.trade.core.persistent.dao.Candle;
-import org.trade.core.persistent.dao.CandleRepository;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradeOrderRepository;
 import org.trade.core.persistent.dao.TradeOrderfill;
@@ -69,9 +69,6 @@ public class TradeServiceImpl implements TradeService {
     private final static Logger _log = LoggerFactory.getLogger(TradeServiceImpl.class);
 
     @Autowired
-    private CandleRepository candleRepository;
-
-    @Autowired
     private TradelogDetailRepository tradelogDetailRepository;
 
     @Autowired
@@ -97,8 +94,9 @@ public class TradeServiceImpl implements TradeService {
     private final RuleService ruleService;
     private final StrategyService strategyService;
     private final ContractService contractService;
+    private final CandleService candleService;
 
-    public TradeServiceImpl(final AspectService aspectService, final TradingdayService tradingdayService, final CodeTypeService codeTypeService, final AccountService accountService, final PortfolioService portfolioService, final RuleService ruleService, final StrategyService strategyService, final ContractService contractService) {
+    public TradeServiceImpl(final AspectService aspectService, final TradingdayService tradingdayService, final CodeTypeService codeTypeService, final AccountService accountService, final PortfolioService portfolioService, final RuleService ruleService, final StrategyService strategyService, final ContractService contractService, final CandleService candleService) {
 
         this.aspectService = aspectService;
         this.tradingdayService = tradingdayService;
@@ -108,6 +106,7 @@ public class TradeServiceImpl implements TradeService {
         this.ruleService = ruleService;
         this.strategyService = strategyService;
         this.contractService = contractService;
+        this.candleService = candleService;
     }
 
     public AspectService getAspectService() {
@@ -148,6 +147,11 @@ public class TradeServiceImpl implements TradeService {
     public ContractService getContractService() {
 
         return this.contractService;
+    }
+
+    public CandleService getCandleService() {
+
+        return this.candleService;
     }
 
     public TradelogReport findTradelogReport(final Portfolio portfolio, ZonedDateTime start, ZonedDateTime end,
@@ -361,22 +365,6 @@ public class TradeServiceImpl implements TradeService {
     }
 
 
-    public List<Candle> findCandlesByContractDateRangeBarSize(final Contract contract, final ZonedDateTime startDate,
-                                                              final ZonedDateTime endDate, final Integer barSize) {
-
-        return candleRepository.findCandlesByContractDateRangeBarSize(contract, startDate, endDate, barSize);
-    }
-
-    public List<Candle> findCandlesByContractAndBarSize(Contract contract, Integer barSize) {
-
-        return candleRepository.findByContractAndBarSizeOrderByStartPeriodAsc(contract, barSize);
-    }
-
-    public Long findCandleCount(final Contract contract) {
-
-        return candleRepository.findCandleCount(contract);
-    }
-
     // READ_UNCOMMITTED, READ_COMMITTED, REPEATABLE_READ, SERIALIZABLE
     @Transactional(isolation = Isolation.READ_COMMITTED)
     public void saveCandleSeries(final CandleSeries candleSeries) {
@@ -393,7 +381,7 @@ public class TradeServiceImpl implements TradeService {
 
             CandleItem candleItem = (CandleItem) candleSeries.getDataItem(i);
             Candle candle = candleItem.getCandle();
-            List<Candle> candles = candleRepository.findCandlesByContractDateRangeBarSize(contract.get(), candle.getStartPeriod(), candle.getEndPeriod(), candle.getBarSize());
+            List<Candle> candles = candleService.findByContractDateRangeBarSize(contract.get(), candle.getStartPeriod(), candle.getEndPeriod(), candle.getBarSize());
 
             if (candles.size() == 1) {
 

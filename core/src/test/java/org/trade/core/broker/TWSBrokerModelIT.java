@@ -429,7 +429,7 @@ public class TWSBrokerModelIT extends TradestrategyBase implements IBrokerChange
      * @param tradestrategy Tradestrategy
      */
     public void historicalDataComplete(Tradestrategy tradestrategy) {
-        _log.info("Symbol: {} Candles  saved: {}", tradestrategy.getContract().getSymbol(), tradeService.findCandleCount(
+        _log.info("Symbol: {} Candles  saved: {}", tradestrategy.getContract().getSymbol(), tradeService.getCandleService().findCount(
                 tradestrategy.getContract()));
 
     }

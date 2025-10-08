@@ -1,4 +1,4 @@
-package org.trade.core.persistent.dao;
+package org.trade.core.persistent.candle;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -9,7 +9,7 @@ import jakarta.persistence.criteria.Expression;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import org.trade.core.persistent.contract.Contract;
 
 import java.time.ZonedDateTime;
@@ -20,11 +20,22 @@ import java.util.List;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-@Repository
-public class CandleRepositoryImpl implements CandleRepositoryCustom {
+@Service
+public class CandleServiceImpl implements CandleService {
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    private final CandleRepository candleRepository;
+
+    public CandleServiceImpl(final CandleRepository candleRepository) {
+        this.candleRepository = candleRepository;
+    }
+
+    public Candle findById(Long id) {
+
+        return this.candleRepository.findById(id).orElse(null);
+    }
 
     /**
      * Method findByContractAndDateRange.
@@ -35,8 +46,8 @@ public class CandleRepositoryImpl implements CandleRepositoryCustom {
      * @param barSize     Integer
      * @return List<Candle>
      */
-    public List<Candle> findCandlesByContractDateRangeBarSize(Contract contract, ZonedDateTime startPeriod,
-                                                              ZonedDateTime endPeriod, Integer barSize) {
+    public List<Candle> findByContractDateRangeBarSize(Contract contract, ZonedDateTime startPeriod,
+                                                       ZonedDateTime endPeriod, Integer barSize) {
 
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Candle> query = builder.createQuery(Candle.class);
@@ -83,7 +94,7 @@ public class CandleRepositoryImpl implements CandleRepositoryCustom {
      * @param contract Contract
      * @return Long
      */
-    public Long findCandleCount(Contract contract) {
+    public Long findCount(Contract contract) {
 
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Object> query = builder.createQuery();
@@ -110,5 +121,10 @@ public class CandleRepositoryImpl implements CandleRepositoryCustom {
         }
 
         return (Long) item;
+    }
+
+    public List<Candle> findByContractAndBarSize(Contract contract, Integer barSize) {
+
+        return candleRepository.findByContractAndBarSizeOrderByStartPeriodAsc(contract, barSize);
     }
 }
