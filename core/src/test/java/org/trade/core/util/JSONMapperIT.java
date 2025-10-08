@@ -118,14 +118,17 @@ public class JSONMapperIT extends TradestrategyBase {
         _log.info("mapCandleJSON Candle JSON: {}", json);
         JSONObject candleJSON = new JSONObject(json);
         assertEquals(candle.getId(), candleJSON.getLong("id"));
+        assertEquals(candle.getContract().getId(), candleJSON.getJSONObject("contract").getLong("id"));
 
         CandleRecord candleRecord = JSONMapper.getDTO(candleJSON.toString(), CandleRecord.class);
         _log.info("mapCandleJSON Candle JSON: {}", candleRecord.toString());
         assertEquals(candle.getId(), candleRecord.id());
+        assertEquals(candle.getContract().getId(), candleRecord.contract().id());
 
         Candle currCandle = tradeService.getCandleService().findById(candleRecord.id());
         _log.info("mapCandleJSON new Candle: {}", candle.toString());
         assertEquals(candle.getId(), currCandle.getId());
+        assertEquals(candle.getContract().getId(), currCandle.getContract().getId());
     }
 
     @Test
