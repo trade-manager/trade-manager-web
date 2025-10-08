@@ -4,9 +4,9 @@ import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Transient;
 import org.trade.core.persistent.ServiceException;
-import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.series.indicator.candle.CandleItem;
 import org.trade.core.persistent.dao.series.indicator.volume.VolumeItem;
+import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.util.time.RegularTimePeriod;
 
 import java.io.Serial;

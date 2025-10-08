@@ -14,13 +14,13 @@ import org.trade.core.broker.IBrokerChangeListener;
 import org.trade.core.broker.IBrokerModel;
 import org.trade.core.factory.ClassFactory;
 import org.trade.core.persistent.TradeService;
+import org.trade.core.persistent.contract.Contract;
 import org.trade.core.persistent.dao.Candle;
-import org.trade.core.persistent.dao.Contract;
-import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradePosition;
 import org.trade.core.persistent.dao.Tradestrategy;
 import org.trade.core.persistent.portfolio.Portfolio;
+import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.persistent.tradingday.Tradingday;
 import org.trade.core.persistent.tradingday.Tradingdays;
 import org.trade.core.properties.ConfigProperties;
@@ -114,7 +114,7 @@ public class CandlestickChartApp extends BasePanel implements IBrokerChangeListe
 
                 Strategy daoStrategy = (Strategy) DAOStrategy.newInstance().getObject();
                 String name = daoStrategy.getName();
-                Strategy strategy = _tradeService.findStrategyByName(name);
+                Strategy strategy = _tradeService.getStrategyService().findByName(name);
                 Tradestrategy tradestrategy = getTradestrategy(contract, strategy, ChartDays.ONE_DAY, BarSize.FIVE_MIN, startDate, endDate);
                 runStrategy(_tradeService, tradestrategy, true);
 

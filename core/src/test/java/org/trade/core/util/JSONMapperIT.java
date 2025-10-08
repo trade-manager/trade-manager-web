@@ -14,15 +14,15 @@ import org.springframework.test.context.ContextConfiguration;
 import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
+import org.trade.core.persistent.contract.ContractRecord;
 import org.trade.core.persistent.dao.Candle;
 import org.trade.core.persistent.dao.CandleDTO;
-import org.trade.core.persistent.dao.ContractDTO;
-import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradeOrderDTO;
 import org.trade.core.persistent.dao.Tradestrategy;
 import org.trade.core.persistent.dao.TradestrategyLiteDTO;
 import org.trade.core.persistent.dao.series.indicator.candle.CandlePeriod;
+import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.time.RegularTimePeriod;
 import org.trade.core.util.time.TradingCalendar;
@@ -115,7 +115,7 @@ public class JSONMapperIT extends TradestrategyBase {
 
         candle.getContract().setTradePositions(new ArrayList<>());
         candle.getContract().setCandles(new ArrayList<>());
-        ContractDTO contractDto = JSONMapper.convertEntityToDTO(candle.getContract(), ContractDTO.class);
+        ContractRecord contractDto = JSONMapper.convertEntityToDTO(candle.getContract(), ContractRecord.class);
         CandleDTO candleDto = JSONMapper.convertEntityToDTO(candle, CandleDTO.class);
         candleDto.setContract(contractDto);
 

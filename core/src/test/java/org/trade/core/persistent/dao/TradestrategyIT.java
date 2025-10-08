@@ -13,6 +13,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
+import org.trade.core.persistent.contract.Contract;
 import org.trade.core.persistent.tradingday.Tradingday;
 import org.trade.core.persistent.tradingday.Tradingdays;
 import org.trade.core.util.time.TradingCalendar;
@@ -173,7 +174,7 @@ public class TradestrategyIT extends TradestrategyBase {
 
             for (String symbol : contracts) {
 
-                Optional<Contract> contract = tradeService.findContractBySymbol(symbol);
+                Optional<Contract> contract = tradeService.getContractService().findBySymbol(symbol);
                 assertTrue(contract.isPresent());
                 tradeService.getAspectService().delete(contract.get());
             }
@@ -205,7 +206,7 @@ public class TradestrategyIT extends TradestrategyBase {
 
             for (String symbol : contracts) {
 
-                Optional<Contract> contract = tradeService.findContractBySymbol(symbol);
+                Optional<Contract> contract = tradeService.getContractService().findBySymbol(symbol);
                 assertTrue(contract.isPresent());
                 tradeService.getAspectService().delete(contract.get());
             }

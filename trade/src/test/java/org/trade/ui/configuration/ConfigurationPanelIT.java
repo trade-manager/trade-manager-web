@@ -15,7 +15,7 @@ import org.trade.core.factory.ClassFactory;
 import org.trade.core.persistent.codetype.CodeAttribute;
 import org.trade.core.persistent.codetype.CodeType;
 import org.trade.core.persistent.codetype.CodeValue;
-import org.trade.core.persistent.dao.Strategy;
+import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.valuetype.CalculationType;
 import org.trade.core.valuetype.DAOStrategy;
 import org.trade.indicator.IndicatorSeries;

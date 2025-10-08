@@ -1,8 +1,8 @@
 package org.trade.core.persistent.dao.series.indicator.candle;
 
 
+import org.trade.core.persistent.contract.Contract;
 import org.trade.core.persistent.dao.Candle;
-import org.trade.core.persistent.dao.Contract;
 import org.trade.core.persistent.dao.series.ComparableObjectItem;
 import org.trade.core.util.time.RegularTimePeriod;
 import org.trade.core.valuetype.Side;

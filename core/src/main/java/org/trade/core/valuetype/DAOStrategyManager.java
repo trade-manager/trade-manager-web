@@ -1,6 +1,6 @@
 package org.trade.core.valuetype;
 
-import org.trade.core.persistent.dao.Strategy;
+import org.trade.core.persistent.strategy.Strategy;
 
 import java.io.Serial;
 import java.util.ArrayList;

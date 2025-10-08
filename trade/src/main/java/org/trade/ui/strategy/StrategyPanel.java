@@ -10,8 +10,7 @@ import org.trade.base.UIPropertyCodes;
 import org.trade.core.broker.IBrokerModel;
 import org.trade.core.factory.ClassFactory;
 import org.trade.core.persistent.TradeService;
-import org.trade.core.persistent.dao.Contract;
-import org.trade.core.persistent.dao.Strategy;
+import org.trade.core.persistent.contract.Contract;
 import org.trade.core.persistent.dao.series.indicator.CandleDataset;
 import org.trade.core.persistent.dao.series.indicator.CandleSeries;
 import org.trade.core.persistent.dao.series.indicator.StrategyData;
@@ -19,6 +18,7 @@ import org.trade.core.persistent.dao.series.indicator.candle.CandlePeriod;
 import org.trade.core.persistent.dao.strategy.IStrategyRule;
 import org.trade.core.persistent.dao.strategy.StrategyRuleJS;
 import org.trade.core.persistent.rule.Rule;
+import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.DynamicCode;
 import org.trade.core.util.time.RegularTimePeriod;
@@ -124,7 +124,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
             srcDirFile.deleteOnExit();
             this.dynacode = new DynamicCode();
             this.dynacode.addSourceDir(new File(strategyDir));
-            this.strategies = this.tradeService.findStrategies();
+            this.strategies = this.tradeService.getStrategyService().findAll();
             strategyTreeModel = new StrategyTreeModel(this.strategies);
             compileButton = new BaseButton(this, UIPropertyCodes.newInstance(UIPropertyCodes.COMPILE));
             newButton = new BaseButton(this, BaseUIPropertyCodes.NEW);
@@ -583,7 +583,7 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
         try {
 
             this.clearStatusBarMessage();
-            this.strategies = this.tradeService.findStrategies();
+            this.strategies = this.tradeService.getStrategyService().findAll();
             refreshTree();
         } catch (Exception ex) {
             this.setErrorMessage("Error finding rule.", ex.getMessage(), ex);

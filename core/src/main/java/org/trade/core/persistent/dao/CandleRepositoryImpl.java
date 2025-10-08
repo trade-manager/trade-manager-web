@@ -10,6 +10,7 @@ import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import org.springframework.stereotype.Repository;
+import org.trade.core.persistent.contract.Contract;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;

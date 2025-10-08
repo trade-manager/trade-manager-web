@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.trade.core.broker.client.Broker;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.account.Account;
-import org.trade.core.persistent.dao.Contract;
+import org.trade.core.persistent.contract.Contract;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradeOrderfill;
 import org.trade.core.persistent.dao.Tradestrategy;

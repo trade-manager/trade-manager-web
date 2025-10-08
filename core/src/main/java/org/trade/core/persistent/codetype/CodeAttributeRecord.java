@@ -12,7 +12,7 @@ public record CodeAttributeRecord(Long id, String name, String description, Stri
                                   String classEditorName, CodeTypeRecord codeType, List<CodeValueRecord> codeValues) {
 
     /**
-     * Method from note roles are LAZY loaded., hence we do not get the children.
+     * Method from codeValue roles are LAZY loaded., hence we do not get the children.
      *
      * @param codeAttribute CodeAttributeRecord
      * @return CodeAttributeRecord

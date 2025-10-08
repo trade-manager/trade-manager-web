@@ -17,10 +17,9 @@ import org.trade.core.dao.Aspect;
 import org.trade.core.dao.Aspects;
 import org.trade.core.persistent.account.Account;
 import org.trade.core.persistent.codetype.CodeType;
+import org.trade.core.persistent.contract.Contract;
+import org.trade.core.persistent.contract.ContractLite;
 import org.trade.core.persistent.dao.Candle;
-import org.trade.core.persistent.dao.Contract;
-import org.trade.core.persistent.dao.ContractLite;
-import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradeOrderfill;
 import org.trade.core.persistent.dao.TradePosition;
@@ -31,6 +30,7 @@ import org.trade.core.persistent.dao.series.indicator.IIndicatorDataset;
 import org.trade.core.persistent.dao.series.indicator.candle.CandleItem;
 import org.trade.core.persistent.portfolio.Portfolio;
 import org.trade.core.persistent.rule.Rule;
+import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.persistent.tradingday.Tradingday;
 import org.trade.core.persistent.tradingday.Tradingdays;
 import org.trade.core.properties.ConfigProperties;
@@ -149,7 +149,7 @@ public class TradeServiceIT extends TradestrategyBase {
         _log.info("testTradingdaysRemoce tradestrategyId:{}", tradestrategy.getId());
         assertNotNull(tradingday.getId());
         this.addRecord(tradingday);
-        Optional<Contract> contractOpt = this.tradeService.findContractBySymbol(symbol);
+        Optional<Contract> contractOpt = this.tradeService.getContractService().findBySymbol(symbol);
         assertTrue(contractOpt.isPresent());
         this.addRecord(contractOpt.get());
     }
@@ -612,15 +612,14 @@ public class TradeServiceIT extends TradestrategyBase {
     @Test
     public void findContractById() {
 
-        Contract result = this.tradeService
-                .findContractById(tradestrategy.getContract().getId());
+        Contract result = this.tradeService.getContractService().findById(tradestrategy.getContract().getId());
         assertNotNull(result);
     }
 
     @Test
     public void findContractByUniqueKey() {
 
-        Contract result = this.tradeService.findContractByUniqueKey(
+        Contract result = this.tradeService.getContractService().findByUniqueKey(
                 tradestrategy.getContract().getSecType(), tradestrategy.getContract().getSymbol(),
                 tradestrategy.getContract().getExchange(), tradestrategy.getContract().getCurrency(),
                 null);
@@ -865,7 +864,7 @@ public class TradeServiceIT extends TradestrategyBase {
         String contentType = ContentType.JAVASCRIPT;
         String content = "function (){console.log('Hi');}";
         Strategy strategy = tradestrategy.getStrategy();
-        strategy = this.tradeService.findStrategyById(strategy.getId());
+        strategy = this.tradeService.getStrategyService().findById(strategy.getId());
         Rule rule = new Rule(strategy, true, 0, comment, content.getBytes(), contentType);
         strategy.getRules().add(rule);
         strategy = this.tradeService.getAspectService().save(strategy);
@@ -878,7 +877,7 @@ public class TradeServiceIT extends TradestrategyBase {
     public void findRuleById() {
 
         Strategy strategy = tradestrategy.getStrategy();
-        strategy = this.tradeService.findStrategyById(strategy.getId());
+        strategy = this.tradeService.getStrategyService().findById(strategy.getId());
         Rule rule = new Rule(strategy, true, 0, comment);
         strategy.getRules().add(rule);
         strategy = this.tradeService.getAspectService().save(strategy);
@@ -907,15 +906,14 @@ public class TradeServiceIT extends TradestrategyBase {
     @Test
     public void findStrategyById() {
 
-        Strategy result = this.tradeService
-                .findStrategyById(tradestrategy.getStrategy().getId());
+        Strategy result = this.tradeService.getStrategyService().findById(tradestrategy.getStrategy().getId());
         assertNotNull(result);
     }
 
     @Test
     public void findStrategyByName() {
 
-        Strategy result = this.tradeService.findStrategyByName(tradestrategy.getStrategy().getName());
+        Strategy result = this.tradeService.getStrategyService().findByName(tradestrategy.getStrategy().getName());
         assertNotNull(result);
     }
 
@@ -923,7 +921,7 @@ public class TradeServiceIT extends TradestrategyBase {
     public void removeRule() {
 
         Strategy strategy = tradestrategy.getStrategy();
-        strategy = this.tradeService.findStrategyById(strategy.getId());
+        strategy = this.tradeService.getStrategyService().findById(strategy.getId());
         Rule latestRule = this.tradeService.getRuleService().findByMaxVersion(strategy, contentType);
         Integer version = 0;
 
@@ -944,7 +942,7 @@ public class TradeServiceIT extends TradestrategyBase {
     @Test
     public void findStrategies() {
 
-        List<Strategy> result = this.tradeService.findStrategies();
+        List<Strategy> result = this.tradeService.getStrategyService().findAll();
         assertNotNull(result);
     }
 
@@ -1002,7 +1000,7 @@ public class TradeServiceIT extends TradestrategyBase {
                 .findById(tradestrategy.getTradingday().getId());
         assertFalse(tradingday.getTradestrategies().isEmpty());
         Strategy toStrategy = (Strategy) DAOStrategy.newInstance().getObject();
-        toStrategy = this.tradeService.findStrategyById(toStrategy.getId());
+        toStrategy = this.tradeService.getStrategyService().findById(toStrategy.getId());
         this.tradeService.reassignStrategy(tradestrategy.getStrategy(), toStrategy, tradingday);
         assertEquals(toStrategy, tradingday.getTradestrategies().getFirst().getStrategy());
     }
@@ -1011,9 +1009,9 @@ public class TradeServiceIT extends TradestrategyBase {
     public void fetchData() {
 
         /*Test data retrieval*/
-        Optional<Contract> contract = tradeService.findContractBySymbol(symbol);
+        Optional<Contract> contract = tradeService.getContractService().findBySymbol(symbol);
         assertNotNull(contract);
-        Iterable<Contract> item = tradeService.findAllContracts();
+        Iterable<Contract> item = tradeService.getContractService().findAll();
         assertTrue(item.iterator().hasNext());
     }
 
@@ -1025,7 +1023,7 @@ public class TradeServiceIT extends TradestrategyBase {
         Contract contract = new Contract("STK", "Test3", "SMART", "USD", expiry, new BigDecimal(1));
         contract = tradeService.getAspectService().save(contract);
 
-        Optional<Contract> contract1 = tradeService.findContractBySymbol(contract.getSymbol());
+        Optional<Contract> contract1 = tradeService.getContractService().findBySymbol(contract.getSymbol());
         assertThat(contract1.get()).extracting(Contract::getSymbol).isEqualTo(contract.getSymbol());
         tradeService.getAspectService().delete(contract);
     }

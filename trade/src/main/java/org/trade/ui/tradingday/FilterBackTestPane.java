@@ -1,6 +1,6 @@
 package org.trade.ui.tradingday;
 
-import org.trade.core.persistent.dao.Contract;
+import org.trade.core.persistent.contract.Contract;
 import org.trade.core.persistent.dao.Tradestrategy;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.BarSize;

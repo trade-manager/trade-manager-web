@@ -4,9 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trade.core.persistent.ServiceException;
 import org.trade.core.persistent.TradeService;
+import org.trade.core.persistent.contract.Contract;
 import org.trade.core.persistent.dao.Candle;
-import org.trade.core.persistent.dao.Contract;
-import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradeOrderfill;
 import org.trade.core.persistent.dao.Tradestrategy;
@@ -16,6 +15,7 @@ import org.trade.core.persistent.dao.series.indicator.CandleSeries;
 import org.trade.core.persistent.dao.series.indicator.IndicatorSeries;
 import org.trade.core.persistent.dao.series.indicator.StrategyData;
 import org.trade.core.persistent.dao.series.indicator.candle.CandleItem;
+import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.CoreUtils;
 import org.trade.core.util.time.TradingCalendar;
@@ -700,7 +700,7 @@ public class DBBroker extends Broker {
 
                 CandleSeries series = candleDataset.getSeries(seriesIndex);
 
-                Contract contract = tradeService.findContractByUniqueKey(series.getSecType(),
+                Contract contract = tradeService.getContractService().findByUniqueKey(series.getSecType(),
                         series.getSymbol(), series.getExchange(), series.getCurrency(), null);
 
                 if (null == contract) {

@@ -3,10 +3,9 @@ package org.trade.core.persistent;
 import org.trade.core.dao.AspectService;
 import org.trade.core.persistent.account.AccountService;
 import org.trade.core.persistent.codetype.CodeTypeService;
+import org.trade.core.persistent.contract.Contract;
+import org.trade.core.persistent.contract.ContractService;
 import org.trade.core.persistent.dao.Candle;
-import org.trade.core.persistent.dao.Contract;
-import org.trade.core.persistent.dao.ContractLite;
-import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradeOrderfill;
 import org.trade.core.persistent.dao.TradePosition;
@@ -18,6 +17,8 @@ import org.trade.core.persistent.dao.series.indicator.CandleSeries;
 import org.trade.core.persistent.portfolio.Portfolio;
 import org.trade.core.persistent.portfolio.PortfolioService;
 import org.trade.core.persistent.rule.RuleService;
+import org.trade.core.persistent.strategy.Strategy;
+import org.trade.core.persistent.strategy.StrategyService;
 import org.trade.core.persistent.tradingday.Tradingday;
 import org.trade.core.persistent.tradingday.TradingdayService;
 
@@ -25,7 +26,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.Optional;
 
 
 /**
@@ -82,19 +82,18 @@ public interface TradeService {
     RuleService getRuleService();
 
     /**
-     * Method findContractBySymbol.
+     * Method getStrategyService.
      *
-     * @param symbol String
-     * @return Optional<Contract>
+     * @return StrategyService
      */
-    Optional<Contract> findContractBySymbol(String symbol);
+    StrategyService getStrategyService();
 
     /**
-     * Method findAllContracts.
+     * Method getContractService.
      *
-     * @return Iterable<Contract>
+     * @return ContractService
      */
-    Iterable<Contract> findAllContracts();
+    ContractService getContractService();
 
     /**
      * Method saveTrading.
@@ -135,23 +134,6 @@ public interface TradeService {
      */
     void saveCandleSeries(CandleSeries candleSeries);
 
-
-    /**
-     * Method findContractById.
-     *
-     * @param id Long
-     * @return Contract
-     */
-    Contract findContractById(Long id);
-
-    /**
-     * Method findContractLiteById.
-     *
-     * @param id Long
-     * @return ContractLite
-     */
-    ContractLite findContractLiteById(final Long id);
-
     /**
      * Method findTradeOrderById.
      *
@@ -160,17 +142,6 @@ public interface TradeService {
      */
     TradeOrder findTradeOrderById(Long id);
 
-    /**
-     * Method findContractByUniqueKey.
-     *
-     * @param SECType  String
-     * @param symbol   String
-     * @param exchange String
-     * @param currency String
-     * @return Contract
-     */
-    Contract findContractByUniqueKey(String SECType, String symbol, String exchange, String currency,
-                                     ZonedDateTime expiry);
 
     /**
      * Method findTradestrategyById.
@@ -343,29 +314,6 @@ public interface TradeService {
      * @return Long
      */
     Long findCandleCount(final Contract contract);
-
-    /**
-     * Method findStrategyById.
-     *
-     * @param id Long
-     * @return Strategy
-     */
-    Strategy findStrategyById(Long id);
-
-    /**
-     * Method findStrategyByName.
-     *
-     * @param name String
-     * @return Strategy
-     */
-    Strategy findStrategyByName(String name);
-
-    /**
-     * Method findStrategies.
-     *
-     * @return List<Strategy>
-     */
-    List<Strategy> findStrategies();
 
     /**
      * Method reassignStrategy.

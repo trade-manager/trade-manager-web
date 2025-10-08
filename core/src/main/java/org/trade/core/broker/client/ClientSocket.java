@@ -2,7 +2,7 @@ package org.trade.core.broker.client;
 
 import org.trade.core.broker.BrokerModelException;
 import org.trade.core.persistent.TradeService;
-import org.trade.core.persistent.dao.Contract;
+import org.trade.core.persistent.contract.Contract;
 import org.trade.core.persistent.dao.Tradestrategy;
 
 import java.time.ZonedDateTime;

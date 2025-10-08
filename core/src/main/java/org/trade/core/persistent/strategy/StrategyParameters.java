@@ -1,4 +1,4 @@
-package org.trade.core.persistent.dao;
+package org.trade.core.persistent.strategy;
 
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;

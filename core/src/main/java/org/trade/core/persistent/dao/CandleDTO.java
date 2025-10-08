@@ -3,6 +3,7 @@ package org.trade.core.persistent.dao;
 // Generated Feb 21, 2011 12:43:33 PM by Hibernate Tools 3.4.0.CR1
 
 import org.trade.core.dao.Aspect;
+import org.trade.core.persistent.contract.ContractRecord;
 
 import java.io.Serial;
 import java.math.BigDecimal;
@@ -37,7 +38,7 @@ public class CandleDTO extends Aspect implements java.io.Serializable {
     private BigDecimal vwap;
     private Integer barSize;
     private ZonedDateTime lastUpdateDate;
-    private ContractDTO contract;
+    private ContractRecord contract;
 
     public CandleDTO() {
     }
@@ -47,7 +48,7 @@ public class CandleDTO extends Aspect implements java.io.Serializable {
      *
      * @return ContractDto
      */
-    public ContractDTO getContract() {
+    public ContractRecord getContract() {
         return this.contract;
     }
 
@@ -56,7 +57,7 @@ public class CandleDTO extends Aspect implements java.io.Serializable {
      *
      * @param contract ContractDto
      */
-    public void setContract(ContractDTO contract) {
+    public void setContract(ContractRecord contract) {
         this.contract = contract;
     }
 

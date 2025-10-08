@@ -6,15 +6,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.trade.core.dao.Aspect;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.account.Account;
-import org.trade.core.persistent.dao.Contract;
-import org.trade.core.persistent.dao.ContractLite;
-import org.trade.core.persistent.dao.Strategy;
+import org.trade.core.persistent.contract.Contract;
+import org.trade.core.persistent.contract.ContractLite;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradePosition;
 import org.trade.core.persistent.dao.Tradestrategy;
 import org.trade.core.persistent.dao.series.indicator.StrategyData;
 import org.trade.core.persistent.portfolio.Portfolio;
 import org.trade.core.persistent.rule.Rule;
+import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.persistent.tradingday.Tradingday;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.AccountType;
@@ -99,7 +99,7 @@ public class TradestrategyBase {
         ZonedDateTime open = TradingCalendar
                 .getTradingDayStart(TradingCalendar.getPrevTradingDay(TradingCalendar.getDateTimeNowMarketTimeZone()));
 
-        Contract contract = tradeService.findContractByUniqueKey(SECType.STOCK, symbol, Exchange.SMART, Currency.USD, null);
+        Contract contract = tradeService.getContractService().findByUniqueKey(SECType.STOCK, symbol, Exchange.SMART, Currency.USD, null);
 
         if (null == contract) {
 

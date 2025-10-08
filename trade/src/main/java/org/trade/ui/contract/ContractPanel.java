@@ -11,15 +11,15 @@ import org.trade.base.Tree;
 import org.trade.core.dao.Aspects;
 import org.trade.core.persistent.ServiceException;
 import org.trade.core.persistent.TradeService;
+import org.trade.core.persistent.contract.Contract;
 import org.trade.core.persistent.dao.Candle;
-import org.trade.core.persistent.dao.Contract;
-import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradePosition;
 import org.trade.core.persistent.dao.Tradestrategy;
 import org.trade.core.persistent.dao.TradestrategyOrders;
 import org.trade.core.persistent.dao.series.indicator.StrategyData;
 import org.trade.core.persistent.portfolio.Portfolio;
+import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.persistent.tradingday.Tradingdays;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.CoreUtils;
@@ -658,7 +658,7 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
 
                 org.trade.core.persistent.dao.series.indicator.CandleSeries series = candleDataset.getSeries(seriesIndex);
 
-                Contract contract = this.tradeService.findContractByUniqueKey(series.getSecType(),
+                Contract contract = this.tradeService.getContractService().findByUniqueKey(series.getSecType(),
                         series.getSymbol(), series.getExchange(), series.getCurrency(), null);
 
                 if (null != contract) {
@@ -721,7 +721,7 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
 
                 CandleSeries series = candleDatasetUI.getSeries(seriesIndex);
 
-                Contract contract = this.tradeService.findContractByUniqueKey(series.getSecType(),
+                Contract contract = this.tradeService.getContractService().findByUniqueKey(series.getSecType(),
                         series.getSymbol(), series.getExchange(), series.getCurrency(), null);
 
                 if (null != contract) {

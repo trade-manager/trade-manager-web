@@ -5,9 +5,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Transient;
 import org.trade.core.persistent.ServiceException;
 import org.trade.core.persistent.codetype.CodeValue;
-import org.trade.core.persistent.dao.Strategy;
 import org.trade.core.persistent.dao.series.indicator.candle.CandleItem;
 import org.trade.core.persistent.dao.series.indicator.vostro.VostroItem;
+import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.util.time.RegularTimePeriod;
 import org.trade.core.valuetype.CalculationType;
 

@@ -4,13 +4,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trade.core.persistent.ServiceException;
 import org.trade.core.persistent.TradeService;
-import org.trade.core.persistent.dao.Contract;
-import org.trade.core.persistent.dao.Strategy;
+import org.trade.core.persistent.contract.Contract;
 import org.trade.core.persistent.dao.Tradestrategy;
 import org.trade.core.persistent.dao.series.indicator.CandleDataset;
 import org.trade.core.persistent.dao.series.indicator.CandleSeries;
 import org.trade.core.persistent.dao.series.indicator.IndicatorSeries;
 import org.trade.core.persistent.dao.series.indicator.StrategyData;
+import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.persistent.tradingday.Tradingday;
 import org.trade.core.persistent.tradingday.Tradingdays;
 import org.trade.core.properties.ConfigProperties;
@@ -532,7 +532,7 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
 
             if (null == series.getContract().getId()) {
 
-                contract = this.tradeService.findContractByUniqueKey(series.getContract().getSecType(),
+                contract = this.tradeService.getContractService().findByUniqueKey(series.getContract().getSecType(),
                         series.getContract().getSymbol(), series.getContract().getExchange(),
                         series.getContract().getCurrency(), series.getContract().getExpiry());
 

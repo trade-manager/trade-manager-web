@@ -12,13 +12,10 @@ import org.trade.core.dao.Aspects;
 import org.trade.core.persistent.account.Account;
 import org.trade.core.persistent.account.AccountService;
 import org.trade.core.persistent.codetype.CodeTypeService;
+import org.trade.core.persistent.contract.Contract;
+import org.trade.core.persistent.contract.ContractService;
 import org.trade.core.persistent.dao.Candle;
 import org.trade.core.persistent.dao.CandleRepository;
-import org.trade.core.persistent.dao.Contract;
-import org.trade.core.persistent.dao.ContractLite;
-import org.trade.core.persistent.dao.ContractRepository;
-import org.trade.core.persistent.dao.Strategy;
-import org.trade.core.persistent.dao.StrategyRepository;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradeOrderRepository;
 import org.trade.core.persistent.dao.TradeOrderfill;
@@ -39,6 +36,8 @@ import org.trade.core.persistent.dao.series.indicator.candle.CandleItem;
 import org.trade.core.persistent.portfolio.Portfolio;
 import org.trade.core.persistent.portfolio.PortfolioService;
 import org.trade.core.persistent.rule.RuleService;
+import org.trade.core.persistent.strategy.Strategy;
+import org.trade.core.persistent.strategy.StrategyService;
 import org.trade.core.persistent.tradingday.Tradingday;
 import org.trade.core.persistent.tradingday.TradingdayService;
 import org.trade.core.util.CoreUtils;
@@ -70,13 +69,7 @@ public class TradeServiceImpl implements TradeService {
     private final static Logger _log = LoggerFactory.getLogger(TradeServiceImpl.class);
 
     @Autowired
-    private ContractRepository contractRepository;
-
-    @Autowired
     private CandleRepository candleRepository;
-
-    @Autowired
-    private StrategyRepository strategyRepository;
 
     @Autowired
     private TradelogDetailRepository tradelogDetailRepository;
@@ -102,8 +95,10 @@ public class TradeServiceImpl implements TradeService {
     private final AccountService accountService;
     private final PortfolioService portfolioService;
     private final RuleService ruleService;
+    private final StrategyService strategyService;
+    private final ContractService contractService;
 
-    public TradeServiceImpl(final AspectService aspectService, final TradingdayService tradingdayService, final CodeTypeService codeTypeService, final AccountService accountService, final PortfolioService portfolioService, final RuleService ruleService) {
+    public TradeServiceImpl(final AspectService aspectService, final TradingdayService tradingdayService, final CodeTypeService codeTypeService, final AccountService accountService, final PortfolioService portfolioService, final RuleService ruleService, final StrategyService strategyService, final ContractService contractService) {
 
         this.aspectService = aspectService;
         this.tradingdayService = tradingdayService;
@@ -111,6 +106,8 @@ public class TradeServiceImpl implements TradeService {
         this.accountService = accountService;
         this.portfolioService = portfolioService;
         this.ruleService = ruleService;
+        this.strategyService = strategyService;
+        this.contractService = contractService;
     }
 
     public AspectService getAspectService() {
@@ -143,14 +140,14 @@ public class TradeServiceImpl implements TradeService {
         return this.ruleService;
     }
 
-    public Optional<Contract> findContractBySymbol(String symbol) {
+    public StrategyService getStrategyService() {
 
-        return contractRepository.findBySymbol(symbol);
+        return this.strategyService;
     }
 
-    public Iterable<Contract> findAllContracts() {
+    public ContractService getContractService() {
 
-        return contractRepository.findAll();
+        return this.contractService;
     }
 
     public TradelogReport findTradelogReport(final Portfolio portfolio, ZonedDateTime start, ZonedDateTime end,
@@ -164,27 +161,12 @@ public class TradeServiceImpl implements TradeService {
         return tradelogReport;
     }
 
-    public Contract findContractById(final Long id) {
-
-        return contractRepository.findById(id).isPresent() ? contractRepository.findById(id).get() : null;
-    }
-
-    public ContractLite findContractLiteById(final Long id) {
-
-        return contractRepository.findContractLiteById(id);
-    }
 
     public TradeOrder findTradeOrderById(final Long id) {
 
         return tradeOrderRepository.findById(id).isPresent() ? tradeOrderRepository.findById(id).get() : null;
     }
 
-    public Contract findContractByUniqueKey(String SECType, String symbol, String exchange, String currency,
-                                            ZonedDateTime expiry) {
-
-        List<Contract> contracts = contractRepository.findContractByUniqueKey(SECType, symbol, exchange, currency, expiry);
-        return contracts.isEmpty() ? null : contracts.getFirst();
-    }
 
     public Tradestrategy findTradestrategyById(final Tradestrategy tradestrategy) {
 
@@ -404,7 +386,7 @@ public class TradeServiceImpl implements TradeService {
             return;
         }
 
-        Optional<Contract> contract = findContractBySymbol(candleSeries.getContract().getSymbol());
+        Optional<Contract> contract = contractService.findBySymbol(candleSeries.getContract().getSymbol());
         List<Candle> newCandles = new ArrayList<>();
 
         for (int i = 0; i < candleSeries.getItemCount(); i++) {
@@ -441,7 +423,7 @@ public class TradeServiceImpl implements TradeService {
              * via this tab, as they are a dropdown list. So find the
              * persisted one and set this.
              */
-            Strategy strategy = this.findStrategyByName(tradestrategy.getStrategy().getName());
+            Strategy strategy = strategyService.findByName(tradestrategy.getStrategy().getName());
 
             if (null != strategy) {
 
@@ -452,7 +434,7 @@ public class TradeServiceImpl implements TradeService {
              * Check to see if the contract exists if it does merge and
              * set the new persisted one. If no persist the contract.
              */
-            Contract contract = this.findContractByUniqueKey(tradestrategy.getContract().getSecType(),
+            Contract contract = contractService.findByUniqueKey(tradestrategy.getContract().getSecType(),
                     tradestrategy.getContract().getSymbol(), tradestrategy.getContract().getExchange(),
                     tradestrategy.getContract().getCurrency(), tradestrategy.getContract().getExpiry());
 
@@ -759,46 +741,6 @@ public class TradeServiceImpl implements TradeService {
         return saveTradeOrder(tradeOrder);
     }
 
-    @Transactional
-    public Strategy findStrategyById(final Long id) {
-
-        Optional<Strategy> strategy = strategyRepository.findById(id);
-        if (strategy.isPresent()) {
-
-            strategy.get().getRules().size();
-            return strategy.get();
-        }
-
-        return null;
-    }
-
-    @Transactional
-    public Strategy findStrategyByName(String name) {
-
-        Strategy strategy = strategyRepository.findByName(name);
-
-        if (null != strategy) {
-
-            strategy.getRules().size();
-            return strategy;
-        }
-
-        return null;
-    }
-
-    @Transactional
-    public List<Strategy> findStrategies() {
-
-        List<Strategy> strategies = strategyRepository.findAll();
-
-        for (Strategy strategy : strategies) {
-
-            strategy.getRules().size();
-        }
-
-        return strategies;
-    }
-
     public Aspects findByClassName(String aspectClassName) throws ClassNotFoundException {
 
         if ((PERSISTENT_PACKAGE + "Strategy").equals(aspectClassName)) {
@@ -807,7 +749,7 @@ public class TradeServiceImpl implements TradeService {
              * Relationship Strategy -> IndicatorSeries is LAZY so we need
              * to call size() on Rule/IndicatorSeries.
              */
-            List<Strategy> items = strategyRepository.findAll();
+            List<Strategy> items = strategyService.findAll();
             Aspects aspects = new Aspects();
 
             for (Aspect item : items) {
