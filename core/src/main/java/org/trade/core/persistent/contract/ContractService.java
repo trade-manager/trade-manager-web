@@ -52,4 +52,5 @@ public interface ContractService {
      * @return Iterable<Contract>
      */
     Iterable<Contract> findAll();
+
 }

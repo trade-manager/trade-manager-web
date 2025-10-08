@@ -12,6 +12,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
+import org.trade.core.persistent.candle.Candle;
 import org.trade.core.persistent.dao.series.indicator.StrategyData;
 import org.trade.core.persistent.dao.series.indicator.candle.CandleItem;
 import org.trade.core.persistent.dao.series.indicator.candle.CandlePeriod;
@@ -126,10 +127,10 @@ public class CandleIT extends TradestrategyBase {
             CandleItem candleItem = (CandleItem) tradestrategy.getStrategyData().getBaseCandleSeries().getDataItem(0);
             assertNotNull(candleItem.getCandle().getId());
 
-            List<Candle> candles = tradeService.findCandlesByContractDateRangeBarSize(tradestrategy.getContract(), candleItem.getCandle().getStartPeriod(), candleItem.getCandle().getEndPeriod(), tradestrategy.getBarSize());
+            List<Candle> candles = tradeService.getCandleService().findByContractDateRangeBarSize(tradestrategy.getContract(), candleItem.getCandle().getStartPeriod(), candleItem.getCandle().getEndPeriod(), tradestrategy.getBarSize());
             assertFalse(candles.isEmpty());
 
-            candles = tradeService.findCandlesByContractAndBarSize(tradestrategy.getContract(), BarSize.FIVE_MIN);
+            candles = tradeService.getCandleService().findByContractAndBarSize(tradestrategy.getContract(), BarSize.FIVE_MIN);
             assertFalse(candles.isEmpty());
         }
     }

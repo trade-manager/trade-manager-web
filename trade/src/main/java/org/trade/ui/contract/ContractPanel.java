@@ -12,7 +12,7 @@ import org.trade.core.dao.Aspects;
 import org.trade.core.persistent.ServiceException;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.contract.Contract;
-import org.trade.core.persistent.dao.Candle;
+import org.trade.core.persistent.candle.Candle;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradePosition;
 import org.trade.core.persistent.dao.Tradestrategy;
@@ -615,7 +615,7 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
 
         if (strategyDataUI.getBaseCandleSeries().isEmpty()) {
 
-            List<Candle> candles = this.tradeService.findCandlesByContractDateRangeBarSize(
+            List<Candle> candles = this.tradeService.getCandleService().findByContractDateRangeBarSize(
                     tradestrategy.getContract(), startDate, endDate, tradestrategy.getBarSize());
 
             if (candles.isEmpty()) {
@@ -668,7 +668,7 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
                             tradestrategy.getChartDays(), tradestrategy.getBarSize());
                     childTradestrategy.setDirty(false);
 
-                    List<Candle> indicatorCandles = this.tradeService.findCandlesByContractDateRangeBarSize(
+                    List<Candle> indicatorCandles = this.tradeService.getCandleService().findByContractDateRangeBarSize(
                             childTradestrategy.getContract(), startDate, endDate,
                             childTradestrategy.getBarSize());
 
@@ -731,7 +731,7 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
                             tradestrategy.getChartDays(), tradestrategy.getBarSize());
                     childTradestrategy.setDirty(false);
 
-                    List<Candle> indicatorCandles = this.tradeService.findCandlesByContractDateRangeBarSize(
+                    List<Candle> indicatorCandles = this.tradeService.getCandleService().findByContractDateRangeBarSize(
                             childTradestrategy.getContract(), startDate, endDate,
                             childTradestrategy.getBarSize());
 

@@ -14,7 +14,7 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import org.trade.core.dao.Aspect;
-import org.trade.core.persistent.dao.Candle;
+import org.trade.core.persistent.candle.Candle;
 import org.trade.core.persistent.dao.TradePosition;
 import org.trade.core.persistent.dao.Tradestrategy;
 

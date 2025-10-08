@@ -16,10 +16,10 @@ import org.trade.core.broker.TWSBrokerModel;
 import org.trade.core.dao.Aspect;
 import org.trade.core.dao.Aspects;
 import org.trade.core.persistent.account.Account;
+import org.trade.core.persistent.candle.Candle;
 import org.trade.core.persistent.codetype.CodeType;
 import org.trade.core.persistent.contract.Contract;
 import org.trade.core.persistent.contract.ContractLite;
-import org.trade.core.persistent.dao.Candle;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradeOrderfill;
 import org.trade.core.persistent.dao.TradePosition;
@@ -845,7 +845,7 @@ public class TradeServiceIT extends TradestrategyBase {
     @Test
     public void findCandlesByContractAndDateRange() {
 
-        List<Candle> result = this.tradeService.findCandlesByContractDateRangeBarSize(
+        List<Candle> result = this.tradeService.getCandleService().findByContractDateRangeBarSize(
                 tradestrategy.getContract(), tradestrategy.getTradingday().getOpen(),
                 tradestrategy.getTradingday().getClose(), tradestrategy.getBarSize());
         assertNotNull(result);
@@ -854,7 +854,7 @@ public class TradeServiceIT extends TradestrategyBase {
     @Test
     public void findCandleCount() {
 
-        Long result = this.tradeService.findCandleCount(tradestrategy.getContract());
+        Long result = this.tradeService.getCandleService().findCount(tradestrategy.getContract());
         assertNotNull(result);
     }
 

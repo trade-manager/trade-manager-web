@@ -4,7 +4,7 @@ import org.jfree.data.ComparableObjectItem;
 import org.jfree.data.general.SeriesChangeEvent;
 import org.trade.core.persistent.codetype.CodeValue;
 import org.trade.core.persistent.contract.Contract;
-import org.trade.core.persistent.dao.Candle;
+import org.trade.core.persistent.candle.Candle;
 import org.trade.core.persistent.dao.series.indicator.candle.CandlePeriod;
 import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.util.time.RegularTimePeriod;
