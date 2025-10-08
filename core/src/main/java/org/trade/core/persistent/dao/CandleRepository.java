@@ -1,6 +1,7 @@
 package org.trade.core.persistent.dao;
 
 import org.trade.core.dao.AspectRepository;
+import org.trade.core.persistent.contract.Contract;
 
 import java.util.List;
 

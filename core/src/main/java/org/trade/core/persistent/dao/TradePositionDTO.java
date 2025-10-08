@@ -4,6 +4,7 @@ package org.trade.core.persistent.dao;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.trade.core.dao.Aspect;
+import org.trade.core.persistent.contract.ContractRecord;
 import org.trade.core.valuetype.Money;
 
 import java.io.Serial;
@@ -47,7 +48,7 @@ public class TradePositionDTO extends Aspect implements java.io.Serializable {
     private Integer totalSellQuantity;
     private BigDecimal totalSellValue;
     private BigDecimal totalNetValue;
-    private ContractDTO contract;
+    private ContractRecord contract;
     private List<TradeOrderDTO> tradeOrders = new ArrayList<>(0);
 
     public TradePositionDTO() {
@@ -60,7 +61,7 @@ public class TradePositionDTO extends Aspect implements java.io.Serializable {
      * @param positionOpenDate Date
      * @param side             String
      */
-    public TradePositionDTO(ContractDTO contract, ZonedDateTime positionOpenDate, String side) {
+    public TradePositionDTO(ContractRecord contract, ZonedDateTime positionOpenDate, String side) {
 
         this.contract = contract;
         this.openDate = positionOpenDate;
@@ -82,7 +83,7 @@ public class TradePositionDTO extends Aspect implements java.io.Serializable {
      * @param totalNetValue     BigDecimal
      * @param tradeOrders       List<TradeOrder>
      */
-    public TradePositionDTO(ContractDTO contract, ZonedDateTime positionOpenDate, ZonedDateTime positionCloseDate,
+    public TradePositionDTO(ContractRecord contract, ZonedDateTime positionOpenDate, ZonedDateTime positionCloseDate,
                             Integer openQuantity, String side, BigDecimal totalCommission, Integer totalBuyQuantity,
                             BigDecimal totalBuyValue, Integer totalSellQuantity, BigDecimal totalSellValue, BigDecimal totalNetValue,
                             List<TradeOrderDTO> tradeOrders) {
@@ -106,7 +107,7 @@ public class TradePositionDTO extends Aspect implements java.io.Serializable {
      *
      * @return ContractDto
      */
-    public ContractDTO getContract() {
+    public ContractRecord getContract() {
         return this.contract;
     }
 
@@ -115,7 +116,7 @@ public class TradePositionDTO extends Aspect implements java.io.Serializable {
      *
      * @param contract ContractDto
      */
-    public void setContract(ContractDTO contract) {
+    public void setContract(ContractRecord contract) {
         this.contract = contract;
     }
 

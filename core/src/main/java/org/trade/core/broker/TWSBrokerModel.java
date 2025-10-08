@@ -21,7 +21,7 @@ import org.trade.core.dao.Aspect;
 import org.trade.core.dao.Aspects;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.account.Account;
-import org.trade.core.persistent.dao.Contract;
+import org.trade.core.persistent.contract.Contract;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradeOrderfill;
 import org.trade.core.persistent.dao.Tradestrategy;
@@ -1685,7 +1685,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
                 // Refresh the contract as contractDetails and contract are the same in PolygonBroker
                 // If the same contract is being back tested over multiple days it could have been updated
                 // by a previous request.
-                contract = tradeService.findContractById(contract.getId());
+                contract = tradeService.getContractService().findById(contract.getId());
                 TWSBrokerModel.logContractDetails(contractDetails);
 
                 if (TWSBrokerModel.populateContract(contract, contractDetails)) {

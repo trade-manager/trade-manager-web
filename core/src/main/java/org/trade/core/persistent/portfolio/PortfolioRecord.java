@@ -2,8 +2,6 @@ package org.trade.core.persistent.portfolio;
 
 import org.trade.core.persistent.account.Account;
 import org.trade.core.persistent.account.AccountRecord;
-import org.trade.core.persistent.rule.Rule;
-import org.trade.core.persistent.rule.RuleRecord;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,8 +1,8 @@
 package org.trade.core.persistent.dao.series.indicator;
 
 import org.trade.core.persistent.ServiceException;
+import org.trade.core.persistent.contract.Contract;
 import org.trade.core.persistent.dao.Candle;
-import org.trade.core.persistent.dao.Contract;
 import org.trade.core.persistent.dao.series.AbstractXYDataset;
 import org.trade.core.persistent.dao.series.DatasetChangeEvent;
 import org.trade.core.persistent.dao.series.indicator.candle.CandleItem;

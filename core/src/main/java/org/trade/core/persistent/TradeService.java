@@ -3,9 +3,9 @@ package org.trade.core.persistent;
 import org.trade.core.dao.AspectService;
 import org.trade.core.persistent.account.AccountService;
 import org.trade.core.persistent.codetype.CodeTypeService;
+import org.trade.core.persistent.contract.Contract;
+import org.trade.core.persistent.contract.ContractService;
 import org.trade.core.persistent.dao.Candle;
-import org.trade.core.persistent.dao.Contract;
-import org.trade.core.persistent.dao.ContractLite;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradeOrderfill;
 import org.trade.core.persistent.dao.TradePosition;
@@ -26,7 +26,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.Optional;
 
 
 /**
@@ -90,19 +89,11 @@ public interface TradeService {
     StrategyService getStrategyService();
 
     /**
-     * Method findContractBySymbol.
+     * Method getContractService.
      *
-     * @param symbol String
-     * @return Optional<Contract>
+     * @return ContractService
      */
-    Optional<Contract> findContractBySymbol(String symbol);
-
-    /**
-     * Method findAllContracts.
-     *
-     * @return Iterable<Contract>
-     */
-    Iterable<Contract> findAllContracts();
+    ContractService getContractService();
 
     /**
      * Method saveTrading.
@@ -143,23 +134,6 @@ public interface TradeService {
      */
     void saveCandleSeries(CandleSeries candleSeries);
 
-
-    /**
-     * Method findContractById.
-     *
-     * @param id Long
-     * @return Contract
-     */
-    Contract findContractById(Long id);
-
-    /**
-     * Method findContractLiteById.
-     *
-     * @param id Long
-     * @return ContractLite
-     */
-    ContractLite findContractLiteById(final Long id);
-
     /**
      * Method findTradeOrderById.
      *
@@ -168,17 +142,6 @@ public interface TradeService {
      */
     TradeOrder findTradeOrderById(Long id);
 
-    /**
-     * Method findContractByUniqueKey.
-     *
-     * @param SECType  String
-     * @param symbol   String
-     * @param exchange String
-     * @param currency String
-     * @return Contract
-     */
-    Contract findContractByUniqueKey(String SECType, String symbol, String exchange, String currency,
-                                     ZonedDateTime expiry);
 
     /**
      * Method findTradestrategyById.

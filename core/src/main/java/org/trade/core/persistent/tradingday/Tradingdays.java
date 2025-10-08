@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.trade.core.dao.Aspect;
 import org.trade.core.lookup.DBTableLookupServiceProvider;
 import org.trade.core.persistent.ServiceException;
-import org.trade.core.persistent.dao.Contract;
+import org.trade.core.persistent.contract.Contract;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.Tradestrategy;
 import org.trade.core.persistent.portfolio.Portfolio;

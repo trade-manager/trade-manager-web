@@ -1,6 +1,6 @@
 package org.trade.indicator;
 
-import org.trade.core.persistent.dao.Contract;
+import org.trade.core.persistent.contract.Contract;
 import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.util.time.RegularTimePeriod;
 import org.trade.indicator.candle.CandleItem;

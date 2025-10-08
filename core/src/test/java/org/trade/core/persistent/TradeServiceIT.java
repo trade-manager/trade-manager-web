@@ -17,9 +17,9 @@ import org.trade.core.dao.Aspect;
 import org.trade.core.dao.Aspects;
 import org.trade.core.persistent.account.Account;
 import org.trade.core.persistent.codetype.CodeType;
+import org.trade.core.persistent.contract.Contract;
+import org.trade.core.persistent.contract.ContractLite;
 import org.trade.core.persistent.dao.Candle;
-import org.trade.core.persistent.dao.Contract;
-import org.trade.core.persistent.dao.ContractLite;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradeOrderfill;
 import org.trade.core.persistent.dao.TradePosition;
@@ -149,7 +149,7 @@ public class TradeServiceIT extends TradestrategyBase {
         _log.info("testTradingdaysRemoce tradestrategyId:{}", tradestrategy.getId());
         assertNotNull(tradingday.getId());
         this.addRecord(tradingday);
-        Optional<Contract> contractOpt = this.tradeService.findContractBySymbol(symbol);
+        Optional<Contract> contractOpt = this.tradeService.getContractService().findBySymbol(symbol);
         assertTrue(contractOpt.isPresent());
         this.addRecord(contractOpt.get());
     }
@@ -612,15 +612,14 @@ public class TradeServiceIT extends TradestrategyBase {
     @Test
     public void findContractById() {
 
-        Contract result = this.tradeService
-                .findContractById(tradestrategy.getContract().getId());
+        Contract result = this.tradeService.getContractService().findById(tradestrategy.getContract().getId());
         assertNotNull(result);
     }
 
     @Test
     public void findContractByUniqueKey() {
 
-        Contract result = this.tradeService.findContractByUniqueKey(
+        Contract result = this.tradeService.getContractService().findByUniqueKey(
                 tradestrategy.getContract().getSecType(), tradestrategy.getContract().getSymbol(),
                 tradestrategy.getContract().getExchange(), tradestrategy.getContract().getCurrency(),
                 null);
@@ -1010,9 +1009,9 @@ public class TradeServiceIT extends TradestrategyBase {
     public void fetchData() {
 
         /*Test data retrieval*/
-        Optional<Contract> contract = tradeService.findContractBySymbol(symbol);
+        Optional<Contract> contract = tradeService.getContractService().findBySymbol(symbol);
         assertNotNull(contract);
-        Iterable<Contract> item = tradeService.findAllContracts();
+        Iterable<Contract> item = tradeService.getContractService().findAll();
         assertTrue(item.iterator().hasNext());
     }
 
@@ -1024,7 +1023,7 @@ public class TradeServiceIT extends TradestrategyBase {
         Contract contract = new Contract("STK", "Test3", "SMART", "USD", expiry, new BigDecimal(1));
         contract = tradeService.getAspectService().save(contract);
 
-        Optional<Contract> contract1 = tradeService.findContractBySymbol(contract.getSymbol());
+        Optional<Contract> contract1 = tradeService.getContractService().findBySymbol(contract.getSymbol());
         assertThat(contract1.get()).extracting(Contract::getSymbol).isEqualTo(contract.getSymbol());
         tradeService.getAspectService().delete(contract);
     }

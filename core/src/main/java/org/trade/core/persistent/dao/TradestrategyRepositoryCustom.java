@@ -1,5 +1,6 @@
 package org.trade.core.persistent.dao;
 
+import org.trade.core.persistent.contract.Contract;
 import org.trade.core.persistent.tradingday.Tradingday;
 
 import java.time.ZonedDateTime;

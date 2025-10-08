@@ -10,6 +10,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import org.trade.core.dao.Aspect;
+import org.trade.core.persistent.contract.ContractLite;
 
 import java.io.Serial;
 import java.io.Serializable;

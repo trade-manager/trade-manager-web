@@ -7,12 +7,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
+import org.trade.core.persistent.contract.Contract;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.Currency;
 import org.trade.core.valuetype.Exchange;
@@ -22,10 +22,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * @author Simon Allen
@@ -37,10 +36,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class ContractIT extends TradestrategyBase {
 
     private final static Logger _log = LoggerFactory.getLogger(TradingdayIT.class);
-
-    @Autowired
-    private ContractRepository contractRepository;
-
     private static ZonedDateTime expiry;
     private static Contract contract;
 
@@ -87,10 +82,10 @@ public class ContractIT extends TradestrategyBase {
         contract = tradeService.getAspectService().save(contract);
         _log.info("Contract added Id:{}", contract.getId());
         this.addRecord(contract);
-        List<Contract> contracts = contractRepository.findContractByUniqueKey(contract.getSecType(),
+        contract = tradeService.getContractService().findByUniqueKey(contract.getSecType(),
                 contract.getSymbol(), contract.getExchange(), contract.getCurrency(),
                 expiry);
-        assertFalse(contracts.isEmpty());
+        assertNotNull(contract);
     }
 
     @Test
@@ -112,9 +107,9 @@ public class ContractIT extends TradestrategyBase {
         // Expiry is monthly based
         expiry = expiry.plusMonths(2);
         _log.info("Expiry Date: {}", expiry);
-        List<Contract> contracts = contractRepository.findContractByUniqueKey(contract.getSecType(),
+        contract = tradeService.getContractService().findByUniqueKey(contract.getSecType(),
                 contract.getSymbol(), contract.getExchange(), contract.getCurrency(),
                 expiry);
-        assertTrue(contracts.isEmpty());
+        assertNull(contract);
     }
 }

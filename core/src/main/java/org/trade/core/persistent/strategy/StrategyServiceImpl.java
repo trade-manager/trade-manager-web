@@ -2,8 +2,6 @@ package org.trade.core.persistent.strategy;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.trade.core.persistent.domain.DomainNotFoundException;
-import org.trade.core.persistent.role.Role;
 
 import java.util.List;
 import java.util.Optional;

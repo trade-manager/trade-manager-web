@@ -9,6 +9,7 @@ import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import org.springframework.stereotype.Repository;
+import org.trade.core.persistent.contract.Contract;
 import org.trade.core.persistent.portfolio.Portfolio;
 import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.persistent.tradingday.Tradingday;

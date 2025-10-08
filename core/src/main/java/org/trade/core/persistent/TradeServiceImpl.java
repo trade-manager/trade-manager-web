@@ -12,11 +12,10 @@ import org.trade.core.dao.Aspects;
 import org.trade.core.persistent.account.Account;
 import org.trade.core.persistent.account.AccountService;
 import org.trade.core.persistent.codetype.CodeTypeService;
+import org.trade.core.persistent.contract.Contract;
+import org.trade.core.persistent.contract.ContractService;
 import org.trade.core.persistent.dao.Candle;
 import org.trade.core.persistent.dao.CandleRepository;
-import org.trade.core.persistent.dao.Contract;
-import org.trade.core.persistent.dao.ContractLite;
-import org.trade.core.persistent.dao.ContractRepository;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradeOrderRepository;
 import org.trade.core.persistent.dao.TradeOrderfill;
@@ -70,9 +69,6 @@ public class TradeServiceImpl implements TradeService {
     private final static Logger _log = LoggerFactory.getLogger(TradeServiceImpl.class);
 
     @Autowired
-    private ContractRepository contractRepository;
-
-    @Autowired
     private CandleRepository candleRepository;
 
     @Autowired
@@ -100,8 +96,9 @@ public class TradeServiceImpl implements TradeService {
     private final PortfolioService portfolioService;
     private final RuleService ruleService;
     private final StrategyService strategyService;
+    private final ContractService contractService;
 
-    public TradeServiceImpl(final AspectService aspectService, final TradingdayService tradingdayService, final CodeTypeService codeTypeService, final AccountService accountService, final PortfolioService portfolioService, final RuleService ruleService, final StrategyService strategyService) {
+    public TradeServiceImpl(final AspectService aspectService, final TradingdayService tradingdayService, final CodeTypeService codeTypeService, final AccountService accountService, final PortfolioService portfolioService, final RuleService ruleService, final StrategyService strategyService, final ContractService contractService) {
 
         this.aspectService = aspectService;
         this.tradingdayService = tradingdayService;
@@ -110,6 +107,7 @@ public class TradeServiceImpl implements TradeService {
         this.portfolioService = portfolioService;
         this.ruleService = ruleService;
         this.strategyService = strategyService;
+        this.contractService = contractService;
     }
 
     public AspectService getAspectService() {
@@ -147,14 +145,9 @@ public class TradeServiceImpl implements TradeService {
         return this.strategyService;
     }
 
-    public Optional<Contract> findContractBySymbol(String symbol) {
+    public ContractService getContractService() {
 
-        return contractRepository.findBySymbol(symbol);
-    }
-
-    public Iterable<Contract> findAllContracts() {
-
-        return contractRepository.findAll();
+        return this.contractService;
     }
 
     public TradelogReport findTradelogReport(final Portfolio portfolio, ZonedDateTime start, ZonedDateTime end,
@@ -168,27 +161,12 @@ public class TradeServiceImpl implements TradeService {
         return tradelogReport;
     }
 
-    public Contract findContractById(final Long id) {
-
-        return contractRepository.findById(id).isPresent() ? contractRepository.findById(id).get() : null;
-    }
-
-    public ContractLite findContractLiteById(final Long id) {
-
-        return contractRepository.findContractLiteById(id);
-    }
 
     public TradeOrder findTradeOrderById(final Long id) {
 
         return tradeOrderRepository.findById(id).isPresent() ? tradeOrderRepository.findById(id).get() : null;
     }
 
-    public Contract findContractByUniqueKey(String SECType, String symbol, String exchange, String currency,
-                                            ZonedDateTime expiry) {
-
-        List<Contract> contracts = contractRepository.findContractByUniqueKey(SECType, symbol, exchange, currency, expiry);
-        return contracts.isEmpty() ? null : contracts.getFirst();
-    }
 
     public Tradestrategy findTradestrategyById(final Tradestrategy tradestrategy) {
 
@@ -408,7 +386,7 @@ public class TradeServiceImpl implements TradeService {
             return;
         }
 
-        Optional<Contract> contract = findContractBySymbol(candleSeries.getContract().getSymbol());
+        Optional<Contract> contract = contractService.findBySymbol(candleSeries.getContract().getSymbol());
         List<Candle> newCandles = new ArrayList<>();
 
         for (int i = 0; i < candleSeries.getItemCount(); i++) {
@@ -456,7 +434,7 @@ public class TradeServiceImpl implements TradeService {
              * Check to see if the contract exists if it does merge and
              * set the new persisted one. If no persist the contract.
              */
-            Contract contract = this.findContractByUniqueKey(tradestrategy.getContract().getSecType(),
+            Contract contract = contractService.findByUniqueKey(tradestrategy.getContract().getSecType(),
                     tradestrategy.getContract().getSymbol(), tradestrategy.getContract().getExchange(),
                     tradestrategy.getContract().getCurrency(), tradestrategy.getContract().getExpiry());
 

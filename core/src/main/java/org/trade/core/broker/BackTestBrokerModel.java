@@ -8,7 +8,7 @@ import org.trade.core.broker.client.ClientSocket;
 import org.trade.core.broker.client.IClientWrapper;
 import org.trade.core.broker.client.OrderState;
 import org.trade.core.persistent.TradeService;
-import org.trade.core.persistent.dao.Contract;
+import org.trade.core.persistent.contract.Contract;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradeOrderfill;
 import org.trade.core.persistent.dao.Tradestrategy;
@@ -984,7 +984,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
                 // Refresh the contract as contractDetails and contract are the same in PolygonBroker
                 // If the same contract is being back tested over multiple days it could have been updated
                 // by a previous request.
-                contract = tradeService.findContractById(contract.getId());
+                contract = tradeService.getContractService().findById(contract.getId());
                 BackTestBrokerModel.logContract(contractDetails);
 
                 if (BackTestBrokerModel.populateContract(contract, contractDetails)) {

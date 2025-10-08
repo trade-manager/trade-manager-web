@@ -13,6 +13,8 @@ import jakarta.persistence.Transient;
 import org.trade.core.dao.Aspect;
 import org.trade.core.factory.ClassFactory;
 import org.trade.core.persistent.codetype.CodeValue;
+import org.trade.core.persistent.contract.Contract;
+import org.trade.core.persistent.contract.ContractLite;
 import org.trade.core.persistent.dao.series.indicator.StrategyData;
 import org.trade.core.persistent.portfolio.Portfolio;
 import org.trade.core.persistent.strategy.Strategy;
