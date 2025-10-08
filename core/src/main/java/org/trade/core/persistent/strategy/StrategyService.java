@@ -30,4 +30,12 @@ public interface StrategyService {
      * @return Strategy
      */
     Strategy findByName(String name);
+
+    /**
+     * Method validateAndGet.
+     *
+     * @param name
+     * @return
+     */
+    Strategy validateAndGet(String name);
 }

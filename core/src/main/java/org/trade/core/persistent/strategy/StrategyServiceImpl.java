@@ -2,6 +2,8 @@ package org.trade.core.persistent.strategy;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.trade.core.persistent.domain.DomainNotFoundException;
+import org.trade.core.persistent.role.Role;
 
 import java.util.List;
 import java.util.Optional;
@@ -67,5 +69,11 @@ public class StrategyServiceImpl implements StrategyService {
 
         return strategies;
     }
+
+    public Strategy validateAndGet(String name) {
+
+        return strategyRepository.findByName(name).orElseThrow(() -> new StrategyNotFoundException(String.format("Strategy with name %s not found", name)));
+    }
+
 
 }
