@@ -1,6 +1,6 @@
 package org.trade.core.util;
 
-import org.trade.core.dao.Aspect;
+import org.trade.core.aspect.Aspect;
 import org.trade.core.properties.CollectionUtilities;
 import org.trade.core.valuetype.Decode;
 

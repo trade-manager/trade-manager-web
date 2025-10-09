@@ -2,7 +2,7 @@ package org.trade.core.persistent.tradingday;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.trade.core.dao.Aspect;
+import org.trade.core.aspect.Aspect;
 import org.trade.core.lookup.DBTableLookupServiceProvider;
 import org.trade.core.persistent.ServiceException;
 import org.trade.core.persistent.contract.Contract;

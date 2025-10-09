@@ -10,7 +10,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
-import org.trade.core.dao.Aspect;
+import org.trade.core.aspect.Aspect;
 import org.trade.core.factory.ClassFactory;
 import org.trade.core.persistent.codetype.CodeValue;
 import org.trade.core.persistent.contract.Contract;

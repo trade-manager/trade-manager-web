@@ -1,7 +1,7 @@
 package org.trade.core.persistent.dao;
 
 import jakarta.persistence.PrePersist;
-import org.trade.core.dao.Aspect;
+import org.trade.core.aspect.Aspect;
 import org.trade.core.persistent.contract.ContractRecord;
 import org.trade.core.persistent.portfolio.PortfolioRecord;
 import org.trade.core.persistent.strategy.StrategyRecord;

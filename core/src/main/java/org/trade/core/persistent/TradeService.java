@@ -1,6 +1,6 @@
 package org.trade.core.persistent;
 
-import org.trade.core.dao.AspectService;
+import org.trade.core.aspect.AspectService;
 import org.trade.core.persistent.account.AccountService;
 import org.trade.core.persistent.candle.CandleService;
 import org.trade.core.persistent.codetype.CodeTypeService;
@@ -9,7 +9,6 @@ import org.trade.core.persistent.contract.ContractService;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradeOrderfill;
 import org.trade.core.persistent.dao.TradePosition;
-import org.trade.core.persistent.dao.TradelogReport;
 import org.trade.core.persistent.dao.Tradestrategy;
 import org.trade.core.persistent.dao.TradestrategyLite;
 import org.trade.core.persistent.dao.TradestrategyOrders;
@@ -19,6 +18,9 @@ import org.trade.core.persistent.portfolio.PortfolioService;
 import org.trade.core.persistent.rule.RuleService;
 import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.persistent.strategy.StrategyService;
+import org.trade.core.persistent.tradelogdetail.TradelogDetailService;
+import org.trade.core.persistent.tradelogdetail.TradelogReport;
+import org.trade.core.persistent.tradelogsummary.TradelogSummaryService;
 import org.trade.core.persistent.tradingday.Tradingday;
 import org.trade.core.persistent.tradingday.TradingdayService;
 
@@ -102,6 +104,19 @@ public interface TradeService {
      */
     CandleService getCandleService();
 
+    /**
+     * Method getTradelogDetailService.
+     *
+     * @return TradelogDetailService
+     */
+    TradelogDetailService getTradelogDetailService();
+
+    /**
+     * Method getTradelogSummaryService.
+     *
+     * @return TradelogSummaryService
+     */
+    TradelogSummaryService getTradelogSummaryService();
 
     /**
      * Method saveTrading.

@@ -1,6 +1,6 @@
 package org.trade.core.persistent.dao;
 
-import org.trade.core.dao.Aspect;
+import org.trade.core.aspect.Aspect;
 
 import java.io.Serial;
 import java.io.Serializable;

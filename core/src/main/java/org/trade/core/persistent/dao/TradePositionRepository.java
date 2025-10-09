@@ -1,6 +1,6 @@
 package org.trade.core.persistent.dao;
 
-import org.trade.core.dao.AspectRepository;
+import org.trade.core.aspect.AspectRepository;
 
 /**
  * @author Simon Allen

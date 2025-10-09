@@ -1,7 +1,7 @@
 package org.trade.core.persistent.account;
 
 import org.springframework.stereotype.Repository;
-import org.trade.core.dao.AspectRepository;
+import org.trade.core.aspect.AspectRepository;
 
 import java.util.Optional;
 

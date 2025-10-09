@@ -1,8 +1,8 @@
 package org.trade.indicator.candle;
 
 import org.jfree.data.ComparableObjectItem;
-import org.trade.core.persistent.contract.Contract;
 import org.trade.core.persistent.candle.Candle;
+import org.trade.core.persistent.contract.Contract;
 import org.trade.core.util.time.RegularTimePeriod;
 import org.trade.core.valuetype.Side;
 
