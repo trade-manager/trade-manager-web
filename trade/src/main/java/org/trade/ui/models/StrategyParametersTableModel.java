@@ -1,7 +1,7 @@
 package org.trade.ui.models;
 
-import org.trade.core.dao.Aspect;
-import org.trade.core.dao.Aspects;
+import org.trade.core.aspect.Aspect;
+import org.trade.core.aspect.Aspects;
 import org.trade.core.persistent.codetype.CodeType;
 import org.trade.core.persistent.strategy.StrategyParameters;
 import org.trade.core.util.CoreUtils;

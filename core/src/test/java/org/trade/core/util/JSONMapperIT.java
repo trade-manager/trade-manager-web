@@ -21,6 +21,7 @@ import org.trade.core.persistent.dao.TradeOrderDTO;
 import org.trade.core.persistent.dao.Tradestrategy;
 import org.trade.core.persistent.dao.TradestrategyLiteDTO;
 import org.trade.core.persistent.dao.series.indicator.candle.CandlePeriod;
+import org.trade.core.persistent.service.CandleServiceIT;
 import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.time.RegularTimePeriod;
@@ -50,7 +51,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
         initializers = ApplicationProfileInitializer.class)
 public class JSONMapperIT extends TradestrategyBase {
 
-    private final static Logger _log = LoggerFactory.getLogger(org.trade.core.persistent.dao.CandleIT.class);
+    private final static Logger _log = LoggerFactory.getLogger(CandleServiceIT.class);
 
     private static final String symbol = "TEST-" + TradestrategyBase.getRandomNumber(4);
     private static Tradestrategy tradestrategy;

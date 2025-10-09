@@ -1,7 +1,7 @@
 package org.trade.ui.models;
 
 import org.trade.base.TableModel;
-import org.trade.core.dao.Aspects;
+import org.trade.core.aspect.Aspects;
 
 import java.io.Serial;
 

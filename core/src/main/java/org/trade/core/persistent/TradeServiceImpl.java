@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
-import org.trade.core.dao.Aspect;
-import org.trade.core.dao.AspectService;
-import org.trade.core.dao.Aspects;
+import org.trade.core.aspect.Aspect;
+import org.trade.core.aspect.AspectService;
+import org.trade.core.aspect.Aspects;
 import org.trade.core.persistent.account.Account;
 import org.trade.core.persistent.account.AccountService;
 import org.trade.core.persistent.candle.Candle;
@@ -22,11 +22,6 @@ import org.trade.core.persistent.dao.TradeOrderfill;
 import org.trade.core.persistent.dao.TradeOrderfillRepository;
 import org.trade.core.persistent.dao.TradePosition;
 import org.trade.core.persistent.dao.TradePositionRepository;
-import org.trade.core.persistent.dao.TradelogDetail;
-import org.trade.core.persistent.dao.TradelogDetailRepository;
-import org.trade.core.persistent.dao.TradelogReport;
-import org.trade.core.persistent.dao.TradelogSummary;
-import org.trade.core.persistent.dao.TradelogSummaryRepository;
 import org.trade.core.persistent.dao.Tradestrategy;
 import org.trade.core.persistent.dao.TradestrategyLite;
 import org.trade.core.persistent.dao.TradestrategyOrders;
@@ -38,6 +33,11 @@ import org.trade.core.persistent.portfolio.PortfolioService;
 import org.trade.core.persistent.rule.RuleService;
 import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.persistent.strategy.StrategyService;
+import org.trade.core.persistent.tradelogdetail.TradelogDetail;
+import org.trade.core.persistent.tradelogdetail.TradelogDetailService;
+import org.trade.core.persistent.tradelogdetail.TradelogReport;
+import org.trade.core.persistent.tradelogsummary.TradelogSummary;
+import org.trade.core.persistent.tradelogsummary.TradelogSummaryService;
 import org.trade.core.persistent.tradingday.Tradingday;
 import org.trade.core.persistent.tradingday.TradingdayService;
 import org.trade.core.util.CoreUtils;
@@ -69,12 +69,6 @@ public class TradeServiceImpl implements TradeService {
     private final static Logger _log = LoggerFactory.getLogger(TradeServiceImpl.class);
 
     @Autowired
-    private TradelogDetailRepository tradelogDetailRepository;
-
-    @Autowired
-    private TradelogSummaryRepository tradelogSummaryRepository;
-
-    @Autowired
     private TradeOrderfillRepository tradeOrderfillRepository;
 
     @Autowired
@@ -95,8 +89,12 @@ public class TradeServiceImpl implements TradeService {
     private final StrategyService strategyService;
     private final ContractService contractService;
     private final CandleService candleService;
+    private final TradelogDetailService tradelogDetailService;
+    private final TradelogSummaryService tradelogSummaryService;
 
-    public TradeServiceImpl(final AspectService aspectService, final TradingdayService tradingdayService, final CodeTypeService codeTypeService, final AccountService accountService, final PortfolioService portfolioService, final RuleService ruleService, final StrategyService strategyService, final ContractService contractService, final CandleService candleService) {
+    public TradeServiceImpl(final AspectService aspectService, final TradingdayService tradingdayService, final CodeTypeService codeTypeService, final AccountService accountService, final PortfolioService portfolioService,
+                            final RuleService ruleService, final StrategyService strategyService, final ContractService contractService, final CandleService candleService, final TradelogDetailService tradelogDetailService,
+                            final TradelogSummaryService tradelogSummaryService) {
 
         this.aspectService = aspectService;
         this.tradingdayService = tradingdayService;
@@ -107,6 +105,8 @@ public class TradeServiceImpl implements TradeService {
         this.strategyService = strategyService;
         this.contractService = contractService;
         this.candleService = candleService;
+        this.tradelogDetailService = tradelogDetailService;
+        this.tradelogSummaryService = tradelogSummaryService;
     }
 
     public AspectService getAspectService() {
@@ -154,13 +154,23 @@ public class TradeServiceImpl implements TradeService {
         return this.candleService;
     }
 
+    public TradelogDetailService getTradelogDetailService() {
+
+        return this.tradelogDetailService;
+    }
+
+    public TradelogSummaryService getTradelogSummaryService() {
+
+        return this.tradelogSummaryService;
+    }
+
     public TradelogReport findTradelogReport(final Portfolio portfolio, ZonedDateTime start, ZonedDateTime end,
                                              boolean filter, String symbol, BigDecimal winLossAmount) throws IOException {
 
         TradelogReport tradelogReport = new TradelogReport();
-        List<TradelogDetail> reportDetails = tradelogDetailRepository.findByTradelogDetail(portfolio, start, end, filter, symbol, winLossAmount);
+        List<TradelogDetail> reportDetails = tradelogDetailService.findByTradelogDetail(portfolio, start, end, filter, symbol, winLossAmount);
         tradelogReport.setTradelogDetail(reportDetails);
-        List<TradelogSummary> reportSummary = tradelogSummaryRepository.findByTradelogSummary(portfolio, start, end, symbol, winLossAmount);
+        List<TradelogSummary> reportSummary = tradelogSummaryService.findByTradelogSummary(portfolio, start, end, symbol, winLossAmount);
         tradelogReport.setTradelogSummary(reportSummary);
         return tradelogReport;
     }

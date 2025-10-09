@@ -3,7 +3,7 @@ package org.trade.core;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.trade.core.dao.Aspect;
+import org.trade.core.aspect.Aspect;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.account.Account;
 import org.trade.core.persistent.contract.Contract;

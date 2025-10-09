@@ -3,7 +3,7 @@ package org.trade.core.persistent.dao;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-import org.trade.core.dao.Aspect;
+import org.trade.core.aspect.Aspect;
 
 import java.io.Serial;
 import java.io.Serializable;

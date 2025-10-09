@@ -1,7 +1,7 @@
 package org.trade.core.valuetype;
 
+import org.trade.core.aspect.Aspect;
 import org.trade.core.conversion.JavaTypeTranslator;
-import org.trade.core.dao.Aspect;
 import org.trade.core.lookup.ILookup;
 import org.trade.core.lookup.LookupQualifier;
 import org.trade.core.lookup.LookupService;

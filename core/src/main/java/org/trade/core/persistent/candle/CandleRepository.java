@@ -1,7 +1,7 @@
 package org.trade.core.persistent.candle;
 
 import org.springframework.stereotype.Repository;
-import org.trade.core.dao.AspectRepository;
+import org.trade.core.aspect.AspectRepository;
 import org.trade.core.persistent.contract.Contract;
 
 import java.util.List;

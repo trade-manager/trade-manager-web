@@ -1,8 +1,8 @@
 package org.trade.ui.models;
 
 import org.trade.base.TableModel;
-import org.trade.core.persistent.dao.TradelogReport;
-import org.trade.core.persistent.dao.TradelogSummary;
+import org.trade.core.persistent.tradelogdetail.TradelogReport;
+import org.trade.core.persistent.tradelogsummary.TradelogSummary;
 import org.trade.core.valuetype.Decimal;
 import org.trade.core.valuetype.Money;
 import org.trade.core.valuetype.Percent;

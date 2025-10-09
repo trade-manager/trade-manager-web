@@ -1,8 +1,8 @@
 package org.trade.ui.models;
 
 import org.trade.base.TableModel;
-import org.trade.core.persistent.dao.TradelogDetail;
-import org.trade.core.persistent.dao.TradelogReport;
+import org.trade.core.persistent.tradelogdetail.TradelogDetail;
+import org.trade.core.persistent.tradelogdetail.TradelogReport;
 import org.trade.core.valuetype.Action;
 import org.trade.core.valuetype.DAOStrategy;
 import org.trade.core.valuetype.Date;
