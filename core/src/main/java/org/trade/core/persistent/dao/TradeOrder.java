@@ -1479,7 +1479,7 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
 
     public static final Comparator<TradeOrder> FILLDATE_ORDER = (o1, o2) -> {
 
-        setAscending(true);
+        o1.setAscending(true);
         int returnVal;
 
         if (CoreUtils.nullSafeComparator(o1.getFilledDate(), o2.getFilledDate()) == 0) {
@@ -1490,7 +1490,7 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
             returnVal = CoreUtils.nullSafeComparator(o1.getFilledDate(), o2.getFilledDate());
         }
 
-        if (getAscending().equals(Boolean.FALSE)) {
+        if (o1.getAscending().equals(Boolean.FALSE)) {
 
             returnVal = returnVal * -1;
         }
@@ -1499,7 +1499,7 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
 
     public static final Comparator<TradeOrder> CREATE_ORDER = (o1, o2) -> {
 
-        setAscending(true);
+        o1.setAscending(true);
         int returnVal;
 
         if (CoreUtils.nullSafeComparator(o1.getOrderCreateDate(), o2.getOrderCreateDate()) == 0) {
@@ -1510,7 +1510,7 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
             returnVal = CoreUtils.nullSafeComparator(o1.getOrderCreateDate(), o2.getOrderCreateDate());
         }
 
-        if (getAscending().equals(Boolean.FALSE)) {
+        if (o1.getAscending().equals(Boolean.FALSE)) {
 
             returnVal = returnVal * -1;
         }
@@ -1519,12 +1519,12 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
 
     public static final Comparator<TradeOrder> ORDER_KEY = (o1, o2) -> {
 
-        setAscending(true);
+        o1.setAscending(true);
         int returnVal;
 
         returnVal = CoreUtils.nullSafeComparator(o1.getOrderKey(), o2.getOrderKey());
 
-        if (getAscending().equals(Boolean.FALSE)) {
+        if (o1.getAscending().equals(Boolean.FALSE)) {
 
             returnVal = returnVal * -1;
         }

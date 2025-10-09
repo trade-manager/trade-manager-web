@@ -293,7 +293,7 @@ public class StrategyRuleJS extends AbstractStrategyRule {
         try {
 
             TradePosition tradePosition = this.getOpenTradePosition();
-            TradePositionDTO tradePositionDto = JSONMapper.convertEntityToDTO(tradePosition, TradePositionDTO.class);
+            TradePositionDTO tradePositionDto = JSONMapper.convertEntityToRecord(tradePosition, TradePositionDTO.class);
 
             if (null != tradePositionDto) {
 
@@ -323,7 +323,7 @@ public class StrategyRuleJS extends AbstractStrategyRule {
         try {
 
             TradeOrder tradeOrder = this.getOpenPositionOrder();
-            TradeOrderDTO tradeOrderDto = JSONMapper.convertEntityToDTO(tradeOrder, TradeOrderDTO.class);
+            TradeOrderDTO tradeOrderDto = JSONMapper.convertEntityToRecord(tradeOrder, TradeOrderDTO.class);
 
             if (null != tradeOrderDto) {
 
@@ -356,7 +356,7 @@ public class StrategyRuleJS extends AbstractStrategyRule {
 
             Tradestrategy tradestrategy = this.getTradestrategy();
             TradingdayRecord tradingdayRecord = TradingdayRecord.from(tradestrategy.getTradingday());
-            TradestrategyDTO tradestrategyDto = JSONMapper.convertEntityToDTO(tradestrategy, TradestrategyDTO.class);
+            TradestrategyDTO tradestrategyDto = JSONMapper.convertEntityToRecord(tradestrategy, TradestrategyDTO.class);
             tradestrategyDto.setTradingday(tradingdayRecord);
 
             if (null != tradestrategyDto) {
@@ -392,7 +392,7 @@ public class StrategyRuleJS extends AbstractStrategyRule {
 
             if (null != tradeOrder) {
 
-                TradeOrderDTO tradeOrderDto = JSONMapper.convertEntityToDTO(tradeOrder, TradeOrderDTO.class);
+                TradeOrderDTO tradeOrderDto = JSONMapper.convertEntityToRecord(tradeOrder, TradeOrderDTO.class);
                 result.put("data", new JSONObject(JSONMapper.getJSONString(tradeOrderDto)));
             } else {
 
@@ -424,7 +424,7 @@ public class StrategyRuleJS extends AbstractStrategyRule {
 
             if (null != tradeOrder) {
 
-                TradeOrderDTO tradeOrderDto = JSONMapper.convertEntityToDTO(tradeOrder, TradeOrderDTO.class);
+                TradeOrderDTO tradeOrderDto = JSONMapper.convertEntityToRecord(tradeOrder, TradeOrderDTO.class);
                 result.put("data", new JSONObject(JSONMapper.getJSONString(tradeOrderDto)));
             } else {
 
@@ -497,8 +497,8 @@ public class StrategyRuleJS extends AbstractStrategyRule {
         try {
 
             Object tradeOrderJSON = NativeJSON.stringify(context, localScope, tradeOrder, null, null);
-            TradeOrderDTO tradeOrderDto = JSONMapper.getDTO(tradeOrderJSON.toString(), TradeOrderDTO.class);
-            tradeOrder = JSONMapper.convertDTOToEntity(tradeOrderDto, TradeOrder.class);
+            TradeOrderDTO tradeOrderDto = JSONMapper.getRecord(tradeOrderJSON.toString(), TradeOrderDTO.class);
+            tradeOrder = JSONMapper.convertRecordToEntity(tradeOrderDto, TradeOrder.class);
 
             if (null != tradeOrder) {
 
@@ -599,7 +599,7 @@ public class StrategyRuleJS extends AbstractStrategyRule {
 
             if (null != tradeOrder) {
 
-                TradeOrderDTO tradeOrderDto = JSONMapper.convertEntityToDTO(tradeOrder, TradeOrderDTO.class);
+                TradeOrderDTO tradeOrderDto = JSONMapper.convertEntityToRecord(tradeOrder, TradeOrderDTO.class);
                 result.put("data", new JSONObject(JSONMapper.getJSONString(tradeOrderDto)));
             } else {
 
@@ -635,15 +635,15 @@ public class StrategyRuleJS extends AbstractStrategyRule {
         try {
 
             Object tradeOrderJSON = NativeJSON.stringify(context, localScope, openPosition, null, null);
-            TradeOrderDTO tradeOrderDto = JSONMapper.getDTO(tradeOrderJSON.toString(), TradeOrderDTO.class);
-            TradeOrder tradeOrder = JSONMapper.convertDTOToEntity(tradeOrderDto, TradeOrder.class);
+            TradeOrderDTO tradeOrderDto = JSONMapper.getRecord(tradeOrderJSON.toString(), TradeOrderDTO.class);
+            TradeOrder tradeOrder = JSONMapper.convertRecordToEntity(tradeOrderDto, TradeOrder.class);
             tradeOrder = super.createStopAndTargetOrder(tradeOrder, stopRiskUnits,
                     new Money(stopAddAmount), targetRiskUnits, new Money(targetAddAmount),
                     quantity, stopTransmit);
 
             if (null != tradeOrder) {
 
-                tradeOrderDto = JSONMapper.convertEntityToDTO(tradeOrder, TradeOrderDTO.class);
+                tradeOrderDto = JSONMapper.convertEntityToRecord(tradeOrder, TradeOrderDTO.class);
                 result.put("data", new JSONObject(JSONMapper.getJSONString(tradeOrderDto)));
             } else {
 

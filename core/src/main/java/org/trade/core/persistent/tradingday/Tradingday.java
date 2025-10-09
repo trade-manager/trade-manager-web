@@ -275,10 +275,10 @@ public class Tradingday extends Aspect implements Serializable, Cloneable {
     public static final Comparator<Tradingday> DATE_ORDER_ASC = (o1, o2) -> {
 
         int returnVal;
-        setAscending(true);
+        o1.setAscending(true);
         returnVal = CoreUtils.nullSafeComparator(o1.getOpen(), o2.getOpen());
 
-        if (getAscending().equals(Boolean.FALSE)) {
+        if (o1.getAscending().equals(Boolean.FALSE)) {
 
             returnVal = returnVal * -1;
         }
@@ -288,10 +288,10 @@ public class Tradingday extends Aspect implements Serializable, Cloneable {
     public static final Comparator<Tradingday> DATE_ORDER_DESC = (o1, o2) -> {
 
         int returnVal;
-        setAscending(true);
+        o1.setAscending(true);
         returnVal = CoreUtils.nullSafeComparator(o1.getOpen(), o2.getOpen());
 
-        if (getAscending().equals(Boolean.FALSE)) {
+        if (o1.getAscending().equals(Boolean.FALSE)) {
 
             returnVal = returnVal * -1;
         }

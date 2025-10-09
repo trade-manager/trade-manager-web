@@ -64,17 +64,17 @@ public class JSONMapper {
      * @return <T> T
      * @throws JsonProcessingException exception
      */
-    public static <T> T getDTO(String json, Class<T> clazz) throws JsonProcessingException {
+    public static <T> T getRecord(String json, Class<T> clazz) throws JsonProcessingException {
 
         return objectMapper.readValue(json, clazz);
     }
 
-    public static <T> T convertEntityToDTO(Aspect aspect, Class<T> clazz) {
+    public static <T> T convertEntityToRecord(Aspect aspect, Class<T> clazz) {
 
         return modelMapper.map(aspect, clazz);
     }
 
-    public static <T> T convertDTOToEntity(Aspect aspect, Class<T> clazz) {
+    public static <T> T convertRecordToEntity(Object aspect, Class<T> clazz) {
 
         return modelMapper.map(aspect, clazz);
     }

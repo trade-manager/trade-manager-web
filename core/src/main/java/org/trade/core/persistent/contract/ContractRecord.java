@@ -12,7 +12,11 @@ import java.time.ZonedDateTime;
  * @version $Revision: 1.0 $
  */
 
-public record ContractRecord(Long id, String symbol,
+public record ContractRecord(Long id, ZonedDateTime createdDate,
+                             ZonedDateTime updatedDate,
+                             Integer version,
+                             Long domainId,
+                             String symbol,
                              String currency,
                              String exchange,
                              ZonedDateTime expiry,
@@ -29,6 +33,10 @@ public record ContractRecord(Long id, String symbol,
 
         return new ContractRecord(
                 contract.getId(),
+                contract.getCreatedDate(),
+                contract.getUpdatedDate(),
+                contract.getVersion(),
+                contract.getDomainId(),
                 contract.getSymbol(),
                 contract.getCurrency(),
                 contract.getExchange(),
@@ -36,5 +44,101 @@ public record ContractRecord(Long id, String symbol,
                 contract.getSecType(),
                 contract.getRequestId()
         );
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    /**
+     * Method getCreatedDate.
+     *
+     * @return ZonedDateTime
+     */
+    public ZonedDateTime getCreatedDate() {
+        return this.createdDate;
+    }
+
+    /**
+     * Method getUpdatedDate.
+     *
+     * @return ZonedDateTime
+     */
+    public ZonedDateTime getUpdatedDate() {
+        return this.updatedDate;
+    }
+
+    /**
+     * Method getVersion.
+     *
+     * @return Integer
+     */
+    public Integer getVersion() {
+        return version;
+    }
+
+    /**
+     * Method getDomainId
+     *
+     * @return Long
+     */
+    public Long getDomainId() {
+
+        return domainId;
+    }
+
+    /**
+     * Method getRequestId.
+     *
+     * @return Integer
+     */
+    public Integer getRequestId() {
+
+        return this.requestId;
+    }
+
+    /**
+     * Method getCurrency.
+     *
+     * @return String
+     */
+    public String getCurrency() {
+        return this.currency;
+    }
+
+    /**
+     * Method getExchange.
+     *
+     * @return String
+     */
+    public String getExchange() {
+        return this.exchange;
+    }
+
+    /**
+     * Method getExpiry.
+     *
+     * @return ZonedDateTime
+     */
+    public ZonedDateTime getExpiry() {
+        return this.expiry;
+    }
+
+    /**
+     * Method getSymbol.
+     *
+     * @return String
+     */
+    public String getSymbol() {
+        return this.symbol;
+    }
+
+    /**
+     * Method getSecType.
+     *
+     * @return String
+     */
+    public String getSecType() {
+        return this.secType;
     }
 }

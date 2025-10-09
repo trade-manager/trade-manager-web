@@ -57,7 +57,6 @@ public class Employee extends Aspect implements Serializable, Cloneable {
         this.user = user;
     }
 
-
     public String getName() {
         return this.name;
     }
