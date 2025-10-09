@@ -1,4 +1,4 @@
-package org.trade.core.persistent.service;
+package org.trade.core.persistent.codetype;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -12,25 +12,22 @@ import org.springframework.test.context.ContextConfiguration;
 import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
-import org.trade.core.persistent.strategy.Strategy;
 
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
- * Some tests for the DataUtilities class.
- *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
 @SpringBootTest
 @ContextConfiguration(classes = ApplicationRepositoryConfig.class,
         initializers = ApplicationProfileInitializer.class)
-public class StrategyServiceIT extends TradestrategyBase {
+public class CodeTypeServiceIT extends TradestrategyBase {
 
-    private final static Logger _log = LoggerFactory.getLogger(StrategyServiceIT.class);
-
-    private static final String name = "TEST-" + TradestrategyBase.getRandomNumber(4);
+    private final static Logger _log = LoggerFactory.getLogger(CodeTypeServiceIT.class);
 
     /**
      * Method setUpBeforeClass.
@@ -51,8 +48,6 @@ public class StrategyServiceIT extends TradestrategyBase {
      */
     @AfterEach
     public void tearDown() {
-
-        this.deleteRecords();
     }
 
     /**
@@ -63,15 +58,13 @@ public class StrategyServiceIT extends TradestrategyBase {
     }
 
     @Test
-    public void addStrategy() {
+    public void findCodeValueByName() {
 
-        // Create new instance of Strategy and set
-        // values in it by reading them from form object
-        Strategy strategy = tradeService.getStrategyService().findByName(name);
-        assertNull(strategy);
-        strategy = tradeService.getAspectService().save(new Strategy(name));
-        _log.info("Strategy added Id = {}, name: {}", strategy, strategy.getName());
-        assertNotNull(strategy);
-        this.addRecord(strategy);
+        CodeType codeType = tradeService.getCodeTypeService().findByName("MovingAverage");
+        assertNotNull(codeType);
+        _log.info("CodeType id: {}", codeType.getId());
+        List<CodeValue> codeValues = tradeService.getCodeTypeService().findByAttributeName(codeType.getName(), "Length");
+        assertFalse(codeValues.isEmpty());
+        _log.info("CodeValue id: {}", codeValues.getFirst().getId());
     }
 }

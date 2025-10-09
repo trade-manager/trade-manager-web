@@ -1,4 +1,4 @@
-package org.trade.core.persistent;
+package org.trade.core.persistent.user;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -15,10 +15,13 @@ import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
 import org.trade.core.persistent.domain.Domain;
 import org.trade.core.persistent.domain.DomainService;
+import org.trade.core.persistent.role.Role;
+import org.trade.core.persistent.role.RoleService;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Simon Allen
@@ -27,14 +30,20 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest
 @ContextConfiguration(classes = ApplicationRepositoryConfig.class,
         initializers = ApplicationProfileInitializer.class)
-public class DomainServiceIT extends TradestrategyBase {
+public class UserServiceIT extends TradestrategyBase {
 
-    private final static Logger _log = LoggerFactory.getLogger(DomainServiceIT.class);
+    private final static Logger _log = LoggerFactory.getLogger(UserServiceIT.class);
 
     @Autowired
     private DomainService domainService;
 
-    private static final String childDomainName = "CHILD-" + TradestrategyBase.getRandomNumber(4);
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private RoleService roleService;
+
+    private static final String userName = "TEST-" + TradestrategyBase.getRandomNumber(4);
 
     /**
      * Method setUpBeforeClass.
@@ -67,16 +76,17 @@ public class DomainServiceIT extends TradestrategyBase {
     }
 
     @Test
-    public void createDomain() {
+    public void createUser() {
 
         Domain gobalDomain = domainService.findByName(Domain.GLOBAL);
         assertNotNull(gobalDomain);
-        assertFalse(gobalDomain.hasParent());
-        Domain childDomain = new Domain(childDomainName, childDomainName);
-        childDomain.setParent(gobalDomain);
-        childDomain = domainService.save(childDomain);
-        assertNotNull(childDomain.getId());
-        assertTrue(childDomain.hasParent());
-        this.addRecord(childDomain);
+        Role role = roleService.findByName(Role.ROLE_ADMIN);
+        assertNotNull(role);
+        List<Role> roles = new ArrayList<>();
+        roles.add(role);
+        User user = new User(userName, userName, userName, userName, userName + "@" + Domain.GLOBAL + ".com", userName, gobalDomain, roles);
+        user = userService.save(user);
+        assertNotNull(user.getId());
+        this.addRecord(user);
     }
 }

@@ -21,7 +21,7 @@ import org.trade.core.persistent.dao.TradeOrderDTO;
 import org.trade.core.persistent.dao.Tradestrategy;
 import org.trade.core.persistent.dao.TradestrategyLiteDTO;
 import org.trade.core.persistent.dao.series.indicator.candle.CandlePeriod;
-import org.trade.core.persistent.service.CandleServiceIT;
+import org.trade.core.persistent.candle.CandleServiceIT;
 import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.time.RegularTimePeriod;

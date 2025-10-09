@@ -1,4 +1,4 @@
-package org.trade.core.persistent;
+package org.trade.core.persistent.role;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.AfterAll;
@@ -14,9 +14,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
-import org.trade.core.persistent.role.Role;
-import org.trade.core.persistent.role.RoleRecord;
-import org.trade.core.persistent.role.RoleService;
 import org.trade.core.util.JSONMapper;
 
 import java.util.List;

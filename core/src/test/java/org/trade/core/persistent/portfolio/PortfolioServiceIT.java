@@ -1,4 +1,4 @@
-package org.trade.core.persistent.service;
+package org.trade.core.persistent.portfolio;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -13,7 +13,6 @@ import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
 import org.trade.core.persistent.account.Account;
-import org.trade.core.persistent.portfolio.Portfolio;
 import org.trade.core.valuetype.AccountType;
 import org.trade.core.valuetype.Currency;
 import org.trade.core.valuetype.DAOPortfolio;
