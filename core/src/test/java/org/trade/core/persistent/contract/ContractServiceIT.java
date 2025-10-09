@@ -1,4 +1,4 @@
-package org.trade.core.persistent.service;
+package org.trade.core.persistent.contract;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -12,7 +12,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
-import org.trade.core.persistent.contract.Contract;
+import org.trade.core.persistent.tradingday.TradingdayServiceIT;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.Currency;
 import org.trade.core.valuetype.Exchange;

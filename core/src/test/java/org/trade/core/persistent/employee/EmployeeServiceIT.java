@@ -1,4 +1,4 @@
-package org.trade.core.persistent;
+package org.trade.core.persistent.employee;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -15,9 +15,6 @@ import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
 import org.trade.core.persistent.domain.Domain;
 import org.trade.core.persistent.domain.DomainService;
-import org.trade.core.persistent.employee.Employee;
-import org.trade.core.persistent.employee.EmployeeRecord;
-import org.trade.core.persistent.employee.EmployeeService;
 import org.trade.core.persistent.role.Role;
 import org.trade.core.persistent.role.RoleService;
 import org.trade.core.persistent.user.User;

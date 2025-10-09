@@ -1,4 +1,4 @@
-package org.trade.core.persistent.service;
+package org.trade.core.persistent.tradeorder;
 
 import com.ib.client.Execution;
 import org.junit.jupiter.api.AfterAll;

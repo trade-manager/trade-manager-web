@@ -16,12 +16,12 @@ import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
 import org.trade.core.persistent.candle.Candle;
 import org.trade.core.persistent.candle.CandleRecord;
+import org.trade.core.persistent.candle.CandleServiceIT;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradeOrderDTO;
 import org.trade.core.persistent.dao.Tradestrategy;
 import org.trade.core.persistent.dao.TradestrategyLiteDTO;
 import org.trade.core.persistent.dao.series.indicator.candle.CandlePeriod;
-import org.trade.core.persistent.service.CandleServiceIT;
 import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.time.RegularTimePeriod;
@@ -121,10 +121,12 @@ public class JSONMapperIT extends TradestrategyBase {
         assertEquals(candle.getId(), candleJSON.getLong("id"));
         assertEquals(candle.getContract().getId(), candleJSON.getJSONObject("contract").getLong("id"));
 
-        CandleRecord candleRecord = JSONMapper.getDTO(candleJSON.toString(), CandleRecord.class);
+        CandleRecord candleRecord = JSONMapper.getRecord(candleJSON.toString(), CandleRecord.class);
         _log.info("mapCandleJSON Candle JSON: {}", candleRecord.toString());
         assertEquals(candle.getId(), candleRecord.id());
         assertEquals(candle.getContract().getId(), candleRecord.contract().id());
+
+        Candle newCandle = JSONMapper.convertRecordToEntity(candleRecord, Candle.class);
 
         Candle currCandle = tradeService.getCandleService().findById(candleRecord.id());
         _log.info("mapCandleJSON new Candle: {}", candle.toString());
@@ -161,8 +163,8 @@ public class JSONMapperIT extends TradestrategyBase {
         _log.info("IdOrder: {}", tradeOrder.getId());
 
 
-        TradestrategyLiteDTO tradestrategyLiteDto = JSONMapper.convertEntityToDTO(tradestrategy, TradestrategyLiteDTO.class);
-        TradeOrderDTO tradeOrderDto = JSONMapper.convertEntityToDTO(tradeOrder, TradeOrderDTO.class);
+        TradestrategyLiteDTO tradestrategyLiteDto = JSONMapper.convertEntityToRecord(tradestrategy, TradestrategyLiteDTO.class);
+        TradeOrderDTO tradeOrderDto = JSONMapper.convertEntityToRecord(tradeOrder, TradeOrderDTO.class);
         tradeOrderDto.setTradestrategyLite(tradestrategyLiteDto);
 
         String json = JSONMapper.getJSONString(tradeOrderDto);
@@ -170,16 +172,16 @@ public class JSONMapperIT extends TradestrategyBase {
         JSONObject dto = new JSONObject(json);
         assertEquals(tradeOrder.getId(), dto.getLong("id"));
 
-        tradeOrderDto = JSONMapper.getDTO(json, TradeOrderDTO.class);
+        tradeOrderDto = JSONMapper.getRecord(json, TradeOrderDTO.class);
         _log.info("mapTradeOrder tradeOrderDto JSON: {}", tradeOrderDto.toString());
         assertEquals(tradeOrder.getId(), tradeOrderDto.getId());
 
-        TradeOrder newTradeOrder = JSONMapper.convertDTOToEntity(tradeOrderDto, TradeOrder.class);
+        TradeOrder newTradeOrder = JSONMapper.convertRecordToEntity(tradeOrderDto, TradeOrder.class);
         _log.info("mapTradeOrder new newTradeOrder: {}", newTradeOrder.toString());
         assertEquals(tradeOrder.getId(), newTradeOrder.getId());
 
         tradeOrder = tradeService.findTradeOrderByKey(newTradeOrder.getOrderKey());
-        tradeOrderDto = JSONMapper.convertEntityToDTO(tradeOrder, TradeOrderDTO.class);
+        tradeOrderDto = JSONMapper.convertEntityToRecord(tradeOrder, TradeOrderDTO.class);
         json = JSONMapper.getJSONString(tradeOrderDto);
         _log.info("mapTradeOrder tradeOrderDto JSON: {}", json.toString());
         dto = new JSONObject(json);

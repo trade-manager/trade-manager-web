@@ -156,7 +156,6 @@ public abstract class Aspect extends AbstractPersistable<Long> {
     public void setDomainId(Long domainId) {
 
         this.domainId = domainId;
-        ;
     }
 
     /**
@@ -164,7 +163,7 @@ public abstract class Aspect extends AbstractPersistable<Long> {
      *
      * @return Boolean
      */
-    public static Boolean getAscending() {
+    public Boolean getAscending() {
         return ascending;
     }
 
@@ -173,7 +172,7 @@ public abstract class Aspect extends AbstractPersistable<Long> {
      *
      * @param ascending Boolean
      */
-    public static void setAscending(Boolean ascending) {
+    public void setAscending(Boolean ascending) {
         Aspect.ascending = ascending;
     }
 

@@ -1,4 +1,4 @@
-package org.trade.core.persistent.service;
+package org.trade.core.persistent.tradelogsummary;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -13,8 +13,6 @@ import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
 import org.trade.core.persistent.portfolio.Portfolio;
-import org.trade.core.persistent.tradelogdetail.TradelogDetail;
-import org.trade.core.persistent.tradelogsummary.TradelogSummary;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.DAOPortfolio;
 
@@ -34,9 +32,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest
 @ContextConfiguration(classes = ApplicationRepositoryConfig.class,
         initializers = ApplicationProfileInitializer.class)
-public class TradelogReportServiceIT extends TradestrategyBase {
+public class TradelogSummaryServiceIT extends TradestrategyBase {
 
-    private final static Logger _log = LoggerFactory.getLogger(TradelogReportServiceIT.class);
+    private final static Logger _log = LoggerFactory.getLogger(TradelogSummaryServiceIT.class);
 
     /**
      * Method setUpBeforeClass.
@@ -64,20 +62,6 @@ public class TradelogReportServiceIT extends TradestrategyBase {
      */
     @AfterAll
     public static void tearDownAfterClass() {
-    }
-
-    @Test
-    public void tradelogDetails() throws IOException {
-
-        Portfolio portfolio = (Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
-        List<TradelogDetail> tradelogDetail = tradeService.getTradelogDetailService().findByTradelogDetail(portfolio, TradingCalendar.getYearStart(),
-                TradingCalendar.getTradingDayEnd(TradingCalendar.getDateTimeNowMarketTimeZone()), false, null, new BigDecimal(0));
-        assertTrue(tradelogDetail.isEmpty());
-
-        for (TradelogDetail item : tradelogDetail) {
-
-            _log.info("tradelogDetails tradelogDetail:  getOpen:{} getAction:{} getMarketBias:{} getName:{} getSymbol:{} getQuantity:{} getLongShort:{} getAverageFilledPrice:{} getFilledDate:{}", item.getOpen(), item.getAction(), item.getMarketBias(), item.getName(), item.getSymbol(), item.getQuantity(), item.getLongShort(), item.getAverageFilledPrice(), item.getFilledDate());
-        }
     }
 
     @Test

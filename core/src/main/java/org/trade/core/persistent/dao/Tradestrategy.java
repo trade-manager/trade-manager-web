@@ -543,7 +543,7 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
 
     public static final Comparator<Tradestrategy> DATE_ORDER_ASC = (o1, o2) -> {
 
-        setAscending(true);
+        o1.setAscending(true);
         int returnVal;
 
         if (CoreUtils.nullSafeComparator(o1.getTradingday().getOpen(), o2.getTradingday().getOpen()) == 0) {
@@ -561,7 +561,7 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
             returnVal = CoreUtils.nullSafeComparator(o1.getTradingday().getOpen(), o2.getTradingday().getOpen());
         }
 
-        if (getAscending().equals(Boolean.FALSE)) {
+        if (o1.getAscending().equals(Boolean.FALSE)) {
 
             returnVal = returnVal * -1;
         }
@@ -570,7 +570,7 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
 
     public static final Comparator<Tradestrategy> TRADINGDAY_CONTRACT = (o1, o2) -> {
 
-        setAscending(true);
+        o1.setAscending(true);
         int returnVal;
 
         if (CoreUtils.nullSafeComparator(o1.getTradingday().getOpen(), o2.getTradingday().getOpen()) == 0) {
@@ -594,7 +594,7 @@ public class Tradestrategy extends Aspect implements Serializable, Cloneable {
             returnVal = CoreUtils.nullSafeComparator(o1.getTradingday().getOpen(), o2.getTradingday().getOpen());
         }
 
-        if (getAscending().equals(Boolean.FALSE)) {
+        if (o1.getAscending().equals(Boolean.FALSE)) {
 
             returnVal = returnVal * -1;
         }

@@ -1,4 +1,4 @@
-package org.trade.core.persistent.service;
+package org.trade.core.persistent.domain;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -7,18 +7,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
-import org.trade.core.persistent.codetype.CodeType;
-import org.trade.core.persistent.codetype.CodeValue;
-
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Simon Allen
@@ -27,9 +25,14 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @SpringBootTest
 @ContextConfiguration(classes = ApplicationRepositoryConfig.class,
         initializers = ApplicationProfileInitializer.class)
-public class CodeTypeServiceIT extends TradestrategyBase {
+public class DomainServiceIT extends TradestrategyBase {
 
-    private final static Logger _log = LoggerFactory.getLogger(CodeTypeServiceIT.class);
+    private final static Logger _log = LoggerFactory.getLogger(DomainServiceIT.class);
+
+    @Autowired
+    private DomainService domainService;
+
+    private static final String childDomainName = "CHILD-" + TradestrategyBase.getRandomNumber(4);
 
     /**
      * Method setUpBeforeClass.
@@ -50,6 +53,8 @@ public class CodeTypeServiceIT extends TradestrategyBase {
      */
     @AfterEach
     public void tearDown() {
+
+        this.deleteRecords();
     }
 
     /**
@@ -60,13 +65,16 @@ public class CodeTypeServiceIT extends TradestrategyBase {
     }
 
     @Test
-    public void findCodeValueByName() {
+    public void createDomain() {
 
-        CodeType codeType = tradeService.getCodeTypeService().findByName("MovingAverage");
-        assertNotNull(codeType);
-        _log.info("CodeType id: {}", codeType.getId());
-        List<CodeValue> codeValues = tradeService.getCodeTypeService().findByAttributeName(codeType.getName(), "Length");
-        assertFalse(codeValues.isEmpty());
-        _log.info("CodeValue id: {}", codeValues.getFirst().getId());
+        Domain gobalDomain = domainService.findByName(Domain.GLOBAL);
+        assertNotNull(gobalDomain);
+        assertFalse(gobalDomain.hasParent());
+        Domain childDomain = new Domain(childDomainName, childDomainName);
+        childDomain.setParent(gobalDomain);
+        childDomain = domainService.save(childDomain);
+        assertNotNull(childDomain.getId());
+        assertTrue(childDomain.hasParent());
+        this.addRecord(childDomain);
     }
 }

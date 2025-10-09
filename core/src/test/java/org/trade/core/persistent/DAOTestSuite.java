@@ -1,4 +1,4 @@
-package org.trade.core.persistent.service;
+package org.trade.core.persistent;
 
 import org.junit.jupiter.api.Test;
 

@@ -14,7 +14,12 @@ import java.time.ZonedDateTime;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-public record CandleRecord(Long id, ZonedDateTime startPeriod,
+public record CandleRecord(Long id,
+                           ZonedDateTime createdDate,
+                           ZonedDateTime updatedDate,
+                           Integer version,
+                           Long domainId,
+                           ZonedDateTime startPeriod,
                            ZonedDateTime endPeriod,
                            BigDecimal open,
                            BigDecimal close,
@@ -37,6 +42,10 @@ public record CandleRecord(Long id, ZonedDateTime startPeriod,
 
         return new CandleRecord(
                 candle.getId(),
+                candle.getCreatedDate(),
+                candle.getUpdatedDate(),
+                candle.getVersion(),
+                candle.getDomainId(),
                 candle.getStartPeriod(),
                 candle.getEndPeriod(),
                 candle.getOpen(),
@@ -49,7 +58,171 @@ public record CandleRecord(Long id, ZonedDateTime startPeriod,
                 candle.getVwap(),
                 candle.getBarSize(),
                 candle.getLastUpdateDate(),
-                ContractRecord.from(candle.getContract())
+                (null == candle.getContract() ? null : ContractRecord.from(candle.getContract()))
         );
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    /**
+     * Method getCreatedDate.
+     *
+     * @return ZonedDateTime
+     */
+    public ZonedDateTime getCreatedDate() {
+        return this.createdDate;
+    }
+
+    /**
+     * Method getUpdatedDate.
+     *
+     * @return ZonedDateTime
+     */
+    public ZonedDateTime getUpdatedDate() {
+        return this.updatedDate;
+    }
+
+    /**
+     * Method getVersion.
+     *
+     * @return Integer
+     */
+    public Integer getVersion() {
+        return version;
+    }
+
+    /**
+     * Method getDomainId
+     *
+     * @return Long
+     */
+    public Long getDomainId() {
+
+        return domainId;
+    }
+
+    /**
+     * Method getContract.
+     *
+     * @return ContractRecord
+     */
+    public ContractRecord getContract() {
+        return this.contract;
+    }
+
+    /**
+     * Method getClose.
+     *
+     * @return BigDecimal
+     */
+    public BigDecimal getClose() {
+        return this.close;
+    }
+
+    /**
+     * Method getHigh.
+     *
+     * @return BigDecimal
+     */
+    public BigDecimal getHigh() {
+        return this.high;
+    }
+
+    /**
+     * Method getLow.
+     *
+     * @return BigDecimal
+     */
+    public BigDecimal getLow() {
+        return this.low;
+    }
+
+    /**
+     * Method getOpen.
+     *
+     * @return BigDecimal
+     */
+    public BigDecimal getOpen() {
+        return this.open;
+    }
+
+    /**
+     * Method getPeriod.
+     *
+     * @return String
+     */
+    public String getPeriod() {
+        return this.period;
+    }
+
+    /**
+     * Method getEndPeriod.
+     *
+     * @return Date
+     */
+    public ZonedDateTime getEndPeriod() {
+        return this.endPeriod;
+    }
+
+    /**
+     * Method getStartPeriod.
+     *
+     * @return Date
+     */
+    public ZonedDateTime getStartPeriod() {
+        return this.startPeriod;
+    }
+
+    /**
+     * Method getTradeCount.
+     *
+     * @return Integer
+     */
+    public Integer getTradeCount() {
+        return this.tradeCount;
+    }
+
+    /**
+     * Method getVolume.
+     *
+     * @return Long
+     */
+    public Long getVolume() {
+        return this.volume;
+    }
+
+    /**
+     * Method getVwap.
+     *
+     * @return BigDecimal
+     */
+    public BigDecimal getVwap() {
+        return this.vwap;
+    }
+
+    /**
+     * Method getBarSize.
+     *
+     * @return Integer
+     */
+    public Integer getBarSize() {
+
+        return this.barSize;
+    }
+
+    /**
+     * Method getLastUpdateDate.
+     *
+     * @return ZonedDateTime
+     */
+    public ZonedDateTime getLastUpdateDate() {
+        return this.lastUpdateDate;
+    }
+
+    public boolean getSide() {
+        return this.getClose().doubleValue() >= this.getOpen().doubleValue();
+    }
+
 }
