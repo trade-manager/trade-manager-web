@@ -82,7 +82,6 @@ public class TradestrategyServiceImpl implements TradestrategyService {
      * @param tradestrategyId Long
      * @return Integer
      */
-    @Transactional
     public Integer findVersionById(Long tradestrategyId) {
 
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
@@ -130,7 +129,6 @@ public class TradestrategyServiceImpl implements TradestrategyService {
         return tradestrategy;
     }
 
-    @Transactional
     public Tradestrategy findByUniqueKeys(ZonedDateTime open, String strategyName, Contract contract,
                                           String portfolioName) {
 
@@ -180,7 +178,6 @@ public class TradestrategyServiceImpl implements TradestrategyService {
 
     }
 
-    @Transactional
     public List<Tradestrategy> findByDateRangeDistinctBarSizeAndChartDaysAndStrategy(ZonedDateTime fromOpen, ZonedDateTime toOpen) {
 
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
@@ -211,7 +208,6 @@ public class TradestrategyServiceImpl implements TradestrategyService {
         return items;
     }
 
-    @Transactional
     public List<Tradestrategy> findByDateRangeDistinctContract(ZonedDateTime fromOpen,
                                                                ZonedDateTime toOpen) {
 
@@ -251,7 +247,6 @@ public class TradestrategyServiceImpl implements TradestrategyService {
      * @param tradingday Tradingday
      * @return List<Tradestrategy>
      */
-    @Transactional
     public List<Tradestrategy> findByTradingday(Tradingday tradingday) {
 
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
