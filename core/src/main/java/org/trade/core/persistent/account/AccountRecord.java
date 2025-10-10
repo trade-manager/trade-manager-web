@@ -2,7 +2,6 @@ package org.trade.core.persistent.account;
 
 // Generated Feb 21, 2011 2:18:03 PM by Hibernate Tools 3.4.0.CR1
 
-import org.trade.core.persistent.portfolio.Portfolio;
 import org.trade.core.persistent.portfolio.PortfolioRecord;
 
 import java.math.BigDecimal;
@@ -25,7 +24,7 @@ public record AccountRecord(Long id, String name, String accountNumber, String c
                             List<PortfolioRecord> portfolios) {
 
     /**
-     * Method from note roles are LAZY loaded.
+     * Method from note portfolio are LAZY loaded.
      *
      * @param account Account
      * @return AccountRecord
@@ -34,6 +33,7 @@ public record AccountRecord(Long id, String name, String accountNumber, String c
 
         List<PortfolioRecord> portfolioRecords = new ArrayList<>();
 
+        /*
         if (null != account.getPortfolios() && !account.getPortfolios().isEmpty()) {
 
             for (Portfolio portfolio : account.getPortfolios()) {
@@ -41,7 +41,7 @@ public record AccountRecord(Long id, String name, String accountNumber, String c
                 portfolioRecords.add(PortfolioRecord.from(portfolio));
             }
         }
-
+*/
         return new AccountRecord(
                 account.getId(),
                 account.getName(),

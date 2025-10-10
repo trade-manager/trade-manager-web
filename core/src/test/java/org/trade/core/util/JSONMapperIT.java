@@ -139,7 +139,7 @@ public class JSONMapperIT extends TradestrategyBase {
     public void mapTradestrategyJSON() throws JsonProcessingException {
 
         Tradestrategy tradestrategy = tradeService.getTradestrategyService().findById(this.tradestrategy.getId());
-        TradestrategyRecord tradestrategyRecord =TradestrategyRecord.from(tradestrategy);
+        TradestrategyRecord tradestrategyRecord = TradestrategyRecord.from(tradestrategy);
         String json = JSONMapper.getJSONString(tradestrategyRecord);
 
         TradestrategyLiteRecord tradestrategyLiteRecord = TradestrategyLiteRecord.from(this.tradestrategy);
@@ -147,7 +147,7 @@ public class JSONMapperIT extends TradestrategyBase {
     }
 
     @Test
-    public void mapTradeOrder() throws Exception {
+    public void mapTradeOrderJSON() throws Exception {
 
         String side = tradestrategy.getSide();
         String action = Action.BUY;

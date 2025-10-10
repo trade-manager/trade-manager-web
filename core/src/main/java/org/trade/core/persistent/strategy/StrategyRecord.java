@@ -5,7 +5,6 @@ package org.trade.core.persistent.strategy;
 
 import org.trade.core.persistent.dao.series.indicator.IndicatorSeries;
 import org.trade.core.persistent.dao.series.indicator.IndicatorSeriesRecord;
-import org.trade.core.persistent.rule.Rule;
 import org.trade.core.persistent.rule.RuleRecord;
 
 import java.util.ArrayList;

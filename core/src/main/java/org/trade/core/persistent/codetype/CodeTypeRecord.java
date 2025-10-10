@@ -23,6 +23,7 @@ public record CodeTypeRecord(Long id, String name, String type, String descripti
 
         List<CodeAttributeRecord> codeAttributeRecords = new ArrayList<>();
 
+        /*
         if (null != codeType.getCodeAttributes() && !codeType.getCodeAttributes().isEmpty()) {
 
             for (CodeAttribute codeAttribute : codeType.getCodeAttributes()) {
@@ -30,6 +31,8 @@ public record CodeTypeRecord(Long id, String name, String type, String descripti
                 codeAttributeRecords.add(CodeAttributeRecord.from(codeAttribute));
             }
         }
+
+         */
 
         return new CodeTypeRecord(
                 codeType.getId(),
