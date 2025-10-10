@@ -142,8 +142,13 @@ public class JSONMapperIT extends TradestrategyBase {
         TradestrategyRecord tradestrategyRecord = TradestrategyRecord.from(tradestrategy);
         String json = JSONMapper.getJSONString(tradestrategyRecord);
 
+        JSONObject tradestrategyJSON = new JSONObject(json);
+        assertEquals(tradestrategy.getId(), tradestrategyJSON.getLong("id"));
+
         TradestrategyLiteRecord tradestrategyLiteRecord = TradestrategyLiteRecord.from(this.tradestrategy);
         json = JSONMapper.getJSONString(tradestrategyLiteRecord);
+        JSONObject tradestrategyLiteJSON = new JSONObject(json);
+        assertEquals(tradestrategy.getId(), tradestrategyLiteJSON.getLong("id"));
     }
 
     @Test
