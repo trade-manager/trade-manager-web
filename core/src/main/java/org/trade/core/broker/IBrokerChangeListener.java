@@ -2,7 +2,7 @@ package org.trade.core.broker;
 
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradePosition;
-import org.trade.core.persistent.dao.Tradestrategy;
+import org.trade.core.persistent.tradestrategy.Tradestrategy;
 
 import java.util.EventListener;
 import java.util.concurrent.ConcurrentHashMap;

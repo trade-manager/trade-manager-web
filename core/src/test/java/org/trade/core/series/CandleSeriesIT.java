@@ -12,8 +12,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
-import org.trade.core.persistent.dao.Tradestrategy;
 import org.trade.core.persistent.dao.series.indicator.CandleSeries;
+import org.trade.core.persistent.tradestrategy.Tradestrategy;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;

@@ -14,13 +14,12 @@ import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradeOrderDTO;
 import org.trade.core.persistent.dao.TradePosition;
 import org.trade.core.persistent.dao.TradePositionDTO;
-import org.trade.core.persistent.dao.Tradestrategy;
-import org.trade.core.persistent.dao.TradestrategyDTO;
 import org.trade.core.persistent.dao.series.indicator.CandleSeries;
 import org.trade.core.persistent.dao.series.indicator.StrategyData;
 import org.trade.core.persistent.dao.series.indicator.candle.CandleItem;
 import org.trade.core.persistent.rule.Rule;
-import org.trade.core.persistent.tradingday.TradingdayRecord;
+import org.trade.core.persistent.tradestrategy.Tradestrategy;
+import org.trade.core.persistent.tradestrategy.TradestrategyRecord;
 import org.trade.core.util.CoreUtils;
 import org.trade.core.util.JSONMapper;
 import org.trade.core.util.time.TradingCalendar;
@@ -355,13 +354,11 @@ public class StrategyRuleJS extends AbstractStrategyRule {
         try {
 
             Tradestrategy tradestrategy = this.getTradestrategy();
-            TradingdayRecord tradingdayRecord = TradingdayRecord.from(tradestrategy.getTradingday());
-            TradestrategyDTO tradestrategyDto = JSONMapper.convertEntityToRecord(tradestrategy, TradestrategyDTO.class);
-            tradestrategyDto.setTradingday(tradingdayRecord);
+            TradestrategyRecord tradestrategyRecord = TradestrategyRecord.from(tradestrategy);
 
-            if (null != tradestrategyDto) {
+            if (null != tradestrategyRecord) {
 
-                result.put("data", new JSONObject(JSONMapper.getJSONString(tradestrategyDto)));
+                result.put("data", new JSONObject(JSONMapper.getJSONString(tradestrategyRecord)));
             } else {
 
                 result.put("error", true);

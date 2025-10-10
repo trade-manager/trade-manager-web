@@ -4,7 +4,7 @@ import org.trade.base.TableModel;
 import org.trade.core.persistent.dao.Entrylimit;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradePosition;
-import org.trade.core.persistent.dao.Tradestrategy;
+import org.trade.core.persistent.tradestrategy.Tradestrategy;
 import org.trade.core.util.CoreUtils;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.Action;

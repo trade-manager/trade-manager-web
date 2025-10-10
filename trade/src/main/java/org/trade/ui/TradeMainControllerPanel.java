@@ -20,8 +20,6 @@ import org.trade.core.persistent.codetype.CodeValue;
 import org.trade.core.persistent.contract.Contract;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradePosition;
-import org.trade.core.persistent.dao.Tradestrategy;
-import org.trade.core.persistent.dao.TradestrategyOrders;
 import org.trade.core.persistent.dao.strategy.IStrategyChangeListener;
 import org.trade.core.persistent.dao.strategy.IStrategyRule;
 import org.trade.core.persistent.dao.strategy.StrategyRuleException;
@@ -29,6 +27,8 @@ import org.trade.core.persistent.dao.strategy.StrategyRuleJS;
 import org.trade.core.persistent.portfolio.Portfolio;
 import org.trade.core.persistent.rule.Rule;
 import org.trade.core.persistent.strategy.Strategy;
+import org.trade.core.persistent.tradestrategy.Tradestrategy;
+import org.trade.core.persistent.tradestrategy.TradestrategyOrders;
 import org.trade.core.persistent.tradingday.Tradingday;
 import org.trade.core.persistent.tradingday.Tradingdays;
 import org.trade.core.properties.ConfigProperties;
@@ -311,7 +311,12 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                 }
             }
 
-            Tradestrategy tradestrategy = tradeService.findTradestrategyById(tradeOrder.getTradestrategy());
+            Tradestrategy tradestrategy = tradeService.getTradestrategyService().findById(tradeOrder.getTradestrategy().getId());
+
+            if (null != instance) {
+
+                tradestrategy.setStrategyData(tradeOrder.getTradestrategy().getStrategyData());
+            }
 
             // Check the order is valid.
             instance.validate();
@@ -404,10 +409,10 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                 ZonedDateTime toOpen = tradingdays.getTradingdays().getLast()
                         .getOpen();
                 List<Tradestrategy> strategyBarSizeChartHistItems = tradeService
-                        .findTradestrategyDistinctByDateRange(fromOpen, toOpen);
+                        .getTradestrategyService().findByDateRangeDistinctBarSizeAndChartDaysAndStrategy(fromOpen, toOpen);
 
                 List<Tradestrategy> contractsItems = tradeService
-                        .findTradestrategyContractDistinctByDateRange(fromOpen, toOpen);
+                        .getTradestrategyService().findByDateRangeDistinctContract(fromOpen, toOpen);
 
                 FilterBackTestPane filterTradestrategyPane = new FilterBackTestPane(fromOpen, toOpen,
                         strategyBarSizeChartHistItems, contractsItems);
@@ -533,7 +538,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                         // Note we use the orderReference to store the
                         // tradestrategyId.
                         Tradestrategy tradestrategy = tradeService
-                                .findTradestrategyById(Long.parseLong(openOrder.getOrderReference()));
+                                .getTradestrategyService().findById(Long.parseLong(openOrder.getOrderReference()));
                         int result = JOptionPane.showConfirmDialog(getFrame(),
                                 "Missing order key: " + openOrder.getOrderKey() + " for contract "
                                         + tradestrategy.getContract().getSymbol() + " do you want to save?",
@@ -552,7 +557,12 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                  */
                 for (Tradestrategy tradestrategy : todayTradingday.getTradestrategies()) {
 
-                    Tradestrategy instance = tradeService.findTradestrategyById(tradestrategy);
+                    Tradestrategy instance = tradeService.getTradestrategyService().findById(tradestrategy.getId());
+
+                    if (null != instance) {
+
+                        instance.setStrategyData(tradestrategy.getStrategyData());
+                    }
 
                     for (TradeOrder todayTradeOrder : instance.getTradeOrders()) {
 
@@ -776,7 +786,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                     for (TradeOrder tradeOrder : currTradePosition.getTradeOrders()) {
 
                         Tradestrategy tradestrategy = tradeService
-                                .findTradestrategyById(tradeOrder.getTradestrategyLite().getId());
+                                .getTradestrategyService().findById(tradeOrder.getTradestrategyLite().getId());
                         tradingdays.getTradestrategy(tradestrategy.getId())
                                 .setStatus(tradestrategy.getStatus());
                         contractPanel.doRefresh(tradestrategy);
@@ -800,7 +810,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
 
             if (brokerModel.isConnected()) {
 
-                tradestrategy = tradeService.findTradestrategyById(tradestrategy.getId());
+                tradestrategy = tradeService.getTradestrategyService().findById(tradestrategy.getId());
                 tradingdays.getTradestrategy(tradestrategy.getId()).setStatus(tradestrategy.getStatus());
                 contractPanel.doRefresh(tradestrategy);
             }
@@ -1355,7 +1365,13 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
 
             if (null != codeType) {
 
-                Tradestrategy instance = tradeService.findTradestrategyById(tradestrategy);
+                Tradestrategy instance = tradeService.getTradestrategyService().findById(tradestrategy.getId());
+
+                if (null != instance) {
+
+                    instance.setStrategyData(tradestrategy.getStrategyData());
+                }
+
                 CodeAttributePanel codeAttributePanel = new CodeAttributePanel(codeType, instance.getCodeValues());
 
                 if (null != codeAttributePanel) {
@@ -1503,7 +1519,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
             }
             TradestrategyOrders positionOrders = tradeService
                     .findPositionOrdersByTradestrategyId(tradestrategy.getId());
-            Tradestrategy instance = tradeService.findTradestrategyById(tradestrategy.getId());
+            Tradestrategy instance = tradeService.getTradestrategyService().findById(tradestrategy.getId());
 
             for (TradeOrder order : positionOrders.getTradeOrders()) {
 
@@ -1631,7 +1647,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
 
         if (null == tradestrategy) {
 
-            tradestrategy = tradeService.findTradestrategyById(tradestrategyId);
+            tradestrategy = tradeService.getTradestrategyService().findById(tradestrategyId);
         }
 
         if (null == tradingdays.getTradingday(tradestrategy.getTradingday().getOpen(),

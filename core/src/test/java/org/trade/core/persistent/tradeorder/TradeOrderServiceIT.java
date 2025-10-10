@@ -18,7 +18,7 @@ import org.trade.core.broker.TWSBrokerModel;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradeOrderRepository;
 import org.trade.core.persistent.dao.TradeOrderfill;
-import org.trade.core.persistent.dao.Tradestrategy;
+import org.trade.core.persistent.tradestrategy.Tradestrategy;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.Action;

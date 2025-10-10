@@ -30,9 +30,12 @@ public record UserRecord(Long id,
 
         List<RoleRecord> roles = new ArrayList<>();
 
-        for (Role role : user.getRoles()) {
+        if (null != user.getRoles() && !user.getRoles().isEmpty()) {
 
-            roles.add(RoleRecord.from(role));
+            for (Role role : user.getRoles()) {
+
+                roles.add(RoleRecord.from(role));
+            }
         }
 
         return new UserRecord(

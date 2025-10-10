@@ -17,7 +17,7 @@ import org.trade.core.TradestrategyBase;
 import org.trade.core.broker.IBrokerModel;
 import org.trade.core.factory.ClassFactory;
 import org.trade.core.persistent.ServiceException;
-import org.trade.core.persistent.dao.Tradestrategy;
+import org.trade.core.persistent.tradestrategy.Tradestrategy;
 import org.trade.core.persistent.dao.strategy.IStrategyRule;
 import org.trade.core.persistent.dao.strategy.StrategyRuleJS;
 import org.trade.core.persistent.rule.Rule;

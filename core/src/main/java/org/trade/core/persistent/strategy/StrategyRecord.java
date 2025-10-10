@@ -5,7 +5,6 @@ package org.trade.core.persistent.strategy;
 
 import org.trade.core.persistent.dao.series.indicator.IndicatorSeries;
 import org.trade.core.persistent.dao.series.indicator.IndicatorSeriesRecord;
-import org.trade.core.persistent.rule.Rule;
 import org.trade.core.persistent.rule.RuleRecord;
 
 import java.util.ArrayList;
@@ -26,7 +25,7 @@ public record StrategyRecord(Long id, String name,
                              List<IndicatorSeriesRecord> indicatorSeries) {
 
     /**
-     * Method from note roles are LAZY loaded., hence we do not get the children.
+     * Method from note rules are LAZY loaded., hence we do not get the children.
      *
      * @param strategy Strategy
      * @return StrategyRecord
@@ -35,6 +34,7 @@ public record StrategyRecord(Long id, String name,
 
         List<RuleRecord> ruleRecords = new ArrayList<>();
 
+        /*
         if (null != strategy.getRules() && !strategy.getRules().isEmpty()) {
 
             for (Rule rule : strategy.getRules()) {
@@ -42,6 +42,8 @@ public record StrategyRecord(Long id, String name,
                 ruleRecords.add(RuleRecord.from(rule));
             }
         }
+
+         */
 
         List<IndicatorSeriesRecord> indicatorSeriesRecords = new ArrayList<>();
 

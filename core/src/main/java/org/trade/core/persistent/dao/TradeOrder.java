@@ -13,6 +13,8 @@ import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import org.trade.core.aspect.Aspect;
+import org.trade.core.persistent.tradestrategy.Tradestrategy;
+import org.trade.core.persistent.tradestrategy.TradestrategyLite;
 import org.trade.core.util.CoreUtils;
 import org.trade.core.valuetype.Action;
 import org.trade.core.valuetype.Money;

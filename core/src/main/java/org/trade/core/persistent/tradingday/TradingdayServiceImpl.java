@@ -8,7 +8,7 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import org.springframework.stereotype.Service;
-import org.trade.core.persistent.dao.Tradestrategy;
+import org.trade.core.persistent.tradestrategy.Tradestrategy;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;

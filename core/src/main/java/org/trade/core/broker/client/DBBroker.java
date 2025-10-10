@@ -8,14 +8,14 @@ import org.trade.core.persistent.candle.Candle;
 import org.trade.core.persistent.contract.Contract;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradeOrderfill;
-import org.trade.core.persistent.dao.Tradestrategy;
-import org.trade.core.persistent.dao.TradestrategyOrders;
 import org.trade.core.persistent.dao.series.indicator.CandleDataset;
 import org.trade.core.persistent.dao.series.indicator.CandleSeries;
 import org.trade.core.persistent.dao.series.indicator.IndicatorSeries;
 import org.trade.core.persistent.dao.series.indicator.StrategyData;
 import org.trade.core.persistent.dao.series.indicator.candle.CandleItem;
 import org.trade.core.persistent.strategy.Strategy;
+import org.trade.core.persistent.tradestrategy.Tradestrategy;
+import org.trade.core.persistent.tradestrategy.TradestrategyOrders;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.CoreUtils;
 import org.trade.core.util.time.TradingCalendar;
@@ -86,7 +86,7 @@ public class DBBroker extends Broker {
 
         try {
 
-            this.tradestrategy = tradeService.findTradestrategyById(this.tradestrategyId);
+            this.tradestrategy = tradeService.getTradestrategyService().findById(this.tradestrategyId);
             this.strategyData.clearBaseCandleDataset();
             this.tradestrategy.setStrategyData(this.strategyData);
 

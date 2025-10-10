@@ -21,6 +21,7 @@ public record CodeAttributeRecord(Long id, String name, String description, Stri
 
         List<CodeValueRecord> codeValueRecords = new ArrayList<>();
 
+        /*
         if (null != codeAttribute.getCodeValues() && !codeAttribute.getCodeValues().isEmpty()) {
 
             for (CodeValue codeValue : codeAttribute.getCodeValues()) {
@@ -28,6 +29,8 @@ public record CodeAttributeRecord(Long id, String name, String description, Stri
                 codeValueRecords.add(CodeValueRecord.from(codeValue));
             }
         }
+
+         */
 
         return new CodeAttributeRecord(
                 codeAttribute.getId(),

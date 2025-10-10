@@ -11,14 +11,14 @@ import org.trade.core.persistent.contract.Contract;
 import org.trade.core.persistent.dao.Entrylimit;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradePosition;
-import org.trade.core.persistent.dao.Tradestrategy;
-import org.trade.core.persistent.dao.TradestrategyOrders;
 import org.trade.core.persistent.dao.series.SeriesChangeEvent;
 import org.trade.core.persistent.dao.series.SeriesChangeListener;
 import org.trade.core.persistent.dao.series.indicator.CandleSeries;
 import org.trade.core.persistent.dao.series.indicator.StrategyData;
 import org.trade.core.persistent.dao.series.indicator.candle.CandleItem;
 import org.trade.core.persistent.dao.series.indicator.candle.CandlePeriod;
+import org.trade.core.persistent.tradestrategy.Tradestrategy;
+import org.trade.core.persistent.tradestrategy.TradestrategyOrders;
 import org.trade.core.util.CoreUtils;
 import org.trade.core.util.Worker;
 import org.trade.core.util.time.TradingCalendar;
@@ -1303,7 +1303,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
         try {
 
             // Get an instances for this thread.
-            this.tradestrategy = tradeService.findTradestrategyById(this.tradestrategyId);
+            this.tradestrategy = tradeService.getTradestrategyService().findById(this.tradestrategyId);
             this.tradestrategy.setStrategyData(this.strategyData);
             this.symbol = this.tradestrategy.getContract().getSymbol();
 

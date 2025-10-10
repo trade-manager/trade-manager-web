@@ -1,4 +1,4 @@
-package org.trade.core.persistent.dao;
+package org.trade.core.persistent.tradestrategy;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -15,6 +15,7 @@ import org.trade.core.factory.ClassFactory;
 import org.trade.core.persistent.codetype.CodeValue;
 import org.trade.core.persistent.contract.Contract;
 import org.trade.core.persistent.contract.ContractLite;
+import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.series.indicator.StrategyData;
 import org.trade.core.persistent.portfolio.Portfolio;
 import org.trade.core.persistent.strategy.Strategy;

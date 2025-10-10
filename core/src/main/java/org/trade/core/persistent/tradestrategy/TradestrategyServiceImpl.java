@@ -1,4 +1,4 @@
-package org.trade.core.persistent.dao;
+package org.trade.core.persistent.tradestrategy;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -8,8 +8,10 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.trade.core.persistent.contract.Contract;
+import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.portfolio.Portfolio;
 import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.persistent.tradingday.Tradingday;
@@ -22,11 +24,46 @@ import java.util.List;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-@Repository
-public class TradestrategyRepositoryImpl implements TradestrategyRepositoryCustom {
+@Service
+public class TradestrategyServiceImpl implements TradestrategyService {
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    private final TradestrategyRepository tradestrategyRepository;
+
+    public TradestrategyServiceImpl(final TradestrategyRepository tradestrategyRepository) {
+
+        this.tradestrategyRepository = tradestrategyRepository;
+    }
+
+    @Transactional
+    public Tradestrategy findById(final Long id) {
+
+        Tradestrategy tradestrategy = this.tradestrategyRepository.findById(id).orElse(null);
+
+        if (null != tradestrategy) {
+
+            for (TradeOrder tradeOrder : tradestrategy.getTradeOrders()) {
+
+                tradeOrder.getTradeOrderfills().size();
+            }
+
+            return tradestrategy;
+        }
+
+        return null;
+    }
+
+    public List<Tradestrategy> findAll() {
+
+        return tradestrategyRepository.findAll();
+    }
+
+    public Tradestrategy findByRequestId(Integer requestId) {
+
+        return tradestrategyRepository.findByRequestId(requestId);
+    }
 
     /**
      * Method findTradestrategyLiteById.
@@ -34,10 +71,9 @@ public class TradestrategyRepositoryImpl implements TradestrategyRepositoryCusto
      * @param tradestrategy Tradestrategy
      * @return TradestrategyLite
      */
-    public TradestrategyLite findTradestrategyLiteByTradestrategy(Tradestrategy tradestrategy) {
+    public TradestrategyLite findByTradestrategy(Tradestrategy tradestrategy) {
 
-        TradestrategyLite instance = entityManager.find(TradestrategyLite.class, tradestrategy.getId());
-        return instance;
+        return entityManager.find(TradestrategyLite.class, tradestrategy.getId());
     }
 
     /**
@@ -46,7 +82,7 @@ public class TradestrategyRepositoryImpl implements TradestrategyRepositoryCusto
      * @param tradestrategyId Long
      * @return Integer
      */
-    public Integer findVersionByTradestrategyId(Long tradestrategyId) {
+    public Integer findVersionById(Long tradestrategyId) {
 
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<TradestrategyLite> query = builder.createQuery(TradestrategyLite.class);
@@ -73,17 +109,12 @@ public class TradestrategyRepositoryImpl implements TradestrategyRepositoryCusto
      * @param tradestrategyId Integer
      * @return PositionOrders
      */
-    public TradestrategyOrders findPositionOrdersByTradestrategyId(Long tradestrategyId) {
+    public TradestrategyOrders findPositionOrdersById(Long tradestrategyId) {
 
         return entityManager.find(TradestrategyOrders.class, tradestrategyId);
     }
 
-    /**
-     * Method findByTradeId.
-     *
-     * @param tradeOrder TradeOrder
-     * @return Tradestrategy
-     */
+    @Transactional
     public Tradestrategy findByTradeOrder(TradeOrder tradeOrder) {
 
         Tradestrategy tradestrategy = null;
@@ -98,17 +129,8 @@ public class TradestrategyRepositoryImpl implements TradestrategyRepositoryCusto
         return tradestrategy;
     }
 
-    /**
-     * Method findTradestrategyByUniqueKeys.
-     *
-     * @param open          Date
-     * @param strategyName  String
-     * @param contract      Contract
-     * @param portfolioName String
-     * @return Tradestrategy
-     */
-    public Tradestrategy findTradestrategyByUniqueKeys(ZonedDateTime open, String strategyName, Contract contract,
-                                                       String portfolioName) {
+    public Tradestrategy findByUniqueKeys(ZonedDateTime open, String strategyName, Contract contract,
+                                          String portfolioName) {
 
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Tradestrategy> query = builder.createQuery(Tradestrategy.class);
@@ -156,15 +178,7 @@ public class TradestrategyRepositoryImpl implements TradestrategyRepositoryCusto
 
     }
 
-    /**
-     * Method findTradestrategyDistinctByDateRange.
-     *
-     * @param fromOpen ZonedDateTime
-     * @param toOpen   ZonedDateTime
-     * @return List<ComboItem>
-     */
-    public List<Tradestrategy> findTradestrategyDistinctByDateRange(ZonedDateTime fromOpen, ZonedDateTime toOpen) {
-
+    public List<Tradestrategy> findByDateRangeDistinctBarSizeAndChartDaysAndStrategy(ZonedDateTime fromOpen, ZonedDateTime toOpen) {
 
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Tradestrategy> query = builder.createQuery(Tradestrategy.class);
@@ -192,18 +206,10 @@ public class TradestrategyRepositoryImpl implements TradestrategyRepositoryCusto
         TypedQuery<Tradestrategy> typedQuery = entityManager.createQuery(query);
         List<Tradestrategy> items = typedQuery.getResultList();
         return items;
-
     }
 
-    /**
-     * Method findTradestrategyContractDistinctByDateRange.
-     *
-     * @param fromOpen ZonedDateTime
-     * @param toOpen   ZonedDateTime
-     * @return List<ComboItem>
-     */
-    public List<Tradestrategy> findTradestrategyContractDistinctByDateRange(ZonedDateTime fromOpen,
-                                                                            ZonedDateTime toOpen) {
+    public List<Tradestrategy> findByDateRangeDistinctContract(ZonedDateTime fromOpen,
+                                                               ZonedDateTime toOpen) {
 
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Tradestrategy> query = builder.createQuery(Tradestrategy.class);
@@ -241,7 +247,7 @@ public class TradestrategyRepositoryImpl implements TradestrategyRepositoryCusto
      * @param tradingday Tradingday
      * @return List<Tradestrategy>
      */
-    public List<Tradestrategy> findTradestrategyByTradingday(Tradingday tradingday) {
+    public List<Tradestrategy> findByTradingday(Tradingday tradingday) {
 
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Tradestrategy> query = builder.createQuery(Tradestrategy.class);
