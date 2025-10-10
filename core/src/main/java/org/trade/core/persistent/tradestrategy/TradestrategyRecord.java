@@ -1,8 +1,9 @@
-package org.trade.core.persistent.dao;
+package org.trade.core.persistent.tradestrategy;
 
 import jakarta.persistence.PrePersist;
 import org.trade.core.aspect.Aspect;
 import org.trade.core.persistent.contract.ContractRecord;
+import org.trade.core.persistent.dao.TradeOrderDTO;
 import org.trade.core.persistent.portfolio.PortfolioRecord;
 import org.trade.core.persistent.strategy.StrategyRecord;
 import org.trade.core.persistent.tradingday.TradingdayRecord;
@@ -22,7 +23,7 @@ import java.util.List;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-public class TradestrategyDTO extends Aspect implements Serializable, Cloneable {
+public class TradestrategyRecord extends Aspect implements Serializable, Cloneable {
 
     @Serial
     private static final long serialVersionUID = -2181676329258092177L;
@@ -42,7 +43,7 @@ public class TradestrategyDTO extends Aspect implements Serializable, Cloneable 
     private List<TradeOrderDTO> tradeOrders = new ArrayList<>(0);
 
 
-    public TradestrategyDTO() {
+    public TradestrategyRecord() {
     }
 
     @PrePersist
@@ -58,7 +59,7 @@ public class TradestrategyDTO extends Aspect implements Serializable, Cloneable 
      * @param barSize   Integer
      * @param strategy  StrategyDto
      */
-    public TradestrategyDTO(Integer barSize, Integer chartDays, StrategyRecord strategy) {
+    public TradestrategyRecord(Integer barSize, Integer chartDays, StrategyRecord strategy) {
 
         this.setBarSize(barSize);
         this.chartDays = chartDays;
@@ -71,7 +72,7 @@ public class TradestrategyDTO extends Aspect implements Serializable, Cloneable 
      *
      * @param contract ContractDto
      */
-    public TradestrategyDTO(ContractRecord contract) {
+    public TradestrategyRecord(ContractRecord contract) {
 
         this.contract = contract;
         super.setDirty(true);
@@ -91,8 +92,8 @@ public class TradestrategyDTO extends Aspect implements Serializable, Cloneable 
      * @param chartDays  Integer
      * @param barSize    Integer
      */
-    public TradestrategyDTO(ContractRecord contract, TradingdayRecord tradingday, StrategyRecord strategy, PortfolioRecord portfolio,
-                            BigDecimal riskAmount, String side, String tier, Boolean trade, Integer chartDays, Integer barSize) {
+    public TradestrategyRecord(ContractRecord contract, TradingdayRecord tradingday, StrategyRecord strategy, PortfolioRecord portfolio,
+                               BigDecimal riskAmount, String side, String tier, Boolean trade, Integer chartDays, Integer barSize) {
 
         this.setBarSize(barSize);
         this.chartDays = chartDays;
@@ -378,7 +379,7 @@ public class TradestrategyDTO extends Aspect implements Serializable, Cloneable 
     }
 
 
-    public static final Comparator<TradestrategyDTO> DATE_ORDER_ASC = (o1, o2) -> {
+    public static final Comparator<TradestrategyRecord> DATE_ORDER_ASC = (o1, o2) -> {
 
         o1.setAscending(true);
         int returnVal;
@@ -405,7 +406,7 @@ public class TradestrategyDTO extends Aspect implements Serializable, Cloneable 
         return returnVal;
     };
 
-    public static final Comparator<TradestrategyDTO> TRADINGDAY_CONTRACT = (o1, o2) -> {
+    public static final Comparator<TradestrategyRecord> TRADINGDAY_CONTRACT = (o1, o2) -> {
 
         o1.setAscending(true);
         int returnVal;
@@ -497,7 +498,7 @@ public class TradestrategyDTO extends Aspect implements Serializable, Cloneable 
             return true;
         }
 
-        if (objectToCompare instanceof TradestrategyDTO tradestrategy) {
+        if (objectToCompare instanceof TradestrategyRecord tradestrategy) {
 
             if (this.getContract().equals(tradestrategy.getContract())) {
 
@@ -523,7 +524,7 @@ public class TradestrategyDTO extends Aspect implements Serializable, Cloneable 
      */
     public Object clone() throws CloneNotSupportedException {
 
-        TradestrategyDTO tradestrategy = (TradestrategyDTO) super.clone();
+        TradestrategyRecord tradestrategy = (TradestrategyRecord) super.clone();
         //ContractRecord contract = (ContractRecord) this.getContract().clone();
         //tradestrategy.setContract(contract);
         // TradingdayRecord tradingday = (TradingdayRecord) this.getTradingday().clone();

@@ -12,7 +12,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
-import org.trade.core.persistent.dao.Tradestrategy;
+import org.trade.core.persistent.tradestrategy.Tradestrategy;
 import org.trade.core.persistent.dao.series.indicator.StrategyData;
 import org.trade.core.persistent.dao.series.indicator.candle.CandleItem;
 import org.trade.core.persistent.dao.series.indicator.candle.CandlePeriod;
@@ -87,7 +87,7 @@ public class CandleServiceIT extends TradestrategyBase {
         RegularTimePeriod period = new CandlePeriod(
                 TradingCalendar.getTradingDayStart(TradingCalendar.getDateTimeNowMarketTimeZone()), 300);
 
-        for (Tradestrategy tradestrategy : tradeService.findAllTradestrategies()) {
+        for (Tradestrategy tradestrategy : tradeService.getTradestrategyService().findAll()) {
 
             tradestrategies.add(tradestrategy);
             Candle candle = new Candle(tradestrategy.getContract(), period, period.getStart());
@@ -108,10 +108,10 @@ public class CandleServiceIT extends TradestrategyBase {
     @Test
     public void addCandleSeries() throws Exception {
 
-        for (Tradestrategy tradestrategy : tradeService.findAllTradestrategies()) {
+        for (Tradestrategy tradestrategy : tradeService.getTradestrategyService().findAll()) {
 
             tradestrategies.add(tradestrategy);
-            tradestrategy = tradeService.findTradestrategyById(tradestrategy.getId());
+            tradestrategy = tradeService.getTradestrategyService().findById(tradestrategy.getId());
             tradestrategy.setStrategyData(StrategyData.create(tradestrategy));
             tradestrategy.getStrategyData().populateCandleSeries(tradestrategy.getTradingday(), tradestrategy.getChartDays(), tradestrategy.getBarSize(), true, 0);
 

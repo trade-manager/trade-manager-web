@@ -22,10 +22,6 @@ import org.trade.core.persistent.dao.TradeOrderfill;
 import org.trade.core.persistent.dao.TradeOrderfillRepository;
 import org.trade.core.persistent.dao.TradePosition;
 import org.trade.core.persistent.dao.TradePositionRepository;
-import org.trade.core.persistent.dao.Tradestrategy;
-import org.trade.core.persistent.dao.TradestrategyLite;
-import org.trade.core.persistent.dao.TradestrategyOrders;
-import org.trade.core.persistent.dao.TradestrategyRepository;
 import org.trade.core.persistent.dao.series.indicator.CandleSeries;
 import org.trade.core.persistent.dao.series.indicator.candle.CandleItem;
 import org.trade.core.persistent.portfolio.Portfolio;
@@ -38,6 +34,9 @@ import org.trade.core.persistent.tradelogdetail.TradelogDetailService;
 import org.trade.core.persistent.tradelogdetail.TradelogReport;
 import org.trade.core.persistent.tradelogsummary.TradelogSummary;
 import org.trade.core.persistent.tradelogsummary.TradelogSummaryService;
+import org.trade.core.persistent.tradestrategy.Tradestrategy;
+import org.trade.core.persistent.tradestrategy.TradestrategyOrders;
+import org.trade.core.persistent.tradestrategy.TradestrategyService;
 import org.trade.core.persistent.tradingday.Tradingday;
 import org.trade.core.persistent.tradingday.TradingdayService;
 import org.trade.core.util.CoreUtils;
@@ -77,9 +76,6 @@ public class TradeServiceImpl implements TradeService {
     @Autowired
     private TradePositionRepository tradePositionRepository;
 
-    @Autowired
-    private TradestrategyRepository tradestrategyRepository;
-
     private final AspectService aspectService;
     private final TradingdayService tradingdayService;
     private final CodeTypeService codeTypeService;
@@ -91,10 +87,11 @@ public class TradeServiceImpl implements TradeService {
     private final CandleService candleService;
     private final TradelogDetailService tradelogDetailService;
     private final TradelogSummaryService tradelogSummaryService;
+    private final TradestrategyService tradestrategyService;
 
     public TradeServiceImpl(final AspectService aspectService, final TradingdayService tradingdayService, final CodeTypeService codeTypeService, final AccountService accountService, final PortfolioService portfolioService,
                             final RuleService ruleService, final StrategyService strategyService, final ContractService contractService, final CandleService candleService, final TradelogDetailService tradelogDetailService,
-                            final TradelogSummaryService tradelogSummaryService) {
+                            final TradelogSummaryService tradelogSummaryService, final TradestrategyService tradestrategyService) {
 
         this.aspectService = aspectService;
         this.tradingdayService = tradingdayService;
@@ -107,6 +104,7 @@ public class TradeServiceImpl implements TradeService {
         this.candleService = candleService;
         this.tradelogDetailService = tradelogDetailService;
         this.tradelogSummaryService = tradelogSummaryService;
+        this.tradestrategyService = tradestrategyService;
     }
 
     public AspectService getAspectService() {
@@ -164,6 +162,11 @@ public class TradeServiceImpl implements TradeService {
         return this.tradelogSummaryService;
     }
 
+    public TradestrategyService getTradestrategyService() {
+
+        return this.tradestrategyService;
+    }
+
     public TradelogReport findTradelogReport(final Portfolio portfolio, ZonedDateTime start, ZonedDateTime end,
                                              boolean filter, String symbol, BigDecimal winLossAmount) throws IOException {
 
@@ -181,37 +184,23 @@ public class TradeServiceImpl implements TradeService {
         return tradeOrderRepository.findById(id).isPresent() ? tradeOrderRepository.findById(id).get() : null;
     }
 
-
-    public Tradestrategy findTradestrategyById(final Tradestrategy tradestrategy) {
-
-        Tradestrategy instance = this.findTradestrategyById(tradestrategy.getId());
-        instance.setStrategyData(tradestrategy.getStrategyData());
-        return instance;
-    }
-
-    public Tradestrategy findTradestrategyByRequestId(Integer requestId) {
-
-        return tradestrategyRepository.findByRequestId(requestId);
-    }
-
     public TradestrategyOrders refreshPositionOrdersByTradestrategyId(final TradestrategyOrders positionOrders) {
 
-        Integer version = tradestrategyRepository.findVersionByTradestrategyId(Objects.requireNonNull(positionOrders.getId()));
+        Integer version = tradestrategyService.findVersionById(Objects.requireNonNull(positionOrders.getId()));
 
         if (positionOrders.getVersion().equals(version)) {
 
             return positionOrders;
         } else {
 
-            return tradestrategyRepository
-                    .findPositionOrdersByTradestrategyId(positionOrders.getId());
+            return this.tradestrategyService.findPositionOrdersById(positionOrders.getId());
         }
     }
 
     @Transactional
     public TradestrategyOrders findPositionOrdersByTradestrategyId(final Long tradestrategyId) {
 
-        TradestrategyOrders instance = tradestrategyRepository.findPositionOrdersByTradestrategyId(tradestrategyId);
+        TradestrategyOrders instance = this.tradestrategyService.findPositionOrdersById(tradestrategyId);
 
         /*
          * If we have an open position get all the orders for that position.
@@ -224,37 +213,6 @@ public class TradeServiceImpl implements TradeService {
         }
 
         return instance;
-    }
-
-    @Transactional
-    public Tradestrategy findTradestrategyById(final Long id) {
-
-        Optional<Tradestrategy> tradestrategyOpt = tradestrategyRepository.findById(id);
-
-        if (tradestrategyOpt.isPresent()) {
-
-            Tradestrategy tradestrategy = tradestrategyOpt.get();
-
-            for (TradeOrder tradeOrder : tradestrategy.getTradeOrders()) {
-
-                tradeOrder.getTradeOrderfills().size();
-            }
-
-            return tradestrategy;
-        }
-
-        return null;
-    }
-
-    public boolean existTradestrategyByRequestId(final Integer requestId) {
-
-        Tradestrategy instance = tradestrategyRepository.findByRequestId(requestId);
-        return instance != null;
-    }
-
-    public TradestrategyLite findTradestrategyLiteByTradestrategy(final Tradestrategy tradestrategy) {
-
-        return tradestrategyRepository.findTradestrategyLiteByTradestrategy(tradestrategy);
     }
 
     public TradePosition findTradePositionById(final Long id) {
@@ -282,29 +240,6 @@ public class TradeServiceImpl implements TradeService {
         return portfolioService.save(instance);
     }
 
-    public List<Tradestrategy> findAllTradestrategies() {
-
-        return tradestrategyRepository.findAll();
-    }
-
-    public Tradestrategy findTradestrategyByUniqueKeys(final ZonedDateTime open, final String strategy,
-                                                       final Contract contract, final String portfolioName) {
-
-        return tradestrategyRepository.findTradestrategyByUniqueKeys(open, strategy, contract, portfolioName);
-    }
-
-    public List<Tradestrategy> findTradestrategyDistinctByDateRange(final ZonedDateTime fromOpen,
-                                                                    final ZonedDateTime toOpen) {
-
-        return tradestrategyRepository.findTradestrategyDistinctByDateRange(fromOpen, toOpen);
-    }
-
-    public List<Tradestrategy> findTradestrategyContractDistinctByDateRange(final ZonedDateTime fromOpen,
-                                                                            final ZonedDateTime toOpen) {
-
-        return tradestrategyRepository.findTradestrategyContractDistinctByDateRange(fromOpen, toOpen);
-    }
-
     public void deleteTradingdayTradeOrders(final Tradingday instance) {
 
         for (Tradestrategy tradestrategy : instance.getTradestrategies()) {
@@ -320,7 +255,7 @@ public class TradeServiceImpl implements TradeService {
          * Refresh the trade strategy as orders across tradePosition could
          * have been deleted if this is a bulk delete of tradestrategies.
          */
-        Tradestrategy tradestrategy = tradestrategyRepository.findById(Objects.requireNonNull(instance.getId())).get();
+        Tradestrategy tradestrategy = this.tradestrategyService.findById(Objects.requireNonNull(instance.getId()));
         Hashtable<Long, TradePosition> tradePositions = new Hashtable<>();
 
         for (TradeOrder tradeOrder : tradestrategy.getTradeOrders()) {

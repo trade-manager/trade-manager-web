@@ -3,7 +3,7 @@ package org.trade.core.broker.client;
 import org.trade.core.broker.BrokerModelException;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.contract.Contract;
-import org.trade.core.persistent.dao.Tradestrategy;
+import org.trade.core.persistent.tradestrategy.Tradestrategy;
 
 import java.time.ZonedDateTime;
 import java.util.concurrent.ConcurrentHashMap;

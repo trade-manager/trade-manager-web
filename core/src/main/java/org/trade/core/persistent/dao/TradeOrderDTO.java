@@ -4,6 +4,7 @@ package org.trade.core.persistent.dao;
 
 import jakarta.persistence.Transient;
 import org.trade.core.aspect.Aspect;
+import org.trade.core.persistent.tradestrategy.TradestrategyLiteRecord;
 import org.trade.core.util.CoreUtils;
 import org.trade.core.valuetype.Action;
 import org.trade.core.valuetype.Money;
@@ -77,7 +78,7 @@ public class TradeOrderDTO extends Aspect implements java.io.Serializable, Clone
 
     private List<TradeOrderfillDTO> tradeOrderfills = new ArrayList<>(0);
     private TradePositionDTO tradePosition;
-    private TradestrategyLiteDTO tradestrategyLite;
+    private TradestrategyLiteRecord tradestrategyLite;
 
 
     public TradeOrderDTO() {
@@ -94,7 +95,7 @@ public class TradeOrderDTO extends Aspect implements java.io.Serializable, Clone
      * @param limitPrice        BigDecimal
      * @param orderCreateDate   ZonedDateTime
      */
-    public TradeOrderDTO(TradestrategyLiteDTO tradestrategyLite, String action, String orderType, Integer quantity,
+    public TradeOrderDTO(TradestrategyLiteRecord tradestrategyLite, String action, String orderType, Integer quantity,
                          BigDecimal auxPrice, BigDecimal limitPrice, ZonedDateTime orderCreateDate) {
 
         this(tradestrategyLite, action, orderCreateDate, orderType, quantity, auxPrice, limitPrice, OverrideConstraints.YES,
@@ -115,7 +116,7 @@ public class TradeOrderDTO extends Aspect implements java.io.Serializable, Clone
      * @param timeInForce         String
      * @param triggerMethod       Integer
      */
-    public TradeOrderDTO(TradestrategyLiteDTO tradestrategyLite, String action, ZonedDateTime orderCreateDate, String orderType,
+    public TradeOrderDTO(TradestrategyLiteRecord tradestrategyLite, String action, ZonedDateTime orderCreateDate, String orderType,
                          Integer quantity, BigDecimal auxPrice, BigDecimal limitPrice, Integer overrideConstraints,
                          String timeInForce, Integer triggerMethod) {
 
@@ -156,7 +157,7 @@ public class TradeOrderDTO extends Aspect implements java.io.Serializable, Clone
      * @param FAMethod            String
      * @param FAPercent           BigDecimal
      */
-    public TradeOrderDTO(TradestrategyLiteDTO tradestrategyLite, String action, ZonedDateTime orderCreateDate, String orderType,
+    public TradeOrderDTO(TradestrategyLiteRecord tradestrategyLite, String action, ZonedDateTime orderCreateDate, String orderType,
                          Money limitPrice, Money auxPrice, Integer quantity, String ocaGroupName, Integer parentId,
                          Integer triggerMethod, Integer overrideConstraints, String timeInForce, Boolean transmit,
                          Money trailStopPrice, Percent trailingPercent, String FAProfile, String FAGroup, String FAMethod,
@@ -304,18 +305,18 @@ public class TradeOrderDTO extends Aspect implements java.io.Serializable, Clone
     /**
      * Method getTradestrategy.
      *
-     * @return TradestrategyLiteDto
+     * @return TradestrategyLiteRecord
      */
-    public TradestrategyLiteDTO getTradestrategyLite() {
+    public TradestrategyLiteRecord getTradestrategyLite() {
         return this.tradestrategyLite;
     }
 
     /**
      * Method setTradestrategy.
      *
-     * @param tradestrategyLite TradestrategyLiteDto
+     * @param tradestrategyLite TradestrategyLiteRecord
      */
-    public void setTradestrategyLite(TradestrategyLiteDTO tradestrategyLite) {
+    public void setTradestrategyLite(TradestrategyLiteRecord tradestrategyLite) {
         this.tradestrategyLite = tradestrategyLite;
     }
 

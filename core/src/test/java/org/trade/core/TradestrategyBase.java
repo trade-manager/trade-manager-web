@@ -10,7 +10,7 @@ import org.trade.core.persistent.contract.Contract;
 import org.trade.core.persistent.contract.ContractLite;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradePosition;
-import org.trade.core.persistent.dao.Tradestrategy;
+import org.trade.core.persistent.tradestrategy.Tradestrategy;
 import org.trade.core.persistent.dao.series.indicator.StrategyData;
 import org.trade.core.persistent.portfolio.Portfolio;
 import org.trade.core.persistent.rule.Rule;
@@ -106,12 +106,17 @@ public class TradestrategyBase {
             contract = new Contract(SECType.STOCK, symbol, Exchange.SMART, Currency.USD, null, null);
         } else {
 
-            tradestrategy = tradeService.findTradestrategyByUniqueKeys(open, strategy.getName(),
+            tradestrategy = tradeService.getTradestrategyService().findByUniqueKeys(open, strategy.getName(),
                     contract, portfolio.getName());
 
             if (null != tradestrategy) {
 
-                Tradestrategy instance = tradeService.findTradestrategyById(tradestrategy.getId());
+                Tradestrategy instance = tradeService.getTradestrategyService().findById(tradestrategy.getId());
+
+                if (null != instance) {
+
+                    instance.setStrategyData(tradestrategy.getStrategyData());
+                }
                 instance = this.tradeService.getAspectService().save(instance);
                 this.addRecord(instance);
                 Hashtable<Long, TradePosition> tradePositions = new Hashtable<>();
@@ -169,7 +174,7 @@ public class TradestrategyBase {
         this.addRecord(tradingday.getTradestrategies().getLast().getContract());
         this.addRecord(tradingday);
         Tradestrategy instance = tradingday.getTradestrategies().getLast();
-        instance = tradeService.findTradestrategyById(instance);
+        instance = tradeService.getTradestrategyService().findById(instance.getId());
         instance.setStrategyData(StrategyData.create(instance));
         return instance;
     }

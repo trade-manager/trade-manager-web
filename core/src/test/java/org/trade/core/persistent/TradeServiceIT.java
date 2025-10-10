@@ -23,8 +23,8 @@ import org.trade.core.persistent.contract.ContractLite;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradeOrderfill;
 import org.trade.core.persistent.dao.TradePosition;
-import org.trade.core.persistent.dao.Tradestrategy;
-import org.trade.core.persistent.dao.TradestrategyOrders;
+import org.trade.core.persistent.tradestrategy.Tradestrategy;
+import org.trade.core.persistent.tradestrategy.TradestrategyOrders;
 import org.trade.core.persistent.dao.series.indicator.IIndicatorDataset;
 import org.trade.core.persistent.dao.series.indicator.candle.CandleItem;
 import org.trade.core.persistent.portfolio.Portfolio;
@@ -261,7 +261,7 @@ public class TradeServiceIT extends TradestrategyBase {
          * Add the stop and target orders.
          */
         Tradestrategy tradestrategyStpTgt = this.tradeService
-                .findTradestrategyById(tradestrategy.getId());
+                .getTradestrategyService().findById(tradestrategy.getId());
         assertTrue(tradestrategyStpTgt.isThereOpenTradePosition());
 
         int buySellMultiplier = 1;
@@ -629,7 +629,7 @@ public class TradeServiceIT extends TradestrategyBase {
     @Test
     public void findTradestrategyByTradestrategy() {
 
-        Tradestrategy result = this.tradeService.findTradestrategyById(tradestrategy);
+        Tradestrategy result = this.tradeService.getTradestrategyService().findById(tradestrategy.getId());
         assertNotNull(result);
     }
 
@@ -637,14 +637,14 @@ public class TradeServiceIT extends TradestrategyBase {
     public void findTradestrategyById() {
 
         Tradestrategy result = this.tradeService
-                .findTradestrategyById(tradestrategy.getId());
+                .getTradestrategyService().findById(tradestrategy.getId());
         assertNotNull(result);
     }
 
     @Test
     public void findTradestrategyByUniqueKeys() {
 
-        Tradestrategy result = this.tradeService.findTradestrategyByUniqueKeys(
+        Tradestrategy result = this.tradeService.getTradestrategyService().findByUniqueKeys(
                 tradestrategy.getTradingday().getOpen(), tradestrategy.getStrategy().getName(),
                 tradestrategy.getContract(), tradestrategy.getPortfolio().getName());
         assertNotNull(result);
@@ -653,7 +653,7 @@ public class TradeServiceIT extends TradestrategyBase {
     @Test
     public void findAllTradestrategies() {
 
-        List<Tradestrategy> result = this.tradeService.findAllTradestrategies();
+        List<Tradestrategy> result = this.tradeService.getTradestrategyService().findAll();
         assertNotNull(result);
     }
 
@@ -743,11 +743,11 @@ public class TradeServiceIT extends TradestrategyBase {
         tradeOrder = this.tradeService.saveTradeOrderfill(tradeOrder);
 
         tradestrategy = this.tradeService
-                .findTradestrategyById(tradestrategy.getId());
+                .getTradestrategyService().findById(tradestrategy.getId());
         assertNotNull(tradestrategy);
         this.tradeService.deleteTradestrategyTradeOrders(tradestrategy);
         tradestrategy = this.tradeService
-                .findTradestrategyById(tradestrategy.getId());
+                .getTradestrategyService().findById(tradestrategy.getId());
         assertTrue(tradestrategy.getTradeOrders().isEmpty());
         assertFalse(tradestrategy.isThereOpenTradePosition());
         assertNull(tradestrategy.getContractLite().getTradePosition());
@@ -828,7 +828,7 @@ public class TradeServiceIT extends TradestrategyBase {
     @Test
     public void findTradestrategyDistinctByDateRange() {
 
-        List<Tradestrategy> result = this.tradeService.findTradestrategyDistinctByDateRange(
+        List<Tradestrategy> result = this.tradeService.getTradestrategyService().findByDateRangeDistinctContract(
                 tradestrategy.getTradingday().getOpen(), tradestrategy.getTradingday().getOpen());
         assertNotNull(result);
     }

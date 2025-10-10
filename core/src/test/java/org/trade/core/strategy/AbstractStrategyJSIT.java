@@ -20,7 +20,7 @@ import org.trade.core.factory.ClassFactory;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradeOrderfill;
 import org.trade.core.persistent.dao.TradePosition;
-import org.trade.core.persistent.dao.Tradestrategy;
+import org.trade.core.persistent.tradestrategy.Tradestrategy;
 import org.trade.core.persistent.dao.series.indicator.StrategyData;
 import org.trade.core.persistent.dao.strategy.IStrategyRule;
 import org.trade.core.persistent.dao.strategy.StrategyRuleJS;
@@ -149,7 +149,7 @@ public class AbstractStrategyJSIT extends TradestrategyBase {
     public void posMgrFHXRBHYRStrategyJS() throws Exception {
 
         deleteAfter = true;
-        tradestrategy = tradeService.findTradestrategyById(tradestrategy.getId());
+        tradestrategy = tradeService.getTradestrategyService().findById(tradestrategy.getId());
         Strategy strategy = (Strategy) DAOStrategy.newInstance().getObject();
         assertTrue(strategy.hasStrategyManager());
         strategy = strategy.getStrategyManager();

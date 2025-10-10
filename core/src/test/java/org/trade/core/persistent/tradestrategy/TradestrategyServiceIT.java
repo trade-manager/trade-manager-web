@@ -7,16 +7,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
 import org.trade.core.persistent.contract.Contract;
-import org.trade.core.persistent.dao.Tradestrategy;
-import org.trade.core.persistent.dao.TradestrategyOrders;
-import org.trade.core.persistent.dao.TradestrategyRepository;
 import org.trade.core.persistent.tradingday.Tradingday;
 import org.trade.core.persistent.tradingday.Tradingdays;
 import org.trade.core.util.time.TradingCalendar;
@@ -42,9 +38,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class TradestrategyServiceIT extends TradestrategyBase {
 
     private final static Logger _log = LoggerFactory.getLogger(TradestrategyServiceIT.class);
-
-    @Autowired
-    private TradestrategyRepository tradestrategyRepository;
 
     private static Tradestrategy tradestrategy;
     private static final String symbol = "TEST-" + TradestrategyBase.getRandomNumber(4);
@@ -85,7 +78,7 @@ public class TradestrategyServiceIT extends TradestrategyBase {
         tradestrategy = this.createTestTradestrategy(symbol);
         assertNotNull(tradestrategy);
 
-        Integer version = tradestrategyRepository.findVersionByTradestrategyId(tradestrategy.getId());
+        Integer version = tradeService.getTradestrategyService().findVersionById(tradestrategy.getId());
         assertNotNull(version);
         _log.info("findVersionById id:{} version: {}", tradestrategy.getId(), version);
     }
@@ -97,15 +90,15 @@ public class TradestrategyServiceIT extends TradestrategyBase {
         assertNotNull(tradestrategy);
         _log.info("findPositionOrdersById id:{}", tradestrategy.getId());
 
-        TradestrategyOrders positionOrders = tradestrategyRepository
-                .findPositionOrdersByTradestrategyId(tradestrategy.getId());
+        TradestrategyOrders positionOrders = tradeService.getTradestrategyService()
+                .findPositionOrdersById(tradestrategy.getId());
         assertNotNull(positionOrders);
         _log.info("findPositionOrdersById PositionOrders id: {}", positionOrders.getId());
         positionOrders.setStatus(TradestrategyStatus.CANCELLED);
 
         positionOrders = tradeService.getAspectService().save(positionOrders);
         assertNotNull(positionOrders);
-        positionOrders = tradestrategyRepository.findPositionOrdersByTradestrategyId(tradestrategy.getId());
+        positionOrders = tradeService.getTradestrategyService().findPositionOrdersById(tradestrategy.getId());
         _log.info("findPositionOrdersById PositionOrders id: {} Status: {}", positionOrders.getId(), positionOrders.getStatus());
         assertEquals(TradestrategyStatus.CANCELLED, positionOrders.getStatus());
     }
@@ -116,7 +109,7 @@ public class TradestrategyServiceIT extends TradestrategyBase {
         tradestrategy = this.createTestTradestrategy(symbol);
         assertNotNull(tradestrategy);
         _log.info("addTradestrategy id:{}", tradestrategy.getId());
-        tradestrategy = tradestrategyRepository.findById(tradestrategy.getId()).get();
+        tradestrategy = tradeService.getTradestrategyService().findById(tradestrategy.getId());
         assertNotNull(tradestrategy);
         _log.info("addTradestrategy id: {}", tradestrategy.getId());
     }
@@ -222,7 +215,7 @@ public class TradestrategyServiceIT extends TradestrategyBase {
         tradestrategy = this.createTestTradestrategy(symbol);
         assertNotNull(tradestrategy);
         _log.info("findTradestrategyDistinctByDateRange id:{}", tradestrategy.getId());
-        List<Tradestrategy> results = tradestrategyRepository.findTradestrategyDistinctByDateRange(
+        List<Tradestrategy> results = tradeService.getTradestrategyService().findByDateRangeDistinctContract(
                 tradestrategy.getTradingday().getOpen(), tradestrategy.getTradingday().getOpen());
 
         for (Tradestrategy value : results) {
@@ -238,7 +231,7 @@ public class TradestrategyServiceIT extends TradestrategyBase {
         tradestrategy = this.createTestTradestrategy(symbol);
         assertNotNull(tradestrategy);
         _log.info("findTradestrategyContractDistinctByDateRange id:{}", tradestrategy.getId());
-        List<Tradestrategy> results = tradestrategyRepository.findTradestrategyContractDistinctByDateRange(
+        List<Tradestrategy> results = tradeService.getTradestrategyService().findByDateRangeDistinctBarsizeAndChartDaysAndStrategy(
                 tradestrategy.getTradingday().getOpen(), tradestrategy.getTradingday().getOpen());
 
         for (Tradestrategy value : results) {

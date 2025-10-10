@@ -2,7 +2,7 @@ package org.trade.ui.models;
 
 import org.trade.base.TableModel;
 import org.trade.core.persistent.contract.Contract;
-import org.trade.core.persistent.dao.Tradestrategy;
+import org.trade.core.persistent.tradestrategy.Tradestrategy;
 import org.trade.core.persistent.portfolio.Portfolio;
 import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.persistent.tradingday.Tradingday;

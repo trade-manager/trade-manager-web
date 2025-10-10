@@ -1,4 +1,4 @@
-package org.trade.core.persistent.dao;
+package org.trade.core.persistent.tradestrategy;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

@@ -24,11 +24,11 @@ import org.trade.core.persistent.account.Account;
 import org.trade.core.persistent.contract.Contract;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradeOrderfill;
-import org.trade.core.persistent.dao.Tradestrategy;
 import org.trade.core.persistent.dao.series.indicator.CandleSeries;
 import org.trade.core.persistent.dao.series.indicator.StrategyData;
 import org.trade.core.persistent.dao.series.indicator.candle.CandleItem;
 import org.trade.core.persistent.portfolio.Portfolio;
+import org.trade.core.persistent.tradestrategy.Tradestrategy;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.CoreUtils;
 import org.trade.core.util.time.TradingCalendar;
@@ -863,10 +863,10 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
                  * request and that do not already exist. Note executionDetails
                  * only contains executions for tradeOrders that do not exist.
                  */
+                Tradestrategy tradestrategy = tradeService.getTradestrategyService().findByRequestId(reqId);
 
-                if (tradeService.existTradestrategyByRequestId(reqId)) {
+                if (null != tradestrategy) {
 
-                    Tradestrategy tradestrategy = tradeService.findTradestrategyByRequestId(reqId);
                     /*
                      * Internal created order have Integer.MAX_VALUE or are
                      * negative as their value, so change the m_orderId to

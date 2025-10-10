@@ -1,4 +1,4 @@
-package org.trade.core.persistent.dao;
+package org.trade.core.persistent.tradestrategy;
 
 import org.trade.core.aspect.Aspect;
 
@@ -12,14 +12,14 @@ import java.io.Serializable;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-public class TradestrategyLiteDTO extends Aspect implements Serializable {
+public class TradestrategyLiteRecord extends Aspect implements Serializable {
 
     @Serial
     private static final long serialVersionUID = -2181676329258092177L;
 
     private String status;
 
-    public TradestrategyLiteDTO() {
+    public TradestrategyLiteRecord() {
     }
 
     /**
@@ -29,7 +29,7 @@ public class TradestrategyLiteDTO extends Aspect implements Serializable {
      * @param id      Integer
      * @param version Integer
      */
-    public TradestrategyLiteDTO(Long id, Integer version) {
+    public TradestrategyLiteRecord(Long id, Integer version) {
 
         setId(id);
         this.version = version;

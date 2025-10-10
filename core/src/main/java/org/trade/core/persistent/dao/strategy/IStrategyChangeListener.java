@@ -1,6 +1,6 @@
 package org.trade.core.persistent.dao.strategy;
 
-import org.trade.core.persistent.dao.Tradestrategy;
+import org.trade.core.persistent.tradestrategy.Tradestrategy;
 
 import java.util.EventListener;
 

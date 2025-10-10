@@ -4,14 +4,10 @@ import org.trade.core.aspect.AspectService;
 import org.trade.core.persistent.account.AccountService;
 import org.trade.core.persistent.candle.CandleService;
 import org.trade.core.persistent.codetype.CodeTypeService;
-import org.trade.core.persistent.contract.Contract;
 import org.trade.core.persistent.contract.ContractService;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradeOrderfill;
 import org.trade.core.persistent.dao.TradePosition;
-import org.trade.core.persistent.dao.Tradestrategy;
-import org.trade.core.persistent.dao.TradestrategyLite;
-import org.trade.core.persistent.dao.TradestrategyOrders;
 import org.trade.core.persistent.dao.series.indicator.CandleSeries;
 import org.trade.core.persistent.portfolio.Portfolio;
 import org.trade.core.persistent.portfolio.PortfolioService;
@@ -21,13 +17,15 @@ import org.trade.core.persistent.strategy.StrategyService;
 import org.trade.core.persistent.tradelogdetail.TradelogDetailService;
 import org.trade.core.persistent.tradelogdetail.TradelogReport;
 import org.trade.core.persistent.tradelogsummary.TradelogSummaryService;
+import org.trade.core.persistent.tradestrategy.Tradestrategy;
+import org.trade.core.persistent.tradestrategy.TradestrategyOrders;
+import org.trade.core.persistent.tradestrategy.TradestrategyService;
 import org.trade.core.persistent.tradingday.Tradingday;
 import org.trade.core.persistent.tradingday.TradingdayService;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
-import java.util.List;
 
 
 /**
@@ -119,6 +117,13 @@ public interface TradeService {
     TradelogSummaryService getTradelogSummaryService();
 
     /**
+     * Method getTradestrategyService.
+     *
+     * @return TradestrategyService
+     */
+    TradestrategyService getTradestrategyService();
+
+    /**
      * Method saveTrading.
      *
      * @param instance Tradingday
@@ -165,37 +170,6 @@ public interface TradeService {
      */
     TradeOrder findTradeOrderById(Long id);
 
-
-    /**
-     * Method findTradestrategyById.
-     *
-     * @param tradestrategy Tradestrategy
-     * @return Tradestrategy
-     */
-    Tradestrategy findTradestrategyById(Tradestrategy tradestrategy);
-
-    /**
-     * Method findTradestrategyById.
-     *
-     * @param id Long
-     * @return Tradestrategy
-     */
-    Tradestrategy findTradestrategyById(Long id);
-
-    /**
-     * @param tradestrategy Tradestrategy
-     * @return TradestrategyLite
-     */
-    TradestrategyLite findTradestrategyLiteByTradestrategy(final Tradestrategy tradestrategy);
-
-    /**
-     * Method existTradestrategyById.
-     *
-     * @param requestId Integer
-     * @return boolean
-     */
-    boolean existTradestrategyByRequestId(final Integer requestId);
-
     /**
      * Method findPositionOrdersByTradestrategyId.
      *
@@ -211,49 +185,6 @@ public interface TradeService {
      * @return PositionOrders
      */
     TradestrategyOrders refreshPositionOrdersByTradestrategyId(TradestrategyOrders positionOrders);
-
-    /**
-     * Method findTradestrategyByUniqueKeys.
-     *
-     * @param open          ZonedDateTime
-     * @param strategy      String
-     * @param contract      Contract
-     * @param portfolioName String
-     * @return Tradestrategy
-     */
-    Tradestrategy findTradestrategyByUniqueKeys(ZonedDateTime open, String strategy, Contract contract,
-                                                String portfolioName);
-
-    /**
-     * @param requestId Integer
-     * @return Tradestrategy
-     */
-    Tradestrategy findTradestrategyByRequestId(Integer requestId);
-
-    /**
-     * Method findTradestrategyDistinctByDateRange.
-     *
-     * @param fromOpen ZonedDateTime
-     * @param toOpen   ZonedDateTime
-     * @return List<Tradestrategy>
-     */
-    List<Tradestrategy> findTradestrategyDistinctByDateRange(ZonedDateTime fromOpen, ZonedDateTime toOpen);
-
-    /**
-     * Method findTradestrategyContractDistinctByDateRange.
-     *
-     * @param fromOpen Date
-     * @param toOpen   Date
-     * @return List<Tradestrategy>
-     */
-    List<Tradestrategy> findTradestrategyContractDistinctByDateRange(ZonedDateTime fromOpen, ZonedDateTime toOpen);
-
-    /**
-     * Method findAllTradestrategies.
-     *
-     * @return List<Tradestrategy>
-     */
-    List<Tradestrategy> findAllTradestrategies();
 
     /**
      * Method findTradePositionById.

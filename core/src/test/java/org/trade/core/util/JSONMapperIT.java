@@ -19,8 +19,8 @@ import org.trade.core.persistent.candle.CandleRecord;
 import org.trade.core.persistent.candle.CandleServiceIT;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradeOrderDTO;
-import org.trade.core.persistent.dao.Tradestrategy;
-import org.trade.core.persistent.dao.TradestrategyLiteDTO;
+import org.trade.core.persistent.tradestrategy.Tradestrategy;
+import org.trade.core.persistent.tradestrategy.TradestrategyLiteRecord;
 import org.trade.core.persistent.dao.series.indicator.candle.CandlePeriod;
 import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.properties.ConfigProperties;
@@ -163,7 +163,7 @@ public class JSONMapperIT extends TradestrategyBase {
         _log.info("IdOrder: {}", tradeOrder.getId());
 
 
-        TradestrategyLiteDTO tradestrategyLiteDto = JSONMapper.convertEntityToRecord(tradestrategy, TradestrategyLiteDTO.class);
+        TradestrategyLiteRecord tradestrategyLiteDto = JSONMapper.convertEntityToRecord(tradestrategy, TradestrategyLiteRecord.class);
         TradeOrderDTO tradeOrderDto = JSONMapper.convertEntityToRecord(tradeOrder, TradeOrderDTO.class);
         tradeOrderDto.setTradestrategyLite(tradestrategyLiteDto);
 
