@@ -210,33 +210,33 @@ public class TradestrategyServiceIT extends TradestrategyBase {
     }
 
     @Test
-    public void findTradestrategyDistinctByDateRange() throws Exception {
+    public void findByDateRangeDistinctContract() throws Exception {
 
         tradestrategy = this.createTestTradestrategy(symbol);
         assertNotNull(tradestrategy);
-        _log.info("findTradestrategyDistinctByDateRange id:{}", tradestrategy.getId());
+        _log.info("findByDateRangeDistinctContract id:{}", tradestrategy.getId());
         List<Tradestrategy> results = tradeService.getTradestrategyService().findByDateRangeDistinctContract(
                 tradestrategy.getTradingday().getOpen(), tradestrategy.getTradingday().getOpen());
 
         for (Tradestrategy value : results) {
 
-            _log.info("BarSize: {} ChartDays: {} Strategy: {}", value.getBarSize(), value.getChartDays(), value.getStrategy().getName());
+            _log.info("BarSize: {} ChartDays: {} Strategy: {}", value.getBarSize(), value.getChartDays(), value.getContract().getSymbol());
         }
         assertNotNull(results);
     }
 
     @Test
-    public void findTradestrategyContractDistinctByDateRange() throws Exception {
+    public void findByDateRangeDistinctBarsizeAndChartDaysAndStrategy() throws Exception {
 
         tradestrategy = this.createTestTradestrategy(symbol);
         assertNotNull(tradestrategy);
-        _log.info("findTradestrategyContractDistinctByDateRange id:{}", tradestrategy.getId());
-        List<Tradestrategy> results = tradeService.getTradestrategyService().findByDateRangeDistinctBarsizeAndChartDaysAndStrategy(
+        _log.info("findByDateRangeDistinctBarsizeAndChartDaysAndStrategy id:{}", tradestrategy.getId());
+        List<Tradestrategy> results = tradeService.getTradestrategyService().findByDateRangeDistinctBarSizeAndChartDaysAndStrategy(
                 tradestrategy.getTradingday().getOpen(), tradestrategy.getTradingday().getOpen());
 
         for (Tradestrategy value : results) {
 
-            _log.info("Contract: {}", value.getContract().getSymbol());
+            _log.info("Contract: {}", value.getStrategy().getName());
         }
         assertNotNull(results);
     }

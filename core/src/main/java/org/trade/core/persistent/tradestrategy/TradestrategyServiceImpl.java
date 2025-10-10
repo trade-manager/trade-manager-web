@@ -73,8 +73,7 @@ public class TradestrategyServiceImpl implements TradestrategyService {
      */
     public TradestrategyLite findByTradestrategy(Tradestrategy tradestrategy) {
 
-        TradestrategyLite instance = entityManager.find(TradestrategyLite.class, tradestrategy.getId());
-        return instance;
+        return entityManager.find(TradestrategyLite.class, tradestrategy.getId());
     }
 
     /**
@@ -83,6 +82,7 @@ public class TradestrategyServiceImpl implements TradestrategyService {
      * @param tradestrategyId Long
      * @return Integer
      */
+    @Transactional
     public Integer findVersionById(Long tradestrategyId) {
 
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
@@ -115,6 +115,7 @@ public class TradestrategyServiceImpl implements TradestrategyService {
         return entityManager.find(TradestrategyOrders.class, tradestrategyId);
     }
 
+    @Transactional
     public Tradestrategy findByTradeOrder(TradeOrder tradeOrder) {
 
         Tradestrategy tradestrategy = null;
@@ -129,6 +130,7 @@ public class TradestrategyServiceImpl implements TradestrategyService {
         return tradestrategy;
     }
 
+    @Transactional
     public Tradestrategy findByUniqueKeys(ZonedDateTime open, String strategyName, Contract contract,
                                           String portfolioName) {
 
@@ -178,7 +180,8 @@ public class TradestrategyServiceImpl implements TradestrategyService {
 
     }
 
-    public List<Tradestrategy> findByDateRangeDistinctBarsizeAndChartDaysAndStrategy(ZonedDateTime fromOpen, ZonedDateTime toOpen) {
+    @Transactional
+    public List<Tradestrategy> findByDateRangeDistinctBarSizeAndChartDaysAndStrategy(ZonedDateTime fromOpen, ZonedDateTime toOpen) {
 
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Tradestrategy> query = builder.createQuery(Tradestrategy.class);
@@ -206,9 +209,9 @@ public class TradestrategyServiceImpl implements TradestrategyService {
         TypedQuery<Tradestrategy> typedQuery = entityManager.createQuery(query);
         List<Tradestrategy> items = typedQuery.getResultList();
         return items;
-
     }
 
+    @Transactional
     public List<Tradestrategy> findByDateRangeDistinctContract(ZonedDateTime fromOpen,
                                                                ZonedDateTime toOpen) {
 
@@ -248,6 +251,7 @@ public class TradestrategyServiceImpl implements TradestrategyService {
      * @param tradingday Tradingday
      * @return List<Tradestrategy>
      */
+    @Transactional
     public List<Tradestrategy> findByTradingday(Tradingday tradingday) {
 
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();

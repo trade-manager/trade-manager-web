@@ -20,7 +20,6 @@ import org.trade.core.persistent.dao.series.indicator.candle.CandleItem;
 import org.trade.core.persistent.rule.Rule;
 import org.trade.core.persistent.tradestrategy.Tradestrategy;
 import org.trade.core.persistent.tradestrategy.TradestrategyRecord;
-import org.trade.core.persistent.tradingday.TradingdayRecord;
 import org.trade.core.util.CoreUtils;
 import org.trade.core.util.JSONMapper;
 import org.trade.core.util.time.TradingCalendar;
@@ -355,13 +354,11 @@ public class StrategyRuleJS extends AbstractStrategyRule {
         try {
 
             Tradestrategy tradestrategy = this.getTradestrategy();
-            TradingdayRecord tradingdayRecord = TradingdayRecord.from(tradestrategy.getTradingday());
-            TradestrategyRecord tradestrategyDto = JSONMapper.convertEntityToRecord(tradestrategy, TradestrategyRecord.class);
-            tradestrategyDto.setTradingday(tradingdayRecord);
+            TradestrategyRecord tradestrategyRecord = TradestrategyRecord.from(tradestrategy);
 
-            if (null != tradestrategyDto) {
+            if (null != tradestrategyRecord) {
 
-                result.put("data", new JSONObject(JSONMapper.getJSONString(tradestrategyDto)));
+                result.put("data", new JSONObject(JSONMapper.getJSONString(tradestrategyRecord)));
             } else {
 
                 result.put("error", true);

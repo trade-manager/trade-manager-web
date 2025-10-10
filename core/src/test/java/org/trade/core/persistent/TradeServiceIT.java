@@ -828,7 +828,7 @@ public class TradeServiceIT extends TradestrategyBase {
     @Test
     public void findTradestrategyDistinctByDateRange() {
 
-        List<Tradestrategy> result = this.tradeService.getTradestrategyService().findByDateRangeDistinctContract(
+        List<Tradestrategy> result = this.tradeService.getTradestrategyService().findByDateRangeDistinctBarSizeAndChartDaysAndStrategy(
                 tradestrategy.getTradingday().getOpen(), tradestrategy.getTradingday().getOpen());
         assertNotNull(result);
     }

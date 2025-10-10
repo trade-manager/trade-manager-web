@@ -409,10 +409,10 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                 ZonedDateTime toOpen = tradingdays.getTradingdays().getLast()
                         .getOpen();
                 List<Tradestrategy> strategyBarSizeChartHistItems = tradeService
-                        .getTradestrategyService().findByDateRangeDistinctContract(fromOpen, toOpen);
+                        .getTradestrategyService().findByDateRangeDistinctBarSizeAndChartDaysAndStrategy(fromOpen, toOpen);
 
                 List<Tradestrategy> contractsItems = tradeService
-                        .getTradestrategyService().findByDateRangeDistinctBarsizeAndChartDaysAndStrategy(fromOpen, toOpen);
+                        .getTradestrategyService().findByDateRangeDistinctContract(fromOpen, toOpen);
 
                 FilterBackTestPane filterTradestrategyPane = new FilterBackTestPane(fromOpen, toOpen,
                         strategyBarSizeChartHistItems, contractsItems);

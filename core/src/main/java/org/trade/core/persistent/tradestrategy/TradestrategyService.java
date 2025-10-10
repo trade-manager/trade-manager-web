@@ -82,13 +82,13 @@ public interface TradestrategyService {
                                    String portfolioName);
 
     /**
-     * Method findByDateRangeDistinctBarsizeAndChartDaysAndStrategy.
+     * Method findByDateRangeDistinctBarSizeAndChartDaysAndStrategy.
      *
      * @param fromOpen ZonedDateTime
      * @param toOpen   ZonedDateTime
      * @return List<Tradestrategy>
      */
-    List<Tradestrategy> findByDateRangeDistinctBarsizeAndChartDaysAndStrategy(ZonedDateTime fromOpen, ZonedDateTime toOpen);
+    List<Tradestrategy> findByDateRangeDistinctBarSizeAndChartDaysAndStrategy(ZonedDateTime fromOpen, ZonedDateTime toOpen);
 
     /**
      * Method findByDateRangeDistinctContract.

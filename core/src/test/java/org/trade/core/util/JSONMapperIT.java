@@ -23,6 +23,7 @@ import org.trade.core.persistent.dao.series.indicator.candle.CandlePeriod;
 import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.persistent.tradestrategy.Tradestrategy;
 import org.trade.core.persistent.tradestrategy.TradestrategyLiteRecord;
+import org.trade.core.persistent.tradestrategy.TradestrategyRecord;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.time.RegularTimePeriod;
 import org.trade.core.util.time.TradingCalendar;
@@ -135,6 +136,17 @@ public class JSONMapperIT extends TradestrategyBase {
     }
 
     @Test
+    public void mapTradestrategyJSON() throws JsonProcessingException {
+
+        Tradestrategy tradestrategy = tradeService.getTradestrategyService().findById(this.tradestrategy.getId());
+        TradestrategyRecord tradestrategyRecord =TradestrategyRecord.from(tradestrategy);
+        String json = JSONMapper.getJSONString(tradestrategyRecord);
+
+        TradestrategyLiteRecord tradestrategyLiteRecord = TradestrategyLiteRecord.from(this.tradestrategy);
+        json = JSONMapper.getJSONString(tradestrategyLiteRecord);
+    }
+
+    @Test
     public void mapTradeOrder() throws Exception {
 
         String side = tradestrategy.getSide();
@@ -162,10 +174,9 @@ public class JSONMapperIT extends TradestrategyBase {
         assertNotNull(tradeOrder);
         _log.info("IdOrder: {}", tradeOrder.getId());
 
-
-        TradestrategyLiteRecord tradestrategyLiteDto = JSONMapper.convertEntityToRecord(tradestrategy, TradestrategyLiteRecord.class);
+        TradestrategyLiteRecord tradestrategyLiteRecord = TradestrategyLiteRecord.from(tradestrategy);
         TradeOrderDTO tradeOrderDto = JSONMapper.convertEntityToRecord(tradeOrder, TradeOrderDTO.class);
-        tradeOrderDto.setTradestrategyLite(tradestrategyLiteDto);
+        tradeOrderDto.setTradestrategyLite(tradestrategyLiteRecord);
 
         String json = JSONMapper.getJSONString(tradeOrderDto);
         _log.info("mapTradeOrder tradeOrderDto JSON: {}", json.toString());
