@@ -10,11 +10,11 @@ import org.trade.core.persistent.contract.Contract;
 import org.trade.core.persistent.contract.ContractLite;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradePosition;
-import org.trade.core.persistent.tradestrategy.Tradestrategy;
 import org.trade.core.persistent.dao.series.indicator.StrategyData;
 import org.trade.core.persistent.portfolio.Portfolio;
 import org.trade.core.persistent.rule.Rule;
 import org.trade.core.persistent.strategy.Strategy;
+import org.trade.core.persistent.tradestrategy.Tradestrategy;
 import org.trade.core.persistent.tradingday.Tradingday;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.AccountType;
@@ -174,7 +174,13 @@ public class TradestrategyBase {
         this.addRecord(tradingday.getTradestrategies().getLast().getContract());
         this.addRecord(tradingday);
         Tradestrategy instance = tradingday.getTradestrategies().getLast();
+        StrategyData strategyData = instance.getStrategyData();
         instance = tradeService.getTradestrategyService().findById(instance.getId());
+
+        if (null != instance) {
+
+            instance.setStrategyData(strategyData);
+        }
         instance.setStrategyData(StrategyData.create(instance));
         return instance;
     }

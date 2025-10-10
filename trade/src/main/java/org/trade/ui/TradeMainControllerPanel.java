@@ -20,8 +20,6 @@ import org.trade.core.persistent.codetype.CodeValue;
 import org.trade.core.persistent.contract.Contract;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradePosition;
-import org.trade.core.persistent.tradestrategy.Tradestrategy;
-import org.trade.core.persistent.tradestrategy.TradestrategyOrders;
 import org.trade.core.persistent.dao.strategy.IStrategyChangeListener;
 import org.trade.core.persistent.dao.strategy.IStrategyRule;
 import org.trade.core.persistent.dao.strategy.StrategyRuleException;
@@ -29,6 +27,8 @@ import org.trade.core.persistent.dao.strategy.StrategyRuleJS;
 import org.trade.core.persistent.portfolio.Portfolio;
 import org.trade.core.persistent.rule.Rule;
 import org.trade.core.persistent.strategy.Strategy;
+import org.trade.core.persistent.tradestrategy.Tradestrategy;
+import org.trade.core.persistent.tradestrategy.TradestrategyOrders;
 import org.trade.core.persistent.tradingday.Tradingday;
 import org.trade.core.persistent.tradingday.Tradingdays;
 import org.trade.core.properties.ConfigProperties;
@@ -313,6 +313,11 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
 
             Tradestrategy tradestrategy = tradeService.getTradestrategyService().findById(tradeOrder.getTradestrategy().getId());
 
+            if (null != instance) {
+
+                tradestrategy.setStrategyData(tradeOrder.getTradestrategy().getStrategyData());
+            }
+
             // Check the order is valid.
             instance.validate();
             submittedTradeOrder = brokerModel.onPlaceOrder(tradestrategy.getContract(), instance);
@@ -553,6 +558,11 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                 for (Tradestrategy tradestrategy : todayTradingday.getTradestrategies()) {
 
                     Tradestrategy instance = tradeService.getTradestrategyService().findById(tradestrategy.getId());
+
+                    if (null != instance) {
+
+                        instance.setStrategyData(tradestrategy.getStrategyData());
+                    }
 
                     for (TradeOrder todayTradeOrder : instance.getTradeOrders()) {
 
@@ -1356,6 +1366,12 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
             if (null != codeType) {
 
                 Tradestrategy instance = tradeService.getTradestrategyService().findById(tradestrategy.getId());
+
+                if (null != instance) {
+
+                    instance.setStrategyData(tradestrategy.getStrategyData());
+                }
+
                 CodeAttributePanel codeAttributePanel = new CodeAttributePanel(codeType, instance.getCodeValues());
 
                 if (null != codeAttributePanel) {

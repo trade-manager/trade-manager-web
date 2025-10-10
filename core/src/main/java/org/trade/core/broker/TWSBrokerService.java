@@ -1767,7 +1767,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
                      */
                     Tradestrategy tradestrategy = getPersistentModel().getTradestrategyService().findByRequestId(getReqId());
 
-                    if (null != tradestrategy ) {
+                    if (null != tradestrategy) {
 
                         /*
                          * Internal created order have Integer.MAX_VALUE or are

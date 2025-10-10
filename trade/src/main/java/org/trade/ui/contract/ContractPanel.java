@@ -15,11 +15,11 @@ import org.trade.core.persistent.candle.Candle;
 import org.trade.core.persistent.contract.Contract;
 import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.dao.TradePosition;
-import org.trade.core.persistent.tradestrategy.Tradestrategy;
-import org.trade.core.persistent.tradestrategy.TradestrategyOrders;
 import org.trade.core.persistent.dao.series.indicator.StrategyData;
 import org.trade.core.persistent.portfolio.Portfolio;
 import org.trade.core.persistent.strategy.Strategy;
+import org.trade.core.persistent.tradestrategy.Tradestrategy;
+import org.trade.core.persistent.tradestrategy.TradestrategyOrders;
 import org.trade.core.persistent.tradingday.Tradingdays;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.CoreUtils;
@@ -856,6 +856,12 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
                  * Refresh the Tradestrategy this will get the latest orders.
                  */
                 tradestrategy = this.tradeService.getTradestrategyService().findById(currentTab.getTradestrategy().getId());
+
+                if (null != tradestrategy) {
+
+                    tradestrategy.setStrategyData(currentTab.getTradestrategy().getStrategyData());
+                }
+
                 tradestrategyOrders = this.tradeService
                         .findPositionOrdersByTradestrategyId(currentTab.getTradestrategy().getId());
                 currentTab.setTradestrategy(tradestrategy);

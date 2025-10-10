@@ -72,19 +72,20 @@ public interface TradestrategyService {
     /**
      * Method findByUniqueKeys.
      *
-     * @param open ZonedDateTime
-     * @param strategyName String
-     * @param contract Contract
+     * @param open          ZonedDateTime
+     * @param strategyName  String
+     * @param contract      Contract
      * @param portfolioName String
      * @return Tradestrategy
      */
     Tradestrategy findByUniqueKeys(ZonedDateTime open, String strategyName, Contract contract,
                                    String portfolioName);
+
     /**
      * Method findByDateRangeDistinctBarsizeAndChartDaysAndStrategy.
      *
      * @param fromOpen ZonedDateTime
-     * @param toOpen ZonedDateTime
+     * @param toOpen   ZonedDateTime
      * @return List<Tradestrategy>
      */
     List<Tradestrategy> findByDateRangeDistinctBarsizeAndChartDaysAndStrategy(ZonedDateTime fromOpen, ZonedDateTime toOpen);
@@ -93,10 +94,11 @@ public interface TradestrategyService {
      * Method findByDateRangeDistinctContract.
      *
      * @param fromOpen ZonedDateTime
-     * @param toOpen ZonedDateTime
+     * @param toOpen   ZonedDateTime
      * @return List<Tradestrategy>
      */
     List<Tradestrategy> findByDateRangeDistinctContract(ZonedDateTime fromOpen, ZonedDateTime toOpen);
+
     /**
      * Method findByTradingday.
      *
