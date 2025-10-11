@@ -13,11 +13,11 @@ import org.trade.core.persistent.ServiceException;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.candle.Candle;
 import org.trade.core.persistent.contract.Contract;
-import org.trade.core.persistent.dao.TradeOrder;
-import org.trade.core.persistent.dao.TradePosition;
 import org.trade.core.persistent.dao.series.indicator.StrategyData;
 import org.trade.core.persistent.portfolio.Portfolio;
 import org.trade.core.persistent.strategy.Strategy;
+import org.trade.core.persistent.tradeorder.TradeOrder;
+import org.trade.core.persistent.tradeposition.TradePosition;
 import org.trade.core.persistent.tradestrategy.Tradestrategy;
 import org.trade.core.persistent.tradestrategy.TradestrategyOrders;
 import org.trade.core.persistent.tradingday.Tradingdays;
@@ -935,7 +935,7 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
                 }
                 if (null != prevIdTradePosition) {
 
-                    TradePosition tradePosition = this.tradeService.findTradePositionById(prevIdTradePosition);
+                    TradePosition tradePosition = this.tradeService.getTradePositionService().findById(prevIdTradePosition);
                     unRealizedPL = tradePosition.getUnRealizedProfit(tradestrategy.getStrategyData().getBaseCandleSeries().getContract().getLastPrice()).doubleValue();
                     realizedPL = tradePosition.getRealizedProfit().doubleValue();
                     netValue = tradePosition.getTotalNetValue().doubleValue();

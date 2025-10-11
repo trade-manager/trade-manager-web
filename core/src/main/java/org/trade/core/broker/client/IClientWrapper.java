@@ -1,8 +1,8 @@
 package org.trade.core.broker.client;
 
 import org.trade.core.persistent.contract.Contract;
-import org.trade.core.persistent.dao.TradeOrder;
-import org.trade.core.persistent.dao.TradeOrderfill;
+import org.trade.core.persistent.tradeorder.TradeOrder;
+import org.trade.core.persistent.tradeorderfill.TradeOrderfill;
 import org.trade.core.persistent.tradestrategy.Tradestrategy;
 
 /**

@@ -21,12 +21,12 @@ import org.trade.core.broker.client.Broker;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.account.Account;
 import org.trade.core.persistent.contract.Contract;
-import org.trade.core.persistent.dao.TradeOrder;
-import org.trade.core.persistent.dao.TradeOrderfill;
 import org.trade.core.persistent.dao.series.indicator.CandleSeries;
 import org.trade.core.persistent.dao.series.indicator.StrategyData;
 import org.trade.core.persistent.dao.series.indicator.candle.CandleItem;
 import org.trade.core.persistent.portfolio.Portfolio;
+import org.trade.core.persistent.tradeorder.TradeOrder;
+import org.trade.core.persistent.tradeorderfill.TradeOrderfill;
 import org.trade.core.persistent.tradestrategy.Tradestrategy;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.CoreUtils;
@@ -1107,7 +1107,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
 
         public void orderStatus(com.ib.client.OrderStatus status, double filled, double remaining, double avgFillPrice, long permId, int parentId, double lastFillPrice, int clientId, String whyHeld) {
             try {
-                TradeOrder instance = getPersistentModel().findTradeOrderByKey(getOrderKey());
+                TradeOrder instance = getPersistentModel().getTradeOrderService().findByOrderKey(getOrderKey());
                 if (null == instance) {
                     error(getOrderKey(), 3170, "Warning Order not found for Order Key: " + getOrderKey() + " make sure Client ID: "
                             + clientId + " is not the master in TWS. On orderStatus update.");
@@ -1691,7 +1691,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
 
                 logExecution(execution);
                 TradeOrder instance = getPersistentModel()
-                        .findTradeOrderByKey(Math.abs(execution.orderId()));
+                        .getTradeOrderService().findByOrderKey(Math.abs(execution.orderId()));
 
                 if (null == instance) {
 
@@ -1700,7 +1700,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
                      * then we have made a request for order executions with a
                      * different clientId than the one which created this order.
                      */
-                    if (null == getPersistentModel().findTradeOrderfillByExecId(execution.execId())) {
+                    if (null == getPersistentModel().getTradeOrderfillService().findByExecId(execution.execId())) {
 
                         executionDetails.put(execution.execId(), execution);
                     }
@@ -1898,7 +1898,7 @@ public class TWSBrokerService extends AbstractBrokerModel {
                             tradeOrder.setCommission(new BigDecimal(totalComms));
                             tradeOrder = getPersistentModel().saveTradeOrderfill(tradeOrder);
                             TradeOrder instance = getPersistentModel()
-                                    .findTradeOrderByKey(tradeOrder.getOrderKey());
+                                    .getTradeOrderService().findByOrderKey(tradeOrder.getOrderKey());
 
                             // Let the controller know an order was filled
                             if (tradeOrder.getIsFilled()) {
@@ -1923,12 +1923,12 @@ public class TWSBrokerService extends AbstractBrokerModel {
             try {
 
                 logCommissionReport(commissionReport);
-                TradeOrderfill instance = getPersistentModel().findTradeOrderfillByExecId(commissionReport.m_execId);
+                TradeOrderfill instance = getPersistentModel().getTradeOrderfillService().findByExecId(commissionReport.m_execId);
 
                 if (null != instance) {
 
                     TradeOrder tradeOrder = getPersistentModel()
-                            .findTradeOrderByKey(instance.getTradeOrder().getOrderKey());
+                            .getTradeOrderService().findByOrderKey(instance.getTradeOrder().getOrderKey());
 
                     for (TradeOrderfill tradeOrderfill : tradeOrder.getTradeOrderfills()) {
 

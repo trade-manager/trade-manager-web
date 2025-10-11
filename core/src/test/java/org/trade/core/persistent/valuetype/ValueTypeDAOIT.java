@@ -11,7 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
-import org.trade.core.persistent.dao.Entrylimit;
+import org.trade.core.aspect.Entrylimit;
 import org.trade.core.valuetype.ChartDays;
 import org.trade.core.valuetype.DAODecode;
 import org.trade.core.valuetype.DAOEntryLimit;

@@ -2,21 +2,21 @@ package org.trade.core.persistent.dao.strategy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.trade.core.aspect.Entrylimit;
 import org.trade.core.broker.BrokerModelException;
 import org.trade.core.broker.IBrokerModel;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.account.Account;
 import org.trade.core.persistent.candle.Candle;
 import org.trade.core.persistent.contract.Contract;
-import org.trade.core.persistent.dao.Entrylimit;
-import org.trade.core.persistent.dao.TradeOrder;
-import org.trade.core.persistent.dao.TradePosition;
 import org.trade.core.persistent.dao.series.SeriesChangeEvent;
 import org.trade.core.persistent.dao.series.SeriesChangeListener;
 import org.trade.core.persistent.dao.series.indicator.CandleSeries;
 import org.trade.core.persistent.dao.series.indicator.StrategyData;
 import org.trade.core.persistent.dao.series.indicator.candle.CandleItem;
 import org.trade.core.persistent.dao.series.indicator.candle.CandlePeriod;
+import org.trade.core.persistent.tradeorder.TradeOrder;
+import org.trade.core.persistent.tradeposition.TradePosition;
 import org.trade.core.persistent.tradestrategy.Tradestrategy;
 import org.trade.core.persistent.tradestrategy.TradestrategyOrders;
 import org.trade.core.util.CoreUtils;
@@ -316,7 +316,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
                 throw new StrategyRuleException(1, 200, "Order Key cannot be null");
             }
 
-            TradeOrder tradeOrder = tradeService.findTradeOrderByKey(orderKey);
+            TradeOrder tradeOrder = tradeService.getTradeOrderService().findByOrderKey(orderKey);
 
             if (null == action) {
 

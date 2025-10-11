@@ -20,15 +20,15 @@ import org.trade.core.persistent.candle.Candle;
 import org.trade.core.persistent.codetype.CodeType;
 import org.trade.core.persistent.contract.Contract;
 import org.trade.core.persistent.contract.ContractLite;
-import org.trade.core.persistent.dao.TradeOrder;
-import org.trade.core.persistent.dao.TradeOrderfill;
-import org.trade.core.persistent.dao.TradePosition;
 import org.trade.core.persistent.dao.series.indicator.IIndicatorDataset;
 import org.trade.core.persistent.dao.series.indicator.candle.CandleItem;
 import org.trade.core.persistent.portfolio.Portfolio;
 import org.trade.core.persistent.rule.Rule;
 import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.persistent.tradelogdetail.TradelogReport;
+import org.trade.core.persistent.tradeorder.TradeOrder;
+import org.trade.core.persistent.tradeorderfill.TradeOrderfill;
+import org.trade.core.persistent.tradeposition.TradePosition;
 import org.trade.core.persistent.tradestrategy.Tradestrategy;
 import org.trade.core.persistent.tradestrategy.TradestrategyOrders;
 import org.trade.core.persistent.tradingday.Tradingday;
@@ -210,7 +210,7 @@ public class TradeServiceIT extends TradestrategyBase {
         /*
          * Update the order to Submitted via openOrder(), orderStatus
          */
-        TradeOrder tradeOrderOpenPosition = this.tradeService.findTradeOrderByKey(tradeOrder.getOrderKey());
+        TradeOrder tradeOrderOpenPosition = this.tradeService.getTradeOrderService().findByOrderKey(tradeOrder.getOrderKey());
         tradeOrderOpenPosition.setStatus(OrderStatus.SUBMITTED);
         tradeOrderOpenPosition = this.tradeService.saveTradeOrder(tradeOrderOpenPosition);
         assertNotNull(tradeOrderOpenPosition.getId());
@@ -219,7 +219,7 @@ public class TradeServiceIT extends TradestrategyBase {
          * Fill the order via execDetails()
          */
         TradeOrder tradeOrderFilled = this.tradeService
-                .findTradeOrderByKey(tradeOrderOpenPosition.getOrderKey());
+                .getTradeOrderService().findByOrderKey(tradeOrderOpenPosition.getOrderKey());
         Execution execution = new Execution();
         execution.side("BOT");
         execution.time(TradingCalendar.getFormattedDate(TradingCalendar.getDateTimeNowMarketTimeZone(),
@@ -244,7 +244,7 @@ public class TradeServiceIT extends TradestrategyBase {
          * Update the status to filled. Check to see if anything has changed
          * as this method gets fired twice on order fills.
          */
-        TradeOrder tradeOrderFilledStatus = this.tradeService.findTradeOrderByKey(tradeOrder.getOrderKey());
+        TradeOrder tradeOrderFilledStatus = this.tradeService.getTradeOrderService().findByOrderKey(tradeOrder.getOrderKey());
         tradeOrderFilledStatus.setStatus(OrderStatus.FILLED);
         double commisionAmt = tradeOrderFilledStatus.getFilledQuantity() * 0.005d;
 
@@ -329,7 +329,7 @@ public class TradeServiceIT extends TradestrategyBase {
         for (TradeOrder tradeOrderOca : positionOrders.getTradeOrders()) {
 
             TradeOrder tradeOrderOcaUnsubmit = this.tradeService
-                    .findTradeOrderByKey(tradeOrderOca.getOrderKey());
+                    .getTradeOrderService().findByOrderKey(tradeOrderOca.getOrderKey());
 
             if (tradeOrderOcaUnsubmit.getStatus().equals(OrderStatus.UNSUBMIT)
                     && (null != tradeOrderOcaUnsubmit.getOcaGroupName())) {
@@ -349,7 +349,7 @@ public class TradeServiceIT extends TradestrategyBase {
         for (TradeOrder tradeOrderOca : positionOrders.getTradeOrders()) {
 
             TradeOrder tradeOrderOcaSubmit = this.tradeService
-                    .findTradeOrderByKey(tradeOrderOca.getOrderKey());
+                    .getTradeOrderService().findByOrderKey(tradeOrderOca.getOrderKey());
 
             if (OrderStatus.SUBMITTED.equals(tradeOrderOcaSubmit.getStatus())
                     && (null != tradeOrderOcaSubmit.getOcaGroupName())) {
@@ -392,7 +392,7 @@ public class TradeServiceIT extends TradestrategyBase {
         for (TradeOrder tradeOrderOca : positionOrders.getTradeOrders()) {
 
             TradeOrder tradeOrderOcaSubmit = this.tradeService
-                    .findTradeOrderByKey(tradeOrderOca.getOrderKey());
+                    .getTradeOrderService().findByOrderKey(tradeOrderOca.getOrderKey());
             if (tradeOrderOcaSubmit.getStatus().equals(OrderStatus.SUBMITTED)
                     && (null != tradeOrderOcaSubmit.getOcaGroupName())) {
 
@@ -663,7 +663,7 @@ public class TradeServiceIT extends TradestrategyBase {
         TradePosition tradePosition = new TradePosition(tradestrategy.getContractLite(),
                 TradingCalendar.getDateTimeNowMarketTimeZone(), Side.BOT);
         TradePosition resultTrade = this.tradeService.getAspectService().save(tradePosition);
-        TradePosition result = this.tradeService.findTradePositionById(resultTrade.getId());
+        TradePosition result = this.tradeService.getTradePositionService().findById(resultTrade.getId());
         assertNotNull(result);
     }
 
@@ -761,7 +761,7 @@ public class TradeServiceIT extends TradestrategyBase {
                 price.add(new BigDecimal(4)), TradingCalendar.getDateTimeNowMarketTimeZone());
         tradeOrder.setOrderKey((BigDecimal.valueOf(Math.random() * 1000000)).intValue());
         tradeOrder = this.tradeService.saveTradeOrder(tradeOrder);
-        tradeOrder = this.tradeService.findTradeOrderById(tradeOrder.getId());
+        tradeOrder = this.tradeService.getTradeOrderService().findById(tradeOrder.getId());
         assertNotNull(tradeOrder);
     }
 
@@ -773,7 +773,7 @@ public class TradeServiceIT extends TradestrategyBase {
                 price.add(new BigDecimal(4)), TradingCalendar.getDateTimeNowMarketTimeZone());
         tradeOrder.setOrderKey((BigDecimal.valueOf(Math.random() * 1000000)).intValue());
         TradeOrder resultTradeOrder = this.tradeService.saveTradeOrder(tradeOrder);
-        TradeOrder result = this.tradeService.findTradeOrderByKey(resultTradeOrder.getOrderKey());
+        TradeOrder result = this.tradeService.getTradeOrderService().findByOrderKey(resultTradeOrder.getOrderKey());
         assertNotNull(result);
     }
 
@@ -790,14 +790,14 @@ public class TradeServiceIT extends TradestrategyBase {
         tradeOrder.addTradeOrderfill(tradeOrderfill);
         TradeOrder resultTradeOrder = this.tradeService.saveTradeOrder(tradeOrder);
         TradeOrderfill result = this.tradeService
-                .findTradeOrderfillByExecId(resultTradeOrder.getTradeOrderfills().getFirst().getExecId());
+                .getTradeOrderfillService().findByExecId(resultTradeOrder.getTradeOrderfills().getFirst().getExecId());
         assertNotNull(result);
     }
 
     @Test
     public void findTradeOrderByMaxKey() {
 
-        Integer result = this.tradeService.findTradeOrderByMaxKey();
+        Integer result = this.tradeService.getTradeOrderService().findByMaxOrderKey();
         assertNotNull(result);
     }
 

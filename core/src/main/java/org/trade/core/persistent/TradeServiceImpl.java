@@ -2,7 +2,6 @@ package org.trade.core.persistent;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,12 +15,6 @@ import org.trade.core.persistent.candle.CandleService;
 import org.trade.core.persistent.codetype.CodeTypeService;
 import org.trade.core.persistent.contract.Contract;
 import org.trade.core.persistent.contract.ContractService;
-import org.trade.core.persistent.dao.TradeOrder;
-import org.trade.core.persistent.dao.TradeOrderRepository;
-import org.trade.core.persistent.dao.TradeOrderfill;
-import org.trade.core.persistent.dao.TradeOrderfillRepository;
-import org.trade.core.persistent.dao.TradePosition;
-import org.trade.core.persistent.dao.TradePositionRepository;
 import org.trade.core.persistent.dao.series.indicator.CandleSeries;
 import org.trade.core.persistent.dao.series.indicator.candle.CandleItem;
 import org.trade.core.persistent.portfolio.Portfolio;
@@ -34,6 +27,12 @@ import org.trade.core.persistent.tradelogdetail.TradelogDetailService;
 import org.trade.core.persistent.tradelogdetail.TradelogReport;
 import org.trade.core.persistent.tradelogsummary.TradelogSummary;
 import org.trade.core.persistent.tradelogsummary.TradelogSummaryService;
+import org.trade.core.persistent.tradeorder.TradeOrder;
+import org.trade.core.persistent.tradeorder.TradeOrderService;
+import org.trade.core.persistent.tradeorderfill.TradeOrderfill;
+import org.trade.core.persistent.tradeorderfill.TradeOrderfillService;
+import org.trade.core.persistent.tradeposition.TradePosition;
+import org.trade.core.persistent.tradeposition.TradePositionService;
 import org.trade.core.persistent.tradestrategy.Tradestrategy;
 import org.trade.core.persistent.tradestrategy.TradestrategyOrders;
 import org.trade.core.persistent.tradestrategy.TradestrategyService;
@@ -67,15 +66,6 @@ public class TradeServiceImpl implements TradeService {
 
     private final static Logger _log = LoggerFactory.getLogger(TradeServiceImpl.class);
 
-    @Autowired
-    private TradeOrderfillRepository tradeOrderfillRepository;
-
-    @Autowired
-    private TradeOrderRepository tradeOrderRepository;
-
-    @Autowired
-    private TradePositionRepository tradePositionRepository;
-
     private final AspectService aspectService;
     private final TradingdayService tradingdayService;
     private final CodeTypeService codeTypeService;
@@ -88,10 +78,13 @@ public class TradeServiceImpl implements TradeService {
     private final TradelogDetailService tradelogDetailService;
     private final TradelogSummaryService tradelogSummaryService;
     private final TradestrategyService tradestrategyService;
+    private final TradeOrderService tradeOrderService;
+    private final TradeOrderfillService tradeOrderfillService;
+    private final TradePositionService tradePositionService;
 
     public TradeServiceImpl(final AspectService aspectService, final TradingdayService tradingdayService, final CodeTypeService codeTypeService, final AccountService accountService, final PortfolioService portfolioService,
                             final RuleService ruleService, final StrategyService strategyService, final ContractService contractService, final CandleService candleService, final TradelogDetailService tradelogDetailService,
-                            final TradelogSummaryService tradelogSummaryService, final TradestrategyService tradestrategyService) {
+                            final TradelogSummaryService tradelogSummaryService, final TradestrategyService tradestrategyService, final TradeOrderService tradeOrderService, final TradeOrderfillService tradeOrderfillService, final TradePositionService tradePositionService) {
 
         this.aspectService = aspectService;
         this.tradingdayService = tradingdayService;
@@ -105,6 +98,9 @@ public class TradeServiceImpl implements TradeService {
         this.tradelogDetailService = tradelogDetailService;
         this.tradelogSummaryService = tradelogSummaryService;
         this.tradestrategyService = tradestrategyService;
+        this.tradeOrderService = tradeOrderService;
+        this.tradeOrderfillService = tradeOrderfillService;
+        this.tradePositionService = tradePositionService;
     }
 
     public AspectService getAspectService() {
@@ -167,6 +163,22 @@ public class TradeServiceImpl implements TradeService {
         return this.tradestrategyService;
     }
 
+    public TradeOrderService getTradeOrderService() {
+
+        return this.tradeOrderService;
+    }
+
+    public TradeOrderfillService getTradeOrderfillService() {
+
+        return this.tradeOrderfillService;
+    }
+
+
+    public TradePositionService getTradePositionService() {
+
+        return this.tradePositionService;
+    }
+
     public TradelogReport findTradelogReport(final Portfolio portfolio, ZonedDateTime start, ZonedDateTime end,
                                              boolean filter, String symbol, BigDecimal winLossAmount) throws IOException {
 
@@ -176,12 +188,6 @@ public class TradeServiceImpl implements TradeService {
         List<TradelogSummary> reportSummary = tradelogSummaryService.findByTradelogSummary(portfolio, start, end, symbol, winLossAmount);
         tradelogReport.setTradelogSummary(reportSummary);
         return tradelogReport;
-    }
-
-
-    public TradeOrder findTradeOrderById(final Long id) {
-
-        return tradeOrderRepository.findById(id).isPresent() ? tradeOrderRepository.findById(id).get() : null;
     }
 
     public TradestrategyOrders refreshPositionOrdersByTradestrategyId(final TradestrategyOrders positionOrders) {
@@ -213,14 +219,6 @@ public class TradeServiceImpl implements TradeService {
         }
 
         return instance;
-    }
-
-    public TradePosition findTradePositionById(final Long id) {
-
-        Optional<TradePosition> tradePosition = tradePositionRepository.findById(id);
-
-        return tradePosition.orElse(null);
-
     }
 
     @Transactional
@@ -285,28 +283,13 @@ public class TradeServiceImpl implements TradeService {
 
         for (TradePosition tradePosition : tradePositions.values()) {
 
-            tradePosition = this.findTradePositionById(tradePosition.getId());
+            tradePosition = this.tradePositionService.findById(tradePosition.getId());
 
             if (null != tradePosition) {
 
                 aspectService.delete(tradePosition);
             }
         }
-    }
-
-    public TradeOrder findTradeOrderByKey(final Integer orderKey) {
-
-        return tradeOrderRepository.findByOrderKey(orderKey);
-    }
-
-    public TradeOrderfill findTradeOrderfillByExecId(String execId) {
-
-        return tradeOrderfillRepository.findByExecId(execId);
-    }
-
-    public Integer findTradeOrderByMaxKey() {
-
-        return tradeOrderRepository.findByMaxKey();
     }
 
 
@@ -422,7 +405,7 @@ public class TradeServiceImpl implements TradeService {
 
                 if (tradestrategyOrders.hasOpenTradePosition()) {
 
-                    tradePosition = this.findTradePositionById(
+                    tradePosition = tradePositionService.findById(
                             tradestrategyOrders.getContractLite().getTradePosition().getId());
 
                     if (!tradePosition.containsTradeOrder(tradeOrder)) {
@@ -459,7 +442,7 @@ public class TradeServiceImpl implements TradeService {
             }
         } else {
 
-            tradePosition = this.findTradePositionById(tradeOrder.getTradePosition().getId());
+            tradePosition = tradePositionService.findById(tradeOrder.getTradePosition().getId());
             tradeOrder.setTradePosition(tradePosition);
         }
 

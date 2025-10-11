@@ -1,9 +1,15 @@
-package org.trade.core.persistent.dao;
+package org.trade.core.persistent.tradeorderfill;
 
 // Generated Feb 21, 2011 12:43:33 PM by Hibernate Tools 3.4.0.CR1
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import org.trade.core.aspect.Aspect;
+import org.trade.core.persistent.tradeorder.TradeOrder;
 import org.trade.core.valuetype.Money;
 
 import java.io.Serial;
@@ -17,32 +23,60 @@ import java.time.ZonedDateTime;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-public class TradeOrderfillDTO extends Aspect implements java.io.Serializable, Cloneable {
+@Entity
+@Table(name = "tradeorderfill")
+public class TradeOrderfill extends Aspect implements java.io.Serializable, Cloneable {
 
     @Serial
     private static final long serialVersionUID = -4345234694835258864L;
 
+    @Column(name = "account_number", length = 20)
     private String accountNumber;
-    private Integer quantity;
-    private String side;
-    private String exchange;
-    private BigDecimal price;
-    private ZonedDateTime time;
-    private BigDecimal averagePrice;
-    private Integer cumulativeQuantity;
-    private String execId;
-    private BigDecimal commission;
-    private String orderReference;
-    private Integer permId;
-    private TradeOrderDTO tradeOrder;
 
-    public TradeOrderfillDTO() {
+    @Column(name = "quantity", nullable = false)
+    private Integer quantity;
+
+    @Column(name = "side", nullable = false, length = 3)
+    private String side;
+
+    @Column(name = "exchange", nullable = false, length = 10)
+    private String exchange;
+
+    @Column(name = "price", nullable = false, precision = 10)
+    private BigDecimal price;
+
+    @Column(name = "time", nullable = false)
+    private ZonedDateTime time;
+
+    @Column(name = "average_price", nullable = false, precision = 11)
+    private BigDecimal averagePrice;
+
+    @Column(name = "cumulative_quantity", nullable = false)
+    private Integer cumulativeQuantity;
+
+    @Column(name = "exec_id", nullable = false, length = 45)
+    private String execId;
+
+    @Column(name = "commission", precision = 11)
+    private BigDecimal commission;
+
+    @Column(name = "order_reference", length = 45)
+    private String orderReference;
+
+    @Column(name = "perm_id")
+    private Integer permId;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "trade_order_id", nullable = false)
+    private TradeOrder tradeOrder;
+
+    public TradeOrderfill() {
     }
 
     /**
      * Constructor for TradeOrderfill.
      *
-     * @param tradeOrder         TradeOrderDto
+     * @param tradeOrder         TradeOrder
      * @param accountNumber      String
      * @param averagePrice       BigDecimal
      * @param cumulativeQuantity Integer
@@ -53,9 +87,9 @@ public class TradeOrderfillDTO extends Aspect implements java.io.Serializable, C
      * @param side               String
      * @param time               Date
      */
-    public TradeOrderfillDTO(TradeOrderDTO tradeOrder, String accountNumber, BigDecimal averagePrice,
-                             Integer cumulativeQuantity, String exchange, String execId, BigDecimal price, Integer quantity, String side,
-                             ZonedDateTime time) {
+    public TradeOrderfill(TradeOrder tradeOrder, String accountNumber, BigDecimal averagePrice,
+                          Integer cumulativeQuantity, String exchange, String execId, BigDecimal price, Integer quantity, String side,
+                          ZonedDateTime time) {
 
         this.tradeOrder = tradeOrder;
         this.accountNumber = accountNumber;
@@ -72,19 +106,18 @@ public class TradeOrderfillDTO extends Aspect implements java.io.Serializable, C
     /**
      * Method getTradeOrder.
      *
-     * @return TradeOrderDto
+     * @return TradeOrder
      */
-    public TradeOrderDTO getTradeOrder() {
+    public TradeOrder getTradeOrder() {
         return this.tradeOrder;
     }
 
     /**
      * Method setTradeOrder.
      *
-     * @param tradeOrder TradeOrderDto
+     * @param tradeOrder TradeOrder
      */
-    @JsonIgnore
-    public void setTradeOrder(TradeOrderDTO tradeOrder) {
+    public void setTradeOrder(TradeOrder tradeOrder) {
         this.tradeOrder = tradeOrder;
     }
 
@@ -309,11 +342,11 @@ public class TradeOrderfillDTO extends Aspect implements java.io.Serializable, C
      *
      * @return TradeOrderfill
      */
-    public TradeOrderfillDTO clone() {
+    public TradeOrderfill clone() {
 
         try {
 
-            return (TradeOrderfillDTO) super.clone();
+            return (TradeOrderfill) super.clone();
         } catch (CloneNotSupportedException e) {
             // will never happen
             return null;

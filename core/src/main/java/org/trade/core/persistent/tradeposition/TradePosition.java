@@ -1,4 +1,4 @@
-package org.trade.core.persistent.dao;
+package org.trade.core.persistent.tradeposition;
 
 // Generated Feb 21, 2011 12:43:33 PM by Hibernate Tools 3.4.0.CR1
 
@@ -13,6 +13,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import org.trade.core.aspect.Aspect;
 import org.trade.core.persistent.contract.ContractLite;
+import org.trade.core.persistent.tradeorder.TradeOrder;
 import org.trade.core.valuetype.Money;
 import org.trade.core.valuetype.Side;
 

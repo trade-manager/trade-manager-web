@@ -1,6 +1,6 @@
 package org.trade.ui.tables.renderer;
 
-import org.trade.core.persistent.dao.TradeOrder;
+import org.trade.core.persistent.tradeorder.TradeOrder;
 import org.trade.core.persistent.tradestrategy.Tradestrategy;
 import org.trade.core.valuetype.Side;
 import org.trade.ui.models.TradingdayTreeModel;

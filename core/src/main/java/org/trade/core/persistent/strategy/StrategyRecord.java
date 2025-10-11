@@ -7,6 +7,7 @@ import org.trade.core.persistent.dao.series.indicator.IndicatorSeries;
 import org.trade.core.persistent.dao.series.indicator.IndicatorSeriesRecord;
 import org.trade.core.persistent.rule.RuleRecord;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +17,12 @@ import java.util.List;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-public record StrategyRecord(Long id, String name,
+public record StrategyRecord(Long id,
+                             ZonedDateTime createdDate,
+                             ZonedDateTime updatedDate,
+                             Integer version,
+                             Long domainId,
+                             String name,
                              String className,
                              String description,
                              Boolean marketData,
@@ -57,13 +63,58 @@ public record StrategyRecord(Long id, String name,
 
         return new StrategyRecord(
                 strategy.getId(),
+                strategy.getCreatedDate(),
+                strategy.getUpdatedDate(),
+                strategy.getVersion(),
+                strategy.getDomainId(),
                 strategy.getName(),
                 strategy.getClassName(),
                 strategy.getDescription(),
                 strategy.getMarketData(),
                 (null != strategy.getStrategyManager() ? StrategyRecord.from(strategy.getStrategyManager()) : null),
-                ruleRecords,
+                List.copyOf(ruleRecords),
                 indicatorSeriesRecords
         );
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    /**
+     * Method getCreatedDate.
+     *
+     * @return ZonedDateTime
+     */
+    public ZonedDateTime getCreatedDate() {
+        return this.createdDate;
+    }
+
+    /**
+     * Method getUpdatedDate.
+     *
+     * @return ZonedDateTime
+     */
+    public ZonedDateTime getUpdatedDate() {
+        return this.updatedDate;
+    }
+
+    /**
+     * Method getVersion.
+     *
+     * @return Integer
+     */
+    public Integer getVersion() {
+        return version;
+    }
+
+    /**
+     * Method getDomainId
+     *
+     * @return Long
+     */
+    public Long getDomainId() {
+
+        return domainId;
     }
 }

@@ -9,9 +9,9 @@ import org.trade.core.broker.client.IClientWrapper;
 import org.trade.core.broker.client.OrderState;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.contract.Contract;
-import org.trade.core.persistent.dao.TradeOrder;
-import org.trade.core.persistent.dao.TradeOrderfill;
 import org.trade.core.persistent.dao.series.indicator.CandleSeries;
+import org.trade.core.persistent.tradeorder.TradeOrder;
+import org.trade.core.persistent.tradeorderfill.TradeOrderfill;
 import org.trade.core.persistent.tradestrategy.Tradestrategy;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.CoreUtils;
@@ -81,7 +81,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
 
             this.tradeService = tradeService;
             client = new ClientSocket(this, tradeService);
-            int maxKey = this.tradeService.findTradeOrderByMaxKey();
+            int maxKey = this.tradeService.getTradeOrderService().findByMaxOrderKey();
 
             if (maxKey < 100000) {
 
@@ -178,7 +178,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
 
         try {
 
-            int maxKey = tradeService.findTradeOrderByMaxKey();
+            int maxKey = tradeService.getTradeOrderService().findByMaxOrderKey();
 
             if (maxKey < minOrderId) {
                 maxKey = minOrderId;
@@ -657,7 +657,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
 
             BackTestBrokerModel.logExecution(execution);
             TradeOrder instance = tradeService
-                    .findTradeOrderByKey(execution.getTradeOrder().getOrderKey());
+                    .getTradeOrderService().findByOrderKey(execution.getTradeOrder().getOrderKey());
 
             if (null == instance) {
 
@@ -719,7 +719,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
 
         try {
 
-            TradeOrder instance = tradeService.findTradeOrderByKey(tradeOrder.getOrderKey());
+            TradeOrder instance = tradeService.getTradeOrderService().findByOrderKey(tradeOrder.getOrderKey());
 
             if (null == instance) {
 
@@ -788,7 +788,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
 
         try {
 
-            TradeOrder instance = tradeService.findTradeOrderByKey(orderId);
+            TradeOrder instance = tradeService.getTradeOrderService().findByOrderKey(orderId);
 
             if (null == instance) {
                 error(orderId, 3170, "Warning Order not found for Order Key: " + orderId + " make sure Client ID: " + 0

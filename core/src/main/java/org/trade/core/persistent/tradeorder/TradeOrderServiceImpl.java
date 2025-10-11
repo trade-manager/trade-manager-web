@@ -1,4 +1,4 @@
-package org.trade.core.persistent.dao;
+package org.trade.core.persistent.tradeorder;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -7,24 +7,41 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Expression;
 import jakarta.persistence.criteria.Root;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 /**
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-@Repository
-public class TradeOrderRepositoryImpl implements TradeOrderRepositoryCustom {
+@Service
+public class TradeOrderServiceImpl implements TradeOrderService {
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    private final TradeOrderRepository tradeOrderRepository;
+
+    public TradeOrderServiceImpl(final TradeOrderRepository tradeOrderRepository) {
+
+        this.tradeOrderRepository = tradeOrderRepository;
+    }
+
+    public TradeOrder findById(final Long id) {
+
+        return tradeOrderRepository.findById(id).orElse(null);
+    }
+
+    public TradeOrder findByOrderKey(final Integer orderKey) {
+
+        return tradeOrderRepository.findByOrderKey(orderKey);
+    }
 
     /**
      * Method findByMaxKey.
      *
      * @return Integer
      */
-    public Integer findByMaxKey() {
+    public Integer findByMaxOrderKey() {
 
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Object> query = builder.createQuery();

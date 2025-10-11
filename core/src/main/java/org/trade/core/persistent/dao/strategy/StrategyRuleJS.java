@@ -10,14 +10,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trade.core.broker.IBrokerModel;
 import org.trade.core.persistent.TradeService;
-import org.trade.core.persistent.dao.TradeOrder;
-import org.trade.core.persistent.dao.TradeOrderDTO;
-import org.trade.core.persistent.dao.TradePosition;
-import org.trade.core.persistent.dao.TradePositionDTO;
 import org.trade.core.persistent.dao.series.indicator.CandleSeries;
 import org.trade.core.persistent.dao.series.indicator.StrategyData;
 import org.trade.core.persistent.dao.series.indicator.candle.CandleItem;
 import org.trade.core.persistent.rule.Rule;
+import org.trade.core.persistent.tradeorder.TradeOrder;
+import org.trade.core.persistent.tradeorder.TradeOrderRecord;
+import org.trade.core.persistent.tradeposition.TradePosition;
+import org.trade.core.persistent.tradeposition.TradePositionRecord;
 import org.trade.core.persistent.tradestrategy.Tradestrategy;
 import org.trade.core.persistent.tradestrategy.TradestrategyRecord;
 import org.trade.core.util.CoreUtils;
@@ -292,7 +292,7 @@ public class StrategyRuleJS extends AbstractStrategyRule {
         try {
 
             TradePosition tradePosition = this.getOpenTradePosition();
-            TradePositionDTO tradePositionDto = JSONMapper.convertEntityToRecord(tradePosition, TradePositionDTO.class);
+            TradePositionRecord tradePositionDto = JSONMapper.convertEntityToRecord(tradePosition, TradePositionRecord.class);
 
             if (null != tradePositionDto) {
 
@@ -322,7 +322,7 @@ public class StrategyRuleJS extends AbstractStrategyRule {
         try {
 
             TradeOrder tradeOrder = this.getOpenPositionOrder();
-            TradeOrderDTO tradeOrderDto = JSONMapper.convertEntityToRecord(tradeOrder, TradeOrderDTO.class);
+            TradeOrderRecord tradeOrderDto = JSONMapper.convertEntityToRecord(tradeOrder, TradeOrderRecord.class);
 
             if (null != tradeOrderDto) {
 
@@ -389,7 +389,7 @@ public class StrategyRuleJS extends AbstractStrategyRule {
 
             if (null != tradeOrder) {
 
-                TradeOrderDTO tradeOrderDto = JSONMapper.convertEntityToRecord(tradeOrder, TradeOrderDTO.class);
+                TradeOrderRecord tradeOrderDto = JSONMapper.convertEntityToRecord(tradeOrder, TradeOrderRecord.class);
                 result.put("data", new JSONObject(JSONMapper.getJSONString(tradeOrderDto)));
             } else {
 
@@ -421,7 +421,7 @@ public class StrategyRuleJS extends AbstractStrategyRule {
 
             if (null != tradeOrder) {
 
-                TradeOrderDTO tradeOrderDto = JSONMapper.convertEntityToRecord(tradeOrder, TradeOrderDTO.class);
+                TradeOrderRecord tradeOrderDto = JSONMapper.convertEntityToRecord(tradeOrder, TradeOrderRecord.class);
                 result.put("data", new JSONObject(JSONMapper.getJSONString(tradeOrderDto)));
             } else {
 
@@ -494,7 +494,7 @@ public class StrategyRuleJS extends AbstractStrategyRule {
         try {
 
             Object tradeOrderJSON = NativeJSON.stringify(context, localScope, tradeOrder, null, null);
-            TradeOrderDTO tradeOrderDto = JSONMapper.getRecord(tradeOrderJSON.toString(), TradeOrderDTO.class);
+            TradeOrderRecord tradeOrderDto = JSONMapper.getRecord(tradeOrderJSON.toString(), TradeOrderRecord.class);
             tradeOrder = JSONMapper.convertRecordToEntity(tradeOrderDto, TradeOrder.class);
 
             if (null != tradeOrder) {
@@ -596,7 +596,7 @@ public class StrategyRuleJS extends AbstractStrategyRule {
 
             if (null != tradeOrder) {
 
-                TradeOrderDTO tradeOrderDto = JSONMapper.convertEntityToRecord(tradeOrder, TradeOrderDTO.class);
+                TradeOrderRecord tradeOrderDto = JSONMapper.convertEntityToRecord(tradeOrder, TradeOrderRecord.class);
                 result.put("data", new JSONObject(JSONMapper.getJSONString(tradeOrderDto)));
             } else {
 
@@ -632,7 +632,7 @@ public class StrategyRuleJS extends AbstractStrategyRule {
         try {
 
             Object tradeOrderJSON = NativeJSON.stringify(context, localScope, openPosition, null, null);
-            TradeOrderDTO tradeOrderDto = JSONMapper.getRecord(tradeOrderJSON.toString(), TradeOrderDTO.class);
+            TradeOrderRecord tradeOrderDto = JSONMapper.getRecord(tradeOrderJSON.toString(), TradeOrderRecord.class);
             TradeOrder tradeOrder = JSONMapper.convertRecordToEntity(tradeOrderDto, TradeOrder.class);
             tradeOrder = super.createStopAndTargetOrder(tradeOrder, stopRiskUnits,
                     new Money(stopAddAmount), targetRiskUnits, new Money(targetAddAmount),
@@ -640,7 +640,7 @@ public class StrategyRuleJS extends AbstractStrategyRule {
 
             if (null != tradeOrder) {
 
-                tradeOrderDto = JSONMapper.convertEntityToRecord(tradeOrder, TradeOrderDTO.class);
+                tradeOrderDto = JSONMapper.convertEntityToRecord(tradeOrder, TradeOrderRecord.class);
                 result.put("data", new JSONObject(JSONMapper.getJSONString(tradeOrderDto)));
             } else {
 

@@ -69,7 +69,6 @@ public record RoleRecord(Long id,
         );
     }
 
-
     public Long getId() {
         return id;
     }

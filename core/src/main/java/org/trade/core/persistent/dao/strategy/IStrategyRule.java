@@ -1,8 +1,8 @@
 package org.trade.core.persistent.dao.strategy;
 
-import org.trade.core.persistent.dao.TradeOrder;
-import org.trade.core.persistent.dao.TradePosition;
 import org.trade.core.persistent.dao.series.indicator.CandleSeries;
+import org.trade.core.persistent.tradeorder.TradeOrder;
+import org.trade.core.persistent.tradeposition.TradePosition;
 
 
 /**

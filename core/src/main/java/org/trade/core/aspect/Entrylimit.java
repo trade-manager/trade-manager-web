@@ -1,9 +1,8 @@
-package org.trade.core.persistent.dao;
+package org.trade.core.aspect;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-import org.trade.core.aspect.Aspect;
 
 import java.io.Serial;
 import java.math.BigDecimal;

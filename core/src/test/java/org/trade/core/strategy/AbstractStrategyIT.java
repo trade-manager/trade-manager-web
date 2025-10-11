@@ -12,21 +12,21 @@ import org.springframework.test.context.ContextConfiguration;
 import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
+import org.trade.core.aspect.Entrylimit;
 import org.trade.core.broker.BackTestBrokerModel;
 import org.trade.core.broker.IBrokerModel;
 import org.trade.core.factory.ClassFactory;
 import org.trade.core.persistent.ServiceException;
 import org.trade.core.persistent.TradeService;
-import org.trade.core.persistent.dao.Entrylimit;
-import org.trade.core.persistent.dao.TradeOrder;
-import org.trade.core.persistent.dao.TradeOrderfill;
-import org.trade.core.persistent.dao.TradePosition;
 import org.trade.core.persistent.dao.series.indicator.CandleSeries;
 import org.trade.core.persistent.dao.series.indicator.StrategyData;
 import org.trade.core.persistent.dao.series.indicator.candle.CandleItem;
 import org.trade.core.persistent.dao.strategy.AbstractStrategyRule;
 import org.trade.core.persistent.dao.strategy.IStrategyRule;
 import org.trade.core.persistent.strategy.Strategy;
+import org.trade.core.persistent.tradeorder.TradeOrder;
+import org.trade.core.persistent.tradeorderfill.TradeOrderfill;
+import org.trade.core.persistent.tradeposition.TradePosition;
 import org.trade.core.persistent.tradestrategy.Tradestrategy;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.DynamicCode;
@@ -437,7 +437,7 @@ public class AbstractStrategyIT extends TradestrategyBase {
         reFreshPositionOrders();
         strategyProxy.cancelOrder(openOrder);
         reFreshPositionOrders();
-        openOrder = tradeService.findTradeOrderByKey(openOrder.getOrderKey());
+        openOrder = tradeService.getTradeOrderService().findByOrderKey(openOrder.getOrderKey());
         assertEquals(OrderStatus.CANCELLED, openOrder.getStatus());
     }
 
