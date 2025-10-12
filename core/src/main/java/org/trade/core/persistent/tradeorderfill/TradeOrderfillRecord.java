@@ -59,7 +59,7 @@ public record TradeOrderfillRecord(Long id,
                 tradeOrderfill.getCommission(),
                 tradeOrderfill.getOrderReference(),
                 tradeOrderfill.getPermId(),
-                (null != tradeOrderfill.getTradeOrder() ? TradeOrderRecord.from(tradeOrderfill.getTradeOrder()) : null)
+                null //(null != tradeOrderfill.getTradeOrder() ? TradeOrderRecord.from(tradeOrderfill.getTradeOrder()) : null)
         );
     }
 

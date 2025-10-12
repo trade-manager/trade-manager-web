@@ -1,7 +1,7 @@
 package org.trade.indicator.cci;
 
 import org.jfree.data.ComparableObjectItem;
-import org.trade.core.persistent.dao.series.indicator.cci.CommodityChannelIndex;
+import org.trade.core.persistent.strategy.series.indicator.cci.CommodityChannelIndex;
 import org.trade.core.util.time.RegularTimePeriod;
 
 import java.io.Serial;

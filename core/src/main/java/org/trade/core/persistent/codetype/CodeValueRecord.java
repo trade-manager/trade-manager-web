@@ -1,6 +1,6 @@
 package org.trade.core.persistent.codetype;
 
-import org.trade.core.persistent.dao.series.indicator.IndicatorSeriesRecord;
+import org.trade.core.persistent.strategy.series.indicator.IndicatorSeriesRecord;
 import org.trade.core.persistent.tradestrategy.TradestrategyRecord;
 
 /**

@@ -8,7 +8,7 @@ import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.account.Account;
 import org.trade.core.persistent.contract.Contract;
 import org.trade.core.persistent.contract.ContractLite;
-import org.trade.core.persistent.dao.series.indicator.StrategyData;
+import org.trade.core.persistent.strategy.series.indicator.StrategyData;
 import org.trade.core.persistent.portfolio.Portfolio;
 import org.trade.core.persistent.rule.Rule;
 import org.trade.core.persistent.strategy.Strategy;

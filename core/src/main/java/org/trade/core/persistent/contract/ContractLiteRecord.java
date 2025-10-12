@@ -34,7 +34,7 @@ public record ContractLiteRecord(Long id, ZonedDateTime createdDate,
                 contract.getUpdatedDate(),
                 contract.getVersion(),
                 contract.getDomainId(),
-                (null != contract.getTradePosition() ? TradePositionRecord.from(contract.getTradePosition()) : null)
+                null //(null != contract.getTradePosition() ? TradePositionRecord.from(contract.getTradePosition()) : null)
         );
     }
 

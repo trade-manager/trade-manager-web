@@ -9,7 +9,7 @@ import org.trade.core.broker.client.IClientWrapper;
 import org.trade.core.broker.client.OrderState;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.contract.Contract;
-import org.trade.core.persistent.dao.series.indicator.CandleSeries;
+import org.trade.core.persistent.strategy.series.indicator.CandleSeries;
 import org.trade.core.persistent.tradeorder.TradeOrder;
 import org.trade.core.persistent.tradeorderfill.TradeOrderfill;
 import org.trade.core.persistent.tradestrategy.Tradestrategy;

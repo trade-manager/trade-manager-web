@@ -1,7 +1,7 @@
 package org.trade.core.broker.client;
 
-import org.trade.core.persistent.dao.strategy.IStrategyChangeListener;
-import org.trade.core.persistent.dao.strategy.StrategyRuleException;
+import org.trade.core.persistent.strategy.strategyrule.IStrategyChangeListener;
+import org.trade.core.persistent.strategy.strategyrule.StrategyRuleException;
 import org.trade.core.persistent.tradestrategy.Tradestrategy;
 
 import javax.swing.*;

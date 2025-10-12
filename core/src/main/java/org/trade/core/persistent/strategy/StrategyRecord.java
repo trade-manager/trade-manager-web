@@ -3,9 +3,9 @@ package org.trade.core.persistent.strategy;
 // Generated Feb 21, 2011 12:43:33 PM by Hibernate Tools 3.4.0.CR1
 
 
-import org.trade.core.persistent.dao.series.indicator.IndicatorSeries;
-import org.trade.core.persistent.dao.series.indicator.IndicatorSeriesRecord;
 import org.trade.core.persistent.rule.RuleRecord;
+import org.trade.core.persistent.strategy.series.indicator.IndicatorSeries;
+import org.trade.core.persistent.strategy.series.indicator.IndicatorSeriesRecord;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -117,4 +117,69 @@ public record StrategyRecord(Long id,
 
         return domainId;
     }
+
+    /**
+     * Method getName.
+     *
+     * @return String
+     */
+    public String getName() {
+        return this.name;
+    }
+
+    /**
+     * Method getClassName.
+     *
+     * @return String
+     */
+    public String getClassName() {
+        return this.className;
+    }
+
+    /**
+     * Method getDescription.
+     *
+     * @return String
+     */
+    public String getDescription() {
+        return this.description;
+    }
+
+    /**
+     * Method getMarketData.
+     *
+     * @return Boolean
+     */
+    public Boolean getMarketData() {
+        return this.marketData;
+    }
+
+    /**
+     * Method getRules.
+     *
+     * @return List<RuleRecord>
+     */
+    public List<RuleRecord> getRules() {
+        return this.rules;
+    }
+
+
+    /**
+     * Method getIndicatorSeries.
+     *
+     * @return List<IndicatorSeries>
+     */
+    public List<IndicatorSeriesRecord> getIndicatorSeries() {
+        return this.indicatorSeries;
+    }
+
+    /**
+     * Method getStrategyManager.
+     *
+     * @return Strategy
+     */
+    public StrategyRecord getStrategyManager() {
+        return this.strategyMgr;
+    }
+
 }

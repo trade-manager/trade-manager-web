@@ -181,7 +181,7 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
     @JoinColumn(name = "tradestrategy_id", nullable = false)
     private Tradestrategy tradestrategy;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH})
     @JoinColumn(name = "tradestrategy_id", insertable = false, updatable = false, nullable = false)
     private TradestrategyLite tradestrategyLite;
 
@@ -225,6 +225,7 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
                       String timeInForce, Integer triggerMethod) {
 
         this.tradestrategy = tradestrategy;
+        this.tradestrategyLite = new TradestrategyLite(tradestrategy.getId(), tradestrategy.getCreatedDate(), tradestrategy.getUpdatedDate(), tradestrategy.getVersion(), tradestrategy.getDomainId(), tradestrategy.getStatus());
         this.action = action;
         this.auxPrice = auxPrice;
         this.orderCreateDate = orderCreateDate;
@@ -267,19 +268,12 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
                       Money trailStopPrice, Percent trailingPercent, String FAProfile, String FAGroup, String FAMethod,
                       BigDecimal FAPercent) {
 
-        this.tradestrategy = tradestrategy;
-        this.action = action;
-        this.orderCreateDate = orderCreateDate;
-        this.auxPrice = (null == auxPrice ? null : auxPrice.getBigDecimalValue());
-        this.limitPrice = (null == limitPrice ? null : limitPrice.getBigDecimalValue());
+        this(tradestrategy, action, orderCreateDate, orderType, quantity, (null == auxPrice ? null : auxPrice.getBigDecimalValue()), (null == limitPrice ? null : limitPrice.getBigDecimalValue()), overrideConstraints,
+                timeInForce, triggerMethod);
+
         this.ocaGroupName = ocaGroupName;
-        this.orderType = orderType;
-        this.overrideConstraints = overrideConstraints;
         this.parentId = parentId;
-        this.quantity = quantity;
-        this.timeInForce = timeInForce;
         this.transmit = transmit;
-        this.triggerMethod = triggerMethod;
         this.trailStopPrice = (null == trailStopPrice ? null : trailStopPrice.getBigDecimalValue());
         this.trailingPercent = (null == trailingPercent ? null : trailingPercent.getBigDecimalValue());
         this.FAProfile = FAProfile;
@@ -287,96 +281,6 @@ public class TradeOrder extends Aspect implements java.io.Serializable, Cloneabl
         this.FAMethod = FAMethod;
         this.FAPercent = FAPercent;
         this.orderUpdateDate = orderCreateDate;
-    }
-
-    /**
-     * Constructor for TradeOrder.
-     *
-     * @param tradePosition       Trade
-     * @param action              String
-     * @param averageFilledPrice  BigDecimal
-     * @param allOrNothing        Boolean
-     * @param auxPrice            BigDecimal
-     * @param clientId            Integer
-     * @param commission          BigDecimal
-     * @param orderCreateDate     ZonedDateTime
-     * @param displayQuantity     Integer
-     * @param filledDate          ZonedDateTime
-     * @param filledQuantity      Integer
-     * @param goodAfterTime       ZonedDateTime
-     * @param goodTillTime        ZonedDateTime
-     * @param hidden              Boolean
-     * @param isOpenPosition      Boolean
-     * @param isFilled            Boolean
-     * @param limitPrice          BigDecimal
-     * @param ocaGroupName        String
-     * @param ocaType             Integer
-     * @param orderKey            Integer
-     * @param orderReference      String
-     * @param orderType           String
-     * @param overrideConstraints Integer
-     * @param parentId            Integer
-     * @param permId              Integer
-     * @param quantity            Integer
-     * @param timeInForce         String
-     * @param status              String
-     * @param stopPrice           BigDecimal
-     * @param transmit            Boolean
-     * @param trailStopPrice      BigDecimal
-     * @param trailingPercent     BigDecimal
-     * @param triggerMethod       Integer
-     * @param warningMessage      String
-     * @param whyHeld             String
-     * @param lastUpdateDate      ZonedDateTime
-     * @param tradeOrderfills     List<TradeOrderfill>
-     */
-    public TradeOrder(TradePosition tradePosition, String action, BigDecimal averageFilledPrice, Boolean allOrNothing,
-                      BigDecimal auxPrice, Integer clientId, BigDecimal commission, ZonedDateTime orderCreateDate,
-                      Integer displayQuantity, ZonedDateTime filledDate, Integer filledQuantity, ZonedDateTime goodAfterTime,
-                      ZonedDateTime goodTillTime, Boolean hidden, Boolean isOpenPosition, Boolean isFilled, BigDecimal limitPrice,
-                      String ocaGroupName, Integer ocaType, Integer orderKey, String orderReference, String orderType,
-                      Integer overrideConstraints, Integer parentId, Integer permId, Integer quantity, String timeInForce,
-                      String status, BigDecimal stopPrice, Boolean transmit, BigDecimal trailStopPrice,
-                      BigDecimal trailingPercent, Integer triggerMethod, String warningMessage, String whyHeld,
-                      ZonedDateTime lastUpdateDate, List<TradeOrderfill> tradeOrderfills) {
-
-        this.tradePosition = tradePosition;
-        this.action = action;
-        this.allOrNothing = allOrNothing;
-        this.auxPrice = auxPrice;
-        this.averageFilledPrice = averageFilledPrice;
-        this.clientId = clientId;
-        this.commission = commission;
-        this.orderCreateDate = orderCreateDate;
-        this.displayQuantity = displayQuantity;
-        this.filledDate = filledDate;
-        this.filledQuantity = filledQuantity;
-        this.goodAfterTime = goodAfterTime;
-        this.goodTillTime = goodTillTime;
-        this.hidden = hidden;
-        this.isOpenPosition = isOpenPosition;
-        this.isFilled = isFilled;
-        this.limitPrice = limitPrice;
-        this.ocaGroupName = ocaGroupName;
-        this.ocaType = ocaType;
-        this.orderKey = orderKey;
-        this.orderReference = orderReference;
-        this.orderType = orderType;
-        this.overrideConstraints = overrideConstraints;
-        this.permId = permId;
-        this.parentId = parentId;
-        this.quantity = quantity;
-        this.timeInForce = timeInForce;
-        this.status = status;
-        this.stopPrice = stopPrice;
-        this.transmit = transmit;
-        this.triggerMethod = triggerMethod;
-        this.trailStopPrice = trailStopPrice;
-        this.trailingPercent = trailingPercent;
-        this.warningMessage = warningMessage;
-        this.whyHeld = whyHeld;
-        this.orderUpdateDate = lastUpdateDate;
-        this.tradeOrderfills = tradeOrderfills;
     }
 
     /**

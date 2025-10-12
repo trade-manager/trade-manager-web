@@ -45,14 +45,14 @@ public record TradePositionRecord(Long id,
     public static TradePositionRecord from(final TradePosition tradePosition) {
 
 
-        List<TradeOrderRecord> tradeOrderRecordRecords = new ArrayList<>();
+        List<TradeOrderRecord> tradeOrderRecords = new ArrayList<>();
 
 
         if (null != tradePosition.getTradeOrders() && !tradePosition.getTradeOrders().isEmpty()) {
 
             for (TradeOrder tradeOrder : tradePosition.getTradeOrders()) {
 
-                tradeOrderRecordRecords.add(TradeOrderRecord.from(tradeOrder));
+                tradeOrderRecords.add(TradeOrderRecord.from(tradeOrder));
             }
         }
 
@@ -74,7 +74,7 @@ public record TradePositionRecord(Long id,
                 tradePosition.getTotalSellValue(),
                 tradePosition.getTotalNetValue(),
                 (null != tradePosition.getContractLite() ? ContractLiteRecord.from(tradePosition.getContractLite()) : null),
-                List.copyOf(tradeOrderRecordRecords)
+                List.copyOf(tradeOrderRecords)
 
         );
     }
@@ -134,11 +134,11 @@ public record TradePositionRecord(Long id,
     }
 
     /**
-     * Method getContract.
+     * Method getContractLite.
      *
      * @return ContractLiteRecord
      */
-    public ContractLiteRecord getContract() {
+    public ContractLiteRecord getContractLite() {
         return this.contract;
     }
 
@@ -242,7 +242,8 @@ public record TradePositionRecord(Long id,
      *
      * @return List<TradeOrderRecord>
      */
-    public List<TradeOrderRecord> getTradeOrderRecords() {
+    public List<TradeOrderRecord> getTradeOrders() {
+
         return this.tradeOrders;
     }
 }

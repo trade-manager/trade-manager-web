@@ -24,6 +24,7 @@ public record TradeOrderRecord(Long id,
                                ZonedDateTime updatedDate,
                                Integer version,
                                Long domainId,
+                               Boolean active,
                                String accountNumber,
                                String action,
                                String orderType,
@@ -80,7 +81,6 @@ public record TradeOrderRecord(Long id,
 
         List<TradeOrderfillRecord> tradeOrderfillRecords = new ArrayList<>();
 
-
         if (null != tradeOrder.getTradeOrderfills() && !tradeOrder.getTradeOrderfills().isEmpty()) {
 
             for (TradeOrderfill tradeOrderfill : tradeOrder.getTradeOrderfills()) {
@@ -89,13 +89,13 @@ public record TradeOrderRecord(Long id,
             }
         }
 
-
         return new TradeOrderRecord(
                 tradeOrder.getId(),
                 tradeOrder.getCreatedDate(),
                 tradeOrder.getUpdatedDate(),
                 tradeOrder.getVersion(),
                 tradeOrder.getDomainId(),
+                tradeOrder.isActive(),
                 tradeOrder.getAccountNumber(),
                 tradeOrder.getAction(),
                 tradeOrder.getOrderType(),
@@ -138,7 +138,7 @@ public record TradeOrderRecord(Long id,
                 tradeOrder.getParentId(),
                 List.copyOf(tradeOrderfillRecords),
                 (null != tradeOrder.getTradePosition() ? TradePositionRecord.from(tradeOrder.getTradePosition()) : null),
-                (null != tradeOrder.getTradestrategyLite() ? TradestrategyLiteRecord.from(tradeOrder.getTradestrategy()) : null)
+                (null != tradeOrder.getTradestrategyLite() ? TradestrategyLiteRecord.from(tradeOrder.getTradestrategyLite()) : null)
 
         );
     }
@@ -182,6 +182,16 @@ public record TradeOrderRecord(Long id,
     public Long getDomainId() {
 
         return domainId;
+    }
+
+    /**
+     * Method getActive
+     *
+     * @return Boolean
+     */
+    public Boolean getActive() {
+
+        return this.active;
     }
 
     /**
@@ -597,11 +607,11 @@ public record TradeOrderRecord(Long id,
     }
 
     /**
-     * Method getTradeOrderfillRecords.
+     * Method getTradeOrderfills.
      *
      * @return List<TradeOrderfillRecord>
      */
-    public List<TradeOrderfillRecord> getTradeOrderfillRecords() {
+    public List<TradeOrderfillRecord> getTradeOrderfills() {
         return this.tradeOrderfills;
     }
 

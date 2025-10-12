@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trade.core.persistent.candle.Candle;
 import org.trade.core.persistent.contract.Contract;
-import org.trade.core.persistent.dao.series.indicator.candle.CandlePeriod;
+import org.trade.core.persistent.strategy.series.indicator.candle.CandlePeriod;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.CoreUtils;
 import org.trade.core.util.time.TradingCalendar;

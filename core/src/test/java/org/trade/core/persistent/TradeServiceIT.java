@@ -20,8 +20,8 @@ import org.trade.core.persistent.candle.Candle;
 import org.trade.core.persistent.codetype.CodeType;
 import org.trade.core.persistent.contract.Contract;
 import org.trade.core.persistent.contract.ContractLite;
-import org.trade.core.persistent.dao.series.indicator.IIndicatorDataset;
-import org.trade.core.persistent.dao.series.indicator.candle.CandleItem;
+import org.trade.core.persistent.strategy.series.indicator.IIndicatorDataset;
+import org.trade.core.persistent.strategy.series.indicator.candle.CandleItem;
 import org.trade.core.persistent.portfolio.Portfolio;
 import org.trade.core.persistent.rule.Rule;
 import org.trade.core.persistent.strategy.Strategy;
@@ -958,7 +958,7 @@ public class TradeServiceIT extends TradestrategyBase {
 
         for (IIndicatorDataset indicator : tradestrategy.getStrategyData().getIndicators()) {
 
-            org.trade.core.persistent.dao.series.indicator.IndicatorSeries series = indicator.getSeries(0);
+            org.trade.core.persistent.strategy.series.indicator.IndicatorSeries series = indicator.getSeries(0);
             String indicatorName = series.getType().substring(0, series.getType().indexOf("Series"));
             Aspects result = this.tradeService.getAspectService().findByClassNameAndFieldName(CodeType.class.getName(),
                     "name", indicatorName);

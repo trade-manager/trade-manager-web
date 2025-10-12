@@ -1,7 +1,7 @@
 package org.trade.indicator.mfi;
 
 import org.jfree.data.ComparableObjectItem;
-import org.trade.core.persistent.dao.series.indicator.mfi.MoneyFlowIndex;
+import org.trade.core.persistent.strategy.series.indicator.mfi.MoneyFlowIndex;
 import org.trade.core.util.time.RegularTimePeriod;
 
 import java.io.Serial;

@@ -1,7 +1,7 @@
 package org.trade.indicator.movingaverage;
 
 import org.jfree.data.ComparableObjectItem;
-import org.trade.core.persistent.dao.series.indicator.movingaverage.MovingAverage;
+import org.trade.core.persistent.strategy.series.indicator.movingaverage.MovingAverage;
 import org.trade.core.util.time.RegularTimePeriod;
 
 import java.io.Serial;
