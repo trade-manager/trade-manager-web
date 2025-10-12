@@ -11,9 +11,9 @@ import jakarta.persistence.criteria.Root;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.trade.core.persistent.contract.Contract;
-import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.portfolio.Portfolio;
 import org.trade.core.persistent.strategy.Strategy;
+import org.trade.core.persistent.tradeorder.TradeOrder;
 import org.trade.core.persistent.tradingday.Tradingday;
 
 import java.time.ZonedDateTime;

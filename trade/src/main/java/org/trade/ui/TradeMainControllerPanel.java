@@ -18,15 +18,15 @@ import org.trade.core.persistent.candle.Candle;
 import org.trade.core.persistent.codetype.CodeType;
 import org.trade.core.persistent.codetype.CodeValue;
 import org.trade.core.persistent.contract.Contract;
-import org.trade.core.persistent.dao.TradeOrder;
-import org.trade.core.persistent.dao.TradePosition;
-import org.trade.core.persistent.dao.strategy.IStrategyChangeListener;
-import org.trade.core.persistent.dao.strategy.IStrategyRule;
-import org.trade.core.persistent.dao.strategy.StrategyRuleException;
-import org.trade.core.persistent.dao.strategy.StrategyRuleJS;
 import org.trade.core.persistent.portfolio.Portfolio;
 import org.trade.core.persistent.rule.Rule;
 import org.trade.core.persistent.strategy.Strategy;
+import org.trade.core.persistent.strategy.strategyrule.IStrategyChangeListener;
+import org.trade.core.persistent.strategy.strategyrule.IStrategyRule;
+import org.trade.core.persistent.strategy.strategyrule.StrategyRuleException;
+import org.trade.core.persistent.strategy.strategyrule.StrategyRuleJS;
+import org.trade.core.persistent.tradeorder.TradeOrder;
+import org.trade.core.persistent.tradeposition.TradePosition;
 import org.trade.core.persistent.tradestrategy.Tradestrategy;
 import org.trade.core.persistent.tradestrategy.TradestrategyOrders;
 import org.trade.core.persistent.tradingday.Tradingday;
@@ -301,7 +301,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
         try {
 
             this.getFrame().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            TradeOrder instance = tradeService.findTradeOrderByKey(tradeOrder.getOrderKey());
+            TradeOrder instance = tradeService.getTradeOrderService().findByOrderKey(tradeOrder.getOrderKey());
 
             if (null != instance) {
 
@@ -781,7 +781,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                 try {
 
                     TradePosition currTradePosition = tradeService
-                            .findTradePositionById(tradePosition.getId());
+                            .getTradePositionService().findById(tradePosition.getId());
 
                     for (TradeOrder tradeOrder : currTradePosition.getTradeOrders()) {
 

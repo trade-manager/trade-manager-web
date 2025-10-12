@@ -257,7 +257,7 @@ function runStrategy(candleSeriesJSON, newBar) {
 
                 if (!newStop === gs.getStopPriceMinUnfilled()) {
 
-                    gs.log("PositionManagerStrategy OneMinuteTrail, symbol: " + gs.getSymbol() + " Trail Price: " + newStop + " Time: " + startPeriod + " Side: " + tradePosition.side);
+                    gs.log("PosMgrFHXRBHYRStrategy OneMinuteTrail, symbol: " + gs.getSymbol() + " Trail Price: " + newStop + " Time: " + startPeriod + " Side: " + tradePosition.side);
                     // moveStopOCAPrice(newStop, true);
                 }
            }
@@ -274,7 +274,7 @@ function runStrategy(candleSeriesJSON, newBar) {
         if (endPeriod.getTime() > lastTimeOutDate.getTime()) {
 
             gs.cancelOrdersClosePosition(true);
-            gs.log("PositionManagerStrategy 15:58:00 done, symbol: " +  gs.getSymbol() +  " startPeriod: " + startPeriod);
+            gs.log("PosMgrFHXRBHYRStrategy 15:58:00 done, symbol: " +  gs.getSymbol() +  " startPeriod: " + startPeriod);
             gs.cancel();
         }
 

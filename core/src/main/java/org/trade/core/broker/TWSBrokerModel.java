@@ -22,12 +22,12 @@ import org.trade.core.broker.request.TWSGroupRequest;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.account.Account;
 import org.trade.core.persistent.contract.Contract;
-import org.trade.core.persistent.dao.TradeOrder;
-import org.trade.core.persistent.dao.TradeOrderfill;
-import org.trade.core.persistent.dao.series.indicator.CandleSeries;
-import org.trade.core.persistent.dao.series.indicator.StrategyData;
-import org.trade.core.persistent.dao.series.indicator.candle.CandleItem;
 import org.trade.core.persistent.portfolio.Portfolio;
+import org.trade.core.persistent.strategy.series.indicator.CandleSeries;
+import org.trade.core.persistent.strategy.series.indicator.StrategyData;
+import org.trade.core.persistent.strategy.series.indicator.candle.CandleItem;
+import org.trade.core.persistent.tradeorder.TradeOrder;
+import org.trade.core.persistent.tradeorderfill.TradeOrderfill;
 import org.trade.core.persistent.tradestrategy.Tradestrategy;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.CoreUtils;
@@ -790,7 +790,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
 
             TWSBrokerModel.logExecution(execution);
             TradeOrder instance = tradeService
-                    .findTradeOrderByKey(Math.abs(execution.orderId()));
+                    .getTradeOrderService().findByOrderKey(Math.abs(execution.orderId()));
 
             if (null == instance) {
 
@@ -799,7 +799,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
                  * then we have made a request for order executions with a
                  * different clientId than the one which created this order.
                  */
-                if (null == tradeService.findTradeOrderfillByExecId(execution.execId())) {
+                if (null == tradeService.getTradeOrderfillService().findByExecId(execution.execId())) {
 
                     executionDetails.put(execution.execId(), execution);
                 }
@@ -994,7 +994,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
                         tradeOrder.setCommission(new BigDecimal(totalComms));
                         tradeOrder = tradeService.saveTradeOrderfill(tradeOrder);
                         TradeOrder instance = tradeService
-                                .findTradeOrderByKey(tradeOrder.getOrderKey());
+                                .getTradeOrderService().findByOrderKey(tradeOrder.getOrderKey());
 
                         // Let the controller know an order was filled
                         if (tradeOrder.getIsFilled()) {
@@ -1021,7 +1021,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
             TWSBrokerModel.logOrderState(orderState);
             TWSBrokerModel.logTradeOrder(order);
 
-            TradeOrder instance = tradeService.findTradeOrderByKey(order.orderId());
+            TradeOrder instance = tradeService.getTradeOrderService().findByOrderKey(order.orderId());
 
             if (null == instance) {
 
@@ -1091,7 +1091,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
 
         try {
 
-            TradeOrder instance = tradeService.findTradeOrderByKey(orderId);
+            TradeOrder instance = tradeService.getTradeOrderService().findByOrderKey(orderId);
 
             if (null == instance) {
 
@@ -1653,7 +1653,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
         try {
 
             _log.debug("nextValidId: {}", orderId);
-            int maxKey = tradeService.findTradeOrderByMaxKey();
+            int maxKey = tradeService.getTradeOrderService().findByMaxOrderKey();
 
             if (maxKey < minOrderId) {
 
@@ -1999,12 +1999,12 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
 
         try {
             TWSBrokerModel.logCommissionReport(commsReport);
-            TradeOrderfill instance = tradeService.findTradeOrderfillByExecId(commsReport.m_execId);
+            TradeOrderfill instance = tradeService.getTradeOrderfillService().findByExecId(commsReport.m_execId);
 
             if (null != instance) {
 
                 TradeOrder tradeOrder = tradeService
-                        .findTradeOrderByKey(instance.getTradeOrder().getOrderKey());
+                        .getTradeOrderService().findByOrderKey(instance.getTradeOrder().getOrderKey());
 
                 for (TradeOrderfill tradeOrderfill : tradeOrder.getTradeOrderfills()) {
 

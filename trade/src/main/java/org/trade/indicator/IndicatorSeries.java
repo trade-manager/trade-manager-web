@@ -28,7 +28,7 @@ public abstract class IndicatorSeries extends ComparableObjectSeries implements 
     public static final String HeikinAshiSeries = HeikinAshiSeries.class.getSimpleName();
     public static final String VwapSeries = VwapSeries.class.getSimpleName();
     public static final String VolumeSeries = VolumeSeries.class.getSimpleName();
-    public static final String CandleSeries = org.trade.core.persistent.dao.series.indicator.CandleSeries.class.getSimpleName();
+    public static final String CandleSeries = org.trade.core.persistent.strategy.series.indicator.CandleSeries.class.getSimpleName();
     public static final String AverageTrueRangeSeries = AverageTrueRangeSeries.class.getSimpleName();
     public static final String RelativeStrengthIndexSeries = RelativeStrengthIndexSeries.class.getSimpleName();
     public static final String CommodityChannelIndexSeries = CommodityChannelIndexSeries.class.getSimpleName();

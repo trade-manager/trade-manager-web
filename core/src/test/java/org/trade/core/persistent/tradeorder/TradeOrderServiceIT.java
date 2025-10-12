@@ -15,9 +15,7 @@ import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
 import org.trade.core.broker.TWSBrokerModel;
-import org.trade.core.persistent.dao.TradeOrder;
-import org.trade.core.persistent.dao.TradeOrderRepository;
-import org.trade.core.persistent.dao.TradeOrderfill;
+import org.trade.core.persistent.tradeorderfill.TradeOrderfill;
 import org.trade.core.persistent.tradestrategy.Tradestrategy;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.time.TradingCalendar;
@@ -330,7 +328,7 @@ public class TradeOrderServiceIT extends TradestrategyBase {
     @Test
     public void findTradeOrderByMaxKey() {
 
-        Integer orderKey = tradeService.findTradeOrderByMaxKey();
+        Integer orderKey = tradeService.getTradeOrderService().findByMaxOrderKey();
         assertNotNull(orderKey);
         _log.info("Max Order key: {}", orderKey);
     }

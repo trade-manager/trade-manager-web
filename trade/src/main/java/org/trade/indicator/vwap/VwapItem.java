@@ -1,7 +1,7 @@
 package org.trade.indicator.vwap;
 
 import org.jfree.data.ComparableObjectItem;
-import org.trade.core.persistent.dao.series.indicator.vwap.Vwap;
+import org.trade.core.persistent.strategy.series.indicator.vwap.Vwap;
 import org.trade.core.util.time.RegularTimePeriod;
 
 import java.io.Serial;

@@ -18,6 +18,18 @@ public record TradestrategyLiteRecord(Long id,
 
     public static TradestrategyLiteRecord from(Tradestrategy tradestrategy) {
 
+        return new TradestrategyLiteRecord(
+
+                tradestrategy.getId(),
+                tradestrategy.getCreatedDate(),
+                tradestrategy.getUpdatedDate(),
+                tradestrategy.getVersion(),
+                tradestrategy.getDomainId(),
+                tradestrategy.getStatus()
+        );
+    }
+
+    public static TradestrategyLiteRecord from(TradestrategyLite tradestrategy) {
 
         return new TradestrategyLiteRecord(
 

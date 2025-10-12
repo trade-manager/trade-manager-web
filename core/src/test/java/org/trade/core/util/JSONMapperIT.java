@@ -17,10 +17,10 @@ import org.trade.core.TradestrategyBase;
 import org.trade.core.persistent.candle.Candle;
 import org.trade.core.persistent.candle.CandleRecord;
 import org.trade.core.persistent.candle.CandleServiceIT;
-import org.trade.core.persistent.dao.TradeOrder;
-import org.trade.core.persistent.dao.TradeOrderDTO;
-import org.trade.core.persistent.dao.series.indicator.candle.CandlePeriod;
 import org.trade.core.persistent.strategy.Strategy;
+import org.trade.core.persistent.strategy.series.indicator.candle.CandlePeriod;
+import org.trade.core.persistent.tradeorder.TradeOrder;
+import org.trade.core.persistent.tradeorder.TradeOrderRecord;
 import org.trade.core.persistent.tradestrategy.Tradestrategy;
 import org.trade.core.persistent.tradestrategy.TradestrategyLiteRecord;
 import org.trade.core.persistent.tradestrategy.TradestrategyRecord;
@@ -142,8 +142,15 @@ public class JSONMapperIT extends TradestrategyBase {
         TradestrategyRecord tradestrategyRecord = TradestrategyRecord.from(tradestrategy);
         String json = JSONMapper.getJSONString(tradestrategyRecord);
 
+        JSONObject tradestrategyJSON = new JSONObject(json);
+        _log.info("mapCandleJSON Tradestrategy JSON: {}", json.toString());
+        assertEquals(tradestrategy.getId(), tradestrategyJSON.getLong("id"));
+
         TradestrategyLiteRecord tradestrategyLiteRecord = TradestrategyLiteRecord.from(this.tradestrategy);
         json = JSONMapper.getJSONString(tradestrategyLiteRecord);
+        _log.info("mapCandleJSON TradestrategyLite JSON: {}", json.toString());
+        JSONObject tradestrategyLiteJSON = new JSONObject(json);
+        assertEquals(tradestrategy.getId(), tradestrategyLiteJSON.getLong("id"));
     }
 
     @Test
@@ -174,27 +181,25 @@ public class JSONMapperIT extends TradestrategyBase {
         assertNotNull(tradeOrder);
         _log.info("IdOrder: {}", tradeOrder.getId());
 
-        TradestrategyLiteRecord tradestrategyLiteRecord = TradestrategyLiteRecord.from(tradestrategy);
-        TradeOrderDTO tradeOrderDto = JSONMapper.convertEntityToRecord(tradeOrder, TradeOrderDTO.class);
-        tradeOrderDto.setTradestrategyLite(tradestrategyLiteRecord);
+        TradeOrderRecord tradeOrderRecord = TradeOrderRecord.from(tradeOrder);
 
-        String json = JSONMapper.getJSONString(tradeOrderDto);
-        _log.info("mapTradeOrder tradeOrderDto JSON: {}", json.toString());
+        String json = JSONMapper.getJSONString(tradeOrderRecord);
+        _log.info("mapTradeOrder tradeOrderRecord JSON: {}", json.toString());
         JSONObject dto = new JSONObject(json);
         assertEquals(tradeOrder.getId(), dto.getLong("id"));
 
-        tradeOrderDto = JSONMapper.getRecord(json, TradeOrderDTO.class);
-        _log.info("mapTradeOrder tradeOrderDto JSON: {}", tradeOrderDto.toString());
-        assertEquals(tradeOrder.getId(), tradeOrderDto.getId());
+        tradeOrderRecord = JSONMapper.getRecord(json, TradeOrderRecord.class);
+        _log.info("mapTradeOrder tradeOrderRecord JSON: {}", tradeOrderRecord.getId());
+        assertEquals(tradeOrder.getId(), tradeOrderRecord.getId());
 
-        TradeOrder newTradeOrder = JSONMapper.convertRecordToEntity(tradeOrderDto, TradeOrder.class);
+        TradeOrder newTradeOrder = JSONMapper.convertRecordToEntity(tradeOrderRecord, TradeOrder.class);
         _log.info("mapTradeOrder new newTradeOrder: {}", newTradeOrder.toString());
         assertEquals(tradeOrder.getId(), newTradeOrder.getId());
 
-        tradeOrder = tradeService.findTradeOrderByKey(newTradeOrder.getOrderKey());
-        tradeOrderDto = JSONMapper.convertEntityToRecord(tradeOrder, TradeOrderDTO.class);
-        json = JSONMapper.getJSONString(tradeOrderDto);
-        _log.info("mapTradeOrder tradeOrderDto JSON: {}", json.toString());
+        tradeOrder = tradeService.getTradeOrderService().findByOrderKey(newTradeOrder.getOrderKey());
+        tradeOrderRecord = TradeOrderRecord.from(tradeOrder);
+        json = JSONMapper.getJSONString(tradeOrderRecord);
+        _log.info("mapTradeOrder tradeOrderRecord JSON: {}", json.toString());
         dto = new JSONObject(json);
         assertEquals(tradeOrder.getId(), dto.getLong("id"));
     }

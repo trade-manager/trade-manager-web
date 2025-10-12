@@ -11,18 +11,72 @@ import java.time.ZonedDateTime;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-public record TradingdayRecord(Long id, ZonedDateTime open, ZonedDateTime close, String marketBar, String marketBias,
-                               String marketGap, Integer requestId) {
+public record TradingdayRecord(Long id,
+                               ZonedDateTime createdDate,
+                               ZonedDateTime updatedDate,
+                               Integer version,
+                               Long domainId,
+                               ZonedDateTime open,
+                               ZonedDateTime close,
+                               String marketBar,
+                               String marketBias,
+                               String marketGap,
+                               Integer requestId) {
 
     public static TradingdayRecord from(Tradingday tradingday) {
 
         return new TradingdayRecord(
                 tradingday.getId(),
+                tradingday.getCreatedDate(),
+                tradingday.getUpdatedDate(),
+                tradingday.getVersion(),
+                tradingday.getDomainId(),
                 tradingday.getOpen(),
                 tradingday.getClose(),
                 tradingday.getMarketBar(),
                 tradingday.getMarketBias(),
                 tradingday.getMarketGap(),
                 tradingday.getRequestId());
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    /**
+     * Method getCreatedDate.
+     *
+     * @return ZonedDateTime
+     */
+    public ZonedDateTime getCreatedDate() {
+        return this.createdDate;
+    }
+
+    /**
+     * Method getUpdatedDate.
+     *
+     * @return ZonedDateTime
+     */
+    public ZonedDateTime getUpdatedDate() {
+        return this.updatedDate;
+    }
+
+    /**
+     * Method getVersion.
+     *
+     * @return Integer
+     */
+    public Integer getVersion() {
+        return version;
+    }
+
+    /**
+     * Method getDomainId
+     *
+     * @return Long
+     */
+    public Long getDomainId() {
+
+        return domainId;
     }
 }

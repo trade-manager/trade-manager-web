@@ -11,8 +11,8 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import org.trade.core.aspect.Aspect;
 import org.trade.core.persistent.contract.ContractLite;
-import org.trade.core.persistent.dao.TradeOrder;
-import org.trade.core.persistent.dao.TradePosition;
+import org.trade.core.persistent.tradeorder.TradeOrder;
+import org.trade.core.persistent.tradeposition.TradePosition;
 
 import java.io.Serial;
 import java.io.Serializable;

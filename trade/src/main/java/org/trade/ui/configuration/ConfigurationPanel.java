@@ -14,9 +14,9 @@ import org.trade.core.lookup.DBTableLookupServiceProvider;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.codetype.CodeType;
 import org.trade.core.persistent.codetype.CodeValue;
-import org.trade.core.persistent.dao.series.indicator.IndicatorSeries;
 import org.trade.core.persistent.portfolio.Portfolio;
 import org.trade.core.persistent.strategy.Strategy;
+import org.trade.core.persistent.strategy.series.indicator.IndicatorSeries;
 import org.trade.core.valuetype.DAOEntryLimit;
 import org.trade.core.valuetype.ReferenceTable;
 import org.trade.ui.models.AccountTableModel;
@@ -41,7 +41,6 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Objects;
 
-import static org.trade.core.persistent.TradeService.PERSISTENT_PACKAGE;
 
 /**
  * @author Simon Allen
@@ -182,7 +181,7 @@ public class ConfigurationPanel extends BasePanel {
 
             this.setStatusBarMessage("Save in progress ...", BasePanel.INFORMATION);
             int selectedRow = configTable.getSelectedRow();
-            String className = PERSISTENT_PACKAGE + ((ReferenceTable) Objects.requireNonNull(refTableEditorComboBox.getSelectedItem())).getCode();
+            String className = ((ReferenceTable) Objects.requireNonNull(refTableEditorComboBox.getSelectedItem())).getCode();
 
             for (ListIterator<Aspect> itemIter = aspects.getAspects().listIterator(); itemIter.hasNext(); ) {
 
@@ -359,10 +358,10 @@ public class ConfigurationPanel extends BasePanel {
 
         try {
 
-            aspects = tradeService.getAspectService().findByClassName(PERSISTENT_PACKAGE + refTableClass);
+            aspects = tradeService.getAspectService().findByClassName(refTableClass);
             List<Object> params = new ArrayList<>();
             tableModel = (AspectTableModel) ClassFactory
-                    .getCreateClass("org.trade.ui.models." + refTableClass + "TableModel", params, this);
+                    .getCreateClass("org.trade.ui.models." + refTableClass.substring((refTableClass.lastIndexOf(".") + 1), refTableClass.length()) + "TableModel", params, this);
             tableModel.setData(aspects);
             configTable = new ConfigurationTable(tableModel);
             configTable.setFont(new Font("Monospaced", Font.PLAIN, 12));

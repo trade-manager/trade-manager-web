@@ -3,10 +3,11 @@ package org.trade.core.persistent.strategy;
 // Generated Feb 21, 2011 12:43:33 PM by Hibernate Tools 3.4.0.CR1
 
 
-import org.trade.core.persistent.dao.series.indicator.IndicatorSeries;
-import org.trade.core.persistent.dao.series.indicator.IndicatorSeriesRecord;
 import org.trade.core.persistent.rule.RuleRecord;
+import org.trade.core.persistent.strategy.series.indicator.IndicatorSeries;
+import org.trade.core.persistent.strategy.series.indicator.IndicatorSeriesRecord;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +17,12 @@ import java.util.List;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-public record StrategyRecord(Long id, String name,
+public record StrategyRecord(Long id,
+                             ZonedDateTime createdDate,
+                             ZonedDateTime updatedDate,
+                             Integer version,
+                             Long domainId,
+                             String name,
                              String className,
                              String description,
                              Boolean marketData,
@@ -57,13 +63,123 @@ public record StrategyRecord(Long id, String name,
 
         return new StrategyRecord(
                 strategy.getId(),
+                strategy.getCreatedDate(),
+                strategy.getUpdatedDate(),
+                strategy.getVersion(),
+                strategy.getDomainId(),
                 strategy.getName(),
                 strategy.getClassName(),
                 strategy.getDescription(),
                 strategy.getMarketData(),
                 (null != strategy.getStrategyManager() ? StrategyRecord.from(strategy.getStrategyManager()) : null),
-                ruleRecords,
+                List.copyOf(ruleRecords),
                 indicatorSeriesRecords
         );
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    /**
+     * Method getCreatedDate.
+     *
+     * @return ZonedDateTime
+     */
+    public ZonedDateTime getCreatedDate() {
+        return this.createdDate;
+    }
+
+    /**
+     * Method getUpdatedDate.
+     *
+     * @return ZonedDateTime
+     */
+    public ZonedDateTime getUpdatedDate() {
+        return this.updatedDate;
+    }
+
+    /**
+     * Method getVersion.
+     *
+     * @return Integer
+     */
+    public Integer getVersion() {
+        return version;
+    }
+
+    /**
+     * Method getDomainId
+     *
+     * @return Long
+     */
+    public Long getDomainId() {
+
+        return domainId;
+    }
+
+    /**
+     * Method getName.
+     *
+     * @return String
+     */
+    public String getName() {
+        return this.name;
+    }
+
+    /**
+     * Method getClassName.
+     *
+     * @return String
+     */
+    public String getClassName() {
+        return this.className;
+    }
+
+    /**
+     * Method getDescription.
+     *
+     * @return String
+     */
+    public String getDescription() {
+        return this.description;
+    }
+
+    /**
+     * Method getMarketData.
+     *
+     * @return Boolean
+     */
+    public Boolean getMarketData() {
+        return this.marketData;
+    }
+
+    /**
+     * Method getRules.
+     *
+     * @return List<RuleRecord>
+     */
+    public List<RuleRecord> getRules() {
+        return this.rules;
+    }
+
+
+    /**
+     * Method getIndicatorSeries.
+     *
+     * @return List<IndicatorSeries>
+     */
+    public List<IndicatorSeriesRecord> getIndicatorSeries() {
+        return this.indicatorSeries;
+    }
+
+    /**
+     * Method getStrategyManager.
+     *
+     * @return Strategy
+     */
+    public StrategyRecord getStrategyManager() {
+        return this.strategyMgr;
+    }
+
 }

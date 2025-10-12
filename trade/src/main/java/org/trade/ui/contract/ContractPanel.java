@@ -13,11 +13,11 @@ import org.trade.core.persistent.ServiceException;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.candle.Candle;
 import org.trade.core.persistent.contract.Contract;
-import org.trade.core.persistent.dao.TradeOrder;
-import org.trade.core.persistent.dao.TradePosition;
-import org.trade.core.persistent.dao.series.indicator.StrategyData;
 import org.trade.core.persistent.portfolio.Portfolio;
 import org.trade.core.persistent.strategy.Strategy;
+import org.trade.core.persistent.strategy.series.indicator.StrategyData;
+import org.trade.core.persistent.tradeorder.TradeOrder;
+import org.trade.core.persistent.tradeposition.TradePosition;
 import org.trade.core.persistent.tradestrategy.Tradestrategy;
 import org.trade.core.persistent.tradestrategy.TradestrategyOrders;
 import org.trade.core.persistent.tradingday.Tradingdays;
@@ -625,7 +625,7 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
             } else {
 
                 // Populate the candle series.
-                org.trade.core.persistent.dao.series.indicator.CandleDataset.populateSeries(tradestrategy.getStrategyData(), candles);
+                org.trade.core.persistent.strategy.series.indicator.CandleDataset.populateSeries(tradestrategy.getStrategyData(), candles);
                 CandleDataset.populateSeries(strategyDataUI, candles);
                 candles.clear();
                 populateIndicatorCandleSeries(tradestrategy, startDate, endDate);
@@ -649,14 +649,14 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
     private void populateIndicatorCandleSeries(Tradestrategy tradestrategy, ZonedDateTime startDate,
                                                ZonedDateTime endDate) throws ServiceException {
 
-        org.trade.core.persistent.dao.series.indicator.CandleDataset candleDataset = (org.trade.core.persistent.dao.series.indicator.CandleDataset) tradestrategy.getStrategyData()
-                .getIndicatorByType(org.trade.core.persistent.dao.series.indicator.IndicatorSeries.CandleSeries);
+        org.trade.core.persistent.strategy.series.indicator.CandleDataset candleDataset = (org.trade.core.persistent.strategy.series.indicator.CandleDataset) tradestrategy.getStrategyData()
+                .getIndicatorByType(org.trade.core.persistent.strategy.series.indicator.IndicatorSeries.CandleSeries);
 
         if (null != candleDataset) {
 
             for (int seriesIndex = 0; seriesIndex < candleDataset.getSeriesCount(); seriesIndex++) {
 
-                org.trade.core.persistent.dao.series.indicator.CandleSeries series = candleDataset.getSeries(seriesIndex);
+                org.trade.core.persistent.strategy.series.indicator.CandleSeries series = candleDataset.getSeries(seriesIndex);
 
                 Contract contract = this.tradeService.getContractService().findByUniqueKey(series.getSecType(),
                         series.getSymbol(), series.getExchange(), series.getCurrency(), null);
@@ -680,10 +680,10 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
                     } else {
 
                         StrategyData strategyData = StrategyData.create(childTradestrategy);
-                        org.trade.core.persistent.dao.series.indicator.CandleDataset.populateSeries(strategyData, indicatorCandles);
+                        org.trade.core.persistent.strategy.series.indicator.CandleDataset.populateSeries(strategyData, indicatorCandles);
                         indicatorCandles.clear();
 
-                        org.trade.core.persistent.dao.series.indicator.CandleSeries childSeries = strategyData.getBaseCandleSeries();
+                        org.trade.core.persistent.strategy.series.indicator.CandleSeries childSeries = strategyData.getBaseCandleSeries();
                         childSeries.setDisplaySeries(series.getDisplaySeries());
                         childSeries.setSeriesRGBColor(series.getSeriesRGBColor());
                         childSeries.setSubChart(series.getSubChart());
@@ -935,7 +935,7 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
                 }
                 if (null != prevIdTradePosition) {
 
-                    TradePosition tradePosition = this.tradeService.findTradePositionById(prevIdTradePosition);
+                    TradePosition tradePosition = this.tradeService.getTradePositionService().findById(prevIdTradePosition);
                     unRealizedPL = tradePosition.getUnRealizedProfit(tradestrategy.getStrategyData().getBaseCandleSeries().getContract().getLastPrice()).doubleValue();
                     realizedPL = tradePosition.getRealizedProfit().doubleValue();
                     netValue = tradePosition.getTotalNetValue().doubleValue();

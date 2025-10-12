@@ -1,6 +1,6 @@
 package org.trade.core.valuetype;
 
-import org.trade.core.persistent.dao.Entrylimit;
+import org.trade.core.persistent.codetype.Entrylimit;
 
 import java.io.Serial;
 import java.util.List;

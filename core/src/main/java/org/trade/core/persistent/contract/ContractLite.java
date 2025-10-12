@@ -9,7 +9,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import org.trade.core.aspect.Aspect;
-import org.trade.core.persistent.dao.TradePosition;
+import org.trade.core.persistent.tradeposition.TradePosition;
 
 import java.io.Serial;
 import java.io.Serializable;

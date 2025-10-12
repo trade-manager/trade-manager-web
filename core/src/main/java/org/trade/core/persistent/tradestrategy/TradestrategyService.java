@@ -1,7 +1,7 @@
 package org.trade.core.persistent.tradestrategy;
 
 import org.trade.core.persistent.contract.Contract;
-import org.trade.core.persistent.dao.TradeOrder;
+import org.trade.core.persistent.tradeorder.TradeOrder;
 import org.trade.core.persistent.tradingday.Tradingday;
 
 import java.time.ZonedDateTime;

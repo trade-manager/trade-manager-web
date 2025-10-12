@@ -5,18 +5,19 @@ import org.trade.core.persistent.account.AccountService;
 import org.trade.core.persistent.candle.CandleService;
 import org.trade.core.persistent.codetype.CodeTypeService;
 import org.trade.core.persistent.contract.ContractService;
-import org.trade.core.persistent.dao.TradeOrder;
-import org.trade.core.persistent.dao.TradeOrderfill;
-import org.trade.core.persistent.dao.TradePosition;
-import org.trade.core.persistent.dao.series.indicator.CandleSeries;
 import org.trade.core.persistent.portfolio.Portfolio;
 import org.trade.core.persistent.portfolio.PortfolioService;
 import org.trade.core.persistent.rule.RuleService;
 import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.persistent.strategy.StrategyService;
+import org.trade.core.persistent.strategy.series.indicator.CandleSeries;
 import org.trade.core.persistent.tradelogdetail.TradelogDetailService;
 import org.trade.core.persistent.tradelogdetail.TradelogReport;
 import org.trade.core.persistent.tradelogsummary.TradelogSummaryService;
+import org.trade.core.persistent.tradeorder.TradeOrder;
+import org.trade.core.persistent.tradeorder.TradeOrderService;
+import org.trade.core.persistent.tradeorderfill.TradeOrderfillService;
+import org.trade.core.persistent.tradeposition.TradePositionService;
 import org.trade.core.persistent.tradestrategy.Tradestrategy;
 import org.trade.core.persistent.tradestrategy.TradestrategyOrders;
 import org.trade.core.persistent.tradestrategy.TradestrategyService;
@@ -33,8 +34,6 @@ import java.time.ZonedDateTime;
  * @version $Revision: 1.0 $
  */
 public interface TradeService {
-
-    String PERSISTENT_PACKAGE = "org.trade.core.persistent.dao.";
 
     int SCALE_5 = 5;
     int SCALE_2 = 2;
@@ -124,6 +123,27 @@ public interface TradeService {
     TradestrategyService getTradestrategyService();
 
     /**
+     * Method getTradeOrderService.
+     *
+     * @return TradeOrderService
+     */
+    TradeOrderService getTradeOrderService();
+
+    /**
+     * Method getTradeOrderfillService.
+     *
+     * @return TradeOrderfillService
+     */
+    TradeOrderfillService getTradeOrderfillService();
+
+    /**
+     * Method getTradePositionService.
+     *
+     * @return TradePositionService
+     */
+    TradePositionService getTradePositionService();
+
+    /**
      * Method saveTrading.
      *
      * @param instance Tradingday
@@ -163,14 +183,6 @@ public interface TradeService {
     void saveCandleSeries(CandleSeries candleSeries);
 
     /**
-     * Method findTradeOrderById.
-     *
-     * @param id Long
-     * @return TradeOrder
-     */
-    TradeOrder findTradeOrderById(Long id);
-
-    /**
      * Method findPositionOrdersByTradestrategyId.
      *
      * @param tradestrategyId Long
@@ -187,14 +199,6 @@ public interface TradeService {
     TradestrategyOrders refreshPositionOrdersByTradestrategyId(TradestrategyOrders positionOrders);
 
     /**
-     * Method findTradePositionById.
-     *
-     * @param tradePositionId Long
-     * @return TradePosition
-     */
-    TradePosition findTradePositionById(Long tradePositionId);
-
-    /**
      * Method removeTradingdayTradeOrders.
      *
      * @param instance Tradingday
@@ -208,28 +212,6 @@ public interface TradeService {
      */
     void deleteTradestrategyTradeOrders(Tradestrategy instance);
 
-    /**
-     * Method findTradeOrderByKey.
-     *
-     * @param orderKey Integer
-     * @return TradeOrder
-     */
-    TradeOrder findTradeOrderByKey(Integer orderKey);
-
-    /**
-     * Method findTradeOrderfillByExecId.
-     *
-     * @param execId String
-     * @return TradeOrderfill
-     */
-    TradeOrderfill findTradeOrderfillByExecId(String execId);
-
-    /**
-     * Method findTradeOrderByMaxKey.
-     *
-     * @return Integer
-     */
-    Integer findTradeOrderByMaxKey();
 
     /**
      * Method findTradelogReport.

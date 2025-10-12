@@ -88,7 +88,6 @@ function runStrategy(candleSeriesJSON, newBar) {
              * cause it to be marked as filled.
              */
              let tradeOrder = JSON.parse(gs.getOpenPositionOrderJSON());
-
              gs.log('Info: FiveMinGapBarStrategy::runStrategy tradeOrder: ' + JSON.stringify(tradeOrder));
 
             if (!tradeOrder.error) {
@@ -217,7 +216,7 @@ function runStrategy(candleSeriesJSON, newBar) {
 
                 tradeOrder = tradeOrder.data;
                 openPositionOrderKey = tradeOrder.orderKey;
-                gs.log("We have a trade!!  trade order key: " + openPositionOrderKey);
+                gs.log("We have a trade!! trade order key: " + openPositionOrderKey);
 
                 // } else {
                 // gs.log("Rule 9:35 5min bar less than 2 * stop limits. Symbol: " + gs.getSymbol() + " Time: " + startPeriod);

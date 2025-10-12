@@ -7,6 +7,7 @@ import org.trade.core.aspect.Aspect;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.ZonedDateTime;
 
 
 /**
@@ -28,6 +29,12 @@ public class TradestrategyLite extends Aspect implements Serializable {
     public TradestrategyLite() {
     }
 
+    public TradestrategyLite(Long id, Integer version) {
+
+        super.setId(id);
+        super.setVersion(version);
+    }
+
     /**
      * Constructor for TradestrategyLite. Need for filtered query that just
      * gets the current version
@@ -35,10 +42,14 @@ public class TradestrategyLite extends Aspect implements Serializable {
      * @param id      Integer
      * @param version Integer
      */
-    public TradestrategyLite(Long id, Integer version) {
+    public TradestrategyLite(Long id, ZonedDateTime createdDate, ZonedDateTime updatedDate, Integer version, Long domainId, String status) {
 
-        setId(id);
-        this.version = version;
+        super.setId(id);
+        super.setCreatedDate(createdDate);
+        super.setUpdatedDate(updatedDate);
+        super.setVersion(version);
+        super.setDomainId(domainId);
+        this.setStatus(status);
     }
 
     /**

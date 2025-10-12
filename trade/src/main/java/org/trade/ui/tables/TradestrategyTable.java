@@ -3,7 +3,7 @@ package org.trade.ui.tables;
 import org.trade.base.Table;
 import org.trade.base.TableModel;
 import org.trade.core.persistent.contract.Contract;
-import org.trade.core.persistent.dao.strategy.IStrategyRule;
+import org.trade.core.persistent.strategy.strategyrule.IStrategyRule;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.BarSize;
 import org.trade.core.valuetype.ChartDays;

@@ -1,7 +1,7 @@
 package org.trade.indicator.bollingerbands;
 
 import org.jfree.data.ComparableObjectItem;
-import org.trade.core.persistent.dao.series.indicator.bollingerbands.BollingerBands;
+import org.trade.core.persistent.strategy.series.indicator.bollingerbands.BollingerBands;
 import org.trade.core.util.time.RegularTimePeriod;
 
 import java.io.Serial;
