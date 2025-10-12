@@ -17,9 +17,9 @@ import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
 import org.trade.core.broker.IBrokerModel;
 import org.trade.core.factory.ClassFactory;
-import org.trade.core.persistent.strategy.series.indicator.StrategyData;
 import org.trade.core.persistent.rule.Rule;
 import org.trade.core.persistent.strategy.Strategy;
+import org.trade.core.persistent.strategy.series.indicator.StrategyData;
 import org.trade.core.persistent.tradeorder.TradeOrder;
 import org.trade.core.persistent.tradeorderfill.TradeOrderfill;
 import org.trade.core.persistent.tradeposition.TradePosition;
@@ -143,7 +143,8 @@ public class AbstractStrategyJSIT extends TradestrategyBase {
     }
 
     /**
-     * The first test create an order with status UNSUBMIT
+     * The first test create an order with status UNSUBMIT which is changed to CANCELLED at 11:30.
+     * So we need to reset the entry order to SUMBIT before we run the PosMgrFHXRBHYRStrategy
      *
      * @throws Exception
      */

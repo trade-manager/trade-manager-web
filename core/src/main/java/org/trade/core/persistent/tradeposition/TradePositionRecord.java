@@ -42,11 +42,10 @@ public record TradePositionRecord(Long id,
      * @param tradePosition TradePosition
      * @return TradePositionRecord
      */
-    public static TradePositionRecord from(final TradePosition tradePosition) {
+    public static TradePositionRecord fromWithChild(final TradePosition tradePosition) {
 
 
         List<TradeOrderRecord> tradeOrderRecords = new ArrayList<>();
-
 
         if (null != tradePosition.getTradeOrders() && !tradePosition.getTradeOrders().isEmpty()) {
 
@@ -56,6 +55,37 @@ public record TradePositionRecord(Long id,
             }
         }
 
+        return new TradePositionRecord(
+                tradePosition.getId(),
+                tradePosition.getCreatedDate(),
+                tradePosition.getUpdatedDate(),
+                tradePosition.getVersion(),
+                tradePosition.getDomainId(),
+                tradePosition.getOpenDate(),
+                tradePosition.getSide(),
+                tradePosition.getOpenQuantity(),
+                tradePosition.getCloseDate(),
+                tradePosition.getTotalCommission(),
+                tradePosition.getTotalBuyQuantity(),
+                tradePosition.getTotalBuyValue(),
+                tradePosition.getTotalSellQuantity(),
+                tradePosition.getTotalSellValue(),
+                tradePosition.getTotalNetValue(),
+                (null != tradePosition.getContractLite() ? ContractLiteRecord.from(tradePosition.getContractLite()) : null),
+                List.copyOf(tradeOrderRecords)
+
+        );
+    }
+
+    /**
+     * Used from TradeOrderRecord i.e. no tradeOrderRecords.
+     *
+     * @param tradePosition
+     * @return
+     */
+    public static TradePositionRecord from(final TradePosition tradePosition) {
+
+        List<TradeOrderRecord> tradeOrderRecords = new ArrayList<>();
 
         return new TradePositionRecord(
                 tradePosition.getId(),
