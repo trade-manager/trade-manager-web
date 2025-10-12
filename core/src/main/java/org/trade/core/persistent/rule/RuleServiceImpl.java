@@ -39,7 +39,7 @@ public class RuleServiceImpl implements RuleService {
 
     public Rule validateAndGet(Long id) {
 
-        return this.ruleRepository.findById(id).orElseThrow(() -> new RuleNotFoundException(String.format("Rule with id %s not found", name)));
+        return this.ruleRepository.findById(id).orElseThrow(() -> new RuleNotFoundException(String.format("Rule with id %s not found", id)));
     }
 
     public List<Rule> findAll() {
