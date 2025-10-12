@@ -109,4 +109,9 @@ public class ContractServiceImpl implements ContractService {
 
         return this.contractRepository.findById(id).orElse(null);
     }
+
+    public Contract validateAndGet(Long id) {
+
+        return this.contractRepository.findById(id).orElseThrow(() -> new ContractNotFoundException(String.format("Contract with id %s not found", id)));
+    }
 }

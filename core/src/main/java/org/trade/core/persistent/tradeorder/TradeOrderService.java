@@ -16,6 +16,14 @@ public interface TradeOrderService {
     TradeOrder findById(final Long id);
 
     /**
+     * Method validateAndGet.
+     *
+     * @param id Long
+     * @return TradeOrder
+     */
+    TradeOrder validateAndGet(Long id);
+
+    /**
      * Method findByMaxOrderKey.
      *
      * @return Integer

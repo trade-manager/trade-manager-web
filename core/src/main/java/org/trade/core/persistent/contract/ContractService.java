@@ -31,6 +31,13 @@ public interface ContractService {
     Contract findById(Long id);
 
     /**
+     * Method findById.
+     *
+     * @return Candle
+     */
+    Contract validateAndGet(Long id);
+
+    /**
      * Method findContractLiteById.
      *
      * @param id Long

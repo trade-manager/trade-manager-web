@@ -14,4 +14,11 @@ public interface TradePositionService {
      */
     TradePosition findById(final Long id);
 
+    /**
+     * Method validateAndGet.
+     *
+     * @param id Long
+     * @return TradePosition
+     */
+    TradePosition validateAndGet(Long id);
 }

@@ -55,6 +55,11 @@ public class TradestrategyServiceImpl implements TradestrategyService {
         return null;
     }
 
+    public Tradestrategy validateAndGet(Long id) {
+
+        return this.tradestrategyRepository.findById(id).orElseThrow(() -> new TradestrategyNotFoundException(String.format("Tradestrategy with id %s not found", id)));
+    }
+
     public List<Tradestrategy> findAll() {
 
         return tradestrategyRepository.findAll();

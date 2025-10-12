@@ -31,6 +31,11 @@ public class TradingdayServiceImpl implements TradingdayService {
         this.tradingdayRepository = tradingdayRepository;
     }
 
+    public Tradingday validateAndGet(Long id) {
+
+        return this.tradingdayRepository.findById(id).orElseThrow(() -> new TradingdayNotFoundException(String.format("Tradingday with id %s not found", id)));
+    }
+
     /**
      * Method findTradingdaysByDateRange.
      *

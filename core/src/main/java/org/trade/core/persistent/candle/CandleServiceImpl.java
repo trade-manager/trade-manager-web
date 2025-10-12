@@ -37,6 +37,11 @@ public class CandleServiceImpl implements CandleService {
         return this.candleRepository.findById(id).orElse(null);
     }
 
+    public Candle validateAndGet(Long id) {
+
+        return this.candleRepository.findById(id).orElseThrow(() -> new CandleNotFoundException(String.format("Candle with id %s not found", id)));
+    }
+
     /**
      * Method findByContractAndDateRange.
      *

@@ -20,4 +20,9 @@ public class TradePositionServiceImpl implements TradePositionService {
 
         return this.tradePositionRepository.findById(id).orElse(null);
     }
+
+    public TradePosition validateAndGet(Long id) {
+
+        return this.tradePositionRepository.findById(id).orElseThrow(() -> new TradePositionNotFoundException(String.format("TradePosition with id %s not found", id)));
+    }
 }

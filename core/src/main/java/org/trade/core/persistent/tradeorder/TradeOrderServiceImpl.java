@@ -31,6 +31,11 @@ public class TradeOrderServiceImpl implements TradeOrderService {
         return tradeOrderRepository.findById(id).orElse(null);
     }
 
+    public TradeOrder validateAndGet(Long id) {
+
+        return this.tradeOrderRepository.findById(id).orElseThrow(() -> new TradeOrderNotFoundException(String.format("TradeOrder with id %s not found", id)));
+    }
+
     public TradeOrder findByOrderKey(final Integer orderKey) {
 
         return tradeOrderRepository.findByOrderKey(orderKey);
