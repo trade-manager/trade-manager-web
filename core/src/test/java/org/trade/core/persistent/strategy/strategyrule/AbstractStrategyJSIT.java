@@ -142,6 +142,11 @@ public class AbstractStrategyJSIT extends TradestrategyBase {
         deleteAfter = false;
     }
 
+    /**
+     * The first test create an order with status UNSUBMIT
+     *
+     * @throws Exception
+     */
     @Test
     @Order(200)
     public void posMgrFHXRBHYRStrategyJS() throws Exception {

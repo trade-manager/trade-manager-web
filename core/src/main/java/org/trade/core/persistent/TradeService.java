@@ -35,8 +35,6 @@ import java.time.ZonedDateTime;
  */
 public interface TradeService {
 
-    String PERSISTENT_PACKAGE = "org.trade.core.persistent.";
-
     int SCALE_5 = 5;
     int SCALE_2 = 2;
 

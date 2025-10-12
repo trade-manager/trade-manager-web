@@ -41,7 +41,6 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Objects;
 
-import static org.trade.core.persistent.TradeService.PERSISTENT_PACKAGE;
 
 /**
  * @author Simon Allen
@@ -182,7 +181,7 @@ public class ConfigurationPanel extends BasePanel {
 
             this.setStatusBarMessage("Save in progress ...", BasePanel.INFORMATION);
             int selectedRow = configTable.getSelectedRow();
-            String className = PERSISTENT_PACKAGE + ((ReferenceTable) Objects.requireNonNull(refTableEditorComboBox.getSelectedItem())).getCode();
+            String className = ((ReferenceTable) Objects.requireNonNull(refTableEditorComboBox.getSelectedItem())).getCode();
 
             for (ListIterator<Aspect> itemIter = aspects.getAspects().listIterator(); itemIter.hasNext(); ) {
 
@@ -359,7 +358,7 @@ public class ConfigurationPanel extends BasePanel {
 
         try {
 
-            aspects = tradeService.getAspectService().findByClassName(PERSISTENT_PACKAGE + refTableClass);
+            aspects = tradeService.getAspectService().findByClassName(refTableClass);
             List<Object> params = new ArrayList<>();
             tableModel = (AspectTableModel) ClassFactory
                     .getCreateClass("org.trade.ui.models." + refTableClass + "TableModel", params, this);
