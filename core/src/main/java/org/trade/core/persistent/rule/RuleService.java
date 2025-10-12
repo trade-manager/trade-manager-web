@@ -18,6 +18,13 @@ public interface RuleService {
     Rule findById(Long id);
 
     /**
+     * Method validateAndGet.
+     *
+     * @return Rule
+     */
+    Rule validateAndGet(Long id);
+
+    /**
      * Method findAll.
      *
      * @return List<Rule>

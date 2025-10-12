@@ -21,6 +21,13 @@ public interface CandleService {
     Candle findById(Long id);
 
     /**
+     * Method findById.
+     *
+     * @return Candle
+     */
+    Candle validateAndGet(Long id);
+
+    /**
      * Method findByContractDateRangeBarSize.
      *
      * @param contract    Contract

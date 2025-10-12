@@ -26,6 +26,14 @@ public interface TradingdayService {
     Tradingday findById(Long tradingdayId);
 
     /**
+     * Method validateAndGet.
+     *
+     * @param id Long
+     * @return Tradingday
+     */
+    Tradingday validateAndGet(Long id);
+
+    /**
      * Method findByOpenCloseDate.
      *
      * @param openDate  ZonedDateTime

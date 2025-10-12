@@ -7,6 +7,14 @@ package org.trade.core.persistent.tradeorderfill;
 public interface TradeOrderfillService {
 
     /**
+     * Method validateAndGet.
+     *
+     * @param id Long
+     * @return TradeOrderfill
+     */
+    TradeOrderfill validateAndGet(Long id);
+
+    /**
      * Method findByExecId.
      *
      * @param execId String

@@ -15,6 +15,11 @@ public class TradeOrderfillServiceImpl implements TradeOrderfillService {
         this.tradeOrderfillRepository = tradeOrderfillRepository;
     }
 
+    public TradeOrderfill validateAndGet(Long id) {
+
+        return this.tradeOrderfillRepository.findById(id).orElseThrow(() -> new TradeOrderfillNotFoundException(String.format("TradeOrderfill with id %s not found", id)));
+    }
+
     public TradeOrderfill findByExecId(String execId) {
 
         return tradeOrderfillRepository.findByExecId(execId);

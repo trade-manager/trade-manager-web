@@ -23,6 +23,14 @@ public interface TradestrategyService {
     Tradestrategy findById(Long id);
 
     /**
+     * Method validateAndGet.
+     *
+     * @param id Long
+     * @return Tradestrategy
+     */
+    Tradestrategy validateAndGet(Long id);
+
+    /**
      * Method findAll.
      *
      * @return List<Tradestrategy>

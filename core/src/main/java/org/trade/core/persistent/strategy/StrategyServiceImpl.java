@@ -72,6 +72,4 @@ public class StrategyServiceImpl implements StrategyService {
 
         return strategyRepository.findByName(name).orElseThrow(() -> new StrategyNotFoundException(String.format("Strategy with name %s not found", name)));
     }
-
-
 }
