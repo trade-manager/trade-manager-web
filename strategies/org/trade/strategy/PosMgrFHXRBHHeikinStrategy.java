@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trade.core.broker.IBrokerModel;
 import org.trade.core.persistent.TradeService;
-import org.trade.core.persistent.dao.TradeOrder;
 import org.trade.core.persistent.strategy.series.indicator.CandleSeries;
 import org.trade.core.persistent.strategy.series.indicator.HeikinAshiDataset;
 import org.trade.core.persistent.strategy.series.indicator.HeikinAshiSeries;
@@ -12,8 +11,9 @@ import org.trade.core.persistent.strategy.series.indicator.IndicatorSeries;
 import org.trade.core.persistent.strategy.series.indicator.StrategyData;
 import org.trade.core.persistent.strategy.series.indicator.candle.CandleItem;
 import org.trade.core.persistent.strategy.series.indicator.heikinashi.HeikinAshiItem;
-import org.trade.core.persistent.dao.strategy.AbstractStrategyRule;
-import org.trade.core.persistent.dao.strategy.StrategyRuleException;
+import org.trade.core.persistent.strategy.strategyrule.AbstractStrategyRule;
+import org.trade.core.persistent.strategy.strategyrule.StrategyRuleException;
+import org.trade.core.persistent.tradeorder.TradeOrder;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.Action;
 import org.trade.core.valuetype.Money;
@@ -24,7 +24,6 @@ import java.io.Serial;
 import java.time.ZonedDateTime;
 
 /**
- *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */

@@ -32,7 +32,8 @@
  * Changes
  * -------
  *
- */package org.trade.strategy;
+ */
+package org.trade.strategy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,14 +42,13 @@ import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.strategy.series.indicator.CandleSeries;
 import org.trade.core.persistent.strategy.series.indicator.StrategyData;
 import org.trade.core.persistent.strategy.series.indicator.candle.CandleItem;
-import org.trade.core.persistent.dao.strategy.AbstractStrategyRule;
-import org.trade.core.persistent.dao.strategy.StrategyRuleException;
+import org.trade.core.persistent.strategy.strategyrule.AbstractStrategyRule;
+import org.trade.core.persistent.strategy.strategyrule.StrategyRuleException;
 
 import java.io.Serial;
 import java.time.ZonedDateTime;
 
 /**
- *
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
