@@ -29,6 +29,12 @@ public class TradestrategyLite extends Aspect implements Serializable {
     public TradestrategyLite() {
     }
 
+    public TradestrategyLite(Long id, Integer version) {
+
+        super.setId(id);
+        super.setVersion(version);
+    }
+
     /**
      * Constructor for TradestrategyLite. Need for filtered query that just
      * gets the current version
