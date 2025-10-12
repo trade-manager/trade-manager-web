@@ -361,7 +361,7 @@ public class ConfigurationPanel extends BasePanel {
             aspects = tradeService.getAspectService().findByClassName(refTableClass);
             List<Object> params = new ArrayList<>();
             tableModel = (AspectTableModel) ClassFactory
-                    .getCreateClass("org.trade.ui.models." + refTableClass + "TableModel", params, this);
+                    .getCreateClass("org.trade.ui.models." + refTableClass.substring((refTableClass.lastIndexOf(".") + 1), refTableClass.length()) + "TableModel", params, this);
             tableModel.setData(aspects);
             configTable = new ConfigurationTable(tableModel);
             configTable.setFont(new Font("Monospaced", Font.PLAIN, 12));
