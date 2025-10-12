@@ -1,7 +1,7 @@
 package org.trade.ui.models;
 
 import org.trade.base.TableModel;
-import org.trade.core.aspect.Entrylimit;
+import org.trade.core.persistent.codetype.Entrylimit;
 import org.trade.core.persistent.tradeorder.TradeOrder;
 import org.trade.core.persistent.tradeposition.TradePosition;
 import org.trade.core.persistent.tradestrategy.Tradestrategy;

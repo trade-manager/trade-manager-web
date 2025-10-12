@@ -1,7 +1,7 @@
 package org.trade.indicator;
 
 
-import org.trade.core.aspect.Entrylimit;
+import org.trade.core.persistent.codetype.Entrylimit;
 import org.trade.core.persistent.codetype.CodeValue;
 import org.trade.core.persistent.strategy.series.indicator.candle.CandlePeriod;
 import org.trade.core.persistent.strategy.series.indicator.pivot.PivotCalculator;

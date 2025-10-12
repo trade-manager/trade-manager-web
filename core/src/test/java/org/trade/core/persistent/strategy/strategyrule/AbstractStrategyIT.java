@@ -12,7 +12,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
-import org.trade.core.aspect.Entrylimit;
+import org.trade.core.persistent.codetype.Entrylimit;
 import org.trade.core.broker.BackTestBrokerModel;
 import org.trade.core.broker.IBrokerModel;
 import org.trade.core.factory.ClassFactory;

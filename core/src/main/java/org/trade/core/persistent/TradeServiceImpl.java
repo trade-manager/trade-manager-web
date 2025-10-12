@@ -659,7 +659,7 @@ public class TradeServiceImpl implements TradeService {
 
     public Aspects findByClassName(String aspectClassName) throws ClassNotFoundException {
 
-        if ((PERSISTENT_PACKAGE + "Strategy").equals(aspectClassName)) {
+        if ((PERSISTENT_PACKAGE + "strategy.Strategy").equals(aspectClassName)) {
 
             /*
              * Relationship Strategy -> IndicatorSeries is LAZY so we need
@@ -675,7 +675,7 @@ public class TradeServiceImpl implements TradeService {
 
             aspects.setDirty(false);
             return aspects;
-        } else if ((PERSISTENT_PACKAGE + "Portfolio").equals(aspectClassName)) {
+        } else if ((PERSISTENT_PACKAGE + "portfolio.Portfolio").equals(aspectClassName)) {
 
             /*
              * Relationship Portfolio -> PortfolioAccount is LAZY so we

@@ -3,7 +3,7 @@ package org.trade.core.persistent.strategy.series.indicator;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Transient;
-import org.trade.core.aspect.Entrylimit;
+import org.trade.core.persistent.codetype.Entrylimit;
 import org.trade.core.persistent.ServiceException;
 import org.trade.core.persistent.codetype.CodeValue;
 import org.trade.core.persistent.strategy.Strategy;

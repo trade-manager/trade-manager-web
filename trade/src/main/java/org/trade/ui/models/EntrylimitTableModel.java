@@ -2,7 +2,7 @@ package org.trade.ui.models;
 
 import org.trade.core.aspect.Aspect;
 import org.trade.core.aspect.Aspects;
-import org.trade.core.aspect.Entrylimit;
+import org.trade.core.persistent.codetype.Entrylimit;
 import org.trade.core.util.CoreUtils;
 import org.trade.core.valuetype.Money;
 import org.trade.core.valuetype.Percent;
