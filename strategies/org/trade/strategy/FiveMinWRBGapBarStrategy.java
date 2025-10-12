@@ -2,10 +2,10 @@ package org.trade.strategy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.trade.core.aspect.Entrylimit;
 import org.trade.core.broker.IBrokerModel;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.candle.Candle;
+import org.trade.core.persistent.codetype.EntryLimit;
 import org.trade.core.persistent.strategy.series.indicator.CandleSeries;
 import org.trade.core.persistent.strategy.series.indicator.StrategyData;
 import org.trade.core.persistent.strategy.series.indicator.candle.CandleItem;
