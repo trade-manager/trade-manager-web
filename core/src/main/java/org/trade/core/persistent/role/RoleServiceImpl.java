@@ -76,7 +76,7 @@ public class RoleServiceImpl implements RoleService {
     private RoleRecord convertToRecord(Role role) {
 
         role.getContainRoles().size();
-        RoleRecord roleRecord = RoleRecord.fromWithChild(role);
+        RoleRecord roleRecord = RoleRecord.from(role, true);
 
         // Recursively convert subordinates, or fetch lazily if needed.
         if (role.getContainRoles() != null && !role.getContainRoles().isEmpty()) {

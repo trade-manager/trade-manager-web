@@ -14,7 +14,8 @@ import java.time.ZonedDateTime;
  * @version $Revision: 1.0 $
  */
 
-public record ContractLiteRecord(Long id, ZonedDateTime createdDate,
+public record ContractLiteRecord(Long id,
+                                 ZonedDateTime createdDate,
                                  ZonedDateTime updatedDate,
                                  Integer version,
                                  Long domainId,
@@ -23,10 +24,11 @@ public record ContractLiteRecord(Long id, ZonedDateTime createdDate,
     /**
      * Method from note roles are LAZY loaded., hence we do not get the children.
      *
-     * @param contract Contract
+     * @param contract          Contract
+     * @param withTradePosition Boolean
      * @return ContractRecord
      */
-    public static ContractLiteRecord from(final ContractLite contract) {
+    public static ContractLiteRecord from(final ContractLite contract, Boolean withTradePosition) {
 
         return new ContractLiteRecord(
                 contract.getId(),
@@ -34,7 +36,7 @@ public record ContractLiteRecord(Long id, ZonedDateTime createdDate,
                 contract.getUpdatedDate(),
                 contract.getVersion(),
                 contract.getDomainId(),
-                null //(null != contract.getTradePosition() ? TradePositionRecord.from(contract.getTradePosition()) : null)
+                (withTradePosition && null != contract.getTradePosition() ? TradePositionRecord.from(contract.getTradePosition()) : null)
         );
     }
 

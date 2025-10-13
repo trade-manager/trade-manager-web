@@ -1518,7 +1518,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
                 return;
             }
             TradestrategyOrders positionOrders = tradeService
-                    .findPositionOrdersByTradestrategyId(tradestrategy.getId());
+                    .getTradestrategyService().findPositionOrdersById(tradestrategy.getId());
             Tradestrategy instance = tradeService.getTradestrategyService().findById(tradestrategy.getId());
 
             for (TradeOrder order : positionOrders.getTradeOrders()) {

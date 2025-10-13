@@ -19,6 +19,7 @@ import org.trade.core.persistent.tradingday.Tradingday;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Simon Allen
@@ -81,6 +82,38 @@ public class TradestrategyServiceImpl implements TradestrategyService {
         return entityManager.find(TradestrategyLite.class, tradestrategy.getId());
     }
 
+    public TradestrategyOrders refreshPositionOrdersById(final TradestrategyOrders positionOrders) {
+
+        Integer version = this.findVersionById(Objects.requireNonNull(positionOrders.getId()));
+
+        if (positionOrders.getVersion().equals(version)) {
+
+            return positionOrders;
+        } else {
+
+            return this.findPositionOrdersById(positionOrders.getId());
+        }
+    }
+
+    @Transactional
+    public TradestrategyOrders findPositionOrdersById(final Long id) {
+
+        TradestrategyOrders instance = entityManager.find(TradestrategyOrders.class, id);
+        ;
+
+        /*
+         * If we have an open position get all the orders for that position.
+         * Note the position could have been opened by a different
+         * tradestrategy. So this set of orders is for the position.
+         */
+        if (instance.hasOpenTradePosition()) {
+
+            instance.getOpenTradePosition().getTradeOrders().size();
+        }
+
+        return instance;
+    }
+
     /**
      * Method findVersionById.
      *
@@ -106,17 +139,6 @@ public class TradestrategyServiceImpl implements TradestrategyService {
         }
 
         return null;
-    }
-
-    /**
-     * Method findPositionOrdersByTradestrategyId.
-     *
-     * @param tradestrategyId Integer
-     * @return PositionOrders
-     */
-    public TradestrategyOrders findPositionOrdersById(Long tradestrategyId) {
-
-        return entityManager.find(TradestrategyOrders.class, tradestrategyId);
     }
 
     @Transactional

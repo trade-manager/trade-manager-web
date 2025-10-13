@@ -19,7 +19,6 @@ import org.trade.core.persistent.tradeorder.TradeOrderService;
 import org.trade.core.persistent.tradeorderfill.TradeOrderfillService;
 import org.trade.core.persistent.tradeposition.TradePositionService;
 import org.trade.core.persistent.tradestrategy.Tradestrategy;
-import org.trade.core.persistent.tradestrategy.TradestrategyOrders;
 import org.trade.core.persistent.tradestrategy.TradestrategyService;
 import org.trade.core.persistent.tradingday.Tradingday;
 import org.trade.core.persistent.tradingday.TradingdayService;
@@ -182,21 +181,6 @@ public interface TradeService {
      */
     void saveCandleSeries(CandleSeries candleSeries);
 
-    /**
-     * Method findPositionOrdersByTradestrategyId.
-     *
-     * @param tradestrategyId Long
-     * @return PositionOrders
-     */
-    TradestrategyOrders findPositionOrdersByTradestrategyId(Long tradestrategyId);
-
-    /**
-     * Method refreshPositionOrdersByTradestrategyId.
-     *
-     * @param positionOrders PositionOrders
-     * @return PositionOrders
-     */
-    TradestrategyOrders refreshPositionOrdersByTradestrategyId(TradestrategyOrders positionOrders);
 
     /**
      * Method removeTradingdayTradeOrders.

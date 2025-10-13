@@ -158,7 +158,7 @@ public class TradeServiceIT extends TradestrategyBase {
     public void findOpenTradePositionByTradestrategyId() {
 
         TradestrategyOrders positionOrders = this.tradeService
-                .findPositionOrdersByTradestrategyId(tradestrategy.getId());
+                .getTradestrategyService().findPositionOrdersById(tradestrategy.getId());
 
         if (!positionOrders.hasOpenTradePosition()) {
 
@@ -171,7 +171,7 @@ public class TradeServiceIT extends TradestrategyBase {
             ContractLite contractLite = this.tradeService.getAspectService().save(tradestrategy.getContractLite());
             tradestrategy.setContractLite(contractLite);
             positionOrders = this.tradeService
-                    .findPositionOrdersByTradestrategyId(tradestrategy.getId());
+                    .getTradestrategyService().findPositionOrdersById(tradestrategy.getId());
 
             assertNotNull(positionOrders.getOpenTradePosition());
         }
@@ -324,7 +324,7 @@ public class TradeServiceIT extends TradestrategyBase {
          * Update Stop/target orders to Submitted.
          */
         TradestrategyOrders positionOrders = this.tradeService
-                .findPositionOrdersByTradestrategyId(tradestrategy.getId());
+                .getTradestrategyService().findPositionOrdersById(tradestrategy.getId());
 
         for (TradeOrder tradeOrderOca : positionOrders.getTradeOrders()) {
 
@@ -344,7 +344,7 @@ public class TradeServiceIT extends TradestrategyBase {
          * Fill the stop orders.
          */
         positionOrders = this.tradeService
-                .findPositionOrdersByTradestrategyId(tradestrategy.getId());
+                .getTradestrategyService().findPositionOrdersById(tradestrategy.getId());
 
         for (TradeOrder tradeOrderOca : positionOrders.getTradeOrders()) {
 
@@ -387,7 +387,7 @@ public class TradeServiceIT extends TradestrategyBase {
          * Update Stop/target orders status to filled and cancelled.
          */
         positionOrders = this.tradeService
-                .findPositionOrdersByTradestrategyId(tradestrategy.getId());
+                .getTradestrategyService().findPositionOrdersById(tradestrategy.getId());
 
         for (TradeOrder tradeOrderOca : positionOrders.getTradeOrders()) {
 
@@ -679,7 +679,7 @@ public class TradeServiceIT extends TradestrategyBase {
         assertNotNull(resultTrade);
 
         TradestrategyOrders result = this.tradeService
-                .findPositionOrdersByTradestrategyId(tradestrategy.getId());
+                .getTradestrategyService().findPositionOrdersById(tradestrategy.getId());
         assertNotNull(result);
         resultTrade.getContractLite().setTradePosition(null);
         resultTrade.setContractLite(this.tradeService.getAspectService().save(resultTrade.getContractLite()));
@@ -695,13 +695,13 @@ public class TradeServiceIT extends TradestrategyBase {
         assertNotNull(resultTrade);
 
         TradestrategyOrders positionOrders = this.tradeService
-                .findPositionOrdersByTradestrategyId(tradestrategy.getId());
+                .getTradestrategyService().findPositionOrdersById(tradestrategy.getId());
         _log.info("testFindVersionById tradestrategyId:{} version: {}", positionOrders.getId(), positionOrders.getVersion());
 
         TradestrategyOrders result = this.tradeService.getAspectService().save(positionOrders);
 
         _log.info("testFindVersionById tradestrategyId:{} version: {}", result.getId(), result.getVersion());
-        result = this.tradeService.refreshPositionOrdersByTradestrategyId(positionOrders);
+        result = this.tradeService.getTradestrategyService().refreshPositionOrdersById(positionOrders);
         _log.info("testFindVersionById tradestrategyId:{} prev version: {} current version: {}", result.getId(), positionOrders.getVersion(), result.getVersion());
         assertNotNull(result);
     }

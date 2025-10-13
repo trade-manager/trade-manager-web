@@ -188,7 +188,7 @@ public class DBBroker extends Broker {
                     continue;
                 }
 
-                positionOrders = tradeService.findPositionOrdersByTradestrategyId(this.tradestrategyId);
+                positionOrders = tradeService.getTradestrategyService().findPositionOrdersById(this.tradestrategyId);
 
                 /*
                  * The new candle may create an order so this call fills it and
@@ -215,7 +215,7 @@ public class DBBroker extends Broker {
                      * the trade that we weren't stopped out on the entry
                      * candle.
                      */
-                    positionOrders = tradeService.findPositionOrdersByTradestrategyId(this.tradestrategyId);
+                    positionOrders = tradeService.getTradestrategyService().findPositionOrdersById(this.tradestrategyId);
 
                     if (this.tradestrategy.getStrategy().hasStrategyManager()) {
 
@@ -241,7 +241,7 @@ public class DBBroker extends Broker {
                                  * Refresh the orders as the other thread may
                                  * have added orders that need to be filled.
                                  */
-                                positionOrders = tradeService.findPositionOrdersByTradestrategyId(this.tradestrategyId);
+                                positionOrders = tradeService.getTradestrategyService().findPositionOrdersById(this.tradestrategyId);
                                 filledOrders(this.tradestrategy.getContract(), positionOrders, candle);
                             }
                         }
