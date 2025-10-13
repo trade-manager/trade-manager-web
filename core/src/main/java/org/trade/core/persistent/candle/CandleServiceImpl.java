@@ -10,16 +10,11 @@ import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Transactional;
 import org.trade.core.persistent.contract.Contract;
-import org.trade.core.persistent.strategy.series.indicator.CandleSeries;
-import org.trade.core.persistent.strategy.series.indicator.candle.CandleItem;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author Simon Allen
