@@ -34,7 +34,7 @@ public record UserRecord(Long id,
 
             for (Role role : user.getRoles()) {
 
-                roles.add(RoleRecord.from(role));
+                roles.add(RoleRecord.from(role, false));
             }
         }
 

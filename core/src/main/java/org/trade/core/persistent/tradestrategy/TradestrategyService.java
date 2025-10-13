@@ -114,4 +114,13 @@ public interface TradestrategyService {
      * @return List<Tradestrategy>
      */
     List<Tradestrategy> findByTradingday(Tradingday tradingday);
+
+    /**
+     * Method refreshPositionOrdersById.
+     *
+     * @param positionOrders
+     * @return
+     */
+    TradestrategyOrders refreshPositionOrdersById(final TradestrategyOrders positionOrders);
+
 }

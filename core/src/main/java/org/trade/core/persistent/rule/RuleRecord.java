@@ -41,7 +41,7 @@ public record RuleRecord(Long id,
                 rule.getRule(),
                 rule.ruleVersion,
                 rule.getContentType(),
-                (null != rule.getStrategy() ? StrategyRecord.from(rule.getStrategy()) : null));
+                (null != rule.getStrategy() ? StrategyRecord.from(rule.getStrategy(), false) : null));
     }
 
     public Long getId() {

@@ -85,7 +85,7 @@ public record TradeOrderRecord(Long id,
 
             for (TradeOrderfill tradeOrderfill : tradeOrder.getTradeOrderfills()) {
 
-                tradeOrderfillRecords.add(TradeOrderfillRecord.from(tradeOrderfill));
+                tradeOrderfillRecords.add(TradeOrderfillRecord.from(tradeOrderfill, false));
             }
         }
 

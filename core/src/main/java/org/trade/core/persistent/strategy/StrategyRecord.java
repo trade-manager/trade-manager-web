@@ -3,6 +3,7 @@ package org.trade.core.persistent.strategy;
 // Generated Feb 21, 2011 12:43:33 PM by Hibernate Tools 3.4.0.CR1
 
 
+import org.trade.core.persistent.rule.Rule;
 import org.trade.core.persistent.rule.RuleRecord;
 import org.trade.core.persistent.strategy.series.indicator.IndicatorSeries;
 import org.trade.core.persistent.strategy.series.indicator.IndicatorSeriesRecord;
@@ -33,23 +34,22 @@ public record StrategyRecord(Long id,
     /**
      * Method from note rules are LAZY loaded., hence we do not get the children.
      *
-     * @param strategy Strategy
+     * @param strategy  Strategy
+     * @param withRules Boolean
      * @return StrategyRecord
      */
-    public static StrategyRecord from(final Strategy strategy) {
+    public static StrategyRecord from(final Strategy strategy, Boolean withRules) {
 
         List<RuleRecord> ruleRecords = new ArrayList<>();
 
-        /*
-        if (null != strategy.getRules() && !strategy.getRules().isEmpty()) {
+
+        if (withRules && null != strategy.getRules() && !strategy.getRules().isEmpty()) {
 
             for (Rule rule : strategy.getRules()) {
 
                 ruleRecords.add(RuleRecord.from(rule));
             }
         }
-
-         */
 
         List<IndicatorSeriesRecord> indicatorSeriesRecords = new ArrayList<>();
 
@@ -71,7 +71,7 @@ public record StrategyRecord(Long id,
                 strategy.getClassName(),
                 strategy.getDescription(),
                 strategy.getMarketData(),
-                (null != strategy.getStrategyManager() ? StrategyRecord.from(strategy.getStrategyManager()) : null),
+                (null != strategy.getStrategyManager() ? StrategyRecord.from(strategy.getStrategyManager(), false) : null),
                 List.copyOf(ruleRecords),
                 indicatorSeriesRecords
         );

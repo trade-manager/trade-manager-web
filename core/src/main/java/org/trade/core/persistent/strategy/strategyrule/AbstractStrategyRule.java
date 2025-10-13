@@ -1082,7 +1082,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
         try {
 
             this.tradestrategyOrders = tradeService
-                    .findPositionOrdersByTradestrategyId(this.tradestrategyId);
+                    .getTradestrategyService().findPositionOrdersById(this.tradestrategyId);
         } catch (Exception ex) {
 
             throw new StrategyRuleException(1, 410, "Error position orders: " + ex.getMessage());

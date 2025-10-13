@@ -33,7 +33,7 @@ public record IndicatorSeriesRecord(Long Id,
 
             for (CodeValue codeValue : indicatorSeries.getCodeValues()) {
 
-                codeValueRecords.add(CodeValueRecord.from(codeValue));
+                codeValueRecords.add(CodeValueRecord.from(codeValue, false, false));
             }
         }
 

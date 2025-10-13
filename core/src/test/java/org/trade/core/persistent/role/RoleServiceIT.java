@@ -135,7 +135,7 @@ public class RoleServiceIT extends TradestrategyBase {
 
         Role role = roleService.findByName(Role.ROLE_MANAGER);
         assertNotNull(role);
-        RoleRecord roleRecord = RoleRecord.from(role);
+        RoleRecord roleRecord = RoleRecord.from(role, false);
         assertNotNull(roleRecord);
     }
 

@@ -18,41 +18,21 @@ public record RoleRecord(Long id,
                          List<RoleRecord> containRoles) {
 
     /**
-     * Method from note roles are LAZY loaded., hence we do not get the children.
-     *
-     * @param role Role
-     * @return RoleRecord
-     */
-    public static RoleRecord from(final Role role) {
-
-        return new RoleRecord(
-                role.getId(),
-                role.getCreatedDate(),
-                role.getUpdatedDate(),
-                role.getVersion(),
-                role.getDomainId(),
-                role.getName(),
-                role.getDescription(),
-                (null == role.getContainedRole() ? null : RoleRecord.from(role.getContainedRole())),
-                null
-        );
-    }
-
-    /**
      * Method fromWithChild note roles are LAZY loaded.
      *
-     * @param role Role
+     * @param role         Role
+     * @param withChildren Boolean
      * @return RoleRecord
      */
-    public static RoleRecord fromWithChild(final Role role) {
+    public static RoleRecord from(final Role role, Boolean withChildren) {
 
         List<RoleRecord> containRecordRoles = new ArrayList<>();
 
-        if (null != role.getContainRoles() && !role.getContainRoles().isEmpty()) {
+        if (withChildren && null != role.getContainRoles() && !role.getContainRoles().isEmpty()) {
 
             for (Role containRole : role.getContainRoles()) {
 
-                containRecordRoles.add(RoleRecord.fromWithChild(containRole));
+                containRecordRoles.add(RoleRecord.from(containRole, true));
             }
         }
 
@@ -64,9 +44,18 @@ public record RoleRecord(Long id,
                 role.getDomainId(),
                 role.getName(),
                 role.getDescription(),
-                (null != role.getContainedRole() ? RoleRecord.from(role.getContainedRole()) : null),
+                (null != role.getContainedRole() ? RoleRecord.from(role.getContainedRole(), false) : null),
                 List.copyOf(containRecordRoles)
         );
+    }
+
+    /**
+     * @param role
+     * @return
+     */
+    public static RoleRecord from(final Role role) {
+
+        return RoleRecord.from(role, false);
     }
 
     public Long getId() {

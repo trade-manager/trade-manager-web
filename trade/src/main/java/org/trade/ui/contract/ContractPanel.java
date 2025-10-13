@@ -863,7 +863,7 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
                 }
 
                 tradestrategyOrders = this.tradeService
-                        .findPositionOrdersByTradestrategyId(currentTab.getTradestrategy().getId());
+                        .getTradestrategyService().findPositionOrdersById(currentTab.getTradestrategy().getId());
                 currentTab.setTradestrategy(tradestrategy);
                 tradeOrderModel.setData(tradestrategy);
                 RowSorter<?> rsDetail = tradeOrderTable.getRowSorter();

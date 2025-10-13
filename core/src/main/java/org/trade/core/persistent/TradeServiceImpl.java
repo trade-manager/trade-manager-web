@@ -190,37 +190,6 @@ public class TradeServiceImpl implements TradeService {
         return tradelogReport;
     }
 
-    public TradestrategyOrders refreshPositionOrdersByTradestrategyId(final TradestrategyOrders positionOrders) {
-
-        Integer version = tradestrategyService.findVersionById(Objects.requireNonNull(positionOrders.getId()));
-
-        if (positionOrders.getVersion().equals(version)) {
-
-            return positionOrders;
-        } else {
-
-            return this.tradestrategyService.findPositionOrdersById(positionOrders.getId());
-        }
-    }
-
-    @Transactional
-    public TradestrategyOrders findPositionOrdersByTradestrategyId(final Long tradestrategyId) {
-
-        TradestrategyOrders instance = this.tradestrategyService.findPositionOrdersById(tradestrategyId);
-
-        /*
-         * If we have an open position get all the orders for that position.
-         * Note the position could have been opened by a different
-         * tradestrategy. So this set of orders is for the position.
-         */
-        if (instance.hasOpenTradePosition()) {
-
-            instance.getOpenTradePosition().getTradeOrders().size();
-        }
-
-        return instance;
-    }
-
     @Transactional
     public Portfolio savePortfolio(Portfolio instance) {
 
@@ -291,7 +260,6 @@ public class TradeServiceImpl implements TradeService {
             }
         }
     }
-
 
     // READ_UNCOMMITTED, READ_COMMITTED, REPEATABLE_READ, SERIALIZABLE
     @Transactional(isolation = Isolation.READ_COMMITTED)
@@ -401,7 +369,7 @@ public class TradeServiceImpl implements TradeService {
 
             if (CoreUtils.nullSafeComparator(tradeOrder.getFilledQuantity(), 0) == 1) {
 
-                tradestrategyOrders = this.findPositionOrdersByTradestrategyId(tradestrategyId);
+                tradestrategyOrders = this.tradestrategyService.findPositionOrdersById(tradestrategyId);
 
                 if (tradestrategyOrders.hasOpenTradePosition()) {
 
@@ -536,7 +504,7 @@ public class TradeServiceImpl implements TradeService {
             // Partial fills case.
             if (null == tradestrategyOrders) {
 
-                tradestrategyOrders = this.findPositionOrdersByTradestrategyId(tradestrategyId);
+                tradestrategyOrders = this.tradestrategyService.findPositionOrdersById(tradestrategyId);
             }
 
             if (!tradePosition.isOpen() && !TradestrategyStatus.CLOSED.equals(tradestrategyOrders.getStatus())) {
@@ -565,7 +533,7 @@ public class TradeServiceImpl implements TradeService {
 
                 if (null == tradestrategyOrders) {
 
-                    tradestrategyOrders = this.findPositionOrdersByTradestrategyId(tradestrategyId);
+                    tradestrategyOrders = this.tradestrategyService.findPositionOrdersById(tradestrategyId);
                 }
 
                 if (!TradestrategyStatus.CANCELLED.equals(tradestrategyOrders.getStatus())) {

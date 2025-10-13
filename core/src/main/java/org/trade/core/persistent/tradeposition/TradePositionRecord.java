@@ -71,7 +71,7 @@ public record TradePositionRecord(Long id,
                 tradePosition.getTotalSellQuantity(),
                 tradePosition.getTotalSellValue(),
                 tradePosition.getTotalNetValue(),
-                (null != tradePosition.getContractLite() ? ContractLiteRecord.from(tradePosition.getContractLite()) : null),
+                (null != tradePosition.getContractLite() ? ContractLiteRecord.from(tradePosition.getContractLite(), false) : null),
                 List.copyOf(tradeOrderRecords)
 
         );
@@ -103,7 +103,7 @@ public record TradePositionRecord(Long id,
                 tradePosition.getTotalSellQuantity(),
                 tradePosition.getTotalSellValue(),
                 tradePosition.getTotalNetValue(),
-                (null != tradePosition.getContractLite() ? ContractLiteRecord.from(tradePosition.getContractLite()) : null),
+                (null != tradePosition.getContractLite() ? ContractLiteRecord.from(tradePosition.getContractLite(), false) : null),
                 List.copyOf(tradeOrderRecords)
 
         );

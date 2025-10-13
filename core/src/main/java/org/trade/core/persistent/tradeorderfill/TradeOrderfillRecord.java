@@ -37,9 +37,10 @@ public record TradeOrderfillRecord(Long id,
      * Method from note roles are LAZY loaded., hence we do not get the children.
      *
      * @param tradeOrderfill TradeOrderfill
+     * @param withTradeOrder Boolean
      * @return TradeOrderfillRecord
      */
-    public static TradeOrderfillRecord from(final TradeOrderfill tradeOrderfill) {
+    public static TradeOrderfillRecord from(final TradeOrderfill tradeOrderfill, Boolean withTradeOrder) {
 
         return new TradeOrderfillRecord(
                 tradeOrderfill.getId(),
@@ -59,7 +60,7 @@ public record TradeOrderfillRecord(Long id,
                 tradeOrderfill.getCommission(),
                 tradeOrderfill.getOrderReference(),
                 tradeOrderfill.getPermId(),
-                null //(null != tradeOrderfill.getTradeOrder() ? TradeOrderRecord.from(tradeOrderfill.getTradeOrder()) : null)
+                (withTradeOrder && null != tradeOrderfill.getTradeOrder() ? TradeOrderRecord.from(tradeOrderfill.getTradeOrder()) : null)
         );
     }
 
