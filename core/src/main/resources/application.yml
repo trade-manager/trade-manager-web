@@ -1,0 +1,71 @@
+spring:
+    application:
+        name: trade-api
+# Root API point
+        data:
+            rest:
+                base-path: /api
+# Spring datasource connection info see ../db:properties
+    datasource:
+        url: @db-dba.url@/@db-dba.schema@?serverTimezone=@db-dba.time_zone@
+        name: @db-dba.schema@
+        serverTimezone: @db-dba.time_zone@
+        username: @db-user.username@
+        password: @db-user.password@
+        driver-class-name: org.mariadb.jdbc.Driver
+
+# DB connection pool properties
+        hikari:maximum-pool-size: 100
+        hikari:minimum-idle: 5
+        hikari:connection-timeout: 30000
+        hikari:idle-timeout: 600000
+        hikari:max-lifetime: 1800000
+    jpa:
+# Spring web request interceptor that binds a Hibernate Session to the thread for the entire processing of the request:
+        open-in-view: false
+# Show or not log for each sql query
+        show-sql: false
+# Hibernate ddl auto (create, create-drop, update): with "update" the database
+# schema will be automatically updated accordingly to java entities found in
+# the project
+        hibernate:
+            ddl-auto: none
+# Hibernate Configuration
+
+        properties:
+# Hibernate Configuration        
+            hibernate:
+            # Optimizes batching by ordering operations:
+                order_inserts: true
+                order_updates: true
+                # Allows Hibernate to generate SQL optimized for a particular DBMS
+                # dialect: org.hibernate.dialect.MariaDBDialect
+                jdbc:
+                
+# Defines the number of statements to be grouped in a single batch:                
+                    batch_size: 20
+
+# Enables batching for entities with versioning:
+                    batch_versioned_data: true
+# Timezone for the DB
+                    time_zone: @db-dba.time_zone@
+
+
+# Springdoc swagger ui to exclude/include
+springdoc:
+    api-docs:enabled: true
+    packages-to-exclude:  org.trade.core
+    paths-to-match: /api/**, /public/**, /auth/**
+
+app:
+    cors:
+        allowed-origins: http://localhost:8080
+        allowedMethods: "GET,POST,PUT,DELETE,OPTIONS"
+        allowedHeaders: "*"
+        allowCredentials: true
+        maxAge: 3600
+
+# The location of the logging properties:
+logging:
+    config: "file:../config.properties"
+    
