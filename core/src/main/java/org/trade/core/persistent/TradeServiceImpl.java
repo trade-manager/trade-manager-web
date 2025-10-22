@@ -15,8 +15,11 @@ import org.trade.core.persistent.candle.CandleService;
 import org.trade.core.persistent.codetype.CodeTypeService;
 import org.trade.core.persistent.contract.Contract;
 import org.trade.core.persistent.contract.ContractService;
+import org.trade.core.persistent.domain.DomainService;
+import org.trade.core.persistent.employee.EmployeeService;
 import org.trade.core.persistent.portfolio.Portfolio;
 import org.trade.core.persistent.portfolio.PortfolioService;
+import org.trade.core.persistent.role.RoleService;
 import org.trade.core.persistent.rule.RuleService;
 import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.persistent.strategy.StrategyService;
@@ -38,6 +41,7 @@ import org.trade.core.persistent.tradestrategy.TradestrategyOrders;
 import org.trade.core.persistent.tradestrategy.TradestrategyService;
 import org.trade.core.persistent.tradingday.Tradingday;
 import org.trade.core.persistent.tradingday.TradingdayService;
+import org.trade.core.persistent.user.UserService;
 import org.trade.core.util.CoreUtils;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.Action;
@@ -67,6 +71,10 @@ public class TradeServiceImpl implements TradeService {
     private final static Logger _log = LoggerFactory.getLogger(TradeServiceImpl.class);
 
     private final AspectService aspectService;
+    private final DomainService domainService;
+    private final UserService userService;
+    private final RoleService roleService;
+    private final EmployeeService employeeService;
     private final TradingdayService tradingdayService;
     private final CodeTypeService codeTypeService;
     private final AccountService accountService;
@@ -82,11 +90,15 @@ public class TradeServiceImpl implements TradeService {
     private final TradeOrderfillService tradeOrderfillService;
     private final TradePositionService tradePositionService;
 
-    public TradeServiceImpl(final AspectService aspectService, final TradingdayService tradingdayService, final CodeTypeService codeTypeService, final AccountService accountService, final PortfolioService portfolioService,
+    public TradeServiceImpl(final AspectService aspectService, final DomainService domainService, final UserService userService, final RoleService roleService , EmployeeService employeeService, final TradingdayService tradingdayService, final CodeTypeService codeTypeService, final AccountService accountService, final PortfolioService portfolioService,
                             final RuleService ruleService, final StrategyService strategyService, final ContractService contractService, final CandleService candleService, final TradelogDetailService tradelogDetailService,
                             final TradelogSummaryService tradelogSummaryService, final TradestrategyService tradestrategyService, final TradeOrderService tradeOrderService, final TradeOrderfillService tradeOrderfillService, final TradePositionService tradePositionService) {
 
         this.aspectService = aspectService;
+        this.domainService = domainService;
+        this.userService = userService;
+        this.roleService = roleService;
+        this.employeeService = employeeService;
         this.tradingdayService = tradingdayService;
         this.codeTypeService = codeTypeService;
         this.accountService = accountService;
@@ -107,6 +119,25 @@ public class TradeServiceImpl implements TradeService {
 
         return this.aspectService;
     }
+
+    public DomainService getDomainService() {
+
+        return this.domainService;
+    }
+
+    public UserService getUserService() {
+
+        return this.userService;
+    }
+
+public RoleService getRoleService(){
+        return roleService;
+}
+    public EmployeeService getEmployeeService() {
+
+        return this.employeeService;
+    }
+
 
     public TradingdayService getTradingdayService() {
 

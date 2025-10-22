@@ -38,6 +38,21 @@ public interface TradestrategyService {
     List<Tradestrategy> findAll();
 
     /**
+     * Method save.
+     *
+     * @param tradestrategy Tradestrategy
+     * @return Tradestrategy
+     */
+    Tradestrategy save(Tradestrategy tradestrategy);
+
+    /**
+     * Method delete.
+     *
+     * @param tradestrategy Tradingday
+     */
+    void delete(Tradestrategy tradestrategy);
+
+    /**
      * Method findByRequestId.
      *
      * @param requestId Integer

@@ -5,8 +5,11 @@ import org.trade.core.persistent.account.AccountService;
 import org.trade.core.persistent.candle.CandleService;
 import org.trade.core.persistent.codetype.CodeTypeService;
 import org.trade.core.persistent.contract.ContractService;
+import org.trade.core.persistent.domain.DomainService;
+import org.trade.core.persistent.employee.EmployeeService;
 import org.trade.core.persistent.portfolio.Portfolio;
 import org.trade.core.persistent.portfolio.PortfolioService;
+import org.trade.core.persistent.role.RoleService;
 import org.trade.core.persistent.rule.RuleService;
 import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.persistent.strategy.StrategyService;
@@ -22,6 +25,7 @@ import org.trade.core.persistent.tradestrategy.Tradestrategy;
 import org.trade.core.persistent.tradestrategy.TradestrategyService;
 import org.trade.core.persistent.tradingday.Tradingday;
 import org.trade.core.persistent.tradingday.TradingdayService;
+import org.trade.core.persistent.user.UserService;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -43,6 +47,34 @@ public interface TradeService {
      * @return AspectService
      */
     AspectService getAspectService();
+
+    /**
+     * Method getDomainService.
+     *
+     * @return DomainService
+     */
+    DomainService getDomainService();
+
+    /**
+     * Method getUserService.
+     *
+     * @return UserService
+     */
+    UserService getUserService();
+
+    /**
+     * Method getRoleService.
+     *
+     * @return RoleServiceS
+     */
+    RoleService getRoleService();
+
+    /**
+     * Method getEmployeeService.
+     *
+     * @return EmployeeService
+     */
+    EmployeeService getEmployeeService();
 
     /**
      * Method getTradingdayService.

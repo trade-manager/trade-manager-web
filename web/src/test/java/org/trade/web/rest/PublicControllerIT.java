@@ -21,14 +21,11 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
+import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.domain.Domain;
-import org.trade.core.persistent.domain.DomainService;
 import org.trade.core.persistent.employee.Employee;
-import org.trade.core.persistent.employee.EmployeeService;
 import org.trade.core.persistent.role.Role;
-import org.trade.core.persistent.role.RoleService;
 import org.trade.core.persistent.user.User;
-import org.trade.core.persistent.user.UserService;
 import org.trade.web.service.CustomUserDetailsService;
 
 import java.util.ArrayList;
@@ -56,16 +53,7 @@ class PublicControllerIT extends TradestrategyBase {
     private MockMvc mockMvc;
 
     @Autowired
-    private DomainService domainService;
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private RoleService roleService;
-
-    @Autowired
-    private EmployeeService employeeService;
+    private TradeService tradeService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -99,20 +87,20 @@ class PublicControllerIT extends TradestrategyBase {
     @BeforeEach
     public void setUpTest() {
 
-        Domain gobalDomain = domainService.findByName(Domain.GLOBAL);
+        Domain gobalDomain = tradeService.getDomainService().findByName(Domain.GLOBAL);
         assertNotNull(gobalDomain);
-        Role role = roleService.findByName(Role.ROLE_ADMIN);
+        Role role = tradeService.getRoleService().findByName(Role.ROLE_ADMIN);
         assertNotNull(role);
         List<Role> roles = new ArrayList<>();
         roles.add(role);
-        User user = userService.findUserByName(userName);
+        User user = tradeService.getUserService().findUserByName(userName);
         assertNull(user);
         user = new User(userName, userName, userName, userName, userName + "@" + Domain.GLOBAL + ".com", this.passwordEncoder.encode(password), gobalDomain, roles);
-        user = userService.save(user);
+        user = tradeService.getUserService().save(user);
         assertNotNull(user.getId());
         this.addRecord(user);
         Employee employee = new Employee(userName, userName, userName, userName, userName + "@" + Domain.GLOBAL + ".com", user);
-        employeeService.save(employee);
+        tradeService.getEmployeeService().save(employee);
         assertNotNull(employee.getId());
         this.addRecord(employee);
     }

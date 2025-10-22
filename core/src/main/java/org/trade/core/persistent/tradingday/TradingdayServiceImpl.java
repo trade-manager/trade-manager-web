@@ -31,6 +31,22 @@ public class TradingdayServiceImpl implements TradingdayService {
         this.tradingdayRepository = tradingdayRepository;
     }
 
+    public List<Tradingday> findAll() {
+
+        return this.tradingdayRepository.findAll();
+    }
+
+    public Tradingday save(Tradingday tradingday) {
+
+        return this.tradingdayRepository.save(tradingday);
+    }
+
+
+    public void delete(Tradingday tradingday) {
+
+        this.tradingdayRepository.delete(tradingday);
+    }
+
     public Tradingday validateAndGet(Long id) {
 
         return this.tradingdayRepository.findById(id).orElseThrow(() -> new TradingdayNotFoundException(String.format("Tradingday with id %s not found", id)));

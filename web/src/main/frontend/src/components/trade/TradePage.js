@@ -13,6 +13,7 @@ function TradePage() {
   const isAdmin = user.role === 'ADMIN'
 
   const tradingday = tradingdayApi.getTradingdays()
+
   const [tradingdays, setTradingdays] = useState([])
   const [tradingdayId, setTradingdayId] = useState('')
   const [tradingdayOpen, setTradingdayOpen] = useState('')
@@ -21,9 +22,9 @@ function TradePage() {
   const [tradingdayMktBias, setTradingdayMktBias] = useState('')
   const [tradingdayMktBar, setTradingdayMktBar] = useState('')
 
-  const [isTradingdaysLoading, setIsTradingdaysLoading] = useState(false)
   const [tradingdayOpenSearch, setTradingdayOpenSearch] = useState('')
   const [tradingdayCloseSearch, setTradingdayCloseSearch] = useState('')
+  const [isTradingdaysLoading, setIsTradingdaysLoading] = useState(false)
 
   const [tradestrategies, setTradestrategies] = useState([])
   const [tradestrategyId, setTradestrategyId] = useState('')

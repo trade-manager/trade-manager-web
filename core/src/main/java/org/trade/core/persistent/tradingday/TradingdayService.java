@@ -1,12 +1,35 @@
 package org.trade.core.persistent.tradingday;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 
 /**
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
 public interface TradingdayService {
+
+    /**
+     * Method findAll.
+     *
+     * @return List<Tradingday>
+     */
+    List<Tradingday> findAll();
+
+    /**
+     * Method save.
+     *
+     * @param tradingday Tradingday
+     * @return Tradingday
+     */
+    Tradingday save(Tradingday tradingday);
+
+    /**
+     * Method delete.
+     *
+     * @param tradingday Tradingday
+     */
+    void delete(Tradingday tradingday);
 
     /**
      * Method findTradingdaysByDateRangeOrderByOpenAsc.
