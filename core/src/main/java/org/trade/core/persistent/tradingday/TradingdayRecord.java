@@ -2,7 +2,11 @@ package org.trade.core.persistent.tradingday;
 
 // Generated Feb 21, 2011 2:18:03 PM by Hibernate Tools 3.4.0.CR1
 
+import org.trade.core.persistent.tradestrategy.TradestrategyRecord;
+
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -21,10 +25,21 @@ public record TradingdayRecord(Long id,
                                String marketBar,
                                String marketBias,
                                String marketGap,
-                               Integer requestId) {
+                               Integer requestId,
+                               List<TradestrategyRecord> tradestrategies) {
 
     public static TradingdayRecord from(Tradingday tradingday) {
 
+        List<TradestrategyRecord> tradestrategyRecords = new ArrayList<>();
+/*
+        if (null != tradingday.getTradestrategies() && !tradingday.getTradestrategies().isEmpty()) {
+
+            for (Tradestrategy tradestrategy : tradingday.getTradestrategies()) {
+
+                tradestrategyRecords.add(TradestrategyRecord.from(tradestrategy));
+            }
+        }
+*/
         return new TradingdayRecord(
                 tradingday.getId(),
                 tradingday.getCreatedDate(),
@@ -36,7 +51,8 @@ public record TradingdayRecord(Long id,
                 tradingday.getMarketBar(),
                 tradingday.getMarketBias(),
                 tradingday.getMarketGap(),
-                tradingday.getRequestId());
+                tradingday.getRequestId(),
+                List.copyOf(tradestrategyRecords));
     }
 
     public Long getId() {
@@ -79,4 +95,60 @@ public record TradingdayRecord(Long id,
 
         return domainId;
     }
+
+    /**
+     * Method getOpen.
+     *
+     * @return ZonedDateTime
+     */
+    public ZonedDateTime getOpen() {
+        return this.open;
+    }
+
+    /**
+     * Method getClose.
+     *
+     * @return ZonedDateTime
+     */
+    public ZonedDateTime getClose() {
+        return this.close;
+    }
+
+    /**
+     * Method getMarketBias.
+     *
+     * @return String
+     */
+    public String getMarketBias() {
+        return this.marketBias;
+    }
+
+    /**
+     * Method getMarketGap.
+     *
+     * @return String
+     */
+    public String getMarketGap() {
+        return this.marketGap;
+    }
+
+    /**
+     * Method getMarketBar.
+     *
+     * @return String
+     */
+    public String getMarketBar() {
+        return this.marketBar;
+    }
+
+    /**
+     * Method getTradestrategies.
+     *
+     * @return List<TradestrategyRecord>
+     */
+    public List<TradestrategyRecord> getTradestrategies() {
+        return this.tradestrategies;
+    }
+
+
 }

@@ -32,8 +32,9 @@ public class TradingCalendar {
 
     public static ZoneId MKT_TIMEZONE = null;
     public static ZoneId LOCAL_TIMEZONE = null;
-    public static final String ISODateFormat = "yyyy-MM-dd HH:mm:ss -HH:mm";
-
+    //public static final String ISODateFormat = "yyyy-MM-dd HH:mm:ss -HH:mm";
+    public static final String ISODateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+    public static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(TradingCalendar.ISODateFormat);
     private static final HashMap<Integer, int[]> HOLIDAYS = new HashMap<>();
     private static int[] NONTRADINGDAYS = new int[]{};
 

@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.tradestrategy.Tradestrategy;
 import org.trade.core.persistent.tradestrategy.TradestrategyRecord;
-import org.trade.core.persistent.tradestrategy.TradestrategyService;
 import org.trade.core.persistent.tradingday.Tradingday;
 import org.trade.core.util.JSONMapper;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -43,8 +43,10 @@ public class TradestrategyController {
 
     @Operation(security = {@SecurityRequirement(name = BASIC_AUTH_SECURITY_SCHEME)})
     @GetMapping
-    public List<TradestrategyRecord> getTradestrategies(@RequestParam(value = "text", required = false) Tradingday tradingday) {
+    public List<TradestrategyRecord> getTradestrategies(@RequestParam(value = "text", required = false) ZonedDateTime open, @RequestParam(value = "text", required = false) ZonedDateTime close) {
         List<Tradestrategy> tradestrategies = new ArrayList<>();
+
+        Tradingday tradingday= tradeService.getTradingdayService().findByOpenCloseDate(open, close);
 
         if (tradingday != null) {
             tradestrategies = tradeService.getTradestrategyService().findByTradingday(tradingday);

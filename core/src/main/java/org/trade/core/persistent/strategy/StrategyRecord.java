@@ -42,7 +42,6 @@ public record StrategyRecord(Long id,
 
         List<RuleRecord> ruleRecords = new ArrayList<>();
 
-
         if (withRules && null != strategy.getRules() && !strategy.getRules().isEmpty()) {
 
             for (Rule rule : strategy.getRules()) {

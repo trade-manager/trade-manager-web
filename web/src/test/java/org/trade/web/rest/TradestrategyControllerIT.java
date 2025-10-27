@@ -22,17 +22,23 @@ import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
 import org.trade.core.persistent.TradeService;
+import org.trade.core.persistent.contract.Contract;
 import org.trade.core.persistent.domain.Domain;
+import org.trade.core.persistent.portfolio.Portfolio;
 import org.trade.core.persistent.role.Role;
+import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.persistent.tradestrategy.Tradestrategy;
+import org.trade.core.persistent.tradestrategy.TradestrategyRecord;
 import org.trade.core.persistent.tradingday.Tradingday;
 import org.trade.core.persistent.tradingday.TradingdayRecord;
 import org.trade.core.persistent.user.User;
 import org.trade.core.util.JSONMapper;
-import org.trade.core.util.time.TradingCalendar;
+import org.trade.core.valuetype.Currency;
+import org.trade.core.valuetype.Exchange;
+import org.trade.core.valuetype.SECType;
 
+import java.math.BigDecimal;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,9 +57,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(classes = {ApplicationRepositoryConfig.class},
         initializers = ApplicationProfileInitializer.class)
 @AutoConfigureMockMvc
-class TradingdayControllerIT extends TradestrategyBase {
+class TradestrategyControllerIT extends TradestrategyBase {
 
-    private final static Logger _log = LoggerFactory.getLogger(TradingdayControllerIT.class);
+    private final static Logger _log = LoggerFactory.getLogger(TradestrategyControllerIT.class);
 
     @Autowired
     private MockMvc mockMvc;
@@ -121,34 +127,33 @@ class TradingdayControllerIT extends TradestrategyBase {
 
     @Test
     @WithMockUser(username = "admin", roles = {Role.ROLE_ADMIN})
-    public void getTradingdayByOpenAndClose() throws Exception {
+    public void getTradestrategyByOpenAndClose() throws Exception {
 
-        _log.info("Info: open: {}, close: {}", open, close);
-
-        MvcResult mvcResult =  mockMvc.perform(get("/api/tradingday").param("text", open.toString(), close.toString())
+        MvcResult mvcResult =  mockMvc.perform(get("/api/tradestrategy").param("text", open.toString(), close.toString())
                         .accept(MediaType.APPLICATION_JSON).with(httpBasic(adminUserName, password)))
                 .andExpect(status().isOk()).andReturn();
         String responseBody = mvcResult.getResponse().getContentAsString();
         assertNotNull(responseBody);
         JSONArray results = new JSONArray(responseBody);
         assertEquals(1, results.length());
-        TradingdayRecord tradingdayRecord = JSONMapper.getRecord(results.getJSONObject(0).toString(), TradingdayRecord.class);
-        _log.info("Info: open: {}", tradingdayRecord.open());
-        assertEquals(open, tradingdayRecord.open());
-        assertEquals(close, tradingdayRecord.close());
-        assertNotNull(tradingdayRecord.getId());
+        TradestrategyRecord tradestrategyRecord = JSONMapper.getRecord(results.getJSONObject(0).toString(), TradestrategyRecord.class);
+        _log.info("Info: open: {}", tradestrategyRecord.contract().getSymbol());
+        assertEquals(symbol, tradestrategyRecord.contract().getSymbol());
+        assertNotNull(tradestrategyRecord.getId());
     }
 
     @Test
     @WithMockUser(username = "admin", roles = {Role.ROLE_ADMIN})
-    public void createTradingday() throws Exception {
+    public void createTradestrategy() throws Exception {
 
-        ZonedDateTime openPlus2 = open.plusDays(2);
-        ZonedDateTime closePlus2 = close.plusDays(2);
-        Tradingday tradingday = new Tradingday(openPlus2, closePlus2);
-        String jsonContent = JSONMapper.getJSONString(TradingdayRecord.from(tradingday));
+        String symbol = "TEST-" + TradestrategyBase.getRandomNumber(4);
+        Contract contract = new Contract(SECType.STOCK, symbol, Exchange.SMART, Currency.USD, null, null);
+        Tradestrategy tradestrategy = new Tradestrategy(contract, this.tradestrategy.getTradingday(), this.tradestrategy.getStrategy(), this.tradestrategy.getPortfolio(),
+                this.tradestrategy.getRiskAmount(), this.tradestrategy.getSide(), this.tradestrategy.getTier(), this.tradestrategy.getTrade(), this.tradestrategy.getChartDays(), this.tradestrategy.getBarSize());
+        String jsonContent = JSONMapper.getJSONString(TradestrategyRecord.from(tradestrategy));
+        _log.info("Info: jsonContent: {}", jsonContent);
 
-        MvcResult mvcResult =  mockMvc.perform(post("/api/tradingday")
+        MvcResult mvcResult =  mockMvc.perform(post("/api/tradestrategy")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .with(httpBasic(adminUserName, password))
@@ -157,21 +162,22 @@ class TradingdayControllerIT extends TradestrategyBase {
                 .andReturn();
         String responseBody = mvcResult.getResponse().getContentAsString();
         assertNotNull(responseBody);
-        TradingdayRecord tradingdayRecord = JSONMapper.getRecord(responseBody, TradingdayRecord.class);
-        _log.info("Info: open: {}", tradingdayRecord.open());
+        TradestrategyRecord tradestrategyRecord = JSONMapper.getRecord(responseBody, TradestrategyRecord.class);
+        _log.info("Info: symbol: {}", tradestrategyRecord.getContract().getSymbol());
 
-        assertEquals(tradingday.getOpen(), tradingdayRecord.open());
-        assertNotNull(tradingdayRecord.getId());
-        tradingday = tradeService.getTradingdayService().findByOpenCloseDate(openPlus2, closePlus2);
-        assertNotNull(tradingday);
-        tradeService.getTradingdayService().delete(tradingday);
+        assertEquals(symbol, tradestrategyRecord.getContract().getSymbol());
+        assertNotNull(tradestrategyRecord.getId());
+        tradestrategy = JSONMapper.convertRecordToEntity(tradestrategyRecord, Tradestrategy.class);
+        tradestrategy = tradeService.getTradestrategyService().findByUniqueKeys(open, tradestrategy.getStrategy().getName(),tradestrategy.getContract(),tradestrategy.getPortfolio().getName());
+        assertNotNull(tradestrategy);
+        tradeService.getTradestrategyService().delete(tradestrategy);
     }
 
     @Test
     @WithMockUser(username = "admin", roles = {Role.ROLE_ADMIN})
-    public void getTradingdays() throws Exception {
+    public void getTradestrategies() throws Exception {
 
-        mockMvc.perform(get("/api/tradingday")
+        mockMvc.perform(get("/api/tradestrategy")
                         .accept(MediaType.APPLICATION_JSON).with(httpBasic(adminUserName, password)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray());
@@ -179,17 +185,17 @@ class TradingdayControllerIT extends TradestrategyBase {
 
     @Test
     @WithMockUser(username = "admin", roles = {Role.ROLE_ADMIN})
-    public void deleteTradingday() throws Exception {
+    public void deleteTradestrategy() throws Exception {
 
-        Tradingday tradingday = tradeService.getTradingdayService().findByOpenCloseDate(open, close);
-        MvcResult mvcResult = mockMvc.perform(delete("/api/tradingday/{id}", tradingday.getId()).with(csrf())
+
+        MvcResult mvcResult = mockMvc.perform(delete("/api/tradestrategy/{id}", this.tradestrategy.getId()).with(csrf())
                         .accept(MediaType.APPLICATION_JSON).with(httpBasic(adminUserName, password)))
                 .andExpect(status().isOk()).andReturn();
         String responseBody = mvcResult.getResponse().getContentAsString();
         assertNotNull(responseBody);
         _log.info("Info: responseBody: {}", responseBody);
-        TradingdayRecord tradingdayRecord = JSONMapper.getRecord(responseBody, TradingdayRecord.class);
-        _log.info("Info: open: {}", tradingdayRecord.open());
-        assertEquals(tradingday.getOpen(), tradingdayRecord.open());
+        TradestrategyRecord tradestrategyRecord = JSONMapper.getRecord(responseBody, TradestrategyRecord.class);
+        _log.info("Info: symbol: {}", tradestrategyRecord.getContract().getSymbol());
+        assertEquals(this.tradestrategy.getId(), tradestrategyRecord.id());
     }
 }

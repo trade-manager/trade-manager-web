@@ -24,6 +24,8 @@ import org.trade.core.persistent.tradeorder.TradeOrderRecord;
 import org.trade.core.persistent.tradestrategy.Tradestrategy;
 import org.trade.core.persistent.tradestrategy.TradestrategyLiteRecord;
 import org.trade.core.persistent.tradestrategy.TradestrategyRecord;
+import org.trade.core.persistent.tradingday.Tradingday;
+import org.trade.core.persistent.tradingday.TradingdayRecord;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.time.RegularTimePeriod;
 import org.trade.core.util.time.TradingCalendar;
@@ -40,6 +42,7 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Some tests for the JSONMapperIT class.
@@ -94,7 +97,17 @@ public class JSONMapperIT extends TradestrategyBase {
     public static void tearDownAfterClass() {
 
     }
+    @Test
+    public void mapTradingdayJSON() throws JsonProcessingException {
 
+        Tradingday tradingday = this.tradestrategy.getTradingday();
+        TradingdayRecord tradingdayRecord = TradingdayRecord.from(tradingday);
+        String tradingdayJSON = JSONMapper.getJSONString(tradingdayRecord);
+        TradingdayRecord tradingdayRecordNew = JSONMapper.getRecord(tradingdayJSON, TradingdayRecord.class);
+        assertEquals(tradingdayRecord.open(), tradingdayRecordNew.open());
+        Tradingday tradingdayNew = JSONMapper.convertRecordToEntity(tradingdayRecordNew, Tradingday.class);
+        assertEquals(tradingday.getOpen(), tradingdayNew.getOpen());
+    }
     @Test
     public void mapCandleJSON() throws JsonProcessingException {
 

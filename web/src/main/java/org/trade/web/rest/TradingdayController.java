@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.tradingday.Tradingday;
 import org.trade.core.persistent.tradingday.TradingdayRecord;
-import org.trade.core.persistent.tradingday.TradingdayService;
 import org.trade.core.util.JSONMapper;
 
 import java.time.ZonedDateTime;

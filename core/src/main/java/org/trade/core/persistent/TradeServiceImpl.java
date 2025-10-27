@@ -90,7 +90,7 @@ public class TradeServiceImpl implements TradeService {
     private final TradeOrderfillService tradeOrderfillService;
     private final TradePositionService tradePositionService;
 
-    public TradeServiceImpl(final AspectService aspectService, final DomainService domainService, final UserService userService, final RoleService roleService , EmployeeService employeeService, final TradingdayService tradingdayService, final CodeTypeService codeTypeService, final AccountService accountService, final PortfolioService portfolioService,
+    public TradeServiceImpl(final AspectService aspectService, final DomainService domainService, final UserService userService, final RoleService roleService, EmployeeService employeeService, final TradingdayService tradingdayService, final CodeTypeService codeTypeService, final AccountService accountService, final PortfolioService portfolioService,
                             final RuleService ruleService, final StrategyService strategyService, final ContractService contractService, final CandleService candleService, final TradelogDetailService tradelogDetailService,
                             final TradelogSummaryService tradelogSummaryService, final TradestrategyService tradestrategyService, final TradeOrderService tradeOrderService, final TradeOrderfillService tradeOrderfillService, final TradePositionService tradePositionService) {
 
@@ -130,9 +130,10 @@ public class TradeServiceImpl implements TradeService {
         return this.userService;
     }
 
-public RoleService getRoleService(){
+    public RoleService getRoleService() {
         return roleService;
-}
+    }
+
     public EmployeeService getEmployeeService() {
 
         return this.employeeService;
