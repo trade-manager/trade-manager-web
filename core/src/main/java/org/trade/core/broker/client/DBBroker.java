@@ -692,7 +692,7 @@ public class DBBroker extends Broker {
                                                ZonedDateTime endDate) throws ServiceException {
 
         CandleDataset candleDataset = (CandleDataset) tradestrategy.getStrategyData()
-                .getIndicatorByType(IndicatorSeries.CandleSeries);
+                .getIndicatorByType(IndicatorSeries.Type.CandleSeries.getType());
 
         if (null != candleDataset) {
 

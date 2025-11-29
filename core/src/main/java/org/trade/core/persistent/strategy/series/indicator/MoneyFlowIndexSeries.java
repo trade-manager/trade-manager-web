@@ -99,7 +99,7 @@ public class MoneyFlowIndexSeries extends IndicatorSeries {
     }
 
     public MoneyFlowIndexSeries() {
-        super(IndicatorSeries.MoneyFlowIndexSeries);
+        super(Type.MoneyFlowIndexSeries.getType());
     }
 
     /**

@@ -169,6 +169,7 @@ public record StrategyRecord(Long id,
      * @return List<IndicatorSeries>
      */
     public List<IndicatorSeriesRecord> getIndicatorSeries() {
+
         return this.indicatorSeries;
     }
 

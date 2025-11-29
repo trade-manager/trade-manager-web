@@ -85,7 +85,7 @@ public class MovingAverageSeries extends IndicatorSeries {
     }
 
     public MovingAverageSeries() {
-        super(IndicatorSeries.MovingAverageSeries);
+        super(Type.MovingAverageSeries.getType());
     }
 
     /**

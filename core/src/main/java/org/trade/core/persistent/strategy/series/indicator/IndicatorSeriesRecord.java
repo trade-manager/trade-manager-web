@@ -1,5 +1,7 @@
 package org.trade.core.persistent.strategy.series.indicator;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.trade.core.persistent.codetype.CodeValue;
 import org.trade.core.persistent.codetype.CodeValueRecord;
 import org.trade.core.persistent.strategy.StrategyRecord;

@@ -1,5 +1,7 @@
 package org.trade.core.persistent.strategy.series.indicator;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
@@ -52,20 +54,6 @@ public abstract class IndicatorSeries extends ComparableObjectSeries implements 
      * These names must match the names of the classes for that series.
      */
     public static final String INDICATOR_PACKAGE = "org.trade.core.persistent.strategy.series.indicator.";
-    public static final String MovingAverageSeries = MovingAverageSeries.class.getSimpleName();
-    public static final String PivotSeries = PivotSeries.class.getSimpleName();
-    public static final String HeikinAshiSeries = HeikinAshiSeries.class.getSimpleName();
-    public static final String VwapSeries = VwapSeries.class.getSimpleName();
-    public static final String VolumeSeries = VolumeSeries.class.getSimpleName();
-    public static final String CandleSeries = CandleSeries.class.getSimpleName();
-    public static final String AverageTrueRangeSeries = AverageTrueRangeSeries.class.getSimpleName();
-    public static final String RelativeStrengthIndexSeries = RelativeStrengthIndexSeries.class.getSimpleName();
-    public static final String CommodityChannelIndexSeries = CommodityChannelIndexSeries.class.getSimpleName();
-    public static final String BollingerBandsSeries = BollingerBandsSeries.class.getSimpleName();
-    public static final String StochasticOscillatorSeries = StochasticOscillatorSeries.class.getSimpleName();
-    public static final String MoneyFlowIndexSeries = MoneyFlowIndexSeries.class.getSimpleName();
-    public static final String MACDSeries = MACDSeries.class.getSimpleName();
-    public static final String VostroSeries = VostroSeries.class.getSimpleName();
 
     private Long id;
     private String type;
@@ -476,5 +464,44 @@ public abstract class IndicatorSeries extends ComparableObjectSeries implements 
         params.add(this.getSeriesRGBColor());
         params.add(this.getSubChart());
         return params;
+    }
+
+    public enum Type {
+
+        MovingAverageSeries(MovingAverageSeries.class.getSimpleName(), MovingAverageSeries.class),
+        PivotSeries(PivotSeries.class.getSimpleName(), PivotSeries.class),
+        HeikinAshiSeries(HeikinAshiSeries.class.getSimpleName(), HeikinAshiSeries.class),
+        VwapSeries(VwapSeries.class.getSimpleName(), VwapSeries.class),
+        VolumeSeries(VolumeSeries.class.getSimpleName(), VolumeSeries.class),
+        CandleSeries(CandleSeries.class.getSimpleName(), CandleSeries.class),
+        AverageTrueRangeSeries(AverageTrueRangeSeries.class.getSimpleName(), AverageTrueRangeSeries.class),
+        RelativeStrengthIndexSeries(RelativeStrengthIndexSeries.class.getSimpleName(), RelativeStrengthIndexSeries.class),
+        CommodityChannelIndexSeries(CommodityChannelIndexSeries.class.getSimpleName(), CommodityChannelIndexSeries.class),
+        BollingerBandsSeries(BollingerBandsSeries.class.getSimpleName(), BollingerBandsSeries.class),
+        StochasticOscillatorSeries(StochasticOscillatorSeries.class.getSimpleName(), StochasticOscillatorSeries.class),
+        MoneyFlowIndexSeries(MoneyFlowIndexSeries.class.getSimpleName(), MoneyFlowIndexSeries.class),
+        MACDSeries(MACDSeries.class.getSimpleName(), MACDSeries.class),
+        VostroSeries(VostroSeries.class.getSimpleName(), VostroSeries.class);
+
+        private final String type;
+        private final Class<?> valueClass;
+
+        Type(String type, Class<?> valueClass) {
+            this.type = type;
+            this.valueClass = valueClass;
+        }
+
+        public String getType() {
+            return this.type;
+        }
+
+        public Class<?> getValueClass() {
+            return this.valueClass;
+        }
+
+        public static Class<?> getValueClassForType(String type) {
+
+            return Type.valueOf(type).valueClass;
+        }
     }
 }

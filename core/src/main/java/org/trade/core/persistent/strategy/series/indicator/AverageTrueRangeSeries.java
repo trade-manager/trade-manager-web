@@ -91,7 +91,7 @@ public class AverageTrueRangeSeries extends IndicatorSeries {
     }
 
     public AverageTrueRangeSeries() {
-        super(IndicatorSeries.AverageTrueRangeSeries);
+        super(Type.AverageTrueRangeSeries.getType());
     }
 
     /**

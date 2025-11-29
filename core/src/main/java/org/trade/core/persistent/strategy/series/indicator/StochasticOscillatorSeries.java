@@ -147,7 +147,7 @@ public class StochasticOscillatorSeries extends IndicatorSeries {
     }
 
     public StochasticOscillatorSeries() {
-        super(IndicatorSeries.StochasticOscillatorSeries);
+        super(Type.StochasticOscillatorSeries.getType());
     }
 
     /**

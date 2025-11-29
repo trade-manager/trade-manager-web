@@ -88,7 +88,7 @@ public class HeikinAshiSeries extends IndicatorSeries {
     }
 
     public HeikinAshiSeries() {
-        super(IndicatorSeries.HeikinAshiSeries);
+        super(Type.HeikinAshiSeries.getType());
     }
 
     /**

@@ -97,7 +97,7 @@ public class CommodityChannelIndexSeries extends IndicatorSeries {
     }
 
     public CommodityChannelIndexSeries() {
-        super(IndicatorSeries.CommodityChannelIndexSeries);
+        super(Type.CommodityChannelIndexSeries.getType());
     }
 
     /**

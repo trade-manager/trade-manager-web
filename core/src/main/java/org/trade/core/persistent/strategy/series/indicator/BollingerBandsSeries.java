@@ -93,7 +93,7 @@ public class BollingerBandsSeries extends IndicatorSeries {
     }
 
     public BollingerBandsSeries() {
-        super(IndicatorSeries.BollingerBandsSeries);
+        super(Type.BollingerBandsSeries.getType());
     }
 
     /**

@@ -167,8 +167,13 @@ public class JSONMapperIT extends TradestrategyBase {
             indicatorSeriesRecord = JSONMapper.getRecord(json, IndicatorSeriesRecord.class);
 
             _log.info("Info: Type: {}", indicatorSeriesRecord.getType());
-            indicatorSeries = JSONMapper.convertRecordToEntity(indicatorSeriesRecord, IndicatorSeries.class);
-            break;
+            Class<IndicatorSeries> indicatorClass = (Class<IndicatorSeries>) indicatorSeries.getClass();
+            IndicatorSeries indicatorSeriesNew = JSONMapper.convertRecordToEntity(indicatorSeriesRecord, IndicatorSeries.class);
+            assertEquals(indicatorSeriesNew.getType(), indicatorSeries.getType());
+            assertEquals(indicatorSeriesNew.getName(), indicatorSeries.getName());
+            assertEquals(indicatorSeriesNew.getDisplaySeries(), indicatorSeries.getDisplaySeries());
+            assertEquals(indicatorSeriesNew.getCodeValues().size(), indicatorSeries.getCodeValues().size());
+            assertEquals(indicatorSeriesNew.getSeriesRGBColor(), indicatorSeries.getSeriesRGBColor());
         }
     }
 
@@ -177,6 +182,7 @@ public class JSONMapperIT extends TradestrategyBase {
 
         Tradestrategy tradestrategy = tradeService.getTradestrategyService().findById(this.tradestrategy.getId());
         TradestrategyRecord tradestrategyRecord = TradestrategyRecord.from(tradestrategy);
+        assertEquals(tradestrategy.getStrategy().getIndicatorSeries().size(), tradestrategyRecord.strategy().getIndicatorSeries().size());
         String json = JSONMapper.getJSONString(tradestrategyRecord);
 
         JSONObject tradestrategyJSON = new JSONObject(json);
@@ -184,6 +190,7 @@ public class JSONMapperIT extends TradestrategyBase {
         assertEquals(tradestrategy.getId(), tradestrategyJSON.getLong("id"));
         tradestrategyRecord = JSONMapper.getRecord(json, TradestrategyRecord.class);
         _log.info("Info: symbol: {}", tradestrategyRecord.getContract().getSymbol());
+        assertEquals(tradestrategy.getStrategy().getIndicatorSeries().size(), tradestrategyRecord.strategy().getIndicatorSeries().size());
 
         tradestrategy = JSONMapper.convertRecordToEntity(tradestrategyRecord, Tradestrategy.class);
         TradestrategyLiteRecord tradestrategyLiteRecord = TradestrategyLiteRecord.from(tradestrategy);

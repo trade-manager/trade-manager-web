@@ -293,7 +293,7 @@ public class StrategyData extends Worker {
              * CandleSeries are only updated via the API i.e. these are not true
              * indicators and are shared across Data-sets.
              */
-            if (!IndicatorSeries.CandleSeries.equals(indicator.getType(0))) {
+            if (!IndicatorSeries.Type.CandleSeries.getType().equals(indicator.getType(0))) {
 
                 indicator.updateDataset(source, 0, newBar);
             }
@@ -310,7 +310,7 @@ public class StrategyData extends Worker {
 
         for (IIndicatorDataset indicator : indicators) {
 
-            if (!IndicatorSeries.CandleSeries.equals(indicator.getType(0))) {
+            if (!IndicatorSeries.Type.CandleSeries.getType().equals(indicator.getType(0))) {
 
                 for (int x = 0; x < indicator.getSeriesCount(); x++) {
 
@@ -342,7 +342,7 @@ public class StrategyData extends Worker {
 
         for (IIndicatorDataset indicator : indicators) {
 
-            if (!IndicatorSeries.CandleSeries.equals(indicator.getType(0))) {
+            if (!IndicatorSeries.Type.CandleSeries.getType().equals(indicator.getType(0))) {
 
                 indicator.clear();
             }

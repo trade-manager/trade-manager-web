@@ -29,6 +29,7 @@ public abstract class Series implements Cloneable, Serializable {
     private boolean notify;
 
     public Series() {
+        super();
     }
 
     protected Series(Comparable key) {

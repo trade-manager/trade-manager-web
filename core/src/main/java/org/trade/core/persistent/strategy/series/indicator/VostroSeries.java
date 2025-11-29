@@ -97,7 +97,7 @@ public class VostroSeries extends IndicatorSeries {
     }
 
     public VostroSeries() {
-        super(IndicatorSeries.VostroSeries);
+        super(Type.VostroSeries.getType());
     }
 
     /**

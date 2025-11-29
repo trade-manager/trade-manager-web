@@ -72,7 +72,7 @@ public class CandleSeries extends IndicatorSeries {
 
     public CandleSeries() {
 
-        super(IndicatorSeries.CandleSeries, true, 0, false);
+        super(Type.CandleSeries.getType(), true, 0, false);
     }
 
     /**
@@ -112,7 +112,7 @@ public class CandleSeries extends IndicatorSeries {
      */
     public CandleSeries(CandleSeries series, Integer barSize, ZonedDateTime startTime, ZonedDateTime endTime) {
 
-        super(series.getContract().getSymbol(), IndicatorSeries.CandleSeries, series.getDisplaySeries(), 0,
+        super(series.getContract().getSymbol(), Type.CandleSeries.getType(), series.getDisplaySeries(), 0,
                 series.getSubChart());
         this.symbol = series.getContract().getSymbol();
         this.contract = series.getContract();
@@ -134,7 +134,7 @@ public class CandleSeries extends IndicatorSeries {
      */
     public CandleSeries(String legend, Contract contract, Integer barSize, ZonedDateTime startTime, ZonedDateTime endTime) {
 
-        super(legend, IndicatorSeries.CandleSeries, true, 0, false);
+        super(legend, Type.CandleSeries.getType(), true, 0, false);
         this.contract = contract;
         this.symbol = contract.getSymbol();
         this.barSize = barSize;

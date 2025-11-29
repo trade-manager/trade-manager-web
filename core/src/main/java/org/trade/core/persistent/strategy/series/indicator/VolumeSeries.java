@@ -65,7 +65,7 @@ public class VolumeSeries extends IndicatorSeries {
     }
 
     public VolumeSeries() {
-        super(IndicatorSeries.VolumeSeries);
+        super(Type.VolumeSeries.getType());
     }
 
     /**

@@ -650,7 +650,7 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
                                                ZonedDateTime endDate) throws ServiceException {
 
         org.trade.core.persistent.strategy.series.indicator.CandleDataset candleDataset = (org.trade.core.persistent.strategy.series.indicator.CandleDataset) tradestrategy.getStrategyData()
-                .getIndicatorByType(org.trade.core.persistent.strategy.series.indicator.IndicatorSeries.CandleSeries);
+                .getIndicatorByType(org.trade.core.persistent.strategy.series.indicator.IndicatorSeries.Type.CandleSeries.getType());
 
         if (null != candleDataset) {
 

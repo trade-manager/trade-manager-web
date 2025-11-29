@@ -264,13 +264,13 @@ public class BrokerModelIT extends TradestrategyBase implements IBrokerChangeLis
 
         IndicatorSeries candleseries = tradestrategy.getStrategyData().getCandleDataset().getSeries(0);
         IndicatorSeries sma1Series = tradestrategy.getStrategyData()
-                .getIndicatorByType(IndicatorSeries.MovingAverageSeries).getSeries(0);
+                .getIndicatorByType(IndicatorSeries.Type.MovingAverageSeries.getType()).getSeries(0);
         IndicatorSeries sma2Series = tradestrategy.getStrategyData()
-                .getIndicatorByType(IndicatorSeries.MovingAverageSeries).getSeries(1);
+                .getIndicatorByType(IndicatorSeries.Type.MovingAverageSeries.getType()).getSeries(1);
         IndicatorSeries vwapSeries = tradestrategy.getStrategyData()
-                .getIndicatorByType(IndicatorSeries.VwapSeries).getSeries(0);
+                .getIndicatorByType(IndicatorSeries.Type.VwapSeries.getType()).getSeries(0);
         IndicatorSeries heikinAshiSeries = tradestrategy.getStrategyData()
-                .getIndicatorByType(IndicatorSeries.HeikinAshiSeries).getSeries(0);
+                .getIndicatorByType(IndicatorSeries.Type.HeikinAshiSeries.getType()).getSeries(0);
 
         for (int i = 0; i < candleseries.getItemCount(); i++) {
 

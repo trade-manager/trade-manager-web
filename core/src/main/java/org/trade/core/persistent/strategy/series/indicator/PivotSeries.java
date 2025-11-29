@@ -87,7 +87,7 @@ public class PivotSeries extends IndicatorSeries {
     }
 
     public PivotSeries() {
-        super(IndicatorSeries.PivotSeries);
+        super(Type.PivotSeries.getType());
     }
 
     /**

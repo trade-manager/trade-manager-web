@@ -100,7 +100,7 @@ public class RelativeStrengthIndexSeries extends IndicatorSeries {
     }
 
     public RelativeStrengthIndexSeries() {
-        super(IndicatorSeries.RelativeStrengthIndexSeries);
+        super(Type.RelativeStrengthIndexSeries.getType());
     }
 
     /**

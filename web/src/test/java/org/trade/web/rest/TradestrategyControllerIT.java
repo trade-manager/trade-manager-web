@@ -25,6 +25,7 @@ import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.contract.Contract;
 import org.trade.core.persistent.domain.Domain;
 import org.trade.core.persistent.role.Role;
+import org.trade.core.persistent.strategy.series.indicator.IndicatorSeriesRecord;
 import org.trade.core.persistent.tradestrategy.Tradestrategy;
 import org.trade.core.persistent.tradestrategy.TradestrategyRecord;
 import org.trade.core.persistent.user.User;

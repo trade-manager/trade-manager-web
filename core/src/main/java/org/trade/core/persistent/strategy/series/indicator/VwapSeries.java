@@ -51,7 +51,7 @@ public class VwapSeries extends IndicatorSeries {
     }
 
     public VwapSeries() {
-        super(IndicatorSeries.VwapSeries);
+        super(Type.VwapSeries.getType());
     }
 
     /**

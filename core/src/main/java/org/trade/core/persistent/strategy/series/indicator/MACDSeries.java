@@ -109,7 +109,7 @@ public class MACDSeries extends IndicatorSeries {
     }
 
     public MACDSeries() {
-        super(IndicatorSeries.MACDSeries);
+        super(Type.MACDSeries.getType());
     }
 
     /**
