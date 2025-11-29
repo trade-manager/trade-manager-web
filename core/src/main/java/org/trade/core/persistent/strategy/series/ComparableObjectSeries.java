@@ -50,7 +50,7 @@ public class ComparableObjectSeries extends Series implements Cloneable, Seriali
         return this.allowDuplicateXValues;
     }
 
-    public int getItemCount() {
+    public Integer getItemCount() {
         return this.data.size();
     }
 

@@ -147,7 +147,7 @@ public class StochasticOscillatorSeries extends IndicatorSeries {
     }
 
     public StochasticOscillatorSeries() {
-        super(IndicatorSeries.StochasticOscillatorSeries);
+        super(Type.StochasticOscillatorSeries.getType());
     }
 
     /**
@@ -183,7 +183,7 @@ public class StochasticOscillatorSeries extends IndicatorSeries {
      * @param index the item index.
      * @return The time period.
      */
-    public RegularTimePeriod getPeriod(int index) {
+    public RegularTimePeriod getPeriod(Integer index) {
         final StochasticOscillatorItem item = (StochasticOscillatorItem) getDataItem(index);
         return item.getPeriod();
     }
@@ -210,7 +210,7 @@ public class StochasticOscillatorSeries extends IndicatorSeries {
      * @param notify   the notify listeners.
      * @param dataItem StochasticOscillatorItem
      */
-    public void add(StochasticOscillatorItem dataItem, boolean notify) throws ServiceException {
+    public void add(StochasticOscillatorItem dataItem, Boolean notify) throws ServiceException {
         if (!this.isEmpty()) {
             StochasticOscillatorItem item0 = (StochasticOscillatorItem) this.getDataItem(0);
             if (!dataItem.getPeriod().getClass().equals(item0.getPeriod().getClass())) {
@@ -332,7 +332,7 @@ public class StochasticOscillatorSeries extends IndicatorSeries {
      * @param source      CandleDataset
      * @param seriesIndex int
      */
-    public void createSeries(CandleDataset source, int seriesIndex) throws ServiceException {
+    public void createSeries(CandleDataset source, Integer seriesIndex) throws ServiceException {
 
         if (source.getSeries(seriesIndex) == null) {
             throw new IllegalArgumentException("Null source (CandleDataset).");
@@ -350,7 +350,7 @@ public class StochasticOscillatorSeries extends IndicatorSeries {
      * @param skip   int
      * @param newBar boolean
      */
-    public void updateSeries(CandleSeries source, int skip, boolean newBar) throws ServiceException {
+    public void updateSeries(CandleSeries source, Integer skip, Boolean newBar) throws ServiceException {
 
         if (source == null) {
             throw new IllegalArgumentException("Null source (CandleSeries).");

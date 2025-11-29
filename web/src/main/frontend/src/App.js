@@ -7,6 +7,7 @@ import Home from './components/home/Home'
 import Login from './components/home/Login'
 import Signup from './components/home/Signup'
 import AdminPage from './components/admin/AdminPage'
+import TradePage from './components/trade/TradePage'
 import UserPage from './components/user/UserPage'
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
           <Route path='/login' element={<Login />} />
           <Route path='/signup' element={<Signup />} />
           <Route path="/adminpage" element={<PrivateRoute><AdminPage /></PrivateRoute>} />
+          <Route path="/Tradepage" element={<PrivateRoute><TradePage /></PrivateRoute>} />
           <Route path="/userpage" element={<PrivateRoute><UserPage /></PrivateRoute>} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>

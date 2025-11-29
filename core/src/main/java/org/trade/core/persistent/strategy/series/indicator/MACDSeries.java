@@ -109,7 +109,7 @@ public class MACDSeries extends IndicatorSeries {
     }
 
     public MACDSeries() {
-        super(IndicatorSeries.MACDSeries);
+        super(Type.MACDSeries.getType());
     }
 
     /**
@@ -150,7 +150,7 @@ public class MACDSeries extends IndicatorSeries {
      * @param index the item index.
      * @return The time period.
      */
-    public RegularTimePeriod getPeriod(int index) {
+    public RegularTimePeriod getPeriod(Integer index) {
         final MACDItem item = (MACDItem) getDataItem(index);
         return item.getPeriod();
     }
@@ -177,7 +177,7 @@ public class MACDSeries extends IndicatorSeries {
      * @param notify   the notify listeners.
      * @param dataItem MACDItem
      */
-    public void add(MACDItem dataItem, boolean notify) throws ServiceException {
+    public void add(MACDItem dataItem, Boolean notify) throws ServiceException {
         if (!this.isEmpty()) {
             MACDItem item0 = (MACDItem) this.getDataItem(0);
             if (!dataItem.getPeriod().getClass().equals(item0.getPeriod().getClass())) {
@@ -293,7 +293,7 @@ public class MACDSeries extends IndicatorSeries {
      * @param source      CandleDataset
      * @param seriesIndex int
      */
-    public void createSeries(CandleDataset source, int seriesIndex) throws ServiceException {
+    public void createSeries(CandleDataset source, Integer seriesIndex) throws ServiceException {
 
         if (source.getSeries(seriesIndex) == null) {
             throw new IllegalArgumentException("Null source (CandleDataset).");
@@ -311,7 +311,7 @@ public class MACDSeries extends IndicatorSeries {
      * @param skip   int
      * @param newBar boolean
      */
-    public void updateSeries(CandleSeries source, int skip, boolean newBar) throws ServiceException {
+    public void updateSeries(CandleSeries source, Integer skip, Boolean newBar) throws ServiceException {
 
         if (source == null) {
             throw new IllegalArgumentException("Null source (CandleSeries).");

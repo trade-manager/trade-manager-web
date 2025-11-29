@@ -38,6 +38,17 @@ public class TradestrategyServiceImpl implements TradestrategyService {
         this.tradestrategyRepository = tradestrategyRepository;
     }
 
+    public Tradestrategy save(Tradestrategy tradestrategy) {
+
+        return this.tradestrategyRepository.save(tradestrategy);
+    }
+
+
+    public void delete(Tradestrategy tradestrategy) {
+
+        this.tradestrategyRepository.delete(tradestrategy);
+    }
+
     @Transactional
     public Tradestrategy findById(final Long id) {
 

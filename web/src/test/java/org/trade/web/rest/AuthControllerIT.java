@@ -19,13 +19,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
+import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.domain.Domain;
-import org.trade.core.persistent.domain.DomainService;
 import org.trade.core.persistent.role.Role;
-import org.trade.core.persistent.role.RoleService;
 import org.trade.core.persistent.user.User;
 import org.trade.core.persistent.user.UserRecord;
-import org.trade.core.persistent.user.UserService;
 import org.trade.core.util.JSONMapper;
 import org.trade.web.service.CustomUserDetailsService;
 
@@ -53,13 +51,7 @@ class AuthControllerIT extends TradestrategyBase {
     private MockMvc mockMvc;
 
     @Autowired
-    private DomainService domainService;
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private RoleService roleService;
+    private TradeService tradeService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -93,16 +85,16 @@ class AuthControllerIT extends TradestrategyBase {
     @BeforeEach
     public void setUpTest() {
 
-        Domain gobalDomain = domainService.findByName(Domain.GLOBAL);
+        Domain gobalDomain = tradeService.getDomainService().findByName(Domain.GLOBAL);
         assertNotNull(gobalDomain);
-        Role role = roleService.findByName(Role.ROLE_ADMIN);
+        Role role = tradeService.getRoleService().findByName(Role.ROLE_ADMIN);
         assertNotNull(role);
         List<Role> roles = new ArrayList<>();
         roles.add(role);
-        User user = userService.findUserByName(userName);
+        User user = tradeService.getUserService().findUserByName(userName);
         assertNull(user);
         user = new User(userName, userName, userName, userName, userName + "@" + Domain.GLOBAL + ".com", this.passwordEncoder.encode(password), gobalDomain, roles);
-        user = userService.save(user);
+        user = tradeService.getUserService().save(user);
         assertNotNull(user.getId());
         this.addRecord(user);
     }
@@ -120,7 +112,7 @@ class AuthControllerIT extends TradestrategyBase {
     @WithMockUser(username = "admin", roles = {Role.ROLE_ADMIN})
     public void authorize() throws Exception {
 
-        User mockUser = userService.findByUsername(userName);
+        User mockUser = tradeService.getUserService().findByUsername(userName);
         mockUser.setPassword(password);
         String jsonContent = JSONMapper.getJSONString(mockUser);
 
@@ -138,9 +130,9 @@ class AuthControllerIT extends TradestrategyBase {
     public void signup() throws Exception {
 
         final String userNameNew = "TEST-" + TradestrategyBase.getRandomNumber(4);
-        Domain gobalDomain = domainService.findByName(Domain.GLOBAL);
+        Domain gobalDomain = tradeService.getDomainService().findByName(Domain.GLOBAL);
         assertNotNull(gobalDomain);
-        Role role = roleService.findByName(Role.ROLE_ADMIN);
+        Role role = tradeService.getRoleService().findByName(Role.ROLE_ADMIN);
         assertNotNull(role);
         List<Role> roles = new ArrayList<>();
         roles.add(role);
@@ -156,7 +148,7 @@ class AuthControllerIT extends TradestrategyBase {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name").value(userNameNew));
 
-        user = userService.findUserByName(userNameNew);
+        user = tradeService.getUserService().findUserByName(userNameNew);
         assertNotNull(user.getId());
         this.addRecord(user);
     }

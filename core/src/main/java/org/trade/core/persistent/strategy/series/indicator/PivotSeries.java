@@ -87,7 +87,7 @@ public class PivotSeries extends IndicatorSeries {
     }
 
     public PivotSeries() {
-        super(IndicatorSeries.PivotSeries);
+        super(Type.PivotSeries.getType());
     }
 
     /**
@@ -96,7 +96,7 @@ public class PivotSeries extends IndicatorSeries {
      * @param index the item index.
      * @return The time period.
      */
-    public RegularTimePeriod getPeriod(int index) {
+    public RegularTimePeriod getPeriod(Integer index) {
         final PivotItem item = (PivotItem) getDataItem(index);
         return item.getPeriod();
     }
@@ -124,7 +124,7 @@ public class PivotSeries extends IndicatorSeries {
      * @param notify   the notify listeners.
      * @param dataItem PivotItem
      */
-    public void add(PivotItem dataItem, boolean notify) throws ServiceException {
+    public void add(PivotItem dataItem, Boolean notify) throws ServiceException {
         if (!this.isEmpty()) {
             PivotItem item0 = (PivotItem) this.getDataItem(0);
             if (!dataItem.getPeriod().getClass().equals(item0.getPeriod().getClass())) {
@@ -215,7 +215,7 @@ public class PivotSeries extends IndicatorSeries {
      * @param candleDataset CandleDataset
      * @param seriesIndex   int
      */
-    public void createSeries(CandleDataset candleDataset, int seriesIndex) throws ServiceException {
+    public void createSeries(CandleDataset candleDataset, Integer seriesIndex) throws ServiceException {
 
         if (candleDataset.getSeries(seriesIndex) == null) {
             throw new IllegalArgumentException("Null source (XYDataset).");
@@ -239,7 +239,7 @@ public class PivotSeries extends IndicatorSeries {
      * @param newBar boolean
      */
 
-    public void updateSeries(CandleSeries source, int skip, boolean newBar) throws ServiceException {
+    public void updateSeries(CandleSeries source, Integer skip, Boolean newBar) throws ServiceException {
 
         if (source == null) {
             throw new IllegalArgumentException("Null source (CandleSeries).");

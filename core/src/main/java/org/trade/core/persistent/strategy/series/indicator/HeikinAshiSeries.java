@@ -88,7 +88,7 @@ public class HeikinAshiSeries extends IndicatorSeries {
     }
 
     public HeikinAshiSeries() {
-        super(IndicatorSeries.HeikinAshiSeries);
+        super(Type.HeikinAshiSeries.getType());
     }
 
     /**
@@ -97,7 +97,7 @@ public class HeikinAshiSeries extends IndicatorSeries {
      * @param index the item index.
      * @return The time period.
      */
-    public RegularTimePeriod getPeriod(int index) {
+    public RegularTimePeriod getPeriod(Integer index) {
         final HeikinAshiItem item = (HeikinAshiItem) getDataItem(index);
         return item.getPeriod();
     }
@@ -130,7 +130,7 @@ public class HeikinAshiSeries extends IndicatorSeries {
      * @param notify   the notify listeners.
      * @param dataItem HeikinAshiItem
      */
-    public void add(HeikinAshiItem dataItem, boolean notify) throws ServiceException {
+    public void add(HeikinAshiItem dataItem, Boolean notify) throws ServiceException {
         if (!this.isEmpty()) {
             HeikinAshiItem item0 = (HeikinAshiItem) this.getDataItem(0);
             if (!dataItem.getPeriod().getClass().equals(item0.getPeriod().getClass())) {
@@ -146,7 +146,7 @@ public class HeikinAshiSeries extends IndicatorSeries {
      * @param source      CandleDataset
      * @param seriesIndex int
      */
-    public void createSeries(CandleDataset source, int seriesIndex) throws ServiceException {
+    public void createSeries(CandleDataset source, Integer seriesIndex) throws ServiceException {
 
         if (source.getSeries(seriesIndex) == null) {
             throw new IllegalArgumentException("Null source (CandleDataset).");
@@ -184,7 +184,7 @@ public class HeikinAshiSeries extends IndicatorSeries {
      * @param newBar boolean
      */
 
-    public void updateSeries(CandleSeries source, int skip, boolean newBar) throws ServiceException {
+    public void updateSeries(CandleSeries source, Integer skip, Boolean newBar) throws ServiceException {
 
         if (source == null) {
             throw new IllegalArgumentException("Null source (CandleSeries).");

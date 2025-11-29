@@ -354,7 +354,7 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
         boolean addedIndicator = false;
 
         CandleDataset candleDataset = (CandleDataset) tradestrategy.getStrategyData()
-                .getIndicatorByType(IndicatorSeries.CandleSeries);
+                .getIndicatorByType(IndicatorSeries.Type.CandleSeries.getType());
 
         if (null != candleDataset) {
 
@@ -739,7 +739,7 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
                      */
                     tradestrategy.setStrategyData(StrategyData.create(tradestrategy));
                     CandleDataset candleDataset = (CandleDataset) tradestrategy.getStrategyData()
-                            .getIndicatorByType(IndicatorSeries.CandleSeries);
+                            .getIndicatorByType(IndicatorSeries.Type.CandleSeries.getType());
 
                     if (null != candleDataset) {
 
@@ -809,7 +809,7 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
                         }
 
                         CandleDataset candleDataset = (CandleDataset) tradestrategy.getStrategyData()
-                                .getIndicatorByType(IndicatorSeries.CandleSeries);
+                                .getIndicatorByType(IndicatorSeries.Type.CandleSeries.getType());
 
                         if (null != candleDataset) {
 

@@ -46,7 +46,7 @@ public class BollingerBandsSeries extends IndicatorSeries {
 
     private BigDecimal numberOfSTD;
     private Integer length;
-    private boolean isUpper;
+    private Boolean isUpper;
     /*
      * Vales used to calculate MA's. These need to be reset when the series is
      * cleared.
@@ -93,7 +93,7 @@ public class BollingerBandsSeries extends IndicatorSeries {
     }
 
     public BollingerBandsSeries() {
-        super(IndicatorSeries.BollingerBandsSeries);
+        super(Type.BollingerBandsSeries.getType());
     }
 
     /**
@@ -102,6 +102,7 @@ public class BollingerBandsSeries extends IndicatorSeries {
      * @return Object
      */
     public Object clone() throws CloneNotSupportedException {
+
         BollingerBandsSeries clone = (BollingerBandsSeries) super.clone();
         clone.yyValues = new LinkedList<>();
         return clone;
@@ -113,6 +114,7 @@ public class BollingerBandsSeries extends IndicatorSeries {
      * Clears down and resets all the local calculated fields.
      */
     public void clear() {
+
         super.clear();
         sum = 0.0;
         yyValues.clear();
@@ -124,7 +126,7 @@ public class BollingerBandsSeries extends IndicatorSeries {
      * @param index the item index.
      * @return The time period.
      */
-    public RegularTimePeriod getPeriod(int index) {
+    public RegularTimePeriod getPeriod(Integer index) {
         final BollingerBandsItem item = (BollingerBandsItem) getDataItem(index);
         return item.getPeriod();
     }
@@ -151,7 +153,7 @@ public class BollingerBandsSeries extends IndicatorSeries {
      * @param notify   the notify listeners.
      * @param dataItem BollingerBandsItem
      */
-    public void add(BollingerBandsItem dataItem, boolean notify) throws ServiceException {
+    public void add(BollingerBandsItem dataItem, Boolean notify) throws ServiceException {
         if (!this.isEmpty()) {
             BollingerBandsItem item0 = (BollingerBandsItem) this.getDataItem(0);
             if (!dataItem.getPeriod().getClass().equals(item0.getPeriod().getClass())) {
@@ -169,8 +171,9 @@ public class BollingerBandsSeries extends IndicatorSeries {
     @Transient
     public Integer getLength() {
         try {
-            if (null == this.length)
+            if (null == this.length) {
                 this.length = (Integer) CodeValue.getValueCode(LENGTH, this.getCodeValues());
+            }
         } catch (Exception e) {
             this.length = null;
         }
@@ -194,8 +197,9 @@ public class BollingerBandsSeries extends IndicatorSeries {
     @Transient
     public BigDecimal getNumberOfSTD() {
         try {
-            if (null == this.numberOfSTD)
+            if (null == this.numberOfSTD) {
                 this.numberOfSTD = (BigDecimal) CodeValue.getValueCode(NUMBER_OF_STD, this.getCodeValues());
+            }
         } catch (Exception e) {
             this.numberOfSTD = null;
         }
@@ -217,7 +221,7 @@ public class BollingerBandsSeries extends IndicatorSeries {
      * @return boolean
      */
     @Transient
-    public boolean getIsUpper() {
+    public Boolean getIsUpper() {
         return this.isUpper;
     }
 
@@ -226,7 +230,7 @@ public class BollingerBandsSeries extends IndicatorSeries {
      *
      * @param isUpper boolean
      */
-    public void setIsUpper(boolean isUpper) {
+    public void setIsUpper(Boolean isUpper) {
         this.isUpper = isUpper;
     }
 
@@ -236,7 +240,7 @@ public class BollingerBandsSeries extends IndicatorSeries {
      * @param source      CandleDataset
      * @param seriesIndex int
      */
-    public void createSeries(CandleDataset source, int seriesIndex) throws ServiceException {
+    public void createSeries(CandleDataset source, Integer seriesIndex) throws ServiceException {
 
         if (source.getSeries(seriesIndex) == null) {
             throw new IllegalArgumentException("Null source (CandleDataset).");
@@ -254,7 +258,7 @@ public class BollingerBandsSeries extends IndicatorSeries {
      * @param skip   int
      * @param newBar boolean
      */
-    public void updateSeries(CandleSeries source, int skip, boolean newBar) throws ServiceException {
+    public void updateSeries(CandleSeries source, Integer skip, Boolean newBar) throws ServiceException {
 
         if (source == null) {
             throw new IllegalArgumentException("Null source (CandleSeries).");

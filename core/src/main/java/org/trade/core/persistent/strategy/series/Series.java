@@ -76,23 +76,23 @@ public abstract class Series implements Cloneable, Serializable {
         this.propertyChangeSupport.firePropertyChange("Description", old, description);
     }
 
-    public boolean getNotify() {
+    public Boolean getNotify() {
         return this.notify;
     }
 
-    public void setNotify(boolean notify) {
+    public void setNotify(Boolean notify) {
+
         if (this.notify != notify) {
             this.notify = notify;
             this.fireSeriesChanged();
         }
-
     }
 
-    public boolean isEmpty() {
+    public Boolean isEmpty() {
         return this.getItemCount() == 0;
     }
 
-    public abstract int getItemCount();
+    public abstract Integer getItemCount();
 
     public Object clone() throws CloneNotSupportedException {
         Series clone = (Series) super.clone();
@@ -119,7 +119,7 @@ public abstract class Series implements Cloneable, Serializable {
         }
     }
 
-    public boolean canEqual(Object other) {
+    public Boolean canEqual(Object other) {
         return other instanceof Series;
     }
 

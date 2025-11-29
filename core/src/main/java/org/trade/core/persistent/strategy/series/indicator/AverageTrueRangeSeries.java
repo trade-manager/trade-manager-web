@@ -91,7 +91,7 @@ public class AverageTrueRangeSeries extends IndicatorSeries {
     }
 
     public AverageTrueRangeSeries() {
-        super(IndicatorSeries.AverageTrueRangeSeries);
+        super(Type.AverageTrueRangeSeries.getType());
     }
 
     /**
@@ -122,7 +122,7 @@ public class AverageTrueRangeSeries extends IndicatorSeries {
      * @param index the item index.
      * @return The time period.
      */
-    public RegularTimePeriod getPeriod(int index) {
+    public RegularTimePeriod getPeriod(Integer index) {
         final AverageTrueRangeItem item = (AverageTrueRangeItem) getDataItem(index);
         return item.getPeriod();
     }
@@ -149,10 +149,13 @@ public class AverageTrueRangeSeries extends IndicatorSeries {
      * @param dataItem the AverageTrueRange.
      * @param notify   the notify listeners.
      */
-    public void add(AverageTrueRangeItem dataItem, boolean notify) throws ServiceException {
+    public void add(AverageTrueRangeItem dataItem, Boolean notify) throws ServiceException {
+
         if (!this.isEmpty()) {
+
             AverageTrueRangeItem item0 = (AverageTrueRangeItem) this.getDataItem(0);
             if (!dataItem.getPeriod().getClass().equals(item0.getPeriod().getClass())) {
+
                 throw new IllegalArgumentException("Can't mix RegularTimePeriod class types.");
             }
         }
@@ -166,10 +169,15 @@ public class AverageTrueRangeSeries extends IndicatorSeries {
      */
     @Transient
     public Integer getLength() {
+
         try {
-            if (null == this.length)
+
+            if (null == this.length) {
+
                 this.length = (Integer) CodeValue.getValueCode(LENGTH, this.getCodeValues());
+            }
         } catch (Exception e) {
+
             this.length = null;
         }
         return this.length;
@@ -192,8 +200,11 @@ public class AverageTrueRangeSeries extends IndicatorSeries {
     @Transient
     public Boolean getRollingCandle() {
         try {
-            if (null == this.rollingCandle)
+
+            if (null == this.rollingCandle) {
+
                 this.rollingCandle = (Boolean) CodeValue.getValueCode(ROLLING_CANDLE, this.getCodeValues());
+            }
         } catch (Exception e) {
             this.rollingCandle = null;
         }
@@ -215,7 +226,7 @@ public class AverageTrueRangeSeries extends IndicatorSeries {
      * @param source      CandleDataset
      * @param seriesIndex int
      */
-    public void createSeries(CandleDataset source, int seriesIndex) throws ServiceException {
+    public void createSeries(CandleDataset source, Integer seriesIndex) throws ServiceException {
 
         if (source.getSeries(seriesIndex) == null) {
             throw new IllegalArgumentException("Null source (CandleDataset).");
@@ -233,7 +244,7 @@ public class AverageTrueRangeSeries extends IndicatorSeries {
      * @param skip   int
      * @param newBar boolean
      */
-    public void updateSeries(CandleSeries source, int skip, boolean newBar) throws ServiceException {
+    public void updateSeries(CandleSeries source, Integer skip, Boolean newBar) throws ServiceException {
 
         if (source == null) {
             throw new IllegalArgumentException("Null source (CandleSeries).");

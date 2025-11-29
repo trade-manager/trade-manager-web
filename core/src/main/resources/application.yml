@@ -1,6 +1,7 @@
 spring:
     application:
         name: trade-api
+
 # Root API point
         data:
             rest:
@@ -47,6 +48,7 @@ spring:
 
 # Enables batching for entities with versioning:
                     batch_versioned_data: true
+
 # Timezone for the DB
                     time_zone: @db-dba.time_zone@
 
