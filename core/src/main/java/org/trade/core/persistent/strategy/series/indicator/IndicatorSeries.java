@@ -1,7 +1,5 @@
 package org.trade.core.persistent.strategy.series.indicator;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
@@ -76,10 +74,6 @@ public abstract class IndicatorSeries extends ComparableObjectSeries implements 
 
     @Column(name = "version", columnDefinition = "integer DEFAULT 0", nullable = false)
     protected Integer version;
-
-    public IndicatorSeries() {
-        super();
-    }
 
     /**
      * Constructor for IndicatorSeries.

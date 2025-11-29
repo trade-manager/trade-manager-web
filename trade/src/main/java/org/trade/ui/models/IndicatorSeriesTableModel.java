@@ -296,8 +296,8 @@ public class IndicatorSeriesTableModel extends TableModel {
         } else {
             Aspects aspect = new Aspects();
             for (CodeValue code : element.getCodeValues()) {
-                aspect.add( code);
-           }
+                aspect.add(code);
+            }
             newRow.add(aspect);
         }
     }
