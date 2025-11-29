@@ -110,7 +110,7 @@ public class CandleSeries extends IndicatorSeries {
      * @param startTime ZonedDateTime
      * @param endTime   ZonedDateTime
      */
-    public CandleSeries(CandleSeries series, int barSize, ZonedDateTime startTime, ZonedDateTime endTime) {
+    public CandleSeries(CandleSeries series, Integer barSize, ZonedDateTime startTime, ZonedDateTime endTime) {
 
         super(series.getContract().getSymbol(), IndicatorSeries.CandleSeries, series.getDisplaySeries(), 0,
                 series.getSubChart());
@@ -165,7 +165,7 @@ public class CandleSeries extends IndicatorSeries {
      * @param source      CandleDataset
      * @param seriesIndex int
      */
-    public void createSeries(CandleDataset source, int seriesIndex) {
+    public void createSeries(CandleDataset source, Integer seriesIndex) {
 
     }
 
@@ -343,7 +343,7 @@ public class CandleSeries extends IndicatorSeries {
      * @param index the item index.
      * @return The time period.
      */
-    public RegularTimePeriod getPeriod(int index) {
+    public RegularTimePeriod getPeriod(Integer index) {
 
         final CandleItem item = (CandleItem) getDataItem(index);
         return item.getPeriod();
@@ -355,7 +355,7 @@ public class CandleSeries extends IndicatorSeries {
      * @return The time period.
      */
     @Transient
-    public int getBarSize() {
+    public Integer getBarSize() {
         return this.barSize;
     }
 
@@ -374,7 +374,7 @@ public class CandleSeries extends IndicatorSeries {
      * @param index the item index.
      * @return The data item.
      */
-    public ComparableObjectItem getDataItem(int index) {
+    public ComparableObjectItem getDataItem(Integer index) {
         return super.getDataItem(index);
     }
 
@@ -414,7 +414,7 @@ public class CandleSeries extends IndicatorSeries {
      * @param candleItem CandleItem
      * @param notify     boolean
      */
-    public void add(CandleItem candleItem, boolean notify) throws ServiceException {
+    public void add(CandleItem candleItem, Boolean notify) throws ServiceException {
 
         if (!this.isEmpty()) {
 
@@ -583,7 +583,7 @@ public class CandleSeries extends IndicatorSeries {
      * @return RegularTimePeriod
      */
     @Transient
-    public RegularTimePeriod getPeriodStart(ZonedDateTime time, int barSize) {
+    public RegularTimePeriod getPeriodStart(ZonedDateTime time, Integer barSize) {
 
         /*
          * For 60min time period start the clock at 9:00am. This matches most
@@ -666,7 +666,7 @@ public class CandleSeries extends IndicatorSeries {
      * @param skip   int
      * @param newBar boolean
      */
-    public void updateSeries(CandleSeries source, int skip, boolean newBar) throws ServiceException {
+    public void updateSeries(CandleSeries source, Integer skip, Boolean newBar) throws ServiceException {
 
         if (source == null) {
 
@@ -702,7 +702,7 @@ public class CandleSeries extends IndicatorSeries {
      * @param wieghted  boolean
      * @return Candle
      */
-    public Candle getAverageBar(ZonedDateTime startDate, ZonedDateTime endDate, boolean wieghted) {
+    public Candle getAverageBar(ZonedDateTime startDate, ZonedDateTime endDate, Boolean wieghted) {
 
         int itemCount = this.getItemCount() - 1;
         long sumVolume = 0;

@@ -20,6 +20,10 @@ public class ComparableObjectSeries extends Series implements Cloneable, Seriali
     private boolean autoSort;
     private boolean allowDuplicateXValues;
 
+    public ComparableObjectSeries() {
+        super();
+    }
+
     public ComparableObjectSeries(Comparable key) {
         this(key, true, true);
     }
@@ -50,7 +54,7 @@ public class ComparableObjectSeries extends Series implements Cloneable, Seriali
         return this.allowDuplicateXValues;
     }
 
-    public int getItemCount() {
+    public Integer getItemCount() {
         return this.data.size();
     }
 

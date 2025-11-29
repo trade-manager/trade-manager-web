@@ -60,7 +60,7 @@ public class VwapSeries extends IndicatorSeries {
      * @param index the item index.
      * @return The time period.
      */
-    public RegularTimePeriod getPeriod(int index) {
+    public RegularTimePeriod getPeriod(Integer index) {
         final VwapItem item = (VwapItem) getDataItem(index);
         return item.getPeriod();
     }
@@ -87,7 +87,7 @@ public class VwapSeries extends IndicatorSeries {
      * @param notify   the notify listeners.
      * @param dataItem VwapItem
      */
-    public void add(VwapItem dataItem, boolean notify) throws ServiceException {
+    public void add(VwapItem dataItem, Boolean notify) throws ServiceException {
         if (!this.isEmpty()) {
             VwapItem item0 = (VwapItem) this.getDataItem(0);
             if (!dataItem.getPeriod().getClass().equals(item0.getPeriod().getClass())) {
@@ -103,7 +103,7 @@ public class VwapSeries extends IndicatorSeries {
      * @param source      CandleDataset
      * @param seriesIndex int
      */
-    public void createSeries(CandleDataset source, int seriesIndex) throws ServiceException {
+    public void createSeries(CandleDataset source, Integer seriesIndex) throws ServiceException {
 
         if (source.getSeries(seriesIndex) == null) {
             throw new IllegalArgumentException("Null source (XYDataset).");
@@ -121,7 +121,7 @@ public class VwapSeries extends IndicatorSeries {
      * @param skip   int
      * @param newBar boolean
      */
-    public void updateSeries(CandleSeries source, int skip, boolean newBar) throws ServiceException {
+    public void updateSeries(CandleSeries source, Integer skip, Boolean newBar) throws ServiceException {
 
         if (source == null) {
             throw new IllegalArgumentException("Null source (CandleSeries).");

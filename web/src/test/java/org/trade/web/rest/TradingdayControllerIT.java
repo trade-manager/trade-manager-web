@@ -29,10 +29,8 @@ import org.trade.core.persistent.tradingday.Tradingday;
 import org.trade.core.persistent.tradingday.TradingdayRecord;
 import org.trade.core.persistent.user.User;
 import org.trade.core.util.JSONMapper;
-import org.trade.core.util.time.TradingCalendar;
 
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -125,7 +123,7 @@ class TradingdayControllerIT extends TradestrategyBase {
 
         _log.info("Info: open: {}, close: {}", open, close);
 
-        MvcResult mvcResult =  mockMvc.perform(get("/api/tradingday").param("text", open.toString(), close.toString())
+        MvcResult mvcResult = mockMvc.perform(get("/api/tradingday").param("text", open.toString(), close.toString())
                         .accept(MediaType.APPLICATION_JSON).with(httpBasic(adminUserName, password)))
                 .andExpect(status().isOk()).andReturn();
         String responseBody = mvcResult.getResponse().getContentAsString();
@@ -148,7 +146,7 @@ class TradingdayControllerIT extends TradestrategyBase {
         Tradingday tradingday = new Tradingday(openPlus2, closePlus2);
         String jsonContent = JSONMapper.getJSONString(TradingdayRecord.from(tradingday));
 
-        MvcResult mvcResult =  mockMvc.perform(post("/api/tradingday")
+        MvcResult mvcResult = mockMvc.perform(post("/api/tradingday")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .with(httpBasic(adminUserName, password))

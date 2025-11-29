@@ -18,6 +18,8 @@ import org.trade.core.persistent.candle.Candle;
 import org.trade.core.persistent.candle.CandleRecord;
 import org.trade.core.persistent.candle.CandleServiceIT;
 import org.trade.core.persistent.strategy.Strategy;
+import org.trade.core.persistent.strategy.series.indicator.IndicatorSeries;
+import org.trade.core.persistent.strategy.series.indicator.IndicatorSeriesRecord;
 import org.trade.core.persistent.strategy.series.indicator.candle.CandlePeriod;
 import org.trade.core.persistent.tradeorder.TradeOrder;
 import org.trade.core.persistent.tradeorder.TradeOrderRecord;
@@ -42,7 +44,6 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Some tests for the JSONMapperIT class.
@@ -97,6 +98,7 @@ public class JSONMapperIT extends TradestrategyBase {
     public static void tearDownAfterClass() {
 
     }
+
     @Test
     public void mapTradingdayJSON() throws JsonProcessingException {
 
@@ -108,6 +110,7 @@ public class JSONMapperIT extends TradestrategyBase {
         Tradingday tradingdayNew = JSONMapper.convertRecordToEntity(tradingdayRecordNew, Tradingday.class);
         assertEquals(tradingday.getOpen(), tradingdayNew.getOpen());
     }
+
     @Test
     public void mapCandleJSON() throws JsonProcessingException {
 
@@ -149,6 +152,27 @@ public class JSONMapperIT extends TradestrategyBase {
     }
 
     @Test
+    public void mapIndicatorSeriesJSON() throws JsonProcessingException {
+
+        Tradestrategy tradestrategy = tradeService.getTradestrategyService().findById(this.tradestrategy.getId());
+
+        for (IndicatorSeries indicatorSeries : tradestrategy.getStrategy().getIndicatorSeries()) {
+
+            IndicatorSeriesRecord indicatorSeriesRecord = IndicatorSeriesRecord.from(indicatorSeries);
+            String json = JSONMapper.getJSONString(indicatorSeriesRecord);
+            JSONObject indicatorSeriesJSON = new JSONObject(json);
+            _log.info("mapCandleJSON indicatorSeries JSON: {}", json.toString());
+
+            assertEquals(indicatorSeries.getId(), indicatorSeriesJSON.getLong("Id"));
+            indicatorSeriesRecord = JSONMapper.getRecord(json, IndicatorSeriesRecord.class);
+
+            _log.info("Info: Type: {}", indicatorSeriesRecord.getType());
+            indicatorSeries = JSONMapper.convertRecordToEntity(indicatorSeriesRecord, IndicatorSeries.class);
+            break;
+        }
+    }
+
+    @Test
     public void mapTradestrategyJSON() throws JsonProcessingException {
 
         Tradestrategy tradestrategy = tradeService.getTradestrategyService().findById(this.tradestrategy.getId());
@@ -158,8 +182,11 @@ public class JSONMapperIT extends TradestrategyBase {
         JSONObject tradestrategyJSON = new JSONObject(json);
         _log.info("mapCandleJSON Tradestrategy JSON: {}", json.toString());
         assertEquals(tradestrategy.getId(), tradestrategyJSON.getLong("id"));
+        tradestrategyRecord = JSONMapper.getRecord(json, TradestrategyRecord.class);
+        _log.info("Info: symbol: {}", tradestrategyRecord.getContract().getSymbol());
 
-        TradestrategyLiteRecord tradestrategyLiteRecord = TradestrategyLiteRecord.from(this.tradestrategy);
+        tradestrategy = JSONMapper.convertRecordToEntity(tradestrategyRecord, Tradestrategy.class);
+        TradestrategyLiteRecord tradestrategyLiteRecord = TradestrategyLiteRecord.from(tradestrategy);
         json = JSONMapper.getJSONString(tradestrategyLiteRecord);
         _log.info("mapCandleJSON TradestrategyLite JSON: {}", json.toString());
         JSONObject tradestrategyLiteJSON = new JSONObject(json);

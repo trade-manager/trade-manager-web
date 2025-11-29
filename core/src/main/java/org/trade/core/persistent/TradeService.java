@@ -178,8 +178,17 @@ public interface TradeService {
      * Method saveTrading.
      *
      * @param instance Tradingday
+     * @return Tradingday
      */
     Tradingday saveTradingday(Tradingday instance);
+
+    /**
+     * Method saveTrading.
+     *
+     * @param instance Tradestrategy
+     * @return Tradestrategy
+     */
+    Tradestrategy saveTradestrategy(Tradestrategy instance);
 
     /**
      * Method savePortfolio.

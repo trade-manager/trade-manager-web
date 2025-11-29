@@ -24,20 +24,15 @@ import org.trade.core.TradestrategyBase;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.contract.Contract;
 import org.trade.core.persistent.domain.Domain;
-import org.trade.core.persistent.portfolio.Portfolio;
 import org.trade.core.persistent.role.Role;
-import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.persistent.tradestrategy.Tradestrategy;
 import org.trade.core.persistent.tradestrategy.TradestrategyRecord;
-import org.trade.core.persistent.tradingday.Tradingday;
-import org.trade.core.persistent.tradingday.TradingdayRecord;
 import org.trade.core.persistent.user.User;
 import org.trade.core.util.JSONMapper;
 import org.trade.core.valuetype.Currency;
 import org.trade.core.valuetype.Exchange;
 import org.trade.core.valuetype.SECType;
 
-import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -129,7 +124,7 @@ class TradestrategyControllerIT extends TradestrategyBase {
     @WithMockUser(username = "admin", roles = {Role.ROLE_ADMIN})
     public void getTradestrategyByOpenAndClose() throws Exception {
 
-        MvcResult mvcResult =  mockMvc.perform(get("/api/tradestrategy").param("text", open.toString(), close.toString())
+        MvcResult mvcResult = mockMvc.perform(get("/api/tradestrategy").param("text", open.toString(), close.toString())
                         .accept(MediaType.APPLICATION_JSON).with(httpBasic(adminUserName, password)))
                 .andExpect(status().isOk()).andReturn();
         String responseBody = mvcResult.getResponse().getContentAsString();
@@ -150,10 +145,11 @@ class TradestrategyControllerIT extends TradestrategyBase {
         Contract contract = new Contract(SECType.STOCK, symbol, Exchange.SMART, Currency.USD, null, null);
         Tradestrategy tradestrategy = new Tradestrategy(contract, this.tradestrategy.getTradingday(), this.tradestrategy.getStrategy(), this.tradestrategy.getPortfolio(),
                 this.tradestrategy.getRiskAmount(), this.tradestrategy.getSide(), this.tradestrategy.getTier(), this.tradestrategy.getTrade(), this.tradestrategy.getChartDays(), this.tradestrategy.getBarSize());
+        tradestrategy.getStrategy().setIndicatorSeries(new ArrayList<>());
         String jsonContent = JSONMapper.getJSONString(TradestrategyRecord.from(tradestrategy));
         _log.info("Info: jsonContent: {}", jsonContent);
 
-        MvcResult mvcResult =  mockMvc.perform(post("/api/tradestrategy")
+        MvcResult mvcResult = mockMvc.perform(post("/api/tradestrategy")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .with(httpBasic(adminUserName, password))
@@ -168,7 +164,7 @@ class TradestrategyControllerIT extends TradestrategyBase {
         assertEquals(symbol, tradestrategyRecord.getContract().getSymbol());
         assertNotNull(tradestrategyRecord.getId());
         tradestrategy = JSONMapper.convertRecordToEntity(tradestrategyRecord, Tradestrategy.class);
-        tradestrategy = tradeService.getTradestrategyService().findByUniqueKeys(open, tradestrategy.getStrategy().getName(),tradestrategy.getContract(),tradestrategy.getPortfolio().getName());
+        tradestrategy = tradeService.getTradestrategyService().findByUniqueKeys(open, tradestrategy.getStrategy().getName(), tradestrategy.getContract(), tradestrategy.getPortfolio().getName());
         assertNotNull(tradestrategy);
         tradeService.getTradestrategyService().delete(tradestrategy);
     }

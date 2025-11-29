@@ -74,7 +74,7 @@ public class VolumeSeries extends IndicatorSeries {
      * @param index the item index.
      * @return The time period.
      */
-    public RegularTimePeriod getPeriod(int index) {
+    public RegularTimePeriod getPeriod(Integer index) {
         final VolumeItem item = (VolumeItem) getDataItem(index);
         return item.getPeriod();
     }
@@ -86,7 +86,7 @@ public class VolumeSeries extends IndicatorSeries {
      * @param volume Long
      * @param side   boolean
      */
-    public void add(RegularTimePeriod period, Long volume, boolean side) throws ServiceException {
+    public void add(RegularTimePeriod period, Long volume, Boolean side) throws ServiceException {
         if (!this.isEmpty()) {
             VolumeItem item0 = (VolumeItem) this.getDataItem(0);
             if (!period.getClass().equals(item0.getPeriod().getClass())) {
@@ -102,7 +102,7 @@ public class VolumeSeries extends IndicatorSeries {
      * @param notify   the notify listeners.
      * @param dataItem VolumeItem
      */
-    public void add(VolumeItem dataItem, boolean notify) throws ServiceException {
+    public void add(VolumeItem dataItem, Boolean notify) throws ServiceException {
         if (!this.isEmpty()) {
             VolumeItem item0 = (VolumeItem) this.getDataItem(0);
             if (!dataItem.getPeriod().getClass().equals(item0.getPeriod().getClass())) {
@@ -118,7 +118,7 @@ public class VolumeSeries extends IndicatorSeries {
      * @param source      CandleDataset
      * @param seriesIndex int
      */
-    public void createSeries(CandleDataset source, int seriesIndex) throws ServiceException {
+    public void createSeries(CandleDataset source, Integer seriesIndex) throws ServiceException {
 
         if (source.getSeries(seriesIndex) == null) {
             throw new IllegalArgumentException("Null source (XYDataset).");
@@ -136,7 +136,7 @@ public class VolumeSeries extends IndicatorSeries {
      * @param skip   int
      * @param newBar boolean
      */
-    public void updateSeries(CandleSeries source, int skip, boolean newBar) throws ServiceException {
+    public void updateSeries(CandleSeries source, Integer skip, Boolean newBar) throws ServiceException {
 
         if (source == null) {
             throw new IllegalArgumentException("Null source (CandleSeries).");

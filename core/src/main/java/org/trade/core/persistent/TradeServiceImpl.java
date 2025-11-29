@@ -365,6 +365,46 @@ public class TradeServiceImpl implements TradeService {
         return instance;
     }
 
+    @Transactional
+    public Tradestrategy saveTradestrategy(Tradestrategy instance) {
+
+
+        Tradingday tradingday = tradingdayService.findByOpenCloseDate(instance.getTradingday().getOpen(), instance.getTradingday().getClose());
+
+        if (null != tradingday) {
+
+            instance.setTradingday(tradingday);
+        }
+        /*
+         * The strategy will always exist as these cannot be created
+         * via this tab, as they are a dropdown list. So find the
+         * persisted one and set this.
+         */
+        Strategy strategy = strategyService.findByName(instance.getStrategy().getName());
+
+        if (null != strategy) {
+
+            instance.setStrategy(strategy);
+        }
+
+        /*
+         * Check to see if the contract exists if it does merge and
+         * set the new persisted one. If no persist the contract.
+         */
+        Contract contract = contractService.findByUniqueKey(instance.getContract().getSecType(),
+                instance.getContract().getSymbol(), instance.getContract().getExchange(),
+                instance.getContract().getCurrency(), instance.getContract().getExpiry());
+
+        if (null != contract) {
+
+            instance.setContract(contract);
+        }
+
+        instance.setDirty(false);
+        instance = aspectService.save(instance);
+        return instance;
+    }
+
     // READ_UNCOMMITTED, READ_COMMITTED, REPEATABLE_READ, SERIALIZABLE
     @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public TradeOrder saveTradeOrder(TradeOrder tradeOrder) {

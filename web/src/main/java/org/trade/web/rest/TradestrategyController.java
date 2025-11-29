@@ -46,7 +46,7 @@ public class TradestrategyController {
     public List<TradestrategyRecord> getTradestrategies(@RequestParam(value = "text", required = false) ZonedDateTime open, @RequestParam(value = "text", required = false) ZonedDateTime close) {
         List<Tradestrategy> tradestrategies = new ArrayList<>();
 
-        Tradingday tradingday= tradeService.getTradingdayService().findByOpenCloseDate(open, close);
+        Tradingday tradingday = tradeService.getTradingdayService().findByOpenCloseDate(open, close);
 
         if (tradingday != null) {
             tradestrategies = tradeService.getTradestrategyService().findByTradingday(tradingday);
@@ -69,7 +69,7 @@ public class TradestrategyController {
             tradestrategy = JSONMapper.convertRecordToEntity(tradestrategyRecord, Tradestrategy.class);
         }
 
-        tradestrategy = tradeService.getTradestrategyService().save(tradestrategy);
+        tradestrategy = tradeService.saveTradestrategy(tradestrategy);
         return TradestrategyRecord.from(tradestrategy);
     }
 

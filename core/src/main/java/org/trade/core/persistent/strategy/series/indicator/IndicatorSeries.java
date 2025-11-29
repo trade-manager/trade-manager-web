@@ -89,6 +89,10 @@ public abstract class IndicatorSeries extends ComparableObjectSeries implements 
     @Column(name = "version", columnDefinition = "integer DEFAULT 0", nullable = false)
     protected Integer version;
 
+    public IndicatorSeries() {
+        super();
+    }
+
     /**
      * Constructor for IndicatorSeries.
      *
@@ -99,6 +103,25 @@ public abstract class IndicatorSeries extends ComparableObjectSeries implements 
         super(type, true, false);
         this.type = type;
         this.version = 0;
+    }
+
+    /**
+     * Constructor for IndicatorSeries.
+     *
+     * @param type String
+     */
+    public IndicatorSeries(Long id, String type, Integer seriesRGBColor, Boolean dirty, String name, String description, Boolean displaySeries, Boolean subChart) {
+
+        super(type, true, false);
+        this.type = type;
+        this.seriesRGBColor = seriesRGBColor;
+        this.dirty = dirty;
+        this.name = name;
+        this.description = description;
+        this.displaySeries = displaySeries;
+        this.subChart = subChart;
+        this.version = 0;
+        setId(id);
     }
 
     /**
@@ -408,7 +431,7 @@ public abstract class IndicatorSeries extends ComparableObjectSeries implements 
      * @return The data item.
      */
     @Transient
-    public ComparableObjectItem getDataItem(int index) {
+    public ComparableObjectItem getDataItem(Integer index) {
         return super.getDataItem(index);
     }
 
@@ -419,7 +442,7 @@ public abstract class IndicatorSeries extends ComparableObjectSeries implements 
      * @param skip   int
      * @param newBar boolean
      */
-    public abstract void updateSeries(CandleSeries source, int skip, boolean newBar) throws ServiceException;
+    public abstract void updateSeries(CandleSeries source, Integer skip, Boolean newBar) throws ServiceException;
 
     /**
      * Method createSeries.
@@ -427,7 +450,7 @@ public abstract class IndicatorSeries extends ComparableObjectSeries implements 
      * @param source      CandleDataset
      * @param seriesIndex int
      */
-    public abstract void createSeries(CandleDataset source, int seriesIndex) throws ServiceException;
+    public abstract void createSeries(CandleDataset source, Integer seriesIndex) throws ServiceException;
 
     /**
      * Method printSeries.
