@@ -33,8 +33,8 @@ public class JSONMapper {
 
         objectMapper.registerModule(new JavaTimeModule());
         // Set max depth
-        StreamReadConstraints readConstraints = StreamReadConstraints.builder().maxNestingDepth(200).build();
-        StreamWriteConstraints writeConstraints = StreamWriteConstraints.builder().maxNestingDepth(200).build();
+        StreamReadConstraints readConstraints = StreamReadConstraints.builder().maxNestingDepth(50).build();
+        StreamWriteConstraints writeConstraints = StreamWriteConstraints.builder().maxNestingDepth(50).build();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 
@@ -48,7 +48,6 @@ public class JSONMapper {
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         modelMapper.addConverter(new ZonedDateTimeConverter());
         modelMapper.addConverter(new IndicatorSeriesConverter());
-
     }
 
     /**

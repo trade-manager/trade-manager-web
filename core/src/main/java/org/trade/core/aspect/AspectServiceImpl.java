@@ -125,10 +125,10 @@ public class AspectServiceImpl implements AspectService {
      */
     public List<?> findCodesByClassName(String className) throws ClassNotFoundException {
 
-        Class<?> c = Class.forName(className);
+        Class<?> clazz = Class.forName(className);
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Object> criteriaQuery = criteriaBuilder.createQuery();
-        Root<?> from = criteriaQuery.from(c);
+        Root<?> from = criteriaQuery.from(clazz);
         CriteriaQuery<Object> select = criteriaQuery.select(from);
         TypedQuery<Object> typedQuery = entityManager.createQuery(select);
         List<Object> items = typedQuery.getResultList();

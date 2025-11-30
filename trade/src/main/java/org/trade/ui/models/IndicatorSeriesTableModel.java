@@ -127,8 +127,7 @@ public class IndicatorSeriesTableModel extends TableModel {
             case 1: {
                 String type = ((org.trade.core.valuetype.IndicatorSeries) value).getCode();
                 String indicatorName = type.substring(0, type.indexOf("Series"));
-                element = this.getIndicatorSeries(element.getStrategy(), indicatorName, type, indicatorName
-                );
+                element = this.getIndicatorSeries(element.getStrategy(), indicatorName, type, indicatorName);
                 this.replaceRow(element, row);
                 break;
             }
@@ -232,9 +231,8 @@ public class IndicatorSeriesTableModel extends TableModel {
             String className = INDICATOR_PACKAGE + type;
             return (org.trade.core.persistent.strategy.series.indicator.IndicatorSeries) ClassFactory.getCreateClass(className, params, this);
         } catch (Exception e) {
-            /*
-             * will only ever happen is IndicatorSeries does not exist.
-             */
+
+            // will only ever happen if IndicatorSeries does not exist.
         }
         return null;
     }

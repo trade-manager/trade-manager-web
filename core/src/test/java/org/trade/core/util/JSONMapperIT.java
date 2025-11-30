@@ -184,18 +184,27 @@ public class JSONMapperIT extends TradestrategyBase {
         TradestrategyRecord tradestrategyRecord = TradestrategyRecord.from(tradestrategy);
         assertEquals(tradestrategy.getStrategy().getIndicatorSeries().size(), tradestrategyRecord.strategy().getIndicatorSeries().size());
         String json = JSONMapper.getJSONString(tradestrategyRecord);
+        _log.info("Info: Tradestrategy JSON:\n{}", json.toString());
 
         JSONObject tradestrategyJSON = new JSONObject(json);
-        _log.info("mapCandleJSON Tradestrategy JSON: {}", json.toString());
         assertEquals(tradestrategy.getId(), tradestrategyJSON.getLong("id"));
         tradestrategyRecord = JSONMapper.getRecord(json, TradestrategyRecord.class);
         _log.info("Info: symbol: {}", tradestrategyRecord.getContract().getSymbol());
+
         assertEquals(tradestrategy.getStrategy().getIndicatorSeries().size(), tradestrategyRecord.strategy().getIndicatorSeries().size());
 
-        tradestrategy = JSONMapper.convertRecordToEntity(tradestrategyRecord, Tradestrategy.class);
-        TradestrategyLiteRecord tradestrategyLiteRecord = TradestrategyLiteRecord.from(tradestrategy);
+        Tradestrategy tradestrategyNew = JSONMapper.convertRecordToEntity(tradestrategyRecord, Tradestrategy.class);
+
+        assertEquals(tradestrategyNew.getStrategy().getIndicatorSeries().getFirst().getType(), tradestrategy.getStrategy().getIndicatorSeries().getFirst().getType());
+        assertEquals(tradestrategyNew.getStrategy().getIndicatorSeries().getFirst().getName(), tradestrategy.getStrategy().getIndicatorSeries().getFirst().getName());
+        assertEquals(tradestrategyNew.getStrategy().getIndicatorSeries().getFirst().getDisplaySeries(), tradestrategy.getStrategy().getIndicatorSeries().getFirst().getDisplaySeries());
+        assertEquals(tradestrategyNew.getStrategy().getIndicatorSeries().getFirst().getCodeValues().size(), tradestrategy.getStrategy().getIndicatorSeries().getFirst().getCodeValues().size());
+        assertEquals(tradestrategyNew.getStrategy().getIndicatorSeries().getFirst().getSeriesRGBColor(), tradestrategy.getStrategy().getIndicatorSeries().getFirst().getSeriesRGBColor());
+
+        TradestrategyLiteRecord tradestrategyLiteRecord = TradestrategyLiteRecord.from(tradestrategyNew);
         json = JSONMapper.getJSONString(tradestrategyLiteRecord);
-        _log.info("mapCandleJSON TradestrategyLite JSON: {}", json.toString());
+        _log.info("Info: TradestrategyLite JSON:\n{}", json.toString());
+
         JSONObject tradestrategyLiteJSON = new JSONObject(json);
         assertEquals(tradestrategy.getId(), tradestrategyLiteJSON.getLong("id"));
     }
