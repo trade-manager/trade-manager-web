@@ -23,7 +23,7 @@ public class DBTableLookupServiceProvider implements ILookupServiceProvider {
 
     private final static Logger _log = LoggerFactory.getLogger(DBTableLookupServiceProvider.class);
 
-    private static TradeService _tradeService;
+    private final TradeService tradeService;
     /*
      * This will be a hashtable of hashtable's of ILookup objects. The first key
      * is the lookup name and the second key is the LookupQualifier.
@@ -33,12 +33,9 @@ public class DBTableLookupServiceProvider implements ILookupServiceProvider {
     /**
      * Default Constructor
      */
-    public DBTableLookupServiceProvider(TradeService tradeService) {
+    public DBTableLookupServiceProvider(final TradeService tradeService) {
 
-        if (null == _tradeService) {
-
-            _tradeService = tradeService;
-        }
+        this.tradeService = tradeService;
     }
 
     public static void clearLookup() {
@@ -180,7 +177,7 @@ public class DBTableLookupServiceProvider implements ILookupServiceProvider {
                         rows.add(newRowNone);
                     }
 
-                    List<?> codes = _tradeService.getAspectService().findCodesByClassName(dao);
+                    List<?> codes = this.tradeService.getAspectService().findCodesByClassName(dao);
 
                     for (Object daoObject : codes) {
 
