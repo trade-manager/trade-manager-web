@@ -108,7 +108,6 @@ class TradestrategyControllerIT extends TradestrategyBase {
         assertNotNull(open);
         close = tradestrategy.getTradingday().getClose();
         assertNotNull(close);
-
     }
 
     /**
