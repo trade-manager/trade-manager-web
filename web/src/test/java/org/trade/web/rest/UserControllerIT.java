@@ -112,7 +112,7 @@ class UserControllerIT extends TradestrategyBase {
     @Test
     @WithMockUser(username = "admin", roles = {Role.ROLE_ADMIN})
     public void getUserByName() throws Exception {
-        ;
+
         mockMvc.perform(get("/api/users/{username}", userName).with(csrf())
                         .accept(MediaType.APPLICATION_JSON).with(httpBasic(adminUserName, password)))
                 .andExpect(status().isOk())

@@ -159,5 +159,4 @@ class PublicControllerIT extends TradestrategyBase {
         JSONArray result = new JSONArray(responseBody);
         assertEquals(3, result.length());
     }
-
 }
