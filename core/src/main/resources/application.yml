@@ -69,5 +69,5 @@ app:
 
 # The location of the logging properties:
 logging:
-    config: "file:../config.properties"
+    config: "file:../log.properties"
     
