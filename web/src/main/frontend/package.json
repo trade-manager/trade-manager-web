@@ -7,13 +7,13 @@
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",
     "axios": "^1.16.1",
-    "next": "^16.2.6",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^7.15.1",
     "react-scripts": "5.0.1",
     "semantic-ui-react": "^2.1.5",
-    "web-vitals": "^5.2.0"
+    "web-vitals": "^5.2.0",
+    "next": "^16.2.6"
   },
   "scripts": {
     "start": "react-scripts start",

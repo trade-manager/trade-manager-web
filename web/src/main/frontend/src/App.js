@@ -1,6 +1,6 @@
 import React from 'react'
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
-import { AuthProvider } from './components/context/AuthContext'
+import {BrowserRouter as Router, Navigate, Route, Routes} from 'react-router-dom'
+import {AuthProvider} from './components/context/AuthContext'
 import PrivateRoute from './components/misc/PrivateRoute'
 import Navbar from './components/misc/Navbar'
 import Home from './components/home/Home'
@@ -11,22 +11,22 @@ import TradePage from './components/trade/TradePage'
 import UserPage from './components/user/UserPage'
 
 function App() {
-  return (
-    <AuthProvider>
-      <Router>
-        <Navbar />
-        <Routes>
-          <Route path='/' element={<Home />} />
-          <Route path='/login' element={<Login />} />
-          <Route path='/signup' element={<Signup />} />
-          <Route path="/adminpage" element={<PrivateRoute><AdminPage /></PrivateRoute>} />
-          <Route path="/Tradepage" element={<PrivateRoute><TradePage /></PrivateRoute>} />
-          <Route path="/userpage" element={<PrivateRoute><UserPage /></PrivateRoute>} />
-          <Route path="*" element={<Navigate to="/" />} />
-        </Routes>
-      </Router>
-    </AuthProvider>
-  )
+    return (
+        <AuthProvider>
+            <Router>
+                <Navbar/>
+                <Routes>
+                    <Route path='/' element={<Home/>}/>
+                    <Route path='/login' element={<Login/>}/>
+                    <Route path='/signup' element={<Signup/>}/>
+                    <Route path="/adminpage" element={<PrivateRoute><AdminPage/></PrivateRoute>}/>
+                    <Route path="/tradepage" element={<PrivateRoute><TradePage/></PrivateRoute>}/>
+                    <Route path="/userpage" element={<PrivateRoute><UserPage/></PrivateRoute>}/>
+                    <Route path="*" element={<Navigate to="/"/>}/>
+                </Routes>
+            </Router>
+        </AuthProvider>
+    )
 }
 
 export default App
