@@ -14,13 +14,12 @@ import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.domain.DomainRecord;
 import org.trade.core.persistent.domain.DomainService;
 import org.trade.core.persistent.employee.EmployeeService;
+import org.trade.core.persistent.log.LogRecord;
 import org.trade.core.persistent.role.RoleRecord;
 import org.trade.core.persistent.role.RoleService;
 import org.trade.core.persistent.user.UserService;
-import org.trade.core.persistent.log.LogRecord;
 
 import java.util.List;
-import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 /**
@@ -91,10 +90,10 @@ public class PublicController {
         if (logRecord.getLevel().equals("ERROR")) {
 
             _log.error(logRecord.getMessage());
-        } else if (logRecord.getLevel().equals("WARNING") ){
+        } else if (logRecord.getLevel().equals("WARNING")) {
 
             _log.warn(logRecord.getMessage());
-        }else if (logRecord.getLevel().equals("INFO") ){
+        } else if (logRecord.getLevel().equals("INFO")) {
 
             _log.info(logRecord.getMessage());
         } else {
