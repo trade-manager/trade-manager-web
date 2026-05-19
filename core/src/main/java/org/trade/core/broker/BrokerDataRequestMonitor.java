@@ -309,7 +309,7 @@ public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
                                 * 100d);
                         setProgress(percent);
                         Duration duration = Duration.ofSeconds((periodSeconds - 1) + ((periodSeconds - 1) * (Math.round((Math.floor(getGrandTotal() / numberPerPeriod) - Math.floor(totalSumbitted / numberPerPeriod))))));
-                        publish("Please wait " + String.format(durationFormat, duration.toHoursPart(), duration.toMinutesPart(), duration.toSecondsPart()) + message + " Completed: " + (totalSumbitted - this.brokerModel.getHistoryDataRequests().size()) + ", of: " + getGrandTotal());
+                        publish("Please wait " + String.format(durationFormat, duration.toHoursPart(), duration.toMinutesPart(), duration.toSecondsPart()) + message + " Completed: " + (totalSumbitted - this.brokerModel.getHistoryDataRequests().size()) + " of: " + getGrandTotal());
                     }
 
                     lockCoreUtilsTest.wait();

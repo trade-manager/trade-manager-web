@@ -19,7 +19,6 @@ import org.trade.core.persistent.tradingday.TradingdayRecord;
 import org.trade.core.util.JSONMapper;
 
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,11 +42,13 @@ public class TradingdayController {
     @Operation(security = {@SecurityRequirement(name = BASIC_AUTH_SECURITY_SCHEME)})
     @GetMapping
     public List<TradingdayRecord> getTradingdays(@RequestParam(value = "text", required = false) ZonedDateTime open, @RequestParam(value = "text", required = false) ZonedDateTime close) {
-        List<Tradingday> tradingdays = new ArrayList<>();
+        List<Tradingday> tradingdays;
 
         if (open != null && close != null) {
+
             tradingdays = tradeService.getTradingdayService().findTradingdaysByDateRangeOrderByOpenAsc(open, close).getTradingdays();
         } else {
+
             tradingdays = tradeService.getTradingdayService().findAll();
         }
 
@@ -59,20 +60,19 @@ public class TradingdayController {
     @PostMapping
     public TradingdayRecord createTradingday(@Valid @RequestBody TradingdayRecord tradingdayRecord) {
 
-        Tradingday tradingday = null;
+        if (null != tradingdayRecord) {
 
-        if (null == tradingday) {
-
-            tradingday = JSONMapper.convertRecordToEntity(tradingdayRecord, Tradingday.class);
+            Tradingday tradingday = JSONMapper.convertRecordToEntity(tradingdayRecord, Tradingday.class);
+            tradingday = tradeService.saveTradingday(tradingday);
+            return TradingdayRecord.from(tradingday);
         }
 
-        tradingday = tradeService.saveTradingday(tradingday);
-        return TradingdayRecord.from(tradingday);
+        return null;
     }
 
     @Operation(security = {@SecurityRequirement(name = BASIC_AUTH_SECURITY_SCHEME)})
     @DeleteMapping("/{id}")
-    public TradingdayRecord deleteEmployee(@PathVariable Long id) {
+    public TradingdayRecord deleteTradingday(@PathVariable Long id) {
 
         Tradingday tradingday = tradeService.getTradingdayService().validateAndGet(id);
         tradeService.getTradingdayService().delete(tradingday);

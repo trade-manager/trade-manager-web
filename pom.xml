@@ -20,7 +20,7 @@
         <jackson-datatype-jsr310.version>2.19.2</jackson-datatype-jsr310.version>
         <yasson.version>3.0.4</yasson.version>
         <nashorn-core.version>15.6</nashorn-core.version>
-        <rhino.version>1.8.0</rhino.version>
+        <rhino.version>1.9.1</rhino.version>
         <maven-surefire-plugin.version>3.5.3</maven-surefire-plugin.version>
     </properties>
     <groupId>org.trade</groupId>
