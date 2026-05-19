@@ -12,7 +12,7 @@ function TradePage() {
     const user = Auth.getUser()
     const isUser = user.role === 'USER'
 
-    const tradingday =  tradingdayApi.getTradingdays(user)
+    const tradingday = tradingdayApi.getTradingdays(user)
 
     const [tradingdays, setTradingdays] = useState([])
     const [tradingdayId, setTradingdayId] = useState('')
