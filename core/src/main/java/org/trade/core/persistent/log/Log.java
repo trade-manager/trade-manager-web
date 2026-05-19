@@ -1,4 +1,4 @@
-package org.trade.core.util;
+package org.trade.core.persistent.log;
 
 
 import org.trade.core.aspect.Aspect;

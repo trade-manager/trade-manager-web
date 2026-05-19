@@ -1,4 +1,4 @@
-package org.trade.core.util;
+package org.trade.core.persistent.log;
 
 
 import java.time.ZonedDateTime;

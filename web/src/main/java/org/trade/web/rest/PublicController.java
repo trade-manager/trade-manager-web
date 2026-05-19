@@ -17,7 +17,7 @@ import org.trade.core.persistent.employee.EmployeeService;
 import org.trade.core.persistent.role.RoleRecord;
 import org.trade.core.persistent.role.RoleService;
 import org.trade.core.persistent.user.UserService;
-import org.trade.core.util.LogRecord;
+import org.trade.core.persistent.log.LogRecord;
 
 import java.util.List;
 import java.util.logging.Level;
