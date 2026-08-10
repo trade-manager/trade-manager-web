@@ -5,7 +5,12 @@ import EmployeeTable from './EmployeeTable'
 
 function AdminTab(props) {
     const {handleInputChange} = props
-    const {isUsersLoading, users, userUsernameSearch, handleDeleteUser, handleSearchUser} = props
+    const {
+        isUsersLoading,
+        users,
+        userUsernameSearch,
+        handleDeleteUser,
+        handleSearchUser} = props
     const {
         isEmployeesLoading,
         employees,
@@ -36,7 +41,7 @@ function AdminTab(props) {
             )
         },
         {
-            menuItem: {key: 'employees', icon: 'employee', content: 'Employees'},
+            menuItem: {key: 'employees', icon: 'employees', content: 'Employees'},
             render: () => (
                 <Tab.Pane loading={isEmployeesLoading}>
                     <EmployeeTable

@@ -11,7 +11,8 @@ function TradingdayForm({
                             handleInputChange,
                             handleAddTradingday
                         }) {
-    let createBtnDisabled = tradingdayOpen.trim() === '' || tradingdayClose.trim() === ''
+
+    let createBtnDisabled =  tradingdayOpen.trim() === '' || tradingdayClose.trim() === ''
     return (
         <Form onSubmit={handleAddTradingday}>
             <Form.Group>

@@ -12,8 +12,6 @@ function TradePage() {
     const user = Auth.getUser()
     const isUser = user.role === 'USER'
 
-    const tradingday = tradingdayApi.getTradingdays(user)
-
     const [tradingdays, setTradingdays] = useState([])
     const [tradingdayId, setTradingdayId] = useState('')
     const [tradingdayOpen, setTradingdayOpen] = useState('')
@@ -30,7 +28,7 @@ function TradePage() {
     const [tradestrategyId, setTradestrategyId] = useState('')
     const [tradestrategyDate, setTradestrategyDate] = useState('')
     const [tradestrategyTrade, setTradestrategyTrade] = useState('')
-    const [tradestrategySymbol, seTradestrategySymbol] = useState('')
+    const [tradestrategySymbol, setTradestrategySymbol] = useState('')
     const [tradestrategySide, setTradestrategySide] = useState('')
     const [tradestrategyTier, setTradestrategyTier] = useState('')
     const [tradestrategyStrategy, setTradestrategyStrategy] = useState('')
@@ -65,20 +63,47 @@ function TradePage() {
             setTradingdayMktBias(value);
         } else if (name === 'tradingdayMktBar') {
             setTradingdayMktBar(value);
+        } else if (name === 'tradestrategySymbolSearch') {
+            setTradestrategySymbolSearch(value);
+        }  else if (name === 'tradestrategyId') {
+            setTradestrategyId(value);
+        } else if (name === 'tradestrategyDate') {
+            setTradestrategyDate(value);
+        } else if (name === 'tradestrategyTrade') {
+            setTradestrategyTrade(value);
+        } else if (name === 'tradestrategySymbol') {
+            setTradestrategySymbol(value);
+        } else if (name === 'tradestrategySide') {
+            setTradestrategySide(value);
+        } else if (name === 'tradestrategyTier') {
+            setTradestrategyTier(value);
+        } else if (name === 'tradestrategyStrategy') {
+            setTradestrategyStrategy(value);
+        } else if (name === 'tradestrategyStrategyMgr') {
+            setTradestrategyStrategyMgr(value);
+        } else if (name === 'tradestrategyPortfolio') {
+            setTradestrategyPortfolio(value);
+        } else if (name === 'tradestrategyBarSize') {
+            setTradestrategyBarSize(value);
+        } else if (name === 'tradestrategyChartDays') {
+            setTradestrategyChartDays(value);
+        } else if (name === 'tradestrategyStatus') {
+            setTradestrategyStatus(value);
         }
     }
 
     const handleGetTradingdays = async () => {
 
         try {
-
+            console.log("handleGetTradingdays user:\n" + JSON.stringify(user) + " tradingdayOpen: " + tradingdayOpen + " tradingdayClose: " + tradingdayClose);
             setIsTradingdaysLoading(true);
-            const response = await tradingdayApi.getTradingdays(user, tradingday);
-            const tradingdays = response.data;
-            console.log("handleGetTradingdays tradingdays:\n" + JSON.stringify(tradingdays));
+            const response = await tradingdayApi.getTradingdays(user, tradingdayOpen, tradingdayClose);
+            const data = response.data;
+            console.log("handleGetTradingdays data:\n" + JSON.stringify(data));
+            const tradingdays = data instanceof Array ? data : [data];
             setTradingdays(tradingdays);
         } catch (error) {
-
+            console.log("handleGetTradingdays error:\n" + JSON.stringify(error));
             logMessage(ERROR, error, user);
         } finally {
 
@@ -101,6 +126,7 @@ function TradePage() {
         try {
             const response = await tradingdayApi.getTradingdays(user, tradingdayOpenSearch, tradingdayCloseSearch);
             const data = response.data;
+            console.log("handleSearchTradingday tradingdays:\n" + JSON.stringify(data));
             const tradingdays = data instanceof Array ? data : [data];
             setTradingdays(tradingdays);
         } catch (error) {
@@ -114,7 +140,7 @@ function TradePage() {
         try {
 
             setIsTradestrategiesLoading(true);
-            const response = await tradestrategyApi.getTradestrategyApi(user, tradingdayId);
+            const response = await tradestrategyApi.getTradestrategies(user, tradingdayOpen, tradingdayClose);
             const tradestrategies = response.data;
             console.log("handleGetTradestrategies Tradestrategies:\n" + JSON.stringify(tradestrategies));
             setTradestrategies(tradestrategies);
@@ -217,7 +243,7 @@ function TradePage() {
     const clearTradestrategyForm = () => {
         setTradestrategyDate('');
         setTradestrategyTrade('');
-        seTradestrategySymbol('');
+        setTradestrategySymbol('');
         setTradestrategySide('');
         setTradestrategyTier('');
         setTradestrategyStrategy('');

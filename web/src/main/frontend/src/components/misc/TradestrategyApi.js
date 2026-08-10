@@ -18,8 +18,8 @@ function deleteTradestrategy(user, id) {
     })
 }
 
-function getTradestrategies(user, symbol) {
-    const url = symbol ? `/api/tradestrategy?symbol=${symbol}` : '/api/tradestrategy'
+function getTradestrategies(user, open, close) {
+    const url = open ? `/api/tradestrategyopen=${open}&close=${close}` : '/api/tradestrategy'
     return instance.get(url, {
         headers: {'Authorization': basicAuth(user)}
     })

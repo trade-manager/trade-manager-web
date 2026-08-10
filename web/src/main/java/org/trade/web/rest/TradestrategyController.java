@@ -44,7 +44,7 @@ public class TradestrategyController {
     @Operation(security = {@SecurityRequirement(name = BASIC_AUTH_SECURITY_SCHEME)})
     @GetMapping
     public List<TradestrategyRecord> getTradestrategies(@RequestParam(value = "text", required = false) ZonedDateTime open, @RequestParam(value = "text", required = false) ZonedDateTime close) {
-        List<Tradestrategy> tradestrategies = new ArrayList<>();
+        List<Tradestrategy> tradestrategies;
 
         Tradingday tradingday = tradeService.getTradingdayService().findByOpenCloseDate(open, close);
 
@@ -54,7 +54,9 @@ public class TradestrategyController {
             tradestrategies = tradeService.getTradestrategyService().findAll();
         }
 
-        return tradestrategies.stream().map(TradestrategyRecord::from).collect(Collectors.toList());
+        List<TradestrategyRecord> tradestrategyRecord = tradestrategies.stream().map(TradestrategyRecord::from).collect(Collectors.toList());
+
+        return tradestrategyRecord;
     }
 
     @Operation(security = {@SecurityRequirement(name = BASIC_AUTH_SECURITY_SCHEME)})
