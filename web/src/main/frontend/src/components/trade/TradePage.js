@@ -38,7 +38,8 @@ function TradePage() {
     const [tradestrategyChartDays, setTradestrategyChartDays] = useState('')
     const [tradestrategyStatus, setTradestrategyStatus] = useState('')
 
-    const [tradestrategySymbolSearch, setTradestrategySymbolSearch] = useState('')
+    const [tradestrategyOpenSearch, setTradestrategyOpenSearch] = useState('')
+    const [tradestrategyCloseSearch, setTradestrategyCloseSearch] = useState('')
     const [isTradestrategiesLoading, setIsTradestrategiesLoading] = useState(false)
 
     useEffect(() => {
@@ -63,9 +64,11 @@ function TradePage() {
             setTradingdayMktBias(value);
         } else if (name === 'tradingdayMktBar') {
             setTradingdayMktBar(value);
-        } else if (name === 'tradestrategySymbolSearch') {
-            setTradestrategySymbolSearch(value);
-        }  else if (name === 'tradestrategyId') {
+        } else if (name === 'tradestrategyOpenSearch') {
+            setTradestrategyOpenSearch(value);
+        } else if (name === 'tradestrategyCloseSearch') {
+            setTradestrategyCloseSearch(value);
+        } else if (name === 'tradestrategyId') {
             setTradestrategyId(value);
         } else if (name === 'tradestrategyDate') {
             setTradestrategyDate(value);
@@ -95,12 +98,23 @@ function TradePage() {
     const handleGetTradingdays = async () => {
 
         try {
-            console.log("handleGetTradingdays user:\n" + JSON.stringify(user) + " tradingdayOpen: " + tradingdayOpen + " tradingdayClose: " + tradingdayClose);
             setIsTradingdaysLoading(true);
             const response = await tradingdayApi.getTradingdays(user, tradingdayOpen, tradingdayClose);
             const data = response.data;
             console.log("handleGetTradingdays data:\n" + JSON.stringify(data));
             const tradingdays = data instanceof Array ? data : [data];
+
+            if (tradingdays.length > 0) {
+
+                const localDateOpen = new Date(tradingdays[0].open);
+                const localISOTimeOpen = new Date(localDateOpen.getTime() - (localDateOpen.getTimezoneOffset() * 60000)).toISOString().slice(0, 16);
+                const localDateClose = new Date(tradingdays[tradingdays.length - 1].close);
+                const localISOTimeClose = new Date(localDateClose.getTime() - (localDateClose.getTimezoneOffset() * 60000)).toISOString().slice(0, 16);
+                setTradingdayOpenSearch(localISOTimeOpen);
+                setTradingdayCloseSearch(localISOTimeClose);
+                setTradestrategyOpenSearch(localISOTimeOpen);
+                setTradestrategyCloseSearch(localISOTimeClose);
+            }
             setTradingdays(tradingdays);
         } catch (error) {
             console.log("handleGetTradingdays error:\n" + JSON.stringify(error));
@@ -124,9 +138,9 @@ function TradePage() {
 
     const handleSearchTradingday = async () => {
         try {
+
             const response = await tradingdayApi.getTradingdays(user, tradingdayOpenSearch, tradingdayCloseSearch);
             const data = response.data;
-            console.log("handleSearchTradingday tradingdays:\n" + JSON.stringify(data));
             const tradingdays = data instanceof Array ? data : [data];
             setTradingdays(tradingdays);
         } catch (error) {
@@ -142,7 +156,6 @@ function TradePage() {
             setIsTradestrategiesLoading(true);
             const response = await tradestrategyApi.getTradestrategies(user, tradingdayOpen, tradingdayClose);
             const tradestrategies = response.data;
-            console.log("handleGetTradestrategies Tradestrategies:\n" + JSON.stringify(tradestrategies));
             setTradestrategies(tradestrategies);
         } catch (error) {
 
@@ -178,6 +191,7 @@ function TradePage() {
 
                 return;
             }
+
             await tradingdayApi.addTradingday(user, tradingday);
             await handleGetTradingdays();
             clearTradingdayForm();
@@ -220,9 +234,9 @@ function TradePage() {
 
     const handleSearchTradestrategy = async () => {
         try {
-            const response = await tradestrategyApi.getTradestrategies(user, tradestrategySymbolSearch)
+
+            const response = await tradestrategyApi.getTradestrategies(user, tradestrategyOpenSearch, tradestrategyCloseSearch)
             const tradestrategies = response.data;
-            console.log("handleSearchTradestrategy tradestrategies:\n" + JSON.stringify(tradestrategies));
             setTradestrategies(tradestrategies)
         } catch (error) {
 
@@ -283,7 +297,8 @@ function TradePage() {
                 tradestrategyBarSize={tradestrategyBarSize}
                 tradestrategyChartDays={tradestrategyChartDays}
                 tradestrategyStatus={tradestrategyStatus}
-                tradestrategySymbolSearch={tradestrategySymbolSearch}
+                tradestrategyOpenSearch={tradestrategyOpenSearch}
+                tradestrategyCloseSearch={tradestrategyCloseSearch}
                 handleAddTradestrategy={handleAddTradestrategy}
                 handleDeleteTradestrategy={handleDeleteTradestrategy}
                 handleSearchTradestrategy={handleSearchTradestrategy}

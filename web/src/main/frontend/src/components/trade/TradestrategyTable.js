@@ -3,7 +3,8 @@ import {Button, Form, Input, Table} from 'semantic-ui-react'
 
 function TradestrategyTable({
                                 tradestrategies,
-                                tradestrategySymbolSearch,
+                                tradestrategyOpenSearch,
+                                tradestrategyCloseSearch,
                                 handleAddTradestrategy,
                                 handleDeleteTradestrategy,
                                 handleSearchTradestrategy,
@@ -51,10 +52,21 @@ function TradestrategyTable({
         <>
             <Form onSubmit={handleSearchTradestrategy}>
                 <Input
+                    type="datetime-local"
+                    id="start-date"
                     action={{icon: 'search'}}
-                    name='tradestrategySymbolSearch'
-                    placeholder='Search by Symbol'
-                    value={tradestrategySymbolSearch}
+                    name='tradestrategyOpenSearch'
+                    placeholder='Search by start date'
+                    value={tradestrategyOpenSearch}
+                    onChange={handleInputChange}
+                />
+                <Input
+                    type="datetime-local"
+                    id="end-date"
+                    action={{icon: 'search'}}
+                    name='tradestrategyCloseSearch'
+                    placeholder='Search by end date'
+                    value={tradestrategyCloseSearch}
                     onChange={handleInputChange}
                 />
             </Form>
@@ -63,7 +75,7 @@ function TradestrategyTable({
                     <Table.Row>
                         <Table.HeaderCell width={1}/>
                         <Table.HeaderCell width={1}>ID</Table.HeaderCell>
-                        <Table.HeaderCell width={3}>Date</Table.HeaderCell>
+                        <Table.HeaderCell width={3}>Open</Table.HeaderCell>
                         <Table.HeaderCell width={4}>Trade</Table.HeaderCell>
                         <Table.HeaderCell width={5}>Symbol</Table.HeaderCell>
                         <Table.HeaderCell width={2}>Side</Table.HeaderCell>

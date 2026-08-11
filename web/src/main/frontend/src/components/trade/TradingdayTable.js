@@ -18,6 +18,7 @@ function TradingdayTable({
             </Table.Row>
         )
     } else {
+
         tradingdayList = tradingdays.map(tradingday => {
             return (
                 <Table.Row key={tradingday.id}>
@@ -45,6 +46,8 @@ function TradingdayTable({
         <>
             <Form onSubmit={handleSearchTradingday}>
                 <Input
+                    type="datetime-local"
+                    id="open-date"
                     action={{icon: 'search'}}
                     name='tradingdayOpenSearch'
                     placeholder='Search by Open'
@@ -52,6 +55,8 @@ function TradingdayTable({
                     onChange={handleInputChange}
                 />
                 <Input
+                    type="datetime-local"
+                    id="close-date"
                     action={{icon: 'search'}}
                     name='tradingdayCloseSearch'
                     placeholder='Search by Close'

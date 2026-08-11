@@ -33,7 +33,8 @@ function TradeTab(props) {
         tradestrategyPortfolio,
         tradestrategyBarSize,
         tradestrategyChartDays,
-        tradestrategySymbolSearch,
+        tradestrategyOpenSearch,
+        tradestrategyCloseSearch,
         handleAddTradestrategy,
         handleDeleteTradestrategy,
         handleSearchTradestrategy
@@ -78,7 +79,8 @@ function TradeTab(props) {
                         tradestrategyPortfolio={tradestrategyPortfolio}
                         tradestrategyBarSize={tradestrategyBarSize}
                         tradestrategyChartDays={tradestrategyChartDays}
-                        tradestrategySymbolSearch={tradestrategySymbolSearch}
+                        tradestrategyOpenSearch={tradestrategyOpenSearch}
+                        tradestrategyCloseSearch={tradestrategyCloseSearch}
                         handleInputChange={handleInputChange}
                         handleAddTradestrategy={handleAddTradestrategy}
                         handleDeleteTradestrategy={handleDeleteTradestrategy}
