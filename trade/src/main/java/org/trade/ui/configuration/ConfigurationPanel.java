@@ -167,7 +167,7 @@ public class ConfigurationPanel extends BasePanel {
             this.addReferenceTablePanel(ReferenceTable.newInstance().getCode());
         } catch (Exception ex) {
 
-            this.setErrorMessage("Error during initiaization.", ex.getMessage(), ex);
+            this.setErrorMessage("Error during initialization.", ex.getMessage(), ex);
         }
     }
 

@@ -498,7 +498,6 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
 
         try {
 
-
             String[] choices = {"Java", "Javascript"};
             String contentType = ContentType.JAVA;
             int result = JOptionPane.showOptionDialog(this.getFrame(), "Do you want to create a Java or Javascript file?",
@@ -653,7 +652,6 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
                 for (File file : strategyFiles) {
 
                     String fileExtension = getExtension(file.getName());
-
                     String content = readFile(strategyDir + file.getName());
 
                     if (null != content) {

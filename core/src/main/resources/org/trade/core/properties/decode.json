@@ -468,6 +468,11 @@
         "display_name": "Entrylimit",
         "value": "Entrylimit",
         "code": "org.trade.core.persistent.codetype.Entrylimit"
+      },
+      {
+        "display_name": "Decode",
+        "value": "Decode",
+        "code": "org.trade.core.persistent.codetype.CodeType"
       }
     ],
     "order_type": [
