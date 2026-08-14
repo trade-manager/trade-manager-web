@@ -4,7 +4,7 @@ import java.io.Serial;
 import java.util.List;
 
 /**
- * This class is suppose to represent a base class for a specialized CodeDecode
+ * This class is supposed to represent a base class for a specialized CodeDecode
  * type object e.g. US State Codes and Descriptions.
  * <p>
  * Note : This object is not intended to be used directly.

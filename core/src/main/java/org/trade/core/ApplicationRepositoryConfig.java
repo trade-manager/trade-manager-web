@@ -7,9 +7,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.trade.core.properties.MissingPropertiesException;
 import org.trade.core.properties.TradeAppLoadConfig;
 
-import java.io.IOException;
 import java.util.Properties;
 
 /**
@@ -23,7 +23,7 @@ public class ApplicationRepositoryConfig {
 
     @Bean
     @Profile("getInitializeConfig")
-    public Properties getInitializeConfig() throws IOException {
+    public Properties getInitializeConfig() throws MissingPropertiesException {
 
         return TradeAppLoadConfig.loadAppProperties();
     }

@@ -21,7 +21,7 @@ function deleteTradingday(user, id) {
 function getTradingdays(user, open, close) {
 
     const url = open ? `/api/tradingday?open=${(new Date(open)).toISOString()}&close=${(new Date(close)).toISOString()}` : '/api/tradingday'
-    console.log("tradingdayApi::getTradingdays url: " + url );
+    console.log("tradingdayApi::getTradingdays url: " + url);
     return instance.get(url, {
         headers: {'Authorization': basicAuth(user)}
     })

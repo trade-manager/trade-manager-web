@@ -59,17 +59,17 @@ INSERT INTO strategy (id, name, description, market_data, class_name, strategy_m
 INSERT INTO strategy (id, name, description, market_data, class_name, strategy_manager_id) VALUES (4, 'HeikinAshiTrailPosMgr', 'Get and trail an open position on the current time frame using Hiekin-Ashi bars',1, 'PosMgrHeikinAshiTrailStrategy',null)//
 COMMIT//
 
-INSERT INTO codetype (id, name, type, description) VALUES(1,'MovingAverage','IndicatorParameters','Moving Average')//
-INSERT INTO codetype (id, name, type, description) VALUES(2,'Pivot','IndicatorParameters','Pivot points')//
-INSERT INTO codetype (id, name, type, description) VALUES(3,'Candle','IndicatorParameters','Contract to be followed')//
-INSERT INTO codetype (id, name, type, description) VALUES(4,'AverageTrueRange','IndicatorParameters','Average True Range')//
-INSERT INTO codetype (id, name, type, description) VALUES(5,'RelativeStrengthIndex','IndicatorParameters','Relative Strength Index')//
-INSERT INTO codetype (id, name, type, description) VALUES(6,'CommodityChannelIndex','IndicatorParameters','Commodity Channel Index')//
-INSERT INTO codetype (id, name, type, description) VALUES(7,'BollingerBands','IndicatorParameters','Bollinger Bands')//
-INSERT INTO codetype (id, name, type, description) VALUES(8,'StochasticOscillator','IndicatorParameters','Stochastic Oscillator')//
-INSERT INTO codetype (id, name, type, description) VALUES(9,'MoneyFlowIndex','IndicatorParameters','Money Flow Index')//
-INSERT INTO codetype (id, name, type, description) VALUES(10,'MACD','IndicatorParameters','MACD')//
-INSERT INTO codetype (id, name, type, description) VALUES(11,'Vostro','IndicatorParameters','Vostro Indicator')//
+INSERT INTO codetype (id, name, type, category, description) VALUES(1,'MovingAverage','IndicatorParameters','IndicatorParameters','Moving Average')//
+INSERT INTO codetype (id, name, type, category, description) VALUES(2,'Pivot','IndicatorParameters','IndicatorParameters','Pivot points')//
+INSERT INTO codetype (id, name, type, category, description) VALUES(3,'Candle','IndicatorParameters','IndicatorParameters','Contract to be followed')//
+INSERT INTO codetype (id, name, type, category, description) VALUES(4,'AverageTrueRange','IndicatorParameters','IndicatorParameters','Average True Range')//
+INSERT INTO codetype (id, name, type, category, description) VALUES(5,'RelativeStrengthIndex','IndicatorParameters','IndicatorParameters','Relative Strength Index')//
+INSERT INTO codetype (id, name, type, category, description) VALUES(6,'CommodityChannelIndex','IndicatorParameters','IndicatorParameters','Commodity Channel Index')//
+INSERT INTO codetype (id, name, type, category, description) VALUES(7,'BollingerBands','IndicatorParameters','IndicatorParameters','Bollinger Bands')//
+INSERT INTO codetype (id, name, type, category, description) VALUES(8,'StochasticOscillator','IndicatorParameters','IndicatorParameters','Stochastic Oscillator')//
+INSERT INTO codetype (id, name, type, category, description) VALUES(9,'MoneyFlowIndex','IndicatorParameters','IndicatorParameters','Money Flow Index')//
+INSERT INTO codetype (id, name, type, category, description) VALUES(10,'MACD','IndicatorParameters','IndicatorParameters','MACD')//
+INSERT INTO codetype (id, name, type, category, description) VALUES(11,'Vostro','IndicatorParameters','IndicatorParameters','Vostro Indicator')//
 COMMIT//
 
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(1,'Length','The length of the Moving Average','10','java.lang.Integer',null, 1)//

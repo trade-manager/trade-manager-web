@@ -26,7 +26,7 @@ import java.util.List;
 @Table(name = "codetype")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "type", discriminatorType = DiscriminatorType.STRING)
-@DiscriminatorValue("CodeType")
+@DiscriminatorValue("Decode")
 public class CodeType extends Aspect implements java.io.Serializable {
 
     @Serial
@@ -38,6 +38,9 @@ public class CodeType extends Aspect implements java.io.Serializable {
     @Column(name = "type", length = 45, insertable = false, updatable = false, unique = true, nullable = false)
     private String type;
 
+    @Column(name = "category", nullable = false, length = 45)
+    private String category;
+
     @Column(name = "description", nullable = false, length = 100)
     private String description;
 
@@ -46,6 +49,7 @@ public class CodeType extends Aspect implements java.io.Serializable {
 
     public static final String IndicatorParameters = "IndicatorParameters";
     public static final String StrategyParameters = "StrategyParameters";
+    public static final String Decode = "Decode";
 
     /**
      * Default constructor for CodeType.
@@ -66,14 +70,27 @@ public class CodeType extends Aspect implements java.io.Serializable {
     /**
      * Constructor for CodeType.
      *
+     * @param category    String
      * @param name        String
      * @param description String
      */
-    public CodeType(String name, String type, String description) {
+    public CodeType(String category, String name, String description) {
 
         this.name = name;
-        this.type = type;
+        this.category = category;
         this.description = description;
+    }
+
+    /**
+     * Constructor for CodeType.
+     *
+     * @param name        String
+     * @param description String
+     */
+    public CodeType(String type, String category, String name, String description) {
+
+        this.type = type;
+        this(category, name, description);
     }
 
     /**
@@ -92,6 +109,24 @@ public class CodeType extends Aspect implements java.io.Serializable {
      */
     public void setName(String name) {
         this.name = name;
+    }
+
+    /**
+     * Method getcategory
+     *
+     * @return String
+     */
+    public String getCategory() {
+        return this.category;
+    }
+
+    /**
+     * Method setcategory.
+     *
+     * @param category String
+     */
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     /**
@@ -145,7 +180,28 @@ public class CodeType extends Aspect implements java.io.Serializable {
      * @param codeAttributes List<CodeAttribute>
      */
     public void setCodeAttributes(List<CodeAttribute> codeAttributes) {
+
         this.codeAttributes = codeAttributes;
+    }
+
+    /**
+     *
+     * @param codeAttribute CodeAttribute
+     */
+    public CodeAttribute addChild(CodeAttribute codeAttribute) {
+
+        for (CodeAttribute codeAttributeExist : this.codeAttributes) {
+
+            if (this.getType().equals(codeAttribute.getCodeType().getType()) && this.getCategory().equals(codeAttribute.getCodeType().getCategory()) &&
+                    codeAttributeExist.getName().equals(codeAttribute.getName())) {
+
+                return codeAttributeExist;
+            }
+        }
+
+        this.codeAttributes.add(codeAttribute);
+        codeAttribute.setCodeType(this);
+        return codeAttribute;
     }
 
     /**

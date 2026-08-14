@@ -44,7 +44,12 @@ public class CodeTypeServiceImpl implements CodeTypeService {
 
         List<CodeType> codeTypes = codeTypeRepository.findByNameAndType(name, type);
         return codeTypes.isEmpty() ? null : codeTypes.getFirst();
+    }
 
+    public CodeType findByNameAndTypeAndCategory(String name, String type, String category) {
+
+        List<CodeType> codeTypes = codeTypeRepository.findByNameAndTypeAndCategory(name, type, category);
+        return codeTypes.isEmpty() ? null : codeTypes.getFirst();
     }
 
     /**

@@ -1,7 +1,15 @@
 package org.trade.core.properties;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.trade.core.ApplicationContextProvider;
+import org.trade.core.persistent.TradeService;
+import org.trade.core.persistent.codetype.CodeAttribute;
+import org.trade.core.persistent.codetype.CodeType;
+import org.trade.core.persistent.codetype.CodeValue;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -13,14 +21,13 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Objects;
 import java.util.Properties;
-import java.util.Scanner;
 import java.util.StringTokenizer;
-import java.util.regex.Pattern;
 
 /**
  * Represents the application's configuration. This class is intended to be a bit
@@ -30,17 +37,20 @@ import java.util.regex.Pattern;
  * @author Simon Allen
  */
 public class ConfigProperties {
+
     private final static Logger _log = LoggerFactory.getLogger(ConfigProperties.class);
 
     public final static String MANDATORY_PROPERTY = "mandatory_property";
     private static String _filename = null;
 
     // This is loaded as a system resource from the current core package
-    private final static String ENVIRONMENT_VARIABLE_SYSTEM_PROPERTY_FILE = "config.properties";
-    private final static String DEFAULT_PROPERTY_FILE = "config.properties";
+    private final static String CONFIG_PROPERTY_FILE = "config.properties";
+    private final static String DECODE_PROPERTY_FILE = "decode.json";
     private final static String ENVIRONMENT_VARIABLE_PROPERTY_FILE = "trade.config";
     private static Properties deploymentProperties;
     private static final ConfigProperties configProperties = new ConfigProperties();
+
+    TradeService tradeService = ApplicationContextProvider.getBean(TradeService.class);
 
     /**
      * Returns a string for a key.
@@ -49,6 +59,7 @@ public class ConfigProperties {
      * @return String
      */
     public static String getPropAsString(String key) throws IOException {
+
         return configProperties.retrieveProperty(key);
     }
 
@@ -60,14 +71,15 @@ public class ConfigProperties {
     public static String getDeploymentPropertyFileName() {
 
         try {
+
             if (null == _filename) {
-                _filename = System.getProperty(ENVIRONMENT_VARIABLE_PROPERTY_FILE, DEFAULT_PROPERTY_FILE);
+
+                _filename = System.getProperty(ENVIRONMENT_VARIABLE_PROPERTY_FILE, CONFIG_PROPERTY_FILE);
                 _filename = _filename.replaceFirst("file:", "");
                 File file = new File(_filename);
                 _filename = file.toString();
             }
-
-        } catch (Throwable e) {
+        } catch (Exception e) {
             // do nothing as we are an applet !!!
         }
         return _filename;
@@ -80,7 +92,8 @@ public class ConfigProperties {
      * @param fileName String
      * @return Properties
      */
-    public static Properties getDeploymentProperties(Object context, String fileName) throws IOException {
+    public static Properties getDeploymentProperties(Object context, String fileName) throws MissingPropertiesException {
+
         return configProperties.getProperties(context, fileName);
     }
 
@@ -90,7 +103,8 @@ public class ConfigProperties {
      * @return String
      */
     public static String getSystemPropertyFileName() {
-        return ENVIRONMENT_VARIABLE_SYSTEM_PROPERTY_FILE;
+
+        return CONFIG_PROPERTY_FILE;
     }
 
     /**
@@ -100,6 +114,7 @@ public class ConfigProperties {
      * @return int
      */
     public static int getPropAsInt(String key) throws IOException {
+
         return Integer.parseInt(configProperties.retrieveProperty(key));
     }
 
@@ -111,6 +126,7 @@ public class ConfigProperties {
      * @return boolean
      */
     public static boolean getPropAsBoolean(String key) throws IOException {
+
         return Boolean.parseBoolean(configProperties.retrieveProperty(key));
     }
 
@@ -170,15 +186,22 @@ public class ConfigProperties {
      * @param fileName String
      * @return Properties
      */
-    private Properties getProperties(Object context, String fileName) throws IOException {
+    private Properties getProperties(Object context, String fileName) throws MissingPropertiesException {
 
-        if (null == deploymentProperties) {
+        try {
 
-            Properties systemProperties = new Properties();
-            loadPropertiesAsResource(configProperties, getSystemPropertyFileName(), systemProperties);
-            loadPropertiesAsResource(context, fileName, systemProperties);
-            deploymentProperties = new Properties(systemProperties);
-            loadPropertiesAsFile(getDeploymentPropertyFileName(), deploymentProperties);
+            if (null == deploymentProperties) {
+
+                Properties systemProperties = new Properties();
+                loadPropertiesAsResource(configProperties, getSystemPropertyFileName(), systemProperties);
+                loadPropertiesAsResource(context, fileName, systemProperties);
+                deploymentProperties = new Properties(systemProperties);
+                loadPropertiesAsFile(getDeploymentPropertyFileName(), deploymentProperties);
+                loadDecodes(DECODE_PROPERTY_FILE);
+            }
+        } catch (IOException ex) {
+
+            throw new MissingPropertiesException(ex.getMessage(), ex);
         }
 
         return deploymentProperties;
@@ -311,6 +334,7 @@ public class ConfigProperties {
      * @param properties Properties
      */
     private void loadPropertiesAsResource(Object context, String filename, Properties properties) throws IOException {
+
         InputStream unbuffered;
 
         if (null == filename) {
@@ -338,93 +362,121 @@ public class ConfigProperties {
      * @param properties Properties
      */
     private void loadPropertiesAsFile(String filename, Properties properties) throws IOException {
-        if (null != filename) {
-            File propertyFile = new File(filename);
-            String propertyFilePath = propertyFile.getAbsolutePath();
 
-            if (propertyFile.exists()) {
-                FileInputStream is = new FileInputStream(propertyFile);
-                properties.load(is);
-                is.close();
+        if (null != filename) {
+
+            File file = new File(filename);
+            String filePath = file.getAbsolutePath();
+
+            if (file.exists()) {
+
+                FileInputStream fis = new FileInputStream(file);
+                properties.load(fis);
+                fis.close();
             } else {
-                _log.debug("The property file {} does not exist -- using defaults", propertyFilePath);
+
+                _log.error("The property file {} does not exist -- using defaults", filePath);
             }
         } else {
-            _log.debug("The property file does not exist -- using defaults");
+
+            _log.error("The property file does not exist -- using defaults");
+        }
+    }
+
+    /**
+     * Method loadPropertiesAsFile.
+     *
+     * @param context  Object
+     * @param filename String
+     * @return jsonObject JSONObject
+     */
+    private static JSONObject loadJSONAsResource(Object context, String filename) throws IOException {
+
+        InputStream unbuffered = context.getClass().getResourceAsStream(filename);
+
+        if (unbuffered == null) {
+
+            throw new PropertyFileNotFoundException(String.format("No property file %s not found", filename));
+        } else {
+
+            InputStream in = new BufferedInputStream(unbuffered);
+            JSONTokener tokener = new JSONTokener(in);
+            JSONObject jsonObject = new JSONObject(tokener);
+            in.close();
+            unbuffered.close();
+            return jsonObject;
         }
     }
 
     /**
      * Method reNumberDecodesInPropertiesFile.
      *
-     * @param propertyFileLocation String
+     * @param filename String
      */
-    public static void reNumberDecodesInPropertiesFile(String propertyFileLocation) {
+    public void loadDecodes(String filename) {
 
-        FileInputStream fileInputStream = null;
-        Scanner scanString = null;
         try {
-            /*
-             * Location of the properties file. Copy the source one to this Dir.
-             */
-            File file = new File(propertyFileLocation);
-            /*
-             * The name of the Decodes to be renumbered. Copy the output BELOW
-             * into the properties file and remember to set the _NumOfItems to
-             * the last value. EACH new item should be number one greater that
-             * the current total.
-             */
-            final String codeName = "CODE_DECODE";
 
-            /*
-             * lookupServiceProvideName current either PropertyFile or DBTable
-             */
+            JSONObject decodes = loadJSONAsResource(this, filename);
+            decodes.keySet().forEach(category -> {
 
-            final String lookupServiceProvideName = "PropertyFile";
+                JSONObject categories = decodes.getJSONObject(category);
 
-            fileInputStream = new FileInputStream(file.getAbsoluteFile());
-            scanString = new Scanner(fileInputStream);
-            Pattern pattern = Pattern.compile("_\\d*=");
-            scanString.useDelimiter(pattern);
-            int count = 0;
-            StringBuilder newText = new StringBuilder();
+                categories.keySet().forEach(type -> {
 
-            String token = null;
-            String delimiter;
-            String oldDelimiter = null;
-            while (scanString.hasNext()) {
+                    JSONArray values = categories.getJSONArray(type);
+                    CodeType codeType = tradeService.getCodeTypeService().findByNameAndTypeAndCategory(type, CodeType.Decode, category);
 
-                token = scanString.next();
-                delimiter = scanString.findInLine(pattern);
-                if (null != token && token.contains(codeName)) {
+                    if (null == codeType) {
 
-                    if (null != delimiter) {
-                        if (!token.endsWith(lookupServiceProvideName)) {
-                            if (!delimiter.equals(oldDelimiter)) {
-                                count++;
+                        codeType = new CodeType(CodeType.Decode, category, type, String.format("%s::%s", type, category));
+                    } else {
+
+                        for (CodeAttribute codeAttribute : codeType.getCodeAttributes()) {
+
+                            if (!codeAttribute.getCodeValues().isEmpty()) {
+
+                                codeAttribute.setCodeValues(new ArrayList<>(0));
                             }
-                            newText.append(token).append("_").append(count).append("=");
-                        } else {
-                            newText.append(token).append(delimiter);
                         }
-                        oldDelimiter = delimiter;
-                    }
-                }
-            }
-            newText.append(token);
-            _log.error("{}", newText);
-        } catch (Exception ex) {
-            _log.error("Error paring file: {}", ex.getMessage(), ex);
-        } finally {
 
-            try {
-                if (null != scanString)
-                    scanString.close();
-                if (null != fileInputStream)
-                    fileInputStream.close();
-            } catch (IOException e) {
-                _log.error("Error closing input stream: {}", e.getMessage(), e);
-            }
+                        tradeService.getCodeTypeService().save(codeType);
+                    }
+
+                    HashMap<String, CodeAttribute> codeAttributesMap = new HashMap<>();
+
+                    if (!values.isEmpty()) {
+
+                        JSONObject decode = values.getJSONObject(0);
+                        Iterator<String> attributes = decode.keys();
+
+                        while (attributes.hasNext()) {
+
+                            String attribute = attributes.next();
+                            CodeAttribute codeAttribute = codeType.addChild(new CodeAttribute(codeType, attribute, attribute, null, "java.lang.String",
+                                    null));
+                            codeAttributesMap.put(attribute, codeAttribute);
+                        }
+                    }
+
+                    for (int i = 0; i < values.length(); i++) {
+
+                        JSONObject decode = values.getJSONObject(i);
+                        Iterator<String> attributes = decode.keys();
+
+                        while (attributes.hasNext()) {
+
+                            String attribute = attributes.next();
+                            codeAttributesMap.get(attribute).addChild(new CodeValue(codeAttributesMap.get(attribute), decode.getString(attribute)));
+                        }
+                    }
+
+                    tradeService.getCodeTypeService().save(codeType);
+                });
+            });
+
+        } catch (Exception ex) {
+            _log.error("Error loading decodes file: {}", ex.getMessage(), ex);
         }
     }
 
@@ -434,7 +486,7 @@ public class ConfigProperties {
      * @param args String[]
      */
     public static void main(String[] args) {
-        String propertyFileLocation = "C:\\Temp\\trade.properties";
-        ConfigProperties.reNumberDecodesInPropertiesFile(propertyFileLocation);
+
+
     }
 }

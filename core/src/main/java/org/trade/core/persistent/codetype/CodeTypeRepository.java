@@ -38,4 +38,14 @@ public interface CodeTypeRepository extends AspectRepository<CodeType, Long> {
      */
     List<CodeType> findByNameAndType(String name, String type);
 
+
+    /**
+     * Method findByNameAndTypeAndCategory.
+     *
+     * @param name
+     * @param type
+     * @param category
+     * @return
+     */
+    List<CodeType> findByNameAndTypeAndCategory(String name, String type, String category);
 }

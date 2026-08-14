@@ -1,0 +1,1483 @@
+{
+  "ui_widget": {
+    "prop": [
+      {
+        "tool_tip": "Compile",
+        "image": "gear.gif",
+        "code": "COMPILE",
+        "method": "doCompile",
+        "mnemonic": "",
+        "display_name": "Compile",
+        "enabled": "true"
+      },
+      {
+        "tool_tip": "Re-Assign strategies for selected tradingdays.",
+        "image": "gear.gif",
+        "code": "REASSIGN",
+        "method": "doReAssign",
+        "mnemonic": "",
+        "display_name": "Re-Assign",
+        "enabled": "true"
+      },
+      {
+        "tool_tip": "Strategy Parameters",
+        "image": "gear.gif",
+        "code": "STRATEGY_PARMS",
+        "method": "doStrategyParameters",
+        "mnemonic": "",
+        "display_name": "Strategy Parms",
+        "enabled": "true"
+      }
+    ]
+  },
+  "dao_decode": {
+    "strategy_manager": [
+      {
+        "code": "org.trade.core.persistent.strategy.Strategy",
+        "display_name": "getName"
+      }
+    ],
+    "indicator_data": [
+      {
+        "code": "org.trade.series.IndicatorSeriesUI",
+        "display_name": "getName"
+      }
+    ],
+    "group_data": [
+      {
+        "code": "org.trade.core.persistent.portfolio.Portfolio",
+        "display_name": "getName"
+      }
+    ],
+    "portfolio": [
+      {
+        "code": "org.trade.core.persistent.portfolio.Portfolio",
+        "display_name": "getName"
+      }
+    ],
+    "profile_data": [
+      {
+        "code": "org.trade.core.persistent.portfolio.Portfolio",
+        "display_name": "getName"
+      }
+    ],
+    "strategy": [
+      {
+        "code": "org.trade.core.persistent.strategy.Strategy",
+        "display_name": "getName"
+      }
+    ],
+    "entry_limit": [
+      {
+        "code": "org.trade.core.persistent.codetype.Entrylimit",
+        "display_name": "getId"
+      }
+    ],
+    "account": [
+      {
+        "code": "org.trade.core.persistent.account.Account",
+        "display_name": "getAccountNumber"
+      }
+    ]
+  },
+  "code_decode": {
+    "account_type": [
+      {
+        "display_name": "Institution",
+        "value": "CORPORATION",
+        "code": "CORPORATION"
+      },
+      {
+        "display_name": "Individual",
+        "value": "INDIVIDUAL",
+        "code": "INDIVIDUAL"
+      },
+      {
+        "display_name": "IRA Traditional",
+        "value": "IRA-TRADITIONAL",
+        "code": "IRA-TRADITIONAL"
+      },
+      {
+        "display_name": "IRA Roth",
+        "value": "IRA-ROTH",
+        "code": "IRA-ROTH"
+      },
+      {
+        "display_name": "Trust",
+        "value": "TRUST",
+        "code": "TRUST"
+      },
+      {
+        "display_name": "Joint",
+        "value": "JOINT",
+        "code": "JOINT"
+      }
+    ],
+    "bar_size": [
+      {
+        "display_name": "1 min",
+        "value": "60",
+        "code": "_1_min"
+      },
+      {
+        "display_name": "2 mins",
+        "value": "120",
+        "code": "_2_mins"
+      },
+      {
+        "display_name": "5 mins",
+        "value": "300",
+        "code": "_5_mins"
+      },
+      {
+        "display_name": "10 mins",
+        "value": "600",
+        "code": "_10_mins"
+      },
+      {
+        "display_name": "15 mins",
+        "value": "900",
+        "code": "_15_mins"
+      },
+      {
+        "display_name": "20 mins",
+        "value": "1200",
+        "code": "_20_mins"
+      },
+      {
+        "display_name": "30 mins",
+        "value": "1800",
+        "code": "_30_mins"
+      },
+      {
+        "display_name": "1 hour",
+        "value": "3600",
+        "code": "_1_hour"
+      },
+      {
+        "display_name": "1 day",
+        "value": "86400",
+        "code": "_1_day"
+      },
+      {
+        "display_name": "30 secs",
+        "value": "30",
+        "code": "_30_secs"
+      }
+    ],
+    "mkt_bar": [
+      {
+        "display_name": "+NRB",
+        "value": "+NRB",
+        "code": "+NRB"
+      },
+      {
+        "display_name": "-NRB",
+        "value": "-NRB",
+        "code": "-NRB"
+      },
+      {
+        "display_name": "+NRB BT",
+        "value": "+NRBBT",
+        "code": "+NRBBT"
+      },
+      {
+        "display_name": "+NRB TT",
+        "value": "+NRBTT",
+        "code": "+NRBTT"
+      },
+      {
+        "display_name": "-NRB BT",
+        "value": "-NRBBT",
+        "code": "-NRBBT"
+      },
+      {
+        "display_name": "-NRB TT",
+        "value": "-NRBTT",
+        "code": "-NRBTT"
+      },
+      {
+        "display_name": "Darling Doji",
+        "value": "+DD",
+        "code": "+DD"
+      },
+      {
+        "display_name": "Deadly Doji",
+        "value": "-DD",
+        "code": "-DD"
+      },
+      {
+        "display_name": "+WRB",
+        "value": "+WRB",
+        "code": "+WRB"
+      },
+      {
+        "display_name": "-WRB",
+        "value": "-WRB",
+        "code": "-WRB"
+      },
+      {
+        "display_name": "+WRB +/-10% Tail",
+        "value": "+1010",
+        "code": "+1010"
+      },
+      {
+        "display_name": "-WRB +/-10% Tail",
+        "value": "-1010",
+        "code": "-1010"
+      },
+      {
+        "display_name": "+WRB +/-20% Tail",
+        "value": "+2020",
+        "code": "+2020"
+      },
+      {
+        "display_name": "-WRB +/-20% Tail",
+        "value": "-2020",
+        "code": "-2020"
+      },
+      {
+        "display_name": "None",
+        "value": "NONE",
+        "code": "NONE"
+      }
+    ],
+    "trigger_method": [
+      {
+        "display_name": "Default",
+        "value": "0",
+        "code": "0"
+      },
+      {
+        "display_name": "Double bid/ask",
+        "value": "1",
+        "code": "1"
+      },
+      {
+        "display_name": "Last",
+        "value": "2",
+        "code": "2"
+      },
+      {
+        "display_name": "Double last",
+        "value": "3",
+        "code": "3"
+      },
+      {
+        "display_name": "Bid/Ask",
+        "value": "4",
+        "code": "4"
+      },
+      {
+        "display_name": "Last or Bid/Ask",
+        "value": "7",
+        "code": "7"
+      },
+      {
+        "display_name": "Mid Point",
+        "value": "8",
+        "code": "8"
+      }
+    ],
+    "oca_type": [
+      {
+        "display_name": "Reduce remaining orders",
+        "value": "2",
+        "code": "2"
+      },
+      {
+        "display_name": "Cancel all remaining",
+        "value": "1",
+        "code": "1"
+      },
+      {
+        "display_name": "Prop reduce remaining",
+        "value": "3",
+        "code": "3"
+      }
+    ],
+    "gap_tier": [
+      {
+        "display_name": "1",
+        "value": "1",
+        "code": "1"
+      },
+      {
+        "display_name": "2",
+        "value": "2",
+        "code": "2"
+      },
+      {
+        "display_name": "3",
+        "value": "3",
+        "code": "3"
+      }
+    ],
+    "order_status": [
+      {
+        "display_name": "UnSubmitted",
+        "value": "UNSUBMIT",
+        "code": "UNSUBMIT"
+      },
+      {
+        "display_name": "Pending Submit",
+        "value": "PENDINGSUBMIT",
+        "code": "PENDINGSUBMIT"
+      },
+      {
+        "display_name": "Pending Cancel",
+        "value": "PENDINGCANCEL",
+        "code": "PENDINGCANCEL"
+      },
+      {
+        "display_name": "Pre Submit",
+        "value": "PRESUBMITTED",
+        "code": "PRESUBMITTED"
+      },
+      {
+        "display_name": "Submitted",
+        "value": "SUBMITTED",
+        "code": "SUBMITTED"
+      },
+      {
+        "display_name": "Cancelled",
+        "value": "CANCELLED",
+        "code": "CANCELLED"
+      },
+      {
+        "display_name": "Filled",
+        "value": "FILLED",
+        "code": "FILLED"
+      },
+      {
+        "display_name": "Inactive",
+        "value": "INACTIVE",
+        "code": "INACTIVE"
+      },
+      {
+        "display_name": "Partial Filled",
+        "value": "PARTIALFILLED",
+        "code": "PARTIALFILLED"
+      }
+    ],
+    "override_constraints": [
+      {
+        "display_name": "No",
+        "value": "0",
+        "code": "0"
+      },
+      {
+        "display_name": "Yes",
+        "value": "1",
+        "code": "1"
+      }
+    ],
+    "content_type": [
+      {
+        "display_name": "Java",
+        "value": "text/java",
+        "code": "java"
+      },
+      {
+        "display_name": "Javascript",
+        "value": "text/javascript",
+        "code": "js"
+      },
+      {
+        "display_name": "Text",
+        "value": "text/rtf",
+        "code": "txt"
+      }
+    ],
+    "action": [
+      {
+        "display_name": "Buy",
+        "value": "BUY",
+        "code": "BUY"
+      },
+      {
+        "display_name": "Sell",
+        "value": "SELL",
+        "code": "SELL"
+      }
+    ],
+    "currency": [
+      {
+        "display_name": "US $",
+        "value": "USD",
+        "code": "USD"
+      },
+      {
+        "display_name": "Euro $",
+        "value": "EUR",
+        "code": "EUR"
+      },
+      {
+        "display_name": "GB Pound",
+        "value": "GBP",
+        "code": "GBP"
+      },
+      {
+        "display_name": "Canada $",
+        "value": "CAD",
+        "code": "CAD"
+      },
+      {
+        "display_name": "Japan Yen",
+        "value": "JPY",
+        "code": "JPY"
+      },
+      {
+        "display_name": "Australian $",
+        "value": "AUD",
+        "code": "AUD"
+      },
+      {
+        "display_name": "Swiss Franc",
+        "value": "CHF",
+        "code": "CHF"
+      },
+      {
+        "display_name": "Indian Rupee",
+        "value": "INR",
+        "code": "INR"
+      }
+    ],
+    "ref_table": [
+      {
+        "display_name": "Strategy",
+        "value": "Strategy",
+        "code": "org.trade.core.persistent.strategy.Strategy"
+      },
+      {
+        "display_name": "Portfolio",
+        "value": "Portfolio",
+        "code": "org.trade.core.persistent.portfolio.Portfolio"
+      },
+      {
+        "display_name": "Indicator Parameters",
+        "value": "IndicatorParameters",
+        "code": "org.trade.core.persistent.codetype.IndicatorParameters"
+      },
+      {
+        "display_name": "Strategy Parameters",
+        "value": "StrategyParameters",
+        "code": "org.trade.core.persistent.strategy.StrategyParameters"
+      },
+      {
+        "display_name": "Entrylimit",
+        "value": "Entrylimit",
+        "code": "org.trade.core.persistent.codetype.Entrylimit"
+      }
+    ],
+    "order_type": [
+      {
+        "display_name": "Stop Lmt",
+        "value": "STPLMT",
+        "code": "STPLMT"
+      },
+      {
+        "display_name": "Limit",
+        "value": "LMT",
+        "code": "LMT"
+      },
+      {
+        "display_name": "Stop",
+        "value": "STP",
+        "code": "STP"
+      },
+      {
+        "display_name": "Market",
+        "value": "MKT",
+        "code": "MKT"
+      },
+      {
+        "display_name": "Market On Cls",
+        "value": "MKTCLS",
+        "code": "MKTCLS"
+      },
+      {
+        "display_name": "Limit on Cls",
+        "value": "LMTCLS",
+        "code": "LMTCLS"
+      },
+      {
+        "display_name": "Peg Mkt",
+        "value": "PEGMKT",
+        "code": "PEGMKT"
+      },
+      {
+        "display_name": "Scale",
+        "value": "SCALE",
+        "code": "SCALE"
+      },
+      {
+        "display_name": "Trail",
+        "value": "TRAIL",
+        "code": "TRAIL"
+      },
+      {
+        "display_name": "Relative",
+        "value": "REL",
+        "code": "REL"
+      },
+      {
+        "display_name": "Vwap",
+        "value": "VWAP",
+        "code": "VWAP"
+      },
+      {
+        "display_name": "Trail Lmt",
+        "value": "TRAILLIMIT",
+        "code": "TRAILLIMIT"
+      }
+    ],
+    "allocation_method": [
+      {
+        "display_name": "AvailableEquity",
+        "value": "AvailableEquity",
+        "code": "AvailableEquity"
+      },
+      {
+        "display_name": "PctChange",
+        "value": "PctChange",
+        "code": "PctChange"
+      },
+      {
+        "display_name": "NetLiq",
+        "value": "NetLiq",
+        "code": "NetLiq"
+      },
+      {
+        "display_name": "EqualQuantity",
+        "value": "EqualQuantity",
+        "code": "EqualQuantity"
+      },
+      {
+        "display_name": "Percentages",
+        "value": "1",
+        "code": "1"
+      },
+      {
+        "display_name": "Ratios",
+        "value": "2",
+        "code": "2"
+      },
+      {
+        "display_name": "Shares",
+        "value": "3",
+        "code": "3"
+      }
+    ],
+    "side": [
+      {
+        "display_name": "Long",
+        "value": "BOT",
+        "code": "BOT"
+      },
+      {
+        "display_name": "Short",
+        "value": "SLD",
+        "code": "SLD"
+      }
+    ],
+    "indicator_series": [
+      {
+        "display_name": "ATR",
+        "value": "AverageTrueRangeSeries",
+        "code": "AverageTrueRangeSeries"
+      },
+      {
+        "display_name": "BollingerBands",
+        "value": "BollingerBandsSeries",
+        "code": "BollingerBandsSeries"
+      },
+      {
+        "display_name": "Candle",
+        "value": "CandleSeries",
+        "code": "CandleSeries"
+      },
+      {
+        "display_name": "CCI",
+        "value": "CommodityChannelIndexSeries",
+        "code": "CommodityChannelIndexSeries"
+      },
+      {
+        "display_name": "HeikinAshi",
+        "value": "HeikinAshiSeries",
+        "code": "HeikinAshiSeries"
+      },
+      {
+        "display_name": "MACD",
+        "value": "MACDSeries",
+        "code": "MACDSeries"
+      },
+      {
+        "display_name": "MFI",
+        "value": "MoneyFlowIndexSeries",
+        "code": "MoneyFlowIndexSeries"
+      },
+      {
+        "display_name": "MovingAverage",
+        "value": "MovingAverageSeries",
+        "code": "MovingAverageSeries"
+      },
+      {
+        "display_name": "Pivot",
+        "value": "PivotSeries",
+        "code": "PivotSeries"
+      },
+      {
+        "display_name": "RSI",
+        "value": "RelativeStrengthIndexSeries",
+        "code": "RelativeStrengthIndexSeries"
+      },
+      {
+        "display_name": "Volume",
+        "value": "VolumeSeries",
+        "code": "VolumeSeries"
+      },
+      {
+        "display_name": "Vostro",
+        "value": "VostroSeries",
+        "code": "VostroSeries"
+      },
+      {
+        "display_name": "Vwap",
+        "value": "VwapSeries",
+        "code": "VwapSeries"
+      },
+      {
+        "display_name": "% K/R",
+        "value": "StochasticOscillatorSeries",
+        "code": "StochasticOscillatorSeries"
+      }
+    ],
+    "yes_no": [
+      {
+        "display_name": "Yes",
+        "value": "true",
+        "code": "true"
+      },
+      {
+        "display_name": "No",
+        "value": "false",
+        "code": "false"
+      }
+    ],
+    "option_type": [
+      {
+        "display_name": "Call",
+        "value": "C",
+        "code": "C"
+      },
+      {
+        "display_name": "Put",
+        "value": "P",
+        "code": "P"
+      }
+    ],
+    "price_source": [
+      {
+        "display_name": "Close",
+        "value": "1",
+        "code": "1"
+      },
+      {
+        "display_name": "Open",
+        "value": "2",
+        "code": "2"
+      },
+      {
+        "display_name": "High",
+        "value": "3",
+        "code": "3"
+      },
+      {
+        "display_name": "Low",
+        "value": "4",
+        "code": "4"
+      },
+      {
+        "display_name": "(H+L)/2",
+        "value": "5",
+        "code": "5"
+      },
+      {
+        "display_name": "(H+L+C)/3",
+        "value": "6",
+        "code": "6"
+      },
+      {
+        "display_name": "(O+H+L+C)/4",
+        "value": "7",
+        "code": "7"
+      }
+    ],
+    "calc_type": [
+      {
+        "display_name": "Linear",
+        "value": "LINEAR",
+        "code": "LINEAR"
+      },
+      {
+        "display_name": "Exponential",
+        "value": "EXPONENTIAL",
+        "code": "EXPONENTIAL"
+      },
+      {
+        "display_name": "Weighted",
+        "value": "WEIGHTED",
+        "code": "WEIGHTED"
+      },
+      {
+        "display_name": "Weighted Volume",
+        "value": "WEIGHTED_VOLUME",
+        "code": "WEIGHTED_VOLUME"
+      },
+      {
+        "display_name": "Triangular",
+        "value": "TRIANGULAR",
+        "code": "TRIANGULAR"
+      }
+    ],
+    "sec_id_type": [
+      {
+        "display_name": "Intl Sec Id #",
+        "value": "ISIN",
+        "code": "ISIN"
+      },
+      {
+        "display_name": "London SE",
+        "value": "SEDOL",
+        "code": "SEDOL"
+      },
+      {
+        "display_name": "Cusip",
+        "value": "CUSIP",
+        "code": "CUSIP"
+      },
+      {
+        "display_name": "Reuters Inst Code",
+        "value": "RIC",
+        "code": "RIC"
+      },
+      {
+        "display_name": "Symbol",
+        "value": "SYMBOL",
+        "code": "SYMBOL"
+      }
+    ],
+    "tradestrategy_status": [
+      {
+        "display_name": "Time Out",
+        "value": "TO",
+        "code": "TO"
+      },
+      {
+        "display_name": "Green Bar",
+        "value": "GB",
+        "code": "GB"
+      },
+      {
+        "display_name": "Red Bar",
+        "value": "RB",
+        "code": "RB"
+      },
+      {
+        "display_name": "Percent range",
+        "value": "PERCENT",
+        "code": "PERCENT"
+      },
+      {
+        "display_name": "Bar Tails",
+        "value": "TTBT",
+        "code": "TTBT"
+      },
+      {
+        "display_name": "Narrow Body Bar",
+        "value": "NBB",
+        "code": "NBB"
+      },
+      {
+        "display_name": "5min Low Broken",
+        "value": "FIVE_MIN_LOW_BROKEN",
+        "code": "FIVE_MIN_LOW_BROKEN"
+      },
+      {
+        "display_name": "5min High Broken",
+        "value": "FIVE_MIN_HIGH_BROKEN",
+        "code": "FIVE_MIN_HIGH_BROKEN"
+      },
+      {
+        "display_name": "Open position",
+        "value": "OPEN",
+        "code": "OPEN"
+      },
+      {
+        "display_name": "Closed Position",
+        "value": "CLOSED",
+        "code": "CLOSED"
+      },
+      {
+        "display_name": "Cancelled",
+        "value": "CANCELLED",
+        "code": "CANCELLED"
+      }
+    ],
+    "chart_days": [
+      {
+        "display_name": "1 D",
+        "value": "1",
+        "code": "1"
+      },
+      {
+        "display_name": "2 D",
+        "value": "2",
+        "code": "2"
+      },
+      {
+        "display_name": "1 W",
+        "value": "7",
+        "code": "7"
+      },
+      {
+        "display_name": "2 W",
+        "value": "15",
+        "code": "15"
+      },
+      {
+        "display_name": "1 M",
+        "value": "30",
+        "code": "30"
+      },
+      {
+        "display_name": "2 M",
+        "value": "60",
+        "code": "60"
+      },
+      {
+        "display_name": "3 M",
+        "value": "90",
+        "code": "90"
+      },
+      {
+        "display_name": "6 M",
+        "value": "180",
+        "code": "180"
+      },
+      {
+        "display_name": "1 Y",
+        "value": "365",
+        "code": "365"
+      }
+    ],
+    "time_in_force": [
+      {
+        "display_name": "Day",
+        "value": "DAY",
+        "code": "DAY"
+      },
+      {
+        "display_name": "Good till Cancel",
+        "value": "GTC",
+        "code": "GTC"
+      },
+      {
+        "display_name": "Immediate-or Cancel",
+        "value": "IOC",
+        "code": "IOC"
+      },
+      {
+        "display_name": "Good till date",
+        "value": "GTD",
+        "code": "GTD"
+      }
+    ],
+    "sec_type": [
+      {
+        "display_name": "Stock",
+        "value": "STK",
+        "code": "STK"
+      },
+      {
+        "display_name": "Option",
+        "value": "OPT",
+        "code": "OPT"
+      },
+      {
+        "display_name": "Future",
+        "value": "FUT",
+        "code": "FUT"
+      },
+      {
+        "display_name": "Cash",
+        "value": "CASH",
+        "code": "CASH"
+      },
+      {
+        "display_name": "indices",
+        "value": "IND",
+        "code": "IND"
+      },
+      {
+        "display_name": "Fut Opt",
+        "value": "FOP",
+        "code": "FOP"
+      },
+      {
+        "display_name": "Bag",
+        "value": "BAG",
+        "code": "BAG"
+      }
+    ],
+    "mkt_bias": [
+      {
+        "display_name": "Short",
+        "value": "S",
+        "code": "S"
+      },
+      {
+        "display_name": "Long",
+        "value": "L",
+        "code": "L"
+      },
+      {
+        "display_name": "Neutral",
+        "value": "N",
+        "code": "N"
+      }
+    ],
+    "data_type": [
+      {
+        "display_name": "String",
+        "value": "java.lang.String",
+        "code": "java.lang.String"
+      },
+      {
+        "display_name": "Integer",
+        "value": "java.lang.Integer",
+        "code": "java.lang.Integer"
+      },
+      {
+        "display_name": "Long",
+        "value": "java.lang.Long",
+        "code": "java.lang.Long"
+      },
+      {
+        "display_name": "Decimal",
+        "value": "java.math.BigDecimal",
+        "code": "java.math.BigDecimal"
+      },
+      {
+        "display_name": "Boolean",
+        "value": "java.lang.Boolean",
+        "code": "java.lang.Boolean"
+      },
+      {
+        "display_name": "Date",
+        "value": "java.time.LocalDate",
+        "code": "java.time.LocalDate"
+      }
+    ],
+    "exchange": [
+      {
+        "display_name": "Smart",
+        "value": "SMART",
+        "code": "SMART"
+      },
+      {
+        "display_name": "Island",
+        "value": "ISLAND",
+        "code": "ISLAND"
+      },
+      {
+        "display_name": "NASDAQ",
+        "value": "XNAS",
+        "code": "NASDAQ"
+      },
+      {
+        "display_name": "Bats Global Mkts",
+        "value": "XCMO",
+        "code": "BATS"
+      },
+      {
+        "display_name": "Direct Edge",
+        "value": "DRCTEDGE",
+        "code": "DRCTEDGE"
+      },
+      {
+        "display_name": "NYSE Arca",
+        "value": "ARCX",
+        "code": "ARCA"
+      },
+      {
+        "display_name": "New York SE",
+        "value": "XNYS",
+        "code": "NYSE"
+      },
+      {
+        "display_name": "Globex",
+        "value": "CMEX",
+        "code": "GLOBEX"
+      },
+      {
+        "display_name": "iDeal",
+        "value": "IDEAL",
+        "code": "IDEAL"
+      },
+      {
+        "display_name": "iDeal Pro",
+        "value": "IDEALPRO",
+        "code": "IDEALPRO"
+      },
+      {
+        "display_name": "Eurex(DTB)",
+        "value": "DTB",
+        "code": "DTB"
+      },
+      {
+        "display_name": "XETRA (IBIS)",
+        "value": "IBIS",
+        "code": "IBIS"
+      },
+      {
+        "display_name": "Nat SE India",
+        "value": "NSE",
+        "code": "NSE"
+      },
+      {
+        "display_name": "CBOT (ECBOT)",
+        "value": "ECBOT",
+        "code": "ECBOT"
+      }
+    ]
+  },
+  "base_ui_widget": {
+    "prop": [
+      {
+        "image": "save.gif",
+        "method": "doSave",
+        "enabled": "true",
+        "display_name": "Save",
+        "code": "SAVE",
+        "tool_tip": "Save",
+        "mnemonic": "S"
+      },
+      {
+        "image": "openFile.gif",
+        "method": "doOpen",
+        "enabled": "true",
+        "display_name": "Open File",
+        "code": "OPEN_FILE",
+        "tool_tip": "Open File",
+        "mnemonic": "F"
+      },
+      {
+        "image": "Prnt_up.gif",
+        "method": "doPrint",
+        "enabled": "true",
+        "display_name": "Print",
+        "code": "PRINT",
+        "tool_tip": "Print",
+        "mnemonic": "P"
+      },
+      {
+        "image": "calculation.gif",
+        "method": "doCalculate",
+        "enabled": "true",
+        "display_name": "Calculate",
+        "code": "CALCULATE",
+        "tool_tip": "Calc",
+        "mnemonic": "C"
+      },
+      {
+        "image": "save.gif",
+        "method": "doSaveAs",
+        "enabled": "true",
+        "display_name": "Save As",
+        "code": "SAVE_AS",
+        "tool_tip": "Save",
+        "mnemonic": "S"
+      },
+      {
+        "image": "new.gif",
+        "method": "doNew",
+        "enabled": "true",
+        "display_name": "New",
+        "code": "NEW",
+        "tool_tip": "New",
+        "mnemonic": "N"
+      },
+      {
+        "image": "closeFile.gif",
+        "method": "doCloseFile",
+        "enabled": "true",
+        "display_name": "Close File",
+        "code": "CLOSE_FILE",
+        "tool_tip": "Close",
+        "mnemonic": "o"
+      },
+      {
+        "image": "help.gif",
+        "method": "doHelp",
+        "enabled": "true",
+        "display_name": "Help",
+        "code": "HELP",
+        "tool_tip": "Help",
+        "mnemonic": "H"
+      },
+      {
+        "image": "cut.gif",
+        "method": "doCut",
+        "enabled": "true",
+        "display_name": "Cut",
+        "code": "CUT",
+        "tool_tip": "Cut",
+        "mnemonic": "u"
+      },
+      {
+        "image": "copy.gif",
+        "method": "doCopy",
+        "enabled": "true",
+        "display_name": "Copy",
+        "code": "COPY",
+        "tool_tip": "Copy",
+        "mnemonic": "C"
+      },
+      {
+        "image": "paste.gif",
+        "method": "doPaste",
+        "enabled": "true",
+        "display_name": "Paste",
+        "code": "PASTE",
+        "tool_tip": "Paste",
+        "mnemonic": "a"
+      },
+      {
+        "image": "close.gif",
+        "method": "doClose",
+        "enabled": "true",
+        "display_name": "Close",
+        "code": "CLOSE",
+        "tool_tip": "Close",
+        "mnemonic": ""
+      },
+      {
+        "image": "results.gif",
+        "method": "doResults",
+        "enabled": "true",
+        "display_name": "Results",
+        "code": "RESULTS",
+        "tool_tip": "Results",
+        "mnemonic": "R"
+      },
+      {
+        "image": "",
+        "method": "doConnect",
+        "enabled": "true",
+        "display_name": "Connect",
+        "code": "CONNECT",
+        "tool_tip": "Connect",
+        "mnemonic": ""
+      },
+      {
+        "image": "",
+        "method": "doDisconnect",
+        "enabled": "true",
+        "display_name": "Disconnect",
+        "code": "DISCONNECT",
+        "tool_tip": "Disconnect",
+        "mnemonic": ""
+      },
+      {
+        "image": "refresh.gif",
+        "method": "doRefresh",
+        "enabled": "true",
+        "display_name": "Refresh",
+        "code": "REFRESH",
+        "tool_tip": "Refresh",
+        "mnemonic": ""
+      },
+      {
+        "image": "",
+        "method": "doNext",
+        "enabled": "true",
+        "display_name": "Next",
+        "code": "NEXT",
+        "tool_tip": "Next",
+        "mnemonic": "n"
+      },
+      {
+        "image": "",
+        "method": "doPrevious",
+        "enabled": "true",
+        "display_name": "Prev",
+        "code": "PREV",
+        "tool_tip": "Prev",
+        "mnemonic": "v"
+      },
+      {
+        "image": "fetch.gif",
+        "method": "doFetch",
+        "enabled": "true",
+        "display_name": "Fetch",
+        "code": "FETCH",
+        "tool_tip": "Fetch",
+        "mnemonic": ""
+      },
+      {
+        "image": "",
+        "method": "doInsert",
+        "enabled": "true",
+        "display_name": "Insert",
+        "code": "INSERT",
+        "tool_tip": "Insert",
+        "mnemonic": ""
+      },
+      {
+        "image": "",
+        "method": "doCommit",
+        "enabled": "true",
+        "display_name": "Commit",
+        "code": "COMMIT",
+        "tool_tip": "Commit",
+        "mnemonic": ""
+      },
+      {
+        "image": "cancel.gif",
+        "method": "doCancel",
+        "enabled": "true",
+        "display_name": "Cancel",
+        "code": "CANCEL",
+        "tool_tip": "Cancel",
+        "mnemonic": ""
+      },
+      {
+        "image": "search.gif",
+        "method": "doSearch",
+        "enabled": "true",
+        "display_name": "Search",
+        "code": "SEARCH",
+        "tool_tip": "Search",
+        "mnemonic": ""
+      },
+      {
+        "image": "clear.gif",
+        "method": "doClear",
+        "enabled": "true",
+        "display_name": "Clear",
+        "code": "CLEAR",
+        "tool_tip": "Clear",
+        "mnemonic": ""
+      },
+      {
+        "image": "printprev.gif",
+        "method": "doPrintPreview",
+        "enabled": "true",
+        "display_name": "Print Prev",
+        "code": "PRINT_PREVIEW",
+        "tool_tip": "Print Prev",
+        "mnemonic": ""
+      },
+      {
+        "image": "execute.gif",
+        "method": "doExecute",
+        "enabled": "true",
+        "display_name": "Execute",
+        "code": "EXECUTE",
+        "tool_tip": "Execute",
+        "mnemonic": ""
+      },
+      {
+        "image": "",
+        "method": "doUpdate",
+        "enabled": "true",
+        "display_name": "Update",
+        "code": "UPDATE",
+        "tool_tip": "Update",
+        "mnemonic": ""
+      },
+      {
+        "image": "delete.gif",
+        "method": "doDelete",
+        "enabled": "true",
+        "display_name": "Delete",
+        "code": "DELETE",
+        "tool_tip": "Delete",
+        "mnemonic": ""
+      },
+      {
+        "image": "",
+        "method": "doTileAll",
+        "enabled": "true",
+        "display_name": "Tile All",
+        "code": "TILE_ALL",
+        "tool_tip": "Tile All",
+        "mnemonic": ""
+      },
+      {
+        "image": "",
+        "method": "doCascadeAll",
+        "enabled": "true",
+        "display_name": "Cascade All",
+        "code": "CASCADE_ALL",
+        "tool_tip": "Cascade All",
+        "mnemonic": ""
+      },
+      {
+        "image": "closeall.gif",
+        "method": "doCloseAll",
+        "enabled": "true",
+        "display_name": "Close All",
+        "code": "CLOSE_ALL",
+        "tool_tip": "Close All",
+        "mnemonic": ""
+      },
+      {
+        "image": "",
+        "method": "doCascade",
+        "enabled": "true",
+        "display_name": "Cascade",
+        "code": "CASCADE",
+        "tool_tip": "Cascade",
+        "mnemonic": ""
+      },
+      {
+        "image": "backwardarrow.gif",
+        "method": "doTest",
+        "enabled": "true",
+        "display_name": "Test",
+        "code": "TEST",
+        "tool_tip": "Test",
+        "mnemonic": ""
+      },
+      {
+        "image": "forwardarrow.gif",
+        "method": "doRun",
+        "enabled": "true",
+        "display_name": "Run",
+        "code": "RUN",
+        "tool_tip": "Run",
+        "mnemonic": ""
+      },
+      {
+        "image": "data.gif",
+        "method": "doData",
+        "enabled": "true",
+        "display_name": "Data",
+        "code": "DATA",
+        "tool_tip": "Get Data",
+        "mnemonic": ""
+      },
+      {
+        "image": "gearsmall.gif",
+        "method": "doProperties",
+        "enabled": "true",
+        "display_name": "Properties",
+        "code": "PROPERTIES",
+        "tool_tip": "Properties",
+        "mnemonic": ""
+      },
+      {
+        "image": "",
+        "method": "doContents",
+        "enabled": "true",
+        "display_name": "Contents",
+        "code": "CONTENTS",
+        "tool_tip": "Contents",
+        "mnemonic": ""
+      },
+      {
+        "image": "",
+        "method": "doAbout",
+        "enabled": "true",
+        "display_name": "About",
+        "code": "ABOUT",
+        "tool_tip": "About",
+        "mnemonic": ""
+      },
+      {
+        "image": "gearsmall.gif",
+        "method": "doPrintOptions",
+        "enabled": "true",
+        "display_name": "Print Options",
+        "code": "PRINT_OPTIONS",
+        "tool_tip": "Print Options",
+        "mnemonic": "u"
+      },
+      {
+        "image": "",
+        "method": "doExit",
+        "enabled": "true",
+        "display_name": "Exit",
+        "code": "EXIT",
+        "tool_tip": "Exit",
+        "mnemonic": ""
+      },
+      {
+        "image": "",
+        "method": "doUndo",
+        "enabled": "true",
+        "display_name": "Undo",
+        "code": "UNDO",
+        "tool_tip": "Undo",
+        "mnemonic": ""
+      },
+      {
+        "image": "",
+        "method": "doRedo",
+        "enabled": "true",
+        "display_name": "Redo",
+        "code": "REDO",
+        "tool_tip": "Redo",
+        "mnemonic": ""
+      },
+      {
+        "image": "",
+        "method": "doFind",
+        "enabled": "true",
+        "display_name": "Find",
+        "code": "FIND",
+        "tool_tip": "Find",
+        "mnemonic": ""
+      },
+      {
+        "image": "",
+        "method": "doReplace",
+        "enabled": "true",
+        "display_name": "Replace",
+        "code": "REPLACE",
+        "tool_tip": "Replace",
+        "mnemonic": ""
+      },
+      {
+        "image": "",
+        "method": "doTransfer",
+        "enabled": "true",
+        "display_name": "Transfer",
+        "code": "TRANSFER",
+        "tool_tip": "Transfer",
+        "mnemonic": ""
+      },
+      {
+        "image": "",
+        "method": "doRemove",
+        "enabled": "true",
+        "display_name": "Remove",
+        "code": "REMOVE",
+        "tool_tip": "Remove",
+        "mnemonic": ""
+      },
+      {
+        "image": "",
+        "method": "doDisclaimer",
+        "enabled": "true",
+        "display_name": "Disclaimer",
+        "code": "DISCLAIMER",
+        "tool_tip": "Disclaimer",
+        "mnemonic": ""
+      }
+    ]
+  }
+}

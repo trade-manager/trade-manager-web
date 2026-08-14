@@ -34,6 +34,16 @@ public interface CodeTypeService {
     CodeType findByNameAndType(String name, String type);
 
     /**
+     * Method findByNameAndType.
+     *
+     * @param name     String
+     * @param type     String
+     * @param category String
+     * @return CodeType
+     */
+    CodeType findByNameAndTypeAndCategory(String name, String type, String category);
+
+    /**
      * Method findByAttributeName.
      *
      * @param codeTypeName      String

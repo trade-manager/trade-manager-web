@@ -10,7 +10,8 @@ function AdminTab(props) {
         users,
         userUsernameSearch,
         handleDeleteUser,
-        handleSearchUser} = props
+        handleSearchUser
+    } = props
     const {
         isEmployeesLoading,
         employees,

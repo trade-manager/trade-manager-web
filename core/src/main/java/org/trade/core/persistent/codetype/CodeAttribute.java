@@ -1,5 +1,7 @@
 package org.trade.core.persistent.codetype;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -40,10 +42,11 @@ public class CodeAttribute extends Aspect implements java.io.Serializable {
     private String classEditorName;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "code_type_id", nullable = false)
+    @JoinColumn(name = "code_type_id")
+    @JsonBackReference
     private CodeType codeType;
 
-    @OneToMany(mappedBy = "codeAttribute", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "codeAttribute", fetch = FetchType.EAGER, orphanRemoval = true, cascade = {CascadeType.ALL})
     private List<CodeValue> codeValues = new ArrayList<>(0);
 
     public CodeAttribute() {
@@ -194,6 +197,18 @@ public class CodeAttribute extends Aspect implements java.io.Serializable {
      * @param codeValues List<CodeValue>
      */
     public void setCodeValues(List<CodeValue> codeValues) {
+
         this.codeValues = codeValues;
     }
+
+    /**
+     *
+     * @param codeValue
+     */
+    public void addChild(CodeValue codeValue) {
+
+        this.codeValues.add(codeValue);
+        codeValue.setCodeAttribute(this);
+    }
 }
+

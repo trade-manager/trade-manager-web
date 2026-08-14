@@ -4,6 +4,8 @@ import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,8 +20,12 @@ import org.trade.core.persistent.log.LogRecord;
 import org.trade.core.persistent.role.RoleRecord;
 import org.trade.core.persistent.role.RoleService;
 import org.trade.core.persistent.user.UserService;
+import org.trade.core.properties.MissingPropertiesException;
+import org.trade.core.properties.TradeAppLoadConfig;
 
 import java.util.List;
+import java.util.Properties;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 /**
@@ -45,6 +51,19 @@ public class PublicController {
         this.userService = userService;
         this.employeeService = employeeService;
         this.tradeService = tradeService;
+    }
+
+    @GetMapping("/init-values")
+    public TreeMap<Object, Object> getInitialValues() throws MissingPropertiesException {
+
+        Properties properties = TradeAppLoadConfig.loadAppProperties();
+        TreeMap<Object, Object> sortedMap = new TreeMap<>(properties);
+        return sortedMap;
+    }
+
+    @ExceptionHandler(MissingPropertiesException.class)
+    public ResponseEntity<String> handleLocalException(MissingPropertiesException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 
     @GetMapping("/numberOfUsers")

@@ -5,6 +5,7 @@ import {useAuth} from '../context/AuthContext'
 import {tradingdayApi} from '../misc/TradingdayApi'
 import {tradestrategyApi} from '../misc/TradestrategyApi'
 import TradeTab from './TradeTab'
+import {utils} from '../misc/Utils'
 import {ERROR, logMessage} from '../misc/LoggerApi'
 
 function TradePage() {
@@ -106,18 +107,16 @@ function TradePage() {
 
             if (tradingdays.length > 0) {
 
-                const localDateOpen = new Date(tradingdays[0].open);
-                const localISOTimeOpen = new Date(localDateOpen.getTime() - (localDateOpen.getTimezoneOffset() * 60000)).toISOString().slice(0, 16);
-                const localDateClose = new Date(tradingdays[tradingdays.length - 1].close);
-                const localISOTimeClose = new Date(localDateClose.getTime() - (localDateClose.getTimezoneOffset() * 60000)).toISOString().slice(0, 16);
-                setTradingdayOpenSearch(localISOTimeOpen);
-                setTradingdayCloseSearch(localISOTimeClose);
-                setTradestrategyOpenSearch(localISOTimeOpen);
-                setTradestrategyCloseSearch(localISOTimeClose);
+                const localDateOpen = utils.toISOStringWithTimezone(tradingdays[0].open, "America/New_York");
+                const localDateClose = utils.toISOStringWithTimezone(tradingdays[tradingdays.length - 1].close, "America/New_York");
+                setTradingdayOpenSearch(localDateOpen);
+                setTradingdayCloseSearch(localDateClose);
+                setTradestrategyOpenSearch(localDateOpen);
+                setTradestrategyCloseSearch(localDateClose);
             }
             setTradingdays(tradingdays);
         } catch (error) {
-            console.log("handleGetTradingdays error:\n" + JSON.stringify(error));
+
             logMessage(ERROR, error, user);
         } finally {
 

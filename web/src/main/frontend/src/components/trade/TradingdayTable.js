@@ -1,5 +1,6 @@
 import React from 'react'
-import {Button, Form, Grid, Input, Table} from 'semantic-ui-react'
+import {Button, Form, Input, Table} from 'semantic-ui-react'
+import {utils} from '../misc/Utils'
 
 function TradingdayTable({
                              tradingdays,

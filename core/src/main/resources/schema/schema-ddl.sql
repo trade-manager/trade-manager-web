@@ -585,13 +585,14 @@ CREATE  TABLE IF NOT EXISTS codetype (
 id BIGINT NOT NULL AUTO_INCREMENT ,
 name VARCHAR(45) NOT NULL ,
 type VARCHAR(45) NOT NULL ,
+category VARCHAR(45) NOT NULL ,
 description VARCHAR(100) NULL ,
 version INT NOT NULL DEFAULT 0,
 domain_id BIGINT NOT NULL DEFAULT 1,
 created_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 PRIMARY KEY (id) ,
-UNIQUE INDEX codetype_name_type_uq (name ASC, TYPE ASC) )
+UNIQUE INDEX codetype_name_type_uq (name ASC, type ASC, category ASC) )
 ENGINE = InnoDB//
 SHOW WARNINGS//
 
@@ -639,7 +640,7 @@ SHOW WARNINGS//
 
 CREATE  TABLE IF NOT EXISTS codevalue (
 id BIGINT NOT NULL AUTO_INCREMENT ,
-code_value VARCHAR(45) NOT NULL ,
+code_value VARCHAR(200) NOT NULL ,
 version INT NOT NULL DEFAULT 0,
 domain_id BIGINT NOT NULL DEFAULT 1,
 created_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
@@ -651,8 +652,6 @@ PRIMARY KEY (id) ,
 INDEX codeValue_codeattribute_idx (code_attribute_id ASC) ,
 INDEX codeValue_indicatorseries_idx (indicator_series_id ASC) ,
 INDEX codeValue_tradestrategy_idx (tradestrategy_id ASC) ,
-UNIQUE INDEX codeValue_tradestrategy_codeattribute_uq (code_attribute_id ASC, tradestrategy_id ASC),
-UNIQUE INDEX codeValue_indicatorseries_codeattribute_uq (indicator_series_id ASC, code_attribute_id ASC),
 CONSTRAINT codeValue_codeattribute_fk
 FOREIGN KEY (code_attribute_id )
 REFERENCES codeattribute (id )

@@ -161,7 +161,7 @@ public class PropertyFileLookupServiceProvider implements ILookupServiceProvider
         }
 
         // Need to clone the object otherwise changes in position in
-        // the object returned would effect everyone using the object
+        // the object returned would affect everyone using the object
         if (null != lookup) {
             lookup = (ILookup) lookup.clone();
         }
