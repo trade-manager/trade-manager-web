@@ -46,7 +46,7 @@ public class CodeAttribute extends Aspect implements java.io.Serializable {
     @JsonBackReference
     private CodeType codeType;
 
-    @OneToMany(mappedBy = "codeAttribute", fetch = FetchType.EAGER, orphanRemoval = true, cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "codeAttribute", fetch = FetchType.LAZY, orphanRemoval = true, cascade = {CascadeType.ALL})
     private List<CodeValue> codeValues = new ArrayList<>(0);
 
     public CodeAttribute() {

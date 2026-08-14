@@ -230,7 +230,6 @@ public class TradeServiceImpl implements TradeService {
         for (Account account : instance.getAccounts()) {
 
             Account current = this.getAccountService().findByAccountNumber(account.getAccountNumber());
-
             accounts.add(Objects.requireNonNullElse(current, account));
         }
 

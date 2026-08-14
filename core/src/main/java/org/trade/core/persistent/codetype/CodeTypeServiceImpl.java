@@ -8,7 +8,10 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import org.trade.core.persistent.tradestrategy.Tradestrategy;
+import org.trade.core.persistent.tradingday.Tradingday;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,9 +49,19 @@ public class CodeTypeServiceImpl implements CodeTypeService {
         return codeTypes.isEmpty() ? null : codeTypes.getFirst();
     }
 
+    @Transactional
     public CodeType findByNameAndTypeAndCategory(String name, String type, String category) {
 
         List<CodeType> codeTypes = codeTypeRepository.findByNameAndTypeAndCategory(name, type, category);
+
+        for (CodeType codeType : codeTypes) {
+
+            for (CodeAttribute codeAttribute : codeType.getCodeAttributes()) {
+
+                codeAttribute.getCodeValues().size();
+            }
+        }
+
         return codeTypes.isEmpty() ? null : codeTypes.getFirst();
     }
 
