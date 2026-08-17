@@ -37,12 +37,6 @@
         "display_name": "getName"
       }
     ],
-    "indicator_data": [
-      {
-        "code": "org.trade.series.IndicatorSeriesUI",
-        "display_name": "getName"
-      }
-    ],
     "group_data": [
       {
         "code": "org.trade.core.persistent.portfolio.Portfolio",
