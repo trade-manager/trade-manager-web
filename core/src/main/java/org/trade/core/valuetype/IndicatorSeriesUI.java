@@ -10,14 +10,14 @@ import java.io.Serial;
  * @version $Revision: 1.0 $
  */
 @Entity
-@DiscriminatorValue("DAOIndicatorSeries")
-public class DAOIndicatorSeries extends DAODecode {
+@DiscriminatorValue("IndicatorSeriesUI")
+public class IndicatorSeriesUI extends Decode {
 
     @Serial
     private static final long serialVersionUID = -5381026427696898592L;
     public static final String DECODE = "INDICATOR_SERIES";
 
-    public DAOIndicatorSeries() {
+    public IndicatorSeriesUI() {
         super(DECODE);
     }
 
@@ -29,7 +29,7 @@ public class DAOIndicatorSeries extends DAODecode {
      * @param name        String
      * @param description String
      */
-    public DAOIndicatorSeries(String type, String category, String name, String description) {
+    public IndicatorSeriesUI(String type, String category, String name, String description) {
 
         super(type, category, name, description);
     }
@@ -40,8 +40,8 @@ public class DAOIndicatorSeries extends DAODecode {
      * @param value String
      * @return IndicatorSeries
      */
-    public static DAOIndicatorSeries newInstance(String value) {
-        final DAOIndicatorSeries returnInstance = new DAOIndicatorSeries();
+    public static IndicatorSeriesUI newInstance(String value) {
+        final IndicatorSeriesUI returnInstance = new IndicatorSeriesUI();
         returnInstance.setValue(value);
         return returnInstance;
     }
@@ -51,8 +51,8 @@ public class DAOIndicatorSeries extends DAODecode {
      *
      * @return IndicatorSeries
      */
-    public static DAOIndicatorSeries newInstance() {
-        final DAOIndicatorSeries returnInstance = new DAOIndicatorSeries();
+    public static IndicatorSeriesUI newInstance() {
+        final IndicatorSeriesUI returnInstance = new IndicatorSeriesUI();
         returnInstance.setDefaultCode();
         return returnInstance;
     }

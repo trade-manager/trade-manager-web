@@ -39,7 +39,7 @@ import org.trade.core.valuetype.ChartDays;
 import org.trade.core.valuetype.ContentType;
 import org.trade.core.valuetype.Currency;
 import org.trade.core.valuetype.DAOPortfolio;
-import org.trade.core.valuetype.Strategy;
+import org.trade.core.valuetype.DAOStrategy;
 import org.trade.core.valuetype.Exchange;
 import org.trade.core.valuetype.Money;
 import org.trade.core.valuetype.OrderStatus;
@@ -113,7 +113,7 @@ public class TradeServiceIT extends TradestrategyBase {
     @Test
     public void addTradestrategy() {
 
-        org.trade.core.persistent.strategy.Strategy strategy = (org.trade.core.persistent.strategy.Strategy) Strategy.newInstance().getObject();
+        org.trade.core.persistent.strategy.Strategy strategy = (org.trade.core.persistent.strategy.Strategy) DAOStrategy.newInstance().getObject();
         org.trade.core.persistent.portfolio.Portfolio portfolio = (org.trade.core.persistent.portfolio.Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
         final String symbol = "TEST-" + TradestrategyBase.getRandomNumber(4);
         Contract contract = new Contract(SECType.STOCK, symbol, Exchange.SMART, Currency.USD, null, null);
@@ -997,7 +997,7 @@ public class TradeServiceIT extends TradestrategyBase {
         Tradingday tradingday = this.tradeService.getTradingdayService()
                 .findById(tradestrategy.getTradingday().getId());
         assertFalse(tradingday.getTradestrategies().isEmpty());
-        org.trade.core.persistent.strategy.Strategy toStrategy = (org.trade.core.persistent.strategy.Strategy) Strategy.newInstance().getObject();
+        org.trade.core.persistent.strategy.Strategy toStrategy = (org.trade.core.persistent.strategy.Strategy) DAOStrategy.newInstance().getObject();
         toStrategy = this.tradeService.getStrategyService().findById(toStrategy.getId());
         this.tradeService.reassignStrategy(tradestrategy.getStrategy(), toStrategy, tradingday);
         assertEquals(toStrategy, tradingday.getTradestrategies().getFirst().getStrategy());

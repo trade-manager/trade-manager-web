@@ -12,8 +12,8 @@ import java.util.List;
  * @version $Revision: 1.0 $
  */
 @Entity
-@DiscriminatorValue("Strategy")
-public class Strategy extends DAODecode {
+@DiscriminatorValue("DAOStrategy")
+public class DAOStrategy extends DAODecode {
 
     @Serial
     private static final long serialVersionUID = -5381026427696898592L;
@@ -22,7 +22,7 @@ public class Strategy extends DAODecode {
     public static final String _TABLE_ID = "_TABLE_ID";
     public static final String _COLUMN = "_COLUMN";
 
-    public Strategy() {
+    public DAOStrategy() {
         super(DECODE);
     }
 
@@ -34,7 +34,7 @@ public class Strategy extends DAODecode {
      * @param name        String
      * @param description String
      */
-    public Strategy(String type, String category, String name, String description) {
+    public DAOStrategy(String type, String category, String name, String description) {
 
         super(type, category, name, description);
     }
@@ -82,9 +82,9 @@ public class Strategy extends DAODecode {
      * @param displayName String
      * @return Strategy
      */
-    public static Strategy newInstance(String displayName) {
+    public static DAOStrategy newInstance(String displayName) {
 
-        final Strategy returnInstance = new Strategy();
+        final DAOStrategy returnInstance = new DAOStrategy();
         returnInstance.setDisplayName(displayName);
         return returnInstance;
     }
@@ -94,9 +94,9 @@ public class Strategy extends DAODecode {
      *
      * @return Strategy
      */
-    public static Strategy newInstance() {
+    public static DAOStrategy newInstance() {
 
-        final Strategy returnInstance = new Strategy();
+        final DAOStrategy returnInstance = new DAOStrategy();
         returnInstance.setDefaultCode();
         return returnInstance;
     }

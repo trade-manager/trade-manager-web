@@ -16,7 +16,7 @@ import org.trade.core.persistent.codetype.CodeAttribute;
 import org.trade.core.persistent.codetype.CodeType;
 import org.trade.core.persistent.codetype.CodeValue;
 import org.trade.core.valuetype.CalculationType;
-import org.trade.core.valuetype.Strategy;
+import org.trade.core.valuetype.DAOStrategy;
 import org.trade.indicator.IndicatorSeries;
 
 import java.util.ArrayList;
@@ -167,7 +167,7 @@ class ConfigurationPanelIT {
     public void createIndicatorSeriesClass() {
 
         final String packageName = "org.trade.indicator.";
-        org.trade.core.persistent.strategy.Strategy strategy = (org.trade.core.persistent.strategy.Strategy) Strategy.newInstance().getObject();
+        org.trade.core.persistent.strategy.Strategy strategy = (org.trade.core.persistent.strategy.Strategy) DAOStrategy.newInstance().getObject();
         List<Object> params = new ArrayList<>(0);
         params.add(strategy);
         params.add("20-SMA");

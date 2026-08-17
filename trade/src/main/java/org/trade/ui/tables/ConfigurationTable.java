@@ -7,10 +7,10 @@ import org.trade.core.valuetype.AccountType;
 import org.trade.core.valuetype.AllocationMethod;
 import org.trade.core.valuetype.Currency;
 import org.trade.core.valuetype.DAOAccount;
-import org.trade.core.valuetype.StrategyManager;
+import org.trade.core.valuetype.DAOStrategyManager;
 import org.trade.core.valuetype.DataType;
 import org.trade.core.valuetype.Decode;
-import org.trade.core.valuetype.DAOIndicatorSeries;
+import org.trade.core.valuetype.IndicatorSeriesUI;
 import org.trade.core.valuetype.ValueTypeException;
 import org.trade.ui.widget.DateEditor;
 import org.trade.ui.widget.DateField;
@@ -54,7 +54,7 @@ public class ConfigurationTable extends Table {
                 new JComboBox<>((new DataType()).getCodesDecodes().toArray(new Decode[0])));
 
         JComboBox<Decode> indicatorComboBoxEditor = new JComboBox<>(
-                (new DAOIndicatorSeries()).getCodesDecodes().toArray(new Decode[0]));
+                (new IndicatorSeriesUI()).getCodesDecodes().toArray(new Decode[0]));
         ListCellRenderer<Object> indicatorRenderer = new DefaultListCellRenderer() {
             @Serial
             private static final long serialVersionUID = -3146015541332720784L;
@@ -79,7 +79,7 @@ public class ConfigurationTable extends Table {
         DecodeTableEditor indicatorSeriesEditor = new DecodeTableEditor(indicatorComboBoxEditor);
 
         JComboBox<Decode> strategyManagerComboBox = new JComboBox<>(
-                (new StrategyManager()).getCodesDecodes().toArray(new Decode[0]));
+                (new DAOStrategyManager()).getCodesDecodes().toArray(new Decode[0]));
         DecodeTableEditor dAOStrategyManagerEditor = new DecodeTableEditor(strategyManagerComboBox);
         JComboBox<Decode> daoAccountComboBox = new JComboBox<>(
                 (new DAOAccount()).getCodesDecodes().toArray(new Decode[0]));
@@ -93,8 +93,8 @@ public class ConfigurationTable extends Table {
         this.setDefaultRenderer(org.trade.core.valuetype.Date.class, rDate);
         this.setDefaultEditor(org.trade.core.valuetype.Date.class, eDate);
         this.setDefaultEditor(DataType.class, dataTypeEditor);
-        this.setDefaultEditor(DAOIndicatorSeries.class, indicatorSeriesEditor);
-        this.setDefaultEditor(StrategyManager.class, dAOStrategyManagerEditor);
+        this.setDefaultEditor(IndicatorSeriesUI.class, indicatorSeriesEditor);
+        this.setDefaultEditor(DAOStrategyManager.class, dAOStrategyManagerEditor);
         this.setDefaultEditor(DAOAccount.class, dAOAccountEditor);
     }
 }

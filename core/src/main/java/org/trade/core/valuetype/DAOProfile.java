@@ -13,17 +13,17 @@ import java.util.List;
  * @version $Revision: 1.0 $
  */
 @Entity
-@DiscriminatorValue("FAGroup")
-public class FAGroup extends DAODecode {
+@DiscriminatorValue("Profile")
+public class DAOProfile extends DAODecode {
 
     @Serial
     private static final long serialVersionUID = -5381026427696898592L;
-    public static final String DECODE = "GROUP_DATA";
+    public static final String DECODE = "PROFILE_DATA";
     public static final String _TABLE = "_TABLE";
     public static final String _TABLE_ID = "_TABLE_ID";
     public static final String _COLUMN = "_COLUMN";
 
-    public FAGroup() {
+    public DAOProfile() {
         super(DECODE, true);
     }
 
@@ -35,7 +35,7 @@ public class FAGroup extends DAODecode {
      * @param name        String
      * @param description String
      */
-    public FAGroup(String type, String category, String name, String description) {
+    public DAOProfile(String type, String category, String name, String description) {
 
         super(type, category, name, description);
     }
@@ -66,8 +66,7 @@ public class FAGroup extends DAODecode {
                     // Do nothing
                 }
 
-                if (null == value) {
-
+                if (null != value) {
                     decodes.add(decode);
                 }
             } else {
@@ -85,11 +84,10 @@ public class FAGroup extends DAODecode {
      * Method newInstance.
      *
      * @param displayName String
-     * @return Group
+     * @return Profile
      */
-    public static FAGroup newInstance(String displayName) {
-
-        final FAGroup returnInstance = new FAGroup();
+    public static DAOProfile newInstance(String displayName) {
+        final DAOProfile returnInstance = new DAOProfile();
         returnInstance.setDisplayName(displayName);
         return returnInstance;
     }
@@ -97,10 +95,10 @@ public class FAGroup extends DAODecode {
     /**
      * Method newInstance.
      *
-     * @return Group
+     * @return Profile
      */
-    public static FAGroup newInstance() {
-        final FAGroup returnInstance = new FAGroup();
+    public static DAOProfile newInstance() {
+        final DAOProfile returnInstance = new DAOProfile();
         returnInstance.setDefaultCode();
         return returnInstance;
     }

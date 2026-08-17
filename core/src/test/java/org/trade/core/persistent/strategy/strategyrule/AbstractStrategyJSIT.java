@@ -28,7 +28,7 @@ import org.trade.core.valuetype.Action;
 import org.trade.core.valuetype.BarSize;
 import org.trade.core.valuetype.ChartDays;
 import org.trade.core.valuetype.ContentType;
-import org.trade.core.valuetype.Strategy;
+import org.trade.core.valuetype.DAOStrategy;
 import org.trade.core.valuetype.Exchange;
 import org.trade.core.valuetype.OrderStatus;
 import org.trade.core.valuetype.Side;
@@ -109,7 +109,7 @@ public class AbstractStrategyJSIT extends TradestrategyBase {
     @Order(100)
     public void fiveMinGapBarStrategyJS() throws Exception {
 
-        org.trade.core.persistent.strategy.Strategy strategy = (org.trade.core.persistent.strategy.Strategy) Strategy.newInstance().getObject();
+        org.trade.core.persistent.strategy.Strategy strategy = (org.trade.core.persistent.strategy.Strategy) DAOStrategy.newInstance().getObject();
         tradestrategy = this.createTestTradestrategy(strategy, symbol, Side.BOT, ChartDays.ONE_DAY, BarSize.FIVE_MIN);
         assertNotNull(tradestrategy);
         strategy = tradeService.getStrategyService().findById(tradestrategy.getStrategy().getId());
@@ -153,7 +153,7 @@ public class AbstractStrategyJSIT extends TradestrategyBase {
 
         deleteAfter = true;
         tradestrategy = tradeService.getTradestrategyService().findById(tradestrategy.getId());
-        org.trade.core.persistent.strategy.Strategy strategy = (org.trade.core.persistent.strategy.Strategy) Strategy.newInstance().getObject();
+        org.trade.core.persistent.strategy.Strategy strategy = (org.trade.core.persistent.strategy.Strategy) DAOStrategy.newInstance().getObject();
         assertTrue(strategy.hasStrategyManager());
         strategy = strategy.getStrategyManager();
 

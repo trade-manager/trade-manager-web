@@ -198,6 +198,7 @@ public class ConfigProperties {
                 loadPropertiesAsResource(context, fileName, systemProperties);
                 deploymentProperties = new Properties(systemProperties);
                 loadPropertiesAsFile(getDeploymentPropertyFileName(), deploymentProperties);
+                //loadDecodes(DECODE_PROPERTY_FILE);
             }
         } catch (IOException ex) {
 
@@ -461,6 +462,7 @@ public class ConfigProperties {
                                     null));
                             codeAttributesMap.put(attribute, codeAttribute);
                             codeAttributeId.getAndIncrement();
+                            codeAttribute.setId((long) codeAttributeId.get());
                             System.out.println(String.format("INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(%s,'%s','%s',null,'java.lang.String',null, %s)//", codeAttributeId.get(), attribute, attribute, codeTypeId.get()));
                         }
                     }
@@ -475,7 +477,7 @@ public class ConfigProperties {
                             String attribute = attributes.next();
                             codeAttributesMap.get(attribute).addChild(new CodeValue(codeAttributesMap.get(attribute), decode.getString(attribute)));
                             codeValueId.getAndIncrement();
-                            System.out.println(String.format("INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(%s,'%s',%s,null)//", codeValueId.get(), decode.getString(attribute), codeAttributeId.get()));
+                            System.out.println(String.format("INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(%s,'%s',%s,null)//", codeValueId.get(), decode.getString(attribute), codeAttributesMap.get(attribute).getId()));
                         }
                     }
 

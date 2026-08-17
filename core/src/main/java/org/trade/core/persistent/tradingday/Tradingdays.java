@@ -14,7 +14,7 @@ import org.trade.core.valuetype.BarSize;
 import org.trade.core.valuetype.ChartDays;
 import org.trade.core.valuetype.Currency;
 import org.trade.core.valuetype.DAOPortfolio;
-import org.trade.core.valuetype.Strategy;
+import org.trade.core.valuetype.DAOStrategy;
 import org.trade.core.valuetype.Tier;
 
 import java.io.BufferedReader;
@@ -433,12 +433,12 @@ public class Tradingdays extends Aspect implements java.io.Serializable {
             int riskAmount = ConfigProperties.getPropAsInt("trade.risk");
             String strategyName = ConfigProperties.getPropAsString("trade.strategy.default");
 
-            if (!Strategy.newInstance(strategyName).isValid()) {
+            if (!DAOStrategy.newInstance(strategyName).isValid()) {
 
-                strategyName = Strategy.newInstance().getCode();
+                strategyName = DAOStrategy.newInstance().getCode();
             }
 
-            org.trade.core.persistent.strategy.Strategy strategy = (org.trade.core.persistent.strategy.Strategy) Strategy.newInstance(strategyName).getObject();
+            org.trade.core.persistent.strategy.Strategy strategy = (org.trade.core.persistent.strategy.Strategy) DAOStrategy.newInstance(strategyName).getObject();
             org.trade.core.persistent.portfolio.Portfolio portfolio = (org.trade.core.persistent.portfolio.Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
             String strLine;
 

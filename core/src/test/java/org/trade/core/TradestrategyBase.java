@@ -20,7 +20,7 @@ import org.trade.core.valuetype.BarSize;
 import org.trade.core.valuetype.ChartDays;
 import org.trade.core.valuetype.Currency;
 import org.trade.core.valuetype.DAOPortfolio;
-import org.trade.core.valuetype.Strategy;
+import org.trade.core.valuetype.DAOStrategy;
 import org.trade.core.valuetype.Exchange;
 import org.trade.core.valuetype.SECType;
 import org.trade.core.valuetype.Side;
@@ -77,7 +77,7 @@ public class TradestrategyBase {
         Tradestrategy tradestrategy;
 
         if (null == strategy) {
-            strategy = (org.trade.core.persistent.strategy.Strategy) Strategy.newInstance().getObject();
+            strategy = (org.trade.core.persistent.strategy.Strategy) DAOStrategy.newInstance().getObject();
         }
 
         org.trade.core.persistent.portfolio.Portfolio portfolio = (org.trade.core.persistent.portfolio.Portfolio) DAOPortfolio.newInstance().getObject();

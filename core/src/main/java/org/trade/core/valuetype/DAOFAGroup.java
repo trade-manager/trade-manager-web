@@ -13,17 +13,17 @@ import java.util.List;
  * @version $Revision: 1.0 $
  */
 @Entity
-@DiscriminatorValue("Profile")
-public class Profile extends DAODecode {
+@DiscriminatorValue("DAOFAGroup")
+public class DAOFAGroup extends DAODecode {
 
     @Serial
     private static final long serialVersionUID = -5381026427696898592L;
-    public static final String DECODE = "PROFILE_DATA";
+    public static final String DECODE = "GROUP_DATA";
     public static final String _TABLE = "_TABLE";
     public static final String _TABLE_ID = "_TABLE_ID";
     public static final String _COLUMN = "_COLUMN";
 
-    public Profile() {
+    public DAOFAGroup() {
         super(DECODE, true);
     }
 
@@ -35,7 +35,7 @@ public class Profile extends DAODecode {
      * @param name        String
      * @param description String
      */
-    public Profile(String type, String category, String name, String description) {
+    public DAOFAGroup(String type, String category, String name, String description) {
 
         super(type, category, name, description);
     }
@@ -66,7 +66,8 @@ public class Profile extends DAODecode {
                     // Do nothing
                 }
 
-                if (null != value) {
+                if (null == value) {
+
                     decodes.add(decode);
                 }
             } else {
@@ -84,10 +85,11 @@ public class Profile extends DAODecode {
      * Method newInstance.
      *
      * @param displayName String
-     * @return Profile
+     * @return Group
      */
-    public static Profile newInstance(String displayName) {
-        final Profile returnInstance = new Profile();
+    public static DAOFAGroup newInstance(String displayName) {
+
+        final DAOFAGroup returnInstance = new DAOFAGroup();
         returnInstance.setDisplayName(displayName);
         return returnInstance;
     }
@@ -95,10 +97,10 @@ public class Profile extends DAODecode {
     /**
      * Method newInstance.
      *
-     * @return Profile
+     * @return Group
      */
-    public static Profile newInstance() {
-        final Profile returnInstance = new Profile();
+    public static DAOFAGroup newInstance() {
+        final DAOFAGroup returnInstance = new DAOFAGroup();
         returnInstance.setDefaultCode();
         return returnInstance;
     }

@@ -6,8 +6,8 @@ import org.trade.core.aspect.Aspects;
 import org.trade.core.factory.ClassFactory;
 import org.trade.core.persistent.codetype.CodeValue;
 import org.trade.core.util.CoreUtils;
-import org.trade.core.valuetype.DAOIndicatorSeries;
-import org.trade.core.valuetype.Strategy;
+import org.trade.core.valuetype.IndicatorSeriesUI;
+import org.trade.core.valuetype.DAOStrategy;
 import org.trade.core.valuetype.YesNo;
 import org.trade.indicator.IndicatorSeries;
 
@@ -121,11 +121,11 @@ public class IndicatorSeriesTableModel extends TableModel {
 
         switch (column) {
             case 0: {
-                element.setStrategy((org.trade.core.persistent.strategy.Strategy) ((Strategy) value).getObject());
+                element.setStrategy((org.trade.core.persistent.strategy.Strategy) ((DAOStrategy) value).getObject());
                 break;
             }
             case 1: {
-                String type = ((DAOIndicatorSeries) value).getCode();
+                String type = ((IndicatorSeriesUI) value).getCode();
                 String indicatorName = type.substring(0, type.indexOf("Series"));
                 element = this.getIndicatorSeries(element.getStrategy(), indicatorName, type, indicatorName);
                 this.replaceRow(element, row);
@@ -189,7 +189,7 @@ public class IndicatorSeriesTableModel extends TableModel {
      */
     public void deleteRow(int selectedRow) {
 
-        String type = ((DAOIndicatorSeries) this.getValueAt(selectedRow, 1)).getCode();
+        String type = ((IndicatorSeriesUI) this.getValueAt(selectedRow, 1)).getCode();
         String name = (String) this.getValueAt(selectedRow, 2);
 
         for (final org.trade.core.persistent.strategy.series.indicator.IndicatorSeries element : getData().getIndicatorSeries()) {
@@ -261,15 +261,15 @@ public class IndicatorSeriesTableModel extends TableModel {
     public void getNewRow(List<Object> newRow, org.trade.core.persistent.strategy.series.indicator.IndicatorSeries element) {
 
         if (null == element.getStrategy()) {
-            newRow.add(Strategy.newInstance());
+            newRow.add(DAOStrategy.newInstance());
         } else {
-            newRow.add(Strategy.newInstance(element.getStrategy().getName()));
+            newRow.add(DAOStrategy.newInstance(element.getStrategy().getName()));
         }
 
         if (null == element.getType()) {
-            newRow.add(DAOIndicatorSeries.newInstance());
+            newRow.add(IndicatorSeriesUI.newInstance());
         } else {
-            newRow.add(DAOIndicatorSeries.newInstance(element.getType()));
+            newRow.add(IndicatorSeriesUI.newInstance(element.getType()));
         }
         newRow.add(element.getName());
         newRow.add(element.getDescription());

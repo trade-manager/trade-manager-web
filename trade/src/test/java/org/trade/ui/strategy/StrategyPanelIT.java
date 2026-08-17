@@ -25,7 +25,7 @@ import org.trade.core.util.DynamicCode;
 import org.trade.core.valuetype.BarSize;
 import org.trade.core.valuetype.ChartDays;
 import org.trade.core.valuetype.ContentType;
-import org.trade.core.valuetype.Strategy;
+import org.trade.core.valuetype.DAOStrategy;
 import org.trade.core.valuetype.Side;
 
 import javax.swing.*;
@@ -80,7 +80,7 @@ public class StrategyPanelIT extends TradestrategyBase {
         strategyDir = ConfigProperties.getPropAsString("trade.strategy.default.dir");
         assertNotNull(strategyDir);
         // tradestrategy = TradestrategyBase.createTestTradestrategy(tradeService, symbol);
-        org.trade.core.persistent.strategy.Strategy strategy = (org.trade.core.persistent.strategy.Strategy) Strategy.newInstance().getObject();
+        org.trade.core.persistent.strategy.Strategy strategy = (org.trade.core.persistent.strategy.Strategy) DAOStrategy.newInstance().getObject();
         tradestrategy = this.createTestTradestrategy(strategy, symbol, Side.BOT, ChartDays.ONE_DAY, BarSize.HOUR_MIN);
 
         assertNotNull(tradestrategy);

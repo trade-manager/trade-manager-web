@@ -15,8 +15,8 @@ import org.trade.core.persistent.codetype.Entrylimit;
 import org.trade.core.valuetype.ChartDays;
 import org.trade.core.valuetype.DAODecode;
 import org.trade.core.valuetype.DAOEntryLimit;
-import org.trade.core.valuetype.Strategy;
-import org.trade.core.valuetype.StrategyManager;
+import org.trade.core.valuetype.DAOStrategy;
+import org.trade.core.valuetype.DAOStrategyManager;
 import org.trade.core.valuetype.Decode;
 import org.trade.core.valuetype.Money;
 
@@ -70,7 +70,7 @@ public class ValueTypeDAOIT {
     @Test
     public void dOAStrategies() throws Exception {
 
-        Strategy strategies = new Strategy();
+        DAOStrategy strategies = new DAOStrategy();
         List<Decode> decodes = strategies.getCodesDecodes();
         ListIterator<Decode> eDecodes = decodes.listIterator();
         assertFalse(decodes.isEmpty());
@@ -84,7 +84,7 @@ public class ValueTypeDAOIT {
 
         }
 
-        StrategyManager strategyManagers = new StrategyManager();
+        DAOStrategyManager strategyManagers = new DAOStrategyManager();
         decodes = strategyManagers.getCodesDecodes();
         assertFalse(decodes.isEmpty());
         eDecodes = decodes.listIterator();

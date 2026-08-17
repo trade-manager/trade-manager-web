@@ -16,7 +16,7 @@ import org.trade.core.persistent.strategy.series.indicator.CandleSeries;
 import org.trade.core.persistent.tradestrategy.Tradestrategy;
 import org.trade.core.valuetype.BarSize;
 import org.trade.core.valuetype.ChartDays;
-import org.trade.core.valuetype.Strategy;
+import org.trade.core.valuetype.DAOStrategy;
 import org.trade.core.valuetype.Side;
 
 import java.io.Serial;
@@ -50,7 +50,7 @@ public class WorkerIT extends TradestrategyBase {
     @BeforeEach
     public void setUp() throws Exception {
 
-        org.trade.core.persistent.strategy.Strategy strategy = (org.trade.core.persistent.strategy.Strategy) Strategy.newInstance().getObject();
+        org.trade.core.persistent.strategy.Strategy strategy = (org.trade.core.persistent.strategy.Strategy) DAOStrategy.newInstance().getObject();
         tradestrategy = this.createTestTradestrategy(strategy, symbol, Side.BOT, ChartDays.ONE_DAY, BarSize.HOUR_MIN);
         assertNotNull(tradestrategy);
         _log.info(" Test Initialized");

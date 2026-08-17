@@ -28,7 +28,7 @@ import org.trade.core.valuetype.BarSize;
 import org.trade.core.valuetype.ChartDays;
 import org.trade.core.valuetype.Currency;
 import org.trade.core.valuetype.DAOPortfolio;
-import org.trade.core.valuetype.Strategy;
+import org.trade.core.valuetype.DAOStrategy;
 import org.trade.core.valuetype.Exchange;
 import org.trade.core.valuetype.SECType;
 import org.trade.indicator.StrategyDataUI;
@@ -110,7 +110,7 @@ public class CandlestickChartApp extends BasePanel implements IBrokerChangeListe
                 endDate = TradingCalendar.getTradingDayEnd(TradingCalendar.getPrevTradingDay(endDate));
                 ZonedDateTime startDate = TradingCalendar.getTradingDayStart(endDate);
 
-                org.trade.core.persistent.strategy.Strategy daoStrategy = (org.trade.core.persistent.strategy.Strategy) Strategy.newInstance().getObject();
+                org.trade.core.persistent.strategy.Strategy daoStrategy = (org.trade.core.persistent.strategy.Strategy) DAOStrategy.newInstance().getObject();
                 String name = daoStrategy.getName();
                 org.trade.core.persistent.strategy.Strategy strategy = _tradeService.getStrategyService().findByName(name);
                 Tradestrategy tradestrategy = getTradestrategy(contract, strategy, ChartDays.ONE_DAY, BarSize.FIVE_MIN, startDate, endDate);

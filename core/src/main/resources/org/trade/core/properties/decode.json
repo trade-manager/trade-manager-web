@@ -1,38 +1,51 @@
 {
   "dao_decode": {
-    "StrategyManager": [
+    "DAOStrategyManager": [
       {
         "code": "org.trade.core.persistent.strategy.Strategy",
+        "value": "getName",
         "display_name": "getName"
       }
     ],
-    "FAGroup": [
+    "DAOFAGroup": [
       {
         "code": "org.trade.core.persistent.portfolio.Portfolio",
+        "value": "getName",
         "display_name": "getName"
       }
     ],
-    "Portfolio": [
+    "DAOPortfolio": [
       {
         "code": "org.trade.core.persistent.portfolio.Portfolio",
+        "value": "getName",
         "display_name": "getName"
       }
     ],
-    "Strategy": [
+    "DAOProfile": [
+      {
+        "code": "org.trade.core.persistent.portfolio.Portfolio",
+        "value": "getName",
+        "display_name": "getName"
+      }
+    ],
+    "DAOStrategy": [
       {
         "code": "org.trade.core.persistent.strategy.Strategy",
+        "value": "getName",
         "display_name": "getName"
       }
     ],
-    "EntryLimit": [
+    "DAOEntryLimit": [
       {
         "code": "org.trade.core.persistent.codetype.Entrylimit",
+        "value": "getId",
         "display_name": "getId"
       }
     ],
-    "Account": [
+    "DAOAccount": [
       {
         "code": "org.trade.core.persistent.account.Account",
+        "value": "getAccountNumber",
         "display_name": "getAccountNumber"
       }
     ]
@@ -543,7 +556,7 @@
         "code": "SLD"
       }
     ],
-    "IndicatorSeries": [
+    "IndicatorSeriesUI": [
       {
         "display_name": "ATR",
         "value": "AverageTrueRangeSeries",

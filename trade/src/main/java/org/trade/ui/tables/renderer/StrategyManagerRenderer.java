@@ -3,7 +3,7 @@ package org.trade.ui.tables.renderer;
 import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.persistent.strategy.strategyrule.IStrategyRule;
 import org.trade.core.persistent.tradestrategy.Tradestrategy;
-import org.trade.core.valuetype.StrategyManager;
+import org.trade.core.valuetype.DAOStrategyManager;
 import org.trade.ui.models.TradestrategyTableModel;
 
 import javax.swing.*;
@@ -50,13 +50,13 @@ public class StrategyManagerRenderer extends DefaultTableCellRenderer {
         synchronized (dAOStrategyManager) {
             setBackground(null);
             super.getTableCellRendererComponent(table, dAOStrategyManager, isSelected, hasFocus, row, column);
-            if (row > -1 && ((StrategyManager) dAOStrategyManager).isValid()) {
+            if (row > -1 && ((DAOStrategyManager) dAOStrategyManager).isValid()) {
                 Tradestrategy transferObject = ((TradestrategyTableModel) table.getModel()).getData()
                         .getTradestrategies().get(table.convertRowIndexToModel(row));
 
-                if (null == ((StrategyManager) dAOStrategyManager).getObject())
+                if (null == ((DAOStrategyManager) dAOStrategyManager).getObject())
                     return this;
-                String key = ((Strategy) ((StrategyManager) dAOStrategyManager).getObject()).getClassName()
+                String key = ((Strategy) ((DAOStrategyManager) dAOStrategyManager).getObject()).getClassName()
                         + transferObject.getId();
                 if (this.strategyWorkers.containsKey(key) && !isSelected) {
                     if (this.strategyWorkers.get(key).isDone()) {

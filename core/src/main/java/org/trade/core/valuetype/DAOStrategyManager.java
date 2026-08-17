@@ -13,8 +13,8 @@ import java.util.List;
  * @version $Revision: 1.0 $
  */
 @Entity
-@DiscriminatorValue("StrategyManager")
-public class StrategyManager extends DAODecode {
+@DiscriminatorValue("DAOStrategyManager")
+public class DAOStrategyManager extends DAODecode {
 
     @Serial
     private static final long serialVersionUID = -5381026427696898592L;
@@ -23,7 +23,7 @@ public class StrategyManager extends DAODecode {
     public static final String _TABLE_ID = "_TABLE_ID";
     public static final String _COLUMN = "_COLUMN";
 
-    public StrategyManager() {
+    public DAOStrategyManager() {
         super(DECODE, true);
     }
 
@@ -35,7 +35,7 @@ public class StrategyManager extends DAODecode {
      * @param name        String
      * @param description String
      */
-    public StrategyManager(String type, String category, String name, String description) {
+    public DAOStrategyManager(String type, String category, String name, String description) {
 
         super(type, category, name, description);
     }
@@ -69,8 +69,8 @@ public class StrategyManager extends DAODecode {
      * @param displayName String
      * @return StrategyManager
      */
-    public static StrategyManager newInstance(String displayName) {
-        final StrategyManager returnInstance = new StrategyManager();
+    public static DAOStrategyManager newInstance(String displayName) {
+        final DAOStrategyManager returnInstance = new DAOStrategyManager();
         returnInstance.setDisplayName(displayName);
         return returnInstance;
     }
@@ -80,8 +80,8 @@ public class StrategyManager extends DAODecode {
      *
      * @return StrategyManager
      */
-    public static StrategyManager newInstance() {
-        final StrategyManager returnInstance = new StrategyManager();
+    public static DAOStrategyManager newInstance() {
+        final DAOStrategyManager returnInstance = new DAOStrategyManager();
         returnInstance.setDefaultCode();
         return returnInstance;
     }

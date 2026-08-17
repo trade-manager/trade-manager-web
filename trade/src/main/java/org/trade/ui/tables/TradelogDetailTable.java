@@ -4,7 +4,7 @@ import org.trade.base.Table;
 import org.trade.base.TableModel;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.Action;
-import org.trade.core.valuetype.Strategy;
+import org.trade.core.valuetype.DAOStrategy;
 import org.trade.core.valuetype.Decode;
 import org.trade.core.valuetype.MarketBar;
 import org.trade.core.valuetype.MarketBias;
@@ -46,14 +46,14 @@ public class TradelogDetailTable extends Table {
         DecodeTableEditor tradestrategyStatusEditor = new DecodeTableEditor(
                 new JComboBox<>((new TradestrategyStatus()).getCodesDecodes().toArray(new Decode[0])));
         DecodeTableEditor strategyEditor = new DecodeTableEditor(
-                new JComboBox<>((new Strategy()).getCodesDecodes().toArray(new Decode[0])));
+                new JComboBox<>((new DAOStrategy()).getCodesDecodes().toArray(new Decode[0])));
         DecodeTableEditor marketBiasEditor = new DecodeTableEditor(
                 new JComboBox<>((new MarketBias()).getCodesDecodes().toArray(new Decode[0])));
         DecodeTableEditor marketBarEditor = new DecodeTableEditor(
                 new JComboBox<>((new MarketBar()).getCodesDecodes().toArray(new Decode[0])));
         DecodeTableEditor actionEditor = new DecodeTableEditor(
                 new JComboBox<>((new Action()).getCodesDecodes().toArray(new Decode[0])));
-        this.setDefaultEditor(Strategy.class, strategyEditor);
+        this.setDefaultEditor(DAOStrategy.class, strategyEditor);
         this.setDefaultEditor(Side.class, sideEditor);
         this.setDefaultEditor(Tier.class, tierEditor);
         this.setDefaultEditor(TradestrategyStatus.class, tradestrategyStatusEditor);

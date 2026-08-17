@@ -4,7 +4,7 @@ import org.trade.base.TableModel;
 import org.trade.core.persistent.tradelogdetail.TradelogDetail;
 import org.trade.core.persistent.tradelogdetail.TradelogReport;
 import org.trade.core.valuetype.Action;
-import org.trade.core.valuetype.Strategy;
+import org.trade.core.valuetype.DAOStrategy;
 import org.trade.core.valuetype.Date;
 import org.trade.core.valuetype.Decimal;
 import org.trade.core.valuetype.MarketBar;
@@ -295,7 +295,7 @@ public class TradelogDetailTableModel extends TableModel {
         if (null == element.getName()) {
             newRow.add("");
         } else {
-            newRow.add(Strategy.newInstance(element.getName()));
+            newRow.add(DAOStrategy.newInstance(element.getName()));
         }
         if (null == element.getStatus()) {
             newRow.add(new TradestrategyStatus());
