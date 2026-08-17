@@ -2,9 +2,8 @@ package org.trade.ui.tradingday;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.trade.core.persistent.portfolio.Portfolio;
 import org.trade.core.properties.ConfigProperties;
-import org.trade.core.valuetype.DAOPortfolio;
+import org.trade.core.valuetype.Portfolio;
 import org.trade.core.valuetype.Decode;
 import org.trade.core.valuetype.ValueTypeException;
 import org.trade.ui.widget.DecodeComboBoxEditor;
@@ -31,14 +30,14 @@ public class ConnectionPane extends JPanel {
     private JTextField hostTextField = null;
     private JFormattedTextField portTextField = null;
     private JFormattedTextField clientIdTextField = null;
-    private Portfolio portfolio = null;
+    private org.trade.core.persistent.portfolio.Portfolio portfolio = null;
 
     public ConnectionPane() throws ValueTypeException {
 
         portTextField = new JFormattedTextField(createFormatter("####"));
         clientIdTextField = new JFormattedTextField(createFormatter("#"));
         hostTextField = new JTextField();
-        portfolio = (Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
+        portfolio = (org.trade.core.persistent.portfolio.Portfolio) Objects.requireNonNull(Portfolio.newInstance()).getObject();
         int clientId = 0;
         int port = 7496;
         String host = "localhost";
@@ -53,15 +52,15 @@ public class ConnectionPane extends JPanel {
         portTextField.setText(Integer.toString(port));
         clientIdTextField.setText(Integer.toString(clientId));
         DecodeComboBoxEditor portfolioEditorComboBox = new DecodeComboBoxEditor(
-                Objects.requireNonNull(DAOPortfolio.newInstance()).getCodesDecodes());
+                Objects.requireNonNull(Portfolio.newInstance()).getCodesDecodes());
         DecodeComboBoxRenderer portfolioTableRenderer = new DecodeComboBoxRenderer();
         portfolioEditorComboBox.setRenderer(portfolioTableRenderer);
         if (null != portfolio)
-            portfolioEditorComboBox.setItem(DAOPortfolio.newInstance(portfolio.getName()));
+            portfolioEditorComboBox.setItem(Portfolio.newInstance(portfolio.getName()));
         portfolioEditorComboBox.addItemListener(e -> {
             if (e.getStateChange() == ItemEvent.SELECTED) {
-                if (!Decode.NONE.equals(((DAOPortfolio) e.getItem()).getDisplayName())) {
-                    portfolio = (Portfolio) ((DAOPortfolio) e.getItem()).getObject();
+                if (!Decode.NONE.equals(((Portfolio) e.getItem()).getDisplayName())) {
+                    portfolio = (org.trade.core.persistent.portfolio.Portfolio) ((Portfolio) e.getItem()).getObject();
                 }
             }
         });
@@ -125,7 +124,7 @@ public class ConnectionPane extends JPanel {
      *
      * @return Portfolio
      */
-    public Portfolio getPortfolio() {
+    public org.trade.core.persistent.portfolio.Portfolio getPortfolio() {
         return portfolio;
     }
 

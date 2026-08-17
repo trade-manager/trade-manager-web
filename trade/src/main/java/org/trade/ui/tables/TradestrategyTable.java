@@ -8,9 +8,9 @@ import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.BarSize;
 import org.trade.core.valuetype.ChartDays;
 import org.trade.core.valuetype.Currency;
-import org.trade.core.valuetype.DAOPortfolio;
-import org.trade.core.valuetype.DAOStrategy;
-import org.trade.core.valuetype.DAOStrategyManager;
+import org.trade.core.valuetype.Portfolio;
+import org.trade.core.valuetype.Strategy;
+import org.trade.core.valuetype.StrategyManager;
 import org.trade.core.valuetype.Decode;
 import org.trade.core.valuetype.Exchange;
 import org.trade.core.valuetype.SECIdType;
@@ -88,12 +88,12 @@ public class TradestrategyTable extends Table {
         DAOStrategyRenderer dAOStrategyRenderer = new DAOStrategyRenderer(strategyWorkers);
         DAOStrategyManagerRenderer dAOStrategyManagerRenderer = new DAOStrategyManagerRenderer(strategyWorkers);
         DecodeTableEditor strategyEditor = new DecodeTableEditor(
-                new JComboBox<>((new DAOStrategy()).getCodesDecodes().toArray(new Decode[0])));
+                new JComboBox<>((new Strategy()).getCodesDecodes().toArray(new Decode[0])));
         JComboBox<Decode> strategyManagerComboBox = new JComboBox<>(
-                (new DAOStrategyManager()).getCodesDecodes().toArray(new Decode[0]));
+                (new StrategyManager()).getCodesDecodes().toArray(new Decode[0]));
         DecodeTableEditor strategyManagerEditor = new DecodeTableEditor(strategyManagerComboBox);
         DecodeTableEditor portfolioEditor = new DecodeTableEditor(
-                new JComboBox<>((new DAOPortfolio()).getCodesDecodes().toArray(new Decode[0])));
+                new JComboBox<>((new Portfolio()).getCodesDecodes().toArray(new Decode[0])));
         DecodeTableEditor chartDaysEditor = new DecodeTableEditor(
                 new JComboBox<>((new ChartDays()).getCodesDecodes().toArray(new Decode[0])));
         DecodeTableEditor barSizeEditor = new DecodeTableEditor(
@@ -103,9 +103,9 @@ public class TradestrategyTable extends Table {
         this.setDefaultEditor(String.class, eString);
         StringRenderer rString = new StringRenderer();
         this.setDefaultRenderer(String.class, rString);
-        this.setDefaultEditor(DAOStrategy.class, strategyEditor);
-        this.setDefaultEditor(DAOStrategyManager.class, strategyManagerEditor);
-        this.setDefaultEditor(DAOPortfolio.class, portfolioEditor);
+        this.setDefaultEditor(Strategy.class, strategyEditor);
+        this.setDefaultEditor(StrategyManager.class, strategyManagerEditor);
+        this.setDefaultEditor(Portfolio.class, portfolioEditor);
         this.setDefaultEditor(Currency.class, currencyEditor);
         this.setDefaultEditor(Exchange.class, exchangeEditor);
         this.setDefaultEditor(SECIdType.class, sECIdTypeEditor);
@@ -113,8 +113,8 @@ public class TradestrategyTable extends Table {
         this.setDefaultEditor(Side.class, sideEditor);
         this.setDefaultEditor(Tier.class, tierEditor);
         this.setDefaultEditor(TradestrategyStatus.class, tradestrategyStatusEditor);
-        this.setDefaultRenderer(DAOStrategy.class, dAOStrategyRenderer);
-        this.setDefaultRenderer(DAOStrategyManager.class, dAOStrategyManagerRenderer);
+        this.setDefaultRenderer(Strategy.class, dAOStrategyRenderer);
+        this.setDefaultRenderer(StrategyManager.class, dAOStrategyManagerRenderer);
         this.setDefaultEditor(ChartDays.class, chartDaysEditor);
         this.setDefaultEditor(BarSize.class, barSizeEditor);
         this.setFont(new Font("Monospaced", Font.PLAIN, 12));

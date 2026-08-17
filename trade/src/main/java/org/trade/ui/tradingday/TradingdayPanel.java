@@ -9,8 +9,6 @@ import org.trade.core.persistent.ServiceException;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.account.Account;
 import org.trade.core.persistent.codetype.CodeType;
-import org.trade.core.persistent.portfolio.Portfolio;
-import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.persistent.strategy.strategyrule.IStrategyRule;
 import org.trade.core.persistent.tradestrategy.Tradestrategy;
 import org.trade.core.persistent.tradingday.Tradingday;
@@ -19,9 +17,9 @@ import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.CoreUtils;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.ContentType;
-import org.trade.core.valuetype.DAOPortfolio;
-import org.trade.core.valuetype.DAOStrategy;
-import org.trade.core.valuetype.DAOStrategyManager;
+import org.trade.core.valuetype.Portfolio;
+import org.trade.core.valuetype.Strategy;
+import org.trade.core.valuetype.StrategyManager;
 import org.trade.core.valuetype.Date;
 import org.trade.core.valuetype.Decode;
 import org.trade.core.valuetype.ValueTypeException;
@@ -172,12 +170,12 @@ public class TradingdayPanel extends BasePanel {
             JPanel jPanel4 = new JPanel(new BorderLayout());
 
             JLabel fromStrategy = new JLabel("From Strategy:");
-            strategyFromEditorComboBox = new DAODecodeComboBoxEditor((new DAOStrategy()).getCodesDecodes());
+            strategyFromEditorComboBox = new DAODecodeComboBoxEditor((new Strategy()).getCodesDecodes());
             strategyFromEditorComboBox.setRenderer(new DecodeComboBoxRenderer());
             strategyFromEditorComboBox.setEditable(true);
 
             JLabel toStrategy = new JLabel("To Strategy:");
-            strategyToEditorComboBox = new DAODecodeComboBoxEditor((new DAOStrategy()).getCodesDecodes());
+            strategyToEditorComboBox = new DAODecodeComboBoxEditor((new Strategy()).getCodesDecodes());
             strategyToEditorComboBox.setRenderer(new DecodeComboBoxRenderer());
             strategyToEditorComboBox.setEditable(true);
 
@@ -256,8 +254,8 @@ public class TradingdayPanel extends BasePanel {
             jSplitPane1.setResizeWeight(0.2d);
             jSplitPane1.setOneTouchExpandable(true);
             this.add(jSplitPane1);
-            DAOPortfolio code = DAOPortfolio.newInstance();
-            Portfolio portfolio = tradeService.getPortfolioService().findByName(((Portfolio) Objects.requireNonNull(code).getObject()).getName());
+            Portfolio code = Portfolio.newInstance();
+            org.trade.core.persistent.portfolio.Portfolio portfolio = tradeService.getPortfolioService().findByName(((org.trade.core.persistent.portfolio.Portfolio) Objects.requireNonNull(code).getObject()).getName());
             this.setPortfolioLabel(portfolio);
             enableTradestrategyButtons(null);
         } catch (Exception ex) {
@@ -270,14 +268,14 @@ public class TradingdayPanel extends BasePanel {
         try {
 
             DecodeTableEditor portfolioEditor = new DecodeTableEditor(
-                    new JComboBox<>((new DAOPortfolio()).getCodesDecodes().toArray(new Decode[0])));
-            tradestrategyTable.setDefaultEditor(DAOPortfolio.class, portfolioEditor);
+                    new JComboBox<>((new Portfolio()).getCodesDecodes().toArray(new Decode[0])));
+            tradestrategyTable.setDefaultEditor(Portfolio.class, portfolioEditor);
             DecodeTableEditor strategyEditor = new DecodeTableEditor(
-                    new JComboBox<>((new DAOStrategy()).getCodesDecodes().toArray(new Decode[0])));
-            tradestrategyTable.setDefaultEditor(DAOStrategy.class, strategyEditor);
+                    new JComboBox<>((new Strategy()).getCodesDecodes().toArray(new Decode[0])));
+            tradestrategyTable.setDefaultEditor(Strategy.class, strategyEditor);
             DecodeTableEditor strategyManagerEditor = new DecodeTableEditor(
-                    new JComboBox<>((new DAOStrategyManager()).getCodesDecodes().toArray(new Decode[0])));
-            tradestrategyTable.setDefaultEditor(DAOStrategyManager.class, strategyManagerEditor);
+                    new JComboBox<>((new StrategyManager()).getCodesDecodes().toArray(new Decode[0])));
+            tradestrategyTable.setDefaultEditor(StrategyManager.class, strategyManagerEditor);
             resetStrategyComboBox(strategyFromEditorComboBox);
             resetStrategyComboBox(strategyToEditorComboBox);
         } catch (ValueTypeException ex) {
@@ -537,9 +535,9 @@ public class TradingdayPanel extends BasePanel {
             if (result == JOptionPane.YES_OPTION) {
 
                 this.setStatusBarMessage("Reassign in progress ...\n", BasePanel.INFORMATION);
-                Strategy fromStrategy = ((Strategy) ((DAOStrategy) Objects.requireNonNull(strategyFromEditorComboBox.getSelectedItem()))
+                org.trade.core.persistent.strategy.Strategy fromStrategy = ((org.trade.core.persistent.strategy.Strategy) ((Strategy) Objects.requireNonNull(strategyFromEditorComboBox.getSelectedItem()))
                         .getObject());
-                Strategy toStrategy = ((Strategy) ((DAOStrategy) Objects.requireNonNull(strategyToEditorComboBox.getSelectedItem()))
+                org.trade.core.persistent.strategy.Strategy toStrategy = ((org.trade.core.persistent.strategy.Strategy) ((Strategy) Objects.requireNonNull(strategyToEditorComboBox.getSelectedItem()))
                         .getObject());
                 final ReAssignProgressMonitor reAssignProgressMonitor = new ReAssignProgressMonitor(
                         tradeService, tradingdays, fromStrategy, toStrategy);
@@ -760,7 +758,7 @@ public class TradingdayPanel extends BasePanel {
      *
      * @param portfolio Portfolio
      */
-    public void setPortfolioLabel(final Portfolio portfolio) {
+    public void setPortfolioLabel(final org.trade.core.persistent.portfolio.Portfolio portfolio) {
         try {
             BigDecimal availableFunds = new BigDecimal(0);
             BigDecimal buyingPower = new BigDecimal(0);
@@ -1121,7 +1119,7 @@ public class TradingdayPanel extends BasePanel {
 
     private void resetStrategyComboBox(DAODecodeComboBoxEditor editorComboBox) throws ValueTypeException {
 
-        List<Decode> codesNew = ((new DAOStrategy()).getCodesDecodes());
+        List<Decode> codesNew = ((new Strategy()).getCodesDecodes());
         DefaultComboBoxModel<Decode> model = new DefaultComboBoxModel<>(codesNew.toArray(new Decode[0]));
         editorComboBox.setModel(model);
         editorComboBox.setRenderer(new DecodeComboBoxRenderer());
@@ -1335,8 +1333,8 @@ public class TradingdayPanel extends BasePanel {
         private final Tradingdays tradingdays;
         private int grandtotal = 0;
         private long startTime = 0;
-        private final Strategy fromStrategy;
-        private Strategy toStrategy;
+        private final org.trade.core.persistent.strategy.Strategy fromStrategy;
+        private org.trade.core.persistent.strategy.Strategy toStrategy;
 
         /**
          * Constructor for ReAssignProgressMonitor.
@@ -1347,7 +1345,7 @@ public class TradingdayPanel extends BasePanel {
          * @param toStrategy   Strategy
          */
         public ReAssignProgressMonitor(TradeService tradeService, Tradingdays tradingdays,
-                                       Strategy fromStrategy, Strategy toStrategy) {
+                                       org.trade.core.persistent.strategy.Strategy fromStrategy, org.trade.core.persistent.strategy.Strategy toStrategy) {
             this.tradingdays = tradingdays;
             this.tradeService = tradeService;
             this.fromStrategy = fromStrategy;

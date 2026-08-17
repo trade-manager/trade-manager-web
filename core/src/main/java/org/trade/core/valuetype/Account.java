@@ -6,7 +6,7 @@ import java.io.Serial;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-public class DAOAccount extends DAODecode {
+public class Account extends DAODecode {
 
     @Serial
     private static final long serialVersionUID = -5381026427696898592L;
@@ -15,7 +15,7 @@ public class DAOAccount extends DAODecode {
     public static final String _TABLE_ID = "_TABLE_ID";
     public static final String _COLUMN = "_COLUMN";
 
-    public DAOAccount() {
+    public Account() {
         super(DECODE, true);
     }
 
@@ -23,10 +23,10 @@ public class DAOAccount extends DAODecode {
      * Method newInstance.
      *
      * @param displayName String
-     * @return DAOAccount
+     * @return Account
      */
-    public static DAOAccount newInstance(String displayName) {
-        final DAOAccount returnInstance = new DAOAccount();
+    public static Account newInstance(String displayName) {
+        final Account returnInstance = new Account();
         returnInstance.setDisplayName(displayName);
         return returnInstance;
     }
@@ -34,10 +34,10 @@ public class DAOAccount extends DAODecode {
     /**
      * Method newInstance.
      *
-     * @return DAOAccount
+     * @return Account
      */
-    public static DAOAccount newInstance() {
-        final DAOAccount returnInstance = new DAOAccount();
+    public static Account newInstance() {
+        final Account returnInstance = new Account();
         returnInstance.setDefaultCode();
         return returnInstance;
     }

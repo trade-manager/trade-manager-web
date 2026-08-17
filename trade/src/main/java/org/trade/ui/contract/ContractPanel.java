@@ -27,8 +27,8 @@ import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.AllocationMethod;
 import org.trade.core.valuetype.BarSize;
 import org.trade.core.valuetype.ContentType;
-import org.trade.core.valuetype.DAOGroup;
-import org.trade.core.valuetype.DAOProfile;
+import org.trade.core.valuetype.Group;
+import org.trade.core.valuetype.Profile;
 import org.trade.core.valuetype.Decode;
 import org.trade.core.valuetype.Money;
 import org.trade.core.valuetype.Side;
@@ -1138,15 +1138,15 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
             percentLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 
             DecodeComboBoxEditor profileEditorComboBox = new DecodeComboBoxEditor(
-                    DAOProfile.newInstance().getCodesDecodes());
+                    Profile.newInstance().getCodesDecodes());
             DecodeComboBoxRenderer profileTableRenderer = new DecodeComboBoxRenderer();
             profileEditorComboBox.setRenderer(profileTableRenderer);
             if (null != tradeOrder.getFAProfile())
-                profileEditorComboBox.setItem(DAOProfile.newInstance(tradeOrder.getFAProfile()));
+                profileEditorComboBox.setItem(Profile.newInstance(tradeOrder.getFAProfile()));
             profileEditorComboBox.addItemListener(e -> {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
-                    if (!Decode.NONE.equals(((DAOProfile) e.getItem()).getDisplayName())) {
-                        tradeOrder.setFAProfile(((Portfolio) ((DAOProfile) e.getItem()).getObject()).getName());
+                    if (!Decode.NONE.equals(((Profile) e.getItem()).getDisplayName())) {
+                        tradeOrder.setFAProfile(((Portfolio) ((Profile) e.getItem()).getObject()).getName());
                     } else {
                         tradeOrder.setFAProfile(null);
                     }
@@ -1154,15 +1154,15 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
             });
 
             DecodeComboBoxEditor groupEditorComboBox = new DecodeComboBoxEditor(
-                    DAOGroup.newInstance().getCodesDecodes());
+                    Group.newInstance().getCodesDecodes());
             DecodeComboBoxRenderer groupTableRenderer = new DecodeComboBoxRenderer();
             groupEditorComboBox.setRenderer(groupTableRenderer);
             if (null != tradeOrder.getFAGroup())
-                groupEditorComboBox.setItem(DAOGroup.newInstance(tradeOrder.getFAGroup()));
+                groupEditorComboBox.setItem(Group.newInstance(tradeOrder.getFAGroup()));
             groupEditorComboBox.addItemListener(e -> {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
-                    if (!Decode.NONE.equals(((DAOGroup) e.getItem()).getDisplayName())) {
-                        tradeOrder.setFAGroup(((Portfolio) ((DAOGroup) e.getItem()).getObject()).getName());
+                    if (!Decode.NONE.equals(((Group) e.getItem()).getDisplayName())) {
+                        tradeOrder.setFAGroup(((Portfolio) ((Group) e.getItem()).getObject()).getName());
                     } else {
                         tradeOrder.setFAGroup(null);
                     }

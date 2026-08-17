@@ -6,8 +6,6 @@ import org.trade.core.aspect.Aspect;
 import org.trade.core.lookup.DBTableLookupServiceProvider;
 import org.trade.core.persistent.ServiceException;
 import org.trade.core.persistent.contract.Contract;
-import org.trade.core.persistent.portfolio.Portfolio;
-import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.persistent.tradeorder.TradeOrder;
 import org.trade.core.persistent.tradestrategy.Tradestrategy;
 import org.trade.core.properties.ConfigProperties;
@@ -15,8 +13,8 @@ import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.BarSize;
 import org.trade.core.valuetype.ChartDays;
 import org.trade.core.valuetype.Currency;
-import org.trade.core.valuetype.DAOPortfolio;
-import org.trade.core.valuetype.DAOStrategy;
+import org.trade.core.valuetype.Portfolio;
+import org.trade.core.valuetype.Strategy;
 import org.trade.core.valuetype.Tier;
 
 import java.io.BufferedReader;
@@ -435,13 +433,13 @@ public class Tradingdays extends Aspect implements java.io.Serializable {
             int riskAmount = ConfigProperties.getPropAsInt("trade.risk");
             String strategyName = ConfigProperties.getPropAsString("trade.strategy.default");
 
-            if (!DAOStrategy.newInstance(strategyName).isValid()) {
+            if (!Strategy.newInstance(strategyName).isValid()) {
 
-                strategyName = DAOStrategy.newInstance().getCode();
+                strategyName = Strategy.newInstance().getCode();
             }
 
-            Strategy strategy = (Strategy) DAOStrategy.newInstance(strategyName).getObject();
-            Portfolio portfolio = (Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
+            org.trade.core.persistent.strategy.Strategy strategy = (org.trade.core.persistent.strategy.Strategy) Strategy.newInstance(strategyName).getObject();
+            org.trade.core.persistent.portfolio.Portfolio portfolio = (org.trade.core.persistent.portfolio.Portfolio) Objects.requireNonNull(Portfolio.newInstance()).getObject();
             String strLine;
 
             // read comma separated file line by line

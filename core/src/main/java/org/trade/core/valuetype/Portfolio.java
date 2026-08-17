@@ -1,14 +1,12 @@
 package org.trade.core.valuetype;
 
-import org.trade.core.persistent.portfolio.Portfolio;
-
 import java.io.Serial;
 
 /**
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-public class DAOPortfolio extends DAODecode {
+public class Portfolio extends DAODecode {
 
     @Serial
     private static final long serialVersionUID = -5381026427696898592L;
@@ -17,7 +15,7 @@ public class DAOPortfolio extends DAODecode {
     public static final String _TABLE_ID = "_TABLE_ID";
     public static final String _COLUMN = "_COLUMN";
 
-    public DAOPortfolio() {
+    public Portfolio() {
         super(DECODE);
     }
 
@@ -25,10 +23,10 @@ public class DAOPortfolio extends DAODecode {
      * Method newInstance.
      *
      * @param displayName String
-     * @return DAOPortfolio
+     * @return Portfolio
      */
-    public static DAOPortfolio newInstance(String displayName) {
-        final DAOPortfolio returnInstance = new DAOPortfolio();
+    public static Portfolio newInstance(String displayName) {
+        final Portfolio returnInstance = new Portfolio();
         returnInstance.setDisplayName(displayName);
         return returnInstance;
     }
@@ -36,16 +34,16 @@ public class DAOPortfolio extends DAODecode {
     /**
      * Method newInstance.
      *
-     * @return DAOPortfolio
+     * @return Portfolio
      */
-    public static DAOPortfolio newInstance() {
+    public static Portfolio newInstance() {
 
         try {
-            final DAOPortfolio returnInstance = new DAOPortfolio();
-            DAOPortfolio code = null;
+            final Portfolio returnInstance = new Portfolio();
+            Portfolio code = null;
             for (Decode decode : returnInstance.getCodesDecodes()) {
-                code = (DAOPortfolio) decode;
-                Portfolio portfolio = (Portfolio) code.getObject();
+                code = (Portfolio) decode;
+                org.trade.core.persistent.portfolio.Portfolio portfolio = (org.trade.core.persistent.portfolio.Portfolio) code.getObject();
                 if (portfolio.getIsDefault())
                     return code;
             }

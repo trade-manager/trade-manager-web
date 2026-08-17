@@ -6,8 +6,8 @@ import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.AccountType;
 import org.trade.core.valuetype.AllocationMethod;
 import org.trade.core.valuetype.Currency;
-import org.trade.core.valuetype.DAOAccount;
-import org.trade.core.valuetype.DAOStrategyManager;
+import org.trade.core.valuetype.Account;
+import org.trade.core.valuetype.StrategyManager;
 import org.trade.core.valuetype.DataType;
 import org.trade.core.valuetype.Decode;
 import org.trade.core.valuetype.IndicatorSeries;
@@ -79,10 +79,10 @@ public class ConfigurationTable extends Table {
         DecodeTableEditor indicatorSeriesEditor = new DecodeTableEditor(indicatorComboBoxEditor);
 
         JComboBox<Decode> strategyManagerComboBox = new JComboBox<>(
-                (new DAOStrategyManager()).getCodesDecodes().toArray(new Decode[0]));
+                (new StrategyManager()).getCodesDecodes().toArray(new Decode[0]));
         DecodeTableEditor dAOStrategyManagerEditor = new DecodeTableEditor(strategyManagerComboBox);
         JComboBox<Decode> daoAccountComboBox = new JComboBox<>(
-                (new DAOAccount()).getCodesDecodes().toArray(new Decode[0]));
+                (new Account()).getCodesDecodes().toArray(new Decode[0]));
         DecodeTableEditor dAOAccountEditor = new DecodeTableEditor(daoAccountComboBox);
         JComboBox<Decode> allocationMethodComboBox = new JComboBox<>(
                 (new AllocationMethod()).getCodesDecodes().toArray(new Decode[0]));
@@ -94,7 +94,7 @@ public class ConfigurationTable extends Table {
         this.setDefaultEditor(org.trade.core.valuetype.Date.class, eDate);
         this.setDefaultEditor(DataType.class, dataTypeEditor);
         this.setDefaultEditor(IndicatorSeries.class, indicatorSeriesEditor);
-        this.setDefaultEditor(DAOStrategyManager.class, dAOStrategyManagerEditor);
-        this.setDefaultEditor(DAOAccount.class, dAOAccountEditor);
+        this.setDefaultEditor(StrategyManager.class, dAOStrategyManagerEditor);
+        this.setDefaultEditor(Account.class, dAOAccountEditor);
     }
 }

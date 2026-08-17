@@ -10,7 +10,7 @@ import java.util.List;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-public class DAOGroup extends DAODecode {
+public class Group extends DAODecode {
 
     @Serial
     private static final long serialVersionUID = -5381026427696898592L;
@@ -19,7 +19,7 @@ public class DAOGroup extends DAODecode {
     public static final String _TABLE_ID = "_TABLE_ID";
     public static final String _COLUMN = "_COLUMN";
 
-    public DAOGroup() {
+    public Group() {
         super(DECODE, true);
     }
 
@@ -55,7 +55,7 @@ public class DAOGroup extends DAODecode {
                 }
             } else {
 
-                if (Decode.NONE.equals(decode.getDisplayName())) {
+                if (ValueType.NONE.equals(decode.getDisplayName())) {
 
                     decodes.add(decode);
                 }
@@ -68,11 +68,11 @@ public class DAOGroup extends DAODecode {
      * Method newInstance.
      *
      * @param displayName String
-     * @return DAOTradeAccount
+     * @return Group
      */
-    public static DAOGroup newInstance(String displayName) {
+    public static Group newInstance(String displayName) {
 
-        final DAOGroup returnInstance = new DAOGroup();
+        final Group returnInstance = new Group();
         returnInstance.setDisplayName(displayName);
         return returnInstance;
     }
@@ -80,10 +80,10 @@ public class DAOGroup extends DAODecode {
     /**
      * Method newInstance.
      *
-     * @return DAOGroup
+     * @return Group
      */
-    public static DAOGroup newInstance() {
-        final DAOGroup returnInstance = new DAOGroup();
+    public static Group newInstance() {
+        final Group returnInstance = new Group();
         returnInstance.setDefaultCode();
         return returnInstance;
     }

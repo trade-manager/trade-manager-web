@@ -8,9 +8,7 @@ import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.account.Account;
 import org.trade.core.persistent.contract.Contract;
 import org.trade.core.persistent.contract.ContractLite;
-import org.trade.core.persistent.portfolio.Portfolio;
 import org.trade.core.persistent.rule.Rule;
-import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.persistent.strategy.series.indicator.StrategyData;
 import org.trade.core.persistent.tradeorder.TradeOrder;
 import org.trade.core.persistent.tradeposition.TradePosition;
@@ -21,8 +19,8 @@ import org.trade.core.valuetype.AccountType;
 import org.trade.core.valuetype.BarSize;
 import org.trade.core.valuetype.ChartDays;
 import org.trade.core.valuetype.Currency;
-import org.trade.core.valuetype.DAOPortfolio;
-import org.trade.core.valuetype.DAOStrategy;
+import org.trade.core.valuetype.Portfolio;
+import org.trade.core.valuetype.Strategy;
 import org.trade.core.valuetype.Exchange;
 import org.trade.core.valuetype.SECType;
 import org.trade.core.valuetype.Side;
@@ -74,15 +72,15 @@ public class TradestrategyBase {
      *
      * @return Tradestrategy
      */
-    public Tradestrategy createTestTradestrategy(Strategy strategy, String symbol, String side, Integer chartDays, Integer barSize) throws Exception {
+    public Tradestrategy createTestTradestrategy(org.trade.core.persistent.strategy.Strategy strategy, String symbol, String side, Integer chartDays, Integer barSize) throws Exception {
 
         Tradestrategy tradestrategy;
 
         if (null == strategy) {
-            strategy = (Strategy) DAOStrategy.newInstance().getObject();
+            strategy = (org.trade.core.persistent.strategy.Strategy) Strategy.newInstance().getObject();
         }
 
-        Portfolio portfolio = (Portfolio) DAOPortfolio.newInstance().getObject();
+        org.trade.core.persistent.portfolio.Portfolio portfolio = (org.trade.core.persistent.portfolio.Portfolio) Portfolio.newInstance().getObject();
         portfolio = tradeService.getPortfolioService().findByName(portfolio.getName());
 
         if (portfolio.getAccounts().isEmpty()) {

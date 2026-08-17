@@ -12,9 +12,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
-import org.trade.core.persistent.portfolio.Portfolio;
 import org.trade.core.util.time.TradingCalendar;
-import org.trade.core.valuetype.DAOPortfolio;
+import org.trade.core.valuetype.Portfolio;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -67,7 +66,7 @@ public class TradelogDetailServiceIT extends TradestrategyBase {
     @Test
     public void tradelogDetails() throws IOException {
 
-        Portfolio portfolio = (Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
+        org.trade.core.persistent.portfolio.Portfolio portfolio = (org.trade.core.persistent.portfolio.Portfolio) Objects.requireNonNull(Portfolio.newInstance()).getObject();
         List<TradelogDetail> tradelogDetail = tradeService.getTradelogDetailService().findByTradelogDetail(portfolio, TradingCalendar.getYearStart(),
                 TradingCalendar.getTradingDayEnd(TradingCalendar.getDateTimeNowMarketTimeZone()), false, null, new BigDecimal(0));
         assertTrue(tradelogDetail.isEmpty());

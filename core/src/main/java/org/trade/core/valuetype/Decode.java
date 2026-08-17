@@ -1,5 +1,7 @@
 package org.trade.core.valuetype;
 
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
 import org.trade.core.aspect.Aspect;
 import org.trade.core.conversion.JavaTypeTranslator;
 import org.trade.core.lookup.ILookup;
@@ -25,7 +27,8 @@ import java.util.List;
  * @author Simon Allen
  * @version $Id: Decode.java,v 1.1 2001/11/06 16:51:54 simon Exp $
  */
-
+@Entity
+@DiscriminatorValue("Decode")
 public class Decode extends ValueType implements Comparator<Decode>, Comparable<Decode> {
     /**
      *
@@ -37,7 +40,6 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
      * The ILookup Identifier for CODE_DECODE values
      */
     public static final String CODE_DECODE_IDENTIFIER = "CODE_DECODE";
-    public static final String NONE = " ";
 
     static {
         // Register the appropriate converters
@@ -64,6 +66,19 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
      */
     public Decode() {
 
+    }
+
+    /**
+     * Constructor for CodeType.
+     *
+     * @param type          String
+     * @param category      String
+     * @param name          String
+     * @param description   String
+     */
+    public Decode(String type, String category, String name, String description) {
+
+        super(type, category, name, description);
     }
 
     /**

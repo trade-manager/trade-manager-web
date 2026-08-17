@@ -1,5 +1,7 @@
 package org.trade.core.valuetype;
 
+import org.trade.core.persistent.codetype.CodeType;
+
 import java.io.Serial;
 import java.io.Serializable;
 
@@ -7,12 +9,33 @@ import java.io.Serializable;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-public abstract class ValueType implements Cloneable, Serializable {
+public abstract class ValueType extends CodeType implements Cloneable, Serializable {
     /**
      *
      */
     @Serial
     private static final long serialVersionUID = -8054819773979644420L;
+
+    public static final String NONE = " ";
+
+    /**
+     * Default Constructor
+     */
+    public ValueType() {
+
+    }
+    /**
+     * Constructor for CodeType.
+     *
+     * @param type          String
+     * @param category      String
+     * @param name          String
+     * @param description   String
+     */
+    public ValueType(String type, String category, String name, String description) {
+
+        super(type, category, name, description);
+    }
 
     // All well-behaved ValueTypes must implement this
 

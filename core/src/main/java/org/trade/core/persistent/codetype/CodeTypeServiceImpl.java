@@ -10,8 +10,6 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
-import org.trade.core.persistent.tradestrategy.Tradestrategy;
-import org.trade.core.persistent.tradingday.Tradingday;
 
 import java.util.ArrayList;
 import java.util.List;

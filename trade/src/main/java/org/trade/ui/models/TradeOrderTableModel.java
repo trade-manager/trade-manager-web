@@ -8,7 +8,7 @@ import org.trade.core.persistent.tradestrategy.Tradestrategy;
 import org.trade.core.util.CoreUtils;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.Action;
-import org.trade.core.valuetype.DAOEntryLimit;
+import org.trade.core.valuetype.EntryLimit;
 import org.trade.core.valuetype.Date;
 import org.trade.core.valuetype.Decimal;
 import org.trade.core.valuetype.Money;
@@ -354,7 +354,7 @@ public class TradeOrderTableModel extends TableModel {
 
         Money price = new Money(tradestrategy.getStrategyData().getBaseCandleSeries().getContract().getLastPrice());
 
-        final Entrylimit entrylimit = DAOEntryLimit.newInstance().getValue(price);
+        final Entrylimit entrylimit = EntryLimit.newInstance().getValue(price);
 
         Money limitPrice = Action.BUY.equals(action) ? price.add(new Money(entrylimit.getLimitAmount().doubleValue()))
                 : price.subtract(new Money(entrylimit.getLimitAmount().doubleValue()));

@@ -8,13 +8,12 @@ import org.trade.base.ExampleFileFilter;
 import org.trade.base.FilePreviewer;
 import org.trade.base.Table;
 import org.trade.core.persistent.TradeService;
-import org.trade.core.persistent.portfolio.Portfolio;
 import org.trade.core.persistent.tradelogdetail.TradelogDetail;
 import org.trade.core.persistent.tradelogdetail.TradelogReport;
 import org.trade.core.persistent.tradelogsummary.TradelogSummary;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.time.TradingCalendar;
-import org.trade.core.valuetype.DAOPortfolio;
+import org.trade.core.valuetype.Portfolio;
 import org.trade.core.valuetype.Date;
 import org.trade.core.valuetype.Decode;
 import org.trade.core.valuetype.Money;
@@ -71,7 +70,7 @@ public class PortfolioPanel extends BasePanel implements ChangeListener, ItemLis
     private DAODecodeComboBoxEditor portfolioEditorComboBox = null;
     private static final String DATEFORMAT = "MM/dd/yyyy";
     private TradelogDetail selectedTradelogDetail = null;
-    private Portfolio portfolio = null;
+    private org.trade.core.persistent.portfolio.Portfolio portfolio = null;
     private final MoneyField lossGainAmt = new MoneyField();
 
     private static final String MASK = "**********";
@@ -98,11 +97,11 @@ public class PortfolioPanel extends BasePanel implements ChangeListener, ItemLis
             csvDefaultDir = ConfigProperties.getPropAsString("trade.csv.default.dir");
             transferButton = new BaseButton(controller, BaseUIPropertyCodes.TRANSFER);
             JLabel portfolioLabel = new JLabel("Portfolio:");
-            portfolioEditorComboBox = new DAODecodeComboBoxEditor(Objects.requireNonNull(DAOPortfolio.newInstance()).getCodesDecodes());
+            portfolioEditorComboBox = new DAODecodeComboBoxEditor(Objects.requireNonNull(Portfolio.newInstance()).getCodesDecodes());
             DecodeComboBoxRenderer portfolioRenderer = new DecodeComboBoxRenderer();
             portfolioEditorComboBox.setRenderer(portfolioRenderer);
-            this.portfolio = (Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
-            portfolioEditorComboBox.setItem(DAOPortfolio.newInstance());
+            this.portfolio = (org.trade.core.persistent.portfolio.Portfolio) Objects.requireNonNull(Portfolio.newInstance()).getObject();
+            portfolioEditorComboBox.setItem(Portfolio.newInstance());
             portfolioEditorComboBox.addItemListener(this);
 
             tradelogSummaryModel = new TradelogSummaryTableModel();
@@ -238,7 +237,7 @@ public class PortfolioPanel extends BasePanel implements ChangeListener, ItemLis
     public void itemStateChanged(ItemEvent e) {
 
         if (e.getStateChange() == ItemEvent.SELECTED) {
-            this.portfolio = (Portfolio) ((DAOPortfolio) e.getItem()).getObject();
+            this.portfolio = (org.trade.core.persistent.portfolio.Portfolio) ((Portfolio) e.getItem()).getObject();
         }
     }
 
@@ -311,10 +310,10 @@ public class PortfolioPanel extends BasePanel implements ChangeListener, ItemLis
 
     private void resetPortfolioComboBox(final DAODecodeComboBoxEditor editorComboBox) throws ValueTypeException {
 
-        List<Decode> codesNew = ((new DAOPortfolio()).getCodesDecodes());
+        List<Decode> codesNew = ((new Portfolio()).getCodesDecodes());
         DefaultComboBoxModel<Decode> model = new DefaultComboBoxModel<>(codesNew.toArray(new Decode[0]));
         editorComboBox.setModel(model);
-        editorComboBox.setItem(DAOPortfolio.newInstance());
+        editorComboBox.setItem(Portfolio.newInstance());
         editorComboBox.setRenderer(new DecodeComboBoxRenderer());
     }
 

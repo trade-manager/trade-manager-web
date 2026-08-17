@@ -18,7 +18,6 @@ import org.trade.core.broker.IBrokerModel;
 import org.trade.core.factory.ClassFactory;
 import org.trade.core.persistent.ServiceException;
 import org.trade.core.persistent.rule.Rule;
-import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.persistent.strategy.strategyrule.IStrategyRule;
 import org.trade.core.persistent.strategy.strategyrule.StrategyRuleJS;
 import org.trade.core.persistent.tradestrategy.Tradestrategy;
@@ -27,7 +26,7 @@ import org.trade.core.util.DynamicCode;
 import org.trade.core.valuetype.BarSize;
 import org.trade.core.valuetype.ChartDays;
 import org.trade.core.valuetype.ContentType;
-import org.trade.core.valuetype.DAOStrategy;
+import org.trade.core.valuetype.Strategy;
 import org.trade.core.valuetype.Side;
 
 import javax.swing.*;
@@ -82,7 +81,7 @@ public class StrategyPanelJSIT extends TradestrategyBase {
         assertNotNull(templateName);
         strategyDir = ConfigProperties.getPropAsString("trade.strategy.default.dir");
         assertNotNull(strategyDir);
-        Strategy strategy = (Strategy) DAOStrategy.newInstance().getObject();
+        org.trade.core.persistent.strategy.Strategy strategy = (org.trade.core.persistent.strategy.Strategy) Strategy.newInstance().getObject();
         tradestrategy = this.createTestTradestrategy(strategy, symbol, Side.BOT, ChartDays.ONE_DAY, BarSize.HOUR_MIN);
         assertNotNull(tradestrategy);
         strategy = tradeService.getStrategyService().findById(tradestrategy.getStrategy().getId());
@@ -107,10 +106,10 @@ public class StrategyPanelJSIT extends TradestrategyBase {
 
         File dir = new File(tmpDir);
         StrategyPanel.deleteDir(dir);
-        List<Strategy> strategies = this.tradeService.getStrategyService().findAll();
+        List<org.trade.core.persistent.strategy.Strategy> strategies = this.tradeService.getStrategyService().findAll();
         assertNotNull(strategies);
 
-        for (Strategy strategy : strategies) {
+        for (org.trade.core.persistent.strategy.Strategy strategy : strategies) {
 
             if (!strategy.getRules().isEmpty()) {
 
@@ -207,7 +206,7 @@ public class StrategyPanelJSIT extends TradestrategyBase {
         List<Object> param = new ArrayList<>();
         param.add(tradeService);
         IBrokerModel brokerManagerModel = null;
-        Strategy strategy = null;
+        org.trade.core.persistent.strategy.Strategy strategy = null;
 
         try {
 
@@ -279,11 +278,11 @@ public class StrategyPanelJSIT extends TradestrategyBase {
     public void doSave() throws Exception {
 
         StrategyPanel strategyPanel = new StrategyPanel(this.tradeService);
-        List<Strategy> strategies = this.tradeService.getStrategyService().findAll();
+        List<org.trade.core.persistent.strategy.Strategy> strategies = this.tradeService.getStrategyService().findAll();
         assertNotNull(strategies);
         assertFalse(strategies.isEmpty());
 
-        Strategy strategy = strategies.getFirst();
+        org.trade.core.persistent.strategy.Strategy strategy = strategies.getFirst();
         assertNotNull(strategy);
         Rule myrule = null;
 

@@ -15,7 +15,7 @@ import org.trade.core.TradestrategyBase;
 import org.trade.core.persistent.account.Account;
 import org.trade.core.valuetype.AccountType;
 import org.trade.core.valuetype.Currency;
-import org.trade.core.valuetype.DAOPortfolio;
+import org.trade.core.valuetype.Portfolio;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,7 +69,7 @@ public class PortfolioServiceIT extends TradestrategyBase {
     @Test
     public void createAccount() {
 
-        Portfolio portfolio = (Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
+        org.trade.core.persistent.portfolio.Portfolio portfolio = (org.trade.core.persistent.portfolio.Portfolio) Objects.requireNonNull(Portfolio.newInstance()).getObject();
         portfolio = tradeService.getPortfolioService().findByName(portfolio.getName());
         assertNotNull(portfolio);
         List<Account> accounts = new ArrayList<>(0);

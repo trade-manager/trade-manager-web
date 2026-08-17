@@ -1,7 +1,5 @@
 package org.trade.core.valuetype;
 
-import org.trade.core.persistent.strategy.Strategy;
-
 import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +8,7 @@ import java.util.List;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-public class DAOStrategy extends DAODecode {
+public class Strategy extends DAODecode {
 
     @Serial
     private static final long serialVersionUID = -5381026427696898592L;
@@ -19,7 +17,7 @@ public class DAOStrategy extends DAODecode {
     public static final String _TABLE_ID = "_TABLE_ID";
     public static final String _COLUMN = "_COLUMN";
 
-    public DAOStrategy() {
+    public Strategy() {
         super(DECODE);
     }
 
@@ -36,13 +34,13 @@ public class DAOStrategy extends DAODecode {
         final List<Decode> decodesAll = super.getCodesDecodes();
         for (final Decode decode : decodesAll) {
 
-            final Strategy strategy = (Strategy) decode.getObject();
+            final org.trade.core.persistent.strategy.Strategy strategy = (org.trade.core.persistent.strategy.Strategy) decode.getObject();
             boolean isMgr = false;
             if (!strategy.hasStrategyManager()) {
 
                 for (final Decode mgrdecode : decodesAll) {
 
-                    final Strategy strategyMgr = (Strategy) mgrdecode.getObject();
+                    final org.trade.core.persistent.strategy.Strategy strategyMgr = (org.trade.core.persistent.strategy.Strategy) mgrdecode.getObject();
                     if (strategyMgr.hasStrategyManager()) {
 
                         if (strategyMgr.getStrategyManager().equals(strategy)) {
@@ -64,11 +62,11 @@ public class DAOStrategy extends DAODecode {
      * Method newInstance.
      *
      * @param displayName String
-     * @return DAOStrategy
+     * @return Strategy
      */
-    public static DAOStrategy newInstance(String displayName) {
+    public static Strategy newInstance(String displayName) {
 
-        final DAOStrategy returnInstance = new DAOStrategy();
+        final Strategy returnInstance = new Strategy();
         returnInstance.setDisplayName(displayName);
         return returnInstance;
     }
@@ -76,11 +74,11 @@ public class DAOStrategy extends DAODecode {
     /**
      * Method newInstance.
      *
-     * @return DAOStrategy
+     * @return Strategy
      */
-    public static DAOStrategy newInstance() {
+    public static Strategy newInstance() {
 
-        final DAOStrategy returnInstance = new DAOStrategy();
+        final Strategy returnInstance = new Strategy();
         returnInstance.setDefaultCode();
         return returnInstance;
     }

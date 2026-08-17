@@ -17,7 +17,7 @@ import org.trade.core.persistent.codetype.CodeValue;
 import org.trade.core.persistent.portfolio.Portfolio;
 import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.persistent.strategy.series.indicator.IndicatorSeries;
-import org.trade.core.valuetype.DAOEntryLimit;
+import org.trade.core.valuetype.EntryLimit;
 import org.trade.core.valuetype.ReferenceTable;
 import org.trade.ui.models.AccountTableModel;
 import org.trade.ui.models.AspectTableModel;
@@ -82,7 +82,7 @@ public class ConfigurationPanel extends BasePanel {
              * Initialize the ValueType decode tables. This caused the tables to
              * be cached.
              */
-            DAOEntryLimit.newInstance();
+            EntryLimit.newInstance();
             jScrollPane = new JScrollPane();
             propertiesButton = new BaseButton(this, BaseUIPropertyCodes.PROPERTIES, 0);
             propertiesButton.setEnabled(false);

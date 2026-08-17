@@ -1,6 +1,6 @@
 package org.trade.core.valuetype;
 
-import org.trade.core.persistent.portfolio.Portfolio;
+import org.trade.core.persistent.strategy.Strategy;
 
 import java.io.Serial;
 import java.util.ArrayList;
@@ -10,16 +10,16 @@ import java.util.List;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-public class DAOProfile extends DAODecode {
+public class StrategyManager extends DAODecode {
 
     @Serial
     private static final long serialVersionUID = -5381026427696898592L;
-    public static final String DECODE = "PROFILE_DATA";
+    public static final String DECODE = "STRATEGY_MANAGER";
     public static final String _TABLE = "_TABLE";
     public static final String _TABLE_ID = "_TABLE_ID";
     public static final String _COLUMN = "_COLUMN";
 
-    public DAOProfile() {
+    public StrategyManager() {
         super(DECODE, true);
     }
 
@@ -28,7 +28,7 @@ public class DAOProfile extends DAODecode {
      *
      * @return List<Decode>
      */
-
+    @Override
     public List<Decode> getCodesDecodes() throws ValueTypeException {
 
         final List<Decode> decodes = new ArrayList<>();
@@ -36,28 +36,11 @@ public class DAOProfile extends DAODecode {
 
         for (final Decode decode : decodesAll) {
 
-            final Portfolio portfolio = (Portfolio) decode.getObject();
+            final Strategy strategy = (Strategy) decode.getObject();
 
-            if (null != portfolio.getAllocationMethod()) {
+            if (!strategy.hasStrategyManager()) {
 
-                Integer value = null;
-
-                try {
-
-                    value = Integer.parseInt(portfolio.getAllocationMethod());
-                } catch (NumberFormatException ex) {
-                    // Do nothing
-                }
-
-                if (null != value) {
-                    decodes.add(decode);
-                }
-            } else {
-
-                if (Decode.NONE.equals(decode.getDisplayName())) {
-
-                    decodes.add(decode);
-                }
+                decodes.add(decode);
             }
         }
         return decodes;
@@ -67,10 +50,10 @@ public class DAOProfile extends DAODecode {
      * Method newInstance.
      *
      * @param displayName String
-     * @return DAOTradeAccount
+     * @return StrategyManager
      */
-    public static DAOProfile newInstance(String displayName) {
-        final DAOProfile returnInstance = new DAOProfile();
+    public static StrategyManager newInstance(String displayName) {
+        final StrategyManager returnInstance = new StrategyManager();
         returnInstance.setDisplayName(displayName);
         return returnInstance;
     }
@@ -78,10 +61,10 @@ public class DAOProfile extends DAODecode {
     /**
      * Method newInstance.
      *
-     * @return DAOProfile
+     * @return StrategyManager
      */
-    public static DAOProfile newInstance() {
-        final DAOProfile returnInstance = new DAOProfile();
+    public static StrategyManager newInstance() {
+        final StrategyManager returnInstance = new StrategyManager();
         returnInstance.setDefaultCode();
         return returnInstance;
     }

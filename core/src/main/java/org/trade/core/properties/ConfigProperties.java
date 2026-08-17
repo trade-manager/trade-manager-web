@@ -10,6 +10,7 @@ import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.codetype.CodeAttribute;
 import org.trade.core.persistent.codetype.CodeType;
 import org.trade.core.persistent.codetype.CodeValue;
+import org.trade.core.valuetype.Decode;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -429,7 +430,7 @@ public class ConfigProperties {
 
                     if (null == codeType) {
 
-                        codeType = new CodeType(CodeType.Decode, category, type, String.format("%s::%s", type, category));
+                        codeType = new Decode(CodeType.Decode, category, type, String.format("%s::%s", type, category));
                     } else {
 
                         for (CodeAttribute codeAttribute : codeType.getCodeAttributes()) {

@@ -12,12 +12,11 @@ import org.springframework.test.context.ContextConfiguration;
 import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
-import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.persistent.strategy.series.indicator.CandleSeries;
 import org.trade.core.persistent.tradestrategy.Tradestrategy;
 import org.trade.core.valuetype.BarSize;
 import org.trade.core.valuetype.ChartDays;
-import org.trade.core.valuetype.DAOStrategy;
+import org.trade.core.valuetype.Strategy;
 import org.trade.core.valuetype.Side;
 
 import java.io.Serial;
@@ -51,7 +50,7 @@ public class WorkerIT extends TradestrategyBase {
     @BeforeEach
     public void setUp() throws Exception {
 
-        Strategy strategy = (Strategy) DAOStrategy.newInstance().getObject();
+        org.trade.core.persistent.strategy.Strategy strategy = (org.trade.core.persistent.strategy.Strategy) Strategy.newInstance().getObject();
         tradestrategy = this.createTestTradestrategy(strategy, symbol, Side.BOT, ChartDays.ONE_DAY, BarSize.HOUR_MIN);
         assertNotNull(tradestrategy);
         _log.info(" Test Initialized");

@@ -18,7 +18,6 @@ import org.trade.core.TradestrategyBase;
 import org.trade.core.broker.IBrokerModel;
 import org.trade.core.factory.ClassFactory;
 import org.trade.core.persistent.rule.Rule;
-import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.persistent.strategy.series.indicator.StrategyData;
 import org.trade.core.persistent.tradeorder.TradeOrder;
 import org.trade.core.persistent.tradeorderfill.TradeOrderfill;
@@ -29,7 +28,7 @@ import org.trade.core.valuetype.Action;
 import org.trade.core.valuetype.BarSize;
 import org.trade.core.valuetype.ChartDays;
 import org.trade.core.valuetype.ContentType;
-import org.trade.core.valuetype.DAOStrategy;
+import org.trade.core.valuetype.Strategy;
 import org.trade.core.valuetype.Exchange;
 import org.trade.core.valuetype.OrderStatus;
 import org.trade.core.valuetype.Side;
@@ -110,7 +109,7 @@ public class AbstractStrategyJSIT extends TradestrategyBase {
     @Order(100)
     public void fiveMinGapBarStrategyJS() throws Exception {
 
-        Strategy strategy = (Strategy) DAOStrategy.newInstance().getObject();
+        org.trade.core.persistent.strategy.Strategy strategy = (org.trade.core.persistent.strategy.Strategy) Strategy.newInstance().getObject();
         tradestrategy = this.createTestTradestrategy(strategy, symbol, Side.BOT, ChartDays.ONE_DAY, BarSize.FIVE_MIN);
         assertNotNull(tradestrategy);
         strategy = tradeService.getStrategyService().findById(tradestrategy.getStrategy().getId());
@@ -154,7 +153,7 @@ public class AbstractStrategyJSIT extends TradestrategyBase {
 
         deleteAfter = true;
         tradestrategy = tradeService.getTradestrategyService().findById(tradestrategy.getId());
-        Strategy strategy = (Strategy) DAOStrategy.newInstance().getObject();
+        org.trade.core.persistent.strategy.Strategy strategy = (org.trade.core.persistent.strategy.Strategy) Strategy.newInstance().getObject();
         assertTrue(strategy.hasStrategyManager());
         strategy = strategy.getStrategyManager();
 

@@ -4,7 +4,7 @@ import org.trade.core.aspect.Aspect;
 import org.trade.core.aspect.Aspects;
 import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.util.CoreUtils;
-import org.trade.core.valuetype.DAOStrategyManager;
+import org.trade.core.valuetype.StrategyManager;
 import org.trade.core.valuetype.Decode;
 import org.trade.core.valuetype.YesNo;
 
@@ -106,9 +106,9 @@ public class StrategyTableModel extends AspectTableModel {
                 break;
             }
             case 3: {
-                if (value instanceof DAOStrategyManager) {
-                    if (!Decode.NONE.equals(((DAOStrategyManager) value).getDisplayName())) {
-                        element.setStrategyManager((Strategy) ((DAOStrategyManager) value).getObject());
+                if (value instanceof StrategyManager) {
+                    if (!Decode.NONE.equals(((StrategyManager) value).getDisplayName())) {
+                        element.setStrategyManager((Strategy) ((StrategyManager) value).getObject());
                     } else {
                         element.setStrategyManager(null);
                     }
@@ -172,9 +172,9 @@ public class StrategyTableModel extends AspectTableModel {
         newRow.add(element.getDescription());
         newRow.add(element.getClassName());
         if (element.hasStrategyManager()) {
-            newRow.add(DAOStrategyManager.newInstance(element.getStrategyManager().getName()));
+            newRow.add(StrategyManager.newInstance(element.getStrategyManager().getName()));
         } else {
-            newRow.add(DAOStrategyManager.newInstance(Decode.NONE));
+            newRow.add(StrategyManager.newInstance(Decode.NONE));
         }
         if (null == element.getMarketData()) {
             newRow.add(new YesNo());

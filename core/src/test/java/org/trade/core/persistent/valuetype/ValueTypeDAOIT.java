@@ -14,9 +14,9 @@ import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.persistent.codetype.Entrylimit;
 import org.trade.core.valuetype.ChartDays;
 import org.trade.core.valuetype.DAODecode;
-import org.trade.core.valuetype.DAOEntryLimit;
-import org.trade.core.valuetype.DAOStrategy;
-import org.trade.core.valuetype.DAOStrategyManager;
+import org.trade.core.valuetype.EntryLimit;
+import org.trade.core.valuetype.Strategy;
+import org.trade.core.valuetype.StrategyManager;
 import org.trade.core.valuetype.Decode;
 import org.trade.core.valuetype.Money;
 
@@ -70,7 +70,7 @@ public class ValueTypeDAOIT {
     @Test
     public void dOAStrategies() throws Exception {
 
-        DAOStrategy strategies = new DAOStrategy();
+        Strategy strategies = new Strategy();
         List<Decode> decodes = strategies.getCodesDecodes();
         ListIterator<Decode> eDecodes = decodes.listIterator();
         assertFalse(decodes.isEmpty());
@@ -84,7 +84,7 @@ public class ValueTypeDAOIT {
 
         }
 
-        DAOStrategyManager strategyManagers = new DAOStrategyManager();
+        StrategyManager strategyManagers = new StrategyManager();
         decodes = strategyManagers.getCodesDecodes();
         assertFalse(decodes.isEmpty());
         eDecodes = decodes.listIterator();
@@ -102,7 +102,7 @@ public class ValueTypeDAOIT {
     @Test
     public void dOAEntryLimit() throws Exception {
 
-        DAOEntryLimit entryLimits = new DAOEntryLimit();
+        EntryLimit entryLimits = new EntryLimit();
         List<Decode> decodes = entryLimits.getCodesDecodes();
         assertFalse(decodes.isEmpty());
         ListIterator<Decode> eDecodes = decodes.listIterator();

@@ -18,7 +18,6 @@ import org.trade.core.factory.ClassFactory;
 import org.trade.core.persistent.ServiceException;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.codetype.Entrylimit;
-import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.persistent.strategy.series.indicator.CandleSeries;
 import org.trade.core.persistent.strategy.series.indicator.StrategyData;
 import org.trade.core.persistent.strategy.series.indicator.candle.CandleItem;
@@ -32,8 +31,8 @@ import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.Action;
 import org.trade.core.valuetype.BarSize;
 import org.trade.core.valuetype.ChartDays;
-import org.trade.core.valuetype.DAOEntryLimit;
-import org.trade.core.valuetype.DAOStrategy;
+import org.trade.core.valuetype.EntryLimit;
+import org.trade.core.valuetype.Strategy;
 import org.trade.core.valuetype.Money;
 import org.trade.core.valuetype.OrderStatus;
 import org.trade.core.valuetype.OrderType;
@@ -96,7 +95,7 @@ public class AbstractStrategyIT extends TradestrategyBase {
         Integer port = Integer.valueOf(ConfigProperties.getPropAsString("trade.tws.port"));
         String host = ConfigProperties.getPropAsString("trade.tws.host");
         brokerModel.onConnect(host, port, clientId);
-        Strategy strategy = (Strategy) DAOStrategy.newInstance().getObject();
+        org.trade.core.persistent.strategy.Strategy strategy = (org.trade.core.persistent.strategy.Strategy) Strategy.newInstance().getObject();
         tradestrategy = this.createTestTradestrategy(strategy, symbol, Side.BOT, ChartDays.ONE_DAY, BarSize.HOUR_MIN);
         assertNotNull(tradestrategy);
 
@@ -357,7 +356,7 @@ public class AbstractStrategyIT extends TradestrategyBase {
          * $50,000/$20.01 = 2498 rounded to nearest 100 i.e Quantity = 2500.
          */
         Money price = new Money(20.00);
-        DAOEntryLimit entryLimits = new DAOEntryLimit();
+        EntryLimit entryLimits = new EntryLimit();
         Entrylimit entryLimit = entryLimits.getValue(price);
         entryLimit.setPercentOfMargin(new BigDecimal("0.5"));
         entryLimit = tradeService.getAspectService().save(entryLimit);
@@ -382,7 +381,7 @@ public class AbstractStrategyIT extends TradestrategyBase {
          * $50,000/$20.01 = 2498 rounded to nearest 100 i.e. Quantity = 2500.
          */
         Money price = new Money(45.75);
-        DAOEntryLimit entryLimits = new DAOEntryLimit();
+        EntryLimit entryLimits = new EntryLimit();
         Entrylimit entryLimit = entryLimits.getValue(price);
         entryLimit.setPercentOfMargin(new BigDecimal("0.5"));
         entryLimit = tradeService.getAspectService().save(entryLimit);
@@ -563,7 +562,7 @@ public class AbstractStrategyIT extends TradestrategyBase {
     @Test
     public void getEntryLimit() {
 
-        DAOEntryLimit result = strategyProxy.getEntryLimit();
+        EntryLimit result = strategyProxy.getEntryLimit();
         assertNotNull(result);
     }
 

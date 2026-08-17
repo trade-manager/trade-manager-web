@@ -10,7 +10,7 @@ import java.util.ListIterator;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-public class DAOEntryLimit extends DAODecode {
+public class EntryLimit extends DAODecode {
 
     @Serial
     private static final long serialVersionUID = -5381026427696898592L;
@@ -19,17 +19,17 @@ public class DAOEntryLimit extends DAODecode {
     public static final String _TABLE_ID = "_TABLE_ID";
     public static final String _COLUMN = "_COLUMN";
 
-    public DAOEntryLimit() {
+    public EntryLimit() {
         super(DECODE);
     }
 
     /**
      * Method newInstance.
      *
-     * @return DAOEntryLimit
+     * @return EntryLimit
      */
-    public static DAOEntryLimit newInstance() {
-        final DAOEntryLimit returnInstance = new DAOEntryLimit();
+    public static EntryLimit newInstance() {
+        final EntryLimit returnInstance = new EntryLimit();
         returnInstance.setDefaultCode();
         return returnInstance;
     }
