@@ -26,7 +26,7 @@ import java.util.List;
 @Table(name = "codetype")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "type", discriminatorType = DiscriminatorType.STRING)
-@DiscriminatorValue("CodeType")
+@DiscriminatorValue("Decode")
 public class CodeType extends Aspect implements java.io.Serializable {
 
     @Serial
@@ -84,10 +84,10 @@ public class CodeType extends Aspect implements java.io.Serializable {
     /**
      * Constructor for CodeType.
      *
-     * @param type          String
-     * @param category      String
-     * @param name          String
-     * @param description   String
+     * @param type        String
+     * @param category    String
+     * @param name        String
+     * @param description String
      */
     public CodeType(String type, String category, String name, String description) {
 

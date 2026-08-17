@@ -24,18 +24,6 @@ public abstract class ValueType extends CodeType implements Cloneable, Serializa
     public ValueType() {
 
     }
-    /**
-     * Constructor for CodeType.
-     *
-     * @param type          String
-     * @param category      String
-     * @param name          String
-     * @param description   String
-     */
-    public ValueType(String type, String category, String name, String description) {
-
-        super(type, category, name, description);
-    }
 
     // All well-behaved ValueTypes must implement this
 

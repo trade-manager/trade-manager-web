@@ -20,8 +20,8 @@ import org.trade.core.valuetype.Tier;
 import org.trade.core.valuetype.TradestrategyStatus;
 import org.trade.core.valuetype.ValueTypeException;
 import org.trade.ui.models.TradestrategyTableModel;
-import org.trade.ui.tables.renderer.DAOStrategyManagerRenderer;
-import org.trade.ui.tables.renderer.DAOStrategyRenderer;
+import org.trade.ui.tables.renderer.StrategyManagerRenderer;
+import org.trade.ui.tables.renderer.StrategyRenderer;
 import org.trade.ui.widget.DateEditor;
 import org.trade.ui.widget.DateField;
 import org.trade.ui.widget.DateRenderer;
@@ -85,8 +85,8 @@ public class TradestrategyTable extends Table {
         DecodeTableEditor tierEditor = new DecodeTableEditor(
                 new JComboBox<>((new Tier()).getCodesDecodes().toArray(new Decode[0])));
 
-        DAOStrategyRenderer dAOStrategyRenderer = new DAOStrategyRenderer(strategyWorkers);
-        DAOStrategyManagerRenderer dAOStrategyManagerRenderer = new DAOStrategyManagerRenderer(strategyWorkers);
+        StrategyRenderer dAOStrategyRenderer = new StrategyRenderer(strategyWorkers);
+        StrategyManagerRenderer dAOStrategyManagerRenderer = new StrategyManagerRenderer(strategyWorkers);
         DecodeTableEditor strategyEditor = new DecodeTableEditor(
                 new JComboBox<>((new Strategy()).getCodesDecodes().toArray(new Decode[0])));
         JComboBox<Decode> strategyManagerComboBox = new JComboBox<>(
