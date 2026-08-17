@@ -11,7 +11,7 @@ import java.io.Serial;
  */
 @Entity
 @DiscriminatorValue("DAOIndicatorSeries")
-public class DAOIndicatorSeries extends Decode {
+public class DAOIndicatorSeries extends DAODecode {
 
     @Serial
     private static final long serialVersionUID = -5381026427696898592L;
