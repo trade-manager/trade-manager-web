@@ -377,15 +377,15 @@ public class DOMTree extends JTree implements DragSourceListener, DragGestureLis
 
         JPopupMenu popup = new JPopupMenu();
 
-        BaseMenuItem copy = new BaseMenuItem(basePanel, BaseUIPropertyCodes.COPY);
+        BaseMenuItem copy = new BaseMenuItem(basePanel, org.trade.core.valuetype.UIComponentProperties.COPY);
 
         popup.add(copy);
 
-        BaseMenuItem cut = new BaseMenuItem(basePanel, BaseUIPropertyCodes.CUT);
+        BaseMenuItem cut = new BaseMenuItem(basePanel, org.trade.core.valuetype.UIComponentProperties.CUT);
 
         popup.add(cut);
 
-        BaseMenuItem paste = new BaseMenuItem(basePanel, BaseUIPropertyCodes.PASTE);
+        BaseMenuItem paste = new BaseMenuItem(basePanel, org.trade.core.valuetype.UIComponentProperties.PASTE);
 
         popup.add(paste);
         // Try to make the popup lightweight

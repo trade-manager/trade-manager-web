@@ -1,5 +1,8 @@
 package org.trade.core.valuetype;
 
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+
 import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +11,8 @@ import java.util.List;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
+@Entity
+@DiscriminatorValue("Strategy")
 public class Strategy extends DAODecode {
 
     @Serial
@@ -19,6 +24,19 @@ public class Strategy extends DAODecode {
 
     public Strategy() {
         super(DECODE);
+    }
+
+    /**
+     * Constructor for CodeType.
+     *
+     * @param type        String
+     * @param category    String
+     * @param name        String
+     * @param description String
+     */
+    public Strategy(String type, String category, String name, String description) {
+
+        super(type, category, name, description);
     }
 
     /**

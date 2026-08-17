@@ -38,7 +38,7 @@ import org.trade.core.valuetype.BarSize;
 import org.trade.core.valuetype.ChartDays;
 import org.trade.core.valuetype.ContentType;
 import org.trade.core.valuetype.Currency;
-import org.trade.core.valuetype.Portfolio;
+import org.trade.core.valuetype.DAOPortfolio;
 import org.trade.core.valuetype.Strategy;
 import org.trade.core.valuetype.Exchange;
 import org.trade.core.valuetype.Money;
@@ -114,7 +114,7 @@ public class TradeServiceIT extends TradestrategyBase {
     public void addTradestrategy() {
 
         org.trade.core.persistent.strategy.Strategy strategy = (org.trade.core.persistent.strategy.Strategy) Strategy.newInstance().getObject();
-        org.trade.core.persistent.portfolio.Portfolio portfolio = (org.trade.core.persistent.portfolio.Portfolio) Objects.requireNonNull(Portfolio.newInstance()).getObject();
+        org.trade.core.persistent.portfolio.Portfolio portfolio = (org.trade.core.persistent.portfolio.Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
         final String symbol = "TEST-" + TradestrategyBase.getRandomNumber(4);
         Contract contract = new Contract(SECType.STOCK, symbol, Exchange.SMART, Currency.USD, null, null);
         ZonedDateTime open = TradingCalendar.getTradingDayStart(

@@ -1,5 +1,7 @@
 package org.trade.core.valuetype;
 
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
 import org.trade.core.persistent.portfolio.Portfolio;
 
 import java.io.Serial;
@@ -10,7 +12,9 @@ import java.util.List;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-public class Group extends DAODecode {
+@Entity
+@DiscriminatorValue("FAGroup")
+public class FAGroup extends DAODecode {
 
     @Serial
     private static final long serialVersionUID = -5381026427696898592L;
@@ -19,8 +23,21 @@ public class Group extends DAODecode {
     public static final String _TABLE_ID = "_TABLE_ID";
     public static final String _COLUMN = "_COLUMN";
 
-    public Group() {
+    public FAGroup() {
         super(DECODE, true);
+    }
+
+    /**
+     * Constructor for CodeType.
+     *
+     * @param type        String
+     * @param category    String
+     * @param name        String
+     * @param description String
+     */
+    public FAGroup(String type, String category, String name, String description) {
+
+        super(type, category, name, description);
     }
 
     /**
@@ -70,9 +87,9 @@ public class Group extends DAODecode {
      * @param displayName String
      * @return Group
      */
-    public static Group newInstance(String displayName) {
+    public static FAGroup newInstance(String displayName) {
 
-        final Group returnInstance = new Group();
+        final FAGroup returnInstance = new FAGroup();
         returnInstance.setDisplayName(displayName);
         return returnInstance;
     }
@@ -82,8 +99,8 @@ public class Group extends DAODecode {
      *
      * @return Group
      */
-    public static Group newInstance() {
-        final Group returnInstance = new Group();
+    public static FAGroup newInstance() {
+        final FAGroup returnInstance = new FAGroup();
         returnInstance.setDefaultCode();
         return returnInstance;
     }

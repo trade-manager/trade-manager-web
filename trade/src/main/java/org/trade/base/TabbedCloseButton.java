@@ -68,7 +68,7 @@ public class TabbedCloseButton extends JPanel {
         // add more space between the label and the button
         label.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
         // tab button
-        TabButton button = new TabButton(basePanel, BaseUIPropertyCodes.CLOSE);
+        TabButton button = new TabButton(basePanel, org.trade.core.valuetype.UIComponentProperties.CLOSE);
         if (basePanel != null) {
             this.addMessageListener(basePanel);
         }
@@ -98,7 +98,7 @@ public class TabbedCloseButton extends JPanel {
 
             try {
 
-                BaseUIPropertyCodes basePropertyCodes = BaseUIPropertyCodes.newInstance(UICode);
+                org.trade.core.valuetype.UIComponentProperties basePropertyCodes = org.trade.core.valuetype.UIComponentProperties.newInstance(UICode);
 
                 if (!basePropertyCodes.getImage().isEmpty()) {
                     setIcon(ImageBuilder.getImageIcon(basePropertyCodes.getImage()));

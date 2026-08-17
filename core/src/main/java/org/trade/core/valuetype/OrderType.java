@@ -1,11 +1,16 @@
 package org.trade.core.valuetype;
 
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+
 import java.io.Serial;
 
 /**
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
+@Entity
+@DiscriminatorValue("OrderType")
 public class OrderType extends Decode {
 
     /**
@@ -23,6 +28,19 @@ public class OrderType extends Decode {
 
     public OrderType() {
         super(DECODE);
+    }
+
+    /**
+     * Constructor for CodeType.
+     *
+     * @param type        String
+     * @param category    String
+     * @param name        String
+     * @param description String
+     */
+    public OrderType(String type, String category, String name, String description) {
+
+        super(type, category, name, description);
     }
 
     /**

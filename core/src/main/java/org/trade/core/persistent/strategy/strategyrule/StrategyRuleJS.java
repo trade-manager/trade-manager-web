@@ -29,9 +29,9 @@ import org.trade.core.valuetype.BarSize;
 import org.trade.core.valuetype.CalculationType;
 import org.trade.core.valuetype.ChartDays;
 import org.trade.core.valuetype.ContentType;
+import org.trade.core.valuetype.DAOIndicatorSeries;
 import org.trade.core.valuetype.Decode;
 import org.trade.core.valuetype.Exchange;
-import org.trade.core.valuetype.IndicatorSeries;
 import org.trade.core.valuetype.MarketBar;
 import org.trade.core.valuetype.MarketBias;
 import org.trade.core.valuetype.Money;
@@ -740,7 +740,7 @@ public class StrategyRuleJS extends AbstractStrategyRule {
 
             constantsJSON.put("MARKET_BAR", marketBarValuesJSON);
 
-            List<Decode> indicatorSeriesCodes = IndicatorSeries.newInstance().getCodesDecodes();
+            List<Decode> indicatorSeriesCodes = DAOIndicatorSeries.newInstance().getCodesDecodes();
             JSONObject indicatorSeriesValuesJSON = new JSONObject();
             for (Decode code : indicatorSeriesCodes) {
 

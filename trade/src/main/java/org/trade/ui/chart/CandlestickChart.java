@@ -32,6 +32,7 @@ import org.jfree.data.xy.XYDataset;
 import org.trade.core.persistent.tradingday.Tradingday;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.Action;
+import org.trade.core.valuetype.DAOIndicatorSeries;
 import org.trade.core.valuetype.Money;
 import org.trade.indicator.CandleSeries;
 import org.trade.indicator.IIndicatorDataset;
@@ -321,7 +322,7 @@ public class CandlestickChart extends JPanel implements SeriesChangeListener {
                         axisName = ((CandleSeries) indicator.getSeries(0)).getSymbol();
                     } else {
 
-                        org.trade.core.valuetype.IndicatorSeries code = org.trade.core.valuetype.IndicatorSeries
+                        DAOIndicatorSeries code = DAOIndicatorSeries
                                 .newInstance(indicator.getType(0));
                         axisName = code.getDisplayName();
                     }

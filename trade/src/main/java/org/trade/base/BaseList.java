@@ -53,7 +53,7 @@ public class BaseList extends JList<Object> {
             this.addMessageListener(p);
         }
 
-        BaseUIPropertyCodes basePropertyCodes = BaseUIPropertyCodes.newInstance(UICode);
+        org.trade.core.valuetype.UIComponentProperties basePropertyCodes = org.trade.core.valuetype.UIComponentProperties.newInstance(UICode);
 
         setMethod(basePropertyCodes.getMethod());
         this.setName(basePropertyCodes.getDisplayName());

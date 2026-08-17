@@ -12,6 +12,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
+import org.trade.core.persistent.tradeorder.TradeOrder;
 
 import java.util.List;
 
@@ -66,5 +67,20 @@ public class CodeTypeServiceIT extends TradestrategyBase {
         List<CodeValue> codeValues = tradeService.getCodeTypeService().findByAttributeName(codeType.getName(), "Length");
         assertFalse(codeValues.isEmpty());
         _log.info("CodeValue id: {}", codeValues.getFirst().getId());
+    }
+
+    @Test
+    public void findCodeValueByType() {
+
+        List<CodeType> codeTypes = tradeService.getCodeTypeService().findByType("BarSize");
+        assertNotNull(!codeTypes.isEmpty());
+
+        for (CodeType codeType : codeTypes) {
+
+            _log.info("CodeType id: {}", codeType.getId());
+            List<CodeValue> codeValues = tradeService.getCodeTypeService().findByAttributeName(codeType.getName(), "value");
+            assertFalse(codeValues.isEmpty());
+            _log.info("CodeValue id: {}", codeValues.getFirst().getId());
+        }
     }
 }

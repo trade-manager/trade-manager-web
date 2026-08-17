@@ -1,12 +1,17 @@
 package org.trade.core.valuetype;
 
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+
 import java.io.Serial;
 
 /**
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-public class Account extends DAODecode {
+@Entity
+@DiscriminatorValue("DAOAccount")
+public class DAOAccount extends DAODecode {
 
     @Serial
     private static final long serialVersionUID = -5381026427696898592L;
@@ -15,8 +20,21 @@ public class Account extends DAODecode {
     public static final String _TABLE_ID = "_TABLE_ID";
     public static final String _COLUMN = "_COLUMN";
 
-    public Account() {
+    public DAOAccount() {
         super(DECODE, true);
+    }
+
+    /**
+     * Constructor for CodeType.
+     *
+     * @param type        String
+     * @param category    String
+     * @param name        String
+     * @param description String
+     */
+    public DAOAccount(String type, String category, String name, String description) {
+
+        super(type, category, name, description);
     }
 
     /**
@@ -25,8 +43,8 @@ public class Account extends DAODecode {
      * @param displayName String
      * @return Account
      */
-    public static Account newInstance(String displayName) {
-        final Account returnInstance = new Account();
+    public static DAOAccount newInstance(String displayName) {
+        final DAOAccount returnInstance = new DAOAccount();
         returnInstance.setDisplayName(displayName);
         return returnInstance;
     }
@@ -36,8 +54,8 @@ public class Account extends DAODecode {
      *
      * @return Account
      */
-    public static Account newInstance() {
-        final Account returnInstance = new Account();
+    public static DAOAccount newInstance() {
+        final DAOAccount returnInstance = new DAOAccount();
         returnInstance.setDefaultCode();
         return returnInstance;
     }

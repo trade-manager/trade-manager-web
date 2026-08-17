@@ -5,7 +5,7 @@ import org.trade.core.aspect.Aspects;
 import org.trade.core.persistent.portfolio.Portfolio;
 import org.trade.core.util.CoreUtils;
 import org.trade.core.valuetype.AllocationMethod;
-import org.trade.core.valuetype.Account;
+import org.trade.core.valuetype.DAOAccount;
 import org.trade.core.valuetype.Decode;
 import org.trade.core.valuetype.YesNo;
 
@@ -107,7 +107,7 @@ public class PortfolioTableModel extends AspectTableModel {
             }
             case 4: {
 
-                org.trade.core.persistent.account.Account account = (org.trade.core.persistent.account.Account) ((Account) value).getObject();
+                org.trade.core.persistent.account.Account account = (org.trade.core.persistent.account.Account) ((DAOAccount) value).getObject();
                 boolean exists = false;
 
                 for (org.trade.core.persistent.account.Account item : element.getAccounts()) {
@@ -200,7 +200,7 @@ public class PortfolioTableModel extends AspectTableModel {
             newRow.add(AllocationMethod.newInstance(element.getAllocationMethod()));
         }
 
-        newRow.add(Account.newInstance(Decode.NONE));
+        newRow.add(DAOAccount.newInstance(Decode.NONE));
         newRow.add(YesNo.newInstance(element.getIsDefault()));
     }
 }

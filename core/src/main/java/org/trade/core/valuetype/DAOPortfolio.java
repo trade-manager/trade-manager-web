@@ -1,12 +1,17 @@
 package org.trade.core.valuetype;
 
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+
 import java.io.Serial;
 
 /**
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-public class Portfolio extends DAODecode {
+@Entity
+@DiscriminatorValue("DAOPortfolio")
+public class DAOPortfolio extends DAODecode {
 
     @Serial
     private static final long serialVersionUID = -5381026427696898592L;
@@ -15,8 +20,21 @@ public class Portfolio extends DAODecode {
     public static final String _TABLE_ID = "_TABLE_ID";
     public static final String _COLUMN = "_COLUMN";
 
-    public Portfolio() {
+    public DAOPortfolio() {
         super(DECODE);
+    }
+
+    /**
+     * Constructor for CodeType.
+     *
+     * @param type        String
+     * @param category    String
+     * @param name        String
+     * @param description String
+     */
+    public DAOPortfolio(String type, String category, String name, String description) {
+
+        super(type, category, name, description);
     }
 
     /**
@@ -25,8 +43,8 @@ public class Portfolio extends DAODecode {
      * @param displayName String
      * @return Portfolio
      */
-    public static Portfolio newInstance(String displayName) {
-        final Portfolio returnInstance = new Portfolio();
+    public static DAOPortfolio newInstance(String displayName) {
+        final DAOPortfolio returnInstance = new DAOPortfolio();
         returnInstance.setDisplayName(displayName);
         return returnInstance;
     }
@@ -36,13 +54,13 @@ public class Portfolio extends DAODecode {
      *
      * @return Portfolio
      */
-    public static Portfolio newInstance() {
+    public static DAOPortfolio newInstance() {
 
         try {
-            final Portfolio returnInstance = new Portfolio();
-            Portfolio code = null;
+            final DAOPortfolio returnInstance = new DAOPortfolio();
+            DAOPortfolio code = null;
             for (Decode decode : returnInstance.getCodesDecodes()) {
-                code = (Portfolio) decode;
+                code = (DAOPortfolio) decode;
                 org.trade.core.persistent.portfolio.Portfolio portfolio = (org.trade.core.persistent.portfolio.Portfolio) code.getObject();
                 if (portfolio.getIsDefault())
                     return code;

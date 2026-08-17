@@ -11,7 +11,7 @@ import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.BarSize;
 import org.trade.core.valuetype.ChartDays;
 import org.trade.core.valuetype.Currency;
-import org.trade.core.valuetype.Portfolio;
+import org.trade.core.valuetype.DAOPortfolio;
 import org.trade.core.valuetype.Strategy;
 import org.trade.core.valuetype.StrategyManager;
 import org.trade.core.valuetype.Date;
@@ -275,7 +275,7 @@ public class TradestrategyTableModel extends TableModel {
             }
             case 7: {
 
-                org.trade.core.persistent.portfolio.Portfolio portfolio = (org.trade.core.persistent.portfolio.Portfolio) ((Portfolio) value).getObject();
+                org.trade.core.persistent.portfolio.Portfolio portfolio = (org.trade.core.persistent.portfolio.Portfolio) ((DAOPortfolio) value).getObject();
                 element.setPortfolio(portfolio);
                 break;
             }
@@ -348,7 +348,7 @@ public class TradestrategyTableModel extends TableModel {
 
         String symbol = ((String) this.getValueAt(selectedRow, 2)).trim().toUpperCase();
         final org.trade.core.persistent.strategy.Strategy strategy = (org.trade.core.persistent.strategy.Strategy) ((Strategy) this.getValueAt(selectedRow, 5)).getObject();
-        org.trade.core.persistent.portfolio.Portfolio portfolio = (org.trade.core.persistent.portfolio.Portfolio) ((Portfolio) this.getValueAt(selectedRow, 7)).getObject();
+        org.trade.core.persistent.portfolio.Portfolio portfolio = (org.trade.core.persistent.portfolio.Portfolio) ((DAOPortfolio) this.getValueAt(selectedRow, 7)).getObject();
         int barSize = Integer.parseInt(((BarSize) this.getValueAt(selectedRow, 8)).getValue());
         String currency = ((Currency) this.getValueAt(selectedRow, 14)).getCode();
         String exchange = ((Exchange) this.getValueAt(selectedRow, 15)).getCode();
@@ -382,7 +382,7 @@ public class TradestrategyTableModel extends TableModel {
         Tradestrategy tradestrategy = null;
         String strategyName;
         org.trade.core.persistent.strategy.Strategy strategy = (org.trade.core.persistent.strategy.Strategy) Strategy.newInstance().getObject();
-        org.trade.core.persistent.portfolio.Portfolio portfolio = (org.trade.core.persistent.portfolio.Portfolio) Objects.requireNonNull(Portfolio.newInstance()).getObject();
+        org.trade.core.persistent.portfolio.Portfolio portfolio = (org.trade.core.persistent.portfolio.Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
         int chartDays = ChartDays.ONE_DAY;
         Integer barSize = BarSize.FIVE_MIN;
         int riskAmount = 0;
@@ -484,7 +484,7 @@ public class TradestrategyTableModel extends TableModel {
             newRow.add(StrategyManager.newInstance(Decode.NONE));
         }
 
-        newRow.add(Portfolio.newInstance(element.getPortfolio().getName()));
+        newRow.add(DAOPortfolio.newInstance(element.getPortfolio().getName()));
         newRow.add(BarSize.newInstance(element.getBarSize()));
         newRow.add(ChartDays.newInstance(element.getChartDays()));
         newRow.add(new Money(element.getRiskAmount()));

@@ -28,6 +28,7 @@ import java.util.ListIterator;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.StringTokenizer;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Represents the application's configuration. This class is intended to be a bit
@@ -197,7 +198,6 @@ public class ConfigProperties {
                 loadPropertiesAsResource(context, fileName, systemProperties);
                 deploymentProperties = new Properties(systemProperties);
                 loadPropertiesAsFile(getDeploymentPropertyFileName(), deploymentProperties);
-                loadDecodes(DECODE_PROPERTY_FILE);
             }
         } catch (IOException ex) {
 
@@ -416,7 +416,9 @@ public class ConfigProperties {
     public void loadDecodes(String filename) {
 
         try {
-
+            AtomicInteger codeTypeId = new AtomicInteger(11);
+            AtomicInteger codeAttributeId = new AtomicInteger(33);
+            AtomicInteger codeValueId = new AtomicInteger(49);
             JSONObject decodes = loadJSONAsResource(this, filename);
             decodes.keySet().forEach(category -> {
 
@@ -442,6 +444,8 @@ public class ConfigProperties {
 
                         tradeService.getCodeTypeService().save(codeType);
                     }
+                    codeTypeId.getAndIncrement();
+                    System.out.println(String.format("INSERT INTO codetype (id, name, type, category, description) VALUES(%s,'%s','%s','%s','%s')//", codeTypeId.get(), type, type, category, String.format("%s::%s", type, category)));
 
                     HashMap<String, CodeAttribute> codeAttributesMap = new HashMap<>();
 
@@ -456,6 +460,8 @@ public class ConfigProperties {
                             CodeAttribute codeAttribute = codeType.addChild(new CodeAttribute(codeType, attribute, attribute, null, "java.lang.String",
                                     null));
                             codeAttributesMap.put(attribute, codeAttribute);
+                            codeAttributeId.getAndIncrement();
+                            System.out.println(String.format("INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(%s,'%s','%s',null,'java.lang.String',null, %s)//", codeAttributeId.get(), attribute, attribute, codeTypeId.get()));
                         }
                     }
 
@@ -468,10 +474,12 @@ public class ConfigProperties {
 
                             String attribute = attributes.next();
                             codeAttributesMap.get(attribute).addChild(new CodeValue(codeAttributesMap.get(attribute), decode.getString(attribute)));
+                            codeValueId.getAndIncrement();
+                            System.out.println(String.format("INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(%s,'%s',%s,null)//", codeValueId.get(), decode.getString(attribute), codeAttributeId.get()));
                         }
                     }
 
-                    tradeService.getCodeTypeService().save(codeType);
+                    //  tradeService.getCodeTypeService().save(codeType);
                 });
             });
 

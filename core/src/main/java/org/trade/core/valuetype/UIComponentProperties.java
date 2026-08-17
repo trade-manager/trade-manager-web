@@ -1,6 +1,7 @@
-package org.trade.base;
+package org.trade.core.valuetype;
 
-import org.trade.core.valuetype.Decode;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
 
 import java.io.Serial;
 
@@ -11,20 +12,22 @@ import java.io.Serial;
  * @author Simon Allen
  * @version $Id: BasePropertyCodes.java,v 1.15 2002/01/22 22:48:21 simon Exp $
  */
-public class BaseUIPropertyCodes extends Decode {
+@Entity
+@DiscriminatorValue("UIComponentProperties")
+public class UIComponentProperties extends Decode {
     /**
      *
      */
     @Serial
     private static final long serialVersionUID = -2178313262496336078L;
 
-    public final static String BASE_UI_WIDGET_PROP = "BASE_UI_WIDGET_PROP";
-    public final static String BASE_UI_WIDGET = "BASE_UI_WIDGET";
-    public final static String BASE_UI_WIDGET_TOOL_TIP = "BASE_UI_WIDGET_TOOL_TIP";
-    public final static String BASE_UI_WIDGET_ENABLED = "BASE_UI_WIDGET_ENABLED";
-    public final static String BASE_UI_WIDGET_MNEMONIC = "BASE_UI_WIDGET_MNEMONIC";
-    public final static String BASE_UI_WIDGET_IMAGE = "BASE_UI_WIDGET_IMAGE";
-    public final static String BASE_UI_WIDGET_METHOD = "BASE_UI_WIDGET_METHOD";
+    public final static String UI_COMPONENT = "UI_COMPONENT";
+    public final static String UI_COMPONENT_PROPERTY = UI_COMPONENT + "_PROPERTY";
+    public final static String UI_COMPONENT_TOOL_TIP = UI_COMPONENT + "_TOOL_TIP";
+    public final static String UI_COMPONENT_ENABLED = UI_COMPONENT + "_ENABLED";
+    public final static String UI_COMPONENT_MNEMONIC = UI_COMPONENT + "_MNEMONIC";
+    public final static String UI_COMPONENT_IMAGE = UI_COMPONENT + "_IMAGE";
+    public final static String UI_COMPONENT_METHOD = UI_COMPONENT + "_METHOD";
 
     public final static String ABOUT = "ABOUT";
     public final static String CALCULATE = "CALCULATE";
@@ -79,11 +82,28 @@ public class BaseUIPropertyCodes extends Decode {
     public final static String TRANSFER = "TRANSFER";
     public final static String REMOVE = "REMOVE";
 
+    public final static String COMPILE = "COMPILE";
+    public final static String REASSIGN = "REASSIGN";
+    public final static String STRATEGY_PARMS = "STRATEGY_PARMS";
+
+    /**
+     * Constructor for CodeType.
+     *
+     * @param type        String
+     * @param category    String
+     * @param name        String
+     * @param description String
+     */
+    public UIComponentProperties(String type, String category, String name, String description) {
+
+        super(type, category, name, description);
+    }
+
     /**
      * Default Constructor
      */
-    public BaseUIPropertyCodes() {
-        super(BASE_UI_WIDGET_PROP, BASE_UI_WIDGET, false);
+    public UIComponentProperties() {
+        super(UI_COMPONENT_PROPERTY, UI_COMPONENT, false);
     }
 
     /**
@@ -92,7 +112,7 @@ public class BaseUIPropertyCodes extends Decode {
      * @param propertyType String
      * @param propertyCode String
      */
-    public BaseUIPropertyCodes(String propertyType, String propertyCode) {
+    public UIComponentProperties(String propertyType, String propertyCode) {
         super(propertyType, propertyCode, false);
     }
 
@@ -103,7 +123,7 @@ public class BaseUIPropertyCodes extends Decode {
      */
     public boolean isEnabled() {
 
-        return getValue(BASE_UI_WIDGET_ENABLED).equalsIgnoreCase("true");
+        return getValue(UI_COMPONENT_ENABLED).equalsIgnoreCase("true");
     }
 
     /**
@@ -112,7 +132,7 @@ public class BaseUIPropertyCodes extends Decode {
      * @return String
      */
     public String getToolTip() {
-        return getValue(BASE_UI_WIDGET_TOOL_TIP);
+        return getValue(UI_COMPONENT_TOOL_TIP);
     }
 
     /**
@@ -121,7 +141,7 @@ public class BaseUIPropertyCodes extends Decode {
      * @return String
      */
     public String getImage() {
-        return getValue(BASE_UI_WIDGET_IMAGE);
+        return getValue(UI_COMPONENT_IMAGE);
     }
 
     /**
@@ -130,7 +150,7 @@ public class BaseUIPropertyCodes extends Decode {
      * @return String
      */
     public String getMethod() {
-        return getValue(BASE_UI_WIDGET_METHOD);
+        return getValue(UI_COMPONENT_METHOD);
     }
 
     /**
@@ -141,8 +161,8 @@ public class BaseUIPropertyCodes extends Decode {
     public int getMnemonic() {
         int returnValue = 0;
 
-        if ((null != getValue(BASE_UI_WIDGET_MNEMONIC)) && (!getValue(BASE_UI_WIDGET_MNEMONIC).isEmpty())) {
-            returnValue = getValue(BASE_UI_WIDGET_MNEMONIC).charAt(0);
+        if ((null != getValue(UI_COMPONENT_MNEMONIC)) && (!getValue(UI_COMPONENT_MNEMONIC).isEmpty())) {
+            returnValue = getValue(UI_COMPONENT_MNEMONIC).charAt(0);
         }
 
         return returnValue;
@@ -154,9 +174,9 @@ public class BaseUIPropertyCodes extends Decode {
      * @param code String
      * @return BaseUIPropertyCodes
      */
-    public static BaseUIPropertyCodes newInstance(String code) {
+    public static UIComponentProperties newInstance(String code) {
 
-        BaseUIPropertyCodes returnInstance = new BaseUIPropertyCodes();
+        UIComponentProperties returnInstance = new UIComponentProperties();
         returnInstance.setValue(code);
         return returnInstance;
     }

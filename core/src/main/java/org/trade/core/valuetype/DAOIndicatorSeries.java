@@ -10,17 +10,14 @@ import java.io.Serial;
  * @version $Revision: 1.0 $
  */
 @Entity
-@DiscriminatorValue("ContentType")
-public class ContentType extends Decode {
+@DiscriminatorValue("DAOIndicatorSeries")
+public class DAOIndicatorSeries extends Decode {
 
     @Serial
     private static final long serialVersionUID = -5381026427696898592L;
-    public static final String DECODE = "CONTENT_TYPE";
-    public static final String JAVA = "text/java";
-    public static final String JAVASCRIPT = "text/javascript";
-    public static final String TEXT = "text/rtf";
+    public static final String DECODE = "INDICATOR_SERIES";
 
-    public ContentType() {
+    public DAOIndicatorSeries() {
         super(DECODE);
     }
 
@@ -32,7 +29,7 @@ public class ContentType extends Decode {
      * @param name        String
      * @param description String
      */
-    public ContentType(String type, String category, String name, String description) {
+    public DAOIndicatorSeries(String type, String category, String name, String description) {
 
         super(type, category, name, description);
     }
@@ -41,11 +38,10 @@ public class ContentType extends Decode {
      * Method newInstance.
      *
      * @param value String
-     * @return ContentType
+     * @return IndicatorSeries
      */
-    public static ContentType newInstance(String value) {
-
-        final ContentType returnInstance = new ContentType();
+    public static DAOIndicatorSeries newInstance(String value) {
+        final DAOIndicatorSeries returnInstance = new DAOIndicatorSeries();
         returnInstance.setValue(value);
         return returnInstance;
     }
@@ -53,11 +49,10 @@ public class ContentType extends Decode {
     /**
      * Method newInstance.
      *
-     * @return ContentType
+     * @return IndicatorSeries
      */
-    public static ContentType newInstance() {
-
-        final ContentType returnInstance = new ContentType();
+    public static DAOIndicatorSeries newInstance() {
+        final DAOIndicatorSeries returnInstance = new DAOIndicatorSeries();
         returnInstance.setDefaultCode();
         return returnInstance;
     }
@@ -70,5 +65,4 @@ public class ContentType extends Decode {
     protected boolean convertToUppercase() {
         return false;
     }
-
 }

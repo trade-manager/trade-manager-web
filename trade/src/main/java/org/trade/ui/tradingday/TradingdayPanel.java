@@ -2,9 +2,8 @@ package org.trade.ui.tradingday;
 
 import org.trade.base.BaseButton;
 import org.trade.base.BasePanel;
-import org.trade.base.BaseUIPropertyCodes;
+import org.trade.core.valuetype.UIComponentProperties;
 import org.trade.base.Table;
-import org.trade.base.UIPropertyCodes;
 import org.trade.core.persistent.ServiceException;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.account.Account;
@@ -17,7 +16,7 @@ import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.CoreUtils;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.ContentType;
-import org.trade.core.valuetype.Portfolio;
+import org.trade.core.valuetype.DAOPortfolio;
 import org.trade.core.valuetype.Strategy;
 import org.trade.core.valuetype.StrategyManager;
 import org.trade.core.valuetype.Date;
@@ -122,24 +121,24 @@ public class TradingdayPanel extends BasePanel {
             currencyFormater.setMinimumFractionDigits(2);
 
             // This allows the controller to listen to these events
-            transferButton = new BaseButton(controller, BaseUIPropertyCodes.TRANSFER);
-            ordersButton = new BaseButton(controller, BaseUIPropertyCodes.FETCH);
+            transferButton = new BaseButton(controller, UIComponentProperties.TRANSFER);
+            ordersButton = new BaseButton(controller, UIComponentProperties.FETCH);
             ordersButton.setToolTipText("Fetch Executions for Orders");
-            deleteTradeOrderButton = new BaseButton(this, BaseUIPropertyCodes.DELETE);
+            deleteTradeOrderButton = new BaseButton(this, UIComponentProperties.DELETE);
             deleteTradeOrderButton.setToolTipText("Delete Orders");
-            cancelStrategiesButton = new BaseButton(controller, BaseUIPropertyCodes.CANCEL);
+            cancelStrategiesButton = new BaseButton(controller, UIComponentProperties.CANCEL);
             cancelStrategiesButton.setToolTipText("Cancel Strategy");
-            runStrategyButton = new BaseButton(controller, BaseUIPropertyCodes.RUN);
+            runStrategyButton = new BaseButton(controller, UIComponentProperties.RUN);
             runStrategyButton.setToolTipText("Run Strategy");
-            testStrategyButton = new BaseButton(controller, BaseUIPropertyCodes.TEST);
+            testStrategyButton = new BaseButton(controller, UIComponentProperties.TEST);
             testStrategyButton.setToolTipText("Test Strategy");
-            brokerDataButton = new BaseButton(controller, BaseUIPropertyCodes.DATA);
+            brokerDataButton = new BaseButton(controller, UIComponentProperties.DATA);
             brokerDataButton.setToolTipText("Get Chart Data");
-            closeAllPositionsButton = new BaseButton(controller, BaseUIPropertyCodes.CLOSE_ALL);
+            closeAllPositionsButton = new BaseButton(controller, UIComponentProperties.CLOSE_ALL);
             closeAllPositionsButton.setToolTipText("Cancel Orders & Close Position");
             strategyParmButton = new BaseButton(controller,
-                    UIPropertyCodes.newInstance(UIPropertyCodes.STRATEGY_PARMS));
-            BaseButton reAssignButton = new BaseButton(this, UIPropertyCodes.newInstance(UIPropertyCodes.REASSIGN));
+                    UIComponentProperties.newInstance(UIComponentProperties.STRATEGY_PARMS));
+            BaseButton reAssignButton = new BaseButton(this, UIComponentProperties.newInstance(UIComponentProperties.REASSIGN));
             tradestrategyModel = new TradestrategyTableModel();
             Tradingday tradingday = null;
 
@@ -254,7 +253,7 @@ public class TradingdayPanel extends BasePanel {
             jSplitPane1.setResizeWeight(0.2d);
             jSplitPane1.setOneTouchExpandable(true);
             this.add(jSplitPane1);
-            Portfolio code = Portfolio.newInstance();
+            DAOPortfolio code = DAOPortfolio.newInstance();
             org.trade.core.persistent.portfolio.Portfolio portfolio = tradeService.getPortfolioService().findByName(((org.trade.core.persistent.portfolio.Portfolio) Objects.requireNonNull(code).getObject()).getName());
             this.setPortfolioLabel(portfolio);
             enableTradestrategyButtons(null);
@@ -268,8 +267,8 @@ public class TradingdayPanel extends BasePanel {
         try {
 
             DecodeTableEditor portfolioEditor = new DecodeTableEditor(
-                    new JComboBox<>((new Portfolio()).getCodesDecodes().toArray(new Decode[0])));
-            tradestrategyTable.setDefaultEditor(Portfolio.class, portfolioEditor);
+                    new JComboBox<>((new DAOPortfolio()).getCodesDecodes().toArray(new Decode[0])));
+            tradestrategyTable.setDefaultEditor(DAOPortfolio.class, portfolioEditor);
             DecodeTableEditor strategyEditor = new DecodeTableEditor(
                     new JComboBox<>((new Strategy()).getCodesDecodes().toArray(new Decode[0])));
             tradestrategyTable.setDefaultEditor(Strategy.class, strategyEditor);

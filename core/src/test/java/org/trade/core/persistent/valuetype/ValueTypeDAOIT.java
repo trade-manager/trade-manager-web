@@ -14,7 +14,7 @@ import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.persistent.codetype.Entrylimit;
 import org.trade.core.valuetype.ChartDays;
 import org.trade.core.valuetype.DAODecode;
-import org.trade.core.valuetype.EntryLimit;
+import org.trade.core.valuetype.DAOEntryLimit;
 import org.trade.core.valuetype.Strategy;
 import org.trade.core.valuetype.StrategyManager;
 import org.trade.core.valuetype.Decode;
@@ -102,7 +102,7 @@ public class ValueTypeDAOIT {
     @Test
     public void dOAEntryLimit() throws Exception {
 
-        EntryLimit entryLimits = new EntryLimit();
+        DAOEntryLimit entryLimits = new DAOEntryLimit();
         List<Decode> decodes = entryLimits.getCodesDecodes();
         assertFalse(decodes.isEmpty());
         ListIterator<Decode> eDecodes = decodes.listIterator();

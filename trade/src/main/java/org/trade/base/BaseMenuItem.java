@@ -29,7 +29,7 @@ public class BaseMenuItem extends JMenuItem {
      * @param p                 BasePanel
      * @param basePropertyCodes BaseUIPropertyCodes
      */
-    public BaseMenuItem(BasePanel p, BaseUIPropertyCodes basePropertyCodes) {
+    public BaseMenuItem(BasePanel p, org.trade.core.valuetype.UIComponentProperties basePropertyCodes) {
         try {
             if (p != null) {
                 this.addMessageListener(p);
@@ -65,7 +65,7 @@ public class BaseMenuItem extends JMenuItem {
                 this.addMessageListener(p);
             }
 
-            BaseUIPropertyCodes basePropertyCodes = BaseUIPropertyCodes.newInstance(UICode);
+            org.trade.core.valuetype.UIComponentProperties basePropertyCodes = org.trade.core.valuetype.UIComponentProperties.newInstance(UICode);
 
             if (basePropertyCodes.getDisplayName().isEmpty()) {
                 setIcon(ImageBuilder.getImageIcon(basePropertyCodes.getImage()));

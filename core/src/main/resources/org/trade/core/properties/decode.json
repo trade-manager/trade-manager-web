@@ -1,73 +1,36 @@
 {
-  "ui_widget": {
-    "prop": [
-      {
-        "tool_tip": "Compile",
-        "image": "gear.gif",
-        "code": "COMPILE",
-        "method": "doCompile",
-        "mnemonic": "",
-        "display_name": "Compile",
-        "enabled": "true"
-      },
-      {
-        "tool_tip": "Re-Assign strategies for selected tradingdays.",
-        "image": "gear.gif",
-        "code": "REASSIGN",
-        "method": "doReAssign",
-        "mnemonic": "",
-        "display_name": "Re-Assign",
-        "enabled": "true"
-      },
-      {
-        "tool_tip": "Strategy Parameters",
-        "image": "gear.gif",
-        "code": "STRATEGY_PARMS",
-        "method": "doStrategyParameters",
-        "mnemonic": "",
-        "display_name": "Strategy Parms",
-        "enabled": "true"
-      }
-    ]
-  },
   "dao_decode": {
-    "strategy_manager": [
+    "StrategyManager": [
       {
         "code": "org.trade.core.persistent.strategy.Strategy",
         "display_name": "getName"
       }
     ],
-    "group_data": [
+    "FAGroup": [
       {
         "code": "org.trade.core.persistent.portfolio.Portfolio",
         "display_name": "getName"
       }
     ],
-    "portfolio": [
+    "Portfolio": [
       {
         "code": "org.trade.core.persistent.portfolio.Portfolio",
         "display_name": "getName"
       }
     ],
-    "profile_data": [
-      {
-        "code": "org.trade.core.persistent.portfolio.Portfolio",
-        "display_name": "getName"
-      }
-    ],
-    "strategy": [
+    "Strategy": [
       {
         "code": "org.trade.core.persistent.strategy.Strategy",
         "display_name": "getName"
       }
     ],
-    "entry_limit": [
+    "EntryLimit": [
       {
         "code": "org.trade.core.persistent.codetype.Entrylimit",
         "display_name": "getId"
       }
     ],
-    "account": [
+    "Account": [
       {
         "code": "org.trade.core.persistent.account.Account",
         "display_name": "getAccountNumber"
@@ -75,7 +38,7 @@
     ]
   },
   "code_decode": {
-    "account_type": [
+    "AccountType": [
       {
         "display_name": "Institution",
         "value": "CORPORATION",
@@ -107,7 +70,7 @@
         "code": "JOINT"
       }
     ],
-    "bar_size": [
+    "BarSize": [
       {
         "display_name": "1 min",
         "value": "60",
@@ -159,7 +122,7 @@
         "code": "_30_secs"
       }
     ],
-    "mkt_bar": [
+    "MarketBar": [
       {
         "display_name": "+NRB",
         "value": "+NRB",
@@ -236,7 +199,7 @@
         "code": "NONE"
       }
     ],
-    "trigger_method": [
+    "TriggerMethod": [
       {
         "display_name": "Default",
         "value": "0",
@@ -273,7 +236,7 @@
         "code": "8"
       }
     ],
-    "oca_type": [
+    "OCAType": [
       {
         "display_name": "Reduce remaining orders",
         "value": "2",
@@ -290,7 +253,7 @@
         "code": "3"
       }
     ],
-    "gap_tier": [
+    "Tier": [
       {
         "display_name": "1",
         "value": "1",
@@ -307,7 +270,7 @@
         "code": "3"
       }
     ],
-    "order_status": [
+    "OrderStatus": [
       {
         "display_name": "UnSubmitted",
         "value": "UNSUBMIT",
@@ -354,7 +317,7 @@
         "code": "PARTIALFILLED"
       }
     ],
-    "override_constraints": [
+    "OverrideConstraints": [
       {
         "display_name": "No",
         "value": "0",
@@ -366,7 +329,7 @@
         "code": "1"
       }
     ],
-    "content_type": [
+    "ContentType": [
       {
         "display_name": "Java",
         "value": "text/java",
@@ -383,7 +346,7 @@
         "code": "txt"
       }
     ],
-    "action": [
+    "Action": [
       {
         "display_name": "Buy",
         "value": "BUY",
@@ -395,7 +358,7 @@
         "code": "SELL"
       }
     ],
-    "currency": [
+    "Currency": [
       {
         "display_name": "US $",
         "value": "USD",
@@ -437,7 +400,7 @@
         "code": "INR"
       }
     ],
-    "ref_table": [
+    "ReferenceTable": [
       {
         "display_name": "Strategy",
         "value": "Strategy",
@@ -469,7 +432,7 @@
         "code": "org.trade.core.persistent.codetype.CodeType"
       }
     ],
-    "order_type": [
+    "OrderType": [
       {
         "display_name": "Stop Lmt",
         "value": "STPLMT",
@@ -531,7 +494,7 @@
         "code": "TRAILLIMIT"
       }
     ],
-    "allocation_method": [
+    "AllocationMethod": [
       {
         "display_name": "AvailableEquity",
         "value": "AvailableEquity",
@@ -568,7 +531,7 @@
         "code": "3"
       }
     ],
-    "side": [
+    "Side": [
       {
         "display_name": "Long",
         "value": "BOT",
@@ -580,7 +543,7 @@
         "code": "SLD"
       }
     ],
-    "indicator_series": [
+    "IndicatorSeries": [
       {
         "display_name": "ATR",
         "value": "AverageTrueRangeSeries",
@@ -652,7 +615,7 @@
         "code": "StochasticOscillatorSeries"
       }
     ],
-    "yes_no": [
+    "YesNo": [
       {
         "display_name": "Yes",
         "value": "true",
@@ -664,7 +627,7 @@
         "code": "false"
       }
     ],
-    "option_type": [
+    "OptionType": [
       {
         "display_name": "Call",
         "value": "C",
@@ -676,7 +639,7 @@
         "code": "P"
       }
     ],
-    "price_source": [
+    "PriceSource": [
       {
         "display_name": "Close",
         "value": "1",
@@ -713,7 +676,7 @@
         "code": "7"
       }
     ],
-    "calc_type": [
+    "CalculationType": [
       {
         "display_name": "Linear",
         "value": "LINEAR",
@@ -740,7 +703,7 @@
         "code": "TRIANGULAR"
       }
     ],
-    "sec_id_type": [
+    "SECIdType": [
       {
         "display_name": "Intl Sec Id #",
         "value": "ISIN",
@@ -767,7 +730,7 @@
         "code": "SYMBOL"
       }
     ],
-    "tradestrategy_status": [
+    "TradestrategyStatus": [
       {
         "display_name": "Time Out",
         "value": "TO",
@@ -824,7 +787,7 @@
         "code": "CANCELLED"
       }
     ],
-    "chart_days": [
+    "ChartDays": [
       {
         "display_name": "1 D",
         "value": "1",
@@ -871,7 +834,7 @@
         "code": "365"
       }
     ],
-    "time_in_force": [
+    "TimeInForce": [
       {
         "display_name": "Day",
         "value": "DAY",
@@ -893,7 +856,7 @@
         "code": "GTD"
       }
     ],
-    "sec_type": [
+    "SECType": [
       {
         "display_name": "Stock",
         "value": "STK",
@@ -930,7 +893,7 @@
         "code": "BAG"
       }
     ],
-    "mkt_bias": [
+    "MarketBias": [
       {
         "display_name": "Short",
         "value": "S",
@@ -947,7 +910,7 @@
         "code": "N"
       }
     ],
-    "data_type": [
+    "DataType": [
       {
         "display_name": "String",
         "value": "java.lang.String",
@@ -979,7 +942,7 @@
         "code": "java.time.LocalDate"
       }
     ],
-    "exchange": [
+    "Exchange": [
       {
         "display_name": "Smart",
         "value": "SMART",
@@ -1052,8 +1015,8 @@
       }
     ]
   },
-  "base_ui_widget": {
-    "prop": [
+  "ui_component": {
+    "UIComponentProperties": [
       {
         "image": "save.gif",
         "method": "doSave",
@@ -1476,6 +1439,33 @@
         "code": "DISCLAIMER",
         "tool_tip": "Disclaimer",
         "mnemonic": ""
+      },
+      {
+        "tool_tip": "Compile",
+        "image": "gear.gif",
+        "code": "COMPILE",
+        "method": "doCompile",
+        "mnemonic": "",
+        "display_name": "Compile",
+        "enabled": "true"
+      },
+      {
+        "tool_tip": "Re-Assign strategies for selected tradingdays.",
+        "image": "gear.gif",
+        "code": "REASSIGN",
+        "method": "doReAssign",
+        "mnemonic": "",
+        "display_name": "Re-Assign",
+        "enabled": "true"
+      },
+      {
+        "tool_tip": "Strategy Parameters",
+        "image": "gear.gif",
+        "code": "STRATEGY_PARMS",
+        "method": "doStrategyParameters",
+        "mnemonic": "",
+        "display_name": "Strategy Parms",
+        "enabled": "true"
       }
     ]
   }

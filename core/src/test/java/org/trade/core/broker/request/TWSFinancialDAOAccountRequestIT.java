@@ -33,9 +33,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest
 @ContextConfiguration(classes = ApplicationRepositoryConfig.class,
         initializers = ApplicationProfileInitializer.class)
-public class TWSFinancialAccountRequestIT extends TradestrategyBase {
+public class TWSFinancialDAOAccountRequestIT extends TradestrategyBase {
 
-    private final static Logger _log = LoggerFactory.getLogger(TWSFinancialAccountRequestIT.class);
+    private final static Logger _log = LoggerFactory.getLogger(TWSFinancialDAOAccountRequestIT.class);
 
     private static final List<Account> accounts = new ArrayList<>();
 

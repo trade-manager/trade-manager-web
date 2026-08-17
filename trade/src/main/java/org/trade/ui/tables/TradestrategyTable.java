@@ -8,7 +8,7 @@ import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.BarSize;
 import org.trade.core.valuetype.ChartDays;
 import org.trade.core.valuetype.Currency;
-import org.trade.core.valuetype.Portfolio;
+import org.trade.core.valuetype.DAOPortfolio;
 import org.trade.core.valuetype.Strategy;
 import org.trade.core.valuetype.StrategyManager;
 import org.trade.core.valuetype.Decode;
@@ -93,7 +93,7 @@ public class TradestrategyTable extends Table {
                 (new StrategyManager()).getCodesDecodes().toArray(new Decode[0]));
         DecodeTableEditor strategyManagerEditor = new DecodeTableEditor(strategyManagerComboBox);
         DecodeTableEditor portfolioEditor = new DecodeTableEditor(
-                new JComboBox<>((new Portfolio()).getCodesDecodes().toArray(new Decode[0])));
+                new JComboBox<>((new DAOPortfolio()).getCodesDecodes().toArray(new Decode[0])));
         DecodeTableEditor chartDaysEditor = new DecodeTableEditor(
                 new JComboBox<>((new ChartDays()).getCodesDecodes().toArray(new Decode[0])));
         DecodeTableEditor barSizeEditor = new DecodeTableEditor(
@@ -105,7 +105,7 @@ public class TradestrategyTable extends Table {
         this.setDefaultRenderer(String.class, rString);
         this.setDefaultEditor(Strategy.class, strategyEditor);
         this.setDefaultEditor(StrategyManager.class, strategyManagerEditor);
-        this.setDefaultEditor(Portfolio.class, portfolioEditor);
+        this.setDefaultEditor(DAOPortfolio.class, portfolioEditor);
         this.setDefaultEditor(Currency.class, currencyEditor);
         this.setDefaultEditor(Exchange.class, exchangeEditor);
         this.setDefaultEditor(SECIdType.class, sECIdTypeEditor);

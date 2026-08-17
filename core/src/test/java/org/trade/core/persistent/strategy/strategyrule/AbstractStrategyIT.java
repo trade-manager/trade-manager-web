@@ -31,7 +31,7 @@ import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.Action;
 import org.trade.core.valuetype.BarSize;
 import org.trade.core.valuetype.ChartDays;
-import org.trade.core.valuetype.EntryLimit;
+import org.trade.core.valuetype.DAOEntryLimit;
 import org.trade.core.valuetype.Strategy;
 import org.trade.core.valuetype.Money;
 import org.trade.core.valuetype.OrderStatus;
@@ -356,7 +356,7 @@ public class AbstractStrategyIT extends TradestrategyBase {
          * $50,000/$20.01 = 2498 rounded to nearest 100 i.e Quantity = 2500.
          */
         Money price = new Money(20.00);
-        EntryLimit entryLimits = new EntryLimit();
+        DAOEntryLimit entryLimits = new DAOEntryLimit();
         Entrylimit entryLimit = entryLimits.getValue(price);
         entryLimit.setPercentOfMargin(new BigDecimal("0.5"));
         entryLimit = tradeService.getAspectService().save(entryLimit);
@@ -381,7 +381,7 @@ public class AbstractStrategyIT extends TradestrategyBase {
          * $50,000/$20.01 = 2498 rounded to nearest 100 i.e. Quantity = 2500.
          */
         Money price = new Money(45.75);
-        EntryLimit entryLimits = new EntryLimit();
+        DAOEntryLimit entryLimits = new DAOEntryLimit();
         Entrylimit entryLimit = entryLimits.getValue(price);
         entryLimit.setPercentOfMargin(new BigDecimal("0.5"));
         entryLimit = tradeService.getAspectService().save(entryLimit);
@@ -562,7 +562,7 @@ public class AbstractStrategyIT extends TradestrategyBase {
     @Test
     public void getEntryLimit() {
 
-        EntryLimit result = strategyProxy.getEntryLimit();
+        DAOEntryLimit result = strategyProxy.getEntryLimit();
         assertNotNull(result);
     }
 

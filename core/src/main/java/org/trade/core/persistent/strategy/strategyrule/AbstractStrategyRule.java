@@ -23,7 +23,7 @@ import org.trade.core.util.CoreUtils;
 import org.trade.core.util.Worker;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.Action;
-import org.trade.core.valuetype.EntryLimit;
+import org.trade.core.valuetype.DAOEntryLimit;
 import org.trade.core.valuetype.Money;
 import org.trade.core.valuetype.OrderType;
 import org.trade.core.valuetype.OverrideConstraints;
@@ -61,7 +61,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
      */
     private final transient EventListenerList listenerList;
     private final IBrokerModel brokerModel;
-    private final EntryLimit entryLimits = new EntryLimit();
+    private final DAOEntryLimit entryLimits = new DAOEntryLimit();
     private final StrategyData strategyData;
     private Tradestrategy tradestrategy = null;
     private TradestrategyOrders tradestrategyOrders = null;
@@ -1029,7 +1029,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
      *
      * @return DAOEntryLimit
      */
-    public EntryLimit getEntryLimit() {
+    public DAOEntryLimit getEntryLimit() {
 
         return this.entryLimits;
     }

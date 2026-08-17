@@ -30,7 +30,7 @@ public class BaseButton extends JButton {
      * @param basePanel         BasePanel
      * @param basePropertyCodes BaseUIPropertyCodes
      */
-    public BaseButton(BasePanel basePanel, BaseUIPropertyCodes basePropertyCodes) {
+    public BaseButton(BasePanel basePanel, org.trade.core.valuetype.UIComponentProperties basePropertyCodes) {
         this(basePanel, basePropertyCodes, 2);
     }
 
@@ -41,7 +41,7 @@ public class BaseButton extends JButton {
      * @param basePropertyCodes BaseUIPropertyCodes
      * @param margin            int
      */
-    public BaseButton(BasePanel basePanel, BaseUIPropertyCodes basePropertyCodes, int margin) {
+    public BaseButton(BasePanel basePanel, org.trade.core.valuetype.UIComponentProperties basePropertyCodes, int margin) {
         try {
             if (basePanel != null) {
                 this.addMessageListener(basePanel);
@@ -78,7 +78,7 @@ public class BaseButton extends JButton {
                 this.addMessageListener(basePanel);
             }
 
-            BaseUIPropertyCodes basePropertyCodes = BaseUIPropertyCodes.newInstance(UICode);
+            org.trade.core.valuetype.UIComponentProperties basePropertyCodes = org.trade.core.valuetype.UIComponentProperties.newInstance(UICode);
 
             if (!basePropertyCodes.getImage().isEmpty()) {
                 setIcon(ImageBuilder.getImageIcon(basePropertyCodes.getImage()));

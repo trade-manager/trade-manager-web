@@ -1,5 +1,7 @@
 package org.trade.core.valuetype;
 
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
 import org.trade.core.persistent.codetype.Entrylimit;
 
 import java.io.Serial;
@@ -10,7 +12,9 @@ import java.util.ListIterator;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-public class EntryLimit extends DAODecode {
+@Entity
+@DiscriminatorValue("DAOEntryLimit")
+public class DAOEntryLimit extends DAODecode {
 
     @Serial
     private static final long serialVersionUID = -5381026427696898592L;
@@ -19,8 +23,21 @@ public class EntryLimit extends DAODecode {
     public static final String _TABLE_ID = "_TABLE_ID";
     public static final String _COLUMN = "_COLUMN";
 
-    public EntryLimit() {
+    public DAOEntryLimit() {
         super(DECODE);
+    }
+
+    /**
+     * Constructor for CodeType.
+     *
+     * @param type        String
+     * @param category    String
+     * @param name        String
+     * @param description String
+     */
+    public DAOEntryLimit(String type, String category, String name, String description) {
+
+        super(type, category, name, description);
     }
 
     /**
@@ -28,8 +45,8 @@ public class EntryLimit extends DAODecode {
      *
      * @return EntryLimit
      */
-    public static EntryLimit newInstance() {
-        final EntryLimit returnInstance = new EntryLimit();
+    public static DAOEntryLimit newInstance() {
+        final DAOEntryLimit returnInstance = new DAOEntryLimit();
         returnInstance.setDefaultCode();
         return returnInstance;
     }

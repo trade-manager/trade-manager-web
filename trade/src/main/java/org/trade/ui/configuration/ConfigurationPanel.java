@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trade.base.BaseButton;
 import org.trade.base.BasePanel;
-import org.trade.base.BaseUIPropertyCodes;
+import org.trade.core.valuetype.UIComponentProperties;
 import org.trade.base.TableModel;
 import org.trade.base.TextDialog;
 import org.trade.core.aspect.Aspect;
@@ -17,7 +17,7 @@ import org.trade.core.persistent.codetype.CodeValue;
 import org.trade.core.persistent.portfolio.Portfolio;
 import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.persistent.strategy.series.indicator.IndicatorSeries;
-import org.trade.core.valuetype.EntryLimit;
+import org.trade.core.valuetype.DAOEntryLimit;
 import org.trade.core.valuetype.ReferenceTable;
 import org.trade.ui.models.AccountTableModel;
 import org.trade.ui.models.AspectTableModel;
@@ -82,9 +82,9 @@ public class ConfigurationPanel extends BasePanel {
              * Initialize the ValueType decode tables. This caused the tables to
              * be cached.
              */
-            EntryLimit.newInstance();
+            DAOEntryLimit.newInstance();
             jScrollPane = new JScrollPane();
-            propertiesButton = new BaseButton(this, BaseUIPropertyCodes.PROPERTIES, 0);
+            propertiesButton = new BaseButton(this, UIComponentProperties.PROPERTIES, 0);
             propertiesButton.setEnabled(false);
             JLabel refTable = new JLabel("Configuration:");
             refTableEditorComboBox = new DecodeComboBoxEditor(ReferenceTable.newInstance().getCodesDecodes());
@@ -428,7 +428,7 @@ public class ConfigurationPanel extends BasePanel {
                     tableChild = new ConfigurationTable(tableModelChild);
 
                     tableChild.getSelectionModel().addListSelectionListener(new IndicatorSeriesTableRowListener());
-                    tableChild.setDefaultRenderer(Aspects.class, new ButtonRenderer(BaseUIPropertyCodes.PROPERTIES));
+                    tableChild.setDefaultRenderer(Aspects.class, new ButtonRenderer(UIComponentProperties.PROPERTIES));
                     tableChild.setDefaultEditor(Aspects.class, new ButtonEditor(propertiesButton));
                 }
                 case CodeType codeType -> {

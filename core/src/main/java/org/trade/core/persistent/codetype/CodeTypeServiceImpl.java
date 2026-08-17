@@ -36,6 +36,22 @@ public class CodeTypeServiceImpl implements CodeTypeService {
         return codeTypeRepository.findByName(name).orElse(null);
     }
 
+    @Transactional
+    public List<CodeType> findByType(String type) {
+
+        List<CodeType> codeTypes = codeTypeRepository.findByType(type);
+
+        for (CodeType codeType : codeTypes) {
+
+            for (CodeAttribute codeAttribute : codeType.getCodeAttributes()) {
+
+                codeAttribute.getCodeValues().size();
+            }
+        }
+
+        return codeTypes;
+    }
+
     public CodeType validateAndGet(String name) {
 
         return codeTypeRepository.findByName(name).orElseThrow(() -> new CodeTypeNotFoundException(String.format("CodeType with name %s not found", name)));

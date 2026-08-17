@@ -13,7 +13,7 @@ import org.trade.core.persistent.strategy.series.indicator.pivot.PivotCalculator
 import org.trade.core.persistent.strategy.series.indicator.pivot.PivotItem;
 import org.trade.core.util.Pair;
 import org.trade.core.util.time.RegularTimePeriod;
-import org.trade.core.valuetype.EntryLimit;
+import org.trade.core.valuetype.DAOEntryLimit;
 import org.trade.core.valuetype.Money;
 import org.trade.core.valuetype.Side;
 
@@ -250,7 +250,7 @@ public class PivotSeries extends IndicatorSeries {
 
         PivotItem dataItem = null;
         Hashtable<Long, Pair> userDataList = new Hashtable<>();
-        EntryLimit entryLimits = new EntryLimit();
+        DAOEntryLimit entryLimits = new DAOEntryLimit();
 
         boolean pivot = false;
         String side = null;

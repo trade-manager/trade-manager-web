@@ -19,7 +19,7 @@ import org.trade.core.valuetype.AccountType;
 import org.trade.core.valuetype.BarSize;
 import org.trade.core.valuetype.ChartDays;
 import org.trade.core.valuetype.Currency;
-import org.trade.core.valuetype.Portfolio;
+import org.trade.core.valuetype.DAOPortfolio;
 import org.trade.core.valuetype.Strategy;
 import org.trade.core.valuetype.Exchange;
 import org.trade.core.valuetype.SECType;
@@ -80,7 +80,7 @@ public class TradestrategyBase {
             strategy = (org.trade.core.persistent.strategy.Strategy) Strategy.newInstance().getObject();
         }
 
-        org.trade.core.persistent.portfolio.Portfolio portfolio = (org.trade.core.persistent.portfolio.Portfolio) Portfolio.newInstance().getObject();
+        org.trade.core.persistent.portfolio.Portfolio portfolio = (org.trade.core.persistent.portfolio.Portfolio) DAOPortfolio.newInstance().getObject();
         portfolio = tradeService.getPortfolioService().findByName(portfolio.getName());
 
         if (portfolio.getAccounts().isEmpty()) {

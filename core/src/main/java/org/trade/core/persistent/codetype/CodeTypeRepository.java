@@ -30,6 +30,14 @@ public interface CodeTypeRepository extends AspectRepository<CodeType, Long> {
     Optional<CodeType> findByName(String name);
 
     /**
+     * Method findByType.
+     *
+     * @param type
+     * @return
+     */
+    List<CodeType> findByType(String type);
+
+    /**
      * Method findByNameAndType.
      *
      * @param name
@@ -37,7 +45,6 @@ public interface CodeTypeRepository extends AspectRepository<CodeType, Long> {
      * @return
      */
     List<CodeType> findByNameAndType(String name, String type);
-
 
     /**
      * Method findByNameAndTypeAndCategory.

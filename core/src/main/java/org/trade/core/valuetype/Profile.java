@@ -1,5 +1,7 @@
 package org.trade.core.valuetype;
 
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
 import org.trade.core.persistent.portfolio.Portfolio;
 
 import java.io.Serial;
@@ -10,6 +12,8 @@ import java.util.List;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
+@Entity
+@DiscriminatorValue("Profile")
 public class Profile extends DAODecode {
 
     @Serial
@@ -21,6 +25,19 @@ public class Profile extends DAODecode {
 
     public Profile() {
         super(DECODE, true);
+    }
+
+    /**
+     * Constructor for CodeType.
+     *
+     * @param type        String
+     * @param category    String
+     * @param name        String
+     * @param description String
+     */
+    public Profile(String type, String category, String name, String description) {
+
+        super(type, category, name, description);
     }
 
     /**
