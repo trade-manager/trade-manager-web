@@ -68,7 +68,7 @@ import java.util.Optional;
 @Service
 public class TradeServiceImpl implements TradeService {
 
-    private final static Logger _log = LoggerFactory.getLogger(TradeServiceImpl.class);
+    private static final Logger _log = LoggerFactory.getLogger(TradeServiceImpl.class);
 
     private final AspectService aspectService;
     private final DomainService domainService;

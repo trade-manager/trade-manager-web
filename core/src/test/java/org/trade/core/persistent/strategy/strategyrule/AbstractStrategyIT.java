@@ -64,7 +64,7 @@ import static org.junit.jupiter.api.Assertions.fail;
         initializers = ApplicationProfileInitializer.class)
 public class AbstractStrategyIT extends TradestrategyBase {
 
-    private final static Logger _log = LoggerFactory.getLogger(AbstractStrategyIT.class);
+    private static final Logger _log = LoggerFactory.getLogger(AbstractStrategyIT.class);
 
     private static final String symbol = "TEST-" + TradestrategyBase.getRandomNumber(4);
     private static Tradestrategy tradestrategy;

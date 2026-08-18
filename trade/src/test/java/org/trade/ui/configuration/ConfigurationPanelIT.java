@@ -37,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.fail;
         initializers = ApplicationProfileInitializer.class)
 class ConfigurationPanelIT {
 
-    private final static Logger _log = LoggerFactory.getLogger(ConfigurationPanelIT.class);
+    private static final Logger _log = LoggerFactory.getLogger(ConfigurationPanelIT.class);
 
     /**
      * Method setUpBeforeClass.

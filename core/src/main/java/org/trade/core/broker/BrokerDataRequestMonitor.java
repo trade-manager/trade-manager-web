@@ -32,7 +32,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class BrokerDataRequestMonitor extends SwingWorker<Void, String> {
 
-    private final static Logger _log = LoggerFactory.getLogger(BrokerDataRequestMonitor.class);
+    private static final Logger _log = LoggerFactory.getLogger(BrokerDataRequestMonitor.class);
 
     private static final String durationFormat = "%s hr %s min %s sec";
 

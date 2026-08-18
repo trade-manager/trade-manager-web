@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
         initializers = ApplicationProfileInitializer.class)
 public class CodeTypeServiceIT extends TradestrategyBase {
 
-    private final static Logger _log = LoggerFactory.getLogger(CodeTypeServiceIT.class);
+    private static final Logger _log = LoggerFactory.getLogger(CodeTypeServiceIT.class);
 
     /**
      * Method setUpBeforeClass.

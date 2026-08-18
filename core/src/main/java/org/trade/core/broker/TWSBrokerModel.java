@@ -76,7 +76,7 @@ public class TWSBrokerModel extends AbstractBrokerModel implements EWrapper, ERe
     @Serial
     private static final long serialVersionUID = 595280836716405557L;
 
-    private final static Logger _log = LoggerFactory.getLogger(TWSBrokerModel.class);
+    private static final Logger _log = LoggerFactory.getLogger(TWSBrokerModel.class);
 
     private final TradeService tradeService;
 

@@ -45,7 +45,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
         initializers = ApplicationProfileInitializer.class)
 public class CoreUtilsIT {
 
-    private final static Logger _log = LoggerFactory.getLogger(CoreUtilsIT.class);
+    private static final Logger _log = LoggerFactory.getLogger(CoreUtilsIT.class);
 
     private static final int SCALE = 5;
     private AtomicInteger timerRunning = null;

@@ -45,7 +45,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class AuthControllerIT extends TradestrategyBase {
 
-    private final static Logger _log = LoggerFactory.getLogger(AuthControllerIT.class);
+    private static final Logger _log = LoggerFactory.getLogger(AuthControllerIT.class);
 
     @Autowired
     private MockMvc mockMvc;

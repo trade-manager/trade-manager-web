@@ -22,7 +22,7 @@ public class Decimal extends ValueType implements Comparator<Decimal>, Comparabl
     @Serial
     private static final long serialVersionUID = 4937298768811778585L;
 
-    public final static Decimal ZERO = new Decimal(0L, 0);
+    public static final Decimal ZERO = new Decimal(0L, 0);
 
     protected static Boolean ascending = true;
 

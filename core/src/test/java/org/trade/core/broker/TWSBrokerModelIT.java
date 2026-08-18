@@ -39,7 +39,7 @@ import java.util.concurrent.atomic.AtomicInteger;
         initializers = ApplicationProfileInitializer.class)
 public class TWSBrokerModelIT extends TradestrategyBase implements IBrokerChangeListener {
 
-    private final static Logger _log = LoggerFactory.getLogger(TWSBrokerModelIT.class);
+    private static final Logger _log = LoggerFactory.getLogger(TWSBrokerModelIT.class);
 
     private Tradingdays tradingdays = null;
     private IBrokerModel tWSBrokerModel;
@@ -47,8 +47,8 @@ public class TWSBrokerModelIT extends TradestrategyBase implements IBrokerChange
     private static Timer timer = null;
     private boolean connectionFailed = false;
     private static AtomicInteger timerRunning = null;
-    private final static Object lockCoreUtilsTest = new Object();
-    private final static String _broker = IBrokerModel._broker;
+    private static final Object lockCoreUtilsTest = new Object();
+    private static final String _broker = IBrokerModel._broker;
 
     private BrokerDataRequestMonitor brokerDataRequestProgressMonitor = null;
 

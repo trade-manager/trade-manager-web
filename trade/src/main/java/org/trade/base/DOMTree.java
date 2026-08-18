@@ -61,7 +61,7 @@ public class DOMTree extends JTree implements DragSourceListener, DragGestureLis
     @Serial
     private static final long serialVersionUID = -8742998183708844989L;
 
-    private final static Logger _log = LoggerFactory.getLogger(DOMTree.class);
+    private static final Logger _log = LoggerFactory.getLogger(DOMTree.class);
     /**
      * Stores the selected node info
      */

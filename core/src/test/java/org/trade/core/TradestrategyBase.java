@@ -47,8 +47,8 @@ import static org.junit.jupiter.api.Assertions.fail;
  */
 public class TradestrategyBase {
 
-    private final static Logger _log = LoggerFactory.getLogger(TradestrategyBase.class);
-    private final static LinkedList<Aspect> aspects = new LinkedList<>();
+    private static final Logger _log = LoggerFactory.getLogger(TradestrategyBase.class);
+    private static final LinkedList<Aspect> aspects = new LinkedList<>();
 
     @Autowired
     public TradeService tradeService;

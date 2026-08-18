@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
         initializers = ApplicationProfileInitializer.class)
 public class TradingdayServiceIT extends TradestrategyBase {
 
-    private final static Logger _log = LoggerFactory.getLogger(TradingdayServiceIT.class);
+    private static final Logger _log = LoggerFactory.getLogger(TradingdayServiceIT.class);
 
     private static Tradingday tradingday;
 

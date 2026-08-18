@@ -46,7 +46,7 @@ public class PropertyFileLookupServiceProvider implements ILookupServiceProvider
             try {
 
                 List<String> colNames = new ArrayList<>();
-                ListIterator<?> en = ConfigProperties.getPropAsEnumeration(lookupName + "_PropertyFile");
+                ListIterator<?> en = ConfigProperties.getDecodesAsEnumeration(lookupName + "_PropertyFile");
 
                 while (en.hasNext()) {
 
@@ -61,7 +61,7 @@ public class PropertyFileLookupServiceProvider implements ILookupServiceProvider
 
                 for (i = 0; i < colNamesSize; i++) {
 
-                    colRows.add(ConfigProperties.getPropAsEnumeration(colNames.get(i)));
+                    colRows.add(ConfigProperties.getDecodesAsEnumeration(colNames.get(i)));
                 }
 
                 // Now construct a List List - representing the table of

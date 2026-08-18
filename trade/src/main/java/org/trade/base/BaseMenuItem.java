@@ -19,7 +19,7 @@ public class BaseMenuItem extends JMenuItem {
     @Serial
     private static final long serialVersionUID = 5816221538464868893L;
 
-    private final static Logger _log = LoggerFactory.getLogger(BaseMenuItem.class);
+    private static final Logger _log = LoggerFactory.getLogger(BaseMenuItem.class);
     protected MessageNotifier notifier = new MessageNotifier();
     private String method = null;
 

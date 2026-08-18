@@ -19,7 +19,7 @@ public class BaseButton extends JButton {
      */
     @Serial
     private static final long serialVersionUID = -47827936580637959L;
-    private final static Logger _log = LoggerFactory.getLogger(BaseButton.class);
+    private static final Logger _log = LoggerFactory.getLogger(BaseButton.class);
     protected MessageNotifier notifier = new MessageNotifier();
     private String method = null;
     private Object transferObject = null;

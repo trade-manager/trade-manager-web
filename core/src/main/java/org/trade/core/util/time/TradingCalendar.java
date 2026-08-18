@@ -28,7 +28,7 @@ public class TradingCalendar {
      * Set the default time zone i.e. user.timezone system property.
      */
 
-    private final static Logger _log = LoggerFactory.getLogger(TradingCalendar.class);
+    private static final Logger _log = LoggerFactory.getLogger(TradingCalendar.class);
 
     public static ZoneId MKT_TIMEZONE = null;
     public static ZoneId LOCAL_TIMEZONE = null;

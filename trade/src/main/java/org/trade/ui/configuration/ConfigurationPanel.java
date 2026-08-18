@@ -52,7 +52,7 @@ public class ConfigurationPanel extends BasePanel {
     private static final long serialVersionUID = 8543984162821384818L;
 
     private final TradeService tradeService;
-    private final static Logger _log = LoggerFactory.getLogger(ConfigurationPanel.class);
+    private static final Logger _log = LoggerFactory.getLogger(ConfigurationPanel.class);
     private JScrollPane jScrollPane = null;
     private final JScrollPane jScrollPane1 = new JScrollPane();
     private ConfigurationTable configTable = null;

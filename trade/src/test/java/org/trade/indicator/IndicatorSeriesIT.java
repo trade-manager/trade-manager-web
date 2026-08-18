@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
         initializers = ApplicationProfileInitializer.class)
 public class IndicatorSeriesIT extends TradestrategyBase {
 
-    private final static Logger _log = LoggerFactory.getLogger(IndicatorSeriesIT.class);
+    private static final Logger _log = LoggerFactory.getLogger(IndicatorSeriesIT.class);
 
     private static Tradestrategy tradestrategy;
     private static TradestrategyBase TradestrategyBase;

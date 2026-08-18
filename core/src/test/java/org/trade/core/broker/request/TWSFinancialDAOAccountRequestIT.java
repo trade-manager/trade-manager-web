@@ -35,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
         initializers = ApplicationProfileInitializer.class)
 public class TWSFinancialDAOAccountRequestIT extends TradestrategyBase {
 
-    private final static Logger _log = LoggerFactory.getLogger(TWSFinancialDAOAccountRequestIT.class);
+    private static final Logger _log = LoggerFactory.getLogger(TWSFinancialDAOAccountRequestIT.class);
 
     private static final List<Account> accounts = new ArrayList<>();
 

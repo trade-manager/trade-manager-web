@@ -41,7 +41,7 @@ public class BackTestBrokerModel extends AbstractBrokerModel implements IClientW
     @Serial
     private static final long serialVersionUID = 3191422640254347940L;
 
-    private final static Logger _log = LoggerFactory.getLogger(BackTestBrokerModel.class);
+    private static final Logger _log = LoggerFactory.getLogger(BackTestBrokerModel.class);
 
     private final TradeService tradeService;
 

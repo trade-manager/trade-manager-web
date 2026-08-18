@@ -25,7 +25,7 @@ import java.util.List;
  */
 public class StrategyData extends Worker {
 
-    private final static Logger _log = LoggerFactory.getLogger(StrategyData.class);
+    private static final Logger _log = LoggerFactory.getLogger(StrategyData.class);
 
     private CandleDataset baseCandleDataset = new CandleDataset();
     private CandleDataset candleDataset = new CandleDataset();

@@ -39,28 +39,16 @@ import java.util.regex.Pattern;
  */
 public class ConfigProperties {
 
-    private final static Logger _log = LoggerFactory.getLogger(ConfigProperties.class);
+    private static final  Logger _log = LoggerFactory.getLogger(ConfigProperties.class);
 
-    public final static String MANDATORY_PROPERTY = "mandatory_property";
+    public static final  String MANDATORY_PROPERTY = "mandatory_property";
     private static String _filename = null;
 
     // This is loaded as a system resource from the current core package
-    private final static String CONFIG_PROPERTY_FILE = "config.properties";
-    private final static String DECODE_PROPERTY_FILE = "decode.json";
-    private final static String ENVIRONMENT_VARIABLE_PROPERTY_FILE = "trade.config";
+    private static final String CONFIG_PROPERTY_FILE = "config.properties";
+    private static final String DECODE_PROPERTY_FILE = "decode.json";
+    private static final String ENVIRONMENT_VARIABLE_PROPERTY_FILE = "trade.config";
     private static Properties deploymentProperties;
-    private static final ConfigProperties configProperties = new ConfigProperties();
-
-    /**
-     * Returns a string for a key.
-     *
-     * @param key String
-     * @return String
-     */
-    public static String getPropAsString(String key) throws IOException {
-
-        return configProperties.retrieveProperty(key);
-    }
 
     /**
      * Method getDeploymentPropertyFileName.
@@ -93,7 +81,7 @@ public class ConfigProperties {
      */
     public static Properties getDeploymentProperties(Object context, String fileName) throws MissingPropertiesException {
 
-        return configProperties.getProperties(context, fileName);
+        return getProperties(context, fileName);
     }
 
     /**
@@ -107,6 +95,17 @@ public class ConfigProperties {
     }
 
     /**
+     * Returns a string for a key.
+     *
+     * @param key String
+     * @return String
+     */
+    public static String getPropAsString(String key) throws IOException {
+
+        return retrieveProperty(key);
+    }
+
+    /**
      * Returns an int for a key. If the number is malformed, then it return 0.
      *
      * @param key String
@@ -114,7 +113,7 @@ public class ConfigProperties {
      */
     public static int getPropAsInt(String key) throws IOException {
 
-        return Integer.parseInt(configProperties.retrieveProperty(key));
+        return Integer.parseInt(retrieveProperty(key));
     }
 
     /**
@@ -126,7 +125,7 @@ public class ConfigProperties {
      */
     public static boolean getPropAsBoolean(String key) throws IOException {
 
-        return Boolean.parseBoolean(configProperties.retrieveProperty(key));
+        return Boolean.parseBoolean(retrieveProperty(key));
     }
 
     /**
@@ -135,7 +134,7 @@ public class ConfigProperties {
      * @param keyRoot String
      * @return ListIterator<String>
      */
-    public static ListIterator<String> getPropAsEnumeration(String keyRoot) throws IOException {
+    public static ListIterator<String> getDecodesAsEnumeration(String keyRoot) throws IOException {
 
         List<String> resVec;
         int iNumEntries = getPropAsInt(keyRoot + "_NumOfItems");
@@ -165,13 +164,14 @@ public class ConfigProperties {
      * @param keyNames Dictionary<?,?>
      * @return Properties[]
      */
-    public static Properties[] getPropertiesAsArrayOfProperties(String keyRoot, Dictionary<?, ?> keyNames)
+    public static Properties[] getDecodesAsArrayOfProperties(String keyRoot, Dictionary<?, ?> keyNames)
             throws IOException {
 
         int iNumItems = getPropAsInt(keyRoot + "_NumOfItems");
         Properties[] propArray = new Properties[iNumItems];
 
         for (int iCount = 1; iCount <= iNumItems; iCount++) {
+            
             propArray[iCount - 1] = getSetOfProperties(keyRoot + "_" + iCount, keyNames);
         }
 
@@ -185,18 +185,24 @@ public class ConfigProperties {
      * @param fileName String
      * @return Properties
      */
-    private Properties getProperties(Object context, String fileName) throws MissingPropertiesException {
+    private static Properties getProperties(Object context, String fileName) throws MissingPropertiesException {
 
         try {
 
             if (null == deploymentProperties) {
 
                 Properties systemProperties = new Properties();
-                loadPropertiesAsResource(configProperties, getSystemPropertyFileName(), systemProperties);
-                loadPropertiesAsResource(context, fileName, systemProperties);
-                deploymentProperties = new Properties(systemProperties);
-                loadPropertiesAsFile(getDeploymentPropertyFileName(), deploymentProperties);
 
+                // Get the resource config.properties
+                loadPropertiesAsResource(context, getSystemPropertyFileName(), systemProperties);
+
+                // Get the resource core.properties
+                loadPropertiesAsResource(context, fileName, systemProperties);
+                deploymentProperties = new Properties();
+
+                // Get the root config.properties
+                loadPropertiesAsFile(getDeploymentPropertyFileName(), deploymentProperties);
+                deploymentProperties.putAll(systemProperties);
             }
         } catch (IOException ex) {
 
@@ -251,6 +257,7 @@ public class ConfigProperties {
      * @return Enumeration<?>
      */
     public static Enumeration<?> getCommaSeparatedStrings(String key) throws IOException {
+
         String list = getPropAsString(key);
         return new StringTokenizer(list, ",");
     }
@@ -261,12 +268,12 @@ public class ConfigProperties {
      * @param key String
      * @return String
      */
-    private String retrieveProperty(String key) throws IOException {
+    private static String retrieveProperty(String key) throws IOException {
 
         if (null == deploymentProperties) {
 
             Properties systemProperties = new Properties();
-            loadPropertiesAsResource(configProperties, getSystemPropertyFileName(), systemProperties);
+            loadPropertiesAsResource(ConfigProperties.class, getSystemPropertyFileName(), systemProperties);
             Properties deploymentProperties = new Properties(systemProperties);
             loadPropertiesAsFile(getDeploymentPropertyFileName(), deploymentProperties);
         }
@@ -291,7 +298,7 @@ public class ConfigProperties {
     public static String getPropertyAfterEnvSubstitution(String key) throws IOException {
         String strRet;
 
-        strRet = configProperties.retrieveProperty(key);
+        strRet = retrieveProperty(key);
 
         // put env variables in the dictionary
         Dictionary<?, ?> toSubstitute = System.getProperties();
@@ -332,7 +339,7 @@ public class ConfigProperties {
      * @param filename   String
      * @param properties Properties
      */
-    private void loadPropertiesAsResource(Object context, String filename, Properties properties) throws IOException {
+    private static void loadPropertiesAsResource(Object context, String filename, Properties properties) throws IOException {
 
         InputStream unbuffered;
 
@@ -360,7 +367,7 @@ public class ConfigProperties {
      * @param filename   String
      * @param properties Properties
      */
-    private void loadPropertiesAsFile(String filename, Properties properties) throws IOException {
+    private static void loadPropertiesAsFile(String filename, Properties properties) throws IOException {
 
         if (null != filename) {
 
@@ -385,13 +392,12 @@ public class ConfigProperties {
     /**
      * Method loadPropertiesAsFile.
      *
-     * @param context  Object
      * @param filename String
      * @return jsonObject JSONObject
      */
-    private static JSONObject loadJSONAsResource(Object context, String filename) throws IOException {
+    private static JSONObject loadJSONAsResource(String filename) throws IOException {
 
-        InputStream unbuffered = context.getClass().getResourceAsStream(filename);
+        InputStream unbuffered = ((Object) ConfigProperties.class).getClass().getResourceAsStream(filename);
 
         if (unbuffered == null) {
 
@@ -420,7 +426,7 @@ public class ConfigProperties {
             AtomicInteger codeTypeId = new AtomicInteger(11);
             AtomicInteger codeAttributeId = new AtomicInteger(33);
             AtomicInteger codeValueId = new AtomicInteger(49);
-            JSONObject decodes = loadJSONAsResource(configProperties, filename);
+            JSONObject decodes = loadJSONAsResource(filename);
             decodes.keySet().forEach(category -> {
 
                 JSONObject categories = decodes.getJSONObject(category);

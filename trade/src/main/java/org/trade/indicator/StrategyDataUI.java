@@ -22,7 +22,7 @@ import java.util.List;
  */
 public class StrategyDataUI extends Worker {
 
-    private final static Logger _log = LoggerFactory.getLogger(StrategyDataUI.class);
+    private static final Logger _log = LoggerFactory.getLogger(StrategyDataUI.class);
 
     private final CandleDataset baseCandleDataset;
     private final CandleDataset candleDataset;

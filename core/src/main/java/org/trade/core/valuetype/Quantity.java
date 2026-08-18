@@ -23,11 +23,11 @@ public class Quantity extends ValueType implements Comparator<Quantity>, Compara
     @Serial
     private static final long serialVersionUID = 4937298768811778585L;
 
-    public final static String QUANTITY_POSITIVE_7_0 = "#(,)###(,)###";
-    public final static String QUANTITY_NONNEGATIVE_8_0 = "##(,)###(,)###";
-    public final static String QUANTITY_POSITIVE_10_0 = "#(,)###(,)###(,)###";
-    public final static String QUANTITY_NONNEGATIVE_11_0 = "##(,)###(,)###(,)###";
-    public final static Quantity ZERO = new Quantity(0);
+    public static final String QUANTITY_POSITIVE_7_0 = "#(,)###(,)###";
+    public static final String QUANTITY_NONNEGATIVE_8_0 = "##(,)###(,)###";
+    public static final String QUANTITY_POSITIVE_10_0 = "#(,)###(,)###(,)###";
+    public static final String QUANTITY_NONNEGATIVE_11_0 = "##(,)###(,)###(,)###";
+    public static final Quantity ZERO = new Quantity(0);
     protected static Boolean ascending = true;
 
     static {

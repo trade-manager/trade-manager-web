@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class PivotCalculator {
 
-    private final static Logger _log = LoggerFactory.getLogger(PivotCalculator.class);
+    private static final Logger _log = LoggerFactory.getLogger(PivotCalculator.class);
 
     private static int _polyOrder = 2; // default order
     private static double _minCorrelationCoeff = 0.6;

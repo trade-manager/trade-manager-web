@@ -26,9 +26,9 @@ import java.util.List;
 @Table(name = "role")
 public class Role extends Aspect implements Serializable, Cloneable {
 
-    public final static String ROLE_ADMIN = "ADMIN";
-    public final static String ROLE_MANAGER = "MANAGER";
-    public final static String ROLE_USER = "USER";
+    public static final String ROLE_ADMIN = "ADMIN";
+    public static final String ROLE_MANAGER = "MANAGER";
+    public static final String ROLE_USER = "USER";
 
     @Serial
     private static final long serialVersionUID = 5691902477608387034L;

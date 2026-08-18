@@ -24,7 +24,7 @@ public class TabbedCloseButton extends JPanel {
      */
     @Serial
     private static final long serialVersionUID = 8543984162821384818L;
-    private final static Logger _log = LoggerFactory.getLogger(TabbedCloseButton.class);
+    private static final Logger _log = LoggerFactory.getLogger(TabbedCloseButton.class);
     protected MessageNotifier notifier = new MessageNotifier();
     private String method = null;
     private Object transferObject = null;
@@ -164,7 +164,7 @@ public class TabbedCloseButton extends JPanel {
         }
     }
 
-    private final static MouseListener buttonMouseListener = new MouseAdapter() {
+    private static final MouseListener buttonMouseListener = new MouseAdapter() {
         public void mouseEntered(MouseEvent e) {
             Component component = e.getComponent();
             if (component instanceof AbstractButton button) {

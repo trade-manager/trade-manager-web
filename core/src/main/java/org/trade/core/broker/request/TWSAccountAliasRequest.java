@@ -18,7 +18,7 @@ import java.util.Stack;
  */
 public class TWSAccountAliasRequest extends SaxMapper {
 
-    private final static Logger _log = LoggerFactory.getLogger(TWSAccountAliasRequest.class);
+    private static final Logger _log = LoggerFactory.getLogger(TWSAccountAliasRequest.class);
 
     private Aspects target = null;
     private final Stack<Object> stack = new Stack<>();

@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
         initializers = ApplicationProfileInitializer.class)
 public class PortfolioServiceIT extends TradestrategyBase {
 
-    private final static Logger _log = LoggerFactory.getLogger(PortfolioServiceIT.class);
+    private static final Logger _log = LoggerFactory.getLogger(PortfolioServiceIT.class);
 
     private static final String accountNumber = "TEST-" + TradestrategyBase.getRandomNumber(4);
 

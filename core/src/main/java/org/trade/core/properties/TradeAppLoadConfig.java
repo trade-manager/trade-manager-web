@@ -8,8 +8,8 @@ import java.util.Properties;
  */
 public class TradeAppLoadConfig {
 
-    private final static String CORE_PROPERTY_FILE = "core.properties";
-    private final static TradeAppLoadConfig tradeAppLoadConfig = new TradeAppLoadConfig();
+    private static final String CORE_PROPERTY_FILE = "core.properties";
+    private static final TradeAppLoadConfig tradeAppLoadConfig = new TradeAppLoadConfig();
 
     TradeAppLoadConfig() {
     }
@@ -18,6 +18,7 @@ public class TradeAppLoadConfig {
      * Method loadAppProperties.
      */
     public static Properties loadAppProperties() throws MissingPropertiesException {
+
         return ConfigProperties.getDeploymentProperties(tradeAppLoadConfig, CORE_PROPERTY_FILE);
     }
 }

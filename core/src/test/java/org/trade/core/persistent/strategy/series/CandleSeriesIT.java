@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
         initializers = ApplicationProfileInitializer.class)
 public class CandleSeriesIT extends TradestrategyBase {
 
-    private final static Logger _log = LoggerFactory.getLogger(CandleSeriesIT.class);
+    private static final Logger _log = LoggerFactory.getLogger(CandleSeriesIT.class);
 
     private static final String symbol = "TEST-" + TradestrategyBase.getRandomNumber(4);
     private static Tradestrategy tradestrategy;

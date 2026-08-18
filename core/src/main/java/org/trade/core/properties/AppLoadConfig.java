@@ -6,8 +6,8 @@ package org.trade.core.properties;
  */
 public class AppLoadConfig {
 
-    private final static String CORE_PROPERTY_FILE = "core.properties";
-    private final static AppLoadConfig fAppConfigLoad = new AppLoadConfig();
+    private static final String CORE_PROPERTY_FILE = "core.properties";
+    private static final AppLoadConfig fAppConfigLoad = new AppLoadConfig();
 
     AppLoadConfig() {
     }

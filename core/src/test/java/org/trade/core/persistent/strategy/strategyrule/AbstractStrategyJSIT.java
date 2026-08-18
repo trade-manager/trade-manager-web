@@ -50,7 +50,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
         initializers = ApplicationProfileInitializer.class)
 public class AbstractStrategyJSIT extends TradestrategyBase {
 
-    private final static Logger _log = LoggerFactory.getLogger(AbstractStrategyJSIT.class);
+    private static final Logger _log = LoggerFactory.getLogger(AbstractStrategyJSIT.class);
 
     private static final String symbol = "TEST-" + TradestrategyBase.getRandomNumber(4);
     private static Tradestrategy tradestrategy;

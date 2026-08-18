@@ -1192,7 +1192,7 @@ public class TradingdayPanel extends BasePanel {
      */
     public static class CVSFilter extends FileFilter {
 
-        public final static String csv = "csv";
+        public static final String csv = "csv";
 
         // Accept all directories and all csv files.
 

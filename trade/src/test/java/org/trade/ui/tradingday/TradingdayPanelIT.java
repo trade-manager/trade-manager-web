@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.fail;
         initializers = ApplicationProfileInitializer.class)
 public class TradingdayPanelIT extends TradestrategyBase {
 
-    private final static Logger _log = LoggerFactory.getLogger(TradingdayPanelIT.class);
+    private static final Logger _log = LoggerFactory.getLogger(TradingdayPanelIT.class);
 
     private static Tradestrategy tradestrategy;
     private static final String symbol = "IBM-" + TradestrategyBase.getRandomNumber(4);

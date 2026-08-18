@@ -28,10 +28,10 @@ public class Date extends ValueType implements Comparator<Date>, Comparable<Date
     @Serial
     private static final long serialVersionUID = -5122615819171831028L;
 
-    public final static String DATE_TIME_FORMAT = "yyyy-MM-dd'T'HHmmss'Z'";
-    public final static String DATE_FORMAT = "yyyyMMdd";
-    public final static int LEN_STRING_IN_DATE_TIME_FORMAT = 18;
-    public final static int LEN_STRING_IN_DATE_FORMAT = 8;
+    public static final String DATE_TIME_FORMAT = "yyyy-MM-dd'T'HHmmss'Z'";
+    public static final String DATE_FORMAT = "yyyyMMdd";
+    public static final int LEN_STRING_IN_DATE_TIME_FORMAT = 18;
+    public static final int LEN_STRING_IN_DATE_FORMAT = 8;
     public static final Date NULLIPDATE = new Date(
             ZonedDateTime.of(LocalDateTime.ofEpochSecond(0, 0, ZoneOffset.UTC), ZoneOffset.UTC.normalized()));
 

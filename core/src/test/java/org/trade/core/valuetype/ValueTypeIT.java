@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
         initializers = ApplicationProfileInitializer.class)
 public class ValueTypeIT {
 
-    private final static Logger _log = LoggerFactory.getLogger(ValueTypeIT.class);
+    private static final Logger _log = LoggerFactory.getLogger(ValueTypeIT.class);
 
     /**
      * Method setUpBeforeClass.

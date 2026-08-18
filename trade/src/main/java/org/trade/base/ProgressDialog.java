@@ -16,7 +16,7 @@ public class ProgressDialog extends JDialog {
     @Serial
     private static final long serialVersionUID = -4399430258481031373L;
 
-    private final static Logger _log = LoggerFactory.getLogger(ProgressDialog.class);
+    private static final Logger _log = LoggerFactory.getLogger(ProgressDialog.class);
     private static final JTextField jTextFieldStatus = new JTextField();
     private static final JProgressBar jProgressBar1 = new JProgressBar();
 

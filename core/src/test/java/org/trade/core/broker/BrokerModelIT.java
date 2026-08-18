@@ -51,7 +51,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
         initializers = ApplicationProfileInitializer.class)
 public class BrokerModelIT extends TradestrategyBase implements IBrokerChangeListener {
 
-    private final static Logger _log = LoggerFactory.getLogger(BrokerModelIT.class);
+    private static final Logger _log = LoggerFactory.getLogger(BrokerModelIT.class);
 
     private static final String symbol = "NVDA";
     private static Tradestrategy tradestrategy;

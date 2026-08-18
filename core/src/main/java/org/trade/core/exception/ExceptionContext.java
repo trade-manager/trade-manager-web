@@ -15,7 +15,7 @@ public class ExceptionContext implements java.io.Serializable {
     @Serial
     private static final long serialVersionUID = 4837522639316151345L;
 
-    private final static String NULL_VALUE = "";
+    private static final String NULL_VALUE = "";
     private final String parameterName;
     private String value;
 
