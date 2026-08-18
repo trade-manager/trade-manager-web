@@ -37,6 +37,38 @@ public class CodeTypeServiceImpl implements CodeTypeService {
     }
 
     @Transactional
+    public List<CodeType> findAll() {
+
+        List<CodeType> codeTypes = codeTypeRepository.findAll();
+
+        for (CodeType codeType : codeTypes) {
+
+            for (CodeAttribute codeAttribute : codeType.getCodeAttributes()) {
+
+                codeAttribute.getCodeValues().size();
+            }
+        }
+
+        return codeTypes;
+    }
+
+    @Transactional
+    public List<CodeType> findByCategory(String category) {
+
+        List<CodeType> codeTypes = codeTypeRepository.findByCategory(category);
+
+        for (CodeType codeType : codeTypes) {
+
+            for (CodeAttribute codeAttribute : codeType.getCodeAttributes()) {
+
+                codeAttribute.getCodeValues().size();
+            }
+        }
+
+        return codeTypes;
+    }
+
+    @Transactional
     public List<CodeType> findByType(String type) {
 
         List<CodeType> codeTypes = codeTypeRepository.findByType(type);

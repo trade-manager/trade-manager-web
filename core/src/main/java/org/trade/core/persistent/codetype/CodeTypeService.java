@@ -9,12 +9,27 @@ import java.util.List;
 public interface CodeTypeService {
 
     /**
+     * Method findAll.
+     *
+     * @return List<CodeType>
+     */
+    List<CodeType> findAll();
+
+    /**
      * Method findByName.
      *
      * @param name String
      * @return CodeType
      */
     CodeType findByName(String name);
+
+    /**
+     * Method findByCategory.
+     *
+     * @param category
+     * @return
+     */
+    List<CodeType> findByCategory(String category);
 
     /**
      * Method findByType.

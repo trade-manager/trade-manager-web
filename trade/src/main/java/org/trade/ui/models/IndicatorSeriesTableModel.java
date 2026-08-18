@@ -6,8 +6,8 @@ import org.trade.core.aspect.Aspects;
 import org.trade.core.factory.ClassFactory;
 import org.trade.core.persistent.codetype.CodeValue;
 import org.trade.core.util.CoreUtils;
-import org.trade.core.valuetype.IndicatorSeriesUI;
 import org.trade.core.valuetype.DAOStrategy;
+import org.trade.core.valuetype.UIIndicatorSeries;
 import org.trade.core.valuetype.YesNo;
 import org.trade.indicator.IndicatorSeries;
 
@@ -125,7 +125,7 @@ public class IndicatorSeriesTableModel extends TableModel {
                 break;
             }
             case 1: {
-                String type = ((IndicatorSeriesUI) value).getCode();
+                String type = ((UIIndicatorSeries) value).getCode();
                 String indicatorName = type.substring(0, type.indexOf("Series"));
                 element = this.getIndicatorSeries(element.getStrategy(), indicatorName, type, indicatorName);
                 this.replaceRow(element, row);
@@ -189,7 +189,7 @@ public class IndicatorSeriesTableModel extends TableModel {
      */
     public void deleteRow(int selectedRow) {
 
-        String type = ((IndicatorSeriesUI) this.getValueAt(selectedRow, 1)).getCode();
+        String type = ((UIIndicatorSeries) this.getValueAt(selectedRow, 1)).getCode();
         String name = (String) this.getValueAt(selectedRow, 2);
 
         for (final org.trade.core.persistent.strategy.series.indicator.IndicatorSeries element : getData().getIndicatorSeries()) {
@@ -267,9 +267,9 @@ public class IndicatorSeriesTableModel extends TableModel {
         }
 
         if (null == element.getType()) {
-            newRow.add(IndicatorSeriesUI.newInstance());
+            newRow.add(UIIndicatorSeries.newInstance());
         } else {
-            newRow.add(IndicatorSeriesUI.newInstance(element.getType()));
+            newRow.add(UIIndicatorSeries.newInstance(element.getType()));
         }
         newRow.add(element.getName());
         newRow.add(element.getDescription());

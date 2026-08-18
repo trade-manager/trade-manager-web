@@ -10,14 +10,14 @@ import java.io.Serial;
  * @version $Revision: 1.0 $
  */
 @Entity
-@DiscriminatorValue("IndicatorSeriesUI")
-public class IndicatorSeriesUI extends Decode {
+@DiscriminatorValue("UIIndicatorSeries")
+public class UIIndicatorSeries extends Decode {
 
     @Serial
     private static final long serialVersionUID = -5381026427696898592L;
     public static final String DECODE = "INDICATOR_SERIES";
 
-    public IndicatorSeriesUI() {
+    public UIIndicatorSeries() {
         super(DECODE);
     }
 
@@ -29,7 +29,7 @@ public class IndicatorSeriesUI extends Decode {
      * @param name        String
      * @param description String
      */
-    public IndicatorSeriesUI(String type, String category, String name, String description) {
+    public UIIndicatorSeries(String type, String category, String name, String description) {
 
         super(type, category, name, description);
     }
@@ -40,8 +40,8 @@ public class IndicatorSeriesUI extends Decode {
      * @param value String
      * @return IndicatorSeries
      */
-    public static IndicatorSeriesUI newInstance(String value) {
-        final IndicatorSeriesUI returnInstance = new IndicatorSeriesUI();
+    public static UIIndicatorSeries newInstance(String value) {
+        final UIIndicatorSeries returnInstance = new UIIndicatorSeries();
         returnInstance.setValue(value);
         return returnInstance;
     }
@@ -51,8 +51,8 @@ public class IndicatorSeriesUI extends Decode {
      *
      * @return IndicatorSeries
      */
-    public static IndicatorSeriesUI newInstance() {
-        final IndicatorSeriesUI returnInstance = new IndicatorSeriesUI();
+    public static UIIndicatorSeries newInstance() {
+        final UIIndicatorSeries returnInstance = new UIIndicatorSeries();
         returnInstance.setDefaultCode();
         return returnInstance;
     }

@@ -15,6 +15,13 @@ import java.util.Optional;
 public interface CodeTypeRepository extends AspectRepository<CodeType, Long> {
 
     /**
+     * Method findAll.
+     *
+     * @return List<CodeType>
+     */
+    List<CodeType> findAll();
+
+    /**
      * Method findAllByOrderByName.
      *
      * @return List<Domain>
@@ -28,6 +35,14 @@ public interface CodeTypeRepository extends AspectRepository<CodeType, Long> {
      * @return
      */
     Optional<CodeType> findByName(String name);
+
+    /**
+     * Method findByCategory.
+     *
+     * @param category
+     * @return
+     */
+    List<CodeType> findByCategory(String category);
 
     /**
      * Method findByType.

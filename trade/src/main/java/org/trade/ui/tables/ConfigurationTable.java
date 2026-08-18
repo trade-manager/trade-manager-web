@@ -10,7 +10,7 @@ import org.trade.core.valuetype.DAOAccount;
 import org.trade.core.valuetype.DAOStrategyManager;
 import org.trade.core.valuetype.DataType;
 import org.trade.core.valuetype.Decode;
-import org.trade.core.valuetype.IndicatorSeriesUI;
+import org.trade.core.valuetype.UIIndicatorSeries;
 import org.trade.core.valuetype.ValueTypeException;
 import org.trade.ui.widget.DateEditor;
 import org.trade.ui.widget.DateField;
@@ -54,7 +54,7 @@ public class ConfigurationTable extends Table {
                 new JComboBox<>((new DataType()).getCodesDecodes().toArray(new Decode[0])));
 
         JComboBox<Decode> indicatorComboBoxEditor = new JComboBox<>(
-                (new IndicatorSeriesUI()).getCodesDecodes().toArray(new Decode[0]));
+                (new UIIndicatorSeries()).getCodesDecodes().toArray(new Decode[0]));
         ListCellRenderer<Object> indicatorRenderer = new DefaultListCellRenderer() {
             @Serial
             private static final long serialVersionUID = -3146015541332720784L;
@@ -93,7 +93,7 @@ public class ConfigurationTable extends Table {
         this.setDefaultRenderer(org.trade.core.valuetype.Date.class, rDate);
         this.setDefaultEditor(org.trade.core.valuetype.Date.class, eDate);
         this.setDefaultEditor(DataType.class, dataTypeEditor);
-        this.setDefaultEditor(IndicatorSeriesUI.class, indicatorSeriesEditor);
+        this.setDefaultEditor(UIIndicatorSeries.class, indicatorSeriesEditor);
         this.setDefaultEditor(DAOStrategyManager.class, dAOStrategyManagerEditor);
         this.setDefaultEditor(DAOAccount.class, dAOAccountEditor);
     }

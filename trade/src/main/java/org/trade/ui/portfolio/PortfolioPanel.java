@@ -2,7 +2,6 @@ package org.trade.ui.portfolio;
 
 import org.trade.base.BaseButton;
 import org.trade.base.BasePanel;
-import org.trade.core.valuetype.UIComponentProperties;
 import org.trade.base.ExampleFileChooser;
 import org.trade.base.ExampleFileFilter;
 import org.trade.base.FilePreviewer;
@@ -17,6 +16,7 @@ import org.trade.core.valuetype.DAOPortfolio;
 import org.trade.core.valuetype.Date;
 import org.trade.core.valuetype.Decode;
 import org.trade.core.valuetype.Money;
+import org.trade.core.valuetype.UIComponentProperties;
 import org.trade.core.valuetype.ValueTypeException;
 import org.trade.ui.models.TradelogDetailTableModel;
 import org.trade.ui.models.TradelogSummaryTableModel;

@@ -4,13 +4,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.trade.core.exception.ModelException;
 import org.trade.core.properties.MissingPropertiesException;
 import org.trade.core.properties.PropertyFileNotFoundException;
 import org.trade.core.properties.PropertyNotFoundException;
 import org.trade.web.rest.response.ErrorResponse;
-
-import java.io.IOException;
 
 @RestControllerAdvice // Automatically catches exceptions thrown by any @RestController
 public class GlobalExceptionHandler {

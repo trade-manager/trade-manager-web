@@ -2,7 +2,6 @@ package org.trade.ui.contract;
 
 import org.trade.base.BaseButton;
 import org.trade.base.BasePanel;
-import org.trade.core.valuetype.UIComponentProperties;
 import org.trade.base.TabbedAppPanel;
 import org.trade.base.TabbedCloseButton;
 import org.trade.base.Table;
@@ -34,6 +33,7 @@ import org.trade.core.valuetype.Money;
 import org.trade.core.valuetype.Side;
 import org.trade.core.valuetype.Tier;
 import org.trade.core.valuetype.TradestrategyStatus;
+import org.trade.core.valuetype.UIComponentProperties;
 import org.trade.indicator.CandleDataset;
 import org.trade.indicator.CandleSeries;
 import org.trade.indicator.IndicatorSeries;

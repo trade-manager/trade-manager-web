@@ -5,8 +5,6 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.trade.core.ApplicationContextProvider;
-import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.codetype.CodeAttribute;
 import org.trade.core.persistent.codetype.CodeType;
 import org.trade.core.persistent.codetype.CodeValue;
@@ -50,8 +48,6 @@ public class ConfigProperties {
     private final static String ENVIRONMENT_VARIABLE_PROPERTY_FILE = "trade.config";
     private static Properties deploymentProperties;
     private static final ConfigProperties configProperties = new ConfigProperties();
-
-    TradeService tradeService = ApplicationContextProvider.getBean(TradeService.class);
 
     /**
      * Returns a string for a key.
@@ -198,7 +194,7 @@ public class ConfigProperties {
                 loadPropertiesAsResource(context, fileName, systemProperties);
                 deploymentProperties = new Properties(systemProperties);
                 loadPropertiesAsFile(getDeploymentPropertyFileName(), deploymentProperties);
-                //loadDecodes(DECODE_PROPERTY_FILE);
+
             }
         } catch (IOException ex) {
 
@@ -410,11 +406,13 @@ public class ConfigProperties {
     }
 
     /**
-     * Method reNumberDecodesInPropertiesFile.
+     * Method generateDecodeSQL.
      *
      * @param filename String
      */
-    public void loadDecodes(String filename) {
+    public static void generateDecodeSQL(String filename) {
+
+        //TradeService tradeService = ApplicationContextProvider.getBean(TradeService.class);
 
         try {
             AtomicInteger codeTypeId = new AtomicInteger(11);
@@ -428,7 +426,7 @@ public class ConfigProperties {
                 categories.keySet().forEach(type -> {
 
                     JSONArray values = categories.getJSONArray(type);
-                    CodeType codeType = tradeService.getCodeTypeService().findByNameAndTypeAndCategory(type, CodeType.Decode, category);
+                    CodeType codeType = null;//tradeService.getCodeTypeService().findByNameAndTypeAndCategory(type, CodeType.Decode, category);
 
                     if (null == codeType) {
 
@@ -443,7 +441,7 @@ public class ConfigProperties {
                             }
                         }
 
-                        tradeService.getCodeTypeService().save(codeType);
+                        //tradeService.getCodeTypeService().save(codeType);
                     }
                     codeTypeId.getAndIncrement();
                     System.out.println(String.format("INSERT INTO codetype (id, name, type, category, description) VALUES(%s,'%s','%s','%s','%s')//", codeTypeId.get(), type, type, category, String.format("%s::%s", type, category)));
@@ -497,6 +495,6 @@ public class ConfigProperties {
      */
     public static void main(String[] args) {
 
-
+        generateDecodeSQL(DECODE_PROPERTY_FILE);
     }
 }

@@ -1,5 +1,5 @@
 {
-  "dao_decode": {
+  "DAODecode": {
     "DAOStrategyManager": [
       {
         "code": "org.trade.core.persistent.strategy.Strategy",
@@ -50,7 +50,7 @@
       }
     ]
   },
-  "code_decode": {
+  "CodeDecode": {
     "AccountType": [
       {
         "display_name": "Institution",
@@ -1028,7 +1028,7 @@
       }
     ]
   },
-  "ui_component": {
+  "UIComponent": {
     "UIComponentProperties": [
       {
         "image": "save.gif",

@@ -2,7 +2,6 @@ package org.trade.ui.tradingday;
 
 import org.trade.base.BaseButton;
 import org.trade.base.BasePanel;
-import org.trade.core.valuetype.UIComponentProperties;
 import org.trade.base.Table;
 import org.trade.core.persistent.ServiceException;
 import org.trade.core.persistent.TradeService;
@@ -21,6 +20,7 @@ import org.trade.core.valuetype.DAOStrategy;
 import org.trade.core.valuetype.DAOStrategyManager;
 import org.trade.core.valuetype.Date;
 import org.trade.core.valuetype.Decode;
+import org.trade.core.valuetype.UIComponentProperties;
 import org.trade.core.valuetype.ValueTypeException;
 import org.trade.ui.models.TradestrategyTableModel;
 import org.trade.ui.models.TradingdayTableModel;

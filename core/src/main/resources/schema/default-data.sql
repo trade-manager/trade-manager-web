@@ -226,56 +226,56 @@ COMMIT//
 INSERT INTO userrole (id, user_id, role_id) VALUES (1, 1, 1)//
 COMMIT//
 
-INSERT INTO codetype (id, name, type, category, description) VALUES(12,'DAOAccount','DAOAccount','dao_decode','DAOAccount::dao_decode')//
+INSERT INTO codetype (id, name, type, category, description) VALUES(12,'DAOAccount','DAOAccount','DAODecode','DAOAccount::DAODecode')//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(34,'code','code',null,'java.lang.String',null, 12)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(35,'display_name','display_name',null,'java.lang.String',null, 12)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(36,'value','value',null,'java.lang.String',null, 12)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(50,'org.trade.core.persistent.account.Account',34,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(51,'getAccountNumber',35,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(52,'getAccountNumber',36,null)//
-INSERT INTO codetype (id, name, type, category, description) VALUES(13,'DAOProfile','DAOProfile','dao_decode','DAOProfile::dao_decode')//
+INSERT INTO codetype (id, name, type, category, description) VALUES(13,'DAOProfile','DAOProfile','DAODecode','DAOProfile::DAODecode')//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(37,'code','code',null,'java.lang.String',null, 13)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(38,'display_name','display_name',null,'java.lang.String',null, 13)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(39,'value','value',null,'java.lang.String',null, 13)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(53,'org.trade.core.persistent.portfolio.Portfolio',37,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(54,'getName',38,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(55,'getName',39,null)//
-INSERT INTO codetype (id, name, type, category, description) VALUES(14,'DAOEntryLimit','DAOEntryLimit','dao_decode','DAOEntryLimit::dao_decode')//
+INSERT INTO codetype (id, name, type, category, description) VALUES(14,'DAOEntryLimit','DAOEntryLimit','DAODecode','DAOEntryLimit::DAODecode')//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(40,'code','code',null,'java.lang.String',null, 14)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(41,'display_name','display_name',null,'java.lang.String',null, 14)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(42,'value','value',null,'java.lang.String',null, 14)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(56,'org.trade.core.persistent.codetype.Entrylimit',40,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(57,'getId',41,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(58,'getId',42,null)//
-INSERT INTO codetype (id, name, type, category, description) VALUES(15,'DAOStrategy','DAOStrategy','dao_decode','DAOStrategy::dao_decode')//
+INSERT INTO codetype (id, name, type, category, description) VALUES(15,'DAOStrategy','DAOStrategy','DAODecode','DAOStrategy::DAODecode')//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(43,'code','code',null,'java.lang.String',null, 15)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(44,'display_name','display_name',null,'java.lang.String',null, 15)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(45,'value','value',null,'java.lang.String',null, 15)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(59,'org.trade.core.persistent.strategy.Strategy',43,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(60,'getName',44,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(61,'getName',45,null)//
-INSERT INTO codetype (id, name, type, category, description) VALUES(16,'DAOStrategyManager','DAOStrategyManager','dao_decode','DAOStrategyManager::dao_decode')//
+INSERT INTO codetype (id, name, type, category, description) VALUES(16,'DAOStrategyManager','DAOStrategyManager','DAODecode','DAOStrategyManager::DAODecode')//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(46,'code','code',null,'java.lang.String',null, 16)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(47,'display_name','display_name',null,'java.lang.String',null, 16)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(48,'value','value',null,'java.lang.String',null, 16)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(62,'org.trade.core.persistent.strategy.Strategy',46,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(63,'getName',47,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(64,'getName',48,null)//
-INSERT INTO codetype (id, name, type, category, description) VALUES(17,'DAOPortfolio','DAOPortfolio','dao_decode','DAOPortfolio::dao_decode')//
+INSERT INTO codetype (id, name, type, category, description) VALUES(17,'DAOPortfolio','DAOPortfolio','DAODecode','DAOPortfolio::DAODecode')//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(49,'code','code',null,'java.lang.String',null, 17)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(50,'display_name','display_name',null,'java.lang.String',null, 17)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(51,'value','value',null,'java.lang.String',null, 17)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(65,'org.trade.core.persistent.portfolio.Portfolio',49,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(66,'getName',50,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(67,'getName',51,null)//
-INSERT INTO codetype (id, name, type, category, description) VALUES(18,'DAOFAGroup','DAOFAGroup','dao_decode','DAOFAGroup::dao_decode')//
+INSERT INTO codetype (id, name, type, category, description) VALUES(18,'DAOFAGroup','DAOFAGroup','DAODecode','DAOFAGroup::DAODecode')//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(52,'code','code',null,'java.lang.String',null, 18)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(53,'display_name','display_name',null,'java.lang.String',null, 18)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(54,'value','value',null,'java.lang.String',null, 18)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(68,'org.trade.core.persistent.portfolio.Portfolio',52,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(69,'getName',53,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(70,'getName',54,null)//
-INSERT INTO codetype (id, name, type, category, description) VALUES(19,'ReferenceTable','ReferenceTable','code_decode','ReferenceTable::code_decode')//
+INSERT INTO codetype (id, name, type, category, description) VALUES(19,'ReferenceTable','ReferenceTable','CodeDecode','ReferenceTable::CodeDecode')//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(55,'code','code',null,'java.lang.String',null, 19)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(56,'display_name','display_name',null,'java.lang.String',null, 19)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(57,'value','value',null,'java.lang.String',null, 19)//
@@ -297,7 +297,7 @@ INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) V
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(86,'org.trade.core.persistent.codetype.CodeType',55,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(87,'Decode',56,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(88,'Decode',57,null)//
-INSERT INTO codetype (id, name, type, category, description) VALUES(20,'Action','Action','code_decode','Action::code_decode')//
+INSERT INTO codetype (id, name, type, category, description) VALUES(20,'Action','Action','CodeDecode','Action::CodeDecode')//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(58,'code','code',null,'java.lang.String',null, 20)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(59,'display_name','display_name',null,'java.lang.String',null, 20)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(60,'value','value',null,'java.lang.String',null, 20)//
@@ -307,7 +307,7 @@ INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) V
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(92,'SELL',58,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(93,'Sell',59,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(94,'SELL',60,null)//
-INSERT INTO codetype (id, name, type, category, description) VALUES(21,'ContentType','ContentType','code_decode','ContentType::code_decode')//
+INSERT INTO codetype (id, name, type, category, description) VALUES(21,'ContentType','ContentType','CodeDecode','ContentType::CodeDecode')//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(61,'code','code',null,'java.lang.String',null, 21)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(62,'display_name','display_name',null,'java.lang.String',null, 21)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(63,'value','value',null,'java.lang.String',null, 21)//
@@ -320,7 +320,7 @@ INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) V
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(101,'txt',61,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(102,'Text',62,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(103,'text/rtf',63,null)//
-INSERT INTO codetype (id, name, type, category, description) VALUES(22,'OverrideConstraints','OverrideConstraints','code_decode','OverrideConstraints::code_decode')//
+INSERT INTO codetype (id, name, type, category, description) VALUES(22,'OverrideConstraints','OverrideConstraints','CodeDecode','OverrideConstraints::CodeDecode')//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(64,'code','code',null,'java.lang.String',null, 22)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(65,'display_name','display_name',null,'java.lang.String',null, 22)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(66,'value','value',null,'java.lang.String',null, 22)//
@@ -330,7 +330,7 @@ INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) V
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(107,'1',64,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(108,'Yes',65,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(109,'1',66,null)//
-INSERT INTO codetype (id, name, type, category, description) VALUES(23,'Side','Side','code_decode','Side::code_decode')//
+INSERT INTO codetype (id, name, type, category, description) VALUES(23,'Side','Side','CodeDecode','Side::CodeDecode')//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(67,'code','code',null,'java.lang.String',null, 23)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(68,'display_name','display_name',null,'java.lang.String',null, 23)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(69,'value','value',null,'java.lang.String',null, 23)//
@@ -340,7 +340,7 @@ INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) V
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(113,'SLD',67,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(114,'Short',68,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(115,'SLD',69,null)//
-INSERT INTO codetype (id, name, type, category, description) VALUES(24,'OrderStatus','OrderStatus','code_decode','OrderStatus::code_decode')//
+INSERT INTO codetype (id, name, type, category, description) VALUES(24,'OrderStatus','OrderStatus','CodeDecode','OrderStatus::CodeDecode')//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(70,'code','code',null,'java.lang.String',null, 24)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(71,'display_name','display_name',null,'java.lang.String',null, 24)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(72,'value','value',null,'java.lang.String',null, 24)//
@@ -371,7 +371,7 @@ INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) V
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(140,'PARTIALFILLED',70,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(141,'Partial Filled',71,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(142,'PARTIALFILLED',72,null)//
-INSERT INTO codetype (id, name, type, category, description) VALUES(25,'OrderType','OrderType','code_decode','OrderType::code_decode')//
+INSERT INTO codetype (id, name, type, category, description) VALUES(25,'OrderType','OrderType','CodeDecode','OrderType::CodeDecode')//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(73,'code','code',null,'java.lang.String',null, 25)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(74,'display_name','display_name',null,'java.lang.String',null, 25)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(75,'value','value',null,'java.lang.String',null, 25)//
@@ -411,7 +411,7 @@ INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) V
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(176,'TRAILLIMIT',73,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(177,'Trail Lmt',74,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(178,'TRAILLIMIT',75,null)//
-INSERT INTO codetype (id, name, type, category, description) VALUES(26,'MarketBias','MarketBias','code_decode','MarketBias::code_decode')//
+INSERT INTO codetype (id, name, type, category, description) VALUES(26,'MarketBias','MarketBias','CodeDecode','MarketBias::CodeDecode')//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(76,'code','code',null,'java.lang.String',null, 26)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(77,'display_name','display_name',null,'java.lang.String',null, 26)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(78,'value','value',null,'java.lang.String',null, 26)//
@@ -424,7 +424,7 @@ INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) V
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(185,'N',76,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(186,'Neutral',77,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(187,'N',78,null)//
-INSERT INTO codetype (id, name, type, category, description) VALUES(27,'IndicatorSeriesUI','IndicatorSeriesUI','code_decode','IndicatorSeriesUI::code_decode')//
+INSERT INTO codetype (id, name, type, category, description) VALUES(27,'UIIndicatorSeries','UIIndicatorSeries','CodeDecode','UIIndicatorSeries::CodeDecode')//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(79,'code','code',null,'java.lang.String',null, 27)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(80,'display_name','display_name',null,'java.lang.String',null, 27)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(81,'value','value',null,'java.lang.String',null, 27)//
@@ -470,7 +470,7 @@ INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) V
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(227,'StochasticOscillatorSeries',79,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(228,'% K/R',80,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(229,'StochasticOscillatorSeries',81,null)//
-INSERT INTO codetype (id, name, type, category, description) VALUES(28,'Currency','Currency','code_decode','Currency::code_decode')//
+INSERT INTO codetype (id, name, type, category, description) VALUES(28,'Currency','Currency','CodeDecode','Currency::CodeDecode')//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(82,'code','code',null,'java.lang.String',null, 28)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(83,'display_name','display_name',null,'java.lang.String',null, 28)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(84,'value','value',null,'java.lang.String',null, 28)//
@@ -498,7 +498,7 @@ INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) V
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(251,'INR',82,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(252,'Indian Rupee',83,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(253,'INR',84,null)//
-INSERT INTO codetype (id, name, type, category, description) VALUES(29,'TimeInForce','TimeInForce','code_decode','TimeInForce::code_decode')//
+INSERT INTO codetype (id, name, type, category, description) VALUES(29,'TimeInForce','TimeInForce','CodeDecode','TimeInForce::CodeDecode')//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(85,'code','code',null,'java.lang.String',null, 29)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(86,'display_name','display_name',null,'java.lang.String',null, 29)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(87,'value','value',null,'java.lang.String',null, 29)//
@@ -514,7 +514,7 @@ INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) V
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(263,'GTD',85,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(264,'Good till date',86,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(265,'GTD',87,null)//
-INSERT INTO codetype (id, name, type, category, description) VALUES(30,'DataType','DataType','code_decode','DataType::code_decode')//
+INSERT INTO codetype (id, name, type, category, description) VALUES(30,'DataType','DataType','CodeDecode','DataType::CodeDecode')//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(88,'code','code',null,'java.lang.String',null, 30)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(89,'display_name','display_name',null,'java.lang.String',null, 30)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(90,'value','value',null,'java.lang.String',null, 30)//
@@ -536,7 +536,7 @@ INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) V
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(281,'java.time.LocalDate',88,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(282,'Date',89,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(283,'java.time.LocalDate',90,null)//
-INSERT INTO codetype (id, name, type, category, description) VALUES(31,'BarSize','BarSize','code_decode','BarSize::code_decode')//
+INSERT INTO codetype (id, name, type, category, description) VALUES(31,'BarSize','BarSize','CodeDecode','BarSize::CodeDecode')//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(91,'code','code',null,'java.lang.String',null, 31)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(92,'display_name','display_name',null,'java.lang.String',null, 31)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(93,'value','value',null,'java.lang.String',null, 31)//
@@ -570,7 +570,7 @@ INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) V
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(311,'_30_secs',91,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(312,'30 secs',92,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(313,'30',93,null)//
-INSERT INTO codetype (id, name, type, category, description) VALUES(32,'OCAType','OCAType','code_decode','OCAType::code_decode')//
+INSERT INTO codetype (id, name, type, category, description) VALUES(32,'OCAType','OCAType','CodeDecode','OCAType::CodeDecode')//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(94,'code','code',null,'java.lang.String',null, 32)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(95,'display_name','display_name',null,'java.lang.String',null, 32)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(96,'value','value',null,'java.lang.String',null, 32)//
@@ -583,7 +583,7 @@ INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) V
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(320,'3',94,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(321,'Prop reduce remaining',95,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(322,'3',96,null)//
-INSERT INTO codetype (id, name, type, category, description) VALUES(33,'SECIdType','SECIdType','code_decode','SECIdType::code_decode')//
+INSERT INTO codetype (id, name, type, category, description) VALUES(33,'SECIdType','SECIdType','CodeDecode','SECIdType::CodeDecode')//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(97,'code','code',null,'java.lang.String',null, 33)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(98,'display_name','display_name',null,'java.lang.String',null, 33)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(99,'value','value',null,'java.lang.String',null, 33)//
@@ -602,7 +602,7 @@ INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) V
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(335,'SYMBOL',97,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(336,'Symbol',98,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(337,'SYMBOL',99,null)//
-INSERT INTO codetype (id, name, type, category, description) VALUES(34,'TriggerMethod','TriggerMethod','code_decode','TriggerMethod::code_decode')//
+INSERT INTO codetype (id, name, type, category, description) VALUES(34,'TriggerMethod','TriggerMethod','CodeDecode','TriggerMethod::CodeDecode')//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(100,'code','code',null,'java.lang.String',null, 34)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(101,'display_name','display_name',null,'java.lang.String',null, 34)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(102,'value','value',null,'java.lang.String',null, 34)//
@@ -627,7 +627,7 @@ INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) V
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(356,'8',100,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(357,'Mid Point',101,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(358,'8',102,null)//
-INSERT INTO codetype (id, name, type, category, description) VALUES(35,'MarketBar','MarketBar','code_decode','MarketBar::code_decode')//
+INSERT INTO codetype (id, name, type, category, description) VALUES(35,'MarketBar','MarketBar','CodeDecode','MarketBar::CodeDecode')//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(103,'code','code',null,'java.lang.String',null, 35)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(104,'display_name','display_name',null,'java.lang.String',null, 35)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(105,'value','value',null,'java.lang.String',null, 35)//
@@ -676,7 +676,7 @@ INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) V
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(401,'NONE',103,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(402,'None',104,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(403,'NONE',105,null)//
-INSERT INTO codetype (id, name, type, category, description) VALUES(36,'OptionType','OptionType','code_decode','OptionType::code_decode')//
+INSERT INTO codetype (id, name, type, category, description) VALUES(36,'OptionType','OptionType','CodeDecode','OptionType::CodeDecode')//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(106,'code','code',null,'java.lang.String',null, 36)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(107,'display_name','display_name',null,'java.lang.String',null, 36)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(108,'value','value',null,'java.lang.String',null, 36)//
@@ -686,7 +686,7 @@ INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) V
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(407,'P',106,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(408,'Put',107,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(409,'P',108,null)//
-INSERT INTO codetype (id, name, type, category, description) VALUES(37,'ChartDays','ChartDays','code_decode','ChartDays::code_decode')//
+INSERT INTO codetype (id, name, type, category, description) VALUES(37,'ChartDays','ChartDays','CodeDecode','ChartDays::CodeDecode')//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(109,'code','code',null,'java.lang.String',null, 37)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(110,'display_name','display_name',null,'java.lang.String',null, 37)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(111,'value','value',null,'java.lang.String',null, 37)//
@@ -717,7 +717,7 @@ INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) V
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(434,'365',109,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(435,'1 Y',110,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(436,'365',111,null)//
-INSERT INTO codetype (id, name, type, category, description) VALUES(38,'Tier','Tier','code_decode','Tier::code_decode')//
+INSERT INTO codetype (id, name, type, category, description) VALUES(38,'Tier','Tier','CodeDecode','Tier::CodeDecode')//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(112,'code','code',null,'java.lang.String',null, 38)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(113,'display_name','display_name',null,'java.lang.String',null, 38)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(114,'value','value',null,'java.lang.String',null, 38)//
@@ -730,7 +730,7 @@ INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) V
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(443,'3',112,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(444,'3',113,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(445,'3',114,null)//
-INSERT INTO codetype (id, name, type, category, description) VALUES(39,'AllocationMethod','AllocationMethod','code_decode','AllocationMethod::code_decode')//
+INSERT INTO codetype (id, name, type, category, description) VALUES(39,'AllocationMethod','AllocationMethod','CodeDecode','AllocationMethod::CodeDecode')//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(115,'code','code',null,'java.lang.String',null, 39)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(116,'display_name','display_name',null,'java.lang.String',null, 39)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(117,'value','value',null,'java.lang.String',null, 39)//
@@ -755,7 +755,7 @@ INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) V
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(464,'3',115,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(465,'Shares',116,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(466,'3',117,null)//
-INSERT INTO codetype (id, name, type, category, description) VALUES(40,'AccountType','AccountType','code_decode','AccountType::code_decode')//
+INSERT INTO codetype (id, name, type, category, description) VALUES(40,'AccountType','AccountType','CodeDecode','AccountType::CodeDecode')//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(118,'code','code',null,'java.lang.String',null, 40)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(119,'display_name','display_name',null,'java.lang.String',null, 40)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(120,'value','value',null,'java.lang.String',null, 40)//
@@ -777,7 +777,7 @@ INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) V
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(482,'JOINT',118,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(483,'Joint',119,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(484,'JOINT',120,null)//
-INSERT INTO codetype (id, name, type, category, description) VALUES(41,'SECType','SECType','code_decode','SECType::code_decode')//
+INSERT INTO codetype (id, name, type, category, description) VALUES(41,'SECType','SECType','CodeDecode','SECType::CodeDecode')//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(121,'code','code',null,'java.lang.String',null, 41)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(122,'display_name','display_name',null,'java.lang.String',null, 41)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(123,'value','value',null,'java.lang.String',null, 41)//
@@ -802,7 +802,7 @@ INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) V
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(503,'BAG',121,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(504,'Bag',122,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(505,'BAG',123,null)//
-INSERT INTO codetype (id, name, type, category, description) VALUES(42,'Exchange','Exchange','code_decode','Exchange::code_decode')//
+INSERT INTO codetype (id, name, type, category, description) VALUES(42,'Exchange','Exchange','CodeDecode','Exchange::CodeDecode')//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(124,'code','code',null,'java.lang.String',null, 42)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(125,'display_name','display_name',null,'java.lang.String',null, 42)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(126,'value','value',null,'java.lang.String',null, 42)//
@@ -848,7 +848,7 @@ INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) V
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(545,'ECBOT',124,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(546,'CBOT (ECBOT)',125,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(547,'ECBOT',126,null)//
-INSERT INTO codetype (id, name, type, category, description) VALUES(43,'CalculationType','CalculationType','code_decode','CalculationType::code_decode')//
+INSERT INTO codetype (id, name, type, category, description) VALUES(43,'CalculationType','CalculationType','CodeDecode','CalculationType::CodeDecode')//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(127,'code','code',null,'java.lang.String',null, 43)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(128,'display_name','display_name',null,'java.lang.String',null, 43)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(129,'value','value',null,'java.lang.String',null, 43)//
@@ -867,7 +867,7 @@ INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) V
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(560,'TRIANGULAR',127,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(561,'Triangular',128,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(562,'TRIANGULAR',129,null)//
-INSERT INTO codetype (id, name, type, category, description) VALUES(44,'PriceSource','PriceSource','code_decode','PriceSource::code_decode')//
+INSERT INTO codetype (id, name, type, category, description) VALUES(44,'PriceSource','PriceSource','CodeDecode','PriceSource::CodeDecode')//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(130,'code','code',null,'java.lang.String',null, 44)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(131,'display_name','display_name',null,'java.lang.String',null, 44)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(132,'value','value',null,'java.lang.String',null, 44)//
@@ -892,7 +892,7 @@ INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) V
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(581,'7',130,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(582,'(O+H+L+C)/4',131,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(583,'7',132,null)//
-INSERT INTO codetype (id, name, type, category, description) VALUES(45,'TradestrategyStatus','TradestrategyStatus','code_decode','TradestrategyStatus::code_decode')//
+INSERT INTO codetype (id, name, type, category, description) VALUES(45,'TradestrategyStatus','TradestrategyStatus','CodeDecode','TradestrategyStatus::CodeDecode')//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(133,'code','code',null,'java.lang.String',null, 45)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(134,'display_name','display_name',null,'java.lang.String',null, 45)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(135,'value','value',null,'java.lang.String',null, 45)//
@@ -929,7 +929,7 @@ INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) V
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(614,'CANCELLED',133,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(615,'Cancelled',134,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(616,'CANCELLED',135,null)//
-INSERT INTO codetype (id, name, type, category, description) VALUES(46,'YesNo','YesNo','code_decode','YesNo::code_decode')//
+INSERT INTO codetype (id, name, type, category, description) VALUES(46,'YesNo','YesNo','CodeDecode','YesNo::CodeDecode')//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(136,'code','code',null,'java.lang.String',null, 46)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(137,'display_name','display_name',null,'java.lang.String',null, 46)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(138,'value','value',null,'java.lang.String',null, 46)//
@@ -939,7 +939,7 @@ INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) V
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(620,'false',136,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(621,'No',137,null)//
 INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(622,'false',138,null)//
-INSERT INTO codetype (id, name, type, category, description) VALUES(47,'UIComponentProperties','UIComponentProperties','ui_component','UIComponentProperties::ui_component')//
+INSERT INTO codetype (id, name, type, category, description) VALUES(47,'UIComponentProperties','UIComponentProperties','UIComponent','UIComponentProperties::UIComponent')//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(139,'tool_tip','tool_tip',null,'java.lang.String',null, 47)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(140,'image','image',null,'java.lang.String',null, 47)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(141,'code','code',null,'java.lang.String',null, 47)//
