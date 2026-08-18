@@ -25,8 +25,10 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.Scanner;
 import java.util.StringTokenizer;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Pattern;
 
 /**
  * Represents the application's configuration. This class is intended to be a bit
@@ -418,7 +420,7 @@ public class ConfigProperties {
             AtomicInteger codeTypeId = new AtomicInteger(11);
             AtomicInteger codeAttributeId = new AtomicInteger(33);
             AtomicInteger codeValueId = new AtomicInteger(49);
-            JSONObject decodes = loadJSONAsResource(this, filename);
+            JSONObject decodes = loadJSONAsResource(configProperties, filename);
             decodes.keySet().forEach(category -> {
 
                 JSONObject categories = decodes.getJSONObject(category);
@@ -489,6 +491,79 @@ public class ConfigProperties {
     }
 
     /**
+     * Method reNumberDecodesInPropertiesFile.
+     *
+     * @param propertyFileLocation String
+     */
+    public static void reNumberDecodesInPropertiesFile(String propertyFileLocation) {
+
+        FileInputStream fileInputStream = null;
+        Scanner scanString = null;
+        try {
+            /*
+             * Location of the properties file. Copy the source one to this Dir.
+             */
+            File file = new File(propertyFileLocation);
+            /*
+             * The name of the Decodes to be renumbered. Copy the output BELOW
+             * into the properties file and remember to set the _NumOfItems to
+             * the last value. EACH new item should be number one greater that
+             * the current total.
+             */
+            final String codeName = "CODE_DECODE";
+
+            /*
+             * lookupServiceProvideName current either PropertyFile or DBTable
+             */
+
+            final String lookupServiceProvideName = "PropertyFile";
+
+            fileInputStream = new FileInputStream(file.getAbsoluteFile());
+            scanString = new Scanner(fileInputStream);
+            Pattern pattern = Pattern.compile("_\\d*=");
+            scanString.useDelimiter(pattern);
+            int count = 0;
+            StringBuilder newText = new StringBuilder();
+
+            String token = null;
+            String delimiter;
+            String oldDelimiter = null;
+            while (scanString.hasNext()) {
+
+                token = scanString.next();
+                delimiter = scanString.findInLine(pattern);
+                if (null != token && token.contains(codeName)) {
+
+                    if (null != delimiter) {
+                        if (!token.endsWith(lookupServiceProvideName)) {
+                            if (!delimiter.equals(oldDelimiter)) {
+                                count++;
+                            }
+                            newText.append(token).append("_").append(count).append("=");
+                        } else {
+                            newText.append(token).append(delimiter);
+                        }
+                        oldDelimiter = delimiter;
+                    }
+                }
+            }
+            newText.append(token);
+            _log.error("{}", newText);
+        } catch (Exception ex) {
+            _log.error("Error paring file: {}", ex.getMessage(), ex);
+        } finally {
+
+            try {
+                if (null != scanString)
+                    scanString.close();
+                if (null != fileInputStream)
+                    fileInputStream.close();
+            } catch (IOException e) {
+                _log.error("Error closing input stream: {}", e.getMessage(), e);
+            }
+        }
+    }
+    /**
      * Method main.
      *
      * @param args String[]
@@ -496,5 +571,7 @@ public class ConfigProperties {
     public static void main(String[] args) {
 
         generateDecodeSQL(DECODE_PROPERTY_FILE);
+        String propertyFileLocation = "C:\\Temp\\trade.properties";
+        ConfigProperties.reNumberDecodesInPropertiesFile(propertyFileLocation);
     }
 }

@@ -13,7 +13,7 @@ import java.util.List;
  * @version $Revision: 1.0 $
  */
 @Entity
-@DiscriminatorValue("Profile")
+@DiscriminatorValue("DAOProfile")
 public class DAOProfile extends DAODecode {
 
     @Serial
