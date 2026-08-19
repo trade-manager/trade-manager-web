@@ -562,7 +562,7 @@ updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 strategy_id BIGINT NULL ,
 PRIMARY KEY (id) ,
 INDEX indicator_strategy_idx (strategy_id ASC) ,
-UNIQUE INDEX indicatorseries_uq (strategy_id ASC, TYPE ASC, name ASC),
+UNIQUE INDEX indicatorseries_uq (strategy_id ASC, type ASC, name ASC),
 CONSTRAINT indicator_strategy_fk
 FOREIGN KEY (strategy_id )
 REFERENCES strategy (id )
@@ -629,6 +629,29 @@ ENGINE = InnoDB//
 SHOW WARNINGS//
 
 -- -----------------------------------------------------
+-- Table Decode
+-- -----------------------------------------------------
+DROP SEQUENCE IF EXISTS decode_seq //
+CREATE SEQUENCE decode_seq start with 1000 minvalue 1000 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
+DO SETVAL(decode_seq, 1001, 0) //
+
+DROP TABLE IF EXISTS decode //
+    SHOW WARNINGS//
+
+CREATE  TABLE IF NOT EXISTS decode (
+id BIGINT NOT NULL AUTO_INCREMENT ,
+type VARCHAR(45) NOT NULL ,
+description VARCHAR(100) NULL ,
+version INT NOT NULL DEFAULT 0,
+domain_id BIGINT NOT NULL DEFAULT 1,
+created_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+PRIMARY KEY (id) ,
+INDEX decode_type_uq (type ASC) )
+ENGINE = InnoDB//
+SHOW WARNINGS//
+
+-- -----------------------------------------------------
 -- Table CodeValue
 -- -----------------------------------------------------
 DROP SEQUENCE IF EXISTS codevalue_seq //
@@ -648,10 +671,18 @@ updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 code_attribute_id BIGINT NOT NULL ,
 indicator_series_id BIGINT NULL ,
 tradestrategy_id BIGINT NULL ,
+decode_id BIGINT NULL ,
 PRIMARY KEY (id) ,
 INDEX codeValue_codeattribute_idx (code_attribute_id ASC) ,
 INDEX codeValue_indicatorseries_idx (indicator_series_id ASC) ,
 INDEX codeValue_tradestrategy_idx (tradestrategy_id ASC) ,
+INDEX codeValue_decode_idx (decode_id ASC) ,
+UNIQUE INDEX codeValue_uq (code_value ASC, decode_id ASC, code_attribute_id ASC, indicator_series_id ASC, tradestrategy_id ASC),
+CONSTRAINT codeValue_decode_fk
+FOREIGN KEY (decode_id )
+REFERENCES decode (id )
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION,
 CONSTRAINT codeValue_codeattribute_fk
 FOREIGN KEY (code_attribute_id )
 REFERENCES codeattribute (id )

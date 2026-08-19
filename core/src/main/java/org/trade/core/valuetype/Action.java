@@ -9,8 +9,6 @@ import java.io.Serial;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-@Entity
-@DiscriminatorValue("Action")
 public class Action extends Decode {
 
     @Serial
@@ -21,19 +19,6 @@ public class Action extends Decode {
 
     public Action() {
         super(DECODE);
-    }
-
-    /**
-     * Constructor for CodeType.
-     *
-     * @param type        String
-     * @param category    String
-     * @param name        String
-     * @param description String
-     */
-    public Action(String type, String category, String name, String description) {
-
-        super(type, category, name, description);
     }
 
     /**

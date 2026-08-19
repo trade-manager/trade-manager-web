@@ -65,19 +65,6 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
     }
 
     /**
-     * Constructor for CodeType.
-     *
-     * @param type        String
-     * @param category    String
-     * @param name        String
-     * @param description String
-     */
-    public Decode(String type, String category, String name, String description) {
-
-        super(type, category, name, description);
-    }
-
-    /**
      * Default Constructor
      *
      * @param codeDecodeType String

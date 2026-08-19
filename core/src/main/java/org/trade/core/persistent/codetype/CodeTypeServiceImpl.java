@@ -9,6 +9,8 @@ import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import jakarta.transaction.Transactional;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,10 +28,14 @@ public class CodeTypeServiceImpl implements CodeTypeService {
 
     private final CodeTypeRepository codeTypeRepository;
 
-    public CodeTypeServiceImpl(final CodeTypeRepository codeTypeRepository) {
+    private final CodeValueRepository codeValueRepository;
+
+    public CodeTypeServiceImpl(final CodeTypeRepository codeTypeRepository, final CodeValueRepository codeValueRepository) {
 
         this.codeTypeRepository = codeTypeRepository;
+        this.codeValueRepository = codeValueRepository;
     }
+
 
     public CodeType findByName(String name) {
 
@@ -68,6 +74,7 @@ public class CodeTypeServiceImpl implements CodeTypeService {
         return codeTypes;
     }
 
+    @Cacheable(value = "codeTypes", key = "#type")
     @Transactional
     public List<CodeType> findByType(String type) {
 
@@ -141,11 +148,13 @@ public class CodeTypeServiceImpl implements CodeTypeService {
         return typedQuery.getResultList();
     }
 
+    @CacheEvict(value = "codeTypes", allEntries = true)
     public CodeType save(CodeType codeType) {
 
         return codeTypeRepository.save(codeType);
     }
 
+    @CacheEvict(value = "codeTypes", allEntries = true)
     public void delete(CodeType codeType) {
 
         if (null == codeType) {
@@ -154,5 +163,14 @@ public class CodeTypeServiceImpl implements CodeTypeService {
         }
 
         codeTypeRepository.delete(codeType);
+    }
+
+    @Cacheable(value = "CodeValue", key = "#type")
+    @Transactional
+    public List<CodeValue> findByTypeSortedByCodeTypeAndCodeValue(String type) {
+
+        List<CodeValue> codeTypes = codeValueRepository.findByTypeSortedByCodeTypeAndCodeValue(type);
+
+        return codeTypes;
     }
 }

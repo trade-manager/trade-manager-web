@@ -12,8 +12,6 @@ import java.io.Serial;
  * @author Simon Allen
  * @version $Id: BasePropertyCodes.java,v 1.15 2002/01/22 22:48:21 simon Exp $
  */
-@Entity
-@DiscriminatorValue("UIComponentProperties")
 public class UIComponentProperties extends Decode {
     /**
      *
@@ -85,19 +83,6 @@ public class UIComponentProperties extends Decode {
     public static final String COMPILE = "COMPILE";
     public static final String REASSIGN = "REASSIGN";
     public static final String STRATEGY_PARMS = "STRATEGY_PARMS";
-
-    /**
-     * Constructor for CodeType.
-     *
-     * @param type        String
-     * @param category    String
-     * @param name        String
-     * @param description String
-     */
-    public UIComponentProperties(String type, String category, String name, String description) {
-
-        super(type, category, name, description);
-    }
 
     /**
      * Default Constructor

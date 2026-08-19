@@ -9,8 +9,6 @@ import java.io.Serial;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-@Entity
-@DiscriminatorValue("AllocationMethod")
 public class AllocationMethod extends Decode {
 
     @Serial
@@ -19,19 +17,6 @@ public class AllocationMethod extends Decode {
 
     public AllocationMethod() {
         super(DECODE, true);
-    }
-
-    /**
-     * Constructor for CodeType.
-     *
-     * @param type        String
-     * @param category    String
-     * @param name        String
-     * @param description String
-     */
-    public AllocationMethod(String type, String category, String name, String description) {
-
-        super(type, category, name, description);
     }
 
     /**

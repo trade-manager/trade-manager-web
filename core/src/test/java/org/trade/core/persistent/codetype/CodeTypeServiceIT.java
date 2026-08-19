@@ -61,7 +61,7 @@ public class CodeTypeServiceIT extends TradestrategyBase {
     public void findCodeTypeByCategory() {
 
         List<CodeType> codeTypes = tradeService.getCodeTypeService().findByCategory("CodeDecode");
-        assertNotNull(!codeTypes.isEmpty());
+        assertFalse(codeTypes.isEmpty());
 
         for (CodeType codeType : codeTypes) {
 
@@ -87,7 +87,7 @@ public class CodeTypeServiceIT extends TradestrategyBase {
     public void findCodeTypeByType() {
 
         List<CodeType> codeTypes = tradeService.getCodeTypeService().findByType("BarSize");
-        assertNotNull(!codeTypes.isEmpty());
+        assertFalse(codeTypes.isEmpty());
 
         for (CodeType codeType : codeTypes) {
 

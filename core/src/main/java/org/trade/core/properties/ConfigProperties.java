@@ -39,9 +39,9 @@ import java.util.regex.Pattern;
  */
 public class ConfigProperties {
 
-    private static final  Logger _log = LoggerFactory.getLogger(ConfigProperties.class);
+    private static final Logger _log = LoggerFactory.getLogger(ConfigProperties.class);
 
-    public static final  String MANDATORY_PROPERTY = "mandatory_property";
+    public static final String MANDATORY_PROPERTY = "mandatory_property";
     private static String _filename = null;
 
     // This is loaded as a system resource from the current core package
@@ -171,7 +171,7 @@ public class ConfigProperties {
         Properties[] propArray = new Properties[iNumItems];
 
         for (int iCount = 1; iCount <= iNumItems; iCount++) {
-            
+
             propArray[iCount - 1] = getSetOfProperties(keyRoot + "_" + iCount, keyNames);
         }
 
@@ -203,6 +203,8 @@ public class ConfigProperties {
                 // Get the root config.properties
                 loadPropertiesAsFile(getDeploymentPropertyFileName(), deploymentProperties);
                 deploymentProperties.putAll(systemProperties);
+
+                //generateDecodeSQL(context, DECODE_PROPERTY_FILE);
             }
         } catch (IOException ex) {
 
@@ -395,13 +397,13 @@ public class ConfigProperties {
      * @param filename String
      * @return jsonObject JSONObject
      */
-    private static JSONObject loadJSONAsResource(String filename) throws IOException {
+    private static JSONObject loadJSONAsResource(Object context, String filename) throws IOException {
 
-        InputStream unbuffered = ((Object) ConfigProperties.class).getClass().getResourceAsStream(filename);
+        InputStream unbuffered = context.getClass().getResourceAsStream(filename);
 
-        if (unbuffered == null) {
+        if (null == unbuffered) {
 
-            throw new PropertyFileNotFoundException(String.format("No property file %s not found", filename));
+            throw new PropertyFileNotFoundException(String.format("No property file %s found", filename));
         } else {
 
             InputStream in = new BufferedInputStream(unbuffered);
@@ -418,15 +420,15 @@ public class ConfigProperties {
      *
      * @param filename String
      */
-    public static void generateDecodeSQL(String filename) {
-
-        //TradeService tradeService = ApplicationContextProvider.getBean(TradeService.class);
+    public static void generateDecodeSQL(Object context, String filename) {
 
         try {
+
             AtomicInteger codeTypeId = new AtomicInteger(11);
             AtomicInteger codeAttributeId = new AtomicInteger(33);
             AtomicInteger codeValueId = new AtomicInteger(49);
-            JSONObject decodes = loadJSONAsResource(filename);
+            AtomicInteger decodeId = new AtomicInteger(0);
+            JSONObject decodes = loadJSONAsResource(context, filename);
             decodes.keySet().forEach(category -> {
 
                 JSONObject categories = decodes.getJSONObject(category);
@@ -434,24 +436,9 @@ public class ConfigProperties {
                 categories.keySet().forEach(type -> {
 
                     JSONArray values = categories.getJSONArray(type);
-                    CodeType codeType = null;//tradeService.getCodeTypeService().findByNameAndTypeAndCategory(type, CodeType.Decode, category);
-
-                    if (null == codeType) {
-
-                        codeType = new CodeType(CodeType.Decode, category, type, String.format("%s::%s", type, category));
-                    } else {
-
-                        for (CodeAttribute codeAttribute : codeType.getCodeAttributes()) {
-
-                            if (!codeAttribute.getCodeValues().isEmpty()) {
-
-                                codeAttribute.setCodeValues(new ArrayList<>(0));
-                            }
-                        }
-
-                        //tradeService.getCodeTypeService().save(codeType);
-                    }
+                    CodeType codeType = new CodeType(CodeType.Decode, category, type, String.format("%s::%s", type, category));
                     codeTypeId.getAndIncrement();
+
                     System.out.println(String.format("INSERT INTO codetype (id, name, type, category, description) VALUES(%s,'%s','%s','%s','%s')//", codeTypeId.get(), type, type, category, String.format("%s::%s", type, category)));
 
                     HashMap<String, CodeAttribute> codeAttributesMap = new HashMap<>();
@@ -478,16 +465,17 @@ public class ConfigProperties {
                         JSONObject decode = values.getJSONObject(i);
                         Iterator<String> attributes = decode.keys();
 
+                        decodeId.getAndIncrement();
+                        System.out.println(String.format("INSERT INTO decode (id, type, description) VALUES(%s,'%s','%s')//", decodeId.get(), type, String.format("Decode of type %s.", type)));
+
                         while (attributes.hasNext()) {
 
                             String attribute = attributes.next();
                             codeAttributesMap.get(attribute).addChild(new CodeValue(codeAttributesMap.get(attribute), decode.getString(attribute)));
                             codeValueId.getAndIncrement();
-                            System.out.println(String.format("INSERT INTO codevalue (id , code_value, code_attribute_id,indicator_series_id) VALUES(%s,'%s',%s,null)//", codeValueId.get(), decode.getString(attribute), codeAttributesMap.get(attribute).getId()));
+                            System.out.println(String.format("INSERT INTO codevalue (id , code_value, decode_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(%s,'%s','%s',%s,null, null)//", codeValueId.get(), decode.getString(attribute), decodeId.get(), codeAttributesMap.get(attribute).getId()));
                         }
                     }
-
-                    //  tradeService.getCodeTypeService().save(codeType);
                 });
             });
 
@@ -569,6 +557,7 @@ public class ConfigProperties {
             }
         }
     }
+
     /**
      * Method main.
      *
@@ -576,8 +565,8 @@ public class ConfigProperties {
      */
     public static void main(String[] args) {
 
-        generateDecodeSQL(DECODE_PROPERTY_FILE);
+        generateDecodeSQL(ConfigProperties.class, DECODE_PROPERTY_FILE);
         String propertyFileLocation = "C:\\Temp\\trade.properties";
-        ConfigProperties.reNumberDecodesInPropertiesFile(propertyFileLocation);
+        //reNumberDecodesInPropertiesFile(propertyFileLocation);
     }
 }

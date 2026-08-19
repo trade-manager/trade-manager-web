@@ -12,8 +12,6 @@ import java.util.List;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-@Entity
-@DiscriminatorValue("DAOProfile")
 public class DAOProfile extends DAODecode {
 
     @Serial
@@ -25,19 +23,6 @@ public class DAOProfile extends DAODecode {
 
     public DAOProfile() {
         super(DECODE, true);
-    }
-
-    /**
-     * Constructor for CodeType.
-     *
-     * @param type        String
-     * @param category    String
-     * @param name        String
-     * @param description String
-     */
-    public DAOProfile(String type, String category, String name, String description) {
-
-        super(type, category, name, description);
     }
 
     /**

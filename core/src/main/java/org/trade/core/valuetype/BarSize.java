@@ -9,8 +9,6 @@ import java.io.Serial;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-@Entity
-@DiscriminatorValue("BarSize")
 public class BarSize extends Decode {
 
     @Serial
@@ -23,19 +21,6 @@ public class BarSize extends Decode {
 
     public BarSize() {
         super(DECODE, true);
-    }
-
-    /**
-     * Constructor for CodeType.
-     *
-     * @param type        String
-     * @param category    String
-     * @param name        String
-     * @param description String
-     */
-    public BarSize(String type, String category, String name, String description) {
-
-        super(type, category, name, description);
     }
 
     /**

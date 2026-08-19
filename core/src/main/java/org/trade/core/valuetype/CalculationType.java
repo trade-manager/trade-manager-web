@@ -9,8 +9,6 @@ import java.io.Serial;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-@Entity
-@DiscriminatorValue("CalculationType")
 public class CalculationType extends Decode {
 
     @Serial
@@ -24,19 +22,6 @@ public class CalculationType extends Decode {
 
     public CalculationType() {
         super(DECODE);
-    }
-
-    /**
-     * Constructor for CodeType.
-     *
-     * @param type        String
-     * @param category    String
-     * @param name        String
-     * @param description String
-     */
-    public CalculationType(String type, String category, String name, String description) {
-
-        super(type, category, name, description);
     }
 
     /**

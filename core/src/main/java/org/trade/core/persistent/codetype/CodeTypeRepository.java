@@ -70,4 +70,15 @@ public interface CodeTypeRepository extends AspectRepository<CodeType, Long> {
      * @return
      */
     List<CodeType> findByNameAndTypeAndCategory(String name, String type, String category);
+
+    /*
+    @Query("SELECT DISTINCT codeType FROM CodeType codeType " +
+            "JOIN codeType.codeAttributes attributes " +
+            "JOIN attributes.codeValues values " +
+            "WHERE codeType.type = :type " +
+            "ORDER BY codeType.id ASC, values.codeObjectId ASC")
+    List<CodeType> findByTypeSortedByCodeTypeAndCodeValue(@Param("type") String type);
+
+     */
 }
+

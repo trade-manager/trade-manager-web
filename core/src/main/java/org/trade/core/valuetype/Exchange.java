@@ -9,8 +9,6 @@ import java.io.Serial;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-@Entity
-@DiscriminatorValue("Exchange")
 public class Exchange extends Decode {
 
     @Serial
@@ -20,19 +18,6 @@ public class Exchange extends Decode {
 
     public Exchange() {
         super(DECODE);
-    }
-
-    /**
-     * Constructor for CodeType.
-     *
-     * @param type        String
-     * @param category    String
-     * @param name        String
-     * @param description String
-     */
-    public Exchange(String type, String category, String name, String description) {
-
-        super(type, category, name, description);
     }
 
     /**

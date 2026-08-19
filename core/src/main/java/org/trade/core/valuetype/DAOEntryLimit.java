@@ -12,8 +12,6 @@ import java.util.ListIterator;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-@Entity
-@DiscriminatorValue("DAOEntryLimit")
 public class DAOEntryLimit extends DAODecode {
 
     @Serial
@@ -25,19 +23,6 @@ public class DAOEntryLimit extends DAODecode {
 
     public DAOEntryLimit() {
         super(DECODE);
-    }
-
-    /**
-     * Constructor for CodeType.
-     *
-     * @param type        String
-     * @param category    String
-     * @param name        String
-     * @param description String
-     */
-    public DAOEntryLimit(String type, String category, String name, String description) {
-
-        super(type, category, name, description);
     }
 
     /**

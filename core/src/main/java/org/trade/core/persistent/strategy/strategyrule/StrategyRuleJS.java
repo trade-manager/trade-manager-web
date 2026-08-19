@@ -31,7 +31,6 @@ import org.trade.core.valuetype.ChartDays;
 import org.trade.core.valuetype.ContentType;
 import org.trade.core.valuetype.Decode;
 import org.trade.core.valuetype.Exchange;
-import org.trade.core.valuetype.UIIndicatorSeries;
 import org.trade.core.valuetype.MarketBar;
 import org.trade.core.valuetype.MarketBias;
 import org.trade.core.valuetype.Money;
@@ -43,6 +42,7 @@ import org.trade.core.valuetype.Tier;
 import org.trade.core.valuetype.TimeInForce;
 import org.trade.core.valuetype.TradestrategyStatus;
 import org.trade.core.valuetype.TriggerMethod;
+import org.trade.core.valuetype.UIIndicatorSeries;
 
 import java.io.Serial;
 import java.time.ZonedDateTime;

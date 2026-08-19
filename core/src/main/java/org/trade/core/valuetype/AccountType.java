@@ -9,8 +9,6 @@ import java.io.Serial;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-@Entity
-@DiscriminatorValue("AccountType")
 public class AccountType extends Decode {
 
     @Serial
@@ -20,19 +18,6 @@ public class AccountType extends Decode {
 
     public AccountType() {
         super(DECODE, true);
-    }
-
-    /**
-     * Constructor for CodeType.
-     *
-     * @param type        String
-     * @param category    String
-     * @param name        String
-     * @param description String
-     */
-    public AccountType(String type, String category, String name, String description) {
-
-        super(type, category, name, description);
     }
 
     /**

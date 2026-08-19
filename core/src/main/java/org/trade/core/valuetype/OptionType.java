@@ -9,8 +9,6 @@ import java.io.Serial;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-@Entity
-@DiscriminatorValue("OptionType")
 public class OptionType extends Decode {
 
     /**
@@ -24,19 +22,6 @@ public class OptionType extends Decode {
 
     public OptionType() {
         super(DECODE);
-    }
-
-    /**
-     * Constructor for CodeType.
-     *
-     * @param type        String
-     * @param category    String
-     * @param name        String
-     * @param description String
-     */
-    public OptionType(String type, String category, String name, String description) {
-
-        super(type, category, name, description);
     }
 
     /**

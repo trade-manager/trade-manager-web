@@ -31,6 +31,9 @@ public class CodeValue extends Aspect implements java.io.Serializable {
     @Column(name = "code_value", nullable = false, length = 45)
     private String codeValue;
 
+    @Column(name = "code_object_id", columnDefinition = "integer DEFAULT 1", nullable = false)
+    private Integer codeObjectId;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "code_attribute_id")
     @JsonBackReference
@@ -43,6 +46,10 @@ public class CodeValue extends Aspect implements java.io.Serializable {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "tradestrategy_id")
     private Tradestrategy tradestrategy;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "decode_id")
+    private Decode decode;
 
     public CodeValue() {
     }
@@ -106,6 +113,24 @@ public class CodeValue extends Aspect implements java.io.Serializable {
     }
 
     /**
+     * Method getCodeObjectId.
+     *
+     * @return Integer
+     */
+    public Integer getCodeObjectId() {
+        return this.codeObjectId;
+    }
+
+    /**
+     * Method setCodeObjectId.
+     *
+     * @param codeObjectId Integer
+     */
+    public void setCodeObjectId(Integer codeObjectId) {
+        this.codeObjectId = codeObjectId;
+    }
+
+    /**
      * Method getCodeAttribute.
      *
      * @return CodeAttribute
@@ -121,6 +146,24 @@ public class CodeValue extends Aspect implements java.io.Serializable {
      */
     public void setCodeAttribute(CodeAttribute codeAttribute) {
         this.codeAttribute = codeAttribute;
+    }
+
+    /**
+     * Method getDecode.
+     *
+     * @return Decode
+     */
+    public Decode getDecode() {
+        return this.decode;
+    }
+
+    /**
+     * Method setDecode.
+     *
+     * @param decode Decode
+     */
+    public void setDecode(Decode decode) {
+        this.decode = decode;
     }
 
     /**

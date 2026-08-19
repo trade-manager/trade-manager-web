@@ -9,8 +9,6 @@ import java.io.Serial;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-@Entity
-@DiscriminatorValue("DAOAccount")
 public class DAOAccount extends DAODecode {
 
     @Serial
@@ -22,19 +20,6 @@ public class DAOAccount extends DAODecode {
 
     public DAOAccount() {
         super(DECODE, true);
-    }
-
-    /**
-     * Constructor for CodeType.
-     *
-     * @param type        String
-     * @param category    String
-     * @param name        String
-     * @param description String
-     */
-    public DAOAccount(String type, String category, String name, String description) {
-
-        super(type, category, name, description);
     }
 
     /**

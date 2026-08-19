@@ -9,8 +9,6 @@ import java.io.Serial;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-@Entity
-@DiscriminatorValue("MarketBar")
 public class MarketBar extends Decode {
 
     @Serial
@@ -19,19 +17,6 @@ public class MarketBar extends Decode {
 
     public MarketBar() {
         super(DECODE);
-    }
-
-    /**
-     * Constructor for CodeType.
-     *
-     * @param type        String
-     * @param category    String
-     * @param name        String
-     * @param description String
-     */
-    public MarketBar(String type, String category, String name, String description) {
-
-        super(type, category, name, description);
     }
 
     /**

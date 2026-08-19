@@ -11,8 +11,6 @@ import java.util.List;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-@Entity
-@DiscriminatorValue("DAOStrategy")
 public class DAOStrategy extends DAODecode {
 
     @Serial
@@ -24,19 +22,6 @@ public class DAOStrategy extends DAODecode {
 
     public DAOStrategy() {
         super(DECODE);
-    }
-
-    /**
-     * Constructor for CodeType.
-     *
-     * @param type        String
-     * @param category    String
-     * @param name        String
-     * @param description String
-     */
-    public DAOStrategy(String type, String category, String name, String description) {
-
-        super(type, category, name, description);
     }
 
     /**
