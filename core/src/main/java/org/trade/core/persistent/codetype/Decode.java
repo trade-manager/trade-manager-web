@@ -134,7 +134,7 @@ public class Decode extends Aspect implements java.io.Serializable {
 
         for (CodeValue codeValueExist : this.codeValues) {
 
-            if (this.getType().equals(codeValue.getDecode().getType())  &&
+            if (this.getType().equals(codeValue.getDecode().getType()) &&
                     codeValueExist.getCodeAttribute().getName().equals(codeValue.getCodeAttribute().getName())) {
 
                 return codeValueExist;

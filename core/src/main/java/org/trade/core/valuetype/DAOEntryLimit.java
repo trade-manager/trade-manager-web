@@ -1,7 +1,5 @@
 package org.trade.core.valuetype;
 
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
 import org.trade.core.persistent.codetype.Entrylimit;
 
 import java.io.Serial;

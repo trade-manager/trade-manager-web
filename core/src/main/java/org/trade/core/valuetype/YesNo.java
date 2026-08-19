@@ -1,8 +1,5 @@
 package org.trade.core.valuetype;
 
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
-
 import java.io.Serial;
 
 /**

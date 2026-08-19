@@ -1,7 +1,5 @@
 package org.trade.core.valuetype;
 
-import org.trade.core.persistent.codetype.CodeType;
-
 import java.io.Serial;
 import java.io.Serializable;
 
