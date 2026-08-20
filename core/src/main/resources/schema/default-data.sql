@@ -822,63 +822,63 @@ INSERT INTO decodetype (id, type, description) VALUES(89,'MarketBias','Decode of
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(514,'N','89',62,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(515,'Neutral','89',63,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(516,'N','89',64,null, null)//
-INSERT INTO codetype (id, name, type, category, description) VALUES(21,'IndicatorSeriesUI','CodeType','CodeDecode','IndicatorSeriesUI::CodeDecode')//
+INSERT INTO codetype (id, name, type, category, description) VALUES(21,'UIIndicatorSeries','CodeType','CodeDecode','UIIndicatorSeries::CodeDecode')//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(65,'code','code',null,'java.lang.String',null, 21)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(66,'display_name','display_name',null,'java.lang.String',null, 21)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(67,'value','value',null,'java.lang.String',null, 21)//
-INSERT INTO decodetype (id, type, description) VALUES(90,'IndicatorSeriesUI','Decode of type IndicatorSeriesUI.')//
+INSERT INTO decodetype (id, type, description) VALUES(90,'UIIndicatorSeries','Decode of type UIIndicatorSeries.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(517,'AverageTrueRangeSeries','90',65,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(518,'ATR','90',66,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(519,'AverageTrueRangeSeries','90',67,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(91,'IndicatorSeriesUI','Decode of type IndicatorSeriesUI.')//
+INSERT INTO decodetype (id, type, description) VALUES(91,'UIIndicatorSeries','Decode of type UIIndicatorSeries.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(520,'BollingerBandsSeries','91',65,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(521,'BollingerBands','91',66,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(522,'BollingerBandsSeries','91',67,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(92,'IndicatorSeriesUI','Decode of type IndicatorSeriesUI.')//
+INSERT INTO decodetype (id, type, description) VALUES(92,'UIIndicatorSeries','Decode of type UIIndicatorSeries.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(523,'CandleSeries','92',65,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(524,'Candle','92',66,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(525,'CandleSeries','92',67,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(93,'IndicatorSeriesUI','Decode of type IndicatorSeriesUI.')//
+INSERT INTO decodetype (id, type, description) VALUES(93,'UIIndicatorSeries','Decode of type UIIndicatorSeries.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(526,'CommodityChannelIndexSeries','93',65,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(527,'CCI','93',66,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(528,'CommodityChannelIndexSeries','93',67,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(94,'IndicatorSeriesUI','Decode of type IndicatorSeriesUI.')//
+INSERT INTO decodetype (id, type, description) VALUES(94,'UIIndicatorSeries','Decode of type UIIndicatorSeries.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(529,'HeikinAshiSeries','94',65,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(530,'HeikinAshi','94',66,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(531,'HeikinAshiSeries','94',67,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(95,'IndicatorSeriesUI','Decode of type IndicatorSeriesUI.')//
+INSERT INTO decodetype (id, type, description) VALUES(95,'UIIndicatorSeries','Decode of type UIIndicatorSeries.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(532,'MACDSeries','95',65,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(533,'MACD','95',66,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(534,'MACDSeries','95',67,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(96,'IndicatorSeriesUI','Decode of type IndicatorSeriesUI.')//
+INSERT INTO decodetype (id, type, description) VALUES(96,'UIIndicatorSeries','Decode of type UIIndicatorSeries.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(535,'MoneyFlowIndexSeries','96',65,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(536,'MFI','96',66,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(537,'MoneyFlowIndexSeries','96',67,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(97,'IndicatorSeriesUI','Decode of type IndicatorSeriesUI.')//
+INSERT INTO decodetype (id, type, description) VALUES(97,'UIIndicatorSeries','Decode of type UIIndicatorSeries.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(538,'MovingAverageSeries','97',65,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(539,'MovingAverage','97',66,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(540,'MovingAverageSeries','97',67,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(98,'IndicatorSeriesUI','Decode of type IndicatorSeriesUI.')//
+INSERT INTO decodetype (id, type, description) VALUES(98,'UIIndicatorSeries','Decode of type UIIndicatorSeries.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(541,'PivotSeries','98',65,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(542,'Pivot','98',66,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(543,'PivotSeries','98',67,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(99,'IndicatorSeriesUI','Decode of type IndicatorSeriesUI.')//
+INSERT INTO decodetype (id, type, description) VALUES(99,'UIIndicatorSeries','Decode of type UIIndicatorSeries.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(544,'RelativeStrengthIndexSeries','99',65,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(545,'RSI','99',66,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(546,'RelativeStrengthIndexSeries','99',67,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(100,'IndicatorSeriesUI','Decode of type IndicatorSeriesUI.')//
+INSERT INTO decodetype (id, type, description) VALUES(100,'UIIndicatorSeries','Decode of type UIIndicatorSeries.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(547,'VolumeSeries','100',65,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(548,'Volume','100',66,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(549,'VolumeSeries','100',67,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(101,'IndicatorSeriesUI','Decode of type IndicatorSeriesUI.')//
+INSERT INTO decodetype (id, type, description) VALUES(101,'UIIndicatorSeries','Decode of type UIIndicatorSeries.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(550,'VostroSeries','101',65,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(551,'Vostro','101',66,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(552,'VostroSeries','101',67,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(102,'IndicatorSeriesUI','Decode of type IndicatorSeriesUI.')//
+INSERT INTO decodetype (id, type, description) VALUES(102,'UIIndicatorSeries','Decode of type UIIndicatorSeries.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(553,'VwapSeries','102',65,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(554,'Vwap','102',66,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(555,'VwapSeries','102',67,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(103,'IndicatorSeriesUI','Decode of type IndicatorSeriesUI.')//
+INSERT INTO decodetype (id, type, description) VALUES(103,'UIIndicatorSeries','Decode of type UIIndicatorSeries.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(556,'StochasticOscillatorSeries','103',65,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(557,'% K/R','103',66,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(558,'StochasticOscillatorSeries','103',67,null, null)//

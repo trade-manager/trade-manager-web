@@ -30,9 +30,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 @SpringBootTest
 @ContextConfiguration(classes = ApplicationRepositoryConfig.class,
         initializers = ApplicationProfileInitializer.class)
-public class CodeTypeServiceCacheIT extends TradestrategyBase {
+public class DecodeTypeServiceCacheIT extends TradestrategyBase {
 
-    private static final Logger _log = LoggerFactory.getLogger(CodeTypeServiceCacheIT.class);
+    private static final Logger _log = LoggerFactory.getLogger(DecodeTypeServiceCacheIT.class);
 
     @Autowired
     CacheManager cacheManager;

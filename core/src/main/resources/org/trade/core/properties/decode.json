@@ -556,7 +556,7 @@
         "code": "SLD"
       }
     ],
-    "IndicatorSeriesUI": [
+    "UIIndicatorSeries": [
       {
         "display_name": "ATR",
         "value": "AverageTrueRangeSeries",
