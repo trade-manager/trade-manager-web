@@ -6,6 +6,8 @@ import org.trade.core.aspect.Aspect;
 import org.trade.core.lookup.DBTableLookupServiceProvider;
 import org.trade.core.persistent.ServiceException;
 import org.trade.core.persistent.contract.Contract;
+import org.trade.core.persistent.portfolio.Portfolio;
+import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.persistent.tradeorder.TradeOrder;
 import org.trade.core.persistent.tradestrategy.Tradestrategy;
 import org.trade.core.properties.ConfigProperties;
@@ -438,8 +440,8 @@ public class Tradingdays extends Aspect implements java.io.Serializable {
                 strategyName = DAOStrategy.newInstance().getCode();
             }
 
-            org.trade.core.persistent.strategy.Strategy strategy = (org.trade.core.persistent.strategy.Strategy) DAOStrategy.newInstance(strategyName).getObject();
-            org.trade.core.persistent.portfolio.Portfolio portfolio = (org.trade.core.persistent.portfolio.Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
+            Strategy strategy = (Strategy) DAOStrategy.newInstance(strategyName).getObject();
+            Portfolio portfolio = (Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
             String strLine;
 
             // read comma separated file line by line

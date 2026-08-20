@@ -303,12 +303,8 @@ public class ConfigProperties {
      */
     public static String getPropertyAfterEnvSubstitution(String key) throws IOException {
 
-        String strRet;
-        strRet = retrieveProperty(key);
-
         // put env variables in the dictionary
-        Dictionary<?, ?> toSubstitute = System.getProperties();
-        TemplateParser tp = new TemplateParser(strRet, toSubstitute);
+        TemplateParser tp = new TemplateParser(retrieveProperty(key), System.getProperties());
         return tp.parseTemplate();
     }
 

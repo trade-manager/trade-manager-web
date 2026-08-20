@@ -3,6 +3,7 @@ package org.trade.ui.models;
 import org.trade.core.aspect.Aspect;
 import org.trade.core.aspect.Aspects;
 import org.trade.core.persistent.codetype.CodeType;
+import org.trade.core.persistent.codetype.DecodeType;
 import org.trade.core.util.CoreUtils;
 
 import java.io.Serial;
@@ -13,26 +14,22 @@ import java.util.List;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-public class CodeTypeTableModel extends AspectTableModel {
+public class DecodeTypeTableModel extends AspectTableModel {
     /**
      *
      */
     @Serial
     private static final long serialVersionUID = 3087514589731145479L;
     private static final String TYPE = "Type*";
-    private static final String CATEGORY = "Category*";
-    private static final String NAME = "Name*";
     private static final String DESCRIPTION = "Description";
 
     Aspects data = null;
 
-    public CodeTypeTableModel() {
+    public DecodeTypeTableModel() {
 
-        columnNames = new String[4];
+        columnNames = new String[2];
         columnNames[0] = TYPE;
-        columnNames[1] = CATEGORY;
-        columnNames[2] = NAME;
-        columnNames[3] = DESCRIPTION;
+        columnNames[1] = DESCRIPTION;
     }
 
     /**
@@ -59,7 +56,7 @@ public class CodeTypeTableModel extends AspectTableModel {
             for (final Aspect element : getData().getAspects()) {
 
                 final List<Object> newRow = new ArrayList<>();
-                getNewRow(newRow, (CodeType) element);
+                getNewRow(newRow, (DecodeType) element);
                 rows.add(newRow);
             }
             fireTableDataChanged();
@@ -75,7 +72,7 @@ public class CodeTypeTableModel extends AspectTableModel {
      */
     public void populateDAO(Object value, int row, int column) {
 
-        final CodeType element = (CodeType) getData().getAspects().get(row);
+        final DecodeType element = (DecodeType) getData().getAspects().get(row);
 
         switch (column) {
             case 0: {
@@ -83,14 +80,6 @@ public class CodeTypeTableModel extends AspectTableModel {
                 break;
             }
             case 1: {
-                element.setCategory((String) value);
-                break;
-            }
-            case 2: {
-                element.setName((String) value);
-                break;
-            }
-            case 3: {
                 element.setDescription((String) value);
                 break;
             }
@@ -125,7 +114,7 @@ public class CodeTypeTableModel extends AspectTableModel {
 
     public void addRow() {
 
-        final CodeType element = new CodeType(CodeType.Decode, CodeType.Decode, "", "");
+        final DecodeType element = new DecodeType(CodeType.Decode, "");
         getData().add(element);
         getData().setDirty(true);
         final List<Object> newRow = new ArrayList<>();
@@ -139,13 +128,11 @@ public class CodeTypeTableModel extends AspectTableModel {
      * Method getNewRow.
      *
      * @param newRow  List<Object>
-     * @param element CodeType
+     * @param element DecodeType
      */
-    public void getNewRow(List<Object> newRow, CodeType element) {
+    public void getNewRow(List<Object> newRow, DecodeType element) {
 
         newRow.add(element.getType());
-        newRow.add(element.getCategory());
-        newRow.add(element.getName());
         newRow.add(element.getDescription());
     }
 }

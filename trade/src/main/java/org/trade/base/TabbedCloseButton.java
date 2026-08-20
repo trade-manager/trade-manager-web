@@ -2,6 +2,7 @@ package org.trade.base;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.trade.core.valuetype.UIComponentProperties;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonUI;
@@ -68,7 +69,7 @@ public class TabbedCloseButton extends JPanel {
         // add more space between the label and the button
         label.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
         // tab button
-        TabButton button = new TabButton(basePanel, org.trade.core.valuetype.UIComponentProperties.CLOSE);
+        TabButton button = new TabButton(basePanel, UIComponentProperties.CLOSE);
         if (basePanel != null) {
             this.addMessageListener(basePanel);
         }
@@ -98,7 +99,7 @@ public class TabbedCloseButton extends JPanel {
 
             try {
 
-                org.trade.core.valuetype.UIComponentProperties basePropertyCodes = org.trade.core.valuetype.UIComponentProperties.newInstance(UICode);
+                UIComponentProperties basePropertyCodes = UIComponentProperties.newInstance(UICode);
 
                 if (!basePropertyCodes.getImage().isEmpty()) {
                     setIcon(ImageBuilder.getImageIcon(basePropertyCodes.getImage()));

@@ -79,7 +79,7 @@ public class CodeTypeServiceCacheIT extends TradestrategyBase {
 
             for (CodeValue codeValue : decodeType.getCodeValues()) {
 
-                _log.info(String.format("CodeValue type: %s, attribute: %s, value: %s, row Id: %s", decodeType.getType(), codeValue.getCodeAttribute().getName(), codeValue.getCodeValue(), codeValue.getCodeObjectId()));
+                _log.info(String.format("CodeValue type: %s, attribute: %s, value: %s", decodeType.getType(), codeValue.getCodeAttribute().getName(), codeValue.getCodeValue()));
             }
         }
     }

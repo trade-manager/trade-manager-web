@@ -677,7 +677,7 @@ INDEX codeValue_codeattribute_idx (code_attribute_id ASC) ,
 INDEX codeValue_indicatorseries_idx (indicator_series_id ASC) ,
 INDEX codeValue_tradestrategy_idx (tradestrategy_id ASC) ,
 INDEX codeValue_decodetype_idx (decodetype_id ASC) ,
-UNIQUE INDEX codeValue_uq (code_value ASC, decodetype_id ASC, code_attribute_id ASC, indicator_series_id ASC, tradestrategy_id ASC),
+UNIQUE INDEX codeValue_uq (code_value ASC, code_attribute_id ASC, decodetype_id ASC, indicator_series_id ASC, tradestrategy_id ASC),
 CONSTRAINT codeValue_decodetype_fk
 FOREIGN KEY (decodetype_id )
 REFERENCES decodetype (id )

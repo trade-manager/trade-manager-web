@@ -2,6 +2,7 @@ package org.trade.base;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.trade.core.valuetype.UIComponentProperties;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,7 +31,7 @@ public class BaseButton extends JButton {
      * @param basePanel         BasePanel
      * @param basePropertyCodes BaseUIPropertyCodes
      */
-    public BaseButton(BasePanel basePanel, org.trade.core.valuetype.UIComponentProperties basePropertyCodes) {
+    public BaseButton(BasePanel basePanel, UIComponentProperties basePropertyCodes) {
         this(basePanel, basePropertyCodes, 2);
     }
 
@@ -41,7 +42,7 @@ public class BaseButton extends JButton {
      * @param basePropertyCodes BaseUIPropertyCodes
      * @param margin            int
      */
-    public BaseButton(BasePanel basePanel, org.trade.core.valuetype.UIComponentProperties basePropertyCodes, int margin) {
+    public BaseButton(BasePanel basePanel, UIComponentProperties basePropertyCodes, int margin) {
         try {
             if (basePanel != null) {
                 this.addMessageListener(basePanel);
@@ -78,7 +79,7 @@ public class BaseButton extends JButton {
                 this.addMessageListener(basePanel);
             }
 
-            org.trade.core.valuetype.UIComponentProperties basePropertyCodes = org.trade.core.valuetype.UIComponentProperties.newInstance(UICode);
+            UIComponentProperties basePropertyCodes = UIComponentProperties.newInstance(UICode);
 
             if (!basePropertyCodes.getImage().isEmpty()) {
                 setIcon(ImageBuilder.getImageIcon(basePropertyCodes.getImage()));

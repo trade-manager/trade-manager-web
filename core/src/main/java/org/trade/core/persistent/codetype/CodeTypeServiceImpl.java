@@ -9,7 +9,6 @@ import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import jakarta.transaction.Transactional;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -74,7 +73,7 @@ public class CodeTypeServiceImpl implements CodeTypeService {
         return codeTypes;
     }
 
-    @Cacheable(value = "codeTypes", key = "#type")
+    //   @Cacheable(value = "codeTypes", key = "#type")
     @Transactional
     public List<CodeType> findByType(String type) {
 
@@ -148,13 +147,13 @@ public class CodeTypeServiceImpl implements CodeTypeService {
         return typedQuery.getResultList();
     }
 
-    @CacheEvict(value = "codeTypes", allEntries = true)
+    //  @CacheEvict(value = "codeTypes", allEntries = true)
     public CodeType save(CodeType codeType) {
 
         return codeTypeRepository.save(codeType);
     }
 
-    @CacheEvict(value = "codeTypes", allEntries = true)
+    //   @CacheEvict(value = "codeTypes", allEntries = true)
     public void delete(CodeType codeType) {
 
         if (null == codeType) {
