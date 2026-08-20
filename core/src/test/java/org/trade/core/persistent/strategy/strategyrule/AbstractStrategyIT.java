@@ -18,7 +18,6 @@ import org.trade.core.factory.ClassFactory;
 import org.trade.core.persistent.ServiceException;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.codetype.Entrylimit;
-import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.persistent.strategy.series.indicator.CandleSeries;
 import org.trade.core.persistent.strategy.series.indicator.StrategyData;
 import org.trade.core.persistent.strategy.series.indicator.candle.CandleItem;
@@ -65,7 +64,7 @@ import static org.junit.jupiter.api.Assertions.fail;
         initializers = ApplicationProfileInitializer.class)
 public class AbstractStrategyIT extends TradestrategyBase {
 
-    private final static Logger _log = LoggerFactory.getLogger(AbstractStrategyIT.class);
+    private static final Logger _log = LoggerFactory.getLogger(AbstractStrategyIT.class);
 
     private static final String symbol = "TEST-" + TradestrategyBase.getRandomNumber(4);
     private static Tradestrategy tradestrategy;
@@ -96,7 +95,7 @@ public class AbstractStrategyIT extends TradestrategyBase {
         Integer port = Integer.valueOf(ConfigProperties.getPropAsString("trade.tws.port"));
         String host = ConfigProperties.getPropAsString("trade.tws.host");
         brokerModel.onConnect(host, port, clientId);
-        Strategy strategy = (Strategy) DAOStrategy.newInstance().getObject();
+        org.trade.core.persistent.strategy.Strategy strategy = (org.trade.core.persistent.strategy.Strategy) DAOStrategy.newInstance().getObject();
         tradestrategy = this.createTestTradestrategy(strategy, symbol, Side.BOT, ChartDays.ONE_DAY, BarSize.HOUR_MIN);
         assertNotNull(tradestrategy);
 

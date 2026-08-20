@@ -35,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
         initializers = ApplicationProfileInitializer.class)
 public class ContractServiceIT extends TradestrategyBase {
 
-    private final static Logger _log = LoggerFactory.getLogger(TradingdayServiceIT.class);
+    private static final Logger _log = LoggerFactory.getLogger(TradingdayServiceIT.class);
     private static ZonedDateTime expiry;
     private static Contract contract;
 

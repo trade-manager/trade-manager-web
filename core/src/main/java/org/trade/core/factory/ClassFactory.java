@@ -23,7 +23,7 @@ public class ClassFactory {
     private ClassFactory() {
     }
 
-    private final static Logger _log = LoggerFactory.getLogger(ClassFactory.class);
+    private static final Logger _log = LoggerFactory.getLogger(ClassFactory.class);
 
     /**
      * Method getServiceForInterface.

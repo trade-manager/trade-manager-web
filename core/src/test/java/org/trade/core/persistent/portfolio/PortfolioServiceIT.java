@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
         initializers = ApplicationProfileInitializer.class)
 public class PortfolioServiceIT extends TradestrategyBase {
 
-    private final static Logger _log = LoggerFactory.getLogger(PortfolioServiceIT.class);
+    private static final Logger _log = LoggerFactory.getLogger(PortfolioServiceIT.class);
 
     private static final String accountNumber = "TEST-" + TradestrategyBase.getRandomNumber(4);
 
@@ -69,7 +69,7 @@ public class PortfolioServiceIT extends TradestrategyBase {
     @Test
     public void createAccount() {
 
-        Portfolio portfolio = (Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
+        org.trade.core.persistent.portfolio.Portfolio portfolio = (org.trade.core.persistent.portfolio.Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
         portfolio = tradeService.getPortfolioService().findByName(portfolio.getName());
         assertNotNull(portfolio);
         List<Account> accounts = new ArrayList<>(0);

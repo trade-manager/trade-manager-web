@@ -38,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
         initializers = ApplicationProfileInitializer.class)
 public class CandlePeriodIT extends TradestrategyBase {
 
-    private final static Logger _log = LoggerFactory.getLogger(CandlePeriodIT.class);
+    private static final Logger _log = LoggerFactory.getLogger(CandlePeriodIT.class);
 
     private static Tradestrategy tradestrategy;
     private static final String symbol = "TEST-" + TradestrategyBase.getRandomNumber(4);

@@ -2,6 +2,7 @@ package org.trade.base;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.trade.core.valuetype.UIComponentProperties;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonUI;
@@ -24,7 +25,7 @@ public class TabbedCloseButton extends JPanel {
      */
     @Serial
     private static final long serialVersionUID = 8543984162821384818L;
-    private final static Logger _log = LoggerFactory.getLogger(TabbedCloseButton.class);
+    private static final Logger _log = LoggerFactory.getLogger(TabbedCloseButton.class);
     protected MessageNotifier notifier = new MessageNotifier();
     private String method = null;
     private Object transferObject = null;
@@ -68,7 +69,7 @@ public class TabbedCloseButton extends JPanel {
         // add more space between the label and the button
         label.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
         // tab button
-        TabButton button = new TabButton(basePanel, BaseUIPropertyCodes.CLOSE);
+        TabButton button = new TabButton(basePanel, UIComponentProperties.CLOSE);
         if (basePanel != null) {
             this.addMessageListener(basePanel);
         }
@@ -98,7 +99,7 @@ public class TabbedCloseButton extends JPanel {
 
             try {
 
-                BaseUIPropertyCodes basePropertyCodes = BaseUIPropertyCodes.newInstance(UICode);
+                UIComponentProperties basePropertyCodes = UIComponentProperties.newInstance(UICode);
 
                 if (!basePropertyCodes.getImage().isEmpty()) {
                     setIcon(ImageBuilder.getImageIcon(basePropertyCodes.getImage()));
@@ -164,7 +165,7 @@ public class TabbedCloseButton extends JPanel {
         }
     }
 
-    private final static MouseListener buttonMouseListener = new MouseAdapter() {
+    private static final MouseListener buttonMouseListener = new MouseAdapter() {
         public void mouseEntered(MouseEvent e) {
             Component component = e.getComponent();
             if (component instanceof AbstractButton button) {

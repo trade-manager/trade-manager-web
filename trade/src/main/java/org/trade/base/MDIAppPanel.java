@@ -26,7 +26,7 @@ public abstract class MDIAppPanel extends BasePanel
     @Serial
     private static final long serialVersionUID = 8405644422808736326L;
 
-    private final static Logger _log = LoggerFactory.getLogger(MDIAppPanel.class);
+    private static final Logger _log = LoggerFactory.getLogger(MDIAppPanel.class);
     private final ExtendedDesktopPane m_desktopPane = new ExtendedDesktopPane();
     protected JInternalFrame internalFrame = null;
     private final JPanel menuPanel = new JPanel();

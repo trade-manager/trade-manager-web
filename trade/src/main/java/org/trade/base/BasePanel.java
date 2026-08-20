@@ -21,7 +21,7 @@ public abstract class BasePanel extends JPanel implements IMessageListener {
     @Serial
     private static final long serialVersionUID = 7015215807608484202L;
 
-    private final static Logger _log = LoggerFactory.getLogger(BasePanel.class);
+    private static final Logger _log = LoggerFactory.getLogger(BasePanel.class);
 
     public static final int INFORMATION = 1;
     public static final int WARNING = 2;

@@ -4,7 +4,7 @@ import org.trade.base.BaseButton;
 import org.trade.base.BaseMenuItem;
 import org.trade.base.BasePanel;
 import org.trade.base.BasePanelMenu;
-import org.trade.base.BaseUIPropertyCodes;
+import org.trade.core.valuetype.UIComponentProperties;
 
 import javax.swing.*;
 import java.io.Serial;
@@ -20,26 +20,26 @@ public class TradeMainPanelMenu extends BasePanelMenu {
     @Serial
     private static final long serialVersionUID = -2716722655140661891L;
 
-    private final BaseMenuItem searchMenu = new BaseMenuItem(null, BaseUIPropertyCodes.SEARCH);
-    private final BaseButton searchButton = new BaseButton(null, BaseUIPropertyCodes.SEARCH);
-    private final BaseMenuItem refreshMenu = new BaseMenuItem(null, BaseUIPropertyCodes.REFRESH);
-    private final BaseButton refreshButton = new BaseButton(null, BaseUIPropertyCodes.REFRESH);
-    private final BaseButton deleteButton = new BaseButton(null, BaseUIPropertyCodes.DELETE);
-    private final BaseMenuItem deleteMenu = new BaseMenuItem(null, BaseUIPropertyCodes.DELETE);
-    private final BaseMenuItem brokerDataMenu = new BaseMenuItem(null, BaseUIPropertyCodes.DATA);
-    private final BaseButton brokerDataButton = new BaseButton(null, BaseUIPropertyCodes.DATA);
-    private final BaseButton runStrategyButton = new BaseButton(null, BaseUIPropertyCodes.RUN);
-    private final BaseMenuItem runStrategyMenu = new BaseMenuItem(null, BaseUIPropertyCodes.RUN);
-    private final BaseButton testStrategyButton = new BaseButton(null, BaseUIPropertyCodes.TEST);
-    private final BaseMenuItem testStrategyMenu = new BaseMenuItem(null, BaseUIPropertyCodes.TEST);
-    private final BaseButton cancelButton = new BaseButton(null, BaseUIPropertyCodes.CANCEL);
-    private final BaseMenuItem cancelMenu = new BaseMenuItem(null, BaseUIPropertyCodes.CANCEL);
-    private final BaseButton closeAllButton = new BaseButton(null, BaseUIPropertyCodes.CLOSE_ALL);
-    private final BaseMenuItem closeAllMenu = new BaseMenuItem(null, BaseUIPropertyCodes.CLOSE_ALL);
-    private final BaseMenuItem propertiesMenu = new BaseMenuItem(null, BaseUIPropertyCodes.PROPERTIES);
-    private final BaseMenuItem connect = new BaseMenuItem(null, BaseUIPropertyCodes.CONNECT);
-    private final BaseMenuItem disconnect = new BaseMenuItem(null, BaseUIPropertyCodes.DISCONNECT);
-    private final BaseMenuItem disclaimer = new BaseMenuItem(null, BaseUIPropertyCodes.DISCLAIMER);
+    private final BaseMenuItem searchMenu = new BaseMenuItem(null, UIComponentProperties.SEARCH);
+    private final BaseButton searchButton = new BaseButton(null, UIComponentProperties.SEARCH);
+    private final BaseMenuItem refreshMenu = new BaseMenuItem(null, UIComponentProperties.REFRESH);
+    private final BaseButton refreshButton = new BaseButton(null, UIComponentProperties.REFRESH);
+    private final BaseButton deleteButton = new BaseButton(null, UIComponentProperties.DELETE);
+    private final BaseMenuItem deleteMenu = new BaseMenuItem(null, UIComponentProperties.DELETE);
+    private final BaseMenuItem brokerDataMenu = new BaseMenuItem(null, UIComponentProperties.DATA);
+    private final BaseButton brokerDataButton = new BaseButton(null, UIComponentProperties.DATA);
+    private final BaseButton runStrategyButton = new BaseButton(null, UIComponentProperties.RUN);
+    private final BaseMenuItem runStrategyMenu = new BaseMenuItem(null, UIComponentProperties.RUN);
+    private final BaseButton testStrategyButton = new BaseButton(null, UIComponentProperties.TEST);
+    private final BaseMenuItem testStrategyMenu = new BaseMenuItem(null, UIComponentProperties.TEST);
+    private final BaseButton cancelButton = new BaseButton(null, UIComponentProperties.CANCEL);
+    private final BaseMenuItem cancelMenu = new BaseMenuItem(null, UIComponentProperties.CANCEL);
+    private final BaseButton closeAllButton = new BaseButton(null, UIComponentProperties.CLOSE_ALL);
+    private final BaseMenuItem closeAllMenu = new BaseMenuItem(null, UIComponentProperties.CLOSE_ALL);
+    private final BaseMenuItem propertiesMenu = new BaseMenuItem(null, UIComponentProperties.PROPERTIES);
+    private final BaseMenuItem connect = new BaseMenuItem(null, UIComponentProperties.CONNECT);
+    private final BaseMenuItem disconnect = new BaseMenuItem(null, UIComponentProperties.DISCONNECT);
+    private final BaseMenuItem disclaimer = new BaseMenuItem(null, UIComponentProperties.DISCLAIMER);
 
     /**
      * Constructor for TradeMainPanelMenu.
@@ -83,19 +83,19 @@ public class TradeMainPanelMenu extends BasePanelMenu {
         disconnect.addActionListener(_ -> messageEvent(disconnect.getMethod()));
         disclaimer.addActionListener(_ -> messageEvent(disclaimer.getMethod()));
 
-        final BaseMenuItem close = new BaseMenuItem(null, BaseUIPropertyCodes.CLOSE);
+        final BaseMenuItem close = new BaseMenuItem(null, UIComponentProperties.CLOSE);
         close.addActionListener(_ -> messageEvent(close.getMethod()));
 
-        final BaseMenuItem closeAll = new BaseMenuItem(null, BaseUIPropertyCodes.CLOSE_ALL);
+        final BaseMenuItem closeAll = new BaseMenuItem(null, UIComponentProperties.CLOSE_ALL);
         closeAll.addActionListener(_ -> messageEvent(closeAll.getMethod()));
 
-        final BaseMenuItem cascade = new BaseMenuItem(null, BaseUIPropertyCodes.CASCADE);
+        final BaseMenuItem cascade = new BaseMenuItem(null, UIComponentProperties.CASCADE);
         cascade.addActionListener(_ -> messageEvent(cascade.getMethod()));
 
-        final BaseMenuItem cascadeAll = new BaseMenuItem(null, BaseUIPropertyCodes.CASCADE_ALL);
+        final BaseMenuItem cascadeAll = new BaseMenuItem(null, UIComponentProperties.CASCADE_ALL);
         cascadeAll.addActionListener(_ -> messageEvent(cascadeAll.getMethod()));
 
-        final BaseMenuItem tileAll = new BaseMenuItem(null, BaseUIPropertyCodes.TILE_ALL);
+        final BaseMenuItem tileAll = new BaseMenuItem(null, UIComponentProperties.TILE_ALL);
         tileAll.addActionListener(_ -> messageEvent(tileAll.getMethod()));
         JMenu actionMenu = new JMenu("Action");
         menuBar.add(actionMenu, 2);

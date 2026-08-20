@@ -149,6 +149,4 @@ public record TradingdayRecord(Long id,
     public List<TradestrategyRecord> getTradestrategies() {
         return this.tradestrategies;
     }
-
-
 }

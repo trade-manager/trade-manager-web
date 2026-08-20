@@ -3,6 +3,13 @@ import {config} from '../../Constants'
 
 let user;
 
+let constants;
+
+// -- Axios
+const instance = axios.create({
+    baseURL: config.url.API_BASE_URL
+})
+
 export const ERROR = "ERROR"
 export const WARNING = "WARNING"
 export const INFO = "INFO"
@@ -46,14 +53,19 @@ function log(level, message, user) {
     })
 }
 
-// -- Axios
-
-const instance = axios.create({
-    baseURL: config.url.API_BASE_URL
-})
-
 // -- Helper functions
-
 function basicAuth(user) {
     return `Basic ${user.authdata}`
 }
+
+export const getUIConfig = async () => {
+
+    if (null == constants) {
+
+        const response = await instance.get('/public/init-values')
+        const data = response.data;
+        constants = data instanceof Array ? data : [data];
+        console.log("getUIConfig data:\n" + JSON.stringify(constants));
+    }
+}
+

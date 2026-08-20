@@ -5,6 +5,7 @@ package org.trade.core.lookup;
  * @version $Revision: 1.0 $
  */
 public interface ILookupServiceProvider {
+
     /**
      * Get the appropriate ILookup.
      *

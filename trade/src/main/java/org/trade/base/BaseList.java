@@ -1,5 +1,7 @@
 package org.trade.base;
 
+import org.trade.core.valuetype.UIComponentProperties;
+
 import javax.swing.*;
 import java.io.Serial;
 import java.util.ArrayList;
@@ -53,8 +55,7 @@ public class BaseList extends JList<Object> {
             this.addMessageListener(p);
         }
 
-        BaseUIPropertyCodes basePropertyCodes = BaseUIPropertyCodes.newInstance(UICode);
-
+        UIComponentProperties basePropertyCodes = UIComponentProperties.newInstance(UICode);
         setMethod(basePropertyCodes.getMethod());
         this.setName(basePropertyCodes.getDisplayName());
         this.setEnabled(basePropertyCodes.isEnabled());

@@ -18,6 +18,7 @@ public class DAOPortfolio extends DAODecode {
     public static final String _COLUMN = "_COLUMN";
 
     public DAOPortfolio() {
+
         super(DECODE);
     }
 
@@ -28,6 +29,7 @@ public class DAOPortfolio extends DAODecode {
      * @return DAOPortfolio
      */
     public static DAOPortfolio newInstance(String displayName) {
+
         final DAOPortfolio returnInstance = new DAOPortfolio();
         returnInstance.setDisplayName(displayName);
         return returnInstance;
@@ -41,19 +43,27 @@ public class DAOPortfolio extends DAODecode {
     public static DAOPortfolio newInstance() {
 
         try {
+
             final DAOPortfolio returnInstance = new DAOPortfolio();
             DAOPortfolio code = null;
+
             for (Decode decode : returnInstance.getCodesDecodes()) {
+
                 code = (DAOPortfolio) decode;
                 Portfolio portfolio = (Portfolio) code.getObject();
-                if (portfolio.getIsDefault())
+
+                if (portfolio.getIsDefault()) {
                     return code;
+                }
             }
+
             if (null == code) {
+
                 code = returnInstance;
             }
             return code;
         } catch (ValueTypeException e) {
+
             return null;
         }
     }
@@ -64,6 +74,7 @@ public class DAOPortfolio extends DAODecode {
      * @return boolean
      */
     protected boolean convertToUppercase() {
+
         return false;
     }
 }

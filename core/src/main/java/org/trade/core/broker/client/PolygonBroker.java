@@ -31,7 +31,7 @@ import java.util.List;
  */
 public class PolygonBroker extends Broker {
 
-    private final static Logger _log = LoggerFactory.getLogger(PolygonBroker.class);
+    private static final Logger _log = LoggerFactory.getLogger(PolygonBroker.class);
 
     private final Integer reqId;
     private final Contract contract;
@@ -40,8 +40,8 @@ public class PolygonBroker extends Broker {
     private final ZonedDateTime endDateTime;
     private final ZonedDateTime startDateTime;
     private final IClientWrapper brokerModel;
-    private final static String url;
-    private final static String apiKey;
+    private static final String url;
+    private static final String apiKey;
 
     static {
 

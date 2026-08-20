@@ -23,7 +23,7 @@ public abstract class TabbedAppPanel extends BasePanel implements ChangeListener
     @Serial
     private static final long serialVersionUID = 8405644422808736326L;
 
-    private final static Logger _log = LoggerFactory.getLogger(TabbedAppPanel.class);
+    private static final Logger _log = LoggerFactory.getLogger(TabbedAppPanel.class);
 
     public final TradeService tradeService;
 

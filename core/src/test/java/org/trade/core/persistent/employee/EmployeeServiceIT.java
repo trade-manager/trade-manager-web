@@ -37,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
         initializers = ApplicationProfileInitializer.class)
 public class EmployeeServiceIT extends TradestrategyBase {
 
-    private final static Logger _log = LoggerFactory.getLogger(EmployeeServiceIT.class);
+    private static final Logger _log = LoggerFactory.getLogger(EmployeeServiceIT.class);
 
     @Autowired
     private DomainService domainService;

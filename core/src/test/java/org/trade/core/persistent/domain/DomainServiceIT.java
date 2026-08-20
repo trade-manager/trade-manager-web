@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
         initializers = ApplicationProfileInitializer.class)
 public class DomainServiceIT extends TradestrategyBase {
 
-    private final static Logger _log = LoggerFactory.getLogger(DomainServiceIT.class);
+    private static final Logger _log = LoggerFactory.getLogger(DomainServiceIT.class);
 
     @Autowired
     private DomainService domainService;

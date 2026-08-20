@@ -41,8 +41,8 @@ public class MessageTranslator {
     public static final String CODE_SUFFIX = "_CODE";
     public static final String CONTEXT_SUFFIX = "";
 
-    public final static String PARAMETER_SUFFIX = "_PARAMETER_NAME";
-    public final static String FIELD_REFERENCE_SUFFIX = "_FIELD_REFERENCE";
+    public static final String PARAMETER_SUFFIX = "_PARAMETER_NAME";
+    public static final String FIELD_REFERENCE_SUFFIX = "_FIELD_REFERENCE";
 
     private static final Hashtable<String, MessageFormat> messageFormats = new Hashtable<>();
     private static final Hashtable<String, String[]> indexesTable = new Hashtable<>();

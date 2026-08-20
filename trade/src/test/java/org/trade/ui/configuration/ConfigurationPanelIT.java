@@ -38,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.fail;
         initializers = ApplicationProfileInitializer.class)
 class ConfigurationPanelIT {
 
-    private final static Logger _log = LoggerFactory.getLogger(ConfigurationPanelIT.class);
+    private static final Logger _log = LoggerFactory.getLogger(ConfigurationPanelIT.class);
 
     /**
      * Method setUpBeforeClass.
@@ -72,7 +72,7 @@ class ConfigurationPanelIT {
     @Test
     public void createIntegerClass() {
 
-        CodeType codeType = new CodeType("Moving Average", CodeType.IndicatorParameters, "Moving Average");
+        CodeType codeType = new CodeType(CodeType.IndicatorParameters, CodeType.IndicatorParameters, "Moving Average", "Moving Average");
         CodeAttribute codeAttribute = new CodeAttribute(codeType, "Length", "The length of the MA", "10",
                 "java.lang.Integer", null);
         CodeValue codeValue = new CodeValue(codeAttribute, "20");
@@ -96,7 +96,7 @@ class ConfigurationPanelIT {
     @Test
     public void createBooleanClass() {
 
-        CodeType codeType = new CodeType("Moving Average", CodeType.IndicatorParameters, "Moving Average");
+        CodeType codeType = new CodeType(CodeType.IndicatorParameters, CodeType.IndicatorParameters, "Moving Average", "Moving Average");
         CodeAttribute codeAttribute = new CodeAttribute(codeType, "Length", "The length of the MA", "true",
                 "java.lang.Boolean", null);
         CodeValue codeValue = new CodeValue(codeAttribute, "true");
@@ -120,7 +120,7 @@ class ConfigurationPanelIT {
     @Test
     public void createStringClass() {
 
-        CodeType codeType = new CodeType("Moving Average", CodeType.IndicatorParameters, "Moving Average");
+        CodeType codeType = new CodeType(CodeType.IndicatorParameters, CodeType.IndicatorParameters, "Moving Average", "Moving Average");
         CodeAttribute codeAttribute = new CodeAttribute(codeType, "Length", "The length of the MA", "Test",
                 "java.lang.String", null);
         CodeValue codeValue = new CodeValue(codeAttribute, "Simple");
@@ -144,7 +144,7 @@ class ConfigurationPanelIT {
     @Test
     public void createDecodeClass() {
 
-        CodeType codeType = new CodeType("Moving Average", CodeType.IndicatorParameters, "Moving Average");
+        CodeType codeType = new CodeType(CodeType.IndicatorParameters, CodeType.IndicatorParameters, "Moving Average", "Moving Average");
         CodeAttribute codeAttribute = new CodeAttribute(codeType, "SMAType", "The length of the MA", "LINEAR",
                 "org.trade.core.valuetype.CalculationType", null);
         CodeValue codeValue = new CodeValue(codeAttribute, CalculationType.LINEAR);

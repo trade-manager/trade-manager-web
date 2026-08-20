@@ -46,7 +46,7 @@ public abstract class IndicatorSeries extends ComparableObjectSeries implements 
     @Serial
     private static final long serialVersionUID = -4985280367851073683L;
 
-    protected final static Logger _log = LoggerFactory.getLogger(IndicatorSeries.class);
+    protected static final Logger _log = LoggerFactory.getLogger(IndicatorSeries.class);
 
     /*
      * These names must match the names of the classes for that series.

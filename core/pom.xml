@@ -13,11 +13,11 @@
     <description>Trade Manager core components</description>
     <properties>
         <com.interactivebrokers.tws-api.version>10.20.01</com.interactivebrokers.tws-api.version>
-        <org.json.json.version>20251224</org.json.json.version>
+        <org.json.json.version>20260719</org.json.json.version>
         <maven-jar-plugin.version>3.5.0</maven-jar-plugin.version>
         <properties-maven-plugin.version>1.3.0</properties-maven-plugin.version>
         <sql-maven-plugin.version>3.0.0</sql-maven-plugin.version>
-        <mariadb-java-client.version>3.5.8</mariadb-java-client.version>
+        <mariadb-java-client.version>3.5.10</mariadb-java-client.version>
     </properties>
     <dependencies>
         <dependency>

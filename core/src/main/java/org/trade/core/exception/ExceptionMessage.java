@@ -14,9 +14,9 @@ public class ExceptionMessage implements java.io.Serializable {
     @Serial
     private static final long serialVersionUID = -1095613543601005491L;
 
-    private final static String charsStartString = "contains invalid characters: [";
-    private final static String charsEndString = "] -- check api specification";
-    private final static String lengthStartString = "length is not to exceed ";
+    private static final String charsStartString = "contains invalid characters: [";
+    private static final String charsEndString = "] -- check api specification";
+    private static final String lengthStartString = "length is not to exceed ";
     private final ExceptionCode code;
     private String message;
 

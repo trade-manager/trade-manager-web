@@ -27,7 +27,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public abstract class AbstractBrokerModel implements IBrokerModel, Cloneable, Serializable, ObjectInputValidation {
 
-    private final static Logger _log = LoggerFactory.getLogger(AbstractBrokerModel.class);
+    private static final Logger _log = LoggerFactory.getLogger(AbstractBrokerModel.class);
 
     @Serial
     private static final long serialVersionUID = -3286930063989668002L;

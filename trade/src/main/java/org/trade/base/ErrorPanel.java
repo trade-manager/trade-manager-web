@@ -1,5 +1,7 @@
 package org.trade.base;
 
+import org.trade.core.valuetype.UIComponentProperties;
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.BufferedInputStream;
@@ -61,16 +63,16 @@ public class ErrorPanel extends BasePanel {
     FlowLayout flowLayout1 = new FlowLayout();
     GridLayout gridLayout8 = new GridLayout();
     GridLayout gridLayout9 = new GridLayout();
-    BaseButton jButtonPrint = new BaseButton(this, BaseUIPropertyCodes.PRINT);
-    BaseButton jButtonClose = new BaseButton(this, BaseUIPropertyCodes.CLOSE);
-    BaseButton jButtonNew = new BaseButton(this, BaseUIPropertyCodes.NEW);
-    BaseButton jButtonSave = new BaseButton(this, BaseUIPropertyCodes.SAVE);
-    BaseButton jButtonOpen = new BaseButton(this, BaseUIPropertyCodes.OPEN_FILE);
-    BaseButton jButtonSaveAs = new BaseButton(this, BaseUIPropertyCodes.SAVE_AS);
-    BaseButton jButtonHelp = new BaseButton(this, BaseUIPropertyCodes.HELP);
-    BaseButton jButtonCut = new BaseButton(this, BaseUIPropertyCodes.CUT);
-    BaseButton jButtonCopy = new BaseButton(this, BaseUIPropertyCodes.COPY);
-    BaseButton jButtonPaste = new BaseButton(this, BaseUIPropertyCodes.PASTE);
+    BaseButton jButtonPrint = new BaseButton(this, UIComponentProperties.PRINT);
+    BaseButton jButtonClose = new BaseButton(this, UIComponentProperties.CLOSE);
+    BaseButton jButtonNew = new BaseButton(this, UIComponentProperties.NEW);
+    BaseButton jButtonSave = new BaseButton(this, UIComponentProperties.SAVE);
+    BaseButton jButtonOpen = new BaseButton(this, UIComponentProperties.OPEN_FILE);
+    BaseButton jButtonSaveAs = new BaseButton(this, UIComponentProperties.SAVE_AS);
+    BaseButton jButtonHelp = new BaseButton(this, UIComponentProperties.HELP);
+    BaseButton jButtonCut = new BaseButton(this, UIComponentProperties.CUT);
+    BaseButton jButtonCopy = new BaseButton(this, UIComponentProperties.COPY);
+    BaseButton jButtonPaste = new BaseButton(this, UIComponentProperties.PASTE);
     public ImageIcon jpgIcon;
     public ImageIcon gifIcon;
     JColorChooser colorChooser1 = new JColorChooser();

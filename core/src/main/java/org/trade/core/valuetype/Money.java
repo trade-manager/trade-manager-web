@@ -22,11 +22,11 @@ public class Money extends ValueType implements Comparator<Money>, Comparable<Mo
     @Serial
     private static final long serialVersionUID = 4937298768811778585L;
 
-    public final static String MONEY_POSITIVE_7_2 = "($)#(,)###(,)###(.##)";
-    public final static String MONEY_NONNEGATIVE_8_2 = "($)##(,)###(,)###(.##)";
-    public final static String MONEY_POSITIVE_10_2 = "($)#(,)###(,)###(,)###(.##)";
-    public final static String MONEY_NONNEGATIVE_11_2 = "($)##(,)###(,)###(,)###(.##)";
-    public final static Money ZERO = new Money(0L, 0);
+    public static final String MONEY_POSITIVE_7_2 = "($)#(,)###(,)###(.##)";
+    public static final String MONEY_NONNEGATIVE_8_2 = "($)##(,)###(,)###(.##)";
+    public static final String MONEY_POSITIVE_10_2 = "($)#(,)###(,)###(,)###(.##)";
+    public static final String MONEY_NONNEGATIVE_11_2 = "($)##(,)###(,)###(,)###(.##)";
+    public static final Money ZERO = new Money(0L, 0);
     protected static Boolean ascending = true;
 
     static {
@@ -38,8 +38,8 @@ public class Money extends ValueType implements Comparator<Money>, Comparable<Mo
     private BigDecimal value = null;
     private String format = MONEY_NONNEGATIVE_11_2;
     private String invalidValue = null; // This will be null if there were
-    private final static int SCALE = 2;
-    private final static String MULTIPLIER = "100";
+    private static final int SCALE = 2;
+    private static final String MULTIPLIER = "100";
 
     /**
      * Default Constructor. Create an object and initialize it to empty.

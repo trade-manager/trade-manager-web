@@ -51,7 +51,7 @@ public abstract class AbstractStrategyRule extends Worker implements SeriesChang
     @Serial
     private static final long serialVersionUID = 4876874276185644936L;
 
-    private final static Logger _log = LoggerFactory.getLogger(AbstractStrategyRule.class);
+    private static final Logger _log = LoggerFactory.getLogger(AbstractStrategyRule.class);
 
     private final TradeService tradeService;
 

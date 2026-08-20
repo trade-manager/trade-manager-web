@@ -15,7 +15,7 @@ import java.util.GregorianCalendar;
  */
 public class DateValidator implements IValidator {
 
-    public final static String DATE_TIME_FORMAT = "yyyy-MM-dd'T'HHmmss'Z'";
+    public static final String DATE_TIME_FORMAT = "yyyy-MM-dd'T'HHmmss'Z'";
     private IMessageFactory messageFactory;
     private final boolean isMandatory;
 

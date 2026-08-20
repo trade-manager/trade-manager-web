@@ -3,10 +3,8 @@ package org.trade.ui.strategy;
 import de.sciss.syntaxpane.DefaultSyntaxKit;
 import org.trade.base.BaseButton;
 import org.trade.base.BasePanel;
-import org.trade.base.BaseUIPropertyCodes;
 import org.trade.base.StreamEditorPane;
 import org.trade.base.Tree;
-import org.trade.base.UIPropertyCodes;
 import org.trade.core.broker.IBrokerModel;
 import org.trade.core.factory.ClassFactory;
 import org.trade.core.persistent.TradeService;
@@ -29,6 +27,7 @@ import org.trade.core.valuetype.Currency;
 import org.trade.core.valuetype.Decode;
 import org.trade.core.valuetype.Exchange;
 import org.trade.core.valuetype.SECType;
+import org.trade.core.valuetype.UIComponentProperties;
 import org.trade.core.valuetype.ValueTypeException;
 import org.trade.ui.models.StrategyTreeModel;
 import org.trade.ui.tables.renderer.StrategyTreeCellRenderer;
@@ -126,8 +125,8 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
             this.dynacode.addSourceDir(new File(strategyDir));
             this.strategies = this.tradeService.getStrategyService().findAll();
             strategyTreeModel = new StrategyTreeModel(this.strategies);
-            compileButton = new BaseButton(this, UIPropertyCodes.newInstance(UIPropertyCodes.COMPILE));
-            newButton = new BaseButton(this, BaseUIPropertyCodes.NEW);
+            compileButton = new BaseButton(this, UIComponentProperties.newInstance(UIComponentProperties.COMPILE));
+            newButton = new BaseButton(this, UIComponentProperties.NEW);
             newButton.setToolTipText("Load Template");
             activeCheckBox = new Checkbox();
             activeCheckBox.setLabel("Active");
@@ -498,7 +497,6 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
 
         try {
 
-
             String[] choices = {"Java", "Javascript"};
             String contentType = ContentType.JAVA;
             int result = JOptionPane.showOptionDialog(this.getFrame(), "Do you want to create a Java or Javascript file?",
@@ -653,7 +651,6 @@ public class StrategyPanel extends BasePanel implements TreeSelectionListener {
                 for (File file : strategyFiles) {
 
                     String fileExtension = getExtension(file.getName());
-
                     String content = readFile(strategyDir + file.getName());
 
                     if (null != content) {

@@ -26,7 +26,7 @@ public class ConnectionPane extends JPanel {
 
     @Serial
     private static final long serialVersionUID = -4696247761711464150L;
-    private final static Logger _log = LoggerFactory.getLogger(ConnectionPane.class);
+    private static final Logger _log = LoggerFactory.getLogger(ConnectionPane.class);
 
     private JTextField hostTextField = null;
     private JFormattedTextField portTextField = null;

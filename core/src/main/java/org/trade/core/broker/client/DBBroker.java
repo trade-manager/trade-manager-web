@@ -38,7 +38,7 @@ import java.util.List;
  */
 public class DBBroker extends Broker {
 
-    private final static Logger _log = LoggerFactory.getLogger(DBBroker.class);
+    private static final Logger _log = LoggerFactory.getLogger(DBBroker.class);
 
     private final TradeService tradeService;
     private final StrategyData strategyData;

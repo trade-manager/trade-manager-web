@@ -12,14 +12,14 @@ import org.trade.core.message.MessageFactory;
 public class StringValidator implements IValidator {
 
     // Use these to indicate sets of valid characters
-    public final static int NONE = 0;
-    public final static int DIGITS = 1;
-    public final static int SPACES = 2;
-    public final static int LETTERS = 4;
-    public final static int PUNCTUATION = 8;
-    public final static int ANY = 16;
-    public final static int ALPHANUMERIC = DIGITS + SPACES + LETTERS;
-    public final static int ALPHA = LETTERS + SPACES;
+    public static final int NONE = 0;
+    public static final int DIGITS = 1;
+    public static final int SPACES = 2;
+    public static final int LETTERS = 4;
+    public static final int PUNCTUATION = 8;
+    public static final int ANY = 16;
+    public static final int ALPHANUMERIC = DIGITS + SPACES + LETTERS;
+    public static final int ALPHA = LETTERS + SPACES;
 
     private IMessageFactory messageFactory;
     private int minLength;

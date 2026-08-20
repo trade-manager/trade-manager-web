@@ -33,7 +33,7 @@ import static org.trade.core.persistent.role.Role.ROLE_USER;
 @Component
 public class DatabaseInitializer implements CommandLineRunner {
 
-    private final static Logger _log = LoggerFactory.getLogger(DatabaseInitializer.class);
+    private static final Logger _log = LoggerFactory.getLogger(DatabaseInitializer.class);
 
     private final UserService userService;
     private final EmployeeService employeeService;

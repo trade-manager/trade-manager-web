@@ -1,27 +1,11 @@
 import React from 'react'
 import {Button, Form, Input, Table} from 'semantic-ui-react'
 
-function jsonToCsv(jsonData) {
-    // Extract headers from the first JSON object
-    const headers = ['name'];
-    // Create the header row
-    const csvHeader = headers.join(',');
-
-    // Create data rows
-    const csvRows = jsonData.map(obj => {
-        return headers.map(header => {
-            // Handle cases where a key might be missing in an object
-            return obj[header] !== undefined ? obj[header] : '';
-        }).join(',');
-    });
-
-    // Combine header and data rows
-    return [...csvRows].join(',');
-}
-
 function TradestrategyTable({
                                 tradestrategies,
-                                tradestrategySymbolSearch,
+                                tradestrategyOpenSearch,
+                                tradestrategyCloseSearch,
+                                handleAddTradestrategy,
                                 handleDeleteTradestrategy,
                                 handleSearchTradestrategy,
                                 handleInputChange
@@ -43,19 +27,19 @@ function TradestrategyTable({
                             color='red'
                             size='small'
                             icon='trash'
-                            disabled={tradestrategy.symbol === ''}
+                            disabled={tradestrategy.contract.symbol === ''}
                             onClick={() => handleDeleteTradestrategy(tradestrategy.id)}
                         />
                     </Table.Cell>
                     <Table.Cell>{tradestrategy.id}</Table.Cell>
-                    <Table.Cell>{tradestrategy.date}</Table.Cell>
+                    <Table.Cell>{tradestrategy.tradingday.open}</Table.Cell>
                     <Table.Cell>{tradestrategy.trade}</Table.Cell>
-                    <Table.Cell>{tradestrategy.symbol}</Table.Cell>
+                    <Table.Cell>{tradestrategy.contract.symbol}</Table.Cell>
                     <Table.Cell>{tradestrategy.side}</Table.Cell>
                     <Table.Cell>{tradestrategy.teir}</Table.Cell>
-                    <Table.Cell>{jsonToCsv(tradestrategy.strategy)}</Table.Cell>
-                    <Table.Cell>{jsonToCsv(tradestrategy.strategyMgr)}</Table.Cell>
-                    <Table.Cell>{jsonToCsv(tradestrategy.portfolio)}</Table.Cell>
+                    <Table.Cell>{tradestrategy.strategy.name}</Table.Cell>
+                    <Table.Cell>{tradestrategy.strategy.strategyMgr.name}</Table.Cell>
+                    <Table.Cell>{tradestrategy.portfolio.name}</Table.Cell>
                     <Table.Cell>{tradestrategy.barSize}</Table.Cell>
                     <Table.Cell>{tradestrategy.chartDays}</Table.Cell>
                     <Table.Cell>{tradestrategy.status}</Table.Cell>
@@ -68,10 +52,21 @@ function TradestrategyTable({
         <>
             <Form onSubmit={handleSearchTradestrategy}>
                 <Input
+                    type="datetime-local"
+                    id="start-date"
                     action={{icon: 'search'}}
-                    name='tradestrategySymbolSearch'
-                    placeholder='Search by Symbol'
-                    value={tradestrategySymbolSearch}
+                    name='tradestrategyOpenSearch'
+                    placeholder='Search by start date'
+                    value={tradestrategyOpenSearch}
+                    onChange={handleInputChange}
+                />
+                <Input
+                    type="datetime-local"
+                    id="end-date"
+                    action={{icon: 'search'}}
+                    name='tradestrategyCloseSearch'
+                    placeholder='Search by end date'
+                    value={tradestrategyCloseSearch}
                     onChange={handleInputChange}
                 />
             </Form>
@@ -80,7 +75,7 @@ function TradestrategyTable({
                     <Table.Row>
                         <Table.HeaderCell width={1}/>
                         <Table.HeaderCell width={1}>ID</Table.HeaderCell>
-                        <Table.HeaderCell width={3}>Date</Table.HeaderCell>
+                        <Table.HeaderCell width={3}>Open</Table.HeaderCell>
                         <Table.HeaderCell width={4}>Trade</Table.HeaderCell>
                         <Table.HeaderCell width={5}>Symbol</Table.HeaderCell>
                         <Table.HeaderCell width={2}>Side</Table.HeaderCell>

@@ -18,7 +18,6 @@ import org.trade.core.TradestrategyBase;
 import org.trade.core.broker.IBrokerModel;
 import org.trade.core.factory.ClassFactory;
 import org.trade.core.persistent.rule.Rule;
-import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.persistent.strategy.series.indicator.StrategyData;
 import org.trade.core.persistent.tradeorder.TradeOrder;
 import org.trade.core.persistent.tradeorderfill.TradeOrderfill;
@@ -51,7 +50,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
         initializers = ApplicationProfileInitializer.class)
 public class AbstractStrategyJSIT extends TradestrategyBase {
 
-    private final static Logger _log = LoggerFactory.getLogger(AbstractStrategyJSIT.class);
+    private static final Logger _log = LoggerFactory.getLogger(AbstractStrategyJSIT.class);
 
     private static final String symbol = "TEST-" + TradestrategyBase.getRandomNumber(4);
     private static Tradestrategy tradestrategy;
@@ -110,7 +109,7 @@ public class AbstractStrategyJSIT extends TradestrategyBase {
     @Order(100)
     public void fiveMinGapBarStrategyJS() throws Exception {
 
-        Strategy strategy = (Strategy) DAOStrategy.newInstance().getObject();
+        org.trade.core.persistent.strategy.Strategy strategy = (org.trade.core.persistent.strategy.Strategy) DAOStrategy.newInstance().getObject();
         tradestrategy = this.createTestTradestrategy(strategy, symbol, Side.BOT, ChartDays.ONE_DAY, BarSize.FIVE_MIN);
         assertNotNull(tradestrategy);
         strategy = tradeService.getStrategyService().findById(tradestrategy.getStrategy().getId());
@@ -154,7 +153,7 @@ public class AbstractStrategyJSIT extends TradestrategyBase {
 
         deleteAfter = true;
         tradestrategy = tradeService.getTradestrategyService().findById(tradestrategy.getId());
-        Strategy strategy = (Strategy) DAOStrategy.newInstance().getObject();
+        org.trade.core.persistent.strategy.Strategy strategy = (org.trade.core.persistent.strategy.Strategy) DAOStrategy.newInstance().getObject();
         assertTrue(strategy.hasStrategyManager());
         strategy = strategy.getStrategyManager();
 

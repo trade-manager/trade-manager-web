@@ -33,7 +33,8 @@ function TradeTab(props) {
         tradestrategyPortfolio,
         tradestrategyBarSize,
         tradestrategyChartDays,
-        tradestrategySymbolSearch,
+        tradestrategyOpenSearch,
+        tradestrategyCloseSearch,
         handleAddTradestrategy,
         handleDeleteTradestrategy,
         handleSearchTradestrategy
@@ -41,7 +42,7 @@ function TradeTab(props) {
 
     const panes = [
         {
-            menuItem: {key: 'tradingdays', icon: 'tradingday', content: 'Tradingdays'},
+            menuItem: {key: 'tradingdays', icon: 'tradingdays', content: 'Tradingdays'},
             render: () => (
                 <Tab.Pane loading={isTradingdaysLoading}>
                     <TradingdayTable
@@ -62,7 +63,7 @@ function TradeTab(props) {
             )
         },
         {
-            menuItem: {key: 'tradestrategies', icon: 'tradingday', content: 'Tradestrategies'},
+            menuItem: {key: 'tradestrategies', icon: 'tradestrategies', content: 'Tradestrategies'},
             render: () => (
                 <Tab.Pane loading={isTradestrategiesLoading}>
                     <TradestrategyTable
@@ -78,7 +79,8 @@ function TradeTab(props) {
                         tradestrategyPortfolio={tradestrategyPortfolio}
                         tradestrategyBarSize={tradestrategyBarSize}
                         tradestrategyChartDays={tradestrategyChartDays}
-                        tradestrategySymbolSearch={tradestrategySymbolSearch}
+                        tradestrategyOpenSearch={tradestrategyOpenSearch}
+                        tradestrategyCloseSearch={tradestrategyCloseSearch}
                         handleInputChange={handleInputChange}
                         handleAddTradestrategy={handleAddTradestrategy}
                         handleDeleteTradestrategy={handleDeleteTradestrategy}

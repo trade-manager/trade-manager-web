@@ -1,14 +1,13 @@
 package org.trade.core.properties;
 
-import java.io.IOException;
-
 /**
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
 public class AppLoadConfig {
-    private final static String PROPERTIES_PROPERTY_FILE = "core.properties";
-    private final static AppLoadConfig m_AppConfigLoad = new AppLoadConfig();
+
+    private static final String CORE_PROPERTY_FILE = "core.properties";
+    private static final AppLoadConfig fAppConfigLoad = new AppLoadConfig();
 
     AppLoadConfig() {
     }
@@ -16,7 +15,8 @@ public class AppLoadConfig {
     /**
      * Method loadAppProperties.
      */
-    public static void loadAppProperties() throws IOException {
-        ConfigProperties.getDeploymentProperties(m_AppConfigLoad, PROPERTIES_PROPERTY_FILE);
+    public static void loadAppProperties() throws MissingPropertiesException {
+
+        ConfigProperties.getDeploymentProperties(fAppConfigLoad, CORE_PROPERTY_FILE);
     }
 }

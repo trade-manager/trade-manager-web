@@ -8,6 +8,8 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
+import jakarta.transaction.Transactional;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -25,14 +27,67 @@ public class CodeTypeServiceImpl implements CodeTypeService {
 
     private final CodeTypeRepository codeTypeRepository;
 
-    public CodeTypeServiceImpl(final CodeTypeRepository codeTypeRepository) {
+    private final DecodeTypeRepository decodeTypeRepository;
+
+    public CodeTypeServiceImpl(final CodeTypeRepository codeTypeRepository, final DecodeTypeRepository decodeTypeRepository) {
 
         this.codeTypeRepository = codeTypeRepository;
+        this.decodeTypeRepository = decodeTypeRepository;
     }
+
 
     public CodeType findByName(String name) {
 
         return codeTypeRepository.findByName(name).orElse(null);
+    }
+
+    @Transactional
+    public List<CodeType> findAll() {
+
+        List<CodeType> codeTypes = codeTypeRepository.findAll();
+
+        for (CodeType codeType : codeTypes) {
+
+            for (CodeAttribute codeAttribute : codeType.getCodeAttributes()) {
+
+                codeAttribute.getCodeValues().size();
+            }
+        }
+
+        return codeTypes;
+    }
+
+    @Transactional
+    public List<CodeType> findByCategory(String category) {
+
+        List<CodeType> codeTypes = codeTypeRepository.findByCategory(category);
+
+        for (CodeType codeType : codeTypes) {
+
+            for (CodeAttribute codeAttribute : codeType.getCodeAttributes()) {
+
+                codeAttribute.getCodeValues().size();
+            }
+        }
+
+        return codeTypes;
+    }
+
+    //   @Cacheable(value = "codeTypes", key = "#type")
+    @Transactional
+    public List<CodeType> findByType(String type) {
+
+        List<CodeType> codeTypes = codeTypeRepository.findByType(type);
+
+        for (CodeType codeType : codeTypes) {
+
+            for (CodeAttribute codeAttribute : codeType.getCodeAttributes()) {
+
+                codeAttribute.getCodeValues().size();
+            }
+        }
+
+        return codeTypes;
     }
 
     public CodeType validateAndGet(String name) {
@@ -44,7 +99,22 @@ public class CodeTypeServiceImpl implements CodeTypeService {
 
         List<CodeType> codeTypes = codeTypeRepository.findByNameAndType(name, type);
         return codeTypes.isEmpty() ? null : codeTypes.getFirst();
+    }
 
+    @Transactional
+    public CodeType findByNameAndTypeAndCategory(String name, String type, String category) {
+
+        List<CodeType> codeTypes = codeTypeRepository.findByNameAndTypeAndCategory(name, type, category);
+
+        for (CodeType codeType : codeTypes) {
+
+            for (CodeAttribute codeAttribute : codeType.getCodeAttributes()) {
+
+                codeAttribute.getCodeValues().size();
+            }
+        }
+
+        return codeTypes.isEmpty() ? null : codeTypes.getFirst();
     }
 
     /**
@@ -77,11 +147,13 @@ public class CodeTypeServiceImpl implements CodeTypeService {
         return typedQuery.getResultList();
     }
 
+    //  @CacheEvict(value = "codeTypes", allEntries = true)
     public CodeType save(CodeType codeType) {
 
         return codeTypeRepository.save(codeType);
     }
 
+    //   @CacheEvict(value = "codeTypes", allEntries = true)
     public void delete(CodeType codeType) {
 
         if (null == codeType) {
@@ -90,5 +162,14 @@ public class CodeTypeServiceImpl implements CodeTypeService {
         }
 
         codeTypeRepository.delete(codeType);
+    }
+
+    @Cacheable(value = "DecodeType", key = "#type")
+    @Transactional
+    public List<DecodeType> findDecodeTypeByType(String type) {
+
+        List<DecodeType> decodeTypes = decodeTypeRepository.findByType(type);
+
+        return decodeTypes;
     }
 }

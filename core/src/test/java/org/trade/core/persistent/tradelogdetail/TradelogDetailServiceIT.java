@@ -12,7 +12,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.trade.core.ApplicationProfileInitializer;
 import org.trade.core.ApplicationRepositoryConfig;
 import org.trade.core.TradestrategyBase;
-import org.trade.core.persistent.portfolio.Portfolio;
 import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.DAOPortfolio;
 
@@ -34,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
         initializers = ApplicationProfileInitializer.class)
 public class TradelogDetailServiceIT extends TradestrategyBase {
 
-    private final static Logger _log = LoggerFactory.getLogger(TradelogDetailServiceIT.class);
+    private static final Logger _log = LoggerFactory.getLogger(TradelogDetailServiceIT.class);
 
     /**
      * Method setUpBeforeClass.
@@ -67,7 +66,7 @@ public class TradelogDetailServiceIT extends TradestrategyBase {
     @Test
     public void tradelogDetails() throws IOException {
 
-        Portfolio portfolio = (Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
+        org.trade.core.persistent.portfolio.Portfolio portfolio = (org.trade.core.persistent.portfolio.Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
         List<TradelogDetail> tradelogDetail = tradeService.getTradelogDetailService().findByTradelogDetail(portfolio, TradingCalendar.getYearStart(),
                 TradingCalendar.getTradingDayEnd(TradingCalendar.getDateTimeNowMarketTimeZone()), false, null, new BigDecimal(0));
         assertTrue(tradelogDetail.isEmpty());

@@ -9,12 +9,35 @@ import java.util.List;
 public interface CodeTypeService {
 
     /**
+     * Method findAll.
+     *
+     * @return List<CodeType>
+     */
+    List<CodeType> findAll();
+
+    /**
      * Method findByName.
      *
      * @param name String
      * @return CodeType
      */
     CodeType findByName(String name);
+
+    /**
+     * Method findByCategory.
+     *
+     * @param category
+     * @return
+     */
+    List<CodeType> findByCategory(String category);
+
+    /**
+     * Method findByType.
+     *
+     * @param type String
+     * @return List<CodeType>
+     */
+    List<CodeType> findByType(String type);
 
     /**
      * Method validateAndGet.
@@ -32,6 +55,16 @@ public interface CodeTypeService {
      * @return CodeType
      */
     CodeType findByNameAndType(String name, String type);
+
+    /**
+     * Method findByNameAndType.
+     *
+     * @param name     String
+     * @param type     String
+     * @param category String
+     * @return CodeType
+     */
+    CodeType findByNameAndTypeAndCategory(String name, String type, String category);
 
     /**
      * Method findByAttributeName.
@@ -56,5 +89,7 @@ public interface CodeTypeService {
      * @param codeType CodeType
      */
     void delete(CodeType codeType);
+
+    List<DecodeType> findDecodeTypeByType(String type);
 
 }

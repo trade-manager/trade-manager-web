@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
         initializers = ApplicationProfileInitializer.class)
 public class CodeTypeServiceIT extends TradestrategyBase {
 
-    private final static Logger _log = LoggerFactory.getLogger(CodeTypeServiceIT.class);
+    private static final Logger _log = LoggerFactory.getLogger(CodeTypeServiceIT.class);
 
     /**
      * Method setUpBeforeClass.
@@ -58,7 +58,22 @@ public class CodeTypeServiceIT extends TradestrategyBase {
     }
 
     @Test
-    public void findCodeValueByName() {
+    public void findCodeTypeByCategory() {
+
+        List<CodeType> codeTypes = tradeService.getCodeTypeService().findByCategory("CodeDecode");
+        assertFalse(codeTypes.isEmpty());
+
+        for (CodeType codeType : codeTypes) {
+
+            _log.info("CodeType id: {}", codeType.getId());
+            List<CodeValue> codeValues = tradeService.getCodeTypeService().findByAttributeName(codeType.getName(), "value");
+            assertFalse(codeValues.isEmpty());
+            _log.info("CodeValue id: {}", codeValues.getFirst().getId());
+        }
+    }
+
+    @Test
+    public void findCodeTypeByType() {
 
         CodeType codeType = tradeService.getCodeTypeService().findByName("MovingAverage");
         assertNotNull(codeType);
@@ -66,5 +81,20 @@ public class CodeTypeServiceIT extends TradestrategyBase {
         List<CodeValue> codeValues = tradeService.getCodeTypeService().findByAttributeName(codeType.getName(), "Length");
         assertFalse(codeValues.isEmpty());
         _log.info("CodeValue id: {}", codeValues.getFirst().getId());
+    }
+
+    @Test
+    public void findCodeTypeByAttributeName() {
+
+        List<CodeType> codeTypes = tradeService.getCodeTypeService().findByType("CodeType");
+        assertFalse(codeTypes.isEmpty());
+
+        for (CodeType codeType : codeTypes) {
+
+            _log.info("CodeType id: {}", codeType.getId());
+            List<CodeValue> codeValues = tradeService.getCodeTypeService().findByAttributeName(codeType.getName(), "code");
+            assertFalse(codeValues.isEmpty(), "Error: Has no attributes: " + codeType.getName());
+            _log.info("CodeValue id: {}", codeValues.getFirst().getId());
+        }
     }
 }

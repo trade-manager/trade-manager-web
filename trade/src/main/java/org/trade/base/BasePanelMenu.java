@@ -1,5 +1,7 @@
 package org.trade.base;
 
+import org.trade.core.valuetype.UIComponentProperties;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ContainerEvent;
@@ -108,17 +110,17 @@ public class BasePanelMenu extends JPanel {
         windowMenu.setText("Window");
         viewMenu.setMnemonic('A');
 
-        openFileButton = new BaseButton(null, BaseUIPropertyCodes.OPEN_FILE);
+        openFileButton = new BaseButton(null, UIComponentProperties.OPEN_FILE);
         openFileButton.addActionListener(_ -> messageEvent(openFileButton.getMethod()));
         buttonPanel.add(openFileButton, null);
-        saveButton = new BaseButton(null, BaseUIPropertyCodes.SAVE);
+        saveButton = new BaseButton(null, UIComponentProperties.SAVE);
         saveButton.addActionListener(_ -> messageEvent(saveButton.getMethod()));
         buttonPanel.add(saveButton, null);
 
-        helpButton = new BaseButton(null, BaseUIPropertyCodes.HELP);
+        helpButton = new BaseButton(null, UIComponentProperties.HELP);
         helpButton.addActionListener(_ -> messageEvent(helpButton.getMethod()));
         buttonPanel.add(helpButton, null);
-        printButton = new BaseButton(null, BaseUIPropertyCodes.PRINT);
+        printButton = new BaseButton(null, UIComponentProperties.PRINT);
         printButton.addActionListener(_ -> messageEvent(printButton.getMethod()));
         buttonPanel.add(printButton, null);
 
@@ -127,40 +129,40 @@ public class BasePanelMenu extends JPanel {
         menuBar.add(viewMenu);
         menuBar.add(windowMenu);
         menuBar.add(helpMenu);
-        final BaseMenuItem menuItemNew = new BaseMenuItem(null, BaseUIPropertyCodes.NEW);
+        final BaseMenuItem menuItemNew = new BaseMenuItem(null, UIComponentProperties.NEW);
         menuItemNew.addActionListener(_ -> messageEvent(menuItemNew.getMethod()));
-        final BaseMenuItem menuItemOpen = new BaseMenuItem(null, BaseUIPropertyCodes.OPEN_FILE);
+        final BaseMenuItem menuItemOpen = new BaseMenuItem(null, UIComponentProperties.OPEN_FILE);
         menuItemOpen.addActionListener(_ -> messageEvent(menuItemOpen.getMethod()));
-        final BaseMenuItem menuItemSave = new BaseMenuItem(null, BaseUIPropertyCodes.SAVE);
+        final BaseMenuItem menuItemSave = new BaseMenuItem(null, UIComponentProperties.SAVE);
         menuItemSave.addActionListener(_ -> messageEvent(menuItemSave.getMethod()));
-        final BaseMenuItem menuItemSaveAs = new BaseMenuItem(null, BaseUIPropertyCodes.SAVE_AS);
+        final BaseMenuItem menuItemSaveAs = new BaseMenuItem(null, UIComponentProperties.SAVE_AS);
         menuItemSaveAs.addActionListener(_ -> messageEvent(menuItemSaveAs.getMethod()));
-        final BaseMenuItem menuItemPrint = new BaseMenuItem(null, BaseUIPropertyCodes.PRINT);
+        final BaseMenuItem menuItemPrint = new BaseMenuItem(null, UIComponentProperties.PRINT);
         menuItemPrint.addActionListener(_ -> messageEvent(menuItemPrint.getMethod()));
-        final BaseMenuItem menuItemPrintPreview = new BaseMenuItem(null, BaseUIPropertyCodes.PRINT_PREVIEW);
+        final BaseMenuItem menuItemPrintPreview = new BaseMenuItem(null, UIComponentProperties.PRINT_PREVIEW);
         menuItemPrintPreview.addActionListener(_ -> messageEvent(menuItemPrintPreview.getMethod()));
-        final BaseMenuItem menuItemPrintSetUp = new BaseMenuItem(null, BaseUIPropertyCodes.PRINT_OPTIONS);
+        final BaseMenuItem menuItemPrintSetUp = new BaseMenuItem(null, UIComponentProperties.PRINT_OPTIONS);
         menuItemPrintSetUp.addActionListener(_ -> messageEvent(menuItemPrintSetUp.getMethod()));
-        final BaseMenuItem menuItemExit = new BaseMenuItem(null, BaseUIPropertyCodes.EXIT);
+        final BaseMenuItem menuItemExit = new BaseMenuItem(null, UIComponentProperties.EXIT);
         menuItemExit.addActionListener(_ -> messageEvent(menuItemExit.getMethod()));
-        final BaseMenuItem menuItemUndo = new BaseMenuItem(null, BaseUIPropertyCodes.UNDO);
+        final BaseMenuItem menuItemUndo = new BaseMenuItem(null, UIComponentProperties.UNDO);
         menuItemUndo.addActionListener(_ -> messageEvent(menuItemUndo.getMethod()));
-        final BaseMenuItem menuItemRedo = new BaseMenuItem(null, BaseUIPropertyCodes.REDO);
+        final BaseMenuItem menuItemRedo = new BaseMenuItem(null, UIComponentProperties.REDO);
         menuItemRedo.addActionListener(_ -> messageEvent(menuItemRedo.getMethod()));
-        final BaseMenuItem menuItemCut = new BaseMenuItem(null, BaseUIPropertyCodes.CUT);
+        final BaseMenuItem menuItemCut = new BaseMenuItem(null, UIComponentProperties.CUT);
         menuItemCut.addActionListener(_ -> messageEvent(menuItemCut.getMethod()));
-        final BaseMenuItem menuItemCopy = new BaseMenuItem(null, BaseUIPropertyCodes.COPY);
+        final BaseMenuItem menuItemCopy = new BaseMenuItem(null, UIComponentProperties.COPY);
         menuItemCopy.addActionListener(_ -> messageEvent(menuItemCopy.getMethod()));
-        final BaseMenuItem menuItemPaste = new BaseMenuItem(null, BaseUIPropertyCodes.PASTE);
+        final BaseMenuItem menuItemPaste = new BaseMenuItem(null, UIComponentProperties.PASTE);
         menuItemPaste.addActionListener(_ -> messageEvent(menuItemPaste.getMethod()));
-        final BaseMenuItem menuItemFind = new BaseMenuItem(null, BaseUIPropertyCodes.FIND);
+        final BaseMenuItem menuItemFind = new BaseMenuItem(null, UIComponentProperties.FIND);
         menuItemFind.addActionListener(_ -> messageEvent(menuItemFind.getMethod()));
 
-        final BaseMenuItem menuItemReplace = new BaseMenuItem(null, BaseUIPropertyCodes.REPLACE);
+        final BaseMenuItem menuItemReplace = new BaseMenuItem(null, UIComponentProperties.REPLACE);
         menuItemReplace.addActionListener(_ -> messageEvent(menuItemReplace.getMethod()));
-        final BaseMenuItem menuItemContents = new BaseMenuItem(null, BaseUIPropertyCodes.CONTENTS);
+        final BaseMenuItem menuItemContents = new BaseMenuItem(null, UIComponentProperties.CONTENTS);
         menuItemContents.addActionListener(_ -> messageEvent(menuItemContents.getMethod()));
-        final BaseMenuItem menuItemAboutHelp = new BaseMenuItem(null, BaseUIPropertyCodes.ABOUT);
+        final BaseMenuItem menuItemAboutHelp = new BaseMenuItem(null, UIComponentProperties.ABOUT);
         menuItemAboutHelp.addActionListener(_ -> messageEvent(menuItemAboutHelp.getMethod()));
         menuItemUtils.setText("Utils");
         menuItemUtils.setEnabled(false);

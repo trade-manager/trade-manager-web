@@ -22,6 +22,11 @@ public class MissingPropertiesException extends Exception {
         super();
     }
 
+    public MissingPropertiesException(String message, Throwable cause) {
+
+        super(message, cause);
+    }
+
     /**
      * Method addProperty.
      *

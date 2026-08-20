@@ -25,11 +25,11 @@ public class Percent extends ValueType implements Comparator<Percent>, Comparabl
     @Serial
     private static final long serialVersionUID = 6356086072126179279L;
 
-    public final static String PERCENT_POSITIVE_7_2 = "($)#(,)###(,)###(.##)";
-    public final static String PERCENT_NONNEGATIVE_8_2 = "($)##(,)###(,)###(.##)";
-    public final static String PERCENT_POSITIVE_10_2 = "($)#(,)###(,)###(,)###(.##)";
-    public final static String PERCENT_NONNEGATIVE_11_2 = "($)##(,)###(,)###(,)###(.##)";
-    public final static Percent ZERO = new Percent(0L, 0);
+    public static final String PERCENT_POSITIVE_7_2 = "($)#(,)###(,)###(.##)";
+    public static final String PERCENT_NONNEGATIVE_8_2 = "($)##(,)###(,)###(.##)";
+    public static final String PERCENT_POSITIVE_10_2 = "($)#(,)###(,)###(,)###(.##)";
+    public static final String PERCENT_NONNEGATIVE_11_2 = "($)##(,)###(,)###(,)###(.##)";
+    public static final Percent ZERO = new Percent(0L, 0);
     protected static Boolean ascending = true;
 
     static {
@@ -42,8 +42,8 @@ public class Percent extends ValueType implements Comparator<Percent>, Comparabl
     private BigDecimal value = null;
     private String format = PERCENT_NONNEGATIVE_11_2;
     private String invalidValue = null; // This will be null if there were
-    private final static int SCALE = 6;
-    private final static String MULTIPLIER = "100";
+    private static final int SCALE = 6;
+    private static final String MULTIPLIER = "100";
 
     /**
      * Default Constructor. Create an object and initialize it to empty.

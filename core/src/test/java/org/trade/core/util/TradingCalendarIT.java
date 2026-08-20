@@ -49,7 +49,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
         initializers = ApplicationProfileInitializer.class)
 public class TradingCalendarIT {
 
-    private final static Logger _log = LoggerFactory.getLogger(TradingCalendarIT.class);
+    private static final Logger _log = LoggerFactory.getLogger(TradingCalendarIT.class);
 
 
     /**

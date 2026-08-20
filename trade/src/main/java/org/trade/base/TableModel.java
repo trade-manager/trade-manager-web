@@ -60,7 +60,9 @@ public abstract class TableModel extends AbstractTableModel {
      * @see javax.swing.table.TableModel#getColumnName(int)
      */
     public String getColumnHeaderToolTip(int column) {
+
         if (columnHeaderToolTip.length > column) {
+
             return columnHeaderToolTip[column];
         } else {
             return "";
@@ -90,13 +92,13 @@ public abstract class TableModel extends AbstractTableModel {
      * @see javax.swing.table.TableModel#getColumnClass(int)
      */
     public Class<?> getColumnClass(int column) {
+
         Object value = getValueAt(0, column);
         if (null == value) {
             return String.class;
         } else {
             return value.getClass();
         }
-
     }
 
     /**

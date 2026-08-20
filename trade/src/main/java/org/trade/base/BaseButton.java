@@ -2,6 +2,7 @@ package org.trade.base;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.trade.core.valuetype.UIComponentProperties;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,7 +20,7 @@ public class BaseButton extends JButton {
      */
     @Serial
     private static final long serialVersionUID = -47827936580637959L;
-    private final static Logger _log = LoggerFactory.getLogger(BaseButton.class);
+    private static final Logger _log = LoggerFactory.getLogger(BaseButton.class);
     protected MessageNotifier notifier = new MessageNotifier();
     private String method = null;
     private Object transferObject = null;
@@ -30,7 +31,7 @@ public class BaseButton extends JButton {
      * @param basePanel         BasePanel
      * @param basePropertyCodes BaseUIPropertyCodes
      */
-    public BaseButton(BasePanel basePanel, BaseUIPropertyCodes basePropertyCodes) {
+    public BaseButton(BasePanel basePanel, UIComponentProperties basePropertyCodes) {
         this(basePanel, basePropertyCodes, 2);
     }
 
@@ -41,7 +42,7 @@ public class BaseButton extends JButton {
      * @param basePropertyCodes BaseUIPropertyCodes
      * @param margin            int
      */
-    public BaseButton(BasePanel basePanel, BaseUIPropertyCodes basePropertyCodes, int margin) {
+    public BaseButton(BasePanel basePanel, UIComponentProperties basePropertyCodes, int margin) {
         try {
             if (basePanel != null) {
                 this.addMessageListener(basePanel);
@@ -78,7 +79,7 @@ public class BaseButton extends JButton {
                 this.addMessageListener(basePanel);
             }
 
-            BaseUIPropertyCodes basePropertyCodes = BaseUIPropertyCodes.newInstance(UICode);
+            UIComponentProperties basePropertyCodes = UIComponentProperties.newInstance(UICode);
 
             if (!basePropertyCodes.getImage().isEmpty()) {
                 setIcon(ImageBuilder.getImageIcon(basePropertyCodes.getImage()));

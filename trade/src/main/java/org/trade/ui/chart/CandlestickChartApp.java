@@ -69,7 +69,7 @@ public class CandlestickChartApp extends BasePanel implements IBrokerChangeListe
 
     private static TradeService _tradeService;
 
-    private final static Logger _log = LoggerFactory.getLogger(CandlestickChartApp.class);
+    private static final Logger _log = LoggerFactory.getLogger(CandlestickChartApp.class);
     private final JPanel menuPanel;
     private static IBrokerModel brokerModel = null;
     private static BrokerDataRequestMonitor brokerDataRequestProgressMonitor = null;

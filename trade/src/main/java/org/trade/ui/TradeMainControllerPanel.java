@@ -102,7 +102,7 @@ public class TradeMainControllerPanel extends TabbedAppPanel implements IBrokerC
     @Serial
     private static final long serialVersionUID = -7717664255656430982L;
 
-    private final static Logger _log = LoggerFactory.getLogger(TradeMainControllerPanel.class);
+    private static final Logger _log = LoggerFactory.getLogger(TradeMainControllerPanel.class);
 
     private static Tradingdays tradingdays = null;
     private IBrokerModel brokerModel = null;

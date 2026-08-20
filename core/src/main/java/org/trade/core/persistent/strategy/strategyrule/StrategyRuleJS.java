@@ -31,7 +31,6 @@ import org.trade.core.valuetype.ChartDays;
 import org.trade.core.valuetype.ContentType;
 import org.trade.core.valuetype.Decode;
 import org.trade.core.valuetype.Exchange;
-import org.trade.core.valuetype.IndicatorSeries;
 import org.trade.core.valuetype.MarketBar;
 import org.trade.core.valuetype.MarketBias;
 import org.trade.core.valuetype.Money;
@@ -43,6 +42,7 @@ import org.trade.core.valuetype.Tier;
 import org.trade.core.valuetype.TimeInForce;
 import org.trade.core.valuetype.TradestrategyStatus;
 import org.trade.core.valuetype.TriggerMethod;
+import org.trade.core.valuetype.UIIndicatorSeries;
 
 import java.io.Serial;
 import java.time.ZonedDateTime;
@@ -61,7 +61,7 @@ public class StrategyRuleJS extends AbstractStrategyRule {
     @Serial
     private static final long serialVersionUID = 4876874276185644936L;
 
-    private final static Logger _log = LoggerFactory.getLogger(StrategyRuleJS.class);
+    private static final Logger _log = LoggerFactory.getLogger(StrategyRuleJS.class);
 
     private Rule rule = null;
     private Context context;
@@ -740,7 +740,7 @@ public class StrategyRuleJS extends AbstractStrategyRule {
 
             constantsJSON.put("MARKET_BAR", marketBarValuesJSON);
 
-            List<Decode> indicatorSeriesCodes = IndicatorSeries.newInstance().getCodesDecodes();
+            List<Decode> indicatorSeriesCodes = UIIndicatorSeries.newInstance().getCodesDecodes();
             JSONObject indicatorSeriesValuesJSON = new JSONObject();
             for (Decode code : indicatorSeriesCodes) {
 

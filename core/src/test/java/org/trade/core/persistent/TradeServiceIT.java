@@ -20,9 +20,7 @@ import org.trade.core.persistent.candle.Candle;
 import org.trade.core.persistent.codetype.CodeType;
 import org.trade.core.persistent.contract.Contract;
 import org.trade.core.persistent.contract.ContractLite;
-import org.trade.core.persistent.portfolio.Portfolio;
 import org.trade.core.persistent.rule.Rule;
-import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.persistent.strategy.series.indicator.IIndicatorDataset;
 import org.trade.core.persistent.strategy.series.indicator.candle.CandleItem;
 import org.trade.core.persistent.tradelogdetail.TradelogReport;
@@ -76,7 +74,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
         initializers = ApplicationProfileInitializer.class)
 public class TradeServiceIT extends TradestrategyBase {
 
-    private final static Logger _log = LoggerFactory.getLogger(TradeServiceIT.class);
+    private static final Logger _log = LoggerFactory.getLogger(TradeServiceIT.class);
 
     private static Tradestrategy tradestrategy;
     private static final String symbol = "IBM-" + TradestrategyBase.getRandomNumber(4);
@@ -115,8 +113,8 @@ public class TradeServiceIT extends TradestrategyBase {
     @Test
     public void addTradestrategy() {
 
-        Strategy strategy = (Strategy) DAOStrategy.newInstance().getObject();
-        Portfolio portfolio = (Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
+        org.trade.core.persistent.strategy.Strategy strategy = (org.trade.core.persistent.strategy.Strategy) DAOStrategy.newInstance().getObject();
+        org.trade.core.persistent.portfolio.Portfolio portfolio = (org.trade.core.persistent.portfolio.Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
         final String symbol = "TEST-" + TradestrategyBase.getRandomNumber(4);
         Contract contract = new Contract(SECType.STOCK, symbol, Exchange.SMART, Currency.USD, null, null);
         ZonedDateTime open = TradingCalendar.getTradingDayStart(
@@ -597,7 +595,7 @@ public class TradeServiceIT extends TradestrategyBase {
     @Test
     public void findAccountById() {
 
-        Portfolio result = this.tradeService
+        org.trade.core.persistent.portfolio.Portfolio result = this.tradeService
                 .getPortfolioService().findById(tradestrategy.getPortfolio().getId());
         assertNotNull(result);
     }
@@ -863,7 +861,7 @@ public class TradeServiceIT extends TradestrategyBase {
 
         String contentType = ContentType.JAVASCRIPT;
         String content = "function (){console.log('Hi');}";
-        Strategy strategy = tradestrategy.getStrategy();
+        org.trade.core.persistent.strategy.Strategy strategy = tradestrategy.getStrategy();
         strategy = this.tradeService.getStrategyService().findById(strategy.getId());
         Rule rule = new Rule(strategy, true, 0, comment, content.getBytes(), contentType);
         strategy.getRules().add(rule);
@@ -876,7 +874,7 @@ public class TradeServiceIT extends TradestrategyBase {
     @Test
     public void findRuleById() {
 
-        Strategy strategy = tradestrategy.getStrategy();
+        org.trade.core.persistent.strategy.Strategy strategy = tradestrategy.getStrategy();
         strategy = this.tradeService.getStrategyService().findById(strategy.getId());
         Rule rule = new Rule(strategy, true, 0, comment);
         strategy.getRules().add(rule);
@@ -906,21 +904,21 @@ public class TradeServiceIT extends TradestrategyBase {
     @Test
     public void findStrategyById() {
 
-        Strategy result = this.tradeService.getStrategyService().findById(tradestrategy.getStrategy().getId());
+        org.trade.core.persistent.strategy.Strategy result = this.tradeService.getStrategyService().findById(tradestrategy.getStrategy().getId());
         assertNotNull(result);
     }
 
     @Test
     public void findStrategyByName() {
 
-        Strategy result = this.tradeService.getStrategyService().findByName(tradestrategy.getStrategy().getName());
+        org.trade.core.persistent.strategy.Strategy result = this.tradeService.getStrategyService().findByName(tradestrategy.getStrategy().getName());
         assertNotNull(result);
     }
 
     @Test
     public void removeRule() {
 
-        Strategy strategy = tradestrategy.getStrategy();
+        org.trade.core.persistent.strategy.Strategy strategy = tradestrategy.getStrategy();
         strategy = this.tradeService.getStrategyService().findById(strategy.getId());
         Rule latestRule = this.tradeService.getRuleService().findByMaxVersion(strategy, contentType);
         Integer version = 0;
@@ -942,7 +940,7 @@ public class TradeServiceIT extends TradestrategyBase {
     @Test
     public void findStrategies() {
 
-        List<Strategy> result = this.tradeService.getStrategyService().findAll();
+        List<org.trade.core.persistent.strategy.Strategy> result = this.tradeService.getStrategyService().findAll();
         assertNotNull(result);
     }
 
@@ -999,7 +997,7 @@ public class TradeServiceIT extends TradestrategyBase {
         Tradingday tradingday = this.tradeService.getTradingdayService()
                 .findById(tradestrategy.getTradingday().getId());
         assertFalse(tradingday.getTradestrategies().isEmpty());
-        Strategy toStrategy = (Strategy) DAOStrategy.newInstance().getObject();
+        org.trade.core.persistent.strategy.Strategy toStrategy = (org.trade.core.persistent.strategy.Strategy) DAOStrategy.newInstance().getObject();
         toStrategy = this.tradeService.getStrategyService().findById(toStrategy.getId());
         this.tradeService.reassignStrategy(tradestrategy.getStrategy(), toStrategy, tradingday);
         assertEquals(toStrategy, tradingday.getTradestrategies().getFirst().getStrategy());

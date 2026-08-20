@@ -2,6 +2,7 @@ package org.trade.base;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.trade.core.valuetype.UIComponentProperties;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -61,7 +62,7 @@ public class DOMTree extends JTree implements DragSourceListener, DragGestureLis
     @Serial
     private static final long serialVersionUID = -8742998183708844989L;
 
-    private final static Logger _log = LoggerFactory.getLogger(DOMTree.class);
+    private static final Logger _log = LoggerFactory.getLogger(DOMTree.class);
     /**
      * Stores the selected node info
      */
@@ -377,15 +378,15 @@ public class DOMTree extends JTree implements DragSourceListener, DragGestureLis
 
         JPopupMenu popup = new JPopupMenu();
 
-        BaseMenuItem copy = new BaseMenuItem(basePanel, BaseUIPropertyCodes.COPY);
+        BaseMenuItem copy = new BaseMenuItem(basePanel, UIComponentProperties.COPY);
 
         popup.add(copy);
 
-        BaseMenuItem cut = new BaseMenuItem(basePanel, BaseUIPropertyCodes.CUT);
+        BaseMenuItem cut = new BaseMenuItem(basePanel, UIComponentProperties.CUT);
 
         popup.add(cut);
 
-        BaseMenuItem paste = new BaseMenuItem(basePanel, BaseUIPropertyCodes.PASTE);
+        BaseMenuItem paste = new BaseMenuItem(basePanel, UIComponentProperties.PASTE);
 
         popup.add(paste);
         // Try to make the popup lightweight

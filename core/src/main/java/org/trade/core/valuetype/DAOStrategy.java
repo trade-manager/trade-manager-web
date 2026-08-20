@@ -32,17 +32,19 @@ public class DAOStrategy extends DAODecode {
     public List<Decode> getCodesDecodes() throws ValueTypeException {
 
         final List<Decode> decodes = new ArrayList<>();
-
         final List<Decode> decodesAll = super.getCodesDecodes();
+
         for (final Decode decode : decodesAll) {
 
             final Strategy strategy = (Strategy) decode.getObject();
             boolean isMgr = false;
+
             if (!strategy.hasStrategyManager()) {
 
                 for (final Decode mgrdecode : decodesAll) {
 
                     final Strategy strategyMgr = (Strategy) mgrdecode.getObject();
+
                     if (strategyMgr.hasStrategyManager()) {
 
                         if (strategyMgr.getStrategyManager().equals(strategy)) {
@@ -53,7 +55,9 @@ public class DAOStrategy extends DAODecode {
                     }
                 }
             }
+
             if (!isMgr) {
+
                 decodes.add(decode);
             }
         }

@@ -68,7 +68,7 @@ import java.util.Optional;
 @Service
 public class TradeServiceImpl implements TradeService {
 
-    private final static Logger _log = LoggerFactory.getLogger(TradeServiceImpl.class);
+    private static final Logger _log = LoggerFactory.getLogger(TradeServiceImpl.class);
 
     private final AspectService aspectService;
     private final DomainService domainService;
@@ -230,7 +230,6 @@ public class TradeServiceImpl implements TradeService {
         for (Account account : instance.getAccounts()) {
 
             Account current = this.getAccountService().findByAccountNumber(account.getAccountNumber());
-
             accounts.add(Objects.requireNonNullElse(current, account));
         }
 

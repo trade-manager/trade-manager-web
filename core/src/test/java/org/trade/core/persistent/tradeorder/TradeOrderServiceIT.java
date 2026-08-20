@@ -40,7 +40,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
         initializers = ApplicationProfileInitializer.class)
 public class TradeOrderServiceIT extends TradestrategyBase {
 
-    private final static Logger _log = LoggerFactory.getLogger(TradeOrderServiceIT.class);
+    private static final Logger _log = LoggerFactory.getLogger(TradeOrderServiceIT.class);
 
     @Autowired
     private TradeOrderRepository tradeOrderRepository;

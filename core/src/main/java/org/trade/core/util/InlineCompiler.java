@@ -21,7 +21,7 @@ import java.util.List;
  */
 public final class InlineCompiler {
 
-    private final static Logger _log = LoggerFactory.getLogger(InlineCompiler.class);
+    private static final Logger _log = LoggerFactory.getLogger(InlineCompiler.class);
 
     private String classpath;
     private String outputdir;

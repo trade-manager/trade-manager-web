@@ -3,6 +3,7 @@ package org.trade.web.rest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +18,9 @@ import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.tradestrategy.Tradestrategy;
 import org.trade.core.persistent.tradestrategy.TradestrategyRecord;
 import org.trade.core.persistent.tradingday.Tradingday;
+import org.trade.core.persistent.tradingday.Tradingdays;
 import org.trade.core.util.JSONMapper;
+import org.trade.core.util.time.TradingCalendar;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -43,13 +46,17 @@ public class TradestrategyController {
 
     @Operation(security = {@SecurityRequirement(name = BASIC_AUTH_SECURITY_SCHEME)})
     @GetMapping
-    public List<TradestrategyRecord> getTradestrategies(@RequestParam(value = "text", required = false) ZonedDateTime open, @RequestParam(value = "text", required = false) ZonedDateTime close) {
+    public List<TradestrategyRecord> getTradestrategies(@RequestParam(name = "open", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) ZonedDateTime open, @RequestParam(value = "close", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) ZonedDateTime close) {
         List<Tradestrategy> tradestrategies = new ArrayList<>();
 
-        Tradingday tradingday = tradeService.getTradingdayService().findByOpenCloseDate(open, close);
+        if (open != null && close != null) {
 
-        if (tradingday != null) {
-            tradestrategies = tradeService.getTradestrategyService().findByTradingday(tradingday);
+            Tradingdays tradingdays = tradeService.getTradingdayService().findTradingdaysByDateRangeOrderByOpenAsc(TradingCalendar.getTradingDayStart(open), TradingCalendar.getTradingDayEnd(close));
+
+            for (Tradingday tradingday : tradingdays.getTradingdays()) {
+
+                tradestrategies.addAll(tradeService.getTradestrategyService().findByTradingday(tradingday));
+            }
         } else {
             tradestrategies = tradeService.getTradestrategyService().findAll();
         }

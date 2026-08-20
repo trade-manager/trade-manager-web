@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trade.base.BaseButton;
 import org.trade.base.BasePanel;
-import org.trade.base.BaseUIPropertyCodes;
 import org.trade.base.TableModel;
 import org.trade.base.TextDialog;
 import org.trade.core.aspect.Aspect;
@@ -19,6 +18,7 @@ import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.persistent.strategy.series.indicator.IndicatorSeries;
 import org.trade.core.valuetype.DAOEntryLimit;
 import org.trade.core.valuetype.ReferenceTable;
+import org.trade.core.valuetype.UIComponentProperties;
 import org.trade.ui.models.AccountTableModel;
 import org.trade.ui.models.AspectTableModel;
 import org.trade.ui.models.CodeAttributeTableModel;
@@ -52,7 +52,7 @@ public class ConfigurationPanel extends BasePanel {
     private static final long serialVersionUID = 8543984162821384818L;
 
     private final TradeService tradeService;
-    private final static Logger _log = LoggerFactory.getLogger(ConfigurationPanel.class);
+    private static final Logger _log = LoggerFactory.getLogger(ConfigurationPanel.class);
     private JScrollPane jScrollPane = null;
     private final JScrollPane jScrollPane1 = new JScrollPane();
     private ConfigurationTable configTable = null;
@@ -84,7 +84,7 @@ public class ConfigurationPanel extends BasePanel {
              */
             DAOEntryLimit.newInstance();
             jScrollPane = new JScrollPane();
-            propertiesButton = new BaseButton(this, BaseUIPropertyCodes.PROPERTIES, 0);
+            propertiesButton = new BaseButton(this, UIComponentProperties.PROPERTIES, 0);
             propertiesButton.setEnabled(false);
             JLabel refTable = new JLabel("Configuration:");
             refTableEditorComboBox = new DecodeComboBoxEditor(ReferenceTable.newInstance().getCodesDecodes());
@@ -167,7 +167,7 @@ public class ConfigurationPanel extends BasePanel {
             this.addReferenceTablePanel(ReferenceTable.newInstance().getCode());
         } catch (Exception ex) {
 
-            this.setErrorMessage("Error during initiaization.", ex.getMessage(), ex);
+            this.setErrorMessage("Error during initialization.", ex.getMessage(), ex);
         }
     }
 
@@ -428,7 +428,7 @@ public class ConfigurationPanel extends BasePanel {
                     tableChild = new ConfigurationTable(tableModelChild);
 
                     tableChild.getSelectionModel().addListSelectionListener(new IndicatorSeriesTableRowListener());
-                    tableChild.setDefaultRenderer(Aspects.class, new ButtonRenderer(BaseUIPropertyCodes.PROPERTIES));
+                    tableChild.setDefaultRenderer(Aspects.class, new ButtonRenderer(UIComponentProperties.PROPERTIES));
                     tableChild.setDefaultEditor(Aspects.class, new ButtonEditor(propertiesButton));
                 }
                 case CodeType codeType -> {

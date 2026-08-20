@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class Worker {
 
-    private final static Logger _log = LoggerFactory.getLogger(Worker.class);
+    private static final Logger _log = LoggerFactory.getLogger(Worker.class);
     public Thread thread;
     protected boolean isDone = false;
     protected boolean isCancelled = false;

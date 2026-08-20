@@ -2,6 +2,7 @@ package org.trade.base;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.trade.core.valuetype.UIComponentProperties;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,7 +20,7 @@ public class BaseMenuItem extends JMenuItem {
     @Serial
     private static final long serialVersionUID = 5816221538464868893L;
 
-    private final static Logger _log = LoggerFactory.getLogger(BaseMenuItem.class);
+    private static final Logger _log = LoggerFactory.getLogger(BaseMenuItem.class);
     protected MessageNotifier notifier = new MessageNotifier();
     private String method = null;
 
@@ -29,7 +30,7 @@ public class BaseMenuItem extends JMenuItem {
      * @param p                 BasePanel
      * @param basePropertyCodes BaseUIPropertyCodes
      */
-    public BaseMenuItem(BasePanel p, BaseUIPropertyCodes basePropertyCodes) {
+    public BaseMenuItem(BasePanel p, UIComponentProperties basePropertyCodes) {
         try {
             if (p != null) {
                 this.addMessageListener(p);
@@ -65,7 +66,7 @@ public class BaseMenuItem extends JMenuItem {
                 this.addMessageListener(p);
             }
 
-            BaseUIPropertyCodes basePropertyCodes = BaseUIPropertyCodes.newInstance(UICode);
+            UIComponentProperties basePropertyCodes = UIComponentProperties.newInstance(UICode);
 
             if (basePropertyCodes.getDisplayName().isEmpty()) {
                 setIcon(ImageBuilder.getImageIcon(basePropertyCodes.getImage()));

@@ -1,15 +1,9 @@
 import React from 'react'
-import {Button, Form, Grid, Input, Table} from 'semantic-ui-react'
-import TradingdayForm from './TradingdayForm'
+import {Button, Form, Input, Table} from 'semantic-ui-react'
+import {utils} from '../misc/Utils'
 
 function TradingdayTable({
                              tradingdays,
-                             tradingdayId,
-                             tradingdayOpen,
-                             tradingdayClose,
-                             tradingdayMktGap,
-                             tradingdayMktBias,
-                             tradingdayMktBar,
                              tradingdayOpenSearch,
                              tradingdayCloseSearch,
                              handleAddTradingday,
@@ -25,6 +19,7 @@ function TradingdayTable({
             </Table.Row>
         )
     } else {
+
         tradingdayList = tradingdays.map(tradingday => {
             return (
                 <Table.Row key={tradingday.id}>
@@ -40,9 +35,9 @@ function TradingdayTable({
                     <Table.Cell>{tradingday.id}</Table.Cell>
                     <Table.Cell>{tradingday.open}</Table.Cell>
                     <Table.Cell>{tradingday.close}</Table.Cell>
-                    <Table.Cell>{tradingday.mktGap}</Table.Cell>
-                    <Table.Cell>{tradingday.mktBias}</Table.Cell>
-                    <Table.Cell>{tradingday.mktBar}</Table.Cell>
+                    <Table.Cell>{tradingday.marketGap}</Table.Cell>
+                    <Table.Cell>{tradingday.marketBias}</Table.Cell>
+                    <Table.Cell>{tradingday.marketBar}</Table.Cell>
                 </Table.Row>
             )
         })
@@ -50,40 +45,26 @@ function TradingdayTable({
 
     return (
         <>
-            <Grid stackable divided>
-                <Grid.Row columns='2'>
-                    <Grid.Column width={4}>
-                        <Form onSubmit={handleSearchTradingday}>
-                            <Input
-                                action={{icon: 'search'}}
-                                name='tradingdayOpenSearch'
-                                placeholder='Search by Open'
-                                value={tradingdayOpenSearch}
-                                onChange={handleInputChange}
-                            />
-                            <Input
-                                action={{icon: 'search'}}
-                                name='tradingdayCloseSearch'
-                                placeholder='Search by Close'
-                                value={tradingdayCloseSearch}
-                                onChange={handleInputChange}
-                            />
-                        </Form>
-                    </Grid.Column>
-                    <Grid.Column width={3}>
-                        <TradingdayForm
-                            tradingdayId={tradingdayId}
-                            tradingdayOpen={tradingdayOpen}
-                            tradingdayClose={tradingdayClose}
-                            tradingdayMktGap={tradingdayMktGap}
-                            tradingdayMktBias={tradingdayMktBias}
-                            tradingdayMktBar={tradingdayMktBar}
-                            handleInputChange={handleInputChange}
-                            handleAddTradingday={handleAddTradingday}
-                        />
-                    </Grid.Column>
-                </Grid.Row>
-            </Grid>
+            <Form onSubmit={handleSearchTradingday}>
+                <Input
+                    type="datetime-local"
+                    id="open-date"
+                    action={{icon: 'search'}}
+                    name='tradingdayOpenSearch'
+                    placeholder='Search by Open'
+                    value={tradingdayOpenSearch}
+                    onChange={handleInputChange}
+                />
+                <Input
+                    type="datetime-local"
+                    id="close-date"
+                    action={{icon: 'search'}}
+                    name='tradingdayCloseSearch'
+                    placeholder='Search by Close'
+                    value={tradingdayCloseSearch}
+                    onChange={handleInputChange}
+                />
+            </Form>
             <Table compact striped selectable>
                 <Table.Header>
                     <Table.Row>

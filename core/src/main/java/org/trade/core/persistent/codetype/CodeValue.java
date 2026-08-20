@@ -1,5 +1,6 @@
 package org.trade.core.persistent.codetype;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -31,7 +32,8 @@ public class CodeValue extends Aspect implements java.io.Serializable {
     private String codeValue;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "code_attribute_id", nullable = false)
+    @JoinColumn(name = "code_attribute_id")
+    @JsonBackReference
     private CodeAttribute codeAttribute;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -41,6 +43,10 @@ public class CodeValue extends Aspect implements java.io.Serializable {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "tradestrategy_id")
     private Tradestrategy tradestrategy;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "decodetype_id")
+    private DecodeType decodeType;
 
     public CodeValue() {
     }
@@ -119,6 +125,24 @@ public class CodeValue extends Aspect implements java.io.Serializable {
      */
     public void setCodeAttribute(CodeAttribute codeAttribute) {
         this.codeAttribute = codeAttribute;
+    }
+
+    /**
+     * Method getDecodeType.
+     *
+     * @return DecodeType
+     */
+    public DecodeType getDecodeType() {
+        return this.decodeType;
+    }
+
+    /**
+     * Method setDecodeType.
+     *
+     * @param decodeType DecodeType
+     */
+    public void setDecodeType(DecodeType decodeType) {
+        this.decodeType = decodeType;
     }
 
     /**

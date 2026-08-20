@@ -43,7 +43,7 @@ public class StreamEditorPane extends JEditorPane implements MouseListener, Acti
     @Serial
     private static final long serialVersionUID = -8068406289677664715L;
 
-    private final static Logger _log = LoggerFactory.getLogger(StreamEditorPane.class);
+    private static final Logger _log = LoggerFactory.getLogger(StreamEditorPane.class);
     protected UndoableEditListener undoHandler = new UndoHandler();
     protected UndoManager undo = new UndoManager();
     private final UndoAction undoAction = new UndoAction();

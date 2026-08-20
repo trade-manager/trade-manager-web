@@ -17,7 +17,6 @@ import org.trade.core.TradestrategyBase;
 import org.trade.core.persistent.candle.Candle;
 import org.trade.core.persistent.candle.CandleRecord;
 import org.trade.core.persistent.candle.CandleServiceIT;
-import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.persistent.strategy.series.indicator.IndicatorSeries;
 import org.trade.core.persistent.strategy.series.indicator.IndicatorSeriesRecord;
 import org.trade.core.persistent.strategy.series.indicator.candle.CandlePeriod;
@@ -56,7 +55,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
         initializers = ApplicationProfileInitializer.class)
 public class JSONMapperIT extends TradestrategyBase {
 
-    private final static Logger _log = LoggerFactory.getLogger(CandleServiceIT.class);
+    private static final Logger _log = LoggerFactory.getLogger(CandleServiceIT.class);
 
     private static final String symbol = "TEST-" + TradestrategyBase.getRandomNumber(4);
     private static Tradestrategy tradestrategy;
@@ -77,7 +76,7 @@ public class JSONMapperIT extends TradestrategyBase {
     public void setUp() throws Exception {
 
         clientId = ConfigProperties.getPropAsInt("trade.tws.clientId");
-        Strategy strategy = (Strategy) DAOStrategy.newInstance().getObject();
+        org.trade.core.persistent.strategy.Strategy strategy = (org.trade.core.persistent.strategy.Strategy) DAOStrategy.newInstance().getObject();
         tradestrategy = this.createTestTradestrategy(strategy, symbol, Side.BOT, ChartDays.ONE_DAY, BarSize.FIVE_MIN);
         assertNotNull(tradestrategy);
     }

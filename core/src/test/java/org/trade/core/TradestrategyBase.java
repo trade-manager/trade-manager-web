@@ -8,9 +8,7 @@ import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.account.Account;
 import org.trade.core.persistent.contract.Contract;
 import org.trade.core.persistent.contract.ContractLite;
-import org.trade.core.persistent.portfolio.Portfolio;
 import org.trade.core.persistent.rule.Rule;
-import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.persistent.strategy.series.indicator.StrategyData;
 import org.trade.core.persistent.tradeorder.TradeOrder;
 import org.trade.core.persistent.tradeposition.TradePosition;
@@ -49,8 +47,8 @@ import static org.junit.jupiter.api.Assertions.fail;
  */
 public class TradestrategyBase {
 
-    private final static Logger _log = LoggerFactory.getLogger(TradestrategyBase.class);
-    private final static LinkedList<Aspect> aspects = new LinkedList<>();
+    private static final Logger _log = LoggerFactory.getLogger(TradestrategyBase.class);
+    private static final LinkedList<Aspect> aspects = new LinkedList<>();
 
     @Autowired
     public TradeService tradeService;
@@ -74,15 +72,15 @@ public class TradestrategyBase {
      *
      * @return Tradestrategy
      */
-    public Tradestrategy createTestTradestrategy(Strategy strategy, String symbol, String side, Integer chartDays, Integer barSize) throws Exception {
+    public Tradestrategy createTestTradestrategy(org.trade.core.persistent.strategy.Strategy strategy, String symbol, String side, Integer chartDays, Integer barSize) throws Exception {
 
         Tradestrategy tradestrategy;
 
         if (null == strategy) {
-            strategy = (Strategy) DAOStrategy.newInstance().getObject();
+            strategy = (org.trade.core.persistent.strategy.Strategy) DAOStrategy.newInstance().getObject();
         }
 
-        Portfolio portfolio = (Portfolio) DAOPortfolio.newInstance().getObject();
+        org.trade.core.persistent.portfolio.Portfolio portfolio = (org.trade.core.persistent.portfolio.Portfolio) DAOPortfolio.newInstance().getObject();
         portfolio = tradeService.getPortfolioService().findByName(portfolio.getName());
 
         if (portfolio.getAccounts().isEmpty()) {

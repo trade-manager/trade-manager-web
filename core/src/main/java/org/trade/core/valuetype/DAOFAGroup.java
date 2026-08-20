@@ -10,16 +10,17 @@ import java.util.List;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-public class DAOGroup extends DAODecode {
+public class DAOFAGroup extends DAODecode {
 
     @Serial
     private static final long serialVersionUID = -5381026427696898592L;
-    public static final String DECODE = "GROUP_DATA";
+    public static final String DECODE = "FA_GROUP";
     public static final String _TABLE = "_TABLE";
     public static final String _TABLE_ID = "_TABLE_ID";
     public static final String _COLUMN = "_COLUMN";
 
-    public DAOGroup() {
+    public DAOFAGroup() {
+
         super(DECODE, true);
     }
 
@@ -30,6 +31,7 @@ public class DAOGroup extends DAODecode {
      */
 
     public List<Decode> getCodesDecodes() throws ValueTypeException {
+
 
         final List<Decode> decodes = new ArrayList<>();
         final List<Decode> decodesAll = super.getCodesDecodes();
@@ -68,11 +70,11 @@ public class DAOGroup extends DAODecode {
      * Method newInstance.
      *
      * @param displayName String
-     * @return DAOTradeAccount
+     * @return DAOFAGroup
      */
-    public static DAOGroup newInstance(String displayName) {
+    public static DAOFAGroup newInstance(String displayName) {
 
-        final DAOGroup returnInstance = new DAOGroup();
+        final DAOFAGroup returnInstance = new DAOFAGroup();
         returnInstance.setDisplayName(displayName);
         return returnInstance;
     }
@@ -80,10 +82,11 @@ public class DAOGroup extends DAODecode {
     /**
      * Method newInstance.
      *
-     * @return DAOGroup
+     * @return DAOFAGroup
      */
-    public static DAOGroup newInstance() {
-        final DAOGroup returnInstance = new DAOGroup();
+    public static DAOFAGroup newInstance() {
+
+        final DAOFAGroup returnInstance = new DAOFAGroup();
         returnInstance.setDefaultCode();
         return returnInstance;
     }

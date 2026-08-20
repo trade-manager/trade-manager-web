@@ -63,7 +63,7 @@ import java.util.logging.Logger;
  */
 public class TWSBrokerService extends AbstractBrokerModel {
 
-    private final static org.slf4j.Logger _log = LoggerFactory.getLogger(TWSBrokerService.class);
+    private static final org.slf4j.Logger _log = LoggerFactory.getLogger(TWSBrokerService.class);
 
     private TradeService tradeService;
 

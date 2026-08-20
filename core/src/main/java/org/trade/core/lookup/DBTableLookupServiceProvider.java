@@ -21,8 +21,7 @@ import java.util.ListIterator;
  */
 public class DBTableLookupServiceProvider implements ILookupServiceProvider {
 
-    private final static Logger _log = LoggerFactory.getLogger(DBTableLookupServiceProvider.class);
-
+    private static final Logger _log = LoggerFactory.getLogger(DBTableLookupServiceProvider.class);
     private final TradeService tradeService;
     /*
      * This will be a hashtable of hashtable's of ILookup objects. The first key
@@ -61,7 +60,7 @@ public class DBTableLookupServiceProvider implements ILookupServiceProvider {
 
                 List<List<Object>> rows = new ArrayList<>();
                 List<String> colNames = new ArrayList<>();
-                ListIterator<?> en = ConfigProperties.getPropAsEnumeration(lookupName + "_DBTable");
+                ListIterator<?> en = ConfigProperties.getDecodesAsEnumeration(lookupName + "_DBTable");
 
                 while (en.hasNext()) {
 
@@ -76,7 +75,7 @@ public class DBTableLookupServiceProvider implements ILookupServiceProvider {
 
                 for (i = 0; i < colNamesSize; i++) {
 
-                    colRows.add(ConfigProperties.getPropAsEnumeration(colNames.get(i)));
+                    colRows.add(ConfigProperties.getDecodesAsEnumeration(colNames.get(i)));
                 }
 
                 // Now construct a List List - representing the table of

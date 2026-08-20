@@ -2,7 +2,6 @@ package org.trade.ui.contract;
 
 import org.trade.base.BaseButton;
 import org.trade.base.BasePanel;
-import org.trade.base.BaseUIPropertyCodes;
 import org.trade.base.TabbedAppPanel;
 import org.trade.base.TabbedCloseButton;
 import org.trade.base.Table;
@@ -27,13 +26,14 @@ import org.trade.core.util.time.TradingCalendar;
 import org.trade.core.valuetype.AllocationMethod;
 import org.trade.core.valuetype.BarSize;
 import org.trade.core.valuetype.ContentType;
-import org.trade.core.valuetype.DAOGroup;
+import org.trade.core.valuetype.DAOFAGroup;
 import org.trade.core.valuetype.DAOProfile;
 import org.trade.core.valuetype.Decode;
 import org.trade.core.valuetype.Money;
 import org.trade.core.valuetype.Side;
 import org.trade.core.valuetype.Tier;
 import org.trade.core.valuetype.TradestrategyStatus;
+import org.trade.core.valuetype.UIComponentProperties;
 import org.trade.indicator.CandleDataset;
 import org.trade.indicator.CandleSeries;
 import org.trade.indicator.IndicatorSeries;
@@ -134,27 +134,27 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
             this.setLayout(new BorderLayout());
             this.currencyFormater.setMinimumFractionDigits(2);
             this.backfillOffsetDays = ConfigProperties.getPropAsInt("trade.backfill.offsetDays");
-            this.propertiesButton = new BaseButton(this, BaseUIPropertyCodes.PROPERTIES, 0);
+            this.propertiesButton = new BaseButton(this, UIComponentProperties.PROPERTIES, 0);
             this.propertiesButton.setEnabled(false);
-            this.executeButton = new BaseButton(controller, BaseUIPropertyCodes.EXECUTE);
+            this.executeButton = new BaseButton(controller, UIComponentProperties.EXECUTE);
             this.executeButton.addMessageListener(this);
-            this.brokerDataButton = new BaseButton(controller, BaseUIPropertyCodes.DATA);
+            this.brokerDataButton = new BaseButton(controller, UIComponentProperties.DATA);
             this.brokerDataButton.setToolTipText("Get Chart Data");
-            this.cancelButton = new BaseButton(controller, BaseUIPropertyCodes.CANCEL);
+            this.cancelButton = new BaseButton(controller, UIComponentProperties.CANCEL);
             this.cancelButton.setToolTipText("Cancel Order");
             this.cancelButton.setTransferObject(new Aspects());
             this.cancelButton.addMessageListener(this);
-            this.cancelStrategiesButton = new BaseButton(controller, BaseUIPropertyCodes.CANCEL);
+            this.cancelStrategiesButton = new BaseButton(controller, UIComponentProperties.CANCEL);
             this.cancelStrategiesButton.setToolTipText("Cancel Strategy");
-            this.refreshButton = new BaseButton(this, BaseUIPropertyCodes.REFRESH);
-            BaseButton closeAllButton = new BaseButton(this, BaseUIPropertyCodes.CLOSE_ALL);
-            this.closeAllPositionsButton = new BaseButton(controller, BaseUIPropertyCodes.CLOSE_ALL);
+            this.refreshButton = new BaseButton(this, UIComponentProperties.REFRESH);
+            BaseButton closeAllButton = new BaseButton(this, UIComponentProperties.CLOSE_ALL);
+            this.closeAllPositionsButton = new BaseButton(controller, UIComponentProperties.CLOSE_ALL);
             this.closeAllPositionsButton.setToolTipText("Cancel Orders & Close Position");
             this.tradeOrderModel = new TradeOrderTableModel();
             this.tradeOrderTable = new TradeOrderTable(tradeOrderModel);
             this.tradeOrderTable.getSelectionModel().addListSelectionListener(new TradeOrderTableRowListener());
             this.tradeOrderTable.setDefaultEditor(TradeOrder.class, new ButtonEditor(propertiesButton));
-            this.tradeOrderTable.setDefaultRenderer(TradeOrder.class, new ButtonRenderer(BaseUIPropertyCodes.PROPERTIES));
+            this.tradeOrderTable.setDefaultRenderer(TradeOrder.class, new ButtonRenderer(UIComponentProperties.PROPERTIES));
             this.treeModel = new TradingdayTreeModel(this.tradingdays);
             this.tree = new Tree(treeModel);
             // Listen for when the selection changes.
@@ -1154,15 +1154,15 @@ public class ContractPanel extends BasePanel implements TreeSelectionListener, C
             });
 
             DecodeComboBoxEditor groupEditorComboBox = new DecodeComboBoxEditor(
-                    DAOGroup.newInstance().getCodesDecodes());
+                    DAOFAGroup.newInstance().getCodesDecodes());
             DecodeComboBoxRenderer groupTableRenderer = new DecodeComboBoxRenderer();
             groupEditorComboBox.setRenderer(groupTableRenderer);
             if (null != tradeOrder.getFAGroup())
-                groupEditorComboBox.setItem(DAOGroup.newInstance(tradeOrder.getFAGroup()));
+                groupEditorComboBox.setItem(DAOFAGroup.newInstance(tradeOrder.getFAGroup()));
             groupEditorComboBox.addItemListener(e -> {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
-                    if (!Decode.NONE.equals(((DAOGroup) e.getItem()).getDisplayName())) {
-                        tradeOrder.setFAGroup(((Portfolio) ((DAOGroup) e.getItem()).getObject()).getName());
+                    if (!Decode.NONE.equals(((DAOFAGroup) e.getItem()).getDisplayName())) {
+                        tradeOrder.setFAGroup(((Portfolio) ((DAOFAGroup) e.getItem()).getObject()).getName());
                     } else {
                         tradeOrder.setFAGroup(null);
                     }

@@ -562,7 +562,7 @@ updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 strategy_id BIGINT NULL ,
 PRIMARY KEY (id) ,
 INDEX indicator_strategy_idx (strategy_id ASC) ,
-UNIQUE INDEX indicatorseries_uq (strategy_id ASC, TYPE ASC, name ASC),
+UNIQUE INDEX indicatorseries_uq (strategy_id ASC, type ASC, name ASC),
 CONSTRAINT indicator_strategy_fk
 FOREIGN KEY (strategy_id )
 REFERENCES strategy (id )
@@ -585,13 +585,14 @@ CREATE  TABLE IF NOT EXISTS codetype (
 id BIGINT NOT NULL AUTO_INCREMENT ,
 name VARCHAR(45) NOT NULL ,
 type VARCHAR(45) NOT NULL ,
+category VARCHAR(45) NOT NULL ,
 description VARCHAR(100) NULL ,
 version INT NOT NULL DEFAULT 0,
 domain_id BIGINT NOT NULL DEFAULT 1,
 created_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 PRIMARY KEY (id) ,
-UNIQUE INDEX codetype_name_type_uq (name ASC, TYPE ASC) )
+UNIQUE INDEX codetype_name_type_uq (name ASC, type ASC, category ASC) )
 ENGINE = InnoDB//
 SHOW WARNINGS//
 
@@ -628,6 +629,29 @@ ENGINE = InnoDB//
 SHOW WARNINGS//
 
 -- -----------------------------------------------------
+-- Table DecodeType
+-- -----------------------------------------------------
+DROP SEQUENCE IF EXISTS decodetype_seq //
+CREATE SEQUENCE decodetype_seq start with 1000 minvalue 1000 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
+DO SETVAL(decodetype_seq, 1001, 0) //
+
+DROP TABLE IF EXISTS decodetype //
+    SHOW WARNINGS//
+
+CREATE  TABLE IF NOT EXISTS decodetype (
+id BIGINT NOT NULL AUTO_INCREMENT ,
+type VARCHAR(45) NOT NULL ,
+description VARCHAR(100) NULL ,
+version INT NOT NULL DEFAULT 0,
+domain_id BIGINT NOT NULL DEFAULT 1,
+created_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+PRIMARY KEY (id) ,
+INDEX decodetype_type_uq (type ASC) )
+ENGINE = InnoDB//
+SHOW WARNINGS//
+
+-- -----------------------------------------------------
 -- Table CodeValue
 -- -----------------------------------------------------
 DROP SEQUENCE IF EXISTS codevalue_seq //
@@ -639,7 +663,7 @@ SHOW WARNINGS//
 
 CREATE  TABLE IF NOT EXISTS codevalue (
 id BIGINT NOT NULL AUTO_INCREMENT ,
-code_value VARCHAR(45) NOT NULL ,
+code_value VARCHAR(200) NOT NULL ,
 version INT NOT NULL DEFAULT 0,
 domain_id BIGINT NOT NULL DEFAULT 1,
 created_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
@@ -647,12 +671,18 @@ updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 code_attribute_id BIGINT NOT NULL ,
 indicator_series_id BIGINT NULL ,
 tradestrategy_id BIGINT NULL ,
+decodetype_id BIGINT NULL ,
 PRIMARY KEY (id) ,
 INDEX codeValue_codeattribute_idx (code_attribute_id ASC) ,
 INDEX codeValue_indicatorseries_idx (indicator_series_id ASC) ,
 INDEX codeValue_tradestrategy_idx (tradestrategy_id ASC) ,
-UNIQUE INDEX codeValue_tradestrategy_codeattribute_uq (code_attribute_id ASC, tradestrategy_id ASC),
-UNIQUE INDEX codeValue_indicatorseries_codeattribute_uq (indicator_series_id ASC, code_attribute_id ASC),
+INDEX codeValue_decodetype_idx (decodetype_id ASC) ,
+UNIQUE INDEX codeValue_uq (code_value ASC, code_attribute_id ASC, decodetype_id ASC, indicator_series_id ASC, tradestrategy_id ASC),
+CONSTRAINT codeValue_decodetype_fk
+FOREIGN KEY (decodetype_id )
+REFERENCES decodetype (id )
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION,
 CONSTRAINT codeValue_codeattribute_fk
 FOREIGN KEY (code_attribute_id )
 REFERENCES codeattribute (id )

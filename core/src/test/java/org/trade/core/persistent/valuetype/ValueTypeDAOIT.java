@@ -36,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
         initializers = ApplicationProfileInitializer.class)
 public class ValueTypeDAOIT {
 
-    private final static Logger _log = LoggerFactory.getLogger(ValueTypeDAOIT.class);
+    private static final Logger _log = LoggerFactory.getLogger(ValueTypeDAOIT.class);
 
     /**
      * Method setUpBeforeClass.

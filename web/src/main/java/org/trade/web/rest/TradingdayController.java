@@ -3,6 +3,7 @@ package org.trade.web.rest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +18,7 @@ import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.tradingday.Tradingday;
 import org.trade.core.persistent.tradingday.TradingdayRecord;
 import org.trade.core.util.JSONMapper;
+import org.trade.core.util.time.TradingCalendar;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -41,12 +43,12 @@ public class TradingdayController {
 
     @Operation(security = {@SecurityRequirement(name = BASIC_AUTH_SECURITY_SCHEME)})
     @GetMapping
-    public List<TradingdayRecord> getTradingdays(@RequestParam(value = "text", required = false) ZonedDateTime open, @RequestParam(value = "text", required = false) ZonedDateTime close) {
+    public List<TradingdayRecord> getTradingdays(@RequestParam(name = "open", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) ZonedDateTime open, @RequestParam(value = "close", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) ZonedDateTime close) {
         List<Tradingday> tradingdays;
 
         if (open != null && close != null) {
 
-            tradingdays = tradeService.getTradingdayService().findTradingdaysByDateRangeOrderByOpenAsc(open, close).getTradingdays();
+            tradingdays = tradeService.getTradingdayService().findTradingdaysByDateRangeOrderByOpenAsc(TradingCalendar.getTradingDayStart(open), TradingCalendar.getTradingDayEnd(close)).getTradingdays();
         } else {
 
             tradingdays = tradeService.getTradingdayService().findAll();

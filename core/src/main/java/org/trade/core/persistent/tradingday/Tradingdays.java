@@ -46,7 +46,7 @@ public class Tradingdays extends Aspect implements java.io.Serializable {
     @Serial
     private static final long serialVersionUID = 3388042483785305102L;
 
-    private final static Logger _log = LoggerFactory.getLogger(Tradingdays.class);
+    private static final Logger _log = LoggerFactory.getLogger(Tradingdays.class);
     private List<Tradingday> tradingdays = Collections.synchronizedList(new ArrayList<>(0));
 
     public Tradingdays() {

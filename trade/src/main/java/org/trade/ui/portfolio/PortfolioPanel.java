@@ -2,7 +2,6 @@ package org.trade.ui.portfolio;
 
 import org.trade.base.BaseButton;
 import org.trade.base.BasePanel;
-import org.trade.base.BaseUIPropertyCodes;
 import org.trade.base.ExampleFileChooser;
 import org.trade.base.ExampleFileFilter;
 import org.trade.base.FilePreviewer;
@@ -18,6 +17,7 @@ import org.trade.core.valuetype.DAOPortfolio;
 import org.trade.core.valuetype.Date;
 import org.trade.core.valuetype.Decode;
 import org.trade.core.valuetype.Money;
+import org.trade.core.valuetype.UIComponentProperties;
 import org.trade.core.valuetype.ValueTypeException;
 import org.trade.ui.models.TradelogDetailTableModel;
 import org.trade.ui.models.TradelogSummaryTableModel;
@@ -96,7 +96,7 @@ public class PortfolioPanel extends BasePanel implements ChangeListener, ItemLis
 
             this.tradeService = tradeService;
             csvDefaultDir = ConfigProperties.getPropAsString("trade.csv.default.dir");
-            transferButton = new BaseButton(controller, BaseUIPropertyCodes.TRANSFER);
+            transferButton = new BaseButton(controller, UIComponentProperties.TRANSFER);
             JLabel portfolioLabel = new JLabel("Portfolio:");
             portfolioEditorComboBox = new DAODecodeComboBoxEditor(Objects.requireNonNull(DAOPortfolio.newInstance()).getCodesDecodes());
             DecodeComboBoxRenderer portfolioRenderer = new DecodeComboBoxRenderer();

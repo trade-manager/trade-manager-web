@@ -23,7 +23,7 @@ import java.util.List;
  */
 public final class DynamicCode {
 
-    private final static Logger _log = LoggerFactory.getLogger(DynamicCode.class);
+    private static final Logger _log = LoggerFactory.getLogger(DynamicCode.class);
     private final String compileClasspath;
     private final ClassLoader parentClassLoader;
     private final List<SourceDir> sourceDirs = new ArrayList<>();

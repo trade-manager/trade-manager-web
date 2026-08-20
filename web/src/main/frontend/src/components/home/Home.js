@@ -3,7 +3,7 @@ import {Container, Dimmer, Grid, Icon, Image, Loader, Segment, Statistic} from '
 import {employeeApi} from '../misc/EmployeeApi'
 import {tradingdayApi} from '../misc/TradingdayApi'
 import {tradestrategyApi} from '../misc/TradestrategyApi'
-import {ERROR, logMessage} from '../misc/LoggerApi'
+import {ERROR, logMessage, getUIConfig} from '../misc/LoggerApi'
 import {useAuth} from "../context/AuthContext";
 
 function Home() {
@@ -24,9 +24,10 @@ function Home() {
 
             try {
 
+                await getUIConfig();
+
                 const responseUsers = await employeeApi.numberOfUsers()
                 setNumberOfUsers(responseUsers.data)
-                // logMessage(ERROR, "Info: Home::fetchData ResponseUsers: " + JSON.stringify(responseUsers.data), user)
 
                 const responseEmployees = await employeeApi.numberOfEmployees()
                 setNumberOfEmployees(responseEmployees.data)
