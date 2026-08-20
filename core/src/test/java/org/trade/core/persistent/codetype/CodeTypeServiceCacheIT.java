@@ -68,17 +68,19 @@ public class CodeTypeServiceCacheIT extends TradestrategyBase {
     @Test
     public void findCodeTypeType() {
 
-        List<CodeValue> codeValues = tradeService.getCodeTypeService().findByTypeSortedByCodeTypeAndCodeValue("BarSize");
-        assertFalse(codeValues.isEmpty());
+        List<DecodeType> decodeTypes = tradeService.getCodeTypeService().findDecodeTypeByType("BarSize");
+        assertFalse(decodeTypes.isEmpty());
         //codeTypes = cacheManager.getCache("codeTypes").get("BarSize", List.class);
         // Extracting a list of User objects from a cache named "users"
 
-        codeValues = extractTypedList("BarSize", CodeValue.class);
-        assertFalse(codeValues.isEmpty());
-        for (CodeValue codeValue : codeValues) {
+        decodeTypes = extractTypedList("BarSize", DecodeType.class);
+        assertFalse(decodeTypes.isEmpty());
+        for (DecodeType decodeType : decodeTypes) {
 
-            _log.info(String.format("CodeValue type: %s, attribute: %s, value: %s, row Id: %s", codeValue.getCodeAttribute().getCodeType().getType(), codeValue.getCodeAttribute().getName(), codeValue.getCodeValue(), codeValue.getCodeObjectId()));
+            for (CodeValue codeValue : decodeType.getCodeValues()) {
 
+                _log.info(String.format("CodeValue type: %s, attribute: %s, value: %s, row Id: %s", decodeType.getType(), codeValue.getCodeAttribute().getName(), codeValue.getCodeValue(), codeValue.getCodeObjectId()));
+            }
         }
     }
 

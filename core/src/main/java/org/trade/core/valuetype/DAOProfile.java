@@ -14,12 +14,13 @@ public class DAOProfile extends DAODecode {
 
     @Serial
     private static final long serialVersionUID = -5381026427696898592L;
-    public static final String DECODE = "PROFILE_DATA";
+    public static final String DECODE = "PROFILE";
     public static final String _TABLE = "_TABLE";
     public static final String _TABLE_ID = "_TABLE_ID";
     public static final String _COLUMN = "_COLUMN";
 
     public DAOProfile() {
+
         super(DECODE, true);
     }
 
@@ -28,7 +29,6 @@ public class DAOProfile extends DAODecode {
      *
      * @return List<Decode>
      */
-
     public List<Decode> getCodesDecodes() throws ValueTypeException {
 
         final List<Decode> decodes = new ArrayList<>();
@@ -54,7 +54,7 @@ public class DAOProfile extends DAODecode {
                 }
             } else {
 
-                if (ValueType.NONE.equals(decode.getDisplayName())) {
+                if (Decode.NONE.equals(decode.getDisplayName())) {
 
                     decodes.add(decode);
                 }
@@ -67,9 +67,10 @@ public class DAOProfile extends DAODecode {
      * Method newInstance.
      *
      * @param displayName String
-     * @return Profile
+     * @return DAOProfile
      */
     public static DAOProfile newInstance(String displayName) {
+
         final DAOProfile returnInstance = new DAOProfile();
         returnInstance.setDisplayName(displayName);
         return returnInstance;
@@ -78,9 +79,10 @@ public class DAOProfile extends DAODecode {
     /**
      * Method newInstance.
      *
-     * @return Profile
+     * @return DAOProfile
      */
     public static DAOProfile newInstance() {
+
         final DAOProfile returnInstance = new DAOProfile();
         returnInstance.setDefaultCode();
         return returnInstance;

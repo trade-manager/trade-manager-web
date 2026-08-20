@@ -26,9 +26,10 @@ public class DAOEntryLimit extends DAODecode {
     /**
      * Method newInstance.
      *
-     * @return EntryLimit
+     * @return DAOEntryLimit
      */
     public static DAOEntryLimit newInstance() {
+
         final DAOEntryLimit returnInstance = new DAOEntryLimit();
         returnInstance.setDefaultCode();
         return returnInstance;

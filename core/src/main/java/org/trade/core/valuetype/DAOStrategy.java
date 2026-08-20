@@ -1,5 +1,7 @@
 package org.trade.core.valuetype;
 
+import org.trade.core.persistent.strategy.Strategy;
+
 import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,17 +32,19 @@ public class DAOStrategy extends DAODecode {
     public List<Decode> getCodesDecodes() throws ValueTypeException {
 
         final List<Decode> decodes = new ArrayList<>();
-
         final List<Decode> decodesAll = super.getCodesDecodes();
+
         for (final Decode decode : decodesAll) {
 
-            final org.trade.core.persistent.strategy.Strategy strategy = (org.trade.core.persistent.strategy.Strategy) decode.getObject();
+            final Strategy strategy = (Strategy) decode.getObject();
             boolean isMgr = false;
+
             if (!strategy.hasStrategyManager()) {
 
                 for (final Decode mgrdecode : decodesAll) {
 
-                    final org.trade.core.persistent.strategy.Strategy strategyMgr = (org.trade.core.persistent.strategy.Strategy) mgrdecode.getObject();
+                    final Strategy strategyMgr = (Strategy) mgrdecode.getObject();
+
                     if (strategyMgr.hasStrategyManager()) {
 
                         if (strategyMgr.getStrategyManager().equals(strategy)) {
@@ -51,7 +55,9 @@ public class DAOStrategy extends DAODecode {
                     }
                 }
             }
+
             if (!isMgr) {
+
                 decodes.add(decode);
             }
         }
@@ -62,7 +68,7 @@ public class DAOStrategy extends DAODecode {
      * Method newInstance.
      *
      * @param displayName String
-     * @return Strategy
+     * @return DAOStrategy
      */
     public static DAOStrategy newInstance(String displayName) {
 
@@ -74,7 +80,7 @@ public class DAOStrategy extends DAODecode {
     /**
      * Method newInstance.
      *
-     * @return Strategy
+     * @return DAOStrategy
      */
     public static DAOStrategy newInstance() {
 

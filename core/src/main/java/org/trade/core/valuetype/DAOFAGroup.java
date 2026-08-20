@@ -14,12 +14,13 @@ public class DAOFAGroup extends DAODecode {
 
     @Serial
     private static final long serialVersionUID = -5381026427696898592L;
-    public static final String DECODE = "GROUP_DATA";
+    public static final String DECODE = "FA_GROUP";
     public static final String _TABLE = "_TABLE";
     public static final String _TABLE_ID = "_TABLE_ID";
     public static final String _COLUMN = "_COLUMN";
 
     public DAOFAGroup() {
+
         super(DECODE, true);
     }
 
@@ -30,6 +31,7 @@ public class DAOFAGroup extends DAODecode {
      */
 
     public List<Decode> getCodesDecodes() throws ValueTypeException {
+
 
         final List<Decode> decodes = new ArrayList<>();
         final List<Decode> decodesAll = super.getCodesDecodes();
@@ -55,7 +57,7 @@ public class DAOFAGroup extends DAODecode {
                 }
             } else {
 
-                if (ValueType.NONE.equals(decode.getDisplayName())) {
+                if (Decode.NONE.equals(decode.getDisplayName())) {
 
                     decodes.add(decode);
                 }
@@ -68,7 +70,7 @@ public class DAOFAGroup extends DAODecode {
      * Method newInstance.
      *
      * @param displayName String
-     * @return Group
+     * @return DAOFAGroup
      */
     public static DAOFAGroup newInstance(String displayName) {
 
@@ -80,9 +82,10 @@ public class DAOFAGroup extends DAODecode {
     /**
      * Method newInstance.
      *
-     * @return Group
+     * @return DAOFAGroup
      */
     public static DAOFAGroup newInstance() {
+
         final DAOFAGroup returnInstance = new DAOFAGroup();
         returnInstance.setDefaultCode();
         return returnInstance;

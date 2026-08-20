@@ -28,12 +28,12 @@ public class CodeTypeServiceImpl implements CodeTypeService {
 
     private final CodeTypeRepository codeTypeRepository;
 
-    private final CodeValueRepository codeValueRepository;
+    private final DecodeTypeRepository decodeTypeRepository;
 
-    public CodeTypeServiceImpl(final CodeTypeRepository codeTypeRepository, final CodeValueRepository codeValueRepository) {
+    public CodeTypeServiceImpl(final CodeTypeRepository codeTypeRepository, final DecodeTypeRepository decodeTypeRepository) {
 
         this.codeTypeRepository = codeTypeRepository;
-        this.codeValueRepository = codeValueRepository;
+        this.decodeTypeRepository = decodeTypeRepository;
     }
 
 
@@ -165,12 +165,12 @@ public class CodeTypeServiceImpl implements CodeTypeService {
         codeTypeRepository.delete(codeType);
     }
 
-    @Cacheable(value = "CodeValue", key = "#type")
+    @Cacheable(value = "DecodeType", key = "#type")
     @Transactional
-    public List<CodeValue> findByTypeSortedByCodeTypeAndCodeValue(String type) {
+    public List<DecodeType> findDecodeTypeByType(String type) {
 
-        List<CodeValue> codeTypes = codeValueRepository.findByTypeSortedByCodeTypeAndCodeValue(type);
+        List<DecodeType> decodeTypes = decodeTypeRepository.findByType(type);
 
-        return codeTypes;
+        return decodeTypes;
     }
 }

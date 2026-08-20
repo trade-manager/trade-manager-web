@@ -25,6 +25,7 @@ import java.util.List;
  * @author Simon Allen
  * @version $Id: Decode.java,v 1.1 2001/11/06 16:51:54 simon Exp $
  */
+
 public class Decode extends ValueType implements Comparator<Decode>, Comparable<Decode> {
     /**
      *

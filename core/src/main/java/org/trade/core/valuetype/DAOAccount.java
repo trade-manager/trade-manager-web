@@ -23,9 +23,10 @@ public class DAOAccount extends DAODecode {
      * Method newInstance.
      *
      * @param displayName String
-     * @return Account
+     * @return DAOAccount
      */
     public static DAOAccount newInstance(String displayName) {
+
         final DAOAccount returnInstance = new DAOAccount();
         returnInstance.setDisplayName(displayName);
         return returnInstance;
@@ -34,9 +35,10 @@ public class DAOAccount extends DAODecode {
     /**
      * Method newInstance.
      *
-     * @return Account
+     * @return DAOAccount
      */
     public static DAOAccount newInstance() {
+
         final DAOAccount returnInstance = new DAOAccount();
         returnInstance.setDefaultCode();
         return returnInstance;

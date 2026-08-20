@@ -92,14 +92,17 @@ public class PropertyFileLookupServiceProvider implements ILookupServiceProvider
                     int colRowsSize = colRows.size();
 
                     for (i = 0; i < colRowsSize; i++) {
+
                         Object value = null;
                         en = colRows.get(i);
 
                         if (en.hasNext()) {
+
                             foundOne = true;
                             value = en.next();
                             row.add(value);
                         } else {
+
                             // Represent an empty value
                             row.add("");
                         }
@@ -118,24 +121,29 @@ public class PropertyFileLookupServiceProvider implements ILookupServiceProvider
                     }
 
                     if (foundOne) {
+
                         if (addIt) {
                             rows.add(row);
                         }
                     } else {
+
                         exit = true;
                     }
                 } while (!exit);
 
                 // If rows where found then I managed to provide the lookup
                 if (!rows.isEmpty()) {
+
                     lookup = new PropertiesLookup(colNames, rows);
                 }
             } catch (Throwable t) {
+
                 // If this occurs means this provider is unable to provide
                 // the lookup ignore the exception.
             }
 
             if (null != lookup) {
+
                 assert qualifier != null;
                 addLookupToCache(lookupName, qualifier, lookup);
             }
@@ -157,12 +165,14 @@ public class PropertyFileLookupServiceProvider implements ILookupServiceProvider
         Hashtable<?, ?> lookupsByQualifier = _lookups.get(lookupName);
 
         if (null != lookupsByQualifier) {
+
             lookup = (ILookup) lookupsByQualifier.get(qualifier.toString());
         }
 
         // Need to clone the object otherwise changes in position in
         // the object returned would affect everyone using the object
         if (null != lookup) {
+
             lookup = (ILookup) lookup.clone();
         }
 

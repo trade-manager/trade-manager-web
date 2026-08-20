@@ -22,7 +22,6 @@ import java.util.ListIterator;
 public class DBTableLookupServiceProvider implements ILookupServiceProvider {
 
     private static final Logger _log = LoggerFactory.getLogger(DBTableLookupServiceProvider.class);
-
     private final TradeService tradeService;
     /*
      * This will be a hashtable of hashtable's of ILookup objects. The first key

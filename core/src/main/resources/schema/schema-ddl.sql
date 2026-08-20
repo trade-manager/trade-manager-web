@@ -629,16 +629,16 @@ ENGINE = InnoDB//
 SHOW WARNINGS//
 
 -- -----------------------------------------------------
--- Table Decode
+-- Table DecodeType
 -- -----------------------------------------------------
-DROP SEQUENCE IF EXISTS decode_seq //
-CREATE SEQUENCE decode_seq start with 1000 minvalue 1000 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
-DO SETVAL(decode_seq, 1001, 0) //
+DROP SEQUENCE IF EXISTS decodetype_seq //
+CREATE SEQUENCE decodetype_seq start with 1000 minvalue 1000 maxvalue 9223372036854775806 increment by 50 nocache nocycle ENGINE=InnoDB //
+DO SETVAL(decodetype_seq, 1001, 0) //
 
-DROP TABLE IF EXISTS decode //
+DROP TABLE IF EXISTS decodetype //
     SHOW WARNINGS//
 
-CREATE  TABLE IF NOT EXISTS decode (
+CREATE  TABLE IF NOT EXISTS decodetype (
 id BIGINT NOT NULL AUTO_INCREMENT ,
 type VARCHAR(45) NOT NULL ,
 description VARCHAR(100) NULL ,
@@ -647,7 +647,7 @@ domain_id BIGINT NOT NULL DEFAULT 1,
 created_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 PRIMARY KEY (id) ,
-INDEX decode_type_uq (type ASC) )
+INDEX decodetype_type_uq (type ASC) )
 ENGINE = InnoDB//
 SHOW WARNINGS//
 
@@ -671,16 +671,16 @@ updated_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 code_attribute_id BIGINT NOT NULL ,
 indicator_series_id BIGINT NULL ,
 tradestrategy_id BIGINT NULL ,
-decode_id BIGINT NULL ,
+decodetype_id BIGINT NULL ,
 PRIMARY KEY (id) ,
 INDEX codeValue_codeattribute_idx (code_attribute_id ASC) ,
 INDEX codeValue_indicatorseries_idx (indicator_series_id ASC) ,
 INDEX codeValue_tradestrategy_idx (tradestrategy_id ASC) ,
-INDEX codeValue_decode_idx (decode_id ASC) ,
-UNIQUE INDEX codeValue_uq (code_value ASC, decode_id ASC, code_attribute_id ASC, indicator_series_id ASC, tradestrategy_id ASC),
-CONSTRAINT codeValue_decode_fk
-FOREIGN KEY (decode_id )
-REFERENCES decode (id )
+INDEX codeValue_decodetype_idx (decodetype_id ASC) ,
+UNIQUE INDEX codeValue_uq (code_value ASC, decodetype_id ASC, code_attribute_id ASC, indicator_series_id ASC, tradestrategy_id ASC),
+CONSTRAINT codeValue_decodetype_fk
+FOREIGN KEY (decodetype_id )
+REFERENCES decodetype (id )
   ON DELETE NO ACTION
   ON UPDATE NO ACTION,
 CONSTRAINT codeValue_codeattribute_fk

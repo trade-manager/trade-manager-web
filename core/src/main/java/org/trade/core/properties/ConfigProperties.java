@@ -227,24 +227,28 @@ public class ConfigProperties {
         Properties result = new Properties();
 
         while (enumKey.hasNext()) {
-            String key;
+
+            String key = (String) enumKey.next();
             String value;
-
-            key = (String) enumKey.next();
-
             boolean mandatory = MANDATORY_PROPERTY.equals(keyNames.get(key));
 
             if (mandatory) {
+
                 value = getPropAsString(keyRoot + "_" + key);
             } else {
+
                 try {
+
                     value = getPropAsString(keyRoot + "_" + key);
+
                 } catch (Exception e) {
+
                     value = null;
                 }
             }
 
             if (value != null) {
+
                 result.put(key, value);
             }
         }
@@ -276,7 +280,7 @@ public class ConfigProperties {
 
             Properties systemProperties = new Properties();
             loadPropertiesAsResource(ConfigProperties.class, getSystemPropertyFileName(), systemProperties);
-            Properties deploymentProperties = new Properties(systemProperties);
+            deploymentProperties = new Properties(systemProperties);
             loadPropertiesAsFile(getDeploymentPropertyFileName(), deploymentProperties);
         }
 
@@ -298,14 +302,13 @@ public class ConfigProperties {
      * @return String
      */
     public static String getPropertyAfterEnvSubstitution(String key) throws IOException {
-        String strRet;
 
+        String strRet;
         strRet = retrieveProperty(key);
 
         // put env variables in the dictionary
         Dictionary<?, ?> toSubstitute = System.getProperties();
         TemplateParser tp = new TemplateParser(strRet, toSubstitute);
-
         return tp.parseTemplate();
     }
 
@@ -325,11 +328,14 @@ public class ConfigProperties {
         BufferedReader reader = new BufferedReader(inputStreamReader);
         char[] buf = new char[1024];
         int numRead;
+
         while ((numRead = reader.read(buf)) != -1) {
+
             String readData = String.valueOf(buf, 0, numRead);
             fileData.append(readData);
             buf = new char[1024];
         }
+
         reader.close();
         return fileData.toString();
     }
@@ -346,16 +352,20 @@ public class ConfigProperties {
         InputStream unbuffered;
 
         if (null == filename) {
+
             throw new PropertyFileNotFoundException("No property file name found"
                     + " please check your command line parameters e.g. " + "-Dconfig.properties=/filename.properties ");
         } else {
+
             unbuffered = context.getClass().getResourceAsStream(filename);
         }
 
         if (unbuffered == null) {
+
             throw new PropertyFileNotFoundException("Check " + "to see if the property file \"" + filename
                     + "\" is installed and available in the class path.");
         } else {
+
             InputStream in = new BufferedInputStream(unbuffered);
             properties.load(in);
             in.close();
@@ -439,7 +449,7 @@ public class ConfigProperties {
                     CodeType codeType = new CodeType(CodeType.Decode, category, type, String.format("%s::%s", type, category));
                     codeTypeId.getAndIncrement();
 
-                    System.out.println(String.format("INSERT INTO codetype (id, name, type, category, description) VALUES(%s,'%s','%s','%s','%s')//", codeTypeId.get(), type, type, category, String.format("%s::%s", type, category)));
+                    System.out.println(String.format("INSERT INTO codetype (id, name, type, category, description) VALUES(%s,'%s','%s','%s','%s')//", codeTypeId.get(), type, "CodeType", category, String.format("%s::%s", type, category)));
 
                     HashMap<String, CodeAttribute> codeAttributesMap = new HashMap<>();
 
@@ -466,20 +476,20 @@ public class ConfigProperties {
                         Iterator<String> attributes = decode.keys();
 
                         decodeId.getAndIncrement();
-                        System.out.println(String.format("INSERT INTO decode (id, type, description) VALUES(%s,'%s','%s')//", decodeId.get(), type, String.format("Decode of type %s.", type)));
+                        System.out.println(String.format("INSERT INTO decodetype (id, type, description) VALUES(%s,'%s','%s')//", decodeId.get(), type, String.format("Decode of type %s.", type)));
 
                         while (attributes.hasNext()) {
 
                             String attribute = attributes.next();
                             codeAttributesMap.get(attribute).addChild(new CodeValue(codeAttributesMap.get(attribute), decode.getString(attribute)));
                             codeValueId.getAndIncrement();
-                            System.out.println(String.format("INSERT INTO codevalue (id , code_value, decode_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(%s,'%s','%s',%s,null, null)//", codeValueId.get(), decode.getString(attribute), decodeId.get(), codeAttributesMap.get(attribute).getId()));
+                            System.out.println(String.format("INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(%s,'%s','%s',%s,null, null)//", codeValueId.get(), decode.getString(attribute), decodeId.get(), codeAttributesMap.get(attribute).getId()));
                         }
                     }
                 });
             });
-
         } catch (Exception ex) {
+
             _log.error("Error loading decodes file: {}", ex.getMessage(), ex);
         }
     }
@@ -493,6 +503,7 @@ public class ConfigProperties {
 
         FileInputStream fileInputStream = null;
         Scanner scanString = null;
+
         try {
             /*
              * Location of the properties file. Copy the source one to this Dir.
@@ -522,6 +533,7 @@ public class ConfigProperties {
             String token = null;
             String delimiter;
             String oldDelimiter = null;
+
             while (scanString.hasNext()) {
 
                 token = scanString.next();
@@ -529,29 +541,41 @@ public class ConfigProperties {
                 if (null != token && token.contains(codeName)) {
 
                     if (null != delimiter) {
+
                         if (!token.endsWith(lookupServiceProvideName)) {
+
                             if (!delimiter.equals(oldDelimiter)) {
+
                                 count++;
                             }
                             newText.append(token).append("_").append(count).append("=");
                         } else {
                             newText.append(token).append(delimiter);
                         }
+
                         oldDelimiter = delimiter;
                     }
                 }
             }
+
             newText.append(token);
             _log.error("{}", newText);
         } catch (Exception ex) {
+
             _log.error("Error paring file: {}", ex.getMessage(), ex);
         } finally {
 
             try {
-                if (null != scanString)
+
+                if (null != scanString) {
+
                     scanString.close();
-                if (null != fileInputStream)
+                }
+
+                if (null != fileInputStream) {
+
                     fileInputStream.close();
+                }
             } catch (IOException e) {
                 _log.error("Error closing input stream: {}", e.getMessage(), e);
             }

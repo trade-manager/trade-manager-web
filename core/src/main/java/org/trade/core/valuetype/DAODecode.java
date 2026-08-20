@@ -18,7 +18,6 @@ public class DAODecode extends Decode {
 
     @Serial
     private static final long serialVersionUID = -5356057478795774210L;
-
     private static final String DAO_DECODE_IDENTIFIER = "DAO_DECODE";
 
     /**
@@ -35,6 +34,7 @@ public class DAODecode extends Decode {
      * @param values         List<Object>
      */
     public DAODecode(String codeDecodeType, List<String> columnNames, List<Object> values) {
+
         super(codeDecodeType, columnNames, values, DAO_DECODE_IDENTIFIER);
     }
 
@@ -44,6 +44,7 @@ public class DAODecode extends Decode {
      * @param codeDecodeType String
      */
     public DAODecode(String codeDecodeType) {
+
         this(codeDecodeType, false);
     }
 
@@ -54,6 +55,7 @@ public class DAODecode extends Decode {
      * @param optional       boolean
      */
     public DAODecode(String codeDecodeType, boolean optional) {
+
         super(codeDecodeType, DAO_DECODE_IDENTIFIER, optional);
     }
 
@@ -65,6 +67,7 @@ public class DAODecode extends Decode {
      * @param optional       boolean
      */
     public DAODecode(String codeDecodeType, String identifier, boolean optional) {
+
         super(codeDecodeType, DAO_DECODE_IDENTIFIER, optional);
     }
 
@@ -75,7 +78,7 @@ public class DAODecode extends Decode {
      * @return boolean
      */
     protected boolean convertToUppercase() {
+
         return false;
     }
-
 }

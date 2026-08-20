@@ -48,8 +48,8 @@ public class CodeValue extends Aspect implements java.io.Serializable {
     private Tradestrategy tradestrategy;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "decode_id")
-    private Decode decode;
+    @JoinColumn(name = "decodetype_id")
+    private DecodeType decodeType;
 
     public CodeValue() {
     }
@@ -149,21 +149,21 @@ public class CodeValue extends Aspect implements java.io.Serializable {
     }
 
     /**
-     * Method getDecode.
+     * Method getDecodeType.
      *
-     * @return Decode
+     * @return DecodeType
      */
-    public Decode getDecode() {
-        return this.decode;
+    public DecodeType getDecodeType() {
+        return this.decodeType;
     }
 
     /**
-     * Method setDecode.
+     * Method setDecodeType.
      *
-     * @param decode Decode
+     * @param decodeType DecodeType
      */
-    public void setDecode(Decode decode) {
-        this.decode = decode;
+    public void setDecodeType(DecodeType decodeType) {
+        this.decodeType = decodeType;
     }
 
     /**

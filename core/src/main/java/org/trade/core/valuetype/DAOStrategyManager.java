@@ -43,6 +43,7 @@ public class DAOStrategyManager extends DAODecode {
                 decodes.add(decode);
             }
         }
+
         return decodes;
     }
 
@@ -50,9 +51,10 @@ public class DAOStrategyManager extends DAODecode {
      * Method newInstance.
      *
      * @param displayName String
-     * @return StrategyManager
+     * @return DAOStrategyManager
      */
     public static DAOStrategyManager newInstance(String displayName) {
+
         final DAOStrategyManager returnInstance = new DAOStrategyManager();
         returnInstance.setDisplayName(displayName);
         return returnInstance;
@@ -61,9 +63,10 @@ public class DAOStrategyManager extends DAODecode {
     /**
      * Method newInstance.
      *
-     * @return StrategyManager
+     * @return DAOStrategyManager
      */
     public static DAOStrategyManager newInstance() {
+
         final DAOStrategyManager returnInstance = new DAOStrategyManager();
         returnInstance.setDefaultCode();
         return returnInstance;

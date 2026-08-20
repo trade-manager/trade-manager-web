@@ -23,11 +23,11 @@ import java.util.List;
  * @version $Revision: 1.0 $
  */
 @Entity
-@Table(name = "decode")
+@Table(name = "decodetype")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "type", discriminatorType = DiscriminatorType.STRING)
-@DiscriminatorValue("Decode")
-public class Decode extends Aspect implements java.io.Serializable {
+@DiscriminatorValue("DecodeType")
+public class DecodeType extends Aspect implements java.io.Serializable {
 
     @Serial
     private static final long serialVersionUID = 2273276207080568947L;
@@ -38,7 +38,7 @@ public class Decode extends Aspect implements java.io.Serializable {
     @Column(name = "description", nullable = false, length = 100)
     private String description;
 
-    @OneToMany(mappedBy = "decode", fetch = FetchType.EAGER, orphanRemoval = true, cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "decodeType", fetch = FetchType.EAGER, orphanRemoval = true, cascade = {CascadeType.ALL})
     private List<CodeValue> codeValues = new ArrayList<>(0);
 
     public static final String Decode = "Decode";
@@ -47,7 +47,7 @@ public class Decode extends Aspect implements java.io.Serializable {
      * Default constructor for CodeType.
      */
 
-    public Decode() {
+    public DecodeType() {
     }
 
     /**
@@ -55,7 +55,7 @@ public class Decode extends Aspect implements java.io.Serializable {
      *
      * @param type String
      */
-    public Decode(String type) {
+    public DecodeType(String type) {
         this.type = type;
     }
 
@@ -65,7 +65,7 @@ public class Decode extends Aspect implements java.io.Serializable {
      * @param type        String
      * @param description String
      */
-    public Decode(String type, String description) {
+    public DecodeType(String type, String description) {
 
         this.type = type;
         this.description = description;
@@ -134,7 +134,7 @@ public class Decode extends Aspect implements java.io.Serializable {
 
         for (CodeValue codeValueExist : this.codeValues) {
 
-            if (this.getType().equals(codeValue.getDecode().getType()) &&
+            if (this.getType().equals(codeValue.getDecodeType().getType()) &&
                     codeValueExist.getCodeAttribute().getName().equals(codeValue.getCodeAttribute().getName())) {
 
                 return codeValueExist;
@@ -142,7 +142,7 @@ public class Decode extends Aspect implements java.io.Serializable {
         }
 
         this.codeValues.add(codeValue);
-        codeValue.setDecode(this);
+        codeValue.setDecodeType(this);
         return codeValue;
     }
 

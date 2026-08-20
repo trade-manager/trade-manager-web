@@ -90,6 +90,6 @@ public interface CodeTypeService {
      */
     void delete(CodeType codeType);
 
-    List<CodeValue> findByTypeSortedByCodeTypeAndCodeValue(String type);
+    List<DecodeType> findDecodeTypeByType(String type);
 
 }

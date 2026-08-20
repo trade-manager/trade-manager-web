@@ -13,15 +13,7 @@ public abstract class ValueType implements Cloneable, Serializable {
      */
     @Serial
     private static final long serialVersionUID = -8054819773979644420L;
-
     public static final String NONE = " ";
-
-    /**
-     * Default Constructor
-     */
-    public ValueType() {
-
-    }
 
     // All well-behaved ValueTypes must implement this
 
