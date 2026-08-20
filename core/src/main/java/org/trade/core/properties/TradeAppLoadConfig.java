@@ -9,7 +9,7 @@ import java.util.Properties;
 public class TradeAppLoadConfig {
 
     private static final String CORE_PROPERTY_FILE = "core.properties";
-    private static final TradeAppLoadConfig tradeAppLoadConfig = new TradeAppLoadConfig();
+    private static final TradeAppLoadConfig fTradeAppLoadConfig = new TradeAppLoadConfig();
 
     TradeAppLoadConfig() {
     }
@@ -19,6 +19,6 @@ public class TradeAppLoadConfig {
      */
     public static Properties loadAppProperties() throws MissingPropertiesException {
 
-        return ConfigProperties.getDeploymentProperties(tradeAppLoadConfig, CORE_PROPERTY_FILE);
+        return ConfigProperties.getDeploymentProperties(fTradeAppLoadConfig, CORE_PROPERTY_FILE);
     }
 }
