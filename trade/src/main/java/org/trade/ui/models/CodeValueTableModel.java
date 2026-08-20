@@ -1,8 +1,6 @@
 package org.trade.ui.models;
 
 import org.trade.base.TableModel;
-import org.trade.core.persistent.codetype.CodeAttribute;
-import org.trade.core.persistent.codetype.CodeType;
 import org.trade.core.persistent.codetype.CodeValue;
 import org.trade.core.persistent.codetype.DecodeType;
 import org.trade.core.util.CoreUtils;
@@ -118,7 +116,7 @@ public class CodeValueTableModel extends TableModel {
 
     public void addRow() {
 
-        final CodeValue element = new CodeValue(this.data.getCodeValues().getFirst().getCodeAttribute(), this.data,null);
+        final CodeValue element = new CodeValue(this.data.getCodeValues().getFirst().getCodeAttribute(), this.data, null);
         getData().getCodeValues().add(element);
         getData().setDirty(true);
         final List<Object> newRow = new ArrayList<>();
