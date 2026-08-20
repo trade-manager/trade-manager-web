@@ -13,6 +13,7 @@ import org.trade.core.lookup.DBTableLookupServiceProvider;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.codetype.CodeType;
 import org.trade.core.persistent.codetype.CodeValue;
+import org.trade.core.persistent.codetype.DecodeType;
 import org.trade.core.persistent.portfolio.Portfolio;
 import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.persistent.strategy.series.indicator.IndicatorSeries;
@@ -22,6 +23,7 @@ import org.trade.core.valuetype.UIComponentProperties;
 import org.trade.ui.models.AccountTableModel;
 import org.trade.ui.models.AspectTableModel;
 import org.trade.ui.models.CodeAttributeTableModel;
+import org.trade.ui.models.CodeValueTableModel;
 import org.trade.ui.models.IndicatorSeriesTableModel;
 import org.trade.ui.tables.ConfigurationTable;
 import org.trade.ui.widget.ButtonEditor;
@@ -331,7 +333,6 @@ public class ConfigurationPanel extends BasePanel {
          * @param event ListSelectionEvent
          * @see ListSelectionListener#valueChanged(ListSelectionEvent)
          */
-
         public void valueChanged(ListSelectionEvent event) {
 
             if (!event.getValueIsAdjusting()) {
@@ -443,6 +444,12 @@ public class ConfigurationPanel extends BasePanel {
                     ((AccountTableModel) tableModelChild).setData(portfolio);
                     tableChild = new ConfigurationTable(tableModelChild);
                 }
+                case DecodeType decodeType -> {
+
+                    tableModelChild = new CodeValueTableModel();
+                    ((CodeValueTableModel) tableModelChild).setData(decodeType);
+                    tableChild = new ConfigurationTable(tableModelChild);
+                }
                 case null, default -> tableChild = new ConfigurationTable(null);
             }
 
@@ -457,5 +464,4 @@ public class ConfigurationPanel extends BasePanel {
             this.setErrorMessage("Error deleting Strategy.", ex.getMessage(), ex);
         }
     }
-
 }

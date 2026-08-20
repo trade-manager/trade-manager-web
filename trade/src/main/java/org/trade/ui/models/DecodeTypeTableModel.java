@@ -22,7 +22,6 @@ public class DecodeTypeTableModel extends AspectTableModel {
     private static final long serialVersionUID = 3087514589731145479L;
     private static final String TYPE = "Type*";
     private static final String DESCRIPTION = "Description";
-
     Aspects data = null;
 
     public DecodeTypeTableModel() {
