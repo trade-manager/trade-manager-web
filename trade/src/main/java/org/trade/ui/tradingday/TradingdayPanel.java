@@ -7,6 +7,8 @@ import org.trade.core.persistent.ServiceException;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.account.Account;
 import org.trade.core.persistent.codetype.CodeType;
+import org.trade.core.persistent.portfolio.Portfolio;
+import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.persistent.strategy.strategyrule.IStrategyRule;
 import org.trade.core.persistent.tradestrategy.Tradestrategy;
 import org.trade.core.persistent.tradingday.Tradingday;
@@ -254,7 +256,7 @@ public class TradingdayPanel extends BasePanel {
             jSplitPane1.setOneTouchExpandable(true);
             this.add(jSplitPane1);
             DAOPortfolio code = DAOPortfolio.newInstance();
-            org.trade.core.persistent.portfolio.Portfolio portfolio = tradeService.getPortfolioService().findByName(((org.trade.core.persistent.portfolio.Portfolio) Objects.requireNonNull(code).getObject()).getName());
+            Portfolio portfolio = tradeService.getPortfolioService().findByName(((Portfolio) Objects.requireNonNull(code).getObject()).getName());
             this.setPortfolioLabel(portfolio);
             enableTradestrategyButtons(null);
         } catch (Exception ex) {
@@ -534,9 +536,9 @@ public class TradingdayPanel extends BasePanel {
             if (result == JOptionPane.YES_OPTION) {
 
                 this.setStatusBarMessage("Reassign in progress ...\n", BasePanel.INFORMATION);
-                org.trade.core.persistent.strategy.Strategy fromStrategy = ((org.trade.core.persistent.strategy.Strategy) ((DAOStrategy) Objects.requireNonNull(strategyFromEditorComboBox.getSelectedItem()))
+                Strategy fromStrategy = ((Strategy) ((DAOStrategy) Objects.requireNonNull(strategyFromEditorComboBox.getSelectedItem()))
                         .getObject());
-                org.trade.core.persistent.strategy.Strategy toStrategy = ((org.trade.core.persistent.strategy.Strategy) ((DAOStrategy) Objects.requireNonNull(strategyToEditorComboBox.getSelectedItem()))
+                Strategy toStrategy = ((Strategy) ((DAOStrategy) Objects.requireNonNull(strategyToEditorComboBox.getSelectedItem()))
                         .getObject());
                 final ReAssignProgressMonitor reAssignProgressMonitor = new ReAssignProgressMonitor(
                         tradeService, tradingdays, fromStrategy, toStrategy);
@@ -757,7 +759,7 @@ public class TradingdayPanel extends BasePanel {
      *
      * @param portfolio Portfolio
      */
-    public void setPortfolioLabel(final org.trade.core.persistent.portfolio.Portfolio portfolio) {
+    public void setPortfolioLabel(final Portfolio portfolio) {
         try {
             BigDecimal availableFunds = new BigDecimal(0);
             BigDecimal buyingPower = new BigDecimal(0);
@@ -1332,8 +1334,8 @@ public class TradingdayPanel extends BasePanel {
         private final Tradingdays tradingdays;
         private int grandtotal = 0;
         private long startTime = 0;
-        private final org.trade.core.persistent.strategy.Strategy fromStrategy;
-        private org.trade.core.persistent.strategy.Strategy toStrategy;
+        private final Strategy fromStrategy;
+        private Strategy toStrategy;
 
         /**
          * Constructor for ReAssignProgressMonitor.
@@ -1344,7 +1346,7 @@ public class TradingdayPanel extends BasePanel {
          * @param toStrategy   Strategy
          */
         public ReAssignProgressMonitor(TradeService tradeService, Tradingdays tradingdays,
-                                       org.trade.core.persistent.strategy.Strategy fromStrategy, org.trade.core.persistent.strategy.Strategy toStrategy) {
+                                       Strategy fromStrategy, Strategy toStrategy) {
             this.tradingdays = tradingdays;
             this.tradeService = tradeService;
             this.fromStrategy = fromStrategy;

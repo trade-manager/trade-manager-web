@@ -2,6 +2,7 @@ package org.trade.ui.models;
 
 import org.trade.core.aspect.Aspect;
 import org.trade.core.aspect.Aspects;
+import org.trade.core.persistent.account.Account;
 import org.trade.core.persistent.portfolio.Portfolio;
 import org.trade.core.util.CoreUtils;
 import org.trade.core.valuetype.AllocationMethod;
@@ -107,10 +108,10 @@ public class PortfolioTableModel extends AspectTableModel {
             }
             case 4: {
 
-                org.trade.core.persistent.account.Account account = (org.trade.core.persistent.account.Account) ((DAOAccount) value).getObject();
+                Account account = (Account) ((DAOAccount) value).getObject();
                 boolean exists = false;
 
-                for (org.trade.core.persistent.account.Account item : element.getAccounts()) {
+                for (Account item : element.getAccounts()) {
 
                     if (account.getAccountNumber().equals(item.getAccountNumber())) {
 

@@ -5,6 +5,7 @@ import org.trade.core.aspect.Aspect;
 import org.trade.core.aspect.Aspects;
 import org.trade.core.factory.ClassFactory;
 import org.trade.core.persistent.codetype.CodeValue;
+import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.util.CoreUtils;
 import org.trade.core.valuetype.DAOStrategy;
 import org.trade.core.valuetype.UIIndicatorSeries;
@@ -43,9 +44,10 @@ public class IndicatorSeriesTableModel extends TableModel {
             "Specific name for this indicator i.e. 20-MA", null, "If checked display on the main chart",
             "If checked display this indicator as a sub-chart i.e Y-axis not $", null, null};
 
-    org.trade.core.persistent.strategy.Strategy data = null;
+    Strategy data = null;
 
     public IndicatorSeriesTableModel() {
+
         super(columnHeaderToolTip);
 
         columnNames = new String[8];
@@ -64,7 +66,7 @@ public class IndicatorSeriesTableModel extends TableModel {
      *
      * @return Strategy
      */
-    public org.trade.core.persistent.strategy.Strategy getData() {
+    public Strategy getData() {
         return data;
     }
 
@@ -73,7 +75,7 @@ public class IndicatorSeriesTableModel extends TableModel {
      *
      * @param data Strategy
      */
-    public void setData(org.trade.core.persistent.strategy.Strategy data) {
+    public void setData(Strategy data) {
 
         this.data = data;
         this.clearAll();
@@ -121,7 +123,7 @@ public class IndicatorSeriesTableModel extends TableModel {
 
         switch (column) {
             case 0: {
-                element.setStrategy((org.trade.core.persistent.strategy.Strategy) ((DAOStrategy) value).getObject());
+                element.setStrategy((Strategy) ((DAOStrategy) value).getObject());
                 break;
             }
             case 1: {
@@ -216,7 +218,7 @@ public class IndicatorSeriesTableModel extends TableModel {
      * @param description String
      * @return IndicatorSeries
      */
-    private org.trade.core.persistent.strategy.series.indicator.IndicatorSeries getIndicatorSeries(org.trade.core.persistent.strategy.Strategy strategy, String name, String type, String description) {
+    private org.trade.core.persistent.strategy.series.indicator.IndicatorSeries getIndicatorSeries(Strategy strategy, String name, String type, String description) {
 
         try {
 

@@ -1,5 +1,6 @@
 package org.trade.ui.tables.renderer;
 
+import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.persistent.strategy.strategyrule.IStrategyRule;
 import org.trade.core.persistent.tradestrategy.Tradestrategy;
 import org.trade.core.valuetype.DAOStrategy;
@@ -52,7 +53,7 @@ public class StrategyRenderer extends DefaultTableCellRenderer {
             if (row > -1 && ((DAOStrategy) dAOStrategy).isValid()) {
                 Tradestrategy transferObject = ((TradestrategyTableModel) table.getModel()).getData()
                         .getTradestrategies().get(table.convertRowIndexToModel(row));
-                String key = ((org.trade.core.persistent.strategy.Strategy) ((DAOStrategy) dAOStrategy).getObject()).getClassName()
+                String key = ((Strategy) ((DAOStrategy) dAOStrategy).getObject()).getClassName()
                         + transferObject.getId();
                 if (this.strategyWorkers.containsKey(key) && !isSelected) {
                     if (this.strategyWorkers.get(key).isDone()) {

@@ -2,6 +2,7 @@ package org.trade.ui.tradingday;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.trade.core.persistent.portfolio.Portfolio;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.valuetype.DAOPortfolio;
 import org.trade.core.valuetype.Decode;
@@ -30,14 +31,14 @@ public class ConnectionPane extends JPanel {
     private JTextField hostTextField = null;
     private JFormattedTextField portTextField = null;
     private JFormattedTextField clientIdTextField = null;
-    private org.trade.core.persistent.portfolio.Portfolio portfolio = null;
+    private Portfolio portfolio = null;
 
     public ConnectionPane() throws ValueTypeException {
 
         portTextField = new JFormattedTextField(createFormatter("####"));
         clientIdTextField = new JFormattedTextField(createFormatter("#"));
         hostTextField = new JTextField();
-        portfolio = (org.trade.core.persistent.portfolio.Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
+        portfolio = (Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
         int clientId = 0;
         int port = 7496;
         String host = "localhost";
@@ -60,7 +61,7 @@ public class ConnectionPane extends JPanel {
         portfolioEditorComboBox.addItemListener(e -> {
             if (e.getStateChange() == ItemEvent.SELECTED) {
                 if (!Decode.NONE.equals(((DAOPortfolio) e.getItem()).getDisplayName())) {
-                    portfolio = (org.trade.core.persistent.portfolio.Portfolio) ((DAOPortfolio) e.getItem()).getObject();
+                    portfolio = (Portfolio) ((DAOPortfolio) e.getItem()).getObject();
                 }
             }
         });
@@ -124,7 +125,7 @@ public class ConnectionPane extends JPanel {
      *
      * @return Portfolio
      */
-    public org.trade.core.persistent.portfolio.Portfolio getPortfolio() {
+    public Portfolio getPortfolio() {
         return portfolio;
     }
 

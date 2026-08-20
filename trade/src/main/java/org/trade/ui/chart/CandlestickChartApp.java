@@ -16,6 +16,8 @@ import org.trade.core.factory.ClassFactory;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.persistent.candle.Candle;
 import org.trade.core.persistent.contract.Contract;
+import org.trade.core.persistent.portfolio.Portfolio;
+import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.persistent.tradeorder.TradeOrder;
 import org.trade.core.persistent.tradeposition.TradePosition;
 import org.trade.core.persistent.tradestrategy.Tradestrategy;
@@ -110,9 +112,9 @@ public class CandlestickChartApp extends BasePanel implements IBrokerChangeListe
                 endDate = TradingCalendar.getTradingDayEnd(TradingCalendar.getPrevTradingDay(endDate));
                 ZonedDateTime startDate = TradingCalendar.getTradingDayStart(endDate);
 
-                org.trade.core.persistent.strategy.Strategy daoStrategy = (org.trade.core.persistent.strategy.Strategy) DAOStrategy.newInstance().getObject();
+                Strategy daoStrategy = (Strategy) DAOStrategy.newInstance().getObject();
                 String name = daoStrategy.getName();
-                org.trade.core.persistent.strategy.Strategy strategy = _tradeService.getStrategyService().findByName(name);
+                Strategy strategy = _tradeService.getStrategyService().findByName(name);
                 Tradestrategy tradestrategy = getTradestrategy(contract, strategy, ChartDays.ONE_DAY, BarSize.FIVE_MIN, startDate, endDate);
                 runStrategy(_tradeService, tradestrategy, true);
 
@@ -363,11 +365,11 @@ public class CandlestickChartApp extends BasePanel implements IBrokerChangeListe
         Toolkit.getDefaultToolkit().getSystemEventQueue().push(waitQue);
     }
 
-    private static Tradestrategy getTradestrategy(Contract contract, org.trade.core.persistent.strategy.Strategy strategy, Integer chartDays, Integer barSize, ZonedDateTime open, ZonedDateTime close) {
+    private static Tradestrategy getTradestrategy(Contract contract, Strategy strategy, Integer chartDays, Integer barSize, ZonedDateTime open, ZonedDateTime close) {
 
         Tradingday tradingday = new Tradingday(open, close);
         Tradestrategy tradestrategy;
-        org.trade.core.persistent.portfolio.Portfolio portfolio = (org.trade.core.persistent.portfolio.Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
+        Portfolio portfolio = (Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
         int riskAmount = 0;
 
         try {

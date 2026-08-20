@@ -2,6 +2,8 @@ package org.trade.ui.models;
 
 import org.trade.base.TableModel;
 import org.trade.core.persistent.contract.Contract;
+import org.trade.core.persistent.portfolio.Portfolio;
+import org.trade.core.persistent.strategy.Strategy;
 import org.trade.core.persistent.tradestrategy.Tradestrategy;
 import org.trade.core.persistent.tradingday.Tradingday;
 import org.trade.core.persistent.tradingday.Tradingdays;
@@ -255,7 +257,7 @@ public class TradestrategyTableModel extends TableModel {
             }
             case 5: {
 
-                final org.trade.core.persistent.strategy.Strategy strategy = (org.trade.core.persistent.strategy.Strategy) ((DAOStrategy) value).getObject();
+                final Strategy strategy = (Strategy) ((DAOStrategy) value).getObject();
                 element.setStrategy(strategy);
 
                 if (strategy.hasStrategyManager()) {
@@ -270,12 +272,12 @@ public class TradestrategyTableModel extends TableModel {
             }
             case 6: {
 
-                element.getStrategy().setStrategyManager((org.trade.core.persistent.strategy.Strategy) ((DAOStrategyManager) value).getObject());
+                element.getStrategy().setStrategyManager((Strategy) ((DAOStrategyManager) value).getObject());
                 break;
             }
             case 7: {
 
-                org.trade.core.persistent.portfolio.Portfolio portfolio = (org.trade.core.persistent.portfolio.Portfolio) ((DAOPortfolio) value).getObject();
+                Portfolio portfolio = (Portfolio) ((DAOPortfolio) value).getObject();
                 element.setPortfolio(portfolio);
                 break;
             }
@@ -347,8 +349,8 @@ public class TradestrategyTableModel extends TableModel {
     public void deleteRow(int selectedRow) {
 
         String symbol = ((String) this.getValueAt(selectedRow, 2)).trim().toUpperCase();
-        final org.trade.core.persistent.strategy.Strategy strategy = (org.trade.core.persistent.strategy.Strategy) ((DAOStrategy) this.getValueAt(selectedRow, 5)).getObject();
-        org.trade.core.persistent.portfolio.Portfolio portfolio = (org.trade.core.persistent.portfolio.Portfolio) ((DAOPortfolio) this.getValueAt(selectedRow, 7)).getObject();
+        final Strategy strategy = (Strategy) ((DAOStrategy) this.getValueAt(selectedRow, 5)).getObject();
+        Portfolio portfolio = (Portfolio) ((DAOPortfolio) this.getValueAt(selectedRow, 7)).getObject();
         int barSize = Integer.parseInt(((BarSize) this.getValueAt(selectedRow, 8)).getValue());
         String currency = ((Currency) this.getValueAt(selectedRow, 14)).getCode();
         String exchange = ((Exchange) this.getValueAt(selectedRow, 15)).getCode();
@@ -381,8 +383,8 @@ public class TradestrategyTableModel extends TableModel {
         Tradingday tradingday = getData();
         Tradestrategy tradestrategy = null;
         String strategyName;
-        org.trade.core.persistent.strategy.Strategy strategy = (org.trade.core.persistent.strategy.Strategy) DAOStrategy.newInstance().getObject();
-        org.trade.core.persistent.portfolio.Portfolio portfolio = (org.trade.core.persistent.portfolio.Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
+        Strategy strategy = (Strategy) DAOStrategy.newInstance().getObject();
+        Portfolio portfolio = (Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
         int chartDays = ChartDays.ONE_DAY;
         Integer barSize = BarSize.FIVE_MIN;
         int riskAmount = 0;
@@ -409,7 +411,7 @@ public class TradestrategyTableModel extends TableModel {
 
                 if (null != strategyName) {
 
-                    strategy = (org.trade.core.persistent.strategy.Strategy) DAOStrategy.newInstance(strategyName).getObject();
+                    strategy = (Strategy) DAOStrategy.newInstance(strategyName).getObject();
                 }
 
                 tradestrategy = Tradingdays

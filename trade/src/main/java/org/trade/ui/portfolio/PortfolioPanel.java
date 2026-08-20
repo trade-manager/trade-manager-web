@@ -7,6 +7,7 @@ import org.trade.base.ExampleFileFilter;
 import org.trade.base.FilePreviewer;
 import org.trade.base.Table;
 import org.trade.core.persistent.TradeService;
+import org.trade.core.persistent.portfolio.Portfolio;
 import org.trade.core.persistent.tradelogdetail.TradelogDetail;
 import org.trade.core.persistent.tradelogdetail.TradelogReport;
 import org.trade.core.persistent.tradelogsummary.TradelogSummary;
@@ -70,7 +71,7 @@ public class PortfolioPanel extends BasePanel implements ChangeListener, ItemLis
     private DAODecodeComboBoxEditor portfolioEditorComboBox = null;
     private static final String DATEFORMAT = "MM/dd/yyyy";
     private TradelogDetail selectedTradelogDetail = null;
-    private org.trade.core.persistent.portfolio.Portfolio portfolio = null;
+    private Portfolio portfolio = null;
     private final MoneyField lossGainAmt = new MoneyField();
 
     private static final String MASK = "**********";
@@ -100,7 +101,7 @@ public class PortfolioPanel extends BasePanel implements ChangeListener, ItemLis
             portfolioEditorComboBox = new DAODecodeComboBoxEditor(Objects.requireNonNull(DAOPortfolio.newInstance()).getCodesDecodes());
             DecodeComboBoxRenderer portfolioRenderer = new DecodeComboBoxRenderer();
             portfolioEditorComboBox.setRenderer(portfolioRenderer);
-            this.portfolio = (org.trade.core.persistent.portfolio.Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
+            this.portfolio = (Portfolio) Objects.requireNonNull(DAOPortfolio.newInstance()).getObject();
             portfolioEditorComboBox.setItem(DAOPortfolio.newInstance());
             portfolioEditorComboBox.addItemListener(this);
 
@@ -237,7 +238,7 @@ public class PortfolioPanel extends BasePanel implements ChangeListener, ItemLis
     public void itemStateChanged(ItemEvent e) {
 
         if (e.getStateChange() == ItemEvent.SELECTED) {
-            this.portfolio = (org.trade.core.persistent.portfolio.Portfolio) ((DAOPortfolio) e.getItem()).getObject();
+            this.portfolio = (Portfolio) ((DAOPortfolio) e.getItem()).getObject();
         }
     }
 
