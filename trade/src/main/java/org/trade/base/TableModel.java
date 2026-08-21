@@ -44,6 +44,7 @@ public abstract class TableModel extends AbstractTableModel {
     public abstract void deleteRow(int selectedRow);
 
     public void clearAll() {
+
         int rowSize = rows.size() - 1;
         if (rowSize > -1) {
             rows.forEach(List::clear);
@@ -77,7 +78,9 @@ public abstract class TableModel extends AbstractTableModel {
      * @see javax.swing.table.TableModel#getColumnName(int)
      */
     public String getColumnName(int column) {
+
         if (columnNames[column] != null) {
+
             return columnNames[column];
         } else {
             return "";
@@ -181,7 +184,9 @@ public abstract class TableModel extends AbstractTableModel {
      * @return Object
      */
     public Object getColumnDataValue(Object currValue, Object newValue) {
+
         Object returnValue = currValue;
+
         if (null != newValue) {
             returnValue = newValue;
         }

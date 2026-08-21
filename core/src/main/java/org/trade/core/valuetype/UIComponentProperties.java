@@ -1,5 +1,8 @@
 package org.trade.core.valuetype;
 
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+
 import java.io.Serial;
 
 /**
@@ -9,6 +12,8 @@ import java.io.Serial;
  * @author Simon Allen
  * @version $Id: BasePropertyCodes.java,v 1.15 2002/01/22 22:48:21 simon Exp $
  */
+@Entity
+@DiscriminatorValue("UIComponentProperties")
 public class UIComponentProperties extends Decode {
     /**
      *

@@ -1,5 +1,7 @@
 package org.trade.core.valuetype;
 
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
 import org.trade.core.persistent.codetype.Entrylimit;
 
 import java.io.Serial;
@@ -10,6 +12,8 @@ import java.util.ListIterator;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
+@Entity
+@DiscriminatorValue("DAOEntryLimit")
 public class DAOEntryLimit extends DAODecode {
 
     @Serial

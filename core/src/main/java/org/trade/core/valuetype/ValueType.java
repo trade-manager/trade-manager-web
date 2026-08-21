@@ -1,5 +1,7 @@
 package org.trade.core.valuetype;
 
+import org.trade.core.persistent.codetype.DecodeType;
+
 import java.io.Serial;
 import java.io.Serializable;
 
@@ -7,7 +9,7 @@ import java.io.Serializable;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
-public abstract class ValueType implements Cloneable, Serializable {
+public abstract class ValueType extends DecodeType {
     /**
      *
      */
@@ -45,7 +47,4 @@ public abstract class ValueType implements Cloneable, Serializable {
         return String.class;
     }
 
-    public Object clone() throws CloneNotSupportedException {
-        return (super.clone());
-    }
 }

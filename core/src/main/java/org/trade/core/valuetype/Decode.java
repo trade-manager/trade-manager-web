@@ -321,38 +321,6 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
     }
 
     /**
-     * Method equals. Use Default Implementations for these 3 methods at the
-     * moment
-     *
-     * @param objectToCompare Object
-     * @return boolean
-     * @see Comparator#equals(Object)
-     */
-    public boolean equals(Object objectToCompare) {
-
-        if (this == objectToCompare) {
-
-            return true;
-        }
-
-        if (objectToCompare == null) {
-
-            return false;
-        }
-        if (objectToCompare instanceof Decode) {
-
-            if (null == this.getCode()) {
-
-                return false;
-            }
-
-            return this.getCode().equals(((Decode) objectToCompare).getCode());
-        }
-
-        return false;
-    }
-
-    /**
      * Method hashCode.
      *
      * @return int

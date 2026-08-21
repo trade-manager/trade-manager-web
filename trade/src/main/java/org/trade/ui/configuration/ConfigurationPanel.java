@@ -343,6 +343,7 @@ public class ConfigurationPanel extends BasePanel {
 
                     Aspect transferObject = tableModel.getData().getAspects()
                             .get(configTable.convertRowIndexToModel(model.getLeadSelectionIndex()));
+                    tableModel.setSelectRowValue(transferObject);
                     propertiesButton.setEnabled(false);
                     setChildPanel(transferObject);
                 }
