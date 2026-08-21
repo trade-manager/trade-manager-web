@@ -30,7 +30,6 @@ public class IndicatorParametersTableModel extends AspectTableModel {
         columnNames = new String[2];
         columnNames[0] = NAME;
         columnNames[1] = DESCRIPTION;
-
     }
 
     /**

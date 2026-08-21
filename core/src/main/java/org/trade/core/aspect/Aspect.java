@@ -16,7 +16,7 @@ import java.time.ZonedDateTime;
  * @version $Revision: 1.0 $
  */
 @MappedSuperclass
-public abstract class Aspect extends AbstractPersistable<Long> {
+public abstract class Aspect extends AbstractPersistable<Long> implements Cloneable {
 
     @Version
     @Column(name = "version", columnDefinition = "integer DEFAULT 0", nullable = false)
@@ -192,5 +192,9 @@ public abstract class Aspect extends AbstractPersistable<Long> {
      */
     public void setDirty(boolean dirty) {
         this.dirty = dirty;
+    }
+
+    public Object clone() throws CloneNotSupportedException {
+        return (super.clone());
     }
 }
