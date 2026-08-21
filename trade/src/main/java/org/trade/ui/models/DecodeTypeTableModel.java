@@ -107,7 +107,7 @@ public class DecodeTypeTableModel extends AspectTableModel {
         for (final Aspect element : getData().getAspects()) {
 
             if (CoreUtils.nullSafeComparator(element.getId(), name) == 0) {
-                
+
                 getData().remove(element);
                 getData().setDirty(true);
                 final List<Object> currRow = rows.get(selectedRow);
