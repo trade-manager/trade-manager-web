@@ -22,13 +22,13 @@ public class UIComponentProperties extends Decode {
     private static final long serialVersionUID = -2178313262496336078L;
 
     public static final String CODE_DECODE_IDENTIFIER = "UIComponent";
-    public static final String DECODE =  "Properties";
+    public static final String DECODE = "Properties";
 
-    public static final String UI_COMPONENT_TOOL_TIP =  "tool_tip";
-    public static final String UI_COMPONENT_ENABLED = "enabled";
-    public static final String UI_COMPONENT_MNEMONIC = "mnemonic";
-    public static final String UI_COMPONENT_IMAGE =  "image";
-    public static final String UI_COMPONENT_METHOD =  "method";
+    public static final String UI_COMPONENT_TOOL_TIP = CODE_DECODE_IDENTIFIER + "tool_tip";
+    public static final String UI_COMPONENT_ENABLED = CODE_DECODE_IDENTIFIER + "enabled";
+    public static final String UI_COMPONENT_MNEMONIC = CODE_DECODE_IDENTIFIER + "mnemonic";
+    public static final String UI_COMPONENT_IMAGE = CODE_DECODE_IDENTIFIER + "image";
+    public static final String UI_COMPONENT_METHOD = CODE_DECODE_IDENTIFIER + "method";
 
     public static final String ABOUT = "ABOUT";
     public static final String CALCULATE = "CALCULATE";
