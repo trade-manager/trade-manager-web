@@ -18,7 +18,7 @@ public class OverrideConstraints extends Decode {
      */
     @Serial
     private static final long serialVersionUID = -5381026427696898592L;
-    public static final String DECODE = "OVERRIDE_CONSTRAINTS";
+    public static final String DECODE = "OverrideConstraints";
     public static final int YES = 1;
 
     public OverrideConstraints() {

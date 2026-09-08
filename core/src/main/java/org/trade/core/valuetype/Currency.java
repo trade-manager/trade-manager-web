@@ -15,7 +15,7 @@ public class Currency extends Decode {
 
     @Serial
     private static final long serialVersionUID = -5381026427696898592L;
-    public static final String DECODE = "CURRENCY";
+    public static final String DECODE = "Currency";
     public static final String USD = "USD";
 
     public Currency() {

@@ -15,7 +15,7 @@ public class TradestrategyStatus extends Decode {
 
     @Serial
     private static final long serialVersionUID = -5381026427696898592L;
-    public static final String DECODE = "TRADESTRATEGY_STATUS";
+    public static final String DECODE = "TradestrategyStatus";
     public static final String TO = "TO";
     public static final String GB = "GB";
     public static final String RB = "RB";

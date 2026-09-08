@@ -15,7 +15,7 @@ public class MarketBias extends Decode {
 
     @Serial
     private static final long serialVersionUID = -5381026427696898592L;
-    public static final String DECODE = "MKT_BIAS";
+    public static final String DECODE = "MarketBias";
 
     public MarketBias() {
         super(DECODE);

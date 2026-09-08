@@ -18,10 +18,7 @@ public class DAOStrategyManager extends DAODecode {
 
     @Serial
     private static final long serialVersionUID = -5381026427696898592L;
-    public static final String DECODE = "STRATEGY_MANAGER";
-    public static final String _TABLE = "_TABLE";
-    public static final String _TABLE_ID = "_TABLE_ID";
-    public static final String _COLUMN = "_COLUMN";
+    public static final String DECODE = "DAOStrategyManager";
 
     public DAOStrategyManager() {
         super(DECODE, true);

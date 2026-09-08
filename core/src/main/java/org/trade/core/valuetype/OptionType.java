@@ -18,7 +18,7 @@ public class OptionType extends Decode {
      */
     @Serial
     private static final long serialVersionUID = -5381026427696898592L;
-    public static final String DECODE = "OPTION_TYPE";
+    public static final String DECODE = "OptionType";
     public static final String PUT = "P";
     public static final String CALL = "C";
 

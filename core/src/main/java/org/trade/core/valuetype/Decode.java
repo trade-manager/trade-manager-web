@@ -36,27 +36,27 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
     /**
      * The ILookup Identifier for CODE_DECODE values
      */
-    public static final String CODE_DECODE_IDENTIFIER = "CODE_DECODE";
-
-    static {
-        // Register the appropriate converters
-        JavaTypeTranslator.registerDynamicTypeConverter(new ObjectToDecode());
-        JavaTypeTranslator.registerDynamicTypeConverter(new DecodeToObject());
-    }
+    public static final String CODE_DECODE_IDENTIFIER = "CodeDecode";
 
     /**
      * The Column identifier's that should be returned in the ILookup
      */
-    public static final String _TYPE = "_TYPE";
-    public static final String _CODE = "_CODE";
-    public static final String _VALUE = "_VALUE";
-    public static final String _DISPLAY_NAME = "_DISPLAY_NAME";
+    public static final String _TYPE = "type";
+    public static final String _CODE = "code";
+    public static final String _VALUE = "value";
+    public static final String _DISPLAY_NAME = "display_name";
 
     private String fCodeDecodeType = "";
     private String fCodeDecodeIdentifier = "";
     private ILookup fLookup = null;
     private Object fBadValue = null;
     protected static Boolean fAscending = true;
+
+    static {
+        // Register the appropriate converters
+        JavaTypeTranslator.registerDynamicTypeConverter(new ObjectToDecode());
+        JavaTypeTranslator.registerDynamicTypeConverter(new DecodeToObject());
+    }
 
     /**
      * Default Constructor
@@ -155,6 +155,7 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
      * will give the error message and isValid will be false
      */
     public boolean isEmpty() {
+
         return (getCode().isEmpty()) && ((null == fBadValue) || (fBadValue.equals("")));
     }
 
@@ -214,6 +215,8 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
      */
     public String getCode() {
 
+        // return super.getValue(_CODE);
+
         String rVal = "";
 
         try {
@@ -236,6 +239,8 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
      */
     public String getValue() {
 
+        // return super.getValue(_VALUE);
+
         String rVal = "";
 
         try {
@@ -257,8 +262,10 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
      * @param key String
      * @return The current code for the object, "" if not set.
      */
+
     public String getValue(String key) {
 
+        //    return super.getValue(key);
         String rVal = "";
 
         try {
@@ -292,6 +299,7 @@ public class Decode extends ValueType implements Comparator<Decode>, Comparable<
      */
     public String getDisplayName() {
 
+        // return super.getValue( _DISPLAY_NAME);
         String rVal = "";
 
         try {

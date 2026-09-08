@@ -18,7 +18,7 @@ public class OrderStatus extends Decode {
      */
     @Serial
     private static final long serialVersionUID = -5381026427696898592L;
-    public static final String DECODE = "ORDER_STATUS";
+    public static final String DECODE = "OrderStatus";
     public static final String UNSUBMIT = "UNSUBMIT";
     public static final String FILLED = "FILLED";
     public static final String SUBMITTED = "SUBMITTED";

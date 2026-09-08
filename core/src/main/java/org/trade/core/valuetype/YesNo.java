@@ -18,9 +18,9 @@ public class YesNo extends Decode {
     @Serial
     private static final long serialVersionUID = -1288975993214301679L;
 
+    public static final String DECODE = "YesNo";
     public static final String NO = "false";
     public static final String YES = "true";
-    public static final String DECODE = "YES_NO";
 
     public YesNo() {
         super(DECODE);

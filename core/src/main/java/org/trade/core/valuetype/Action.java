@@ -15,7 +15,7 @@ public class Action extends Decode {
 
     @Serial
     private static final long serialVersionUID = -5381026427696898592L;
-    public static final String DECODE = "ACTION";
+    public static final String DECODE = "Action";
     public static final String SELL = "SELL";
     public static final String BUY = "BUY";
 

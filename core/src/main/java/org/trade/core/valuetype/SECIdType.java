@@ -18,7 +18,7 @@ public class SECIdType extends Decode {
      */
     @Serial
     private static final long serialVersionUID = -5381026427696898592L;
-    public static final String DECODE = "SEC_ID_TYPE";
+    public static final String DECODE = "SECIdType";
 
     public SECIdType() {
         super(DECODE);

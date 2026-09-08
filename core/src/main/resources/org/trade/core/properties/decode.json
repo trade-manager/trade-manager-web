@@ -53,6 +53,11 @@
   "CodeDecode": {
     "AccountType": [
       {
+        "display_name": "None",
+        "value": "NONE",
+        "code": "NONE"
+      },
+      {
         "display_name": "Institution",
         "value": "CORPORATION",
         "code": "CORPORATION"
@@ -84,6 +89,11 @@
       }
     ],
     "BarSize": [
+      {
+        "display_name": "None",
+        "value": "NONE",
+        "code": "NONE"
+      },
       {
         "display_name": "1 min",
         "value": "60",
@@ -136,6 +146,11 @@
       }
     ],
     "MarketBar": [
+      {
+        "display_name": "None",
+        "value": "NONE",
+        "code": "NONE"
+      },
       {
         "display_name": "+NRB",
         "value": "+NRB",
@@ -205,11 +220,6 @@
         "display_name": "-WRB +/-20% Tail",
         "value": "-2020",
         "code": "-2020"
-      },
-      {
-        "display_name": "None",
-        "value": "NONE",
-        "code": "NONE"
       }
     ],
     "TriggerMethod": [
@@ -267,6 +277,11 @@
       }
     ],
     "Tier": [
+      {
+        "display_name": "None",
+        "value": "NONE",
+        "code": "NONE"
+      },
       {
         "display_name": "1",
         "value": "1",
@@ -509,6 +524,11 @@
     ],
     "AllocationMethod": [
       {
+        "display_name": "None",
+        "value": "NONE",
+        "code": "NONE"
+      },
+      {
         "display_name": "AvailableEquity",
         "value": "AvailableEquity",
         "code": "AvailableEquity"
@@ -653,6 +673,11 @@
       }
     ],
     "PriceSource": [
+      {
+        "display_name": "None",
+        "value": "NONE",
+        "code": "NONE"
+      },
       {
         "display_name": "Close",
         "value": "1",
@@ -1029,7 +1054,7 @@
     ]
   },
   "UIComponent": {
-    "UIComponentProperties": [
+    "Properties": [
       {
         "image": "save.gif",
         "method": "doSave",

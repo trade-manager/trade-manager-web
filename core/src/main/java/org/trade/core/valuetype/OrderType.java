@@ -18,7 +18,7 @@ public class OrderType extends Decode {
      */
     @Serial
     private static final long serialVersionUID = -5381026427696898592L;
-    public static final String DECODE = "ORDER_TYPE";
+    public static final String DECODE = "OrderType";
     public static final String LMT = "LMT";
     public static final String STP = "STP";
     public static final String STPLMT = "STPLMT";

@@ -226,7 +226,7 @@ COMMIT//
 INSERT INTO userrole (id, user_id, role_id) VALUES (1, 1, 1)//
 COMMIT//
 
-INSERT INTO codetype (id, name, type, category, description) VALUES(12,'UIComponentProperties','CodeType','UIComponent','UIComponentProperties::UIComponent')//
+INSERT INTO codetype (id, name, type, category, description) VALUES(12,'Properties','CodeType','UIComponent','Properties::UIComponent')//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(34,'tool_tip','tool_tip',null,'java.lang.String',null, 12)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(35,'image','image',null,'java.lang.String',null, 12)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(36,'code','code',null,'java.lang.String',null, 12)//
@@ -234,7 +234,7 @@ INSERT INTO codeattribute (id, name, description, default_value, class_name, cla
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(38,'mnemonic','mnemonic',null,'java.lang.String',null, 12)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(39,'display_name','display_name',null,'java.lang.String',null, 12)//
 INSERT INTO codeattribute (id, name, description, default_value, class_name, class_editor_name, code_type_id) VALUES(40,'enabled','enabled',null,'java.lang.String',null, 12)//
-INSERT INTO decodetype (id, type, description) VALUES(1,'UIComponentProperties','Decode of type UIComponentProperties.')//
+INSERT INTO decodetype (id, type, description) VALUES(1,'Properties','Decode of type Properties.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(50,'Save','1',34,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(51,'save.gif','1',35,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(52,'SAVE','1',36,null, null)//
@@ -242,7 +242,7 @@ INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicat
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(54,'S','1',38,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(55,'Save','1',39,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(56,'true','1',40,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(2,'UIComponentProperties','Decode of type UIComponentProperties.')//
+INSERT INTO decodetype (id, type, description) VALUES(2,'Properties','Decode of type Properties.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(57,'Open File','2',34,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(58,'openFile.gif','2',35,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(59,'OPEN_FILE','2',36,null, null)//
@@ -250,7 +250,7 @@ INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicat
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(61,'F','2',38,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(62,'Open File','2',39,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(63,'true','2',40,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(3,'UIComponentProperties','Decode of type UIComponentProperties.')//
+INSERT INTO decodetype (id, type, description) VALUES(3,'Properties','Decode of type Properties.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(64,'Print','3',34,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(65,'Prnt_up.gif','3',35,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(66,'PRINT','3',36,null, null)//
@@ -258,7 +258,7 @@ INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicat
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(68,'P','3',38,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(69,'Print','3',39,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(70,'true','3',40,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(4,'UIComponentProperties','Decode of type UIComponentProperties.')//
+INSERT INTO decodetype (id, type, description) VALUES(4,'Properties','Decode of type Properties.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(71,'Calc','4',34,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(72,'calculation.gif','4',35,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(73,'CALCULATE','4',36,null, null)//
@@ -266,7 +266,7 @@ INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicat
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(75,'C','4',38,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(76,'Calculate','4',39,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(77,'true','4',40,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(5,'UIComponentProperties','Decode of type UIComponentProperties.')//
+INSERT INTO decodetype (id, type, description) VALUES(5,'Properties','Decode of type Properties.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(78,'Save','5',34,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(79,'save.gif','5',35,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(80,'SAVE_AS','5',36,null, null)//
@@ -274,7 +274,7 @@ INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicat
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(82,'S','5',38,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(83,'Save As','5',39,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(84,'true','5',40,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(6,'UIComponentProperties','Decode of type UIComponentProperties.')//
+INSERT INTO decodetype (id, type, description) VALUES(6,'Properties','Decode of type Properties.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(85,'New','6',34,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(86,'new.gif','6',35,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(87,'NEW','6',36,null, null)//
@@ -282,7 +282,7 @@ INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicat
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(89,'N','6',38,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(90,'New','6',39,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(91,'true','6',40,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(7,'UIComponentProperties','Decode of type UIComponentProperties.')//
+INSERT INTO decodetype (id, type, description) VALUES(7,'Properties','Decode of type Properties.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(92,'Close','7',34,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(93,'closeFile.gif','7',35,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(94,'CLOSE_FILE','7',36,null, null)//
@@ -290,7 +290,7 @@ INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicat
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(96,'o','7',38,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(97,'Close File','7',39,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(98,'true','7',40,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(8,'UIComponentProperties','Decode of type UIComponentProperties.')//
+INSERT INTO decodetype (id, type, description) VALUES(8,'Properties','Decode of type Properties.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(99,'Help','8',34,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(100,'help.gif','8',35,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(101,'HELP','8',36,null, null)//
@@ -298,7 +298,7 @@ INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicat
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(103,'H','8',38,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(104,'Help','8',39,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(105,'true','8',40,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(9,'UIComponentProperties','Decode of type UIComponentProperties.')//
+INSERT INTO decodetype (id, type, description) VALUES(9,'Properties','Decode of type Properties.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(106,'Cut','9',34,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(107,'cut.gif','9',35,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(108,'CUT','9',36,null, null)//
@@ -306,7 +306,7 @@ INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicat
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(110,'u','9',38,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(111,'Cut','9',39,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(112,'true','9',40,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(10,'UIComponentProperties','Decode of type UIComponentProperties.')//
+INSERT INTO decodetype (id, type, description) VALUES(10,'Properties','Decode of type Properties.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(113,'Copy','10',34,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(114,'copy.gif','10',35,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(115,'COPY','10',36,null, null)//
@@ -314,7 +314,7 @@ INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicat
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(117,'C','10',38,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(118,'Copy','10',39,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(119,'true','10',40,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(11,'UIComponentProperties','Decode of type UIComponentProperties.')//
+INSERT INTO decodetype (id, type, description) VALUES(11,'Properties','Decode of type Properties.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(120,'Paste','11',34,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(121,'paste.gif','11',35,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(122,'PASTE','11',36,null, null)//
@@ -322,7 +322,7 @@ INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicat
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(124,'a','11',38,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(125,'Paste','11',39,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(126,'true','11',40,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(12,'UIComponentProperties','Decode of type UIComponentProperties.')//
+INSERT INTO decodetype (id, type, description) VALUES(12,'Properties','Decode of type Properties.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(127,'Close','12',34,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(128,'close.gif','12',35,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(129,'CLOSE','12',36,null, null)//
@@ -330,7 +330,7 @@ INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicat
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(131,'','12',38,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(132,'Close','12',39,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(133,'true','12',40,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(13,'UIComponentProperties','Decode of type UIComponentProperties.')//
+INSERT INTO decodetype (id, type, description) VALUES(13,'Properties','Decode of type Properties.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(134,'Results','13',34,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(135,'results.gif','13',35,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(136,'RESULTS','13',36,null, null)//
@@ -338,7 +338,7 @@ INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicat
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(138,'R','13',38,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(139,'Results','13',39,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(140,'true','13',40,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(14,'UIComponentProperties','Decode of type UIComponentProperties.')//
+INSERT INTO decodetype (id, type, description) VALUES(14,'Properties','Decode of type Properties.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(141,'Connect','14',34,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(142,'','14',35,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(143,'CONNECT','14',36,null, null)//
@@ -346,7 +346,7 @@ INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicat
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(145,'','14',38,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(146,'Connect','14',39,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(147,'true','14',40,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(15,'UIComponentProperties','Decode of type UIComponentProperties.')//
+INSERT INTO decodetype (id, type, description) VALUES(15,'Properties','Decode of type Properties.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(148,'Disconnect','15',34,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(149,'','15',35,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(150,'DISCONNECT','15',36,null, null)//
@@ -354,7 +354,7 @@ INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicat
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(152,'','15',38,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(153,'Disconnect','15',39,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(154,'true','15',40,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(16,'UIComponentProperties','Decode of type UIComponentProperties.')//
+INSERT INTO decodetype (id, type, description) VALUES(16,'Properties','Decode of type Properties.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(155,'Refresh','16',34,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(156,'refresh.gif','16',35,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(157,'REFRESH','16',36,null, null)//
@@ -362,7 +362,7 @@ INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicat
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(159,'','16',38,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(160,'Refresh','16',39,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(161,'true','16',40,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(17,'UIComponentProperties','Decode of type UIComponentProperties.')//
+INSERT INTO decodetype (id, type, description) VALUES(17,'Properties','Decode of type Properties.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(162,'Next','17',34,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(163,'','17',35,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(164,'NEXT','17',36,null, null)//
@@ -370,7 +370,7 @@ INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicat
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(166,'n','17',38,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(167,'Next','17',39,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(168,'true','17',40,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(18,'UIComponentProperties','Decode of type UIComponentProperties.')//
+INSERT INTO decodetype (id, type, description) VALUES(18,'Properties','Decode of type Properties.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(169,'Prev','18',34,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(170,'','18',35,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(171,'PREV','18',36,null, null)//
@@ -378,7 +378,7 @@ INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicat
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(173,'v','18',38,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(174,'Prev','18',39,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(175,'true','18',40,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(19,'UIComponentProperties','Decode of type UIComponentProperties.')//
+INSERT INTO decodetype (id, type, description) VALUES(19,'Properties','Decode of type Properties.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(176,'Fetch','19',34,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(177,'fetch.gif','19',35,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(178,'FETCH','19',36,null, null)//
@@ -386,7 +386,7 @@ INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicat
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(180,'','19',38,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(181,'Fetch','19',39,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(182,'true','19',40,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(20,'UIComponentProperties','Decode of type UIComponentProperties.')//
+INSERT INTO decodetype (id, type, description) VALUES(20,'Properties','Decode of type Properties.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(183,'Insert','20',34,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(184,'','20',35,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(185,'INSERT','20',36,null, null)//
@@ -394,7 +394,7 @@ INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicat
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(187,'','20',38,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(188,'Insert','20',39,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(189,'true','20',40,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(21,'UIComponentProperties','Decode of type UIComponentProperties.')//
+INSERT INTO decodetype (id, type, description) VALUES(21,'Properties','Decode of type Properties.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(190,'Commit','21',34,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(191,'','21',35,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(192,'COMMIT','21',36,null, null)//
@@ -402,7 +402,7 @@ INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicat
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(194,'','21',38,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(195,'Commit','21',39,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(196,'true','21',40,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(22,'UIComponentProperties','Decode of type UIComponentProperties.')//
+INSERT INTO decodetype (id, type, description) VALUES(22,'Properties','Decode of type Properties.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(197,'Cancel','22',34,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(198,'cancel.gif','22',35,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(199,'CANCEL','22',36,null, null)//
@@ -410,7 +410,7 @@ INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicat
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(201,'','22',38,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(202,'Cancel','22',39,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(203,'true','22',40,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(23,'UIComponentProperties','Decode of type UIComponentProperties.')//
+INSERT INTO decodetype (id, type, description) VALUES(23,'Properties','Decode of type Properties.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(204,'Search','23',34,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(205,'search.gif','23',35,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(206,'SEARCH','23',36,null, null)//
@@ -418,7 +418,7 @@ INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicat
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(208,'','23',38,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(209,'Search','23',39,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(210,'true','23',40,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(24,'UIComponentProperties','Decode of type UIComponentProperties.')//
+INSERT INTO decodetype (id, type, description) VALUES(24,'Properties','Decode of type Properties.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(211,'Clear','24',34,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(212,'clear.gif','24',35,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(213,'CLEAR','24',36,null, null)//
@@ -426,7 +426,7 @@ INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicat
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(215,'','24',38,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(216,'Clear','24',39,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(217,'true','24',40,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(25,'UIComponentProperties','Decode of type UIComponentProperties.')//
+INSERT INTO decodetype (id, type, description) VALUES(25,'Properties','Decode of type Properties.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(218,'Print Prev','25',34,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(219,'printprev.gif','25',35,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(220,'PRINT_PREVIEW','25',36,null, null)//
@@ -434,7 +434,7 @@ INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicat
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(222,'','25',38,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(223,'Print Prev','25',39,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(224,'true','25',40,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(26,'UIComponentProperties','Decode of type UIComponentProperties.')//
+INSERT INTO decodetype (id, type, description) VALUES(26,'Properties','Decode of type Properties.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(225,'Execute','26',34,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(226,'execute.gif','26',35,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(227,'EXECUTE','26',36,null, null)//
@@ -442,7 +442,7 @@ INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicat
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(229,'','26',38,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(230,'Execute','26',39,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(231,'true','26',40,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(27,'UIComponentProperties','Decode of type UIComponentProperties.')//
+INSERT INTO decodetype (id, type, description) VALUES(27,'Properties','Decode of type Properties.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(232,'Update','27',34,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(233,'','27',35,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(234,'UPDATE','27',36,null, null)//
@@ -450,7 +450,7 @@ INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicat
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(236,'','27',38,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(237,'Update','27',39,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(238,'true','27',40,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(28,'UIComponentProperties','Decode of type UIComponentProperties.')//
+INSERT INTO decodetype (id, type, description) VALUES(28,'Properties','Decode of type Properties.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(239,'Delete','28',34,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(240,'delete.gif','28',35,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(241,'DELETE','28',36,null, null)//
@@ -458,7 +458,7 @@ INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicat
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(243,'','28',38,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(244,'Delete','28',39,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(245,'true','28',40,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(29,'UIComponentProperties','Decode of type UIComponentProperties.')//
+INSERT INTO decodetype (id, type, description) VALUES(29,'Properties','Decode of type Properties.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(246,'Tile All','29',34,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(247,'','29',35,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(248,'TILE_ALL','29',36,null, null)//
@@ -466,7 +466,7 @@ INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicat
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(250,'','29',38,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(251,'Tile All','29',39,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(252,'true','29',40,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(30,'UIComponentProperties','Decode of type UIComponentProperties.')//
+INSERT INTO decodetype (id, type, description) VALUES(30,'Properties','Decode of type Properties.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(253,'Cascade All','30',34,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(254,'','30',35,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(255,'CASCADE_ALL','30',36,null, null)//
@@ -474,7 +474,7 @@ INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicat
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(257,'','30',38,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(258,'Cascade All','30',39,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(259,'true','30',40,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(31,'UIComponentProperties','Decode of type UIComponentProperties.')//
+INSERT INTO decodetype (id, type, description) VALUES(31,'Properties','Decode of type Properties.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(260,'Close All','31',34,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(261,'closeall.gif','31',35,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(262,'CLOSE_ALL','31',36,null, null)//
@@ -482,7 +482,7 @@ INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicat
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(264,'','31',38,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(265,'Close All','31',39,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(266,'true','31',40,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(32,'UIComponentProperties','Decode of type UIComponentProperties.')//
+INSERT INTO decodetype (id, type, description) VALUES(32,'Properties','Decode of type Properties.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(267,'Cascade','32',34,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(268,'','32',35,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(269,'CASCADE','32',36,null, null)//
@@ -490,7 +490,7 @@ INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicat
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(271,'','32',38,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(272,'Cascade','32',39,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(273,'true','32',40,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(33,'UIComponentProperties','Decode of type UIComponentProperties.')//
+INSERT INTO decodetype (id, type, description) VALUES(33,'Properties','Decode of type Properties.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(274,'Test','33',34,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(275,'backwardarrow.gif','33',35,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(276,'TEST','33',36,null, null)//
@@ -498,7 +498,7 @@ INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicat
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(278,'','33',38,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(279,'Test','33',39,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(280,'true','33',40,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(34,'UIComponentProperties','Decode of type UIComponentProperties.')//
+INSERT INTO decodetype (id, type, description) VALUES(34,'Properties','Decode of type Properties.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(281,'Run','34',34,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(282,'forwardarrow.gif','34',35,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(283,'RUN','34',36,null, null)//
@@ -506,7 +506,7 @@ INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicat
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(285,'','34',38,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(286,'Run','34',39,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(287,'true','34',40,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(35,'UIComponentProperties','Decode of type UIComponentProperties.')//
+INSERT INTO decodetype (id, type, description) VALUES(35,'Properties','Decode of type Properties.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(288,'Get Data','35',34,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(289,'data.gif','35',35,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(290,'DATA','35',36,null, null)//
@@ -514,7 +514,7 @@ INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicat
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(292,'','35',38,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(293,'Data','35',39,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(294,'true','35',40,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(36,'UIComponentProperties','Decode of type UIComponentProperties.')//
+INSERT INTO decodetype (id, type, description) VALUES(36,'Properties','Decode of type Properties.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(295,'Properties','36',34,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(296,'gearsmall.gif','36',35,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(297,'PROPERTIES','36',36,null, null)//
@@ -522,7 +522,7 @@ INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicat
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(299,'','36',38,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(300,'Properties','36',39,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(301,'true','36',40,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(37,'UIComponentProperties','Decode of type UIComponentProperties.')//
+INSERT INTO decodetype (id, type, description) VALUES(37,'Properties','Decode of type Properties.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(302,'Contents','37',34,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(303,'','37',35,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(304,'CONTENTS','37',36,null, null)//
@@ -530,7 +530,7 @@ INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicat
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(306,'','37',38,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(307,'Contents','37',39,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(308,'true','37',40,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(38,'UIComponentProperties','Decode of type UIComponentProperties.')//
+INSERT INTO decodetype (id, type, description) VALUES(38,'Properties','Decode of type Properties.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(309,'About','38',34,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(310,'','38',35,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(311,'ABOUT','38',36,null, null)//
@@ -538,7 +538,7 @@ INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicat
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(313,'','38',38,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(314,'About','38',39,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(315,'true','38',40,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(39,'UIComponentProperties','Decode of type UIComponentProperties.')//
+INSERT INTO decodetype (id, type, description) VALUES(39,'Properties','Decode of type Properties.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(316,'Print Options','39',34,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(317,'gearsmall.gif','39',35,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(318,'PRINT_OPTIONS','39',36,null, null)//
@@ -546,7 +546,7 @@ INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicat
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(320,'u','39',38,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(321,'Print Options','39',39,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(322,'true','39',40,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(40,'UIComponentProperties','Decode of type UIComponentProperties.')//
+INSERT INTO decodetype (id, type, description) VALUES(40,'Properties','Decode of type Properties.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(323,'Exit','40',34,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(324,'','40',35,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(325,'EXIT','40',36,null, null)//
@@ -554,7 +554,7 @@ INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicat
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(327,'','40',38,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(328,'Exit','40',39,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(329,'true','40',40,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(41,'UIComponentProperties','Decode of type UIComponentProperties.')//
+INSERT INTO decodetype (id, type, description) VALUES(41,'Properties','Decode of type Properties.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(330,'Undo','41',34,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(331,'','41',35,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(332,'UNDO','41',36,null, null)//
@@ -562,7 +562,7 @@ INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicat
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(334,'','41',38,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(335,'Undo','41',39,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(336,'true','41',40,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(42,'UIComponentProperties','Decode of type UIComponentProperties.')//
+INSERT INTO decodetype (id, type, description) VALUES(42,'Properties','Decode of type Properties.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(337,'Redo','42',34,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(338,'','42',35,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(339,'REDO','42',36,null, null)//
@@ -570,7 +570,7 @@ INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicat
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(341,'','42',38,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(342,'Redo','42',39,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(343,'true','42',40,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(43,'UIComponentProperties','Decode of type UIComponentProperties.')//
+INSERT INTO decodetype (id, type, description) VALUES(43,'Properties','Decode of type Properties.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(344,'Find','43',34,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(345,'','43',35,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(346,'FIND','43',36,null, null)//
@@ -578,7 +578,7 @@ INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicat
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(348,'','43',38,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(349,'Find','43',39,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(350,'true','43',40,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(44,'UIComponentProperties','Decode of type UIComponentProperties.')//
+INSERT INTO decodetype (id, type, description) VALUES(44,'Properties','Decode of type Properties.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(351,'Replace','44',34,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(352,'','44',35,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(353,'REPLACE','44',36,null, null)//
@@ -586,7 +586,7 @@ INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicat
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(355,'','44',38,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(356,'Replace','44',39,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(357,'true','44',40,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(45,'UIComponentProperties','Decode of type UIComponentProperties.')//
+INSERT INTO decodetype (id, type, description) VALUES(45,'Properties','Decode of type Properties.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(358,'Transfer','45',34,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(359,'','45',35,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(360,'TRANSFER','45',36,null, null)//
@@ -594,7 +594,7 @@ INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicat
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(362,'','45',38,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(363,'Transfer','45',39,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(364,'true','45',40,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(46,'UIComponentProperties','Decode of type UIComponentProperties.')//
+INSERT INTO decodetype (id, type, description) VALUES(46,'Properties','Decode of type Properties.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(365,'Remove','46',34,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(366,'','46',35,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(367,'REMOVE','46',36,null, null)//
@@ -602,7 +602,7 @@ INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicat
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(369,'','46',38,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(370,'Remove','46',39,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(371,'true','46',40,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(47,'UIComponentProperties','Decode of type UIComponentProperties.')//
+INSERT INTO decodetype (id, type, description) VALUES(47,'Properties','Decode of type Properties.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(372,'Disclaimer','47',34,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(373,'','47',35,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(374,'DISCLAIMER','47',36,null, null)//
@@ -610,7 +610,7 @@ INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicat
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(376,'','47',38,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(377,'Disclaimer','47',39,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(378,'true','47',40,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(48,'UIComponentProperties','Decode of type UIComponentProperties.')//
+INSERT INTO decodetype (id, type, description) VALUES(48,'Properties','Decode of type Properties.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(379,'Compile','48',34,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(380,'gear.gif','48',35,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(381,'COMPILE','48',36,null, null)//
@@ -618,7 +618,7 @@ INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicat
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(383,'','48',38,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(384,'Compile','48',39,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(385,'true','48',40,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(49,'UIComponentProperties','Decode of type UIComponentProperties.')//
+INSERT INTO decodetype (id, type, description) VALUES(49,'Properties','Decode of type Properties.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(386,'Re-Assign strategies for selected tradingdays.','49',34,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(387,'gear.gif','49',35,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(388,'REASSIGN','49',36,null, null)//
@@ -626,7 +626,7 @@ INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicat
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(390,'','49',38,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(391,'Re-Assign','49',39,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(392,'true','49',40,null, null)//
-INSERT INTO decodetype (id, type, description) VALUES(50,'UIComponentProperties','Decode of type UIComponentProperties.')//
+INSERT INTO decodetype (id, type, description) VALUES(50,'Properties','Decode of type Properties.')//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(393,'Strategy Parameters','50',34,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(394,'gear.gif','50',35,null, null)//
 INSERT INTO codevalue (id , code_value, decodetype_id, code_attribute_id,indicator_series_id, tradestrategy_id) VALUES(395,'STRATEGY_PARMS','50',36,null, null)//

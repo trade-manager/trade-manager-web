@@ -146,6 +146,21 @@ public class DecodeType extends Aspect implements java.io.Serializable {
         return codeValue;
     }
 
+    @Transient
+    public String getValue(String attribute) {
+
+        for (CodeValue codeValue : this.getCodeValues()) {
+
+            if (codeValue.getCodeAttribute().getName().equals(attribute)) {
+
+                return codeValue.getCodeValue();
+            }
+        }
+
+        return null;
+    }
+
+
     /**
      * Method isDirty.
      *

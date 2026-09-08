@@ -19,7 +19,7 @@ public class LookupService {
 
     static {
 
-        addLookupServiceProvider(new PropertyFileLookupServiceProvider());
+        addLookupServiceProvider(new PropertyFileLookupServiceProvider(ApplicationContextProvider.getBean(TradeService.class)));
         addLookupServiceProvider(new DBTableLookupServiceProvider(ApplicationContextProvider.getBean(TradeService.class)));
     }
 

@@ -1,5 +1,6 @@
 package org.trade.core.lookup;
 
+import org.trade.core.persistent.TradeService;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.valuetype.Decode;
 
@@ -16,6 +17,8 @@ import java.util.Objects;
  * @author Simon Allen
  */
 public class PropertyFileLookupServiceProvider implements ILookupServiceProvider {
+
+    private final TradeService tradeService;
     /*
      * This will be a hashtable of hashtables of ILookup objects. The first key
      * is the lookup name and the second key is the LookupQualifier.
@@ -26,7 +29,9 @@ public class PropertyFileLookupServiceProvider implements ILookupServiceProvider
     /**
      * Default Constructor
      */
-    public PropertyFileLookupServiceProvider() {
+    public PropertyFileLookupServiceProvider(final TradeService tradeService) {
+
+        this.tradeService = tradeService;
     }
 
     /**
@@ -56,10 +61,9 @@ public class PropertyFileLookupServiceProvider implements ILookupServiceProvider
                 // Have all of the columns - want to get a List for each
                 // column value
                 List<ListIterator<?>> colRows = new ArrayList<>();
-                int i;
                 int colNamesSize = colNames.size();
 
-                for (i = 0; i < colNamesSize; i++) {
+                for (int i = 0; i < colNamesSize; i++) {
 
                     colRows.add(ConfigProperties.getDecodesAsEnumeration(colNames.get(i)));
                 }
@@ -76,11 +80,12 @@ public class PropertyFileLookupServiceProvider implements ILookupServiceProvider
 
                     List<Object> newRowNone = new ArrayList<>();
 
-                    for (i = 0; i < colRows.size(); i++) {
+                    for (int i = 0; i < colRows.size(); i++) {
 
                         Object qualVal = qualifier.getValue(colNames.get(i));
                         newRowNone.add(Objects.requireNonNullElse(qualVal, Decode.NONE));
                     }
+
                     rows.add(newRowNone);
                 }
 
@@ -91,7 +96,7 @@ public class PropertyFileLookupServiceProvider implements ILookupServiceProvider
                     boolean addIt = true;
                     int colRowsSize = colRows.size();
 
-                    for (i = 0; i < colRowsSize; i++) {
+                    for (int i = 0; i < colRowsSize; i++) {
 
                         Object value = null;
                         en = colRows.get(i);
@@ -123,6 +128,7 @@ public class PropertyFileLookupServiceProvider implements ILookupServiceProvider
                     if (foundOne) {
 
                         if (addIt) {
+
                             rows.add(row);
                         }
                     } else {
