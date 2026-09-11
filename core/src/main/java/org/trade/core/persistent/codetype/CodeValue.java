@@ -66,6 +66,21 @@ public class CodeValue extends Aspect implements java.io.Serializable {
     /**
      * Constructor for CodeValue.
      *
+     * @param codeAttribute CodeAttribute
+     * @param decodeType    DecodeType
+     * @param codeValue     String
+     */
+    public CodeValue(CodeAttribute codeAttribute, DecodeType decodeType, String codeValue) {
+
+        this.codeAttribute = codeAttribute;
+        this.decodeType = decodeType;
+        this.codeValue = codeValue;
+
+    }
+
+    /**
+     * Constructor for CodeValue.
+     *
      * @param codeAttribute   CodeAttribute
      * @param codeValue       String
      * @param indicatorSeries IndicatorSeries

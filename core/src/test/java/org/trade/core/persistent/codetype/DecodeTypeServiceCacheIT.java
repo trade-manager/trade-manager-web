@@ -75,6 +75,7 @@ public class DecodeTypeServiceCacheIT extends TradestrategyBase {
 
         decodeTypes = extractTypedList("BarSize", DecodeType.class);
         assertFalse(decodeTypes.isEmpty());
+        
         for (DecodeType decodeType : decodeTypes) {
 
             for (CodeValue codeValue : decodeType.getCodeValues()) {

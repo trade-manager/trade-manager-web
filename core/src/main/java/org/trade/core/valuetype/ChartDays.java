@@ -1,16 +1,21 @@
 package org.trade.core.valuetype;
 
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+
 import java.io.Serial;
 
 /**
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
+@Entity
+@DiscriminatorValue("ChartDays")
 public class ChartDays extends Decode {
 
     @Serial
     private static final long serialVersionUID = -5381026427696898592L;
-    public static final String DECODE = "CHART_DAYS";
+    public static final String DECODE = "ChartDays";
     public static final int ONE_DAY = 1;
     public static final int TWO_MONTHS = 60;
 
@@ -18,10 +23,11 @@ public class ChartDays extends Decode {
         super(DECODE);
     }
 
+    /*
     public ChartDays(boolean optional) {
         super(DECODE, optional);
     }
-
+*/
     /**
      * Method newInstance.
      *

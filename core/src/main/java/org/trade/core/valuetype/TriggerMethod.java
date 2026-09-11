@@ -1,11 +1,16 @@
 package org.trade.core.valuetype;
 
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+
 import java.io.Serial;
 
 /**
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
+@Entity
+@DiscriminatorValue("TriggerMethod")
 public class TriggerMethod extends Decode {
 
     /**
@@ -13,7 +18,7 @@ public class TriggerMethod extends Decode {
      */
     @Serial
     private static final long serialVersionUID = -5381026427696898592L;
-    public static final String DECODE = "TRIGGER_METHOD";
+    public static final String DECODE = "TriggerMethod";
     public static final int DEFAULT = 0;
 
     public TriggerMethod() {

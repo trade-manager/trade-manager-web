@@ -1,6 +1,7 @@
 package org.trade.ui.models;
 
 import org.trade.base.TableModel;
+import org.trade.core.aspect.Aspect;
 import org.trade.core.aspect.Aspects;
 
 import java.io.Serial;
@@ -15,6 +16,8 @@ public abstract class AspectTableModel extends TableModel {
      */
     @Serial
     private static final long serialVersionUID = 3087514589731145479L;
+
+    private Aspect value;
 
     public AspectTableModel() {
     }
@@ -37,4 +40,13 @@ public abstract class AspectTableModel extends TableModel {
      */
     public abstract void setData(Aspects data) throws Exception;
 
+    public void setSelectRowValue(Aspect value) {
+
+        this.value = value;
+    }
+
+    public Aspect getSelectRowValue() {
+
+        return this.value;
+    }
 }

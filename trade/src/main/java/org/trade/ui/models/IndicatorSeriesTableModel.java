@@ -100,7 +100,9 @@ public class IndicatorSeriesTableModel extends TableModel {
      * @see javax.swing.table.TableModel#isCellEditable(int, int)
      */
     public boolean isCellEditable(int row, int column) {
+
         if (column == 0) {
+
             return false;
         }
         if (Objects.equals(columnNames[column], TYPE)) {
@@ -127,6 +129,7 @@ public class IndicatorSeriesTableModel extends TableModel {
                 break;
             }
             case 1: {
+
                 String type = ((UIIndicatorSeries) value).getCode();
                 String indicatorName = type.substring(0, type.indexOf("Series"));
                 element = this.getIndicatorSeries(element.getStrategy(), indicatorName, type, indicatorName);
@@ -134,26 +137,32 @@ public class IndicatorSeriesTableModel extends TableModel {
                 break;
             }
             case 2: {
+
                 element.setName(((String) value).trim());
                 break;
             }
             case 3: {
+
                 element.setDescription((String) value);
                 break;
             }
             case 4: {
+
                 element.setDisplaySeries(Boolean.valueOf(((YesNo) value).getCode()));
                 break;
             }
             case 5: {
+
                 element.setSubChart(Boolean.valueOf(((YesNo) value).getCode()));
                 break;
             }
             case 6: {
+
                 element.setSeriesRGBColor(((Color) value).getRGB());
                 break;
             }
             case 7: {
+
                 List<CodeValue> code = new ArrayList<>();
                 for (Aspect aspect : ((Aspects) value).getAspects()) {
                     code.add((CodeValue) aspect);

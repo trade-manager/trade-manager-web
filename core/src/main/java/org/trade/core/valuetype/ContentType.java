@@ -1,16 +1,21 @@
 package org.trade.core.valuetype;
 
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+
 import java.io.Serial;
 
 /**
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
+@Entity
+@DiscriminatorValue("ContentType")
 public class ContentType extends Decode {
 
     @Serial
     private static final long serialVersionUID = -5381026427696898592L;
-    public static final String DECODE = "CONTENT_TYPE";
+    public static final String DECODE = "ContentType";
     public static final String JAVA = "text/java";
     public static final String JAVASCRIPT = "text/javascript";
     public static final String TEXT = "text/rtf";

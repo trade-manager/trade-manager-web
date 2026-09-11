@@ -241,7 +241,6 @@ public class TradelogDetailTableModel extends TableModel {
         rows.add(newRow);
         // Tell the listeners a new table has arrived.
         this.fireTableRowsInserted(rows.size() - 1, rows.size() - 1);
-
     }
 
     public void addRow() {

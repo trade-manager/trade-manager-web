@@ -41,7 +41,7 @@ public class DecodeType extends Aspect implements java.io.Serializable {
     @OneToMany(mappedBy = "decodeType", fetch = FetchType.EAGER, orphanRemoval = true, cascade = {CascadeType.ALL})
     private List<CodeValue> codeValues = new ArrayList<>(0);
 
-    public static final String Decode = "Decode";
+    public static final String DecodeType = "DecodeType";
 
     /**
      * Default constructor for CodeType.
@@ -145,6 +145,21 @@ public class DecodeType extends Aspect implements java.io.Serializable {
         codeValue.setDecodeType(this);
         return codeValue;
     }
+
+    @Transient
+    public String getValue(String attribute) {
+
+        for (CodeValue codeValue : this.getCodeValues()) {
+
+            if (codeValue.getCodeAttribute().getName().equals(attribute)) {
+
+                return codeValue.getCodeValue();
+            }
+        }
+
+        return null;
+    }
+
 
     /**
      * Method isDirty.

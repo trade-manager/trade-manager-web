@@ -1,5 +1,8 @@
 package org.trade.core.valuetype;
 
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+
 import java.io.Serial;
 
 /**
@@ -9,6 +12,8 @@ import java.io.Serial;
  * @author Simon Allen
  * @version $Id: BasePropertyCodes.java,v 1.15 2002/01/22 22:48:21 simon Exp $
  */
+@Entity
+@DiscriminatorValue("Properties")
 public class UIComponentProperties extends Decode {
     /**
      *
@@ -16,13 +21,14 @@ public class UIComponentProperties extends Decode {
     @Serial
     private static final long serialVersionUID = -2178313262496336078L;
 
-    public static final String UI_COMPONENT = "UI_COMPONENT";
-    public static final String UI_COMPONENT_PROPERTY = UI_COMPONENT + "_PROPERTY";
-    public static final String UI_COMPONENT_TOOL_TIP = UI_COMPONENT + "_TOOL_TIP";
-    public static final String UI_COMPONENT_ENABLED = UI_COMPONENT + "_ENABLED";
-    public static final String UI_COMPONENT_MNEMONIC = UI_COMPONENT + "_MNEMONIC";
-    public static final String UI_COMPONENT_IMAGE = UI_COMPONENT + "_IMAGE";
-    public static final String UI_COMPONENT_METHOD = UI_COMPONENT + "_METHOD";
+    public static final String CODE_DECODE_IDENTIFIER = "UIComponent";
+    public static final String DECODE = "Properties";
+
+    public static final String UI_COMPONENT_TOOL_TIP = CODE_DECODE_IDENTIFIER + "tool_tip";
+    public static final String UI_COMPONENT_ENABLED = CODE_DECODE_IDENTIFIER + "enabled";
+    public static final String UI_COMPONENT_MNEMONIC = CODE_DECODE_IDENTIFIER + "mnemonic";
+    public static final String UI_COMPONENT_IMAGE = CODE_DECODE_IDENTIFIER + "image";
+    public static final String UI_COMPONENT_METHOD = CODE_DECODE_IDENTIFIER + "method";
 
     public static final String ABOUT = "ABOUT";
     public static final String CALCULATE = "CALCULATE";
@@ -85,7 +91,8 @@ public class UIComponentProperties extends Decode {
      * Default Constructor
      */
     public UIComponentProperties() {
-        super(UI_COMPONENT_PROPERTY, UI_COMPONENT, false);
+
+        super(DECODE, CODE_DECODE_IDENTIFIER, false);
     }
 
     /**
@@ -95,6 +102,7 @@ public class UIComponentProperties extends Decode {
      * @param propertyCode String
      */
     public UIComponentProperties(String propertyType, String propertyCode) {
+
         super(propertyType, propertyCode, false);
     }
 
@@ -104,8 +112,8 @@ public class UIComponentProperties extends Decode {
      * @return boolean
      */
     public boolean isEnabled() {
-
         return getValue(UI_COMPONENT_ENABLED).equalsIgnoreCase("true");
+        //return super.getValue(UI_COMPONENT_ENABLED).equalsIgnoreCase("true");
     }
 
     /**
@@ -115,6 +123,7 @@ public class UIComponentProperties extends Decode {
      */
     public String getToolTip() {
         return getValue(UI_COMPONENT_TOOL_TIP);
+        //return super.getValue(UI_COMPONENT_TOOL_TIP);
     }
 
     /**
@@ -124,6 +133,7 @@ public class UIComponentProperties extends Decode {
      */
     public String getImage() {
         return getValue(UI_COMPONENT_IMAGE);
+        //return super.getValue(UI_COMPONENT_IMAGE);
     }
 
     /**
@@ -133,6 +143,7 @@ public class UIComponentProperties extends Decode {
      */
     public String getMethod() {
         return getValue(UI_COMPONENT_METHOD);
+        //return super.getValue(UI_COMPONENT_METHOD);
     }
 
     /**
@@ -141,10 +152,12 @@ public class UIComponentProperties extends Decode {
      * @return int
      */
     public int getMnemonic() {
+
         int returnValue = 0;
 
-        if ((null != getValue(UI_COMPONENT_MNEMONIC)) && (!getValue(UI_COMPONENT_MNEMONIC).isEmpty())) {
-            returnValue = getValue(UI_COMPONENT_MNEMONIC).charAt(0);
+        if ((null != super.getValue(UI_COMPONENT_MNEMONIC)) && (!super.getValue(UI_COMPONENT_MNEMONIC).isEmpty())) {
+
+            returnValue = super.getValue(UI_COMPONENT_MNEMONIC).charAt(0);
         }
 
         return returnValue;

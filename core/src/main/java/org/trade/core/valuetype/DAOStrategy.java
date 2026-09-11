@@ -1,5 +1,7 @@
 package org.trade.core.valuetype;
 
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
 import org.trade.core.persistent.strategy.Strategy;
 
 import java.io.Serial;
@@ -10,14 +12,13 @@ import java.util.List;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
+@Entity
+@DiscriminatorValue("DAOStrategy")
 public class DAOStrategy extends DAODecode {
 
     @Serial
     private static final long serialVersionUID = -5381026427696898592L;
-    public static final String DECODE = "STRATEGY";
-    public static final String _TABLE = "_TABLE";
-    public static final String _TABLE_ID = "_TABLE_ID";
-    public static final String _COLUMN = "_COLUMN";
+    public static final String DECODE = "DAOStrategy";
 
     public DAOStrategy() {
         super(DECODE);

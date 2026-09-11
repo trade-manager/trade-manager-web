@@ -1,11 +1,16 @@
 package org.trade.core.valuetype;
 
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+
 import java.io.Serial;
 
 /**
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
+@Entity
+@DiscriminatorValue("SECIdType")
 public class SECIdType extends Decode {
 
     /**
@@ -13,7 +18,7 @@ public class SECIdType extends Decode {
      */
     @Serial
     private static final long serialVersionUID = -5381026427696898592L;
-    public static final String DECODE = "SEC_ID_TYPE";
+    public static final String DECODE = "SECIdType";
 
     public SECIdType() {
         super(DECODE);

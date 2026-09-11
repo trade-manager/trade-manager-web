@@ -1,5 +1,7 @@
 package org.trade.core.valuetype;
 
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
 import org.trade.core.persistent.portfolio.Portfolio;
 
 import java.io.Serial;
@@ -8,14 +10,13 @@ import java.io.Serial;
  * @author Simon Allen
  * @version $Revision: 1.0 $
  */
+@Entity
+@DiscriminatorValue("DAOPortfolio")
 public class DAOPortfolio extends DAODecode {
 
     @Serial
     private static final long serialVersionUID = -5381026427696898592L;
-    public static final String DECODE = "PORTFOLIO";
-    public static final String _TABLE = "_TABLE";
-    public static final String _TABLE_ID = "_TABLE_ID";
-    public static final String _COLUMN = "_COLUMN";
+    public static final String DECODE = "DAOPortfolio";
 
     public DAOPortfolio() {
 

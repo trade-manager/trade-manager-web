@@ -55,10 +55,14 @@ public class CodeAttributePanel extends JPanel {
             jLabel.setHorizontalTextPosition(SwingConstants.RIGHT);
             jLabel.setHorizontalAlignment(SwingConstants.RIGHT);
             JComponent field;
+
             if (null == codeAttribute.getEditorClassName()) {
+
                 field = new JFormattedTextField();
                 field.setInputVerifier(new FormattedTextFieldVerifier());
+
                 for (CodeValue value : this.currentCodeValues) {
+
                     if (value.getCodeAttribute().getName().equals(codeAttribute.getName())) {
                         ((JFormattedTextField) field)
                                 .setValue(CodeValue.getValueCode(codeAttribute.getName(), this.currentCodeValues));

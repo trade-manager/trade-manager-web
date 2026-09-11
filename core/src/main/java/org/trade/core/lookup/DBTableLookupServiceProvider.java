@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.trade.core.persistent.TradeService;
 import org.trade.core.properties.ConfigProperties;
 import org.trade.core.util.Reflector;
+import org.trade.core.valuetype.DAODecode;
 import org.trade.core.valuetype.Decode;
 
 import java.lang.reflect.Method;
@@ -70,10 +71,9 @@ public class DBTableLookupServiceProvider implements ILookupServiceProvider {
                 // Have all of the columns - want to get a List for each
                 // column value
                 List<ListIterator<?>> colRows = new ArrayList<>();
-                int i;
                 int colNamesSize = colNames.size();
 
-                for (i = 0; i < colNamesSize; i++) {
+                for (int i = 0; i < colNamesSize; i++) {
 
                     colRows.add(ConfigProperties.getDecodesAsEnumeration(colNames.get(i)));
                 }
@@ -89,7 +89,7 @@ public class DBTableLookupServiceProvider implements ILookupServiceProvider {
                     boolean addIt = true;
                     int colRowsSize = colRows.size();
 
-                    for (i = 0; i < colRowsSize; i++) {
+                    for (int i = 0; i < colRowsSize; i++) {
 
                         Object value = null;
                         en = colRows.get(i);
@@ -140,21 +140,21 @@ public class DBTableLookupServiceProvider implements ILookupServiceProvider {
                 String methodName = null;
                 int rowsSize = rows.size();
 
-                for (i = 0; i < rowsSize; i++) {
+                for (int i = 0; i < rowsSize; i++) {
 
                     List<Object> row = rows.get(i);
                     int rowSize = row.size();
 
                     for (int y = 0; y < rowSize; y++) {
 
-                        if ("DAO_DECODE_TYPE".equals(colNames.get(y))) {
+                        if ((DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._TYPE).equals(colNames.get(y))) {
 
                             type = (String) row.get(y);
 
-                        } else if ("DAO_DECODE_CODE".equals(colNames.get(y))) {
+                        } else if ((DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._CODE).equals(colNames.get(y))) {
 
                             dao = (String) row.get(y);
-                        } else if ("DAO_DECODE_DISPLAY_NAME".equals(colNames.get(y))) {
+                        } else if ((DAODecode.CODE_DECODE_IDENTIFIER + DAODecode._DISPLAY_NAME).equals(colNames.get(y))) {
 
                             methodName = (String) row.get(y);
                         }
